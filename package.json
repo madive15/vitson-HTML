@@ -1,0 +1,88 @@
+{
+  "name": "root",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "description": "ejs, webpack5, lerna",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max-old-space-size=12000 webpack serve --progress --config webpack.dev.cjs",
+    "build": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.cjs",
+    "gh-pages": "pnpm build && echo > dist/.nojekyll && gh-pages -d dist -t",
+    "analyze": "cross-env NODE_ENV=production webpack --progress --analyze --config webpack.prod.cjs",
+    "eslint": "eslint \"**/*.{js,ts}\" --ignore-path .eslintignore .",
+    "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --ignore-path .eslintignore .",
+    "stylelint": "stylelint \"**/*.{css,scss,sass}\" --ignore-path .stylelintignore .",
+    "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .stylelintignore .",
+    "ejslint": "npx ejs-lint **/*.ejs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madive15/ejs-webpack-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madive15/ejs-webpack-template/issues"
+  },
+  "homepage": "https://github.com/madive15/ejs-webpack-template#readme",
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/eslint-parser": "^7.27.5",
+    "@babel/plugin-transform-runtime": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/lodash": "^4.17.18",
+    "@types/node": "^22.15.32",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^9.2.1",
+    "copy-webpack-plugin": "^12.0.2",
+    "core-js": "^3.43.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "dotenv": "^16.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.5.0",
+    "eslint-webpack-plugin": "^4.2.0",
+    "gh-pages": "^6.3.0",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "prettier": "^3.5.3",
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "stylelint": "^16.20.0",
+    "stylelint-config-prettier-scss": "^1.0.0",
+    "stylelint-config-recess-order": "^5.1.1",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard-scss": "^13.1.0",
+    "stylelint-webpack-plugin": "^5.0.1",
+    "template-ejs-loader": "^0.9.4",
+    "terser-webpack-plugin": "^5.3.14",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.27.6",
+    "lodash": "^4.17.21",
+    "swiper": "^11.2.8"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

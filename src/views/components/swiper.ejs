@@ -1,0 +1,16 @@
+<div class="swiper <%= name %>" style="width: 400px;height: 200px;">
+  <div class="swiper-wrapper">
+    <% datas.forEach((data) => { %>
+      <div class="swiper-slide">
+        <%- data.html %>
+      </div>
+    <% }); %> 
+  </div>
+  <% if (useNav) { %>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  <% } %>
+  <% if (usePage) { %>
+    <div class="swiper-pagination"></div>
+  <% } %>
+</div>

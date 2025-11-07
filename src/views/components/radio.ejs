@@ -1,0 +1,10 @@
+<div class="mx-radio">
+  <div class="radio-item-group">
+    <% datas.forEach((data) => { %>
+      <div class="radio-item">
+        <input id="<%= `${name}-${data.value}` %>" name="<%= name %>" type="radio" value="<%= data.value %>" <% if (data.disabled) { %>disabled<% } %> />
+        <label for="<%= `${name}-${data.value}` %>"><%= data.label %></label>
+      </div>
+    <% }); %> 
+  </div>
+</div>
