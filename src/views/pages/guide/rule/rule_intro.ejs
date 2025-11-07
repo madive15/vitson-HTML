@@ -1,0 +1,391 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="<%= _public %>/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="<%= _public %>/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shCore.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shAutoLoader.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushjScript.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushXml.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushCss.js?cb=undefined"></script>
+    <link href="<%= _public %>/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">aa프로젝트웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li class="is-current">
+                <a href="../rule/rule_intro.html">규칙가이드</a>
+              </li>
+              <li>
+                <a href="../_plan/plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <!-- Prototype -->
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">규칙가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2 is-current">
+                      <a href="rule_intro.html">기본정책</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_standard.html">표준규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_name.html">네임규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_markup.html">HTML Markup 규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_css.html">CSS 코드규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_js.html">JS 코드규칙</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">기본정책</h1>
+              <small class="g-explain-h1">Publishing Conventions</small>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!--S:삭제필요-->
+            <h2 class="wsg-h2">가이드 작업 지시사항</h2>
+            <ul class="wsg-desc">
+              <li class="wsg-txt-red">"Robots" 관련된 메타테그 삭제금지 (검색어수집거부코드)</li>
+              <li>작업완료시 해당 목록은 삭제한다.</li>
+              <li>프로젝트 특성/및 스펙에 따라 정의한다.</li>
+              <li>반응형인지 PC/Mobile 분리인지에 따라 가이드 정책을 정확하게 정의한다.</li>
+            </ul>
+            <br />
+            <br />
+            <!--E:삭제필요-->
+
+            <section id="section5" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">가이드 정보</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      작업자 정보
+                    </caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="al-l">프로젝트</th>
+                        <td>OOOO 프로젝트</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">작업기간</th>
+                        <td>20190000 ~ 201903</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">가이드작업자</th>
+                        <td>홍길동 직급</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">Last Update</th>
+                        <td>20190202</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- section1 -->
+            <section id="section1" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">환경정의</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      환경정의
+                    </caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="al-l">문서 및 버전</th>
+                        <td>HTML5, CSS3</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">인코딩</th>
+                        <td>UTF-8</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">웹 유형</th>
+                        <td>PC Web, Mobile Web, Responcive Web</td>
+                        <!-- PC Web | Mobile Web | Responsive Web | Mobile Hybrid Web -->
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">PC 웹 호환성</th>
+                        <td>
+                          <div class="wsg-browser-icons">
+                            <img src="<%= _public %>/wsg/resources/images/ico_ie9.png" alt="" />
+                            <img src="<%= _public %>/wsg/resources/images/ico_crom.png" alt="" />
+                            <img src="<%= _public %>/wsg/resources/images/ico_firefox.png" alt="" />
+                            <img src="<%= _public %>/wsg/resources/images/ico_sapari.jpg" alt="" />
+                            <img src="<%= _public %>/wsg/resources/images/ico_opera.png" alt="" />
+                            (IE10 이상)
+                          </div>
+                          <style type="text/css">
+                            .wsg-browser-icons img {
+                              width: 30px;
+                              height: 30px;
+                            }
+                          </style>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">Mobile 웹 호환성</th>
+                        <td>
+                          <div class="wsg-browser-icons">안드로이드 4.x 이상, IOS 9.x 이상, 사파리, 크롬</div>
+                          <style type="text/css">
+                            .wsg-browser-icons img {
+                              width: 22px;
+                              height: 22px;
+                            }
+                          </style>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">웹 접근성</th>
+                        <td>기본 준수 or 자체 가이드 or 마크획득</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="al-l">디자인 해상도</th>
+                        <td>1200px</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //section1 -->
+
+            <!-- section2 -->
+            <section id="section2" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">파일/폴더 규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">파일구조</h3>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      파일구조
+                    </caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col style="width: 20%" />
+                      <col style="width: 30%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>분류 폴더</th>
+                        <th>구분 폴더</th>
+                        <th>파일 이름</th>
+                        <th>파일 설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>css</td>
+                        <td></td>
+                        <td>
+                          reset.css<br />
+                          common.css<br />
+                          <br />
+                          layout.css<br />
+                          content.css<br />
+                          main.css<br />
+                          icon.css<br />
+                          button.css<br />
+                          popup.css<br />
+                          popup_win.css<br />
+                          dev.css<br />
+                          webfont.css
+                        </td>
+                        <td>
+                          스타일 - 초기화<br />
+                          스타일 - 공통
+                          <br />(초기화와 공통은 필요에 따라)<br />
+                          스타일 - 레이아웃<br />
+                          스타일 - 컨텐츠/서브<br />
+                          스타일 - 메인화면<br />
+                          스타일 - 아이콘<br />
+                          스타일 - 버튼<br />
+                          스타일 - 레이어팝업<br />
+                          스타일 - 윈도우팝업(사용시에)<br />
+                          스타일 - js 관련 override<br />
+                          스타일 - 웹폰트
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>js</td>
+                        <td>
+                          common.js<br />
+                          front.ui.js
+                        </td>
+                        <td></td>
+                        <td>
+                          스크립트 - 공통 함수모아놓음<br />
+                          스크립트 - UI 스크립트
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>libs<br />(라이브러리)</td>
+                        <td>jquery.min.js</td>
+                        <td>스크립트 - Jquery Core<br /></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>addon<br />(추가기능)</td>
+                        <td>
+                          jquery.bxslider.min.js<br />
+                          jquery.mCustomScrollbar.min.js<br />
+                        </td>
+                        <td>
+                          플러그인 - BxSlider<br />
+                          플러그인 - Custom Scroller
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>DESC</td>
+                        <td colspan="3">- 상황에 따라서 맞춰서 쓰도록 한다</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">폴더구조</h3>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      폴더구조
+                    </caption>
+                    <colgroup>
+                      <col span="4" style="width: 20%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>기기 폴더</th>
+                        <th>분류 폴더</th>
+                        <th>구분 폴더1</th>
+                        <th>구분 폴더2</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td rowspan="6">
+                          mobile
+                          <br />web
+                        </td>
+                        <td>resources</td>
+                        <td>css</td>
+                        <td></td>
+                        <td>스타일</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>fonts</td>
+                        <td>웹폰트</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>js</td>
+                        <td>
+                          common<br />
+                          libs<br />
+                          addon(상황에따라)
+                        </td>
+                        <td>스크립트</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>img</td>
+                        <td>common <br />main <br />temp <br />[카테고리별]</td>
+                        <td>이미지</td>
+                      </tr>
+                      <tr>
+                        <td>html</td>
+                        <td>
+                          guide<br />
+                          [카테고리별]
+                        </td>
+                        <td></td>
+                        <td>페이지</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //section2 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>

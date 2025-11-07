@@ -9,7 +9,7 @@ const appRoot = env.parsed.APP_ENV_ROOT;
 const excludeRegExp = /(node_modules|public)/;
 // const buildPath = env.parsed.APP_ENV_URL ? `dist/${env.parsed.APP_ENV_URL}` : 'dist'
 const buildPath = '../dist';
-const pathRegExp = /views\/pages\/index.ejs/;
+const pathRegExp = /(views\/pages\/index.ejs)|(views\/pages\/guide\/)/;
 
 const stringifyValues = (object) => {
   return Object.entries(object).reduce((acc, curr) => ({...acc, [`${curr[0]}`]: JSON.stringify(curr[1])}), {});
