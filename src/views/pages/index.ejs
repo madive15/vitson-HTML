@@ -1,74 +1,511 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>main</title>
-</head>
-<body>
-  <%- include(`${_src}/views/layout/header.ejs`) %>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>프로젝트명 - 퍼블리싱 현황판</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cleartype" content="on" />
+    <meta name="Robots" content="noindex, nofollow" />
+    <meta name="msapplication-TileColor" content="#000000" />
 
-  <h1 class="text-[30px]">APP_ENV_URL : <%= APP_ENV_URL %></h1>
-  <h1 class="text-[30px]">APP_ENV_TYPE : <%= APP_ENV_TYPE %></h1>
+    <!-- front ui
+    ================================================== -->
+    <link rel="stylesheet" type="text/css" href="<%= _public %>/wsg/ia_resources/fonts/nanumsquare.css" />
+    <link rel="stylesheet" type="text/css" href="<%= _public %>/wsg/ia_resources/madive.css" />
+    <script src="<%= _public %>/wsg/ia_resources/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/ia_resources/madive.js"></script>
+  </head>
 
-  test 111
+  <body data-theme-color="#ff3399">
+    <div class="ia-wrapper">
+      <div class="ia-header-wrapper">
+        <div class="ia-section">
+          <h1 class="ia-h1">프로젝트명 - 퍼블리싱 현황판</h1>
+          <!--S:PC Case-->
+          <div class="ia-guide-link">
+            <a href="index.html" class="is-active">PC</a>
+            <a href="./_wsg/_rule/rule_intro.html">퍼블리싱가이드</a>
+          </div>
+          <!--E:PC Case-->
+          <!--S:Mobile Case-->
+          <nav class="ia-header-guide-mobile" onclick="javascript:funcIAMenuDropdown();">
+            <button type="button" class="g-node-title">WeB-OOO</button>
+            <ul>
+              <li class="is-current">
+                <a href="../../mobile/html/index.html">MOBILE-OOO</a>
+              </li>
+            </ul>
+          </nav>
+          <!--E:Mobile Case-->
+        </div>
+      </div>
+      <div class="ia-container">
+        <div class="ia-content">
+          <div class="ia-content-body">
+            <!-- Note -->
+            <section class="ia-section">
+              <div class="ia-note-wrap">
+                <div class="ia-box ia-box-note">
+                  <div class="ia-box-header">
+                    <h4 class="ia-h4">Note</h4>
+                  </div>
+                  <div class="ia-box-body">
+                    <ul class="ia-desc">
+                      <li>※ 유형 표시방법 - Html, LP : Layer Popup, WP : Window Popup</li>
+                      <li>※ IA 기준으로 목록 업데이트 필요</li>
+                      <li>1. 진척관리 - 최초 완료표시 기준으로 날짜를 표시</li>
+                      <li>2. 수정관리 - 최조 완료표시 날짜에 [YY-MM-DD/&lt;br&gt;YY-MM-DD]수정날짜를 추가한다.</li>
+                      <li>
+                        3. 결함관리 - 신규/수정/삭제 이슈가 있는 경우 소스코드와 비고란에 동일한 주석문구를 표시한다.
+                        (주석표기 예시 - 181130 홍길동 작업내용 수정)
+                      </li>
+                      <li>4. 최초 완료시 상태항목에 [완료]</li>
+                      <li>5. 상태값에 [완료] 문구 등록시 완료페이지로 표시됨.</li>
+                      <li>
+                        6. Row 컬러 상태
+                        <span class="state row-done-new">최신완료 </span>
+                        <span class="state row-done-update">기존완료지만 추가수정됨 </span>
+                        <span class="state row-done">이전완료 </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- //Note -->
 
-  <img src="<%= _src %>/assets/images/img_list01.jpg" alt="" style="width: 300px;"/>
-  <video src="<%= _src %>/assets/medias/ROSE_CAMPAIGN.mp4" style="width: 300px;"></video>
-  <%- include(`${_src}/views/components/radio.ejs`, {
-    name: 'radio001',
-    datas: [
-    {
-      value: 'value_01',
-      label: '라디오박스 01',
-      disabled: false
-    },
-    {
-      value: 'value_02',
-      label: '라디오박스 02',
-      disabled: false
-    },
-    {
-      value: 'value_03',
-      label: '라디오박스 03',
-      disabled: true
-    },
-  ]}) %>
+            <!-- Total -->
+            <section class="ia-section">
+              <div class="ia-section-body">
+                <div class="ia-h4 ia-total-legend">
+                  <span class="item c-last-date"><em>최종수정일 : </em><em class="value">1</em> /</span>
+                  <span class="item c-total"><em>총 페이지 : </em><em class="value">30</em> /</span>
+                  <span class="item c-done"><em>총 완료 : </em><em class="value">1</em> (</span>
+                  <span class="item c-done-new"><em>신규완료 : </em><em class="value">1</em> /</span>
+                  <span class="item c-done-update"><em>수정완료 : </em><em class="value">1</em> )</span>
+                </div>
+                <div class="ia-graph">
+                  <ul class="graph"></ul>
+                </div>
+              </div>
+            </section>
+            <!-- //Total -->
 
-  <div class="background-test">
-    <div class="icon-png"></div>
-    <div class="icon-svg"></div>
-  </div>
+            <!-- Guide -->
+            <section class="ia-section ia-section-list">
+              <div class="ia-section-header">
+                <h2 class="ia-h2"><a href="#this" class="ui-accordion-toggle">가이드</a></h2>
+                <div class="ia-legend">
+                  <span class="item"><em>총 페이지 : </em><em class="legend-total">30</em> /</span>
+                  <span class="item c-done"><em>완료 : </em><em class="legend-complete">1</em> /</span>
+                  <span class="item"><em>진척률 : </em><em class="legend-process">3%</em></span>
+                </div>
+              </div>
+              <div class="ia-section-body">
+                <div class="ia-tbl-wrap">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col" class="col-1depth">1Depth</th>
+                        <th scope="col" class="col-2depth">2Depth</th>
+                        <th scope="col" class="col-3depth">3Depth</th>
+                        <th scope="col">URL</th>
+                        <th scope="col" class="col-date">날짜</th>
+                        <th scope="col">상태</th>
+                        <th scope="col">비고<a href="javascript:;" class="btn-memo-all">Comment Toggle</a></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">메인</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__01_main.html" target="_blank"
+                            >00_guide/01_layout__01_main.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">서브</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__02_sub.html" target="_blank">00_guide/01_layout__02_sub.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">공통</td>
+                        <td class="col-3depth" data-label="3Depth">GNB/FOOTER</td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__03_common.html" target="_blank"
+                            >00_guide/01_layout__03_common.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-01-31</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">공통</td>
+                        <td class="col-3depth" data-label="3Depth">레이어팝업</td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__04_layer_popup.html" target="_blank"
+                            >00_guide/01_layout__04_layer_popup.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">서브 공통</td>
+                        <td class="col-3depth" data-label="3Depth">LNB</td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__05_lnb.html" target="_blank">00_guide/01_layout__05_lnb.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Layout</td>
+                        <td class="col-2depth" data-label="2Depth">서브 공통</td>
+                        <td class="col-3depth" data-label="3Depth">로케이션</td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/01_layout__06_location.html" target="_blank"
+                            >00_guide/01_layout__06_location.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Content Element</td>
+                        <td class="col-2depth" data-label="2Depth">button</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/02_content__00_ele__01_button.html" target="_blank"
+                            >00_guide/02_content__00_ele__01_button.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Content Element</td>
+                        <td class="col-2depth" data-label="2Depth">List Bullet/Step</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/02_content__00_ele__02_bullet_list.html" target="_blank"
+                            >00_guide/02_content__00_ele__02_bullet_list.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Content</td>
+                        <td class="col-2depth" data-label="2Depth">타이틀</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/02_content__01_title.html" target="_blank"
+                            >00_guide/02_content__01_title.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Content</td>
+                        <td class="col-2depth" data-label="2Depth">테이블</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/02_content__02_table.html" target="_blank"
+                            >00_guide/02_content__02_table.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Content</td>
+                        <td class="col-2depth" data-label="2Depth">TAB</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="00_guide/02_content__03_tab.html" target="_blank"
+                            >00_guide/02_content__03_tab.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜">20-10-11</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //Guide -->
 
-  <%- include(`${_src}/views/components/swiper.ejs`, {
-    name: 'swiper01 swiper-page-nav',
-    usePage: true,
-    useNav: true,
-    datas: [
-      {
-        html: `<p>Slide 1</p>`
-      },
-      {
-        html: `<p>Slide 2</p>`
-      }
-    ]
-  })%>
-  <%- include(`${_src}/views/components/swiper.ejs`, {
-    name: 'swiper02 swiper-page',
-    usePage: true,
-    useNav: false,
-    datas: [
-      {
-        html: `<p>test!!!!</p>`
-      },
-      {
-        html: `<p>test2!!!!</p>`
-      }
-    ]
-  })%>
+            <!-- Main -->
+            <section class="ia-section ia-section-list">
+              <div class="ia-section-header">
+                <h2 class="ia-h2"><a href="#this" class="ui-accordion-toggle">Main</a></h2>
+                <div class="ia-legend">
+                  <span class="item"><em>총 페이지 : </em><em class="legend-total">30</em> /</span>
+                  <span class="item c-done"><em>완료 : </em><em class="legend-complete">1</em> /</span>
+                  <span class="item"><em>진척률 : </em><em class="legend-process">3%</em></span>
+                </div>
+              </div>
+              <div class="ia-section-body">
+                <div class="ia-tbl-wrap">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col" class="col-1depth">1Depth</th>
+                        <th scope="col" class="col-2depth">2Depth</th>
+                        <th scope="col" class="col-3depth">3Depth</th>
+                        <th scope="col">URL</th>
+                        <th scope="col" class="col-date">날짜</th>
+                        <th scope="col">상태</th>
+                        <th scope="col">비고<a href="javascript:;" class="btn-memo-all">Comment Toggle</a></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Main</td>
+                        <td class="col-2depth" data-label="2Depth">메인</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="main/01_main.html" target="_blank">main/01_main.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜">20-02-28/<br />20-11-21</td>
+                        <td class="col-complete" data-label="상태">완료</td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con">
+                            [190313 OOO 수정]<br />
+                            - OOO 속성 추가<br />
+                            ---------------------------------------<br />
+                            [190321 OOO 수정]<br />
+                            - OOO 기능 추가
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">Main</td>
+                        <td class="col-2depth" data-label="2Depth">공지팝업</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="main/01_main__01_pop.html" target="_blank">main/01_main__01_pop.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //Main -->
 
-  <%- include(`${_src}/views/layout/footer.ejs`) %>
-  <!-- 퍼브릭 라이브러리 링크 테스트-->
-  <script src="<%= _public %>/lib/jquery-3.6.1.min.js"></script>
-</body>
+            <!-- Member -->
+            <section class="ia-section ia-section-list">
+              <div class="ia-section-header">
+                <h2 class="ia-h2"><a href="#this" class="ui-accordion-toggle">Member</a></h2>
+                <div class="ia-legend">
+                  <span class="item"><em>총 페이지 : </em><em class="legend-total">30</em> /</span>
+                  <span class="item c-done"><em>완료 : </em><em class="legend-complete">1</em> /</span>
+                  <span class="item"><em>진척률 : </em><em class="legend-process">3%</em></span>
+                </div>
+              </div>
+              <div class="ia-section-body">
+                <div class="ia-tbl-wrap">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col" class="col-1depth">1Depth</th>
+                        <th scope="col" class="col-2depth">2Depth</th>
+                        <th scope="col" class="col-3depth">3Depth</th>
+                        <th scope="col">URL</th>
+                        <th scope="col" class="col-date">날짜</th>
+                        <th scope="col">상태</th>
+                        <th scope="col">비고<a href="javascript:;" class="btn-memo-all">Comment Toggle</a></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">MEMBER</td>
+                        <td class="col-2depth" data-label="2Depth">로그인</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="member/01_login.html" target="_blank">member/01_login.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">MEMBER</td>
+                        <td class="col-2depth" data-label="2Depth">아이디찾기</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="member/02_find_id.html" target="_blank">member/02_find_id.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">MEMBER</td>
+                        <td class="col-2depth" data-label="2Depth">비밀번호찾기</td>
+                        <td class="col-3depth" data-label="3Depth"></td>
+                        <td class="col-url" data-label="URL">
+                          <a href="member/02_find_pw.html" target="_blank">member/02_find_pw.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">MEMBER</td>
+                        <td class="col-2depth" data-label="2Depth">가입</td>
+                        <td class="col-3depth" data-label="3Depth">01_동의</td>
+                        <td class="col-url" data-label="URL">
+                          <a href="member/03_join__01_agree.html" target="_blank">member/03_join__01_agree.html</a>
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="col-num" data-label="번호"></td>
+                        <td class="col-1depth" data-label="1Depth">MEMBER</td>
+                        <td class="col-2depth" data-label="2Depth">가입</td>
+                        <td class="col-3depth" data-label="3Depth">
+                          02_본인인증<br />
+                          - LP : OOO 팝업<br />
+                          - WP : OOO 팝업
+                        </td>
+                        <td class="col-url" data-label="URL">
+                          <a href="member/03_join__02_identity.html" target="_blank"
+                            >member/03_join__02_identity.html</a
+                          >
+                        </td>
+                        <td class="col-date" data-label="날짜"></td>
+                        <td class="col-complete" data-label="상태"></td>
+                        <td class="col-memo" data-label="비고">
+                          <button type="button" class="btn-memo">Comment</button>
+                          <div class="col-memo-con"></div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //Member -->
+          </div>
+        </div>
+      </div>
+      <script></script>
+    </div>
+  </body>
 </html>
