@@ -1,0 +1,421 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="<%= _public %>/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="<%= _public %>/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shCore.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shAutoLoader.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushjScript.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushXml.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushCss.js?cb=undefined"></script>
+    <link href="<%= _public %>/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li class="is-current">
+                <a href="rule_intro.html">규칙가이드</a>
+              </li>
+              <li>
+                <a href="../plan/plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">규칙가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="rule_intro.html">기본정책</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_standard.html">표준규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_name.html">네임규칙</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="rule_code_markup.html">HTML Markup 규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_css.html">CSS 코드규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_js.html">JS 코드규칙</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">CSS 코드 규칙</h1>
+              <small class="g-explain-h1">Publishing Conventions</small>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!-- section3 -->
+            <section id="section3" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">코드규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">CSS 기본 규칙</h3>
+                <h4 class="wsg-h4">파일명세</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									@charset "utf-8";
+									/*
+									 * 파일정의 : reset.css
+									 * 파일설명 : reset css
+									 * 작성자 :  홍길동
+									 * 주의사항 : 주석표기는 페이지 접근방법을 알수 있도록 표시
+									 * 최초작성일: 2025/01/04
+									 * 최종수정일: 2025/06/09
+									 */
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <ul class="wsg-desc-guide">
+                  <li>* 파일에 따라서 불필요한 항목은 삭제 할 수 있다. (예 : animate.css)</li>
+                </ul>
+
+                <h3 class="wsg-h3">코드 들여쓰기</h3>
+                <ul class="wsg-desc">
+                  <li>1탭 들여쓰기 하며, 1탭의 크기는 공백 4칸으로 설정한다.</li>
+                </ul>
+
+                <h4 class="wsg-h4">들여쓰기를 하지 않는 경우</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									input[type=text],
+									input[type=password] ,
+									input[data-type=date] {font-size:12px;height: 14px; line-height: 13px; border: 1px solid #e0e0e0; color: #4c5667; padding: 5px 3px 5px 10px; }
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">
+                  상위 블럭의 자식노드로 들어갈 경우 1level 까지는 가독성을 위해 1Tab 들여쓰기 가능
+                </h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									/*box grid 기본형태*/
+									.box_grid { position:relative; float:left;width:50%; overflow:hidden; padding:9px 8px 8px 9px;  }
+										.box_grid .bg_inner {position:relative; width:100%; height:100%;}
+										.box_grid .bg_inner .title_bar {position:relative; z-index:1;}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">줄바꿈</h4>
+
+                <ul class="wsg-desc">
+                  <li>공통으로 사용되는 속성의 선택자간의 줄 바꿈은 허용하며 이 외의 줄바꿈은 허용하지 않는다.</li>
+                  <li>박스단위 구분을 위해 단 사이 빈줄 추가(최대 2줄을 넘지않는다)</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									/**********************************************************************************
+									** box_grid
+									***********************************************************************************/
+									/*box grid 기본형태*/
+									.box_grid { position:relative; float:left;width:50%; overflow:hidden; padding:9px 8px 8px 9px;  }
+										.box_grid .bg_inner {position:relative; width:100%; height:100%;}
+										.box_grid .bg_inner .title_bar {position:relative; z-index:1;}
+
+									/*box grid 검색형태*/
+									.box_grid.search {overflow:hidden; margin-bottom:26px; margin-top:9px;}
+										.box_grid.search .bg_inner { float:left; width:31%; text-align:center; box-sizing:border-box; }
+										.box_grid.search .bg_inner .title_bar {position:relative; z-index:1;}
+	
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">주석/블럭구분</h3>
+
+                <h4 class="wsg-h4">CSS 주석 표기</h4>
+                <ul class="wsg-desc">
+                  <li>컨테이너 및 메뉴 구분은 하기 내용과 같은 주석으로 표시한다.</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									/**********************************************************************************
+									** wrap
+									***********************************************************************************/
+									.wrap.dashboard { height: auto; min-height: 100%; background: #f0f0f0; }
+									.wrap.dashboard .body { height: auto; }
+									
+									/**********************************************************************************
+									** dashboard-wrap
+									***********************************************************************************/
+									.dashboard-wrap { padding: 23px 25px 25px; }
+									.dashboard-wrap .dashboard-inner { position: relative; }
+									.dashboard-wrap .dashboard-inner:after { content:''; display: block; clear: both; }
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">상세 코드 규칙</h3>
+                <h4 class="wsg-h4">작은 따옴표('') 사용 범위</h4>
+                <p class="wsg-desc">폰트의 선언, filter, content에 작은 따옴표('')를 사용한다.</p>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									.class-name {font-family:'dotum';}
+									.filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img.png', sizingMethod='scale';}
+									.class-name:after{content:'.'}
+									.class-name {background:url(img.gif) no-repeat}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">세미콜론(;)</h4>
+                <p class="wsg-desc">마지막 선언된 속성에도 세미콜론(;)을 사용한다.</p>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									.class-name {margin-left:0; padding-left:10px;}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">공백의 사용</h4>
+                <p class="wsg-desc">
+                  선택자 간, 중괄호간 한칸의 공백을 사용한다, 중괄호 안쪽 좌우에는 공백은 사용하지 않는다.
+                </p>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									.class-name,
+									.class-name .child-class {background:url(../img/img.gif) no-repeat;}
+									.class-name {padding:0; margin:0;}
+									.class-name {padding:0; margin:0;}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">선택자</h3>
+                <h4 class="wsg-h4">공통 선택자</h4>
+                <p class="wsg-desc">
+                  '*' 공통 선택자는 웹 페이지의 성능을 저하를 가져오기 때문에 가급적 사용하지 않는다.
+                </p>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:css;">
+									/* 잘못된 예 */
+									* {margin:0;padding:0}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">속성의 선언 순서</h3>
+                <p class="wsg-desc">상황에 따라 다르지만 가능하면 순서를 지키도록 설정</p>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      CSS 속성선언순서
+                    </caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col style="width: 20%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>구분</th>
+                        <th>속성</th>
+                        <th>속성 값</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td rowspan="2">1. 표시</td>
+                        <td>display</td>
+                        <td>
+                          none, block, inline, inline-block, inline-table, list-item, table, table-caption, table-cell,
+                          table-column, table-column-group, table-footer-group, table-header-group, table-row,
+                          table-row-group
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>visibility</td>
+                        <td>visible, hidden, collapse</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="3">2. 위치</td>
+                        <td>position</td>
+                        <td>absolute, fixed, relative, static</td>
+                      </tr>
+                      <tr>
+                        <td>top, right, bottom, left</td>
+                        <td>length(px), %</td>
+                      </tr>
+                      <tr>
+                        <td>z-index</td>
+                        <td>number</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="2">3. 넘침/흐름</td>
+                        <td>overflow</td>
+                        <td>visible, hidden, scroll, auto</td>
+                      </tr>
+                      <tr>
+                        <td>float</td>
+                        <td>left, right, none</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="4">4. 크기/간격</td>
+                        <td>width, max-width, min-width</td>
+                        <td>auto, length(px), %</td>
+                      </tr>
+                      <tr>
+                        <td>height, max-height, min-height</td>
+                        <td>auto, length(px), %</td>
+                      </tr>
+                      <tr>
+                        <td>margin</td>
+                        <td>auto, length(px, em), %</td>
+                      </tr>
+                      <tr>
+                        <td>padding</td>
+                        <td>auto, length(px, em), %</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="2">5. 박스모양</td>
+                        <td>border</td>
+                        <td>border-width, border-style, border-color</td>
+                      </tr>
+                      <tr>
+                        <td>background</td>
+                        <td>
+                          background-color, background-image, background-repeat, background-attachment,
+                          background-position
+                        </td>
+                      </tr>
+                      <tr>
+                        <td rowspan="4">6. 폰트/정렬</td>
+                        <td>font</td>
+                        <td>font-style, font-variant, font-weigth, font-size/line-height, font-family</td>
+                      </tr>
+                      <tr>
+                        <td>color</td>
+                        <td>hex_number, hex_number</td>
+                      </tr>
+                      <tr>
+                        <td>text-align</td>
+                        <td>left, right, center, justify</td>
+                      </tr>
+                      <tr>
+                        <td>vertical-align</td>
+                        <td>top, middle, bottom, baseline</td>
+                      </tr>
+                      <tr>
+                        <td>7. 기타</td>
+                        <td></td>
+                        <td>언급되지 않은 속성들은 후순위로 적용한다.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //section3 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>
