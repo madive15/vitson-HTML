@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="../../../public/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="../../../public/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="../../../public/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <link href="../../../public/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shCore.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shAutoLoader.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushjScript.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushXml.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushPhp.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushCss.js"></script>
+  </head>
+
+  <body>
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li class="is-current">
+                <a href="rule_intro.html">규칙가이드</a>
+              </li>
+              <li>
+                <a href="../plan/plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">규칙가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="rule_intro.html">기본정책</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_standard.html">표준규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_name.html">네임규칙</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="rule_code_markup.html">HTML Markup 규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_css.html">CSS 코드규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_js.html">JS 코드규칙</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">HTML Markup 규칙</h1>
+              <small class="g-explain-h1">Publishing Conventions</small>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!-- section3 -->
+            <section id="section3" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">코드규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">코드 들여쓰기</h3>
+                <ul class="wsg-desc">
+                  <li>1탭 들여쓰기 하며, 1탭의 크기는 공백 4칸으로 설정한다.</li>
+                </ul>
+
+                <h4 class="wsg-h4">들여쓰기를 하지 않는 경우</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush: php; html-script: true">
+										&lt;!doctype html>
+										&lt;html lang="ko">
+										&lt;head>
+										&lt;/head>
+										&lt;body>
+										<div id="wrapper">
+										</div>
+										&lt;/body>
+										&lt;/html>
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">주석 / 빈줄</h3>
+                <ul class="wsg-desc">
+                  <li>가독성을 고려하여 빈 줄을 추가한다. 단, 1줄을 초과하지 않는다.</li>
+                  <li>주석은 시작과 종료를 표시한다.</li>
+                  <li>코멘트가 있을경우 Start 주석 아래에 "TODO" 한줄 추가하여 주석처리</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<!-- S:header-warpper -->
+										<header class="header-warpper">
+										</header>
+										<!-- E:header-warpper -->
+										 
+										<!-- S:container-wrapper -->
+										<!--TODO:메뉴 상태값에 따라 블라블라 -->
+										<div class="container-wrapper">
+										</div>
+										<!-- E:container-wrapper -->
+										 
+										<!-- S:footer-wrapper -->
+										<!--TODO:여러줄 상태값일경우 상태에 따라 클래스추가
+											.default : 기본상태 (클래스 없음)
+											.active : 활성화상태
+											.disabled : 사용불가
+										-->
+										<footer class="footer-wrapper">
+										</footer>
+										<!-- E:footer-wrapper -->
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">수정/추가/삭제</h3>
+                <ul class="wsg-desc">
+                  <li>조치사항 진행 결과의 주석을 남긴다. (예 : [update or 수정][날짜][조치내용][이슈])</li>
+                  <li>잦은 수정사항을 고려하여 다중구조인 경우만 닫기주석으로 범위를 표시한다.</li>
+                </ul>
+                <h4 class="wsg-h4">한줄 수정</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<div>
+											(내용생략) <!-- update 181130 한줄 수정일때  -->
+										</div>
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">영역 수정</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<!-- S:update 181130 상세내용 수정 -->
+										<div>
+											(내용생략)
+										</div>
+										<!-- E:update 181130 상세내용 수정 -->
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">클래스나 단순 영역 수정</h4>
+                <ul class="wsg-desc">
+                  <li>수정 종료태그에는 변경 상세내용은 제외</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<!-- S:update 181130 클래스 수정 / .block > .block-asd -->
+										<div>
+											(내용생략)
+										</div>
+										<!-- E:update 181130 클래스 수정 -->
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">단일항목 이슈단위 표시</h4>
+                <ul class="wsg-desc">
+                  <li>조치사항 이슈가 많은경우 이슈단위로 주석을 남긴다. (예 : [제목][조치내용][이슈])</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<!-- update 181130 접근성 title 제목문구 수정 -->
+										<div title="제목">
+											(내용생략)
+										</div>
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">Attribute 지정 순서</h3>
+                <p class="wsg-desc">기능 &gt; 이름 &gt; 정보 &gt; 선택속성 &gt; 클래스 &gt; 상태 순서로 적용한다.</p>
+                <h4 class="wsg-h4">A 엘리먼트</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<a href="#none" class="" title="새창열기" target="">인쇄하기</a>
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">Iframe 엘리먼트</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<iframe src="about:blank" title="빈프레임"></iframe>
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">Img 엘리먼트</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<img src="../../../assets/images/camera.png" class="" alt="대체텍스트" />
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">Input 엘리먼트</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:html;">
+										<input type="text" title="" class="" name="" id="" value="" disabled="disabled" />
+									</pre>
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- //section3 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>

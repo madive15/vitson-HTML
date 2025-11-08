@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="../../../public/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="../../../public/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="../../../public/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shCore.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shAutoLoader.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushjScript.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushXml.js"></script>
+    <script src="../../../public/wsg/resources/libs/codeview/scripts/shBrushCss.js"></script>
+    <link href="../../../public/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li class="is-current">
+                <a href="rule_intro.html">규칙가이드</a>
+              </li>
+              <li>
+                <a href="../plan/plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">규칙가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="rule_intro.html">기본정책</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_standard.html">표준규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_name.html">네임규칙</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="rule_code_markup.html">HTML Markup 규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_css.html">CSS 코드규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_js.html">JS 코드규칙</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">JS 코드 규칙</h1>
+              <small class="g-explain-h1">Publishing Conventions</small>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!-- section3 -->
+            <section id="section3" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">코드규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">JS 기본 규칙</h3>
+                <h4 class="wsg-h4">파일명세</h4>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:js;">
+									/*
+									 * 파일명 : common.func.js
+									 * 파일설명 : 페이지 내 공통 실행이 필요한 함수 include
+									 * 작성자 : madive
+									 * 최초작성일: 2025/01/04
+									 * 최종수정일: 2025/06/09   
+									 */
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h3 class="wsg-h3">코드 들여쓰기</h3>
+                <ul class="wsg-desc">
+                  <li>1탭 들여쓰기 하며, 1탭의 크기는 공백 4칸으로 설정한다.</li>
+                </ul>
+
+                <h3 class="wsg-h3">Function</h3>
+
+                <h4 class="wsg-h4">함수</h4>
+                <ul class="wsg-desc">
+                  <li>함수에 설명은 파라메터와 함께 꼼꼼히 작성한다</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:js;">
+										/*
+										 * date : 20250104
+										 * last : 20250609 (다중사용으로 selector 변경)
+										 * name : lnbMenuOnoff( 선택자, 상위 선택자, 보여지는 컨텐츠 선택자, 콜백함수 )
+										 * pram : el (target) / container (parent) / tg (target ele selector)
+										 * desc : 20250103 메뉴 활성화 상태와 open 상대 분리
+										 * exam :funcLnbMenuOnoff($(this), $(this).parents('.lnb-menu'));
+										 * 
+										*/
+										function funcLnbMenuOnoff (el, container, tg) {   
+											var item = $(el).parent('li');      
+											if ( $(item).hasClass ("open") ){          
+												$(item).removeClass('open');    
+											}else{
+												$(item).addClass('open');
+											}
+											return false;
+										} 
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+
+                <h4 class="wsg-h4">조건문</h4>
+                <ul class="wsg-desc">
+                  <li>K&R 방법 : 여는블록울 ({)을 같은 줄에 배치한다.</li>
+                </ul>
+                <div class="wsg-code">
+                  <div class="syntaxhighlighter">
+                    <figure class="highlight">
+                      <!-- S:pre in 보여질 코드삽입 -->
+                      <pre class="brush:js;">
+										if (조건식){
+
+										}else if (조건식){
+
+										}
+									</pre
+                      >
+                      <!-- E:pre in 보여질 코드삽입 -->
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- //section3 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>
