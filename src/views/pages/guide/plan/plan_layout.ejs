@@ -1,0 +1,737 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="<%= _public %>/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="<%= _public %>/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shCore.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shAutoLoader.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushjScript.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushXml.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushCss.js?cb=undefined"></script>
+    <link href="<%= _public %>/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li>
+                <a href="../rule/rule_intro.html">규칙가이드</a>
+              </li>
+              <li class="is-current">
+                <a href="plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">설계가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="plan_codeset.html">Codeset</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="plan_general.html">General</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="plan_layout.html">Layout</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-inner">
+            <div class="wsg-content-header">
+              <h1 class="wsg-h1">Layout</h1>
+              <p class="g-explain-h1">General, Wrapper, Content, Section</p>
+            </div>
+            <div class="wsg-content-body">
+              <!-- General Layout -->
+              <section id="gLayout1" class="wsg-section wsg-inner">
+                <div class="wsg-section-header">
+                  <h2 class="wsg-h2">General Layout</h2>
+                </div>
+                <div class="wsg-section-body">
+                  <div class="wsg-example-wrap">
+                    <div class="wsg-example-header">
+                      <strong class="wsg-example-tit is-before"></strong>
+                      <div class="wsg-example-nav">
+                        <span class="wsg-example-txt"></span>
+                        <a href="#tabContentCode1-1" class="wsg-example-btn">HTML</a>
+                        <a href="#tabContentCode1-2" class="wsg-example-btn">css</a>
+                      </div>
+                    </div>
+                    <div class="wsg-example-body">
+                      <!-- 마크업뷰영역 -->
+                      <div class="wsg-frame-wrap">
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.wrapper</p>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">#skipNav</p>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.header-wrpper</p>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.container-wrpper</p>
+                            <div class="wsg-frame">
+                              <p class="wsg-frame-title">.content-wrpper</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.modal-warpper</p>
+                        </div>
+                      </div>
+                      <!-- //마크업뷰영역 -->
+                    </div>
+                    <div id="tabContentCode1-1" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:html;">
+
+													<!--S: wrapper-->
+													<div class="wrapper">
+														<!-- S: SkipNav -->
+														<div id="skipNav"></div>
+														<!-- E: SkipNav -->
+														<!-- S: header-wrapper -->
+														<div class="header-wrapper"></div>
+														<!-- E: header-wrapper -->
+														<!-- S: container-wrapper -->
+														<div class="container-wrapper"></div>
+														<!-- E: container-wrapper -->
+														<!-- S: footer-wrapper -->
+														<div class="footer-wrapper"></div>
+														<!-- E: footer-wrapper -->
+													</div>
+													<!-- E: wrapper-->
+													<!-- S: modal-warp -->
+													<div class="modal-warpper"></div>
+													<!-- E: modal-warp -->
+												</pre>
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tabContentCode1-2" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:css;">
+												@charset 'utf-8';
+												/*
+												 * 파일정의 : layout.css
+												 * 파일설명 : 레이아웃
+												 * 작성자 :   홍길동
+												 * 주의사항 : 주석표기는 페이지 접근방법을 알수 있도록 표시
+												 * 최초작성일: 2025/01/04
+												 * 최종수정일: 2025/06/09
+												 */
+												/**********************************************************************************
+												** wrapper
+												***********************************************************************************/
+												.wrapper {}
+													 
+												/**********************************************************************************
+												** header
+												***********************************************************************************/
+												.header-wrapper {}
+												/* UNB (Util Nav) */
+												.unb-wrap {}
+
+												/* GNB (Global Nav) */
+												.gnb-wrap {}
+												 
+												/**********************************************************************************
+												** footer
+												***********************************************************************************/
+												.footer-wrapper {}
+												 	 
+												/**********************************************************************************
+												** container-wrapper
+												***********************************************************************************/
+												.container-wrapper {}
+
+												/**********************************************************************************
+												** content-wrapper
+												***********************************************************************************/
+												.content-wrapper {}
+												</pre
+                            >
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- //General Layout -->
+
+              <!-- Content Layout -->
+              <section id="gLayout2" class="wsg-section wsg-inner">
+                <div class="wsg-section-header">
+                  <h2 class="wsg-h2">Main/Sub Layout</h2>
+                </div>
+                <div class="wsg-section-body">
+                  <h3 class="wsg-h3">Main/Sub Layout</h3>
+                  <div class="wsg-example-wrap">
+                    <div class="wsg-example-header">
+                      <strong class="wsg-example-tit is-before"></strong>
+                      <div class="wsg-example-nav">
+                        <span class="wsg-example-txt"></span>
+                        <a href="#tabContentCode2-1" class="wsg-example-btn is-active">[Preview]Main</a>
+                        <a href="#tabContentCode2-2" class="wsg-example-btn">[Preview]Sub</a>
+                        <a href="#tabContentCode2-3" class="wsg-example-btn">[HTML]Main</a>
+                        <a href="#tabContentCode2-4" class="wsg-example-btn">[HTML]Sub</a>
+                        <a href="#tabContentCode2-5" class="wsg-example-btn">[CSS]Layout</a>
+                      </div>
+                    </div>
+                    <div id="tabContentCode2-1" class="wsg-example-footer is-active">
+                      <!-- 마크업뷰영역 -->
+                      <div class="wsg-frame-wrap">
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.wrapper</p>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">#skipNav</p>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.header-wrpper</p>
+                            <div class="wsg-frame">
+                              <p class="wsg-frame-title">.unb-wrap</p>
+                            </div>
+                            <div class="grid gutter-h16">
+                              <div class="col col-3">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">h1.logo</p>
+                                </div>
+                              </div>
+                              <div class="col col-9">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.gnb-wrap</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.container-wrapper</p>
+                            <div class="wsg-frame">
+                              <p class="wsg-frame-title">.content-wrapper</p>
+                              <div class="wsg-frame">
+                                <p class="wsg-frame-title">.content-header</p>
+                                <p class="wsg-frame-cont">h3</p>
+                              </div>
+                              <div class="wsg-frame">
+                                <p class="wsg-frame-title">.content-body</p>
+                                <p class="wsg-frame-cont">h4</p>
+                                <div class="wsg-frame wsg-frame-section">
+                                  <p class="wsg-frame-title">.section-wrap.섹션명1-sec</p>
+                                </div>
+                                <div class="wsg-frame wsg-frame-section">
+                                  <p class="wsg-frame-title">.section-wrap.섹션명2-sec</p>
+                                </div>
+                                <div class="wsg-frame wsg-frame-section">
+                                  <p class="wsg-frame-title">.section-wrap.섹션명3-sec</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.footer-wrpper</p>
+                          </div>
+                        </div>
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.modal-warp</p>
+                        </div>
+                      </div>
+                      <!-- //마크업뷰영역 -->
+                    </div>
+                    <div id="tabContentCode2-2" class="wsg-example-footer">
+                      <!-- 마크업뷰영역 -->
+                      <div class="wsg-frame-wrap">
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.wrapper</p>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">#skipNav</p>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.header-wrpper</p>
+                            <div class="wsg-frame">
+                              <p class="wsg-frame-title">.unb-wrap</p>
+                            </div>
+                            <div class="grid gutter-h16">
+                              <div class="col col-3">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">h1.logo</p>
+                                </div>
+                              </div>
+                              <div class="col col-9">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.gnb-wrap</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.container-wrapper</p>
+                            <div class="grid gutter-h16">
+                              <div class="col col-3">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.aside-wrapper</p>
+                                  <div class="wsg-frame">
+                                    <p class="wsg-frame-title">.aside-header</p>
+                                    <p class="wsg-frame-cont">h2</p>
+                                  </div>
+                                  <div class="wsg-frame">
+                                    <p class="wsg-frame-title">.aside-body</p>
+                                    <div class="wsg-frame">
+                                      <p class="wsg-frame-title">.snb-wrap</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col col-9">
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.content-wrapper</p>
+                                  <div class="wsg-frame">
+                                    <p class="wsg-frame-title">.content-header</p>
+                                    <p class="wsg-frame-cont">h3</p>
+                                  </div>
+                                  <div class="wsg-frame">
+                                    <p class="wsg-frame-title">.content-body</p>
+                                    <p class="wsg-frame-cont">h4</p>
+                                    <div class="wsg-frame wsg-frame-section">
+                                      <p class="wsg-frame-title">.section-wrap.섹션명1-sec</p>
+                                    </div>
+                                    <div class="wsg-frame wsg-frame-section">
+                                      <p class="wsg-frame-title">.section-wrap.섹션명2-sec</p>
+                                    </div>
+                                    <div class="wsg-frame wsg-frame-section">
+                                      <p class="wsg-frame-title">.section-wrap.섹션명3-sec</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col col-1"></div>
+                            </div>
+                          </div>
+                          <div class="wsg-frame">
+                            <p class="wsg-frame-title">.footer-wrpper</p>
+                          </div>
+                        </div>
+                        <div class="wsg-frame">
+                          <p class="wsg-frame-title">.modal-warp</p>
+                        </div>
+                      </div>
+                      <!-- //마크업뷰영역 -->
+                    </div>
+                    <div id="tabContentCode2-3" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:html;">
+
+													<!--S: wrapper-->
+													<div class="wrapper">
+														<!-- S: SkipNav -->
+														<div id="skipNav"></div>
+														<!-- E: SkipNav -->
+														<!-- S: header-wrapper -->
+														<div class="header-wrapper">
+															<div class="unb-wrap"></div>
+															<h1 class="logo"></h1>
+															<div class="gnb-wrap"></div>
+														</div>
+														<!-- E: header-wrapper -->
+														<!-- S: container-wrapper -->
+														<div class="container-wrapper">
+															<!--S: content-wrapper-->
+															<div class="content-wrapper">
+																<!--S: content-header-->
+																<div class="content-header"><h3>타이틀</h3></div>
+																<!--E: content-header-->
+																<!--S: content-body-->
+																<div class="content-body">
+																	<h4>타이틀</h4>
+																	<!--S: section-wrap-->
+																	<div class="section-wrap"></div>
+																	<!--E: section-wrap-->
+																</div>
+																<!--E: content-body-->
+															</div>
+															<!--E: content-wrapper-->
+														</div>
+														<!-- E: container-wrapper -->
+														<!-- S: footer-wrapper -->
+														<div class="footer-wrapper"></div>
+														<!-- E: footer-wrapper -->
+													</div>
+													<!-- E: wrapper-->
+													<!-- S: modal-warp -->
+													<div class="modal-warpper"></div>
+													<!-- E: modal-warp -->
+												</pre>
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tabContentCode2-4" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:html;">
+
+													<!--S: wrapper-->
+													<div class="wrapper sub-wrapper">
+														<!-- S: SkipNav -->
+														<div id="skipNav"></div>
+														<!-- E: SkipNav -->
+														<!-- S: header-wrapper -->
+														<div class="header-wrapper">
+															<div class="unb-wrap"></div>
+															<h1 class="logo"></h1>
+															<div class="gnb-wrap"></div>
+														</div>
+														<!-- E: header-wrapper -->
+														<!-- S: container-wrapper -->
+														<div class="container-wrapper">
+															<!--S:aside-wrapper-->
+															<div class="aside-wrapper">
+																<div class="aside-header"><h2>타이틀</h2></div>
+																<div class="aside-body">
+																	<div class="snb-wrap"></div>
+																</div>
+															</div>
+															<!--E: aside-wrapper-->
+															<!--S: content-wrapper-->
+															<div class="content-wrapper">
+																<!--S: content-header-->
+																<div class="content-header"><h3>타이틀</h3></div>
+																<!--E: content-header-->
+																<!--S: content-body-->
+																<div class="content-body">
+																	<h4>타이틀</h4>
+																	<!--S: section-wrap-->
+																	<div class="section-wrap"></div>
+																	<!--E: section-wrap-->
+																</div>
+																<!--E: content-body-->
+															</div>
+															<!--E: content-wrapper-->
+														</div>
+														<!-- E: container-wrapper -->
+														<!-- S: footer-wrapper -->
+														<div class="footer-wrapper"></div>
+														<!-- E: footer-wrapper -->
+													</div>
+													<!-- E: wrapper-->
+													<!-- S: modal-warp -->
+													<div class="modal-warpper"></div>
+													<!-- E: modal-warp -->
+												</pre>
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tabContentCode2-5" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:css;">
+												@charset 'utf-8';
+												/*
+												 * 파일정의 : layout.css
+												 * 파일설명 : 레이아웃
+												 * 작성자 :  홍길동
+												 * 주의사항 : 주석표기는 페이지 접근방법을 알수 있도록 표시
+												 * 최초작성일: 2025/01/04
+												 * 최종수정일: 2025/06/09
+												 */
+												/**********************************************************************************
+												** wrapper
+												***********************************************************************************/
+												.wrapper {}
+												.wrapper.sub-wrapper {}
+												.wrapper.sub-wrapper .content-wrapper {margin-left:20px; width:calc(80% - 20px);}
+													 
+												 
+												/**********************************************************************************
+												** header
+												***********************************************************************************/
+												.header-wrapper {}
+												.header-wrapper:after { content: ''; display: block; clear: both; }
+												/* UNB (Util Nav) */
+												.header-wrapper .unb-wrap {}
+
+												/* GNB (Global Nav) */
+												.header-wrapper .gnb-wrap {}
+												 
+												/**********************************************************************************
+												** footer
+												***********************************************************************************/
+												.footer-wrapper {}
+												 	 
+												/**********************************************************************************
+												** container
+												***********************************************************************************/
+												.container-wrapper {}
+												.container-wrapper:after { content: ''; display: block; clear: both; }
+
+												/**********************************************************************************
+												** aside-wrapper
+												***********************************************************************************/
+												.aside-wrapper {width:20%;}
+													.aside-wrapper .aside-header {}
+													.aside-wrapper .aside-body {}
+
+													/* SNB (Sub Nav) */
+													.aside-wrapper .aside-body .snb-wrap {}
+
+												/**********************************************************************************
+												** content-wrapper
+												***********************************************************************************/
+												.content-wrapper {width:100%;}
+
+													.content-wrapper .content-header {}
+													.content-wrapper .content-body {}
+
+													.content-wrapper .content-body .section-wrap {}
+
+												</pre
+                            >
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- //Content Layout -->
+
+              <!-- Popup Layout -->
+              <section id="gLayout3" class="wsg-section wsg-inner">
+                <div class="wsg-section-header">
+                  <h2 class="wsg-h2">Layer Popup Layout</h2>
+                </div>
+                <div class="wsg-section-body">
+                  <div class="wsg-example-wrap">
+                    <div class="wsg-example-header">
+                      <strong class="wsg-example-tit is-before"></strong>
+                      <div class="wsg-example-nav">
+                        <span class="wsg-example-txt"></span>
+                        <a href="#tabContentCode3-1" class="wsg-example-btn">HTML</a>
+                        <a href="#tabContentCode3-2" class="wsg-example-btn">CSS</a>
+                      </div>
+                    </div>
+                    <div class="wsg-example-body">
+                      <!-- 마크업뷰영역 -->
+                      <div class="wsg-frame-wrap">
+                        <div class="row gutter-h16">
+                          <div class="col col-3"></div>
+                          <div class="col col-6">
+                            <div class="wsg-frame">
+                              <p class="wsg-frame-title">.modal-wrapper.modal-[type].modal-[name]</p>
+                              <div class="wsg-frame">
+                                <p class="wsg-frame-title">.modal-overlay(뒷배경 막힘)</p>
+                              </div>
+                              <div class="wsg-frame">
+                                <p class="wsg-frame-title">.modal-wrap</p>
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.modal-header-h1</p>
+                                </div>
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.modal-body</p>
+                                  <div class="wsg-frame wsg-frame-section">
+                                    <p class="wsg-frame-title">.section-wrap</p>
+                                  </div>
+                                </div>
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.modal-footer</p>
+                                </div>
+                                <div class="wsg-frame">
+                                  <p class="wsg-frame-title">.modal-close</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col col-3"></div>
+                        </div>
+                      </div>
+                      <!-- //마크업뷰영역 -->
+                    </div>
+                    <div id="tabContentCode3-1" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:html;">
+													<!--S: modal-[name]-->
+													<div class="modal-wrapper modal-[type] modal-[name]">
+														<div class="modal-overlay"></div>
+														<!--S: modal-wrap-->
+														<div class="modal-wrap">
+															<!--S: modal-header-->
+															<div class="modal-header">
+																<h1>h1</h1>
+															</div>
+															<!--E: modal-header-->
+															<!--S: modal-body-->
+															<div class="modal-body">
+																<div class="section-wrap [섹션명]-sec">
+																	<section class="section"></section>
+																</div>
+															</div>
+															<!--E: modal-body-->
+															<!--S: modal-footer-->
+															<div class="modal-footer"></div>
+															<!--E: modal-footer-->
+															<!--S: modal-close-->
+															<div class="modal-close"></div>
+															<!--E: modal-close-->
+														</div>
+														<!--E: modal-wrap-->
+													</div>
+													<!--E: modal-[name]-->
+												</pre>
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tabContentCode3-2" class="wsg-example-footer">
+                      <div class="wsg-code">
+                        <div class="syntaxhighlighter">
+                          <figure class="highlight">
+                            <!-- S:pre in 보여질 코드삽입 -->
+                            <pre class="brush:css;">
+												@charset 'utf-8';
+												/*
+												 * 파일정의 : modal.css
+												 * 파일설명 : 레이아웃
+												 * 작성자 :  홍길동
+												 * 주의사항 : 주석표기는 페이지 접근방법을 알수 있도록 표시
+												 * 최초작성일: 2025/01/04
+												 * 최종수정일: 2025/06/09
+												 */
+												/**********************************************************************************
+												** modal-wrapper
+												***********************************************************************************/
+												.modal-wrapper {}
+												.modal-wrapper .modal-overlay {}
+
+
+												/* type/size */
+												.modal-wrapper.modal-sm {width:400px;}
+												.modal-wrapper.modal-md {width:550px;}
+												.modal-wrapper.modal-lg {width:800px;}
+													 
+												/**********************************************************************************
+												** header
+												***********************************************************************************/
+												.header-wrapper {}
+												.header-wrapper:after { content: ''; display: block; clear: both; }
+												/* UNB (Util Nav) */
+												.header-wrapper .unb-wrap {}
+
+												/* GNB (Global Nav) */
+												.header-wrapper .gnb-wrap {}
+												 
+												/**********************************************************************************
+												** footer
+												***********************************************************************************/
+												.footer-wrapper {}
+												 	 
+												/**********************************************************************************
+												** container
+												***********************************************************************************/
+												.container-wrapper {}
+												.container-wrapper:after { content: ''; display: block; clear: both; }
+
+												/**********************************************************************************
+												** aside-wrapper
+												***********************************************************************************/
+												.aside-wrapper {width:20%;}
+													.aside-wrapper .aside-header {}
+													.aside-wrapper .aside-body {}
+
+													/* SNB (Sub Nav) */
+													.aside-wrapper .aside-body .snb-wrap {}
+
+												/**********************************************************************************
+												** content-wrapper
+												***********************************************************************************/
+												.content-wrapper {width:100%;}
+
+													.content-wrapper .content-header {}
+													.content-wrapper .content-body {}
+
+													.content-wrapper .content-body .section-wrap {}
+
+												</pre
+                            >
+                            <!-- E:pre in 보여질 코드삽입 -->
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- //Popup Layout -->
+            </div>
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>
