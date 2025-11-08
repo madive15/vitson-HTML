@@ -1,0 +1,834 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="<%= _public %>/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="<%= _public %>/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shCore.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shAutoLoader.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushjScript.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushXml.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushCss.js?cb=undefined"></script>
+    <link href="<%= _public %>/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li class="is-current">
+                <a href="rule_intro.html">규칙가이드</a>
+              </li>
+              <li>
+                <a href="../plan/plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <!-- Prototype --><!-- //Prototype --><!-- Convention -->
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">규칙가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="rule_intro.html">기본정책</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_standard.html">표준규칙</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="rule_name.html">네임규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_markup.html">HTML Markup 규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_css.html">CSS 코드규칙</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="rule_code_js.html">JS 코드규칙</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">네임규칙</h1>
+              <small class="g-explain-h1">Publishing Conventions</small>
+              <div class="g-guideLink">
+                <a href="#section1" daalign-role="spy-scroll">기본정책</a>
+                <a href="#section2" daalign-role="spy-scroll">네임규칙</a>
+                <a href="#section3" daalign-role="spy-scroll">코드규칙</a>
+                <a href="#section4" daalign-role="spy-scroll">표준규칙</a>
+              </div>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!-- section2 -->
+            <section id="section2" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">네이밍 규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">일반규칙</h3>
+                <ul class="wsg-desc">
+                  <li>이름은 영문 소문자, 숫자, 언더스코어(_), 하이픈(-)으로 작성한다.</li>
+                  <li>시작이름은 영문 대문자, 숫자로 시작할 수 없다.</li>
+                </ul>
+
+                <h3 class="wsg-h3">표기법</h3>
+                <ul class="wsg-desc">
+                  <li>일반 클래스명과 스크립트에서 사용되는 클래스명의 동일사용을 지양한다.</li>
+                  <li>클래스 예약어는 상황에 맞게 선택적으로 참고한다.</li>
+                  <li>js-접두어를 사용하는 클래스는 디자인을 위한 CSS로 해당 클래스에 스타일을 정의하지 않는다.</li>
+                  <li>단, 공통적으로 기능을 정의하는 경우에는 별도의 CSS로 분리하도록 한다.</li>
+                </ul>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      공통 네이밍 규칙 예
+                    </caption>
+                    <colgroup>
+                      <col style="width: 15%" />
+                      <col />
+                      <col style="width: 20%" />
+                      <col style="width: 18%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>종류</th>
+                        <th>설명</th>
+                        <th>구분</th>
+                        <th>번호</th>
+                        <th>예시</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="al-l">ID Selector</td>
+                        <td class="al-l">아이디 셀렉터</td>
+                        <td class="al-l">카멜표기법 (camelCase)</td>
+                        <td class="al-l">한 자리수 (생략가능, 2, 3)</td>
+                        <td class="al-l">errorMesage, controlCenter, controlCenter2</td>
+                      </tr>
+                      <tr>
+                        <td class="al-l">Class Selector</td>
+                        <td class="al-l">스타일 정의를 위한 표기</td>
+                        <td class="al-l">스네이크 표기법 (hyphen-nate)</td>
+                        <td class="al-l">한 자리수 (생략가능, 2, 3)</td>
+                        <td class="al-l">tab-page, tbl-type1, tbl-type2</td>
+                      </tr>
+                      <tr>
+                        <td class="al-l">JS Class Selector</td>
+                        <td class="al-l">스크립트에서 사용되는 클래스명은 js-접두어 사용</td>
+                        <td class="al-l">스네이크 표기법 (hyphen-nate)</td>
+                        <td class="al-l">한 자리수 (생략가능, 2, 3)</td>
+                        <td class="al-l">js-tab-page, js-tbl-type1, js-tbl-type2</td>
+                      </tr>
+                      <tr>
+                        <td class="al-l">Image</td>
+                        <td class="al-l"></td>
+                        <td class="al-l">스네이크 표기법 (underbar_nate)</td>
+                        <td class="al-l">두 자리수 (01, 02, 03)</td>
+                        <td class="al-l">btn_cancle01_off.gif</td>
+                      </tr>
+                      <tr>
+                        <td class="al-l">파일 및 폴더</td>
+                        <td class="al-l"></td>
+                        <td class="al-l">스네이크 표기법 (underbar_nate)</td>
+                        <td class="al-l">두 자리수 (01, 02, 03)</td>
+                        <td class="al-l">cyber_center</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">파일 및 폴더 네이밍 규칙</h3>
+                <ul class="wsg-desc">
+                  <li>스네이크 표기법(underbar_nate)을 사용한다.</li>
+                  <li>파스칼 표기법은 사용하지 않는다.</li>
+                  <li>* 파스칼 표기법 : 모든 단어에서 첫번째 문자는 대문자이며 나머지는 소문자이다.(예: PascalCase)</li>
+                  <li>
+                    * 카멜 표기법 : 각 단어의 첫문자를 대문자로 표기하고 붙여쓰되, 맨처음 문자는 소문자로 표기한다.(예:
+                    PascalCase)
+                  </li>
+                </ul>
+              </div>
+            </section>
+            <section id="section3" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">Layout Selector(ID/Class)</h2>
+              </div>
+              <div class="wsg-section-body">
+                <ul class="wsg-desc">
+                  <li>
+                    개발 케이스에 따라서 중복 아이디가 사용될 수 있으므로
+                    <span class="wsg-txt-red">최상위 레이아웃, 폼 요소, 책갈피를 제외하고 id를 사용하지 않는다.</span>
+                  </li>
+                  <li>레이어 팝업의 경우 각 팝업의 이름을 제외하고 절대 공통아이디로 사용 할 수 없다.</li>
+                  <li>최상위 레이아웃, 폼 요소, 책갈피를 제외하고 ID를 사용하지 않는다.</li>
+                </ul>
+                <h4 class="wsg-h4">예약어</h4>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      예약어
+                    </caption>
+                    <colgroup>
+                      <col span="2" style="width: 25%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>구분</th>
+                        <th>예약어</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td rowspan="8">사이트 레이아웃</td>
+                        <td>wrapper</td>
+                        <td>사이트 전체영역</td>
+                      </tr>
+                      <tr>
+                        <td>#skipNav</td>
+                        <td>바로가기 영역</td>
+                      </tr>
+                      <tr>
+                        <td>header</td>
+                        <td>머리글 영역</td>
+                      </tr>
+                      <tr>
+                        <td>container</td>
+                        <td>페이지 영역</td>
+                      </tr>
+                      <tr>
+                        <td>aside</td>
+                        <td>사이드 영역</td>
+                      </tr>
+                      <tr>
+                        <td>content</td>
+                        <td>본문 영역</td>
+                      </tr>
+                      <tr>
+                        <td>footer</td>
+                        <td>바닥글 영역</td>
+                      </tr>
+                      <tr>
+                        <td>modal-wrapper/modal-[name]</td>
+                        <td>레이어팝업</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">레이아웃 네이밍 구조</h3>
+                <ul class="wsg-desc">
+                  <li>최상위 레이아웃, 폼 요소, 책갈피를 제외하고 ID를 사용하지 않는다.</li>
+                </ul>
+                <h4 class="wsg-h4">레이아웃 네이밍 구조</h4>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      예약어
+                    </caption>
+                    <colgroup>
+                      <col style="width: 90px" />
+                      <col style="width: 150px" />
+                      <col style="width: 140px" />
+                      <col style="width: 140px" />
+                      <col style="width: 15%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>구분</th>
+                        <th>Level 1</th>
+                        <th>Level 2</th>
+                        <th>Level 3</th>
+                        <th>Level 4</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>wrapper</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>사이트 전체영역</td>
+                      </tr>
+                      <tr>
+                        <td>#skipNav</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>상황에따라 맞춰서 위치 지정되도록 한다</td>
+                      </tr>
+                      <tr>
+                        <td>modal-wrapper</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>구조는 디자인에 따라 맞춰서 위치 지정되도록 한다</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>header-wrapper</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>머리글 영역</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          header-inner <br />
+                          > section
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <span class="wsg-txt-red">*디자인에 따라 생략가능</span>
+                          <br /><span class="wsg-txt-red">*반응형이거나 사이트 특성에따라</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>unb-wrap</td>
+                        <td></td>
+                        <td>util navi</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>gnb-wrap</td>
+                        <td></td>
+                        <td>gloabal navi</td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td></td>
+                        <td>container-wrapper</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>컨텐츠 영역</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          container-inner <br />
+                          > section
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <span class="wsg-txt-red">*디자인에 따라 생략가능</span>
+                          <br /><span class="wsg-txt-red">*반응형이거나 사이트 특성에따라</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>aside-wrapper</td>
+                        <td></td>
+                        <td>left menu</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>content-wrapper</td>
+                        <td></td>
+                        <td>컨텐츠 전체영역</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>content-header</td>
+                        <td>컨텐츠 헤더/페이지헤더</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>content-body</td>
+                        <td>컨텐츠바디</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>content-footer</td>
+                        <td>컨텐츠푸터</td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td></td>
+                        <td>footer-wrapper</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>푸터 영역</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          footer-inner <br />
+                          > section
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <span class="wsg-txt-red">*디자인에 따라 생략가능</span>
+                          <br /><span class="wsg-txt-red">*반응형이거나 사이트 특성에따라</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>fnb-wrap</td>
+                        <td></td>
+                        <td>푸터메뉴</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>footer-wrap</td>
+                        <td></td>
+                        <td>푸터메뉴</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">단계 규칙</h3>
+                <ul class="wsg-desc">
+                  <li>lnb, anb, mnb, snb의 메뉴구조는 클래스의 통일성을 갖춘다. (메뉴구조 복붙 고려)</li>
+                  <li>fnb, gnb, unb, qnb의 메뉴구조는 클래스를 생략 할 수 있다.</li>
+                </ul>
+
+                <h4 class="wsg-h4">단계 레벨</h4>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <colgroup>
+                      <col />
+                      <col />
+                      <col />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">level 1</th>
+                        <th scope="col">level 2</th>
+                        <th scope="col">level 3</th>
+                        <th scope="col">level common</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>.[*]-wrapper</td>
+                        <td>.[*]-wrap <br />.[*]-area</td>
+                        <td>.[*]-group <br />.[*]-box <br />.[*]-grid <br />.[*]-section/sec</td>
+                        <td>.[*]-inner</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h4 class="wsg-h4">단계 정의</h4>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col />
+                      <col />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">규칙</th>
+                        <th scope="col">정의</th>
+                        <th scope="col">설명</th>
+                        <th scope="col">예제</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>.node[n]-wrapper</td>
+                        <td>[n]단계 컨테이너 <br />[메뉴카테고리] 대 컨테이너</td>
+                        <td>전체 첫번째 컨테이너를 구분짓는 이름</td>
+                        <td>
+                          header-wrapper
+                          <br />body-wrapper <br />member-join-wrapper : 메뉴명
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>.node[n]-wrap <br />.node[n]-area</td>
+                        <td>[n]단계 모듈 또는 컨포넌트 등</td>
+                        <td>컨테이너 다음으로 사용가능한 이름</td>
+                        <td>
+                          prd-list-wrap > ul
+                          <br />main-banner-wrap > ul <br />search-wrap <br />table-area <br />tbl-row-area
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          .node[n]-group <br />.node[n]-box <br />.node[n]-grid <br />.node[n]-section
+                          <br />.node[n]-sec
+                        </td>
+                        <td>[n]단계 그룹으로 묶이는 컨텐츠들</td>
+                        <td>wrap 다음 단계에 사용 가능한 이름</td>
+                        <td>
+                          table-title-group
+                          <br />table-title-group <br />table-header-group
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>.node[n]-inner</td>
+                        <td>[n]단계 위치 상관없이 공통 사용 가능</td>
+                        <td>상황에 따라 -inner 를 사용</td>
+                        <td>.banner-title-group > banner-title-group-inner</td>
+                      </tr>
+                      <tr>
+                        <td>ul.node[n]-list</td>
+                        <td>[n]단계 가지 목록</td>
+                        <td>
+                          - ul 상위에 컨테이너 사용이 필요한경우 반드시 wrap/group/area 등 으로 사용필요
+                          <br />- 단 group/box 보다 wrap이 큰단위임
+                        </td>
+                        <td>
+                          .prd-list
+                          <br />.member-list <br />.notice-list
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>li.node[n]-item</td>
+                        <td>[n]단계 가지 항목</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>a.node[n]-link</td>
+                        <td>[n]단계 가지 링크 (클래스 사용권장)</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>span.node[n]-text/txt</td>
+                        <td>[n]단계 가지 텍스트</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>button.btn-node[n]</td>
+                        <td>기능을 제공하는 버튼</td>
+                        <td></td>
+                        <td>.btn-prev/.btn-next</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">Class Selector</h3>
+                <ul class="wsg-desc">
+                  <li>체인 선택자(멀티클래스)의 개수는 3개까지 권장한다.</li>
+                  <li>클래스 예약어는 상황에 맞게 선택적으로 참고한다.</li>
+                  <li>
+                    레이아웃에 한하여 정의된 예시이며, 자세한 내용은
+                    <a href="/_wsg/html/plan/plan_layout.html" class="wsg-txt-primary">설계가이드</a>를 참고한다.
+                  </li>
+                </ul>
+                <h4 class="wsg-h4">예약어</h4>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      예약어
+                    </caption>
+                    <colgroup>
+                      <col span="2" style="width: 25%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>구분</th>
+                        <th>예약어</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td rowspan="7">네비게이션</td>
+                        <td>.anb</td>
+                        <td>전체메뉴 (All Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td>.gnb</td>
+                        <td>사이트메뉴 (Global Navigation Bar) : 자사 사이트단위 링크(채널사이트, 다국어 등)</td>
+                      </tr>
+                      <tr>
+                        <td>.lnb</td>
+                        <td>주메뉴 (Location Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td>.mnb</td>
+                        <td>모바일 (Mobile Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td>.snb</td>
+                        <td>서브메뉴 (Sub Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td>.qnb</td>
+                        <td>빠른메뉴 (Quick Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td>.fnb</td>
+                        <td>바닥글메뉴 (Footer Navigation Bar)</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="7">컨텐츠 레이아웃</td>
+                        <td>.content</td>
+                        <td>본문 영역</td>
+                      </tr>
+                      <tr>
+                        <td>.content-header</td>
+                        <td>본문 헤더 영역</td>
+                      </tr>
+                      <tr>
+                        <td>.content-body</td>
+                        <td>본문 내용 영역</td>
+                      </tr>
+                      <tr>
+                        <td>.content-footer</td>
+                        <td>본문 푸터 영역</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <section id="section4" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">기타 네이밍 규칙</h2>
+              </div>
+              <div class="wsg-section-body">
+                <h3 class="wsg-h3">이미지 예약어</h3>
+                <ul class="wsg-desc">
+                  <li>종류별로 스프라이트 방식을 적용한다.</li>
+                  <li>이미지 네이밍의 조합은 '형태_의미_순서_상태'의 순서로 조합한다.</li>
+                </ul>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      이미지 예약어
+                    </caption>
+                    <colgroup>
+                      <col span="2" style="width: 25%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>분류</th>
+                        <th>파일명</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>버튼</td>
+                        <td>btn_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>아이콘</td>
+                        <td>ico_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>화살표</td>
+                        <td>arw_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>배경</td>
+                        <td>bg_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>비주얼</td>
+                        <td>visual_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>일반</td>
+                        <td>img_</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>임시</td>
+                        <td>tmp_/temp_</td>
+                        <td>관리자나 사용자에 의해 등록될 이미지 영역으로 기본코딩을 위한 임시이미지</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h3 class="wsg-h3">반의어</h3>
+                <ul class="wsg-desc">
+                  <li>반의어는 반드시 대응하는 개념으로 사용해야 한다.</li>
+                </ul>
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <colgroup>
+                      <col style="width: 20%" />
+                      <col style="width: 25%" />
+                      <col />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>word</th>
+                        <th>word</th>
+                        <th>설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>set</td>
+                        <td>get</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>add</td>
+                        <td>remove/delete</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>insert</td>
+                        <td>delete</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>start</td>
+                        <td>end/stop</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>increment</td>
+                        <td>decrement</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>old</td>
+                        <td>new</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>begin</td>
+                        <td>end</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>first</td>
+                        <td>last</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>up</td>
+                        <td>down</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>min</td>
+                        <td>max</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>next</td>
+                        <td>previeus/prev</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>open</td>
+                        <td>close</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>show</td>
+                        <td>hide</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //section2 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>

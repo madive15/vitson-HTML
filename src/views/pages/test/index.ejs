@@ -1,0 +1,74 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+</head>
+<body>
+  <%- include(`${_src}/views/layout/header.ejs`) %>
+
+  <h1 class="text-[30px]">APP_ENV_URL : <%= APP_ENV_URL %></h1>
+  <h1 class="text-[30px]">APP_ENV_TYPE : <%= APP_ENV_TYPE %></h1>
+
+  test 111
+
+  <img src="<%= _src %>/assets/images/img_list01.jpg" alt="" style="width: 300px;"/>
+  <video src="<%= _src %>/assets/medias/ROSE_CAMPAIGN.mp4" style="width: 300px;"></video>
+  <%- include(`${_src}/views/components/radio.ejs`, {
+    name: 'radio001',
+    datas: [
+    {
+      value: 'value_01',
+      label: '라디오박스 01',
+      disabled: false
+    },
+    {
+      value: 'value_02',
+      label: '라디오박스 02',
+      disabled: false
+    },
+    {
+      value: 'value_03',
+      label: '라디오박스 03',
+      disabled: true
+    },
+  ]}) %>
+
+  <div class="background-test">
+    <div class="icon-png"></div>
+    <div class="icon-svg"></div>
+  </div>
+
+  <%- include(`${_src}/views/components/swiper.ejs`, {
+    name: 'swiper01 swiper-page-nav',
+    usePage: true,
+    useNav: true,
+    datas: [
+      {
+        html: `<p>Slide 1</p>`
+      },
+      {
+        html: `<p>Slide 2</p>`
+      }
+    ]
+  })%>
+  <%- include(`${_src}/views/components/swiper.ejs`, {
+    name: 'swiper02 swiper-page',
+    usePage: true,
+    useNav: false,
+    datas: [
+      {
+        html: `<p>test!!!!</p>`
+      },
+      {
+        html: `<p>test2!!!!</p>`
+      }
+    ]
+  })%>
+
+  <%- include(`${_src}/views/layout/footer.ejs`) %>
+  <!-- 퍼브릭 라이브러리 링크 테스트-->
+  <script src="<%= _public %>/lib/jquery-3.6.1.min.js"></script>
+</body>
+</html>

@@ -1,7 +1,8 @@
-const webpack = require('webpack')
-const path = require('path')
-const env = require('./env.cjs')
-const parser = require('./parser.cjs')
+const webpack = require('webpack');
+const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+const env = require('./env.cjs');
+const parser = require('./parser.cjs');
 
 module.exports = (dirPath, {envType, envRoot}) => ({
   entry: {
@@ -17,7 +18,7 @@ module.exports = (dirPath, {envType, envRoot}) => ({
   },
   resolve: {
     alias: {
-      '@': path.resolve(dirPath, 'src/'),
+      '@': path.resolve(dirPath, 'src/')
       // '#': path.resolve(__dirname, 'scss-modules/')
     },
     extensions: ['.ts', '.js']
@@ -75,6 +76,17 @@ module.exports = (dirPath, {envType, envRoot}) => ({
   plugins: [
     new webpack.DefinePlugin({
       ...parser.stringifyValues(env.parsed)
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'public',
+          to: 'public',
+          globOptions: {
+            // ignore: ['**/lib/**']
+          }
+        }
+      ]
     })
   ].concat(parser.createCopyPattern(['assets/datas']))
-})
+});

@@ -5,14 +5,12 @@ module.exports = {
     node: true,
     es6: true
   },
-  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
-  plugins: ['prettier'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+  plugins: ['@typescript-eslint', 'prettier'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: '@babel/eslint-parser',
     ecmaVersion: 'latest',
-    sourceType: 'module',
-    allowImportExportEverywhere: true,
-    requireConfigFile: false
+    sourceType: 'module'
   },
   rules: {
     'no-unused-vars': 'warn'
@@ -23,4 +21,4 @@ module.exports = {
     APP_ENV_TYPE: true,
     APP_ENV_URL: true
   }
-}
+};

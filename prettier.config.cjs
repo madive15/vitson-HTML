@@ -9,5 +9,13 @@ module.exports = {
   proseWrap: 'preserve',
   tabWidth: 2,
   trailingComma: 'none',
-  useTabs: false
+  useTabs: false,
+  overrides: [
+    {
+      files: ['*.ejs'],
+      options: {
+        parser: 'html'
+      }
+    }
+  ]
 };

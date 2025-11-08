@@ -1,0 +1,945 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>웹퍼블리싱가이드 - Standard Guide</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta name="Robots" content="noindex, nofollow" />
+    <!-- Front CSS-->
+    <link href="<%= _public %>/wsg/resources/css/common.css" rel="stylesheet" />
+
+    <!-- JS/Guide -->
+    <script src="<%= _public %>/wsg/resources/libs/jquery-3.3.1.min.js"></script>
+    <script src="<%= _public %>/wsg/resources/js/guide.js"></script>
+
+    <!-- codeview -->
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shCore.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shAutoLoader.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushjScript.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushXml.js?cb=undefined"></script>
+    <script src="<%= _public %>/wsg/resources/libs/codeview/scripts/shBrushCss.js?cb=undefined"></script>
+    <link href="<%= _public %>/wsg/resources/libs/codeview/styles/shCoreDefaultWhite.css" rel="stylesheet" />
+    <script>
+      SyntaxHighlighter.config.bloggerMode = false;
+      SyntaxHighlighter.defaults['smart-tabs'] = false;
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+
+  <body>
+    <div class="wsg-wrapper">
+      <header class="wsg-header-wrapper js-wsg-header-wrapper">
+        <div class="wsg-header-inner">
+          <h1 class="wsg-logo"><a href="../../index.html">웹퍼블리싱가이드</a></h1>
+          <button class="btn-aside is-clickEvent" type="button"><span>Menu</span></button>
+          <nav class="wsg-lnb">
+            <ul>
+              <li>
+                <a href="../../index.html">메뉴현황판</a>
+              </li>
+              <li>
+                <a href="../rule/rule_intro.html">규칙가이드</a>
+              </li>
+              <li class="is-current">
+                <a href="plan_codeset.html">설계가이드</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <div class="wsg-container-wrapper">
+        <aside class="wsg-aside js-wsg-aside">
+          <div class="wsg-aside-scroll">
+            <nav class="wsg-snb">
+              <ul class="wsg-node1-list" style="display: block">
+                <li class="wsg-node1">
+                  <a href="javascript:;">설계가이드</a>
+                  <ul class="wsg-node2-list">
+                    <li class="wsg-node2">
+                      <a href="plan_codeset.html">Codeset</a>
+                    </li>
+                    <li class="wsg-node2 is-current">
+                      <a href="plan_general.html">General</a>
+                    </li>
+                    <li class="wsg-node2">
+                      <a href="plan_layout.html">Layout</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </aside>
+        <!-- Content -->
+        <article class="wsg-content">
+          <div class="wsg-content-header">
+            <div class="wsg-inner">
+              <h1 class="wsg-h1">General</h1>
+              <p class="g-explain-h1">구조, 기준, 의미, 구분, 방법 등의 일반적인 구분방법</p>
+            </div>
+          </div>
+          <div class="wsg-content-body">
+            <!-- 영역구분 -->
+            <section id="section12" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">영역구분</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      영역구분
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>카테고리 또는 최상위 영역</td>
+                        <td>-wrapper</td>
+                        <td>컨텐츠 단위별 감싸줄 때</td>
+                      </tr>
+                      <tr>
+                        <td>모듈/컴포넌트 영역</td>
+                        <td>-wrap</td>
+                        <td>컨텐츠 단위별 감싸줄 때</td>
+                      </tr>
+                      <tr>
+                        <td>지역 영역</td>
+                        <td>-area</td>
+                        <td>블록 컨텐츠 분류할 때</td>
+                      </tr>
+                      <tr>
+                        <td>그룹 영역</td>
+                        <td>-group</td>
+                        <td>인라인 컨텐츠 분류할 때</td>
+                      </tr>
+                      <tr>
+                        <td>안쪽 영역</td>
+                        <td>-inner</td>
+                        <td>안쪽 공간처리가 필요할 때</td>
+                      </tr>
+                      <tr>
+                        <td>머리글 영역</td>
+                        <td>-header</td>
+                        <td>제목이 들어간다.</td>
+                      </tr>
+                      <tr>
+                        <td>본문 영역</td>
+                        <td>-body</td>
+                        <td>내용이 들어간다.</td>
+                      </tr>
+                      <tr>
+                        <td>바닥글 영역</td>
+                        <td>-footer</td>
+                        <td>바닥글이 들어간다.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //영역구분 -->
+
+            <!-- 레이아웃 -->
+            <section id="section11" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">레이아웃</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      레이아웃
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>그리드 기본</td>
+                        <td>.grid .col</td>
+                        <td>너비 100%</td>
+                      </tr>
+                      <tr>
+                        <td>그리드 균등분할</td>
+                        <td>.grid.flex .col</td>
+                        <td>flex 레이아웃 방식</td>
+                      </tr>
+                      <tr>
+                        <td>그리드 균등분할</td>
+                        <td>.grid.table .col</td>
+                        <td>table 레이아웃 방식</td>
+                      </tr>
+                      <tr>
+                        <td>그리드 자식 지정칸수</td>
+                        <td>.grid <span class="wsg-txt-primary">.col-[n]</span>.col</td>
+                        <td>n개만큼 column 병합</td>
+                      </tr>
+                      <tr>
+                        <td>그리드 자신 지정칸수</td>
+                        <td>.grid<span class="wsg-txt-primary">.cols-[n]</span> .col</td>
+                        <td>n개만큼 column 분할</td>
+                      </tr>
+                      <tr>
+                        <td>레이아웃 유연하게</td>
+                        <td>.fluide</td>
+                        <td>고정 또는 최소너비를 없앤다.</td>
+                      </tr>
+                      <tr>
+                        <td>레이아웃 유연하지 않은</td>
+                        <td>.unfluide</td>
+                        <td>고정 또는 최소너비를 갖는다.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //레이아웃 -->
+
+            <!-- UI Elements -->
+            <section id="section1" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">UI Elements</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Forms</td>
+                        <td>.frm-</td>
+                        <td>폼</td>
+                      </tr>
+                      <tr>
+                        <td>Buttons</td>
+                        <td>.btn-</td>
+                        <td>버튼</td>
+                      </tr>
+                      <tr>
+                        <td>Icons</td>
+                        <td>.ico-</td>
+                        <td>아이콘</td>
+                      </tr>
+                      <tr>
+                        <td>Labels</td>
+                        <td>.label-</td>
+                        <td>이름표</td>
+                      </tr>
+                      <tr>
+                        <td>Badges</td>
+                        <td>.badge-</td>
+                        <td>배지</td>
+                      </tr>
+                      <tr>
+                        <td>Divider</td>
+                        <td>.divider-</td>
+                        <td>영역분할 구분선</td>
+                      </tr>
+                      <tr>
+                        <td>Bullets</td>
+                        <td>.bul-</td>
+                        <td>불릿목록</td>
+                      </tr>
+                      <tr>
+                        <td>Defines</td>
+                        <td>.define-</td>
+                        <td>정의목록</td>
+                      </tr>
+                      <tr>
+                        <td>List</td>
+                        <td>.list-</td>
+                        <td>그룹목록</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Boxs</td>
+                        <td>.box-</td>
+                        <td>시각적 구분 목적으로 표현함</td>
+                      </tr>
+                      <tr>
+                        <td>Card</td>
+                        <td>.card-</td>
+                        <td>디자인 의도를 갖추어 표현함</td>
+                      </tr>
+                      <tr>
+                        <td>Panel</td>
+                        <td>.panel-</td>
+                        <td>컨텐츠 의미를 갖추어 표현함</td>
+                      </tr>
+                      <tr>
+                        <td>Alert</td>
+                        <td>.alert-</td>
+                        <td>경고, 상태 알림 컨텐츠</td>
+                      </tr>
+                      <tr>
+                        <td>Thumbnail</td>
+                        <td>.thumbnail</td>
+                        <td>썸네일</td>
+                      </tr>
+                      <tr>
+                        <td>반응형 임베드</td>
+                        <td>.responsive-</td>
+                        <td>-16by9, -4by3</td>
+                      </tr>
+                      <tr>
+                        <td>Steps</td>
+                        <td>.step-</td>
+                        <td>스텝</td>
+                      </tr>
+                      <tr>
+                        <td>Tables</td>
+                        <td>.tbl-</td>
+                        <td>표</td>
+                      </tr>
+                      <tr>
+                        <td>Pager</td>
+                        <td>.pager-</td>
+                        <td>페이지 이전/다음</td>
+                      </tr>
+                      <tr>
+                        <td>Pagination</td>
+                        <td>.pagination-</td>
+                        <td>페이지 쪽수매기기</td>
+                      </tr>
+                      <tr>
+                        <td>Progress</td>
+                        <td>.progress-</td>
+                        <td>진행바</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //UI Elements -->
+
+            <!-- UI Modules -->
+            <section id="section2" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">UI Modules</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Tabs</td>
+                        <td>.tab-</td>
+                        <td>탭</td>
+                      </tr>
+                      <tr>
+                        <td>Accordions</td>
+                        <td>.accordion-</td>
+                        <td>아코디언</td>
+                      </tr>
+                      <tr>
+                        <td>Folder</td>
+                        <td>.folder-</td>
+                        <td>접기/펴기</td>
+                      </tr>
+                      <tr>
+                        <td>Collapse</td>
+                        <td>.collapse-</td>
+                        <td>보이기/가리기</td>
+                      </tr>
+                      <tr>
+                        <td>Tooltips</td>
+                        <td>.tooltip-</td>
+                        <td>설명 자세히보기</td>
+                      </tr>
+                      <tr>
+                        <td>Dropdowns</td>
+                        <td>.dropdown-</td>
+                        <td>상세 목록보기</td>
+                      </tr>
+                      <tr>
+                        <td>Select</td>
+                        <td>.select-</td>
+                        <td>디자인 셀렉트</td>
+                      </tr>
+                      <tr>
+                        <td>Modals</td>
+                        <td>.modal-</td>
+                        <td>대화상자</td>
+                      </tr>
+                      <tr>
+                        <td>Popup</td>
+                        <td>.popup-</td>
+                        <td>팝업</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption></caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Stikcy</td>
+                        <td>.sticky-</td>
+                        <td>요소고정</td>
+                      </tr>
+                      <tr>
+                        <td>Floaing</td>
+                        <td>.floating-</td>
+                        <td>요소이동</td>
+                      </tr>
+                      <tr>
+                        <td>Spy Scroll</td>
+                        <td>.spyScroll-</td>
+                        <td>화면 스크롤</td>
+                      </tr>
+                      <tr>
+                        <td>Infinite Scroll</td>
+                        <td>.infScroll-</td>
+                        <td>무한 스크롤</td>
+                      </tr>
+                      <tr>
+                        <td>Custom Scroll</td>
+                        <td>.cusScroll-</td>
+                        <td>사용자정의 스크롤</td>
+                      </tr>
+                      <tr>
+                        <td>Slide Show</td>
+                        <td>.carousel-</td>
+                        <td>슬라이드쇼</td>
+                      </tr>
+                      <tr>
+                        <td>Zommer</td>
+                        <td>.zommer-</td>
+                        <td>이미지확대</td>
+                      </tr>
+                      <tr>
+                        <td>Youtube API</td>
+                        <td>.youtube-</td>
+                        <td>유튜브API</td>
+                      </tr>
+                      <tr>
+                        <td>Google Map API</td>
+                        <td>.map-</td>
+                        <td>구글맵</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //section1 -->
+
+            <!-- 접두어 -->
+            <section id="section3" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">접두어</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      접두어
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>기능</td>
+                        <td>js-</td>
+                        <td>javascript 축약어</td>
+                      </tr>
+                      <tr>
+                        <td>상태</td>
+                        <td>is-</td>
+                        <td>~이다.</td>
+                      </tr>
+                      <tr>
+                        <td>확장</td>
+                        <td>has-</td>
+                        <td>~있다.</td>
+                      </tr>
+                      <tr>
+                        <td>종류</td>
+                        <td>type-</td>
+                        <td>유형구분</td>
+                      </tr>
+                      <tr>
+                        <td>UI</td>
+                        <td>[ui]-</td>
+                        <td>형태구분</td>
+                      </tr>
+                      <tr>
+                        <td>UX</td>
+                        <td>[ux]-</td>
+                        <td>의미구분</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //접두어 -->
+
+            <!-- zIndex -->
+            <section id="section4" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">zIndex</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      zIndex
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">단위</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>인라인</td>
+                        <td>1</td>
+                        <td>우선순위 1씩 증가, 기본요소 0</td>
+                      </tr>
+                      <tr>
+                        <td>그 룹</td>
+                        <td>10</td>
+                        <td>우선순위 1씩 증가, 기본요소 10</td>
+                      </tr>
+                      <tr>
+                        <td>구 조</td>
+                        <td>100</td>
+                        <td>우선순위 1씩 증가, 기본요소 100</td>
+                      </tr>
+                      <tr>
+                        <td>팝 업</td>
+                        <td>1000</td>
+                        <td>우선순위 1씩 증가, 기본요소 1000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //zIndex -->
+
+            <!-- 성격의미 -->
+            <section id="section5" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">성격의미</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      성격의미
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">정의</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>긍정</td>
+                        <td>positive</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>부정</td>
+                        <td>negative</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>성공</td>
+                        <td>success</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>실패</td>
+                        <td>fail</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>주의</td>
+                        <td>warring</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>위험</td>
+                        <td>danger</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>오류</td>
+                        <td>error</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>경고</td>
+                        <td>alert</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>안내</td>
+                        <td>info</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //성격의미 -->
+
+            <!-- 속성정의 -->
+            <section id="section6" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">속성정의</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      속성정의
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">속성</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>역할정의</td>
+                        <td>role</td>
+                        <td>button, text</td>
+                      </tr>
+                      <tr>
+                        <td>기능정보</td>
+                        <td>aria-</td>
+                        <td>-controls, -hidden</td>
+                      </tr>
+                      <tr>
+                        <td>조건정보</td>
+                        <td>data-</td>
+                        <td>사용자정의 속성 정의</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //속성정의 -->
+
+            <!-- 크기단위 -->
+            <section id="section7" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">크기단위</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      크기단위
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>가장크게</td>
+                        <td>-xxl</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>더크게</td>
+                        <td>-xl</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>크게</td>
+                        <td>-lg</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>보통</td>
+                        <td>-md</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>작게</td>
+                        <td>-sm</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>더작게</td>
+                        <td>-xs</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>가장작게</td>
+                        <td>-xxs</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //크기단위 -->
+
+            <!-- 색상단위 -->
+            <section id="section8" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">색상단위</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      명도단위
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>더어두운</td>
+                        <td>-darker</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>어두운</td>
+                        <td>-dark</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>밝게</td>
+                        <td>-light</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>더밝은</td>
+                        <td>-lighter</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //색상단위 -->
+
+            <!-- 굵기단위 -->
+            <section id="section9" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">굵기단위</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      굵기단위
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">구분</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>더굵은</td>
+                        <td>-bolder</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>굵은</td>
+                        <td>-bold</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>얅은</td>
+                        <td>-thin</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>더얅은</td>
+                        <td>-thiner</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //굵기단위 -->
+
+            <!-- 기준단위 -->
+            <section id="section10" class="wsg-section wsg-inner">
+              <div class="wsg-section-header">
+                <h2 class="wsg-h2">기준단위</h2>
+              </div>
+              <div class="wsg-section-body">
+                <div class="wsg-tbl-type1">
+                  <table>
+                    <caption>
+                      기준단위
+                    </caption>
+                    <colgroup>
+                      <col style="width: 25%" />
+                      <col style="width: 25%" />
+                      <col style="width: auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">요소</th>
+                        <th scope="col">예약어</th>
+                        <th scope="col">설명</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>최대</td>
+                        <td>-max</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>표준</td>
+                        <td>-std</td>
+                        <td>standard 축약어</td>
+                      </tr>
+                      <tr>
+                        <td>최소</td>
+                        <td>-min</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <!-- //기준단위 -->
+          </div>
+        </article>
+        <!-- //Content -->
+      </div>
+    </div>
+  </body>
+</html>
