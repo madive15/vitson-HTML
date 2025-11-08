@@ -21,4 +21,4 @@ module.exports = {
     APP_ENV_TYPE: true,
     APP_ENV_URL: true
   }
-}
+};

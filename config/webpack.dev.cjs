@@ -1,7 +1,7 @@
-const ESLintPlugin = require('eslint-webpack-plugin')
-const StylelintPlugin = require('stylelint-webpack-plugin')
-const parser = require('./parser.cjs')
-const buildMode = 'development'
+const ESLintPlugin = require('eslint-webpack-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
+const parser = require('./parser.cjs');
+const buildMode = 'development';
 
 module.exports = (dirPath, scssOptions, localPort) => ({
   mode: buildMode,
@@ -49,4 +49,4 @@ module.exports = (dirPath, scssOptions, localPort) => ({
      */
     // new StylelintPlugin()
   ].concat(parser.getEjsFile({dir: 'src/views', type: buildMode, dirPath}))
-})
+});
