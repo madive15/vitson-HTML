@@ -79,3 +79,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
   console.log(jQuery)
 })
 */
+
+$(document).ready(function () {
+  // Initialize Kendo Buttons
+  if ($('#kendoButton').length) {
+    $('#kendoButton').kendoButton({themeColor: 'primary', enable: true});
+    $('#kendoPrimaryButton').kendoButton({icon: 'filter', size: 'large'});
+    $('#kendoLargeButton').kendoButton({
+      rounded: 'full', // none | small | medium | large | full
+      fillMode: 'solid', // solid | outline | flat | link
+      themeColor: 'primary' // base | primary | secondary | success | etc
+    });
+    $('#customSizedButton').kendoButton({size: 'small'});
+  }
+  // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
+  // included in the themes. No specific JS initialization is required for basic rendering.
+});
