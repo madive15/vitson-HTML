@@ -1,22 +1,78 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <title>guide</title>
-    <!-- public css 링크 테스트-->
-    <link rel="stylesheet" href="<%= _public %>/lib/test.css" />
+    <%- include(`${_src}/views/layout/head.ejs`, {meta_title: ''}) %>
+    <style>
+      .kendo-ui-examples {
+        padding: 20px;
+      }
+      .kendo-ui-examples h2,
+      .kendo-ui-examples h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      /* 2. Custom CSS로 크기 조절 */
+      .my-custom-size-button {
+        padding: 12px 24px; /* 원하는 패딩 값 */
+        font-size: 1.2em; /* 원하는 폰트 크기 */
+      }
+    </style>
   </head>
   <body>
     <%- include(`${_src}/views/layout/header.ejs`) %>
     <h1 class="!text-[30px]">guide 222<%= APP_ENV_URL %></h1>
 
     <!-- public 이미지 링크 테스트  -->
-    <img src="<%= _public %>/images/news_02.png" alt="test" style="width: 300px" />
+    <!-- <img src="<%= _public %>/images/news_02.png" alt="test" style="width: 300px" />
     <img src="<%= _public %>/images/repo.svg" alt="test" style="width: 300px" />
-    <img src="<%= _public %>/images/img_list01.jpg" alt="test" style="width: 300px" />
+    <img src="<%= _public %>/images/img_list01.jpg" alt="test" style="width: 300px" /> -->
 
-    <!-- public js 링크 테스트-->
-    <script src="<%= _public %>/lib/jquery-3.6.1.min.js"></script>
+    <section class="kendo-ui-examples">
+      <h2>Kendo UI Examples</h2>
+
+      <h3>Buttons</h3>
+      <p>버튼 크기를 키우는 방법은 두 가지가 있습니다.</p>
+
+      <h4>1. Kendo UI 내장 클래스 사용</h4>
+      <p><code>k-button-lg</code> 클래스를 추가하여 Kendo 테마에서 제공하는 큰 사이즈를 사용할 수 있습니다.</p>
+      <div>
+        <button id="kendoButton" type="button">Default Button</button>
+        <button id="kendoPrimaryButton" type="button" class="k-primary">Primary Button</button>
+        <button id="kendoLargeButton" type="button" class="k-button-lg k-primary">Large Button (k-button-lg)</button>
+      </div>
+
+      <h4 style="margin-top: 20px">2. Custom CSS 사용</h4>
+      <p>
+        원하는 크기로 직접 스타일을 지정할 수 있습니다. 아래 버튼은 <code>my-custom-size-button</code> 클래스를
+        가집니다.
+      </p>
+      <div>
+        <button id="customSizedButton" class="my-custom-size-button">Custom Size Button</button>
+      </div>
+
+      <h3>Radio Buttons</h3>
+      <div>
+        <input type="radio" name="kendoRadio" id="radio1" value="1" class="k-radio" checked />
+        <label for="radio1" class="k-radio-label">Option 1</label>
+        <input type="radio" name="kendoRadio" id="radio2" value="2" class="k-radio" />
+        <label for="radio2" class="k-radio-label">Option 2</label>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      $(document).ready(function () {
+        // Initialize Kendo Buttons
+        $('#kendoButton').kendoButton({themeColor: 'primary', enable: true});
+        $('#kendoPrimaryButton').kendoButton();
+        $('#kendoLargeButton').kendoButton();
+        $('#customSizedButton').kendoButton();
+
+        // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
+        // included in the themes. No specific JS initialization is required for basic rendering.
+      });
+    </script>
   </body>
 </html>
