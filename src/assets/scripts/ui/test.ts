@@ -18,33 +18,40 @@ $(document).ready(function () {
   }
   // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
 
-  $('#engine1').kendoRadioButton({
-    label: '1.4 Petrol, 92kW',
-    checked: true
-  });
-  $('#engine2').kendoRadioButton({
-    label: '1.8 Petrol, 118kW'
-  });
-  $('#engine3').kendoRadioButton({
-    label: '2.0 Petrol, 147kW',
-    enabled: false
-  });
-  $('#radiogroup').kendoRadioGroup({
-    items: [
-      {
-        label: 'Phone (SMS)',
-        value: 'Phone (SMS)'
-      },
-      {
-        label: 'E-mail',
-        value: 'E-mail'
-      },
-      {
-        label: 'None',
-        value: 'None'
-      }
-    ],
-    layout: 'horizontal', // horizontal | vertical
-    value: 'Phone (SMS)'
-  });
+  if ($('#engine1').length) {
+    // Add existence check for radio buttons
+    $('#engine1').kendoRadioButton({
+      label: '1.4 Petrol, 92kW',
+      checked: true
+    });
+    $('#engine2').kendoRadioButton({
+      label: '1.8 Petrol, 118kW'
+    });
+    $('#engine3').kendoRadioButton({
+      label: '2.0 Petrol, 147kW',
+      enabled: false
+    });
+  }
+
+  if ($('#radiogroup').length) {
+    // Add existence check for radio group
+    $('#radiogroup').kendoRadioGroup({
+      items: [
+        {
+          label: 'Phone (SMS)',
+          value: 'Phone (SMS)'
+        },
+        {
+          label: 'E-mail',
+          value: 'E-mail'
+        },
+        {
+          label: 'None',
+          value: 'None'
+        }
+      ],
+      layout: 'horizontal', // horizontal | vertical
+      value: 'Phone (SMS)'
+    });
+  }
 });
