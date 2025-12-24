@@ -141,6 +141,27 @@ $(document).ready(function () {
     });
   }
 
+  if ($('#radiogroup2').length) {
+    $('#radiogroup2').kendoRadioGroup({
+      items: [
+        {
+          label: 'Phone (SMS)',
+          value: 'phone'
+        },
+        {
+          label: 'E-mail',
+          value: 'email'
+        },
+        {
+          label: 'None',
+          value: 'none'
+        }
+      ],
+      layout: 'vertical',
+      value: 'email'
+    });
+  }
+
   createChart();
 });
 
