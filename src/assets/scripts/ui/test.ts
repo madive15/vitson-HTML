@@ -87,8 +87,9 @@ $(document).ready(function () {
   if ($('#engine1').length) {
     // Add existence check for radio buttons
     $('#engine1').kendoRadioButton({
-      label: '1.4 Petrol, 92kW',
-      checked: true
+      label: `<span class="k-radio-label-text">1.4 Petrol, 92kW</span><span class="k-radio-label-description">A útis consummationem.</span>`,
+      checked: true,
+      encoded: false
     });
     $('#engine2').kendoRadioButton({
       label: '1.8 Petrol, 118kW'
