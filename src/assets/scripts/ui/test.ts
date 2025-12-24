@@ -17,10 +17,7 @@ function createChart() {
         name: 'Total Visits',
         data: [56000, 63000, 74000, 91000, 117000, 138000]
       },
-      {
-        name: 'Unique visitors',
-        data: [52000, 34000, 23000, 48000, 67000, 83000]
-      }
+      {name: 'Unique visitors', data: [52000, 34000, 23000, 48000, 67000, 83000]}
     ],
     valueAxis: {
       max: 140000,
@@ -65,6 +62,26 @@ $(document).ready(function () {
     });
     $('#customSizedButton').kendoButton({size: 'small'});
   }
+
+  // Templated Button
+  if ($('#templatedButtonContainer').length) {
+    const buttonTemplate = kendo.template(
+      `<button id='#= id #' type='button' class='k-button k-button-lg'><span class='k-icon k-i-#= icon #'></span> #: text #</button>`
+    );
+    const buttonData = {
+      id: 'myTemplatedButton',
+      text: 'Templated Button',
+      icon: 'save'
+    };
+
+    $('#templatedButtonContainer').html(buttonTemplate(buttonData));
+    $('#myTemplatedButton').kendoButton({
+      click: () => {
+        alert('Templated button clicked!');
+      }
+    });
+  }
+
   // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
 
   if ($('#engine1').length) {
@@ -84,23 +101,42 @@ $(document).ready(function () {
 
   if ($('#radiogroup').length) {
     // Add existence check for radio group
-    $('#radiogroup').kendoRadioGroup({
-      items: [
-        {
-          label: 'Phone (SMS)',
-          value: 'Phone (SMS)'
-        },
-        {
-          label: 'E-mail',
-          value: 'E-mail'
-        },
-        {
-          label: 'None',
-          value: 'None'
-        }
-      ],
-      layout: 'horizontal', // horizontal | vertical
-      value: 'Phone (SMS)'
+    const radioItems = [
+      {
+        label: 'Phone (SMS)',
+        value: 'phone',
+        description: 'Receive notifications via SMS'
+      },
+      {
+        label: 'E-mail',
+        value: 'email',
+        description: 'Receive notifications via E-mail'
+      },
+      {
+        label: 'None',
+        value: 'none',
+        description: 'Do not receive any notifications'
+      }
+    ];
+
+    const radioTemplate = kendo.template(`
+      <li>
+        <input type="radio" name="notification" id="radio-#: value #" class="k-radio" value="#: value #" />
+        <label for="radio-#: value #" class="k-radio-label">
+          <span class="k-radio-label-text">#: label #</span>
+          <span class="k-radio-label-description">#: description #</span>
+        </label>
+      </li>
+    `);
+
+    const radioGroupElement = $('#radiogroup');
+    radioItems.forEach((item) => {
+      radioGroupElement.append(radioTemplate(item));
+    });
+
+    radioGroupElement.kendoRadioGroup({
+      layout: 'horizontal',
+      value: 'phone'
     });
   }
 
