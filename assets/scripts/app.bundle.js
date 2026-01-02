@@ -1,10 +1,10 @@
 /******/ (function() { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 945:
+/***/ 370:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
+"use strict";
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/swiper.mjs + 1 modules
 var swiper = __webpack_require__(723);
@@ -34,16 +34,184 @@ window.addEventListener('DOMContentLoaded', event => {
     }
   });
 });
+// EXTERNAL MODULE: ./src/assets/scripts/ui/test.ts
+var test = __webpack_require__(445);
 ;// ./src/assets/scripts/index.ts
 
 
 ;// ./src/app.js
 
 
+
+
+
+
 console.log(`%c ==== ${"app"}.${"js"} run ====`, 'color: green');
 console.log('%c APP_ENV_URL :', 'color: green', "pc");
 console.log('%c APP_ENV_TYPE :', 'color: green', "js");
 console.log('%c ====================', 'color: green');
+
+/***/ }),
+
+/***/ 445:
+/***/ (function() {
+
+function createChart() {
+  $('#chart').kendoChart({
+    title: {
+      text: 'Site Visitors Stats'
+    },
+    subtitle: {
+      text: '/thousands/'
+    },
+    legend: {
+      visible: false
+    },
+    seriesDefaults: {
+      type: 'bar'
+    },
+    series: [{
+      name: 'Total Visits',
+      data: [56000, 63000, 74000, 91000, 117000, 138000]
+    }, {
+      name: 'Unique visitors',
+      data: [52000, 34000, 23000, 48000, 67000, 83000]
+    }],
+    valueAxis: {
+      max: 140000,
+      line: {
+        visible: false
+      },
+      minorGridLines: {
+        visible: true
+      },
+      labels: {
+        rotation: 'auto'
+      }
+    },
+    categoryAxis: {
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      majorGridLines: {
+        visible: false
+      }
+    },
+    tooltip: {
+      visible: true,
+      template: '#= series.name #: #= value #'
+    }
+  });
+}
+$(document).ready(function () {
+  // Initialize Kendo Buttons
+  if ($('#kendoButton').length) {
+    $('#kendoButton').kendoButton({
+      themeColor: 'primary',
+      enable: true
+    });
+    $('#kendoPrimaryButton').kendoButton({
+      icon: 'filter',
+      size: 'large',
+      click: e => {
+        console.log(e);
+      }
+    });
+    $('#kendoLargeButton').kendoButton({
+      rounded: 'full',
+      // none | small | medium | large | full
+      fillMode: 'solid',
+      // solid | outline | flat | link
+      themeColor: 'primary' // base | primary | secondary | success | etc
+    });
+    $('#customSizedButton').kendoButton({
+      size: 'small'
+    });
+  }
+
+  // Templated Button
+  if ($('#templatedButtonContainer').length) {
+    const buttonTemplate = kendo.template(`<button id='#= id #' type='button' class='k-button k-button-lg'><span class='k-icon k-i-#= icon #'></span> #: text #</button>`);
+    const buttonData = {
+      id: 'myTemplatedButton',
+      text: 'Templated Button',
+      icon: 'save'
+    };
+    $('#templatedButtonContainer').html(buttonTemplate(buttonData));
+    $('#myTemplatedButton').kendoButton({
+      click: () => {
+        alert('Templated button clicked!');
+      }
+    });
+  }
+
+  // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
+
+  if ($('#engine1').length) {
+    // Add existence check for radio buttons
+    $('#engine1').kendoRadioButton({
+      label: `<span class="k-radio-label-text">1.4 Petrol, 92kW</span><span class="k-radio-label-description">A útis consummationem.</span>`,
+      checked: true,
+      encoded: false
+    });
+    $('#engine2').kendoRadioButton({
+      label: '1.8 Petrol, 118kW'
+    });
+    $('#engine3').kendoRadioButton({
+      label: '2.0 Petrol, 147kW',
+      enabled: false
+    });
+  }
+  if ($('#radiogroup').length) {
+    // Add existence check for radio group
+    const radioItems = [{
+      label: 'Phone (SMS)',
+      value: 'phone',
+      description: 'Receive notifications via SMS'
+    }, {
+      label: 'E-mail',
+      value: 'email',
+      description: 'Receive notifications via E-mail'
+    }, {
+      label: 'None',
+      value: 'none',
+      description: 'Do not receive any notifications'
+    }];
+    const radioTemplate = kendo.template(`
+      <li>
+        <input type="radio" name="notification" id="radio-#: value #" class="k-radio" value="#: value #" />
+        <label for="radio-#: value #" class="k-radio-label">
+          <span class="k-radio-label-text">#: label #</span>
+          <span class="k-radio-label-description">#: description #</span>
+        </label>
+      </li>
+    `);
+    const radioGroupElement = $('#radiogroup');
+    radioItems.forEach(item => {
+      radioGroupElement.append(radioTemplate(item));
+    });
+    radioGroupElement.kendoRadioGroup({
+      layout: 'horizontal',
+      value: 'phone'
+    });
+  }
+  if ($('#radiogroup2').length) {
+    $('#radiogroup2').kendoRadioGroup({
+      items: [{
+        label: 'Phone (SMS)',
+        value: 'phone'
+      }, {
+        label: 'E-mail',
+        value: 'email'
+      }, {
+        label: 'None',
+        value: 'none'
+      }],
+      layout: 'vertical',
+      value: 'email'
+    });
+  }
+  createChart();
+});
+$(document).bind('kendo:skinChange', createChart);
 
 /***/ })
 
@@ -188,7 +356,7 @@ console.log('%c ====================', 'color: green');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [979], function() { return __webpack_require__(945); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [979], function() { return __webpack_require__(370); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -1,12 +1,54 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <title>guide</title>
-    <!-- public css 링크 테스트-->
-    <link rel="stylesheet" href="../../public/lib/test.css" />
-  <script defer src="../../assets/scripts/swiper.bundle.js"></script><script defer src="../../assets/scripts/app.bundle.js"></script><link href="../../assets/css/app.css" rel="stylesheet"></head>
+    
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title></title>
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/lib/test.css" />
+
+  <!-- Kendo UI Core CSS -->
+  <link href="https://kendo.cdn.telerik.com/themes/12.2.3/default/default-main.css" rel="stylesheet" />
+<script defer src="../../assets/scripts/swiper.bundle.js"></script><script defer src="../../assets/scripts/app.bundle.js"></script><link href="../../assets/css/app.css" rel="stylesheet"></head>
+
+    <style>
+      .kendo-ui-examples {
+        padding: 20px;
+      }
+      .kendo-ui-examples h2,
+      .kendo-ui-examples h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      /* 2. Custom CSS로 크기 조절 */
+      .my-custom-size-button {
+        padding: 12px 24px; /* 원하는 패딩 값 */
+        font-size: 1.2em; /* 원하는 폰트 크기 */
+      }
+      .k-radio-label {
+        display: flex;
+        flex-direction: column;
+        /* Adjust alignment as needed */
+      }
+      .k-radio-label-text {
+        font-weight: bold;
+      }
+      .k-radio-label-description {
+        font-size: 0.8em;
+        color: #666;
+        margin-top: 2px;
+      }
+    </style>
+  </head>
   <body>
     <div>
   header!!!!!
@@ -15,11 +57,159 @@
     <h1 class="!text-[30px]">guide 222pc</h1>
 
     <!-- public 이미지 링크 테스트  -->
-    <img src="../../public/images/news_02.png" alt="test" style="width: 300px" />
-    <img src="../../public/images/repo.svg" alt="test" style="width: 300px" />
-    <img src="../../public/images/img_list01.jpg" alt="test" style="width: 300px" />
+    <!-- <img src="/home/runner/work/vitson-HTML/vitson-HTML/public/images/news_02.png" alt="test" style="width: 300px" />
+    <img src="/home/runner/work/vitson-HTML/vitson-HTML/public/images/repo.svg" alt="test" style="width: 300px" />
+    <img src="/home/runner/work/vitson-HTML/vitson-HTML/public/images/img_list01.jpg" alt="test" style="width: 300px" /> -->
 
-    <!-- public js 링크 테스트-->
-    <script src="../../public/lib/jquery-3.6.1.min.js"></script>
+    <section class="kendo-ui-examples">
+      <h2>Kendo UI Examples</h2>
+
+      <h3 class="font-bold text-2xl!">Buttons</h3>
+      <p>버튼 크기를 키우는 방법은 두 가지가 있습니다.</p>
+
+      <h4>1. Kendo UI 내장 클래스 사용</h4>
+      <p><code>k-button-lg</code> 클래스를 추가하여 Kendo 테마에서 제공하는 큰 사이즈를 사용할 수 있습니다.</p>
+      <div>
+        <button id="kendoButton" type="button">Default Button</button>
+        <button id="kendoPrimaryButton" type="button" class="k-primary">Primary Button</button>
+        <button id="kendoLargeButton" type="button" class="k-button-lg k-primary">Large Button (k-button-lg)</button>
+      </div>
+
+      <h4 style="margin-top: 20px">2. Custom CSS 사용</h4>
+      <p>
+        원하는 크기로 직접 스타일을 지정할 수 있습니다. 아래 버튼은 <code>my-custom-size-button</code> 클래스를
+        가집니다.
+      </p>
+      <div>
+        <button id="customSizedButton" class="my-custom-size-button">Custom Size Button</button>
+      </div>
+
+      <h4 style="margin-top: 20px">3. Templated Button</h4>
+      <div id="templatedButtonContainer"></div>
+
+      <h3 class="font-bold text-2xl!">Radio Buttons</h3>
+      <ul class="fieldlist">
+        <li>
+          <input type="radio" name="engine" id="engine1" />
+        </li>
+        <li>
+          <input type="radio" name="engine" id="engine2" />
+        </li>
+        <li>
+          <input type="radio" name="engine" id="engine3" />
+        </li>
+      </ul>
+      <ul id="radiogroup"></ul>
+      <ul id="radiogroup2"></ul>
+
+      <h3 class="font-bold text-2xl!">Bar Chart</h3>
+      <!-- <div id="chart"></div> -->
+
+      <style>
+        .cards-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .k-card {
+          width: 285px;
+          margin: 5%;
+        }
+
+        .k-card-footer {
+          text-align: center;
+        }
+
+        .k-card-action > .k-button {
+          width: 100%;
+        }
+      </style>
+      <h3 class="font-bold text-2xl!">Cards</h3>
+      <div class="cards-container">
+        <div class="k-card">
+          <div class="k-card-header">
+            <h5 class="k-card-title">Rome</h5>
+            <h6 class="k-card-subtitle">Capital of Italy</h6>
+          </div>
+          <!-- <img alt="Kendo UI for jQuery Card Colosseum in Rome" class="k-card-media" src="" /> -->
+          <div class="k-card-body">
+            <p>
+              Rome is a sprawling, cosmopolitan city with nearly 3,000 years of globally influential art, architecture
+              and culture on display.
+            </p>
+            <p>Ancient ruins such as the Forum and the Colosseum evoke the power of the former Roman Empire.</p>
+          </div>
+          <div class="k-card-footer">
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon facebook"></span
+            ></a>
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon pinterest"></span
+            ></a>
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon twitter"></span
+            ></a>
+          </div>
+          <div class="k-actions k-card-actions k-actions-stretched">
+            <span class="k-card-action"
+              ><button class="k-button k-button-flat-primary k-button-flat k-button-md k-rounded-md">Map</button></span
+            >
+            <span class="k-card-action"
+              ><button class="k-button k-button-flat-primary k-button-flat k-button-md k-rounded-md">
+                Weather
+              </button></span
+            >
+          </div>
+        </div>
+
+        <div class="k-card">
+          <div class="k-card-header">
+            <h5 class="k-card-title">Barcelona</h5>
+          </div>
+          <!-- <img alt="Kendo UI for jQuery Card Arc de Triomf" class="k-card-media" src="../content/web/cards/barcelona.jpg" /> -->
+          <div class="k-card-body">
+            <p>
+              Barcelona, the cosmopolitan capital of Spain's Catalonia region, is known for its art and architecture.
+            </p>
+            <p>
+              The fantastical Sagrada Família church and other modernist landmarks designed by Antoni Gaudí dot the
+              city.
+            </p>
+          </div>
+          <div class="k-actions k-card-actions">
+            <button class="k-button k-button-flat-primary k-button-flat k-button-md k-rounded-md">Map</button>
+            <button class="k-button k-button-flat-primary k-button-flat k-button-md k-rounded-md">Weather</button>
+          </div>
+          <div class="k-card-footer">
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon facebook"></span
+            ></a>
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon pinterest"></span
+            ></a>
+            <a class="k-button k-button-flat-base k-button-flat k-button-md k-rounded-md k-icon-button"
+              ><span class="k-button-icon twitter"></span
+            ></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+<!-- 퍼브릭 라이브러리 링크 -->
+<!-- <script src="/home/runner/work/vitson-HTML/vitson-HTML/public/lib/jquery-3.6.1.min.js"></script> -->
+<!-- Kendo UI Core JavaScript -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script>
+
+
+    <script></script>
+    <script>
+      kendo.ui.icon($('.facebook'), {icon: 'facebook'});
+      kendo.ui.icon($('.pinterest'), {icon: 'pinterest'});
+      kendo.ui.icon($('.twitter'), {icon: 'twitter'});
+    </script>
   </body>
 </html>
