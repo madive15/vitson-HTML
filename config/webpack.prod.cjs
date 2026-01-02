@@ -48,7 +48,8 @@ module.exports = (dirPath, scssOptions) => ({
     */
     new MiniCssExtractPlugin({
       // filename: '[name].[contenthash].chunk.css'
-      filename: 'assets/css/[name].css'
+      filename: 'assets/css/[name].css',
+      chunkFilename: 'assets/css/[name].css'
     })
   ].concat(parser.getEjsFile({dir: 'src/views', type: buildMode, dirPath})),
   optimization: {
@@ -98,25 +99,40 @@ module.exports = (dirPath, scssOptions) => ({
           name: 'lodash',
           priority: 2,
           reuseExistingChunk: true
-        }
+        },
 
         // css 파일분리 원하는경우 작성!
-        /*
-        modules: {
-          name: 'modules',
-          test: /modules\.s?css$/,
+        vendorsCss: {
+          test: /[\\/]scss[\\/]vendors[\\/]/,
+          name: 'vendors',
+          type: 'css/mini-extract',
           chunks: 'all',
-          priority: -10,
-          enforce: true
+          enforce: true,
+          priority: 50
         },
-        contents: {
-          name: 'contents',
-          test: /contents\.s?css$/,
+        baseBundle: {
+          test: /[\\/]scss[\\/](abstracts|base)[\\/]/,
+          name: 'base',
+          type: 'css/mini-extract',
+          enforce: true,
+          priority: 40
+        },
+        layoutCss: {
+          test: /[\\/]scss[\\/](layout|components)[\\/]/,
+          name: 'layout',
+          type: 'css/mini-extract',
           chunks: 'all',
-          priority: -10,
-          enforce: true
+          enforce: true,
+          priority: 30
+        },
+        pagesCss: {
+          test: /[\\/]scss[\\/]pages[\\/]/,
+          name: 'pages',
+          type: 'css/mini-extract',
+          chunks: 'all',
+          enforce: true,
+          priority: 20
         }
-        */
       }
     }
   }
