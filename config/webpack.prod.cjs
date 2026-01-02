@@ -1,10 +1,11 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const banner = require('./banner.cjs');
 const parser = require('./parser.cjs');
-const buildMode = 'production';
-// const buildMode = 'development'; // 개발모드로 설정시 압축제거됨. 배포시 production으로 변경할 것
+// const buildMode = 'production';
+const buildMode = 'development'; // 개발모드로 설정시 압축제거됨. 배포시 production으로 변경할 것
 
 module.exports = (dirPath, scssOptions) => ({
   mode: buildMode,
@@ -52,11 +53,25 @@ module.exports = (dirPath, scssOptions) => ({
   ].concat(parser.getEjsFile({dir: 'src/views', type: buildMode, dirPath})),
   optimization: {
     minimizer: [], // 빈배열로 설정시 압축 제거
+    // minimize: true,
     // minimizer: [
     //   new TerserPlugin({
     //     extractComments: false,
     //     terserOptions: {
     //       compress: {drop_console: true} // console.log 제거
+    //     }
+    //   }),
+    //   new CssMinimizerPlugin({
+    //     minimizerOptions: {
+    //       preset: [
+    //         'default',
+    //         {
+    //           normalizeCharset: true,
+    //           discardComments: {
+    //             removeAll: true // 모든 CSS 주석 제거
+    //           }
+    //         }
+    //       ]
     //     }
     //   })
     // ],
