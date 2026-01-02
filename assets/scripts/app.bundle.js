@@ -305,7 +305,11 @@ $(document).bind('kendo:skinChange', createChart);
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			524: 0
+/******/ 			524: 0,
+/******/ 			96: 0,
+/******/ 			152: 0,
+/******/ 			133: 0,
+/******/ 			237: 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -357,7 +361,7 @@ $(document).bind('kendo:skinChange', createChart);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [979], function() { return __webpack_require__(370); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(370); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
