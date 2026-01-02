@@ -1,4 +1,5 @@
 import '@/assets/scripts';
+import '@/assets/scss/abstracts/root.scss';
 import '@/assets/scss/vendors/index.scss';
 import '@/assets/scss/base/index.scss';
 import '@/assets/scss/layout/index.scss';
