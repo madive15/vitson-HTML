@@ -4,8 +4,8 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const banner = require('./banner.cjs');
 const parser = require('./parser.cjs');
-// const buildMode = 'production';
-const buildMode = 'development'; // 개발모드로 설정시 압축제거됨. 배포시 production으로 변경할 것
+const buildMode = 'production';
+// const buildMode = 'development'; // 개발모드로 설정시 압축제거됨. 배포시 production으로 변경할 것
 
 module.exports = (dirPath, scssOptions) => ({
   mode: buildMode,
