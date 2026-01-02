@@ -1,81 +1,168 @@
-/*
-import _isEmpty from 'lodash/isEmpty'
-
-const Async = {
-  generaterRun(iter) {
-    return (function iterate({value, done}) {
-      if (done) return value
-      if (value.constructor === Promise) {
-        return value.then((data) => iterate(iter.next(data))).catch((err) => iter.throw(err))
-      } else {
-        return iterate(iter.next(value))
+function createChart() {
+  $('#chart').kendoChart({
+    title: {
+      text: 'Site Visitors Stats'
+    },
+    subtitle: {
+      text: '/thousands/'
+    },
+    legend: {
+      visible: false
+    },
+    seriesDefaults: {
+      type: 'bar'
+    },
+    series: [
+      {
+        name: 'Total Visits',
+        data: [56000, 63000, 74000, 91000, 117000, 138000]
+      },
+      {name: 'Unique visitors', data: [52000, 34000, 23000, 48000, 67000, 83000]}
+    ],
+    valueAxis: {
+      max: 140000,
+      line: {
+        visible: false
+      },
+      minorGridLines: {
+        visible: true
+      },
+      labels: {
+        rotation: 'auto'
       }
-    })(iter.next())
-  },
-  wait(ms, value) {
-    return new Promise((resolve) => setTimeout(resolve, ms, value))
-  },
-  promise(callback) {
-    return new Promise((resolve, reject) => {
-      callback(resolve, reject)
-    })
-  }
-}
-console.log('Async222', Async)
-
-function* testEvent01() {
-  try {
-    const delay1 = yield Async.wait(2000, 'delay2초')
-    console.log(delay1)
-
-    const runVal2 = yield 'test2'
-    console.log(runVal2)
-
-    const delay2 = yield Async.wait(3000, 'delay3초')
-    console.log(delay2)
-  } catch (err) {
-    if (err instanceof Error) {
-      console.log(err.message)
+    },
+    categoryAxis: {
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      majorGridLines: {
+        visible: false
+      }
+    },
+    tooltip: {
+      visible: true,
+      template: '#= series.name #: #= value #'
     }
+  });
+}
+
+$(document).ready(function () {
+  // Initialize Kendo Buttons
+  if ($('#kendoButton').length) {
+    $('#kendoButton').kendoButton({themeColor: 'primary', enable: true});
+    $('#kendoPrimaryButton').kendoButton({
+      icon: 'filter',
+      size: 'large',
+      click: (e) => {
+        console.log(e);
+      }
+    });
+    $('#kendoLargeButton').kendoButton({
+      rounded: 'full', // none | small | medium | large | full
+      fillMode: 'solid', // solid | outline | flat | link
+      themeColor: 'primary' // base | primary | secondary | success | etc
+    });
+    $('#customSizedButton').kendoButton({size: 'small'});
   }
-}
 
-Async.generaterRun(testEvent01())
+  // Templated Button
+  if ($('#templatedButtonContainer').length) {
+    const buttonTemplate = kendo.template(
+      `<button id='#= id #' type='button' class='k-button k-button-lg'><span class='k-icon k-i-#= icon #'></span> #: text #</button>`
+    );
+    const buttonData = {
+      id: 'myTemplatedButton',
+      text: 'Templated Button',
+      icon: 'save'
+    };
 
-console.log(Promise.resolve('test!!!!'))
-
-class Test {
-  constructor(txt) {
-    this.txt = txt
+    $('#templatedButtonContainer').html(buttonTemplate(buttonData));
+    $('#myTemplatedButton').kendoButton({
+      click: () => {
+        alert('Templated button clicked!');
+      }
+    });
   }
 
-  showTxt() {
-    return this.txt
+  // Kendo UI RadioButtons are typically styled via CSS classes ('k-radio', 'k-radio-label')
+
+  if ($('#engine1').length) {
+    // Add existence check for radio buttons
+    $('#engine1').kendoRadioButton({
+      label: `<span class="k-radio-label-text">1.4 Petrol, 92kW</span><span class="k-radio-label-description">A útis consummationem.</span>`,
+      checked: true,
+      encoded: false
+    });
+    $('#engine2').kendoRadioButton({
+      label: '1.8 Petrol, 118kW'
+    });
+    $('#engine3').kendoRadioButton({
+      label: '2.0 Petrol, 147kW',
+      enabled: false
+    });
   }
-}
-const testIns = new Test('문구 입니다!')
-console.log(testIns.showTxt())
 
-const bb = {
-  as: 1,
-  cs: 3
-}
-const cc = {
-  cs: 2,
-  ds: 5
-}
+  if ($('#radiogroup').length) {
+    // Add existence check for radio group
+    const radioItems = [
+      {
+        label: 'Phone (SMS)',
+        value: 'phone',
+        description: 'Receive notifications via SMS'
+      },
+      {
+        label: 'E-mail',
+        value: 'email',
+        description: 'Receive notifications via E-mail'
+      },
+      {
+        label: 'None',
+        value: 'none',
+        description: 'Do not receive any notifications'
+      }
+    ];
 
-const {as, cs} = bb
+    const radioTemplate = kendo.template(`
+      <li>
+        <input type="radio" name="notification" id="radio-#: value #" class="k-radio" value="#: value #" />
+        <label for="radio-#: value #" class="k-radio-label">
+          <span class="k-radio-label-text">#: label #</span>
+          <span class="k-radio-label-description">#: description #</span>
+        </label>
+      </li>
+    `);
 
-console.log(as, cs)
+    const radioGroupElement = $('#radiogroup');
+    radioItems.forEach((item) => {
+      radioGroupElement.append(radioTemplate(item));
+    });
 
-const Maa = {...bb, ...cc}
+    radioGroupElement.kendoRadioGroup({
+      layout: 'horizontal',
+      value: 'phone'
+    });
+  }
 
-console.log(Maa)
+  if ($('#radiogroup2').length) {
+    $('#radiogroup2').kendoRadioGroup({
+      items: [
+        {
+          label: 'Phone (SMS)',
+          value: 'phone'
+        },
+        {
+          label: 'E-mail',
+          value: 'email'
+        },
+        {
+          label: 'None',
+          value: 'none'
+        }
+      ],
+      layout: 'vertical',
+      value: 'email'
+    });
+  }
 
-console.log('_isEmpty', _isEmpty)
+  createChart();
+});
 
-window.addEventListener('DOMContentLoaded', (event) => {
-  console.log(jQuery)
-})
-*/
+$(document).bind('kendo:skinChange', createChart);
