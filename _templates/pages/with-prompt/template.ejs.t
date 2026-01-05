@@ -19,7 +19,7 @@ force: true
 
   <!-- src, public 이미지 가이드
   <img src="<<%= ejs %>= _src <%= ejs %>>/assets/images/img_list01.jpg" alt="src img"/>
-  <img src="<<%= ejs %>= _public <%= ejs %>>/images/news_02.png" alt="public img" />
+  <img src="<<%= ejs %>= _public <%= ejs %>>/images/camera.png" alt="public img" />
   -->
 
 
