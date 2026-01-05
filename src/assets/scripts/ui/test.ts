@@ -1,3 +1,4 @@
+/*
 function createChart() {
   $('#chart').kendoChart({
     title: {
@@ -43,6 +44,7 @@ function createChart() {
     }
   });
 }
+*/
 
 $(document).ready(function () {
   // Initialize Kendo Buttons
@@ -162,7 +164,7 @@ $(document).ready(function () {
     });
   }
 
-  createChart();
+  // createChart();
 });
 
-$(document).bind('kendo:skinChange', createChart);
+// $(document).bind('kendo:skinChange', createChart);
