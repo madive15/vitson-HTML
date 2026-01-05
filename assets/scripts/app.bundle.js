@@ -57,6 +57,7 @@ console.log('%c ====================', 'color: green');
 /***/ 445:
 /***/ (function() {
 
+/*
 function createChart() {
   $('#chart').kendoChart({
     title: {
@@ -71,13 +72,13 @@ function createChart() {
     seriesDefaults: {
       type: 'bar'
     },
-    series: [{
-      name: 'Total Visits',
-      data: [56000, 63000, 74000, 91000, 117000, 138000]
-    }, {
-      name: 'Unique visitors',
-      data: [52000, 34000, 23000, 48000, 67000, 83000]
-    }],
+    series: [
+      {
+        name: 'Total Visits',
+        data: [56000, 63000, 74000, 91000, 117000, 138000]
+      },
+      {name: 'Unique visitors', data: [52000, 34000, 23000, 48000, 67000, 83000]}
+    ],
     valueAxis: {
       max: 140000,
       line: {
@@ -102,6 +103,8 @@ function createChart() {
     }
   });
 }
+*/
+
 $(document).ready(function () {
   // Initialize Kendo Buttons
   if ($('#kendoButton').length) {
@@ -210,9 +213,11 @@ $(document).ready(function () {
       value: 'email'
     });
   }
-  createChart();
+
+  // createChart();
 });
-$(document).bind('kendo:skinChange', createChart);
+
+// $(document).bind('kendo:skinChange', createChart);
 
 /***/ })
 
