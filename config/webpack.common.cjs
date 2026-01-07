@@ -9,7 +9,7 @@ module.exports = (dirPath, {envType, envRoot}) => ({
     [envRoot]: `./src/${envRoot}.${envType}`
   },
   output: {
-    filename: 'assets/scripts/[name].bundle.js',
+    filename: 'public/resources/scripts/[name].bundle.js',
     assetModuleFilename: '[file]',
     path: path.resolve(__dirname, parser.buildPath),
     clean: true,
