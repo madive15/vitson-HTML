@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max-old-space-size=12000 webpack serve --progress --config webpack.dev.cjs",
-    "build": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.cjs",
+    "build": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.cjs && sh ./postbuild.sh",
     "gh-pages": "pnpm build && echo > dist/.nojekyll && gh-pages -d dist -t",
     "analyze": "cross-env NODE_ENV=production webpack --progress --analyze --config webpack.prod.cjs",
     "eslint": "eslint \"**/*.{js,ts}\" --ignore-path .eslintignore .",
