@@ -1,0 +1,64 @@
+<style>
+  /* -------------------------------------------
+  Toggle UI (TEST ONLY)
+  - data-toggle 동작 확인용
+  - 공유/가이드용 임시 스타일
+------------------------------------------- */
+
+  [data-toggle-scope] {
+    margin: 20px 0;
+  }
+
+  [data-toggle-scope] [data-toggle-btn] {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  [data-toggle-scope] [data-toggle-btn]:hover {
+    background: #eee;
+  }
+
+  [data-toggle-scope] [data-toggle-box] {
+    display: none;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    font-size: 13px;
+  }
+
+  [data-toggle-scope] [data-toggle-box].is-open {
+    display: block;
+  }
+</style>
+
+<div data-toggle-scope data-toggle-group="true" data-toggle-outside="true">
+  <button type="button" data-toggle-btn data-toggle-target="panel" aria-expanded="false">토글 버튼</button>
+
+  <div data-toggle-box="panel">토글 패널</div>
+</div>
+
+<!--
+  [Toggle UI 사용 예시]
+
+  - 기본 구조:
+    * data-toggle-scope : 토글 동작 범위
+    * data-toggle-btn   : 토글 트리거
+    * data-toggle-box   : 토글 대상 패널
+    * data-toggle-target ↔ data-toggle-box 값 매칭
+
+  - 옵션(선택):
+    * data-toggle-group="true"
+      : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
+    * data-toggle-outside="true"
+      : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
+
+  - 상태:
+    * 패널 열림 시 data-toggle-box에 'is-open' 클래스가 추가됨
+    * aria-expanded 값은 JS에서 자동 관리됨
+-->

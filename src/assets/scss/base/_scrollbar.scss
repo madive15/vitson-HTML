@@ -1,0 +1,115 @@
+// -----------------------------------------------------------------------------
+// base/_scrollbar.scss (vits scope skin)
+// - 적용 범위:
+//   1) 문서 스크롤: html.vits-scope, body.vits-scope
+//   2) 내부 스크롤: .vits-scrollbar 클래스가 직접 적용된 요소
+// -----------------------------------------------------------------------------
+// - 목적:
+//   - 스크롤바 "시각 스타일"만 CSS로 커스텀한다.
+//   - 스크롤 이벤트 제어, 가상 스크롤, JS 개입은 하지 않는다.
+// -----------------------------------------------------------------------------
+// - 기본 정책:
+//   - 문서(body) 스크롤은 자동 적용
+//   - overflow(auto/scroll)가 걸린 내부 스크롤 컨테이너는
+//     반드시 .vits-scrollbar 클래스를 직접 부여해야 적용된다.
+// -----------------------------------------------------------------------------
+// - 주의:
+//   - 모든 overflow 요소에 전역으로 덮어씌우지 않는다.
+//   - 스크롤바 스킨 적용 범위는 명시적으로 관리한다.
+// -----------------------------------------------------------------------------
+// - 페이지별 톤 변경:
+//   - wrapper에서 CSS 변수만 덮어쓰는 방식으로 처리
+// -----------------------------------------------------------------------------
+
+@use '@/assets/scss/base/colors' as color;
+
+html.vits-scope,
+body.vits-scope,
+.vits-scrollbar {
+  // 토큰: 페이지별로 wrapper에서 값만 덮어쓰기
+  --vits-scrollbar-size: 10px; // 두께(세로/가로 공통)
+  --vits-scrollbar-radius: 999px; // 아주 둥글게
+  --vits-scrollbar-track: transparent; // 트랙은 거의 안 보이게
+  --vits-scrollbar-thumb: color.$scrollbar-thumb;
+  --vits-scrollbar-thumb-hover: color.$scrollbar-thumb-hover;
+  --vits-scrollbar-thumb-active: color.$scrollbar-thumb-active;
+
+  // thumb와 트랙 사이 ‘여백감’(맥처럼 떠 보이는 느낌)
+  --vits-scrollbar-gap: 3px; // border 두께로 여백 연출
+  scrollbar-color: var(--vits-scrollbar-thumb) var(--vits-scrollbar-track);
+
+  /* =========================
+   * Firefox 대응
+   * =========================
+   * - Firefox는 WebKit 가상요소 미지원
+   * - 색상/두께만 지원(라운드/hover는 제한적)
+   */
+  scrollbar-width: thin; /* auto | thin */
+
+  /* =========================
+   * WebKit 계열(크롬/엣지/사파리)
+   * ========================= */
+
+  // 스크롤바 전체(레일 크기)
+  &::-webkit-scrollbar {
+    width: var(--vits-scrollbar-size);
+    height: var(--vits-scrollbar-size);
+  }
+
+  // 트랙(레일 배경)
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    background-color: var(--vits-scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: var(--vits-scrollbar-track);
+  }
+
+  // thumb(드래그 바)
+  &::-webkit-scrollbar-thumb {
+    min-width: 36px;
+
+    // 너무 짧은 thumb 방지(콘텐츠 짧을 때도 잡기 쉬움)
+    min-height: 36px;
+    background-color: var(--vits-scrollbar-thumb);
+    background-clip: padding-box;
+
+    // 여백감: thumb에 트랙색 테두리를 주고, 실제 색은 padding 영역에만 표시
+    border: var(--vits-scrollbar-gap) solid var(--vits-scrollbar-track);
+    border-radius: var(--vits-scrollbar-radius);
+  }
+
+  // 상태(마우스 환경)
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--vits-scrollbar-thumb-hover);
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background-color: var(--vits-scrollbar-thumb-active);
+  }
+
+  // 리사이저(일부 환경에서만 노출)
+  &::-webkit-resizer {
+    background: transparent;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 페이지별 톤 변경이 필요할 때(값만 덮어쓰기)
+ * - 규칙(셀렉터/속성)은 body.vits-scope에서 고정
+ * - 값은 wrapper에서 변경(가이드 기준 유지)
+ * --------------------------------------------------------------------------- */
+/*
+.vits-wrapper.vits-wrapper-order {
+  --vits-scrollbar-thumb: rgba(255, 120, 120, 0.35);
+  --vits-scrollbar-thumb-hover: rgba(255, 120, 120, 0.50);
+  --vits-scrollbar-thumb-active: rgba(255, 120, 120, 0.65);
+}
+
+.vits-wrapper.vits-wrapper-dashboard {
+  --vits-scrollbar-thumb: rgba(80, 160, 255, 0.35);
+  --vits-scrollbar-thumb-hover: rgba(80, 160, 255, 0.50);
+  --vits-scrollbar-thumb-active: rgba(80, 160, 255, 0.65);
+}
+*/

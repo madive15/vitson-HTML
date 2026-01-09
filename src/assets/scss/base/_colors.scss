@@ -1,0 +1,137 @@
+// -----------------------------------------------------------------------------
+// base/_colors.scss
+// - 프로젝트 공통 색상 토큰/팔레트 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+
+$red-shades: (
+  '10': #fff8f8,
+  '20': #fff0f1,
+  '30': #fee1e2,
+  '40': #fccbcd,
+  '50': #fab1b3,
+  '60': #f88d90,
+  '70': #f57175,
+  '80': #f2555a,
+  '90': #ed3a40,
+  '100': #e51e25
+);
+$blue-shades: (
+  '10': #f7f9ff,
+  '20': #edf1fd,
+  '30': #d3ddf8,
+  '40': #b0c2f2,
+  '50': #8ba7ec,
+  '60': #7693dd,
+  '70': #5e7ed1,
+  '80': #5e7ed1,
+  '90': #3b5cb0,
+  '100': #3b5cb0
+);
+$green-shades: (
+  '10': #f5fdf9,
+  '20': #ecfaf3,
+  '30': #d4f0e0,
+  '40': #b2e2c4,
+  '50': #8fd2a6,
+  '60': #6ec18a,
+  '70': #4caf65,
+  '80': #2e9b45,
+  '90': #1e8a33,
+  '100': #177927
+);
+$gray-shades: (
+  '10': #fafafa,
+  '20': #f0f0f0,
+  '30': #dadada,
+  '40': #bebebe,
+  '50': #9a9a9a,
+  '60': #767676,
+  '70': #5c5c5c,
+  '80': #444,
+  '90': #2e2e2e,
+  '100': #1b1b1b
+);
+$brand-colors: (
+  '10': map.get($red-shades, '10'),
+  '20': map.get($red-shades, '20'),
+  '30': map.get($red-shades, '30'),
+  '40': map.get($red-shades, '40'),
+  '50': map.get($red-shades, '50'),
+  '60': map.get($red-shades, '60'),
+  '70': map.get($red-shades, '70'),
+  '80': map.get($red-shades, '80'),
+  '90': map.get($red-shades, '90'),
+  '100': map.get($red-shades, '100'),
+  'primary': map.get($red-shades, '100'),
+  'hover': map.get($red-shades, '90'),
+  'disabled': map.get($red-shades, '40')
+);
+$info-colors: (
+  'primary': map.get($blue-shades, '100'),
+  'bg': map.get($blue-shades, '50'),
+  'surface': map.get($blue-shades, '30')
+);
+$success-colors: (
+  'primary': map.get($green-shades, '100'),
+  'bg': map.get($green-shades, '60'),
+  'surface': map.get($green-shades, '30')
+);
+$text-colors: (
+  'primary': map.get($gray-shades, '100'),
+  'default': map.get($gray-shades, '90'),
+  'tertiary': map.get($gray-shades, '80'),
+  'quaternary': map.get($gray-shades, '60'),
+  'mute': map.get($gray-shades, '40'),
+  'brand': map.get($brand-colors, '100'),
+  'brand-sub': map.get($brand-colors, '80'),
+  'inverse': map.get($gray-shades, '0')
+);
+$surf-colors: (
+  'base': map.get($gray-shades, '0'),
+  'dark': map.get($gray-shades, '100'),
+  'primary': map.get($brand-colors, '100'),
+  'secondary': map.get($gray-shades, '80'),
+  'tertiary': map.get($gray-shades, '30'),
+  'raised': map.get($gray-shades, '10'),
+  'sunken': map.get($gray-shades, '20'),
+  'info': map.get($blue-shades, '30'),
+  'sub': map.get($brand-colors, '30'),
+  'footer': map.get($gray-shades, '90')
+);
+$border-colors: (
+  'brand': map.get($brand-colors, '100'),
+  'primary': map.get($gray-shades, '100'),
+  'secondary': map.get($gray-shades, '70'),
+  'tertiary': map.get($gray-shades, '40'),
+  'quaternary': map.get($gray-shades, '20')
+);
+$icon-colors: (
+  'primary': map.get($brand-colors, '100'),
+  'hover': map.get($brand-colors, '90'),
+  'disabled': map.get($brand-colors, '40'),
+  'info': map.get($blue-shades, '100'),
+  'info-surface': map.get($blue-shades, '30'),
+  'success': map.get($green-shades, '100'),
+  'success-surface': map.get($green-shades, '30')
+);
+$icon-neutral-colors: (
+  'primary': map.get($gray-shades, '80'),
+  'secondary': map.get($gray-shades, '60'),
+  'tertiary': map.get($gray-shades, '40'),
+  'disabled': map.get($gray-shades, '30'),
+  'inverse': map.get($gray-shades, '0')
+);
+$label-colors: (
+  'today': map.get($brand-colors, '60'),
+  'tomorrow': map.get($blue-shades, '50'),
+  'free': map.get($green-shades, '50')
+);
+$color-white: #fff;
+$color-black: #000;
+
+/* 스크롤바 커스텀 */
+$scrollbar-thumb: map.get($gray-shades, '70');
+$scrollbar-thumb-hover: map.get($gray-shades, '80'); // hover
+$scrollbar-thumb-active: map.get($gray-shades, '100'); // active

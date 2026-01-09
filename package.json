@@ -16,7 +16,9 @@
     "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --ignore-path .eslintignore .",
     "stylelint": "stylelint \"**/*.{css,scss,sass}\" --ignore-path .stylelintignore .",
     "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .stylelintignore .",
-    "ejslint": "npx ejs-lint **/*.ejs"
+    "ejslint": "npx ejs-lint **/*.ejs",
+    "prettier:dist": "prettier --write \"dist/html/**/*.html\" \"dist/resources/css/mro/renewal/**/*.css\" --ignore-path /dev/null",
+    "build:prettier": "pnpm build && pnpm prettier:dist"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,67 @@
+// -----------------------------------------------------------------------------
+// components/_icon.scss
+// - SVG 마스크 기반 아이콘(ico-svg) 공통 스타일 모음
+// -----------------------------------------------------------------------------
+
+// 동일한 SVG 마스크 스타일 재사용
+// 실제 아이콘일 땐 ic 폴더 만들어서 하기
+@mixin ic-mask($class, $file: $class) {
+  .#{$class} {
+    mask: url(/public/resources/img/mro/renewal/ic/#{$file}.svg) no-repeat center / contain;
+  }
+}
+
+/* ic-size */
+@mixin ic-size($w: 100%, $h: $w) {
+  width: $w;
+  height: $h;
+
+  .ic {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ic {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  background-color: currentcolor;
+}
+
+$svg-map: (
+  'ic-calendar': 'ic-calendar',
+  'ic-print': 'ic-print',
+  'ic-filter': 'ic-filter',
+  'ic-list': 'ic-list',
+  'ic-circles-four': 'ic-circles-four',
+  'ic-arrow-right': 'ic-arrow-right',
+  'ic-arrow-left': 'ic-arrow-left',
+  'ic-arrow-up': 'ic-arrow-up',
+  'ic-arrow-down': 'ic-arrow-down',
+  'ic-lightning': 'ic-lightning',
+  'ic-kakao': 'ic-kakao',
+  'ic-electric-bulb': 'ic-electric-bulb',
+  'ic-compare': 'ic-compare',
+  'ic-document-paper': 'ic-document-paper',
+  'ic-document-question': 'ic-document-question',
+  'ic-textbox': 'ic-textbox',
+  'ic-magnifying-glass': 'ic-magnifying-glass',
+  'ic-heart': 'ic-heart',
+  'ic-menu': 'ic-menu',
+  'ic-check': 'ic-check',
+  'ic-x': 'ic-x',
+  'ic-minus': 'ic-minus',
+  'ic-plus': 'ic-plus',
+  'ic-label': 'ic-label',
+  'ic-tag': 'ic-tag',
+  'ic-user': 'ic-user',
+  'ic-bag-check': 'ic-bag-check',
+  'ic-compare-on': 'ic-compare-on',
+  'ic-bag-on': 'ic-bag-on',
+  'ic-bag': 'ic-bag'
+);
+
+@each $class, $file in $svg-map {
+  @include ic-mask($class, $file);
+}

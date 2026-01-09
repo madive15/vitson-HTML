@@ -1,0 +1,75 @@
+// -----------------------------------------------------------------------------
+// layout/_wrapper.scss (Layout Core)
+// - 프로젝트 공통 레이아웃 기준(수정 금지): wrapper 프레임 + grid 구조까지 포함.
+// - sticky는 '문서(body) 스크롤' 기준으로 운용하며, grid/wrap/wrapper에는 overflow를 두지 않는다.
+// - 화면별 예외(스크롤 컨테이너 전환 등)는 vits-wrapper-{1depth} 확장 클래스로만 처리.
+// -----------------------------------------------------------------------------
+
+@use '@/assets/scss/abstracts/mixins' as mx;
+
+/* 
+  html, body { height: 100%; } 는 
+  - height: 100% 체인(= .vits-wrap/.vits-grid 높이 계산) 전제 조건.
+  - (현재 정책) 스크롤은 문서(body) 기준으로 운용한다.
+  - reset.css에 없으면 프로젝트 공통(reset/root)에서 확정 반영 권장.
+*/
+
+/* [수정 금지] 레이아웃 기준 파일(프레임).
+   화면별 예외/변형은 vits-wrapper-{1depth} 확장 클래스에서만 처리.
+   
+   .vits-wrapper [금지]
+   - wrapper에는 overflow를 주지 마세요(hidden/auto 포함)
+   - sticky 클리핑/기준 변경 이슈 방지(현재는 body 스크롤 기준) */
+.vits-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom); // iOS 하단 안전영역(미지원 환경은 0)
+
+  @include mx.full-height; // wrapper 최소 높이 확보(모바일 주소창 변동 대응)
+}
+
+.vits-header,
+.vits-footer {
+  flex: 0 0 auto;
+}
+
+/* .vits-main [유지]
+   - flex 레이아웃에서 min-height 기본값(auto) 이슈 방어
+   - 자식 높이 계산이 밀리거나 깨지는 케이스 방지 */
+.vits-main {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* .vits-wrap [금지]
+   - overflow(특히 hidden/auto)를 주지 마세요
+   - sticky가 잘리거나 기준이 바뀌는 원인이 됩니다 */
+.vits-wrap {
+  height: 100%;
+  min-height: 0;
+}
+
+/* .vits-grid [금지]
+   - overflow를 주지 않습니다(현재는 body 스크롤 기준)
+   - 스크롤 컨테이너로 전환하면 sticky 기준이 분산될 수 있음 */
+.vits-grid {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch; // (참고) overflow:auto 전환 시 iOS 관성 스크롤
+}
+
+/* 메인 */
+.vits-grid-main {
+  flex: 1 1 auto;
+  min-width: 0; // 긴 컨텐츠로 인한 가로 넘침 방지
+  min-height: 0;
+}
+
+/* 좌/우 사이드 */
+/* .vits-grid-side [주의]
+   - 사이드(및 내부)에 overflow(auto/hidden) 금지: sticky 기준 변경/클리핑 위험
+   - “사이드 자체 스크롤” 요구는 별도 정책으로 분리 */
+.vits-grid-side {
+  min-height: 0;
+}

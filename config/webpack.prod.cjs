@@ -48,8 +48,8 @@ module.exports = (dirPath, scssOptions) => ({
     */
     new MiniCssExtractPlugin({
       // filename: '[name].[contenthash].chunk.css'
-      filename: 'public/resources/styles/[name].css',
-      chunkFilename: 'public/resources/styles/[name].css'
+      filename: 'public/resources/css/mro/renewal/[name].css',
+      chunkFilename: 'public/resources/css/mro/renewal/[name].css'
     })
   ].concat(parser.getEjsFile({dir: 'src/views', type: buildMode, dirPath})),
   optimization: {

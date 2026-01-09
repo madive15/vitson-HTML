@@ -1,0 +1,384 @@
+@charset "utf-8";
+.maintenance_area {
+    margin: 0 auto;
+    max-width: 624px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh
+}
+
+.maintenance_area img {
+    max-width: 100%;
+}
+
+.inner_box {
+    margin: 10px;
+    border: 2px solid #000;
+}
+
+.notice_info_area {
+    padding: 5px;
+    background: #ebebeb;
+    text-align: center
+}
+
+.notice_tit {
+    padding: 2px 5px;
+    display: inline-block;
+    vertical-align: middle;
+    color: #000;
+    background: #f3bb2d;
+    font-size: 12px
+}
+
+.notice_date {
+    display: inline-block;
+    vertical-align: middle;
+    color: #ff0000;
+}
+
+/* 배송 추적 */
+.header_delivery {
+    position: relative;
+}
+
+.header_delivery .header_delivery_logo {
+    text-align: center;
+    padding: 20px 30px 0;
+}
+
+.header_delivery h1 {
+    font-size: 20px;
+    font-weight: normal;
+    color: #262626;
+    line-height: 1.2;
+    padding: 15px 30px 0;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+.content_delivery .tracking_info {
+    background-color: #03a9f4;
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.content_delivery .tracking_info dt,
+.content_delivery .tracking_info dd {
+    color: #ffffff;
+}
+
+.content_delivery .tracking_info .tracking_data_num_info {
+    border-radius: 30px;
+    font-size: 12px;
+    border: 1px solid #ffffff;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 0 10px 0;
+}
+
+.content_delivery .tracking_info .tracking_data_num {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.content_delivery .tracking_info .tracking_delivery_data {
+    font-size: 18px;
+}
+
+.content_delivery .tracking_state {
+    padding: 10px;
+    position: sticky;
+    top: 157px;
+    z-index: 10;
+    background-color: #fff;
+}
+
+.content_delivery .tracking_state.tracking_state_error {
+    padding: 10px 0 0 0;
+    background-color: #f1f1f1;
+}
+
+.content_delivery .tracking_state.tracking_state_error .tracking_state_error_txt {
+    font-size: 14px;
+    padding: 20px 10px 10px;
+    background-color: #fff;
+    color: #999;
+    text-align: center;
+}
+
+.content_delivery .tracking_state ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.content_delivery .tracking_state li {
+    flex: 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px 0;
+    position: relative;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box:before {
+    content: "";
+    display: inline-block;
+    width: 70%;
+    height: 1px;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-70%, -50%);
+    z-index: -1;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.content_delivery .tracking_state li:first-child .tracking_delivery_icon_box:before {
+    display: none;
+}
+
+.content_delivery .tracking_state li span {
+    color: #aaaaaa;
+}
+
+.content_delivery .tracking_state li.on span {
+    color: #03a9f4;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box {
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    position: relative;
+    display: inline-block;
+}
+
+.content_delivery .tracking_state li.on .tracking_delivery_icon_box {
+    background-color: #03a9f4;
+}
+
+.content_delivery .tracking_state li.on .tracking_delivery_icon_box i {
+    fill: #fff;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box i {
+    display: inline-block;
+    /*background-position: center center;*/
+    /*background-size: 25px 25px;*/
+    /*background-repeat: no-repeat;*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box .tracking_delivery_package_icon {
+    /*background-image: url("/resources/img/common/delivery_package_icon.svg");*/
+    /*background-size: 60% auto;*/
+    width: 30px;
+    height: 30px;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box .tracking_delivery_cargo_icon {
+    /*background-image: url("/resources/img/common/delivery_shop_truck_icon.svg");*/
+    /*background-size: 100% auto;*/
+    width: 50px;
+    height: 50px;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box .tracking_delivery_warehouse_icon {
+    /*background-image: url("/resources/img/common/delivery_warehouse_icon.svg");*/
+    /*background-size: 60% auto;*/
+    /*background-position: center 7px;*/
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -60%);
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box .tracking_delivery_truck_icon {
+    /*background-image: url("/resources/img/common/delivery_truck_icon.svg");*/
+    /*background-size: 100% auto;*/
+    width: 50px;
+    height: 50px;
+}
+
+.content_delivery .tracking_state li .tracking_delivery_icon_box .tracking_delivery_check_icon {
+    /*background-image: url("/resources/img/common/delivery_check_icon.svg");*/
+    /*background-size: 60% auto;*/
+    width: 25px;
+    height: 25px;
+}
+
+.content_delivery .tracking_list_wrap_bg {
+    background-color: #f1f1f1;
+    padding: 10px 0 0 0;
+}
+
+.content_delivery .tracking_list_wrap {
+    background-color: #ffffff;
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px 0;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_time {
+    font-size: 12px;
+    font-style: normal;
+    color: #686868;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_time.arrive {
+    color: #f7635b;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement {
+    font-size: 16px;
+    color: #454545;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement.arrive strong {
+    color: #f7635b;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement strong {
+    color: #0b83e6;
+    position: relative;
+    padding: 0 0 0 5px;
+}
+
+.content_delivery .tracking_list_wrap li {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 0 0 30px;
+    position: relative;
+}
+
+.content_delivery .tracking_list_wrap li:after {
+    content: "";
+    display: inline-block;
+    border-left: 1px solid #0b83e6;
+    width: 1px;
+    height: 80px;
+    position: absolute;
+    bottom: 50%;
+    left: 15px;
+    transform: translate(-50%, 0);
+    z-index: 1;
+}
+
+.content_delivery .tracking_list_wrap li:first-child:after {
+    display: none;
+}
+
+.content_delivery .tracking_list_wrap li:before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid #0b83e6;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translate(0, -50%);
+    z-index: 2;
+}
+
+.content_delivery .tracking_list_wrap li.arrive:before {
+    background-color: #f7635b;
+    border-color: #f7635b;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement strong:before {
+    content: "";
+    display: inline-block;
+    border-left: 1px solid #666666;
+    width: 1px;
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -45%);
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement_txt {
+    visibility: hidden;
+    width: 60px;
+    background-color: #aaa;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    left: 0;
+    margin-left: 0;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement_txt::after {
+    content: " ";
+    position: absolute;
+    border-style: solid;
+    border-width: 5px;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-color: #aaa transparent transparent transparent;
+}
+
+.content_delivery .tracking_list_wrap .tracking_movement_box:hover .tracking_movement_txt {
+    visibility: visible;
+}
+
+
+@media (min-width: 1024px) {
+    .notice_info_area {
+        font-size: 16px
+    }
+
+    .notice_tit {
+        font-size: 13px
+    }
+}
+
+@media (max-width: 430px) {
+    .content_delivery .tracking_state li {
+        width: 20%;
+    }
+
+    .content_delivery .tracking_list_wrap {
+        gap: 20px 0;
+        padding: 15px;
+    }
+
+    .content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement_txt {
+        display: none;
+    }
+
+    .content_delivery .tracking_list_wrap .tracking_movement_box .tracking_movement {
+        font-size: 13px;
+    }
+
+    .content_delivery .tracking_list_wrap .tracking_movement_box .tracking_time {
+        font-size: 11px;
+    }
+
+    .content_delivery .tracking_list_wrap li:after {
+        height: 60px;
+    }
+}

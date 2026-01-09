@@ -1,0 +1,68 @@
+// -----------------------------------------------------------------------------
+// pages/_guide.scss
+// - 가이드(guide) 전용 스타일 모음
+// - EJS에서 <body data-guide="true"> 인 페이지만 로드/적용됨
+// - 운영/실서비스 페이지 스타일과의 충돌을 방지하고, 가이드 UI만 독립 관리
+// - 포함 대상 예시: vits-guide-*, 가이드용 데모 레이아웃/타이포/리스트/코드블록 등
+// - 주의: pages/index.scss(공통)에서는 guide.scss를 import 하지 말 것(전 페이지 적용 방지)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+body {
+  min-width: 0;
+}
+
+.vits-guide {
+  &-wrapper {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 32);
+  }
+
+  &-title {
+    @include typo.typography('h1b');
+  }
+
+  &-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0;
+
+    > li {
+      @include mx.flex(flex, column, flex-start, center);
+      @include mx.border(bottom);
+      gap: map.get(var.$unit, 8);
+      padding: map.get(var.$unit, 12) map.get(var.$unit, 8);
+      text-align: center;
+    }
+  }
+
+  &-item {
+    @include icon.ic-size(map.get(var.$unit, 40));
+    min-height: map.get(var.$unit, 36);
+  }
+
+  &-icon {
+    @include icon.ic-size(map.get(var.$unit, 40));
+  }
+
+  &-name {
+    @include typo.typography('b3m');
+  }
+
+  &-code {
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+    background: map.get(color.$gray-shades, '20');
+
+    code {
+      font-size: fn.rem(14);
+    }
+  }
+}
