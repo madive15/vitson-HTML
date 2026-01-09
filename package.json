@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max-old-space-size=12000 webpack serve --progress --config webpack.dev.cjs",
-    "build": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.cjs && sh ./postbuild.sh",
+    "build": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.cjs",
     "gh-pages": "pnpm build && echo > dist/.nojekyll && gh-pages -d dist -t",
     "analyze": "cross-env NODE_ENV=production webpack --progress --analyze --config webpack.prod.cjs",
     "eslint": "eslint \"**/*.{js,ts}\" --ignore-path .eslintignore .",
@@ -17,8 +17,9 @@
     "stylelint": "stylelint \"**/*.{css,scss,sass}\" --ignore-path .stylelintignore .",
     "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .stylelintignore .",
     "ejslint": "npx ejs-lint **/*.ejs",
+    "build:sh": "pnpm build && sh ./postbuild.sh",
     "prettier:dist": "prettier --write \"dist/html/**/*.html\" \"dist/resources/css/mro/renewal/**/*.css\" --ignore-path /dev/null",
-    "build:prettier": "pnpm build && pnpm prettier:dist"
+    "build:sh:prettier": "pnpm build:sh && pnpm prettier:dist"
   },
   "repository": {
     "type": "git",
