@@ -76,8 +76,8 @@ module.exports = {
     'string-no-newline': true,
     // 알 수 없는 단위 사용 금지
     'unit-no-unknown': true,
-    // 허용되는 CSS 단위 목록 지정
-    'unit-allowed-list': ['px', 'em', 'rem', 'vh', 'vw', 'vmin', 'vmax', 'deg', 's', '%', 'fr'],
+    // 허용되는 CSS 단위 목록 지정 (26년 dvh 추가)
+    'unit-allowed-list': ['px', 'em', 'rem', 'vh', 'dvh', 'vw', 'vmin', 'vmax', 'deg', 's', '%', 'fr'],
     // CSS 값 키워드(예: `solid`, `auto`)를 소문자로 강제
     'value-keyword-case': 'lower',
     // 사용자 정의 미디어 쿼리 이름 패턴을 kebab-case로 강제

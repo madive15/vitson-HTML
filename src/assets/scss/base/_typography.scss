@@ -1,0 +1,157 @@
+// -----------------------------------------------------------------------------
+// base/_typography.scss
+// - 프로젝트 전체에서 사용하는 기본 타이포그래피 스타일
+//   (폰트, 글자 크기, 줄 높이, 자간, 헤딩/본문 스타일 등)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:string';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+
+/* -----------------------------------------------------------------------------
+  Typography Mixins
+
+  1. 목적
+     - 프로젝트 전역에서 통일된 타이포그래피 스타일 적용
+     - 글자 크기, 줄 높이, 자간, 폰트 굵기 등 관리
+
+  2. 토큰 구조
+     - 그룹 + 숫자 + 굵기
+       * 그룹: h (head), b (body), d (deco)
+       * 숫자: 1~5 (사이즈 구분)
+       * 굵기: r (regular), m (medium), s (semi-bold), b (bold)
+     - 예: h1m, b2r, d1s
+
+  3. 변수
+     - $typo-head / $typo-body / $typo-deco : 그룹별 사이즈, 줄 높이 매핑
+     - $typo-weight : 토큰 굵기 매핑
+
+  4. 함수/믹스인
+     - typo-token($name) : 토큰을 key + weight로 분리
+     - @mixin typography($name, $family, $tracking, $color) : 토큰 기반 스타일 적용
+     - @mixin font-style(...) : 개별 스타일 지정용
+
+  5. 사용 방법
+    - 다른 SCSS 파일에서 import 후 사용
+      @use '@/assets/scss/base/typography' as typo;
+      .example {
+        @include typo.typography("h1m");
+      }
+----------------------------------------------------------------------------- */
+$typo-deco: (
+  d1: (
+    // XL
+    fn.rem(32),
+    1.3
+  ),
+  d2: (
+    // L
+    fn.rem(30),
+    1.3
+  ),
+  d3: (
+    // R
+    fn.rem(12),
+    1.3
+  )
+);
+$typo-head: (
+  h1: (
+    fn.rem(28),
+    1.3
+  ),
+  h2: (
+    fn.rem(24),
+    1.3
+  ),
+  h3: (
+    fn.rem(20),
+    1.3
+  ),
+  h4: (
+    fn.rem(18),
+    1.3
+  )
+);
+$typo-body: (
+  b1: (
+    fn.rem(18),
+    1.3
+  ),
+  b2: (
+    fn.rem(16),
+    1.3
+  ),
+  b3: (
+    fn.rem(14),
+    1.3
+  ),
+  b4: (
+    fn.rem(12),
+    1.3
+  ),
+  b5: (
+    fn.rem(10),
+    1.3
+  )
+);
+$typo-weight: (
+  r: 400,
+  m: 500,
+  s: 600,
+  b: 700
+);
+
+// 문자열 파싱용
+@function typo-token($name) {
+  $lower: string.to-lower-case($name); // h1m → h1m
+  $key: string.slice($lower, 1, 2); // 1번째와 2번째 문자 = "h1"
+  $weight: string.slice($lower, 3); // 3번째부터 끝 = "m"
+
+  @return ($key, $weight);
+}
+
+// typography mixin
+@mixin typography($name, $family: 'Pretendard', $tracking: 0, $color: map.get(color.$text-colors, 'default')) {
+  $token: typo-token($name);
+  $key: list.nth($token, 1); // h1
+  $weight-key: list.nth($token, 2); // m
+
+  $style: null;
+  $group: string.slice($key, 0, 1); // h / b / d
+
+  @if $group == 'h' {
+    $style: map.get($typo-head, $key);
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $group == 'b' {
+    $style: map.get($typo-body, $key);
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $group == 'd' {
+    $style: map.get($typo-deco, $key);
+  }
+
+  @if not $style {
+    @error "Invalid typography token: #{$name}";
+  }
+  font-family: $family, system-ui, sans-serif;
+  font-size: list.nth($style, 1);
+  font-weight: map.get($typo-weight, $weight-key);
+  line-height: list.nth($style, 2);
+  color: $color;
+  letter-spacing: $tracking;
+}
+
+/* font-style */
+@mixin font-style($family: 'Pretendard', $weight: 400, $size: 16, $line-height: 1.3, $tracking: 0, $color: #333) {
+  font-family: $family, system-ui, sans-serif;
+  font-size: fn.rem($size);
+  font-weight: $weight;
+  line-height: $line-height;
+  color: $color;
+  letter-spacing: $tracking;
+}

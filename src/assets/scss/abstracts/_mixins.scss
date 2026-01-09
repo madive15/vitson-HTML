@@ -1,218 +1,239 @@
+// -----------------------------------------------------------------------------
+// abstracts/_mixins.scss
+// - 공통 믹스인 모음
+// -----------------------------------------------------------------------------
 
-@mixin normal {
-  font-family: ManropeR, NotoR, serif;
-  font-weight: normal;
-}
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/base/colors' as color;
 
-@mixin bold {
-  font-family: ManropeB, NotoB, serif;
-  font-weight: normal;
-}
+/* -----------------------------------------------------------------------------
+ * full-height (모바일 뷰포트 높이 보정)
+ *
+ * - iOS/안드 주소창·툴바 변화에도 화면 높이(래퍼 min-height) 안정화
+ * - 100vh 기본 → 100dvh 우선 → 미지원 시 --vh로 대체
+ * - 최상위 래퍼에 @include full-height;
+ * --------------------------------------------------------------------------- */
+@mixin full-height {
+  min-height: 100vh;
+  min-height: 100dvh;
 
-/* 인라인 가로스크롤 */
-
-@mixin inline-scrolling {
-  box-sizing: border-box;
-  width: 100%;
-  padding-bottom: .2rem;
-  overflow: visible hidden;
-  font-size: 0;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-}
-
-// cover그라디언트
-
-@mixin cover-img($radius: 15px, $color: rgba(0, 0, 0, .1)) {
-  position: relative;
-
-  &::before {
-    @include Position($top: 0, $left: 0);
-    display: block;
-    width: 100%;
-    height: 100%;
-    content: "";
-    background-color: $color;
-    border-radius: $radius;
+  @supports not (height: 100dvh) {
+    min-height: calc(var(--vh, 1vh) * 100);
   }
 }
 
-/* 폰트만 삭제시킴 */
+/* -----------------------------------------------------------------------------
+ * 반응형 브레이크포인트 사용 가이드
+ *
+ * - pc-sm: 1024px 이상 ~ 1279px 이하 (작은 PC)
+ *   - 여백, 폰트, 레이아웃 폭 등 조정
+ * - pc: 1280px 이상 (기본 시안)
+ *   - 기본 레이아웃 및 여백 적용
+ *
+ * 사용 예시:
+ *   .container {
+ *     // 1024~1279 구간만 여백 줄이기
+ *     @include respond-to(pc-sm) {
+ *       padding: 0 16px;
+ *     }
+ *
+ *     // 1280 이상은 기본
+ *     @include respond-to(pc) {
+ *       max-width: 1280px;
+ *       margin: 0 auto;
+ *     }
+ *   }
+ * --------------------------------------------------------------------------- */
+@mixin respond-to($key) {
+  $bp: map.get($breakpoints, $key);
 
-@mixin hide-txt {
-  font-size: 0;
-  line-height: 0;
+  @if $bp {
+    @media (min-width: $bp) {
+      @content;
+    }
+  }
 }
 
-@mixin hidden {
-  @include hide-txt;
-  position: absolute;
-  visibility: hidden;
+/* ---------------------------------------------------------------------------
+ * hoverable-only / common-mouse-event
+ * - hoverable-only: 마우스/트랙패드 등 호버 가능한 장치에서만 스타일 적용
+ * - common-mouse-event: hover, focus-visible, active에서 동일 스타일 적용
+ *   (호버 가능한 장치면 hover + focus/active 적용, 아닌 장치는 focus/active만)
+ * - 사용 예:
+ *   @include common-mouse-event {
+ *     color: red;
+ *   }
+ * ------------------------------------------------------------------------- */
+@mixin hoverable-only {
+  @media (any-hover: hover) and (any-pointer: fine) {
+    @content;
+  }
 }
 
-@mixin break-word {
-  word-break: break-all;
-  word-wrap: break-word;
-}
+@mixin common-mouse-event {
+  @include hoverable-only {
+    &:hover {
+      @content;
+    }
+  }
 
-/* 투명도 믹스인 */
-
-@mixin opacity($opacity) {
-  filter: alpha(opacity=$opacity-ie); /* For IE5~IE9 */
-  opacity: $opacity; /* All modern browsers */
-  $opacity-ie: $opacity * 100;
+  &:focus-visible,
+  &:active {
+    @content;
+  }
 }
 
 /* 포지션 믹스인 */
-// @include position($top: 0, $left: 0)
 @mixin position($position: absolute, $top: null, $right: null, $bottom: null, $left: null) {
   position: $position;
-  inset: $top $right $bottom $left;
-}
 
-/* 백그라운드 믹스인 */
-// @include background($sprite:'error', $type:'png', $position:right center); ---  사용법
-// @include background($sprite:'error', $type:'jpg'); ---  사용법
-// @include background($sprite:'error', $type:'jpg', $position:20% 20%, $size:100%); ---  사용법
-@mixin background($sprite, $type: "png", $position: 0 0, $size: auto, $path: "icons") {
-  background-image: url("../../assets/images/#{$path}/#{$sprite}.#{$type}");
-  background-repeat: no-repeat;
-  background-position: $position;
-  background-size: $size;
-}
-
-/* 말줄임표 */
-// 인자 값의 기본 값은 1
-// @include ellipsis($w:100px, $lines:2); --- 사용법
-@mixin ellipsis($w: 100%, $lines: 1, $display: block) {
-  @if  $lines == 1 {
-    display: $display;
-    width: $w;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  @if $top {
+    top: $top;
   }
 
+  @if $right {
+    right: $right;
+  }
+
+  @if $bottom {
+    bottom: $bottom;
+  }
+
+  @if $left {
+    left: $left;
+  }
+}
+
+/* flex */
+@mixin flex($flex: flex, $direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: $flex;
+  flex-flow: $direction $wrap;
+  align-items: $align;
+  justify-content: $justify;
+}
+
+/* ---------------------------------------------------------------------------
+ * background 믹스인
+ * - 역할: 배경 색상, 이미지, 반복, 위치, 크기를 한 번에 설정
+ * - 기본값: 
+ *     $url: 'none' (이미지 없음)
+ *     $color: colors.$color-white
+ *     $repeat: no-repeat
+ *     $position: center
+ *     $size: contain
+ * - 사용 시 주의:
+ *     배경 이미지를 적용할 경우, 반드시 '/public/resources/img/mro/renewal/' 폴더 기준 경로로 입력
+ *     예: "ills/temp.png"
+ * - 사용 예시:
+ *     @use '@/assets/scss/abstracts/mixins' as mx;
+ *     .example {
+ *       @include mx.background("ills/temp.png");
+ *     }
+ * ------------------------------------------------------------------------- */
+@mixin background($url: 'none', $color: colors.$color-white, $repeat: no-repeat, $position: center, $size: contain) {
+  @if $url == 'none' {
+    background: $color $repeat $position / $size;
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
   @else {
-    display: $display;
-    width: $w;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: $lines;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
+    background: $color url('/public/resources/img/mro/renewal/#{$url}') $repeat $position / $size;
   }
 }
 
-// 커스텀 스크롤바
-@mixin custum-scroll($minus: 5px) {
-  &::-webkit-scrollbar {
-    width: 17px;
+/* ---------------------------------------------------------------------------
+ * border 믹스인
+ * - 역할: 특정 방향 또는 전체에 보더(border) 적용
+ * - 기본값:
+ *     $direct: bottom (하단 border)
+ *     $width: 1px
+ *     $style: solid
+ *     $color: map.get(colors.$border-colors, 'primary')
+ * - 사용 시 주의:
+ *     - $width는 px 단위로 입력
+ *     - 전체 보더를 적용하려면 $direct: all 사용
+ * - 사용 예시:
+ *     @use '@/assets/scss/abstracts/mixins' as mx;
+ *     .example {
+ *       @include mx.border();                  // 하단 1px solid primary
+ *       @include mx.border(all, 2px, dashed); // 전체 2px dashed 기본 색상
+ *     }
+ * ------------------------------------------------------------------------- */
+@mixin border($direct: bottom, $width: 1px, $style: solid, $color: map.get(color.$border-colors, 'tertiary')) {
+  @if $direct == 'all' {
+    border: $width $style $color;
   }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #e1e1e1;
-    background-clip: content-box;
-    border: $minus solid transparent;
-    border-radius: 15px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #fafafa;
-    background-clip: content-box;
-    border: $minus solid transparent;
-    border-radius: 15px;
-  }
-  scrollbar-base-color: #e1e1e1;
-  scrollbar-face-color: #e1e1e1;
-  scrollbar-highlight-color: #e1e1e1;
-  scrollbar-track-color: #fafafa;
-  scrollbar-arrow-color: #fafafa;
-  scrollbar-shadow-color: #fafafa;
-  scrollbar-dark-shadow-color: #fafafa;
-}
-
-// @include box-shadow($top:0, $left:0px, $blur:15px, $color:rgba(50, 50, 50, 0.75));
-
-@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
-  @if $inset {
-    box-shadow: inset $top $left $blur $color;
-  }
-
+  // stylelint-disable-next-line at-rule-empty-line-before
   @else {
-    box-shadow: $top $left $blur $color;
+    border-#{$direct}: $width $style $color;
   }
 }
 
-/* 미디어쿼리 믹스인 */
-// @include media( $queryPoint: "(max-width:480px)" ){
-//  width : 50%;
-// }
-
-@mixin media($queryPoint) {
-  @media #{ $queryPoint } {
-    @content;
-  }
+/* 스크린 리더 전용 숨김 처리 */
+@mixin sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
-// 미디어 쿼리 MIXIN
-// --------------------------------------------------
-
-// Break Point (Desktop First 기준 내림차순 설정)
-// only PC
-
-@mixin pc-only {
-  @media screen and (min-width: $tablet-l-width + 1) {
-    @content;
-  }
+/* 말줄임 - 한 줄 */
+@mixin ellipsis-single {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-// PC large
-
-@mixin pc-large {
-  @media screen and (min-width: $desktop-l-width + 1) {
-    @content;
-  }
+/* 말줄임 - 2줄 이상 */
+@mixin ellipsis-multi($line-height: 1.4, $ea: 2) {
+  display: -webkit-box;
+  max-height: calc(#{$line-height} * #{$ea});
+  overflow: hidden;
+  line-height: $line-height;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: #{$ea};
+  -webkit-box-orient: vertical;
 }
 
-// --------------------------------------------------
-
-// 태블릿
-
-@mixin tab {
-  @media screen and (max-width: $tablet-l-width) {
-    @content;
-  }
+/* 한국어/영어 모두 안전하게 개행 */
+@mixin text-wrap-safe {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
-// 모바일
-
-@mixin mob {
-  @media screen and (max-width: $tablet-s-width - 1) {
-    @content;
+/* media-box: 미디어 박스 공통 규칙 */
+@mixin media-box($fit: contain, $ratio: null, $w: null, $h: null, $overflow: null, $pos: 50% 50%, $bg: null) {
+  @if $w {
+    width: $w;
   }
-}
 
-// 모바일 large
-
-@mixin mob-large {
-  @media screen and (max-width: $mob-l-width) {
-    @content;
+  @if $h {
+    height: $h;
   }
-}
 
-// 모바일 mid
-
-@mixin mob-mid {
-  @media screen and (max-width: $mob-m-width) {
-    @content;
+  @if $ratio {
+    aspect-ratio: $ratio;
   }
-}
 
-// 모바일 small
+  @if $bg {
+    background: $bg;
+  }
 
-@mixin mob-small {
-  @media screen and (max-width: $mob-s-width) {
-    @content;
+  @if $overflow {
+    overflow: $overflow;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: $fit;
+    object-position: $pos;
   }
 }

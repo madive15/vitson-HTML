@@ -1,0 +1,45 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- 아이콘 토큰(이름) 목록 -->
+<% const icons = [ 'calendar', 'print', 'filter', 'list', 'circles-four', 'arrow-right', 'arrow-left', 'arrow-up',
+'arrow-down', 'lightning', 'kakao', 'electric-bulb', 'compare', 'document-paper', 'document-question', 'textbox',
+'magnifying-glass', 'heart', 'menu', 'check', 'x', 'minus', 'plus', 'label', 'tag', 'user', 'bag-check', 'compare-on',
+'bag-on', 'bag' ] ; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 아이콘'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">아이콘</h2>
+
+        <div class="vits-guide-code">
+          <code> &lt;%- include(`${_src}/views/components/icon.ejs`, { iconName: {name} }) %&gt; </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list">
+            <% icons.forEach(function (name) { %>
+            <li>
+              <div class="vits-guide-icon">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: `${name}` }) %>
+              </div>
+              <p class="vits-guide-name"><%= `${name}` %></p>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

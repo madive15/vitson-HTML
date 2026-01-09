@@ -1,6 +1,49 @@
-$desktop-l-width: 1440px;
-$tablet-l-width: 1024px;
-$tablet-s-width: 768px;
-$mob-l-width: 640px;
-$mob-m-width: 425px;
-$mob-s-width: 375px;
+// -----------------------------------------------------------------------------
+// abstracts/_variables.scss
+// - 프로젝트 전역 변수(디자인 토큰/브레이크포인트/z-index) 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:list';
+@use '@/assets/scss/abstracts/functions' as fn;
+
+/* brakpoint width */
+$breakpoints: (
+  pc-sm: 1024px,
+  pc: 1280px
+);
+
+/* width */
+$desktop-width: fn.rem(map.get($breakpoints, pc));
+$desktop-sm-width: fn.rem(map.get($breakpoints, pc-sm));
+
+/* height */
+
+/* z-index */
+$zindex-skipnav: 9999;
+
+/* radius */
+$radius: (
+  'sm': '4px',
+  'md': '8px',
+  'lg': '12px',
+  'xl': '56px'
+);
+
+/* unit 단위 배수 리스트 */
+$unit: (
+  2: fn.rem(2),
+  4: fn.rem(4),
+  8: fn.rem(8),
+  12: fn.rem(12),
+  16: fn.rem(16),
+  20: fn.rem(20),
+  24: fn.rem(24),
+  32: fn.rem(32),
+  36: fn.rem(36),
+  40: fn.rem(40),
+  44: fn.rem(44),
+  48: fn.rem(48),
+  52: fn.rem(52),
+  56: fn.rem(56)
+);

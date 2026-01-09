@@ -8,22 +8,22 @@
     <h1 class="text-[30px]">APP_ENV_URL : <%= APP_ENV_URL %></h1>
     <h1 class="text-[30px]">APP_ENV_TYPE : <%= APP_ENV_TYPE %></h1>
 
-    test 111 <%- include(`${_src}/views/components/radio.ejs`, { name: 'radio001', datas: [ { value: 'value_01', label:
-    '라디오박스 01', disabled: false }, { value: 'value_02', label: '라디오박스 02', disabled: false }, { value:
-    'value_03', label: '라디오박스 03', disabled: true }, ]}) %>
+    test 111 <%- include(`${_src}/views/components/form/input-radio.ejs`, { name: 'radio001', datas: [ { value:
+    'value_01', label: '라디오박스 01', disabled: false }, { value: 'value_02', label: '라디오박스 02', disabled: false
+    }, { value: 'value_03', label: '라디오박스 03', disabled: true }, ]}) %>
 
     <div class="background-test">
       <div class="icon-png"></div>
       <div class="icon-svg"></div>
     </div>
 
-    <%- include(`${_src}/views/components/swiper.ejs`, { name: 'swiper01 swiper-page-nav', usePage: true, useNav: true,
-    datas: [ { html: `
+    <%- include(`${_src}/views/components/swiper/swiper.ejs`, { name: 'swiper01 swiper-page-nav', usePage: true, useNav:
+    true, datas: [ { html: `
     <p>Slide 1</p>
     ` }, { html: `
     <p>Slide 2</p>
-    ` } ] })%> <%- include(`${_src}/views/components/swiper.ejs`, { name: 'swiper02 swiper-page', usePage: true, useNav:
-    false, datas: [ { html: `
+    ` } ] })%> <%- include(`${_src}/views/components/swiper/swiper.ejs`, { name: 'swiper02 swiper-page', usePage: true,
+    useNav: false, datas: [ { html: `
     <p>test!!!!</p>
     ` }, { html: `
     <p>test2!!!!</p>
