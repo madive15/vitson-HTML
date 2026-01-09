@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>sample-main</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../resources/css/common/catalog.css" />
+<script defer src="../../resources/scripts/swiper.bundle.js"></script><script defer src="../../resources/scripts/app.bundle.js"></script><link href="../../resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper vits-wrapper-{1depth 이름}">
+      <header class="vits-header">header 영역</header>
+
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-side-left -->
+            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
+            <!-- E: vits-grid-side-left -->
+
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main">
+              <!-- 섹션 단위 컴포넌트 삽입 -->
+
+              <div style="height: 800px; background: darkcyan">영역1</div>
+              <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">스티키</div>
+              <div style="height: 1500px; background: green">영역3</div>
+
+              <section data-swiper data-swiper-loop="true" data-swiper-autoplay="3000">
+  <div class="swiper" style="width: 100%; height: 400px">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <a href="#" class="hero-item">배너 1</a>
+      </div>
+      <div class="swiper-slide">
+        <a href="#" class="hero-item">배너 2</a>
+      </div>
+      <div class="swiper-slide">
+        <a href="#" class="hero-item">배너 3</a>
+      </div>
+    </div>
+
+    <div class="swiper-pagination"></div>
+
+    <button type="button" class="swiper-button-prev" aria-label="이전"></button>
+    <button type="button" class="swiper-button-next" aria-label="다음"></button>
+  </div>
+</section>
+ <style>
+  /* -------------------------------------------
+  Toggle UI (TEST ONLY)
+  - data-toggle 동작 확인용
+  - 공유/가이드용 임시 스타일
+------------------------------------------- */
+
+  [data-toggle-scope] {
+    margin: 20px 0;
+  }
+
+  [data-toggle-scope] [data-toggle-btn] {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  [data-toggle-scope] [data-toggle-btn]:hover {
+    background: #eee;
+  }
+
+  [data-toggle-scope] [data-toggle-box] {
+    display: none;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    font-size: 13px;
+  }
+
+  [data-toggle-scope] [data-toggle-box].is-open {
+    display: block;
+  }
+</style>
+
+<div data-toggle-scope data-toggle-group="true" data-toggle-outside="true">
+  <button type="button" data-toggle-btn data-toggle-target="panel" aria-expanded="false">토글 버튼</button>
+
+  <div data-toggle-box="panel">토글 패널</div>
+</div>
+
+<!--
+  [Toggle UI 사용 예시]
+
+  - 기본 구조:
+    * data-toggle-scope : 토글 동작 범위
+    * data-toggle-btn   : 토글 트리거
+    * data-toggle-box   : 토글 대상 패널
+    * data-toggle-target ↔ data-toggle-box 값 매칭
+
+  - 옵션(선택):
+    * data-toggle-group="true"
+      : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
+    * data-toggle-outside="true"
+      : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
+
+  - 상태:
+    * 패널 열림 시 data-toggle-box에 'is-open' 클래스가 추가됨
+    * aria-expanded 값은 JS에서 자동 관리됨
+-->
+
+            </div>
+            <!-- E: vits-grid-main -->
+
+            <!-- S: vits-grid-right -->
+            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
+            <!-- E: vits-grid-right -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <footer class="vits-footer">footer 영역</footer>
+
+    </section>
+    <!-- E: vits-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>
