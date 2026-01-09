@@ -1,7 +1,7 @@
 "use strict";
 (self["webpackChunkroot"] = self["webpackChunkroot"] || []).push([[979],{
 
-/***/ 510:
+/***/ 111:
 /***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 
 
@@ -12,9 +12,9 @@ __webpack_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: Swiper
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/ssr-window.esm.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/ssr-window.esm.mjs
 /**
- * SSR Window 5.0.1
+ * SSR Window 5.0.0
  * Better handling for window object in SSR environment
  * https://github.com/nolimits4web/ssr-window
  *
@@ -22,7 +22,7 @@ __webpack_require__.d(__webpack_exports__, {
  *
  * Licensed under MIT
  *
- * Released on: June 27, 2025
+ * Released on: February 12, 2025
  */
 /* eslint-disable no-param-reassign */
 function isObject(obj) {
@@ -160,7 +160,7 @@ function getWindow() {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/utils.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/utils.mjs
 
 
 function classesToTokens(classes) {
@@ -505,7 +505,7 @@ function setInnerHTML(el, html) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/swiper-core.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/swiper-core.mjs
 
 
 
@@ -2276,16 +2276,23 @@ function slideToClickedSlide() {
     slidesEl
   } = swiper;
   const slidesPerView = params.slidesPerView === 'auto' ? swiper.slidesPerViewDynamic() : params.slidesPerView;
-  let slideToIndex = swiper.getSlideIndexWhenGrid(swiper.clickedIndex);
+  let slideToIndex = swiper.clickedIndex;
   let realIndex;
   const slideSelector = swiper.isElement ? `swiper-slide` : `.${params.slideClass}`;
-  const isGrid = swiper.grid && swiper.params.grid && swiper.params.grid.rows > 1;
   if (params.loop) {
     if (swiper.animating) return;
     realIndex = parseInt(swiper.clickedSlide.getAttribute('data-swiper-slide-index'), 10);
     if (params.centeredSlides) {
-      swiper.slideToLoop(realIndex);
-    } else if (slideToIndex > (isGrid ? (swiper.slides.length - slidesPerView) / 2 - (swiper.params.grid.rows - 1) : swiper.slides.length - slidesPerView)) {
+      if (slideToIndex < swiper.loopedSlides - slidesPerView / 2 || slideToIndex > swiper.slides.length - swiper.loopedSlides + slidesPerView / 2) {
+        swiper.loopFix();
+        slideToIndex = swiper.getSlideIndex(elementChildren(slidesEl, `${slideSelector}[data-swiper-slide-index="${realIndex}"]`)[0]);
+        nextTick(() => {
+          swiper.slideTo(slideToIndex);
+        });
+      } else {
+        swiper.slideTo(slideToIndex);
+      }
+    } else if (slideToIndex > swiper.slides.length - slidesPerView) {
       swiper.loopFix();
       slideToIndex = swiper.getSlideIndex(elementChildren(slidesEl, `${slideSelector}[data-swiper-slide-index="${realIndex}"]`)[0]);
       nextTick(() => {
@@ -2322,20 +2329,7 @@ function loopCreate(slideRealIndex, initial) {
       el.setAttribute('data-swiper-slide-index', index);
     });
   };
-  const clearBlankSlides = () => {
-    const slides = elementChildren(slidesEl, `.${params.slideBlankClass}`);
-    slides.forEach(el => {
-      el.remove();
-    });
-    if (slides.length > 0) {
-      swiper.recalcSlides();
-      swiper.updateSlides();
-    }
-  };
   const gridEnabled = swiper.grid && params.grid && params.grid.rows > 1;
-  if (params.loopAddBlankSlides && (params.slidesPerGroup > 1 || gridEnabled)) {
-    clearBlankSlides();
-  }
   const slidesPerGroup = params.slidesPerGroup * (gridEnabled ? params.grid.rows : 1);
   const shouldFillGroup = swiper.slides.length % slidesPerGroup !== 0;
   const shouldFillGrid = gridEnabled && swiper.slides.length % params.grid.rows !== 0;
@@ -2427,7 +2421,7 @@ function loopFix(_temp) {
     }
   }
   const slidesPerGroup = params.slidesPerGroupAuto ? slidesPerView : params.slidesPerGroup;
-  let loopedSlides = centeredSlides ? Math.max(slidesPerGroup, Math.ceil(slidesPerView / 2)) : slidesPerGroup;
+  let loopedSlides = slidesPerGroup;
   if (loopedSlides % slidesPerGroup !== 0) {
     loopedSlides += slidesPerGroup - loopedSlides % slidesPerGroup;
   }
@@ -4025,16 +4019,6 @@ class Swiper {
   getSlideIndexByData(index) {
     return this.getSlideIndex(this.slides.find(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === index));
   }
-  getSlideIndexWhenGrid(index) {
-    if (this.grid && this.params.grid && this.params.grid.rows > 1) {
-      if (this.params.grid.fill === 'column') {
-        index = Math.floor(index / this.params.grid.rows);
-      } else if (this.params.grid.fill === 'row') {
-        index = index % Math.ceil(this.slides.length / this.params.grid.rows);
-      }
-    }
-    return index;
-  }
   recalcSlides() {
     const swiper = this;
     const {
@@ -4459,7 +4443,7 @@ Swiper.use([Resize, Observer]);
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/virtual.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/virtual.mjs
 
 
 
@@ -4810,7 +4794,7 @@ function Virtual(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/keyboard.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/keyboard.mjs
 
 
 
@@ -4859,7 +4843,7 @@ function Keyboard(_ref) {
     if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
       return undefined;
     }
-    if (document.activeElement && (document.activeElement.isContentEditable || document.activeElement.nodeName && (document.activeElement.nodeName.toLowerCase() === 'input' || document.activeElement.nodeName.toLowerCase() === 'textarea'))) {
+    if (document.activeElement && document.activeElement.nodeName && (document.activeElement.nodeName.toLowerCase() === 'input' || document.activeElement.nodeName.toLowerCase() === 'textarea')) {
       return undefined;
     }
     if (swiper.params.keyboard.onlyInViewport && (isPageUp || isPageDown || isArrowLeft || isArrowRight || isArrowUp || isArrowDown)) {
@@ -4929,7 +4913,7 @@ function Keyboard(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/mousewheel.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/mousewheel.mjs
 
 
 
@@ -5326,7 +5310,7 @@ function Mousewheel(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/create-element-if-not-defined.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/create-element-if-not-defined.mjs
 
 
 function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
@@ -5349,7 +5333,7 @@ function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/navigation.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/navigation.mjs
 
 
 
@@ -5551,18 +5535,18 @@ function Navigation(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/classes-to-selector.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/classes-to-selector.mjs
 function classesToSelector(classes) {
   if (classes === void 0) {
     classes = '';
   }
-  return `.${classes.trim().replace(/([\.:!+\/()[\]])/g, '\\$1') // eslint-disable-line
+  return `.${classes.trim().replace(/([\.:!+\/])/g, '\\$1') // eslint-disable-line
   .replace(/ /g, '.')}`;
 }
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/pagination.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/pagination.mjs
 
 
 
@@ -6024,7 +6008,7 @@ function Pagination(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/scrollbar.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/scrollbar.mjs
 
 
 
@@ -6392,7 +6376,7 @@ function Scrollbar(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/parallax.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/parallax.mjs
 
 
 function Parallax(_ref) {
@@ -6518,7 +6502,7 @@ function Parallax(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/zoom.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/zoom.mjs
 
 
 
@@ -7221,7 +7205,7 @@ function Zoom(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/controller.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/controller.mjs
 
 
 /* eslint no-bitwise: ["error", { "allow": [">>"] }] */
@@ -7414,7 +7398,7 @@ function Controller(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/a11y.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/a11y.mjs
 
 
 
@@ -7653,9 +7637,9 @@ function A11y(_ref) {
     requestAnimationFrame(() => {
       if (preventFocusHandler) return;
       if (swiper.params.loop) {
-        swiper.slideToLoop(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'))), 0);
+        swiper.slideToLoop(parseInt(slideEl.getAttribute('data-swiper-slide-index')), 0);
       } else {
-        swiper.slideTo(swiper.getSlideIndexWhenGrid(swiper.slides.indexOf(slideEl)), 0);
+        swiper.slideTo(swiper.slides.indexOf(slideEl), 0);
       }
       preventFocusHandler = false;
     });
@@ -7793,7 +7777,7 @@ function A11y(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/history.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/history.mjs
 
 
 function History(_ref) {
@@ -7937,7 +7921,7 @@ function History(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/hash-navigation.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/hash-navigation.mjs
 
 
 
@@ -8032,7 +8016,7 @@ function HashNavigation(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/autoplay.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/autoplay.mjs
 
 
 /* eslint no-underscore-dangle: "off" */
@@ -8338,7 +8322,7 @@ function Autoplay(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/thumbs.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/thumbs.mjs
 
 
 
@@ -8537,7 +8521,7 @@ function Thumb(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/free-mode.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/free-mode.mjs
 
 
 function freeMode(_ref) {
@@ -8776,7 +8760,7 @@ function freeMode(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/grid.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/grid.mjs
 function Grid(_ref) {
   let {
     swiper,
@@ -8933,7 +8917,7 @@ function Grid(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/manipulation.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/manipulation.mjs
 
 
 function appendSlide(slides) {
@@ -9128,7 +9112,7 @@ function Manipulation(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-init.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/effect-init.mjs
 function effectInit(params) {
   const {
     effect,
@@ -9188,7 +9172,7 @@ function effectInit(params) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-target.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/effect-target.mjs
 
 
 function effectTarget(effectParams, slideEl) {
@@ -9202,7 +9186,7 @@ function effectTarget(effectParams, slideEl) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-virtual-transition-end.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/effect-virtual-transition-end.mjs
 
 
 function effectVirtualTransitionEnd(_ref) {
@@ -9252,7 +9236,7 @@ function effectVirtualTransitionEnd(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-fade.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-fade.mjs
 
 
 
@@ -9320,7 +9304,7 @@ function EffectFade(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-cube.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-cube.mjs
 
 
 
@@ -9496,7 +9480,7 @@ function EffectCube(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/create-shadow.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/shared/create-shadow.mjs
 
 
 function createShadow(suffix, slideEl, side) {
@@ -9512,7 +9496,7 @@ function createShadow(suffix, slideEl, side) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-flip.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-flip.mjs
 
 
 
@@ -9625,7 +9609,7 @@ function EffectFlip(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-coverflow.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-coverflow.mjs
 
 
 
@@ -9731,7 +9715,7 @@ function EffectCoverflow(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-creative.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-creative.mjs
 
 
 
@@ -9879,7 +9863,7 @@ function EffectCreative(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-cards.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/modules/effect-cards.mjs
 
 
 
@@ -10009,9 +9993,9 @@ function EffectCards(_ref) {
 
 
 
-;// ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/swiper-bundle.mjs
+;// ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs
 /**
- * Swiper 11.2.10
+ * Swiper 11.2.8
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
@@ -10019,7 +10003,7 @@ function EffectCards(_ref) {
  *
  * Released under the MIT License
  *
- * Released on: June 28, 2025
+ * Released on: May 23, 2025
  */
 
 

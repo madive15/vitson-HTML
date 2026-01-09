@@ -1,202 +1,17 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 259:
-/***/ (function() {
-
-/**
- * scripts/core/utils.js
- * @purpose 공통 유틸 모음(항상 로드)
- * @assumption
- *  - 전역 오염 최소화(필요 시 window.Utils 네임스페이스로만 제공)
- *  - UI 기능이 아닌 “범용/반복 로직”만 둔다
- * @maintenance
- *  - 실행 트리거(DOMReady/이벤트 바인딩) 금지
- *  - 특정 페이지/컴포넌트 전용 로직 금지
- *  - 프로젝트 공통으로 쓰이는 유틸만, 실제 반복이 확인될 때만 추가한다
- */
-
-(function (window, document) {
-  'use strict';
-
-  /**
-   * @purpose 모바일 환경 100vh 보정용 --vh CSS 변수 계산
-   * @returns {void}
-   * @example
-   * // SCSS: min-height: calc(var(--vh, 1vh) * 100);
-   */
-  function setVh() {
-    var vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', vh + 'px');
-  }
-  setVh();
-  window.addEventListener('resize', setVh);
-})(window, document);
-
-/***/ }),
-
-/***/ 501:
-/***/ (function() {
-
-/**
- * scripts/core/common.js
- * @purpose 공통 초기화/바인딩(실행 트리거)
- * @assumption
- *  - jQuery는 전역(window.jQuery 또는 window.$)에 존재해야 한다
- *  - UI.init은 core/ui.js에서 정의되어 있어야 한다
- * @maintenance
- *  - 페이지 의미 분기(gnb/main/detail 등) 로직 금지
- *  - 공통 실행(초기화 트리거)만 담당하고, 기능 구현은 ui/*로 분리한다
- *  - DOMReady에서 UI.init은 1회만 호출한다(중복 호출 금지)
- */
-(function ($, window) {
-  'use strict';
-
-  if (!$) {
-    console.log('[common] jQuery not found (window.jQuery/window.$ undefined)');
-    return;
-  }
-  $(function () {
-    console.log('[common] DOM ready');
-    if (window.UI && window.UI.init) window.UI.init();
-  });
-})(window.jQuery || window.$, window);
-
-/***/ }),
-
-/***/ 655:
-/***/ (function() {
-
-/**
- * scripts/ui/toggle.js
- * @purpose 토글/아코디언 공통 UI
- * @assumption
- *  - data- 속성 기반으로 “스코프(data-toggle-scope)” 내부에서만 동작한다
- *  - 버튼(data-toggle-btn) ↔ 패널(data-toggle-box) 매핑은 data-toggle-target 값으로 연결한다
- * @options
- *  - data-toggle-group="true"   : 같은 스코프에서 하나만 열림(아코디언)
- *  - data-toggle-outside="true" : 스코프 외부 클릭 시 닫힘(기본 사용 지양)
- * @maintenance
- *  - 페이지 의미(gnb, detail 등) 분기 금지
- *  - 디자인 차이는 CSS로 처리(동작은 동일)
- *  - 토글 상태 클래스는 is-open만 사용한다
- *  - 접근성: aria-expanded만 최소 보장(aria-controls는 마크업에서 선택 적용)
- *  - outside 옵션은 document 이벤트를 사용하므로 남용 금지(필요한 스코프에만 제한 적용)
- */
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) {
-    console.log('[toggle] jQuery not found');
-    return;
-  }
-  window.UI = window.UI || {};
-  var ACTIVE = 'is-open';
-
-  /**
-   * 패널 오픈
-   * @param {jQuery} $btn 토글 버튼
-   * @param {jQuery} $box 토글 패널
-   * @returns {void}
-   */
-  function open($btn, $box) {
-    $box.addClass(ACTIVE);
-    $btn.attr('aria-expanded', 'true');
-  }
-
-  /**
-   * 패널 클로즈
-   * @param {jQuery} $btn 토글 버튼
-   * @param {jQuery} $box 토글 패널
-   * @returns {void}
-   */
-  function close($btn, $box) {
-    $box.removeClass(ACTIVE);
-    $btn.attr('aria-expanded', 'false');
-  }
-
-  /**
-   * 스코프 내 열린 패널 모두 닫기(아코디언용)
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   */
-  function closeAll($scope) {
-    $scope.find('[data-toggle-box].' + ACTIVE).removeClass(ACTIVE);
-    $scope.find('[data-toggle-btn][aria-expanded="true"]').attr('aria-expanded', 'false');
-  }
-
-  /**
-   * 스코프 외부 클릭 시 닫기 바인딩
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   * @example
-   * // <div data-toggle-scope data-toggle-outside="true">...</div>
-   */
-  function bindOutsideClose($scope) {
-    $(document).on('click.uiToggleOutside', function (e) {
-      if ($scope.has(e.target).length) return;
-      closeAll($scope);
-    });
-  }
-
-  /**
-   * 스코프 바인딩(이벤트 위임)
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   */
-  function bindScope($scope) {
-    $scope.on('click', '[data-toggle-btn]', function (e) {
-      e.preventDefault();
-      var $btn = $(this);
-      var target = $btn.data('toggleTarget');
-      if (!target) return;
-      var $box = $scope.find('[data-toggle-box="' + target + '"]');
-      if (!$box.length) return;
-      var isOpen = $box.hasClass(ACTIVE);
-      var isGroup = $scope.data('toggleGroup') === true;
-      if (isOpen) {
-        close($btn, $box);
-        return;
-      }
-      if (isGroup) closeAll($scope);
-      open($btn, $box);
-    });
-    if ($scope.data('toggleOutside') === true) {
-      bindOutsideClose($scope);
-    }
-  }
-  window.UI.toggle = {
-    /**
-     * 토글 초기화
-     * @returns {void}
-     * @example
-     * // scripts/core/ui.js의 UI.init()에서 호출
-     * UI.toggle.init();
-     */
-    init: function () {
-      $('[data-toggle-scope]').each(function () {
-        bindScope($(this));
-      });
-      console.log('[toggle] init');
-    }
-  };
-  console.log('[toggle] module loaded');
-})(window.jQuery || window.$, window);
-
-/***/ }),
-
-/***/ 867:
+/***/ 3:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
 
 // EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
-var utils = __webpack_require__(259);
+var utils = __webpack_require__(918);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
-var toggle = __webpack_require__(655);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(510);
+var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(111);
 ;// ./src/assets/scripts/ui/swiper.js
 /**
  * scripts/ui/swiper.js
@@ -441,7 +256,7 @@ var swiper_bundle = __webpack_require__(510);
   console.log('[core/ui] loaded');
 })(window);
 // EXTERNAL MODULE: ./src/assets/scripts/core/common.js
-var common = __webpack_require__(501);
+var common = __webpack_require__(538);
 ;// ./src/assets/scripts/index.js
 /**
  * scripts/index.js
@@ -469,12 +284,197 @@ console.log('[index] entry 실행');
 
 if (document.body?.dataset?.guide === 'true') {
   // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
-  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(610)]).then(__webpack_require__.bind(__webpack_require__, 610));
+  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
 }
 console.log(`%c ==== ${"app"}.${"js"} run ====`, 'color: green');
 console.log('%c APP_ENV_URL :', 'color: green', "pc");
 console.log('%c APP_ENV_TYPE :', 'color: green', "js");
 console.log('%c ====================', 'color: green');
+
+/***/ }),
+
+/***/ 344:
+/***/ (function() {
+
+/**
+ * scripts/ui/toggle.js
+ * @purpose 토글/아코디언 공통 UI
+ * @assumption
+ *  - data- 속성 기반으로 “스코프(data-toggle-scope)” 내부에서만 동작한다
+ *  - 버튼(data-toggle-btn) ↔ 패널(data-toggle-box) 매핑은 data-toggle-target 값으로 연결한다
+ * @options
+ *  - data-toggle-group="true"   : 같은 스코프에서 하나만 열림(아코디언)
+ *  - data-toggle-outside="true" : 스코프 외부 클릭 시 닫힘(기본 사용 지양)
+ * @maintenance
+ *  - 페이지 의미(gnb, detail 등) 분기 금지
+ *  - 디자인 차이는 CSS로 처리(동작은 동일)
+ *  - 토글 상태 클래스는 is-open만 사용한다
+ *  - 접근성: aria-expanded만 최소 보장(aria-controls는 마크업에서 선택 적용)
+ *  - outside 옵션은 document 이벤트를 사용하므로 남용 금지(필요한 스코프에만 제한 적용)
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[toggle] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var ACTIVE = 'is-open';
+
+  /**
+   * 패널 오픈
+   * @param {jQuery} $btn 토글 버튼
+   * @param {jQuery} $box 토글 패널
+   * @returns {void}
+   */
+  function open($btn, $box) {
+    $box.addClass(ACTIVE);
+    $btn.attr('aria-expanded', 'true');
+  }
+
+  /**
+   * 패널 클로즈
+   * @param {jQuery} $btn 토글 버튼
+   * @param {jQuery} $box 토글 패널
+   * @returns {void}
+   */
+  function close($btn, $box) {
+    $box.removeClass(ACTIVE);
+    $btn.attr('aria-expanded', 'false');
+  }
+
+  /**
+   * 스코프 내 열린 패널 모두 닫기(아코디언용)
+   * @param {jQuery} $scope 스코프 루트
+   * @returns {void}
+   */
+  function closeAll($scope) {
+    $scope.find('[data-toggle-box].' + ACTIVE).removeClass(ACTIVE);
+    $scope.find('[data-toggle-btn][aria-expanded="true"]').attr('aria-expanded', 'false');
+  }
+
+  /**
+   * 스코프 외부 클릭 시 닫기 바인딩
+   * @param {jQuery} $scope 스코프 루트
+   * @returns {void}
+   * @example
+   * // <div data-toggle-scope data-toggle-outside="true">...</div>
+   */
+  function bindOutsideClose($scope) {
+    $(document).on('click.uiToggleOutside', function (e) {
+      if ($scope.has(e.target).length) return;
+      closeAll($scope);
+    });
+  }
+
+  /**
+   * 스코프 바인딩(이벤트 위임)
+   * @param {jQuery} $scope 스코프 루트
+   * @returns {void}
+   */
+  function bindScope($scope) {
+    $scope.on('click', '[data-toggle-btn]', function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var target = $btn.data('toggleTarget');
+      if (!target) return;
+      var $box = $scope.find('[data-toggle-box="' + target + '"]');
+      if (!$box.length) return;
+      var isOpen = $box.hasClass(ACTIVE);
+      var isGroup = $scope.data('toggleGroup') === true;
+      if (isOpen) {
+        close($btn, $box);
+        return;
+      }
+      if (isGroup) closeAll($scope);
+      open($btn, $box);
+    });
+    if ($scope.data('toggleOutside') === true) {
+      bindOutsideClose($scope);
+    }
+  }
+  window.UI.toggle = {
+    /**
+     * 토글 초기화
+     * @returns {void}
+     * @example
+     * // scripts/core/ui.js의 UI.init()에서 호출
+     * UI.toggle.init();
+     */
+    init: function () {
+      $('[data-toggle-scope]').each(function () {
+        bindScope($(this));
+      });
+      console.log('[toggle] init');
+    }
+  };
+  console.log('[toggle] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 538:
+/***/ (function() {
+
+/**
+ * scripts/core/common.js
+ * @purpose 공통 초기화/바인딩(실행 트리거)
+ * @assumption
+ *  - jQuery는 전역(window.jQuery 또는 window.$)에 존재해야 한다
+ *  - UI.init은 core/ui.js에서 정의되어 있어야 한다
+ * @maintenance
+ *  - 페이지 의미 분기(gnb/main/detail 등) 로직 금지
+ *  - 공통 실행(초기화 트리거)만 담당하고, 기능 구현은 ui/*로 분리한다
+ *  - DOMReady에서 UI.init은 1회만 호출한다(중복 호출 금지)
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[common] jQuery not found (window.jQuery/window.$ undefined)');
+    return;
+  }
+  $(function () {
+    console.log('[common] DOM ready');
+    if (window.UI && window.UI.init) window.UI.init();
+  });
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 918:
+/***/ (function() {
+
+/**
+ * scripts/core/utils.js
+ * @purpose 공통 유틸 모음(항상 로드)
+ * @assumption
+ *  - 전역 오염 최소화(필요 시 window.Utils 네임스페이스로만 제공)
+ *  - UI 기능이 아닌 “범용/반복 로직”만 둔다
+ * @maintenance
+ *  - 실행 트리거(DOMReady/이벤트 바인딩) 금지
+ *  - 특정 페이지/컴포넌트 전용 로직 금지
+ *  - 프로젝트 공통으로 쓰이는 유틸만, 실제 반복이 확인될 때만 추가한다
+ */
+
+(function (window, document) {
+  'use strict';
+
+  /**
+   * @purpose 모바일 환경 100vh 보정용 --vh CSS 변수 계산
+   * @returns {void}
+   * @example
+   * // SCSS: min-height: calc(var(--vh, 1vh) * 100);
+   */
+  function setVh() {
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
+})(window, document);
 
 /***/ })
 
@@ -622,6 +622,7 @@ console.log('%c ====================', 'color: green');
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -705,7 +706,7 @@ console.log('%c ====================', 'color: green');
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if(/^(524|610|979)$/.test(chunkId)) {
+/******/ 						if(/^(395|524|979)$/.test(chunkId)) {
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise(function(resolve, reject) { installedChunkData = installedChunks[chunkId] = [resolve, reject]; });
 /******/ 							promises.push(installedChunkData[2] = promise);
@@ -782,7 +783,7 @@ console.log('%c ====================', 'color: green');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(867); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(3); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
