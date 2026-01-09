@@ -1,0 +1,308 @@
+body {
+    margin: 0;
+    font-size: 12px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table1 {
+    border: 1px solid #c3c3c3;
+}
+
+.table1 .inputPrint {
+    width: 80%;
+    outline: none;
+}
+
+.a4Size {
+    margin: 0 auto;
+    width: 21cm
+}
+
+.w950 {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.w120f {
+    width: 120px
+}
+
+.w40f {
+    width: 40px
+}
+
+.w30f {
+    width: 30px
+}
+
+.bold {
+    font-weight: bold
+}
+
+.inputPrint {
+    border: 1px solid #ddd;
+    background-color: #FAF4C0
+}
+
+.salesAgreementBox {
+    margin: 50px 0;
+}
+
+.salesAgreementItemBox {
+    padding: 10px 15px;
+    box-sizing: border-box;
+}
+
+.salesAgreeBox {
+    margin-bottom: 15px;
+}
+
+.title {
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 10px;
+}
+
+.subTitle {
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: bold
+}
+
+.salesAgreeCon {
+    width: 100%;
+}
+
+.salesAgreeCon .inputPrint {
+    text-align: right;
+    background-color: #FAF4C0
+}
+
+.salesAgreeCon .cont {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 12px
+}
+
+.proTable td,
+.supTable td,
+.suretyTable td {
+    border-bottom: 1px solid #c3c3c3;
+    border-right: 1px solid #c3c3c3;
+}
+
+.proTable, .supTable, .suretyTable {
+    margin-bottom: 10px;
+}
+
+.table1 td:nth-child(1) {
+    width: 10%;
+}
+
+.table1 td:nth-child(2) {
+    width: 35%;
+}
+
+.table1 td:nth-child(3) {
+    width: 15%;
+}
+
+.table1 td:nth-child(4) {
+    width: 30%;
+}
+
+.tableStyle {
+    width: 10%;
+    text-align: center;
+    background-color: #e5e4e4;
+}
+
+.padding4 {
+    padding: 4px;
+}
+
+.inputWidth {
+    width: 2%;
+}
+
+.suretyLighter {
+    font-weight: lighter;
+}
+
+.btnBox {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.btn1 {
+    color: white;
+    padding: 10px 40px;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.cancelBtn {
+    display: inline-block;
+    background-color: #c3c2c2;
+}
+
+.submitBtn {
+    background-color: rgba(0 32 96);
+}
+
+.date {
+    width: 45%;
+    border: 1px solid #c3c3c3;
+}
+
+input[type='date']::before {
+    content: attr(data-placeholder);
+    width: 100%;
+}
+
+input[type='date']:focus::before,
+input[type='date']:valid::before {
+    display: none;
+}
+
+.signRow {
+    position: relative
+}
+
+.signRow .signBox {
+    position: absolute;
+    top: 50%;
+    right: 50px;
+    transform: translateY(-50%);
+}
+
+.userSign {
+    position: relative;
+    text-align: center
+}
+
+.userSign img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60px;
+}
+
+/* 개인 신용 정보 수집 */
+.title2 {
+    margin-bottom: 20px;
+    text-decoration: underline;
+    text-align: center;
+}
+
+.table2 {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px
+}
+
+.table2 td {
+    padding: 10px 5px;
+    border: 1px solid #000
+}
+
+.signInfoArea {
+    margin: 30px 0 40px
+}
+
+.signInfoArea .infoRow + .infoRow {
+    margin-top: 15px
+}
+
+.infoRow .infoBox {
+    display: inline-block
+}
+
+.infoRow .info2 {
+    margin-left: 100px
+}
+
+.infoRow .info3 {
+    margin-left: 80px
+}
+
+.textbox {
+    border: 1px solid #9b9b9b
+}
+
+.dateArea {
+    margin: 20px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold
+}
+
+.dateArea .textbox {
+    font-size: inherit;
+    height: 30px;
+    font-weight: inherit
+}
+
+@media print {
+    .salesAgreementBox {
+        margin-top: 0
+    }
+
+    .inputPrint, .textbox {
+        border: 0
+    }
+
+    .printHide {
+        display: none
+    }
+
+    @page {
+        size: 21cm 29.7cm;
+        margin: 20px;
+    }
+}
+
+/* 로딩바 */
+#back {
+    position: fixed;
+    z-index: 100;
+    background-color: #000000;
+    display: none;
+    top: 0;
+    left: 0;
+}
+
+#loadingBar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* display: none; */
+    z-index: 200;
+    /* width:48px;
+    height:48px; */
+    font-size: 30px;
+    color: orange
+}

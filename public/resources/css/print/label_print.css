@@ -1,0 +1,233 @@
+@charset "utf-8";
+.print_wrap {
+    width: 21cm;
+    margin: 0 auto;
+    position: relative; /* padding-top:100%; */
+    font-size: 12px;
+    font-family: "malgun gothic", sans-serif;
+}
+
+.print_area { /* position: absolute;left:0; right:0; */
+    position: relative;
+    border-bottom: 1px dashed #000;
+}
+
+.print_bar {
+    padding: 10px 0;
+    text-align: right;
+}
+
+.print_bar .btn_print {
+    padding: 5px 10px;
+    border: 2px solid #23a283;
+    color: #23a283;
+    width: 100px;
+    text-align: center;
+    background-color: #fff;
+    transition: all .3s
+}
+
+.print_bar .btn_print:hover {
+    color: #fff;
+    background-color: #23a283;
+}
+
+.print_bar .btn_print_close {
+    padding: 5px 10px;
+    border: 2px solid #262626;
+    color: #262626;
+    width: 100px;
+    text-align: center;
+    background-color: #fff;
+    transition: all .3s
+}
+
+.print_bar .btn_print_close:hover {
+    color: #fff;
+    background-color: #262626;
+}
+
+/* 라벨인쇄 공통 */
+.page_break + .page_break {
+    margin-top: 10px
+}
+
+/* 공통 */
+.txt_left {
+    text-align: left !important;
+}
+
+.txt_center, td.txt_center {
+    text-align: center !important;
+}
+
+.txt_right {
+    text-align: right !important;
+}
+
+.txt_bold {
+    font-weight: bold
+}
+
+.page_break {
+    page-break-after: always
+}
+
+/* 라벨인쇄 사이즈 s */
+.print_wrap.label_wrap {
+    width: 100%
+}
+
+.print_label_s {
+    width: 8cm;
+    height: 9cm;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    font-family: "malgun gothic", 'Noto Sans KR', sans-serif;
+}
+
+.print_label_s + .print_label_s {
+    margin-top: 10px
+}
+
+.print_label_s .top_info {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 2px;
+    border-bottom: 2px solid #000;
+    font-size: 1em
+}
+
+.print_label_s .prd_nm {
+    margin-bottom: 10px;
+}
+
+.print_label_s .prd_nm,
+.print_label_s .standard {
+    font-size: 1.5em
+}
+
+.print_label_s .middle_info {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between
+}
+
+.print_label_s .stock {
+    font-size: 1.4em
+}
+
+.print_label_s .location_nm {
+    margin: 10px 0;
+    font-size: 2em;
+    text-align: center
+}
+
+.print_label_s .bottom_info {
+    margin-top: 10px;
+    position: relative;
+    text-align: center;
+    font-size: 1em
+}
+
+.print_label_s .bottom_info .date {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%)
+}
+
+/* 라벨인쇄 사이즈 s */
+.print_label_m {
+    width: 10cm;
+    height: 15cm;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    font-family: "malgun gothic", 'Noto Sans KR', sans-serif;
+}
+
+.print_label_m + .print_label_m {
+    margin-top: 10px
+}
+
+.print_label_m .top_info {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 2px;
+    border-bottom: 2px solid #000;
+    font-size: 1em
+}
+
+.print_label_m .prd_nm {
+    margin-bottom: 10px;
+}
+
+.print_label_m .prd_nm,
+.print_label_m .standard {
+    font-size: 1.5em
+}
+
+.print_label_m .middle_info {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between
+}
+
+.print_label_m .stock {
+    font-size: 1.4em
+}
+
+.print_label_m .location_nm {
+    margin: 10px 0;
+    font-size: 2em;
+    text-align: center
+}
+
+.print_label_m .bottom_info {
+    margin-top: 10px;
+    position: relative;
+    text-align: center;
+    font-size: 1em
+}
+
+.print_label_m .bottom_info .date {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%)
+}
+
+@media print {
+    .print_hide {
+        display: none
+    }
+
+    .print_label_s {
+        border: 0
+    }
+
+    .print_label_m {
+        border: 0
+    }
+
+    .page_break + .page_break {
+        margin-top: 0
+    }
+
+    /* 라벨 s 인쇄 */
+    .print_label_s {
+        width: 100%;
+        margin: 0;
+        height: 1cm
+    }
+
+    .print_label_m {
+        width: 100%;
+        margin: 0;
+        height: 1cm
+    }
+}
