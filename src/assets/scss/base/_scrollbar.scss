@@ -24,72 +24,53 @@
 @use '@/assets/scss/base/colors' as color;
 
 html.vits-scope,
+body.vits-scope {
+  overscroll-behavior: none;
+}
+
+html.vits-scope,
 body.vits-scope,
 .vits-scrollbar {
-  // 토큰: 페이지별로 wrapper에서 값만 덮어쓰기
-  --vits-scrollbar-size: 10px; // 두께(세로/가로 공통)
-  --vits-scrollbar-radius: 999px; // 아주 둥글게
-  --vits-scrollbar-track: transparent; // 트랙은 거의 안 보이게
-  --vits-scrollbar-thumb: color.$scrollbar-thumb;
-  --vits-scrollbar-thumb-hover: color.$scrollbar-thumb-hover;
-  --vits-scrollbar-thumb-active: color.$scrollbar-thumb-active;
+  // thumb만 보이게(트랙/레일 숨김)
+  --vits-scrollbar-size: 8px;
+  --vits-scrollbar-radius: 4px;
+  --vits-scrollbar-track: transparent;
+  --vits-scrollbar-thumb: #c1c1c1;
+  --vits-scrollbar-thumb-hover: #a8a8a8;
+  scrollbar-color: var(--vits-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
 
-  // thumb와 트랙 사이 ‘여백감’(맥처럼 떠 보이는 느낌)
-  --vits-scrollbar-gap: 3px; // border 두께로 여백 연출
-  scrollbar-color: var(--vits-scrollbar-thumb) var(--vits-scrollbar-track);
-
-  /* =========================
-   * Firefox 대응
-   * =========================
-   * - Firefox는 WebKit 가상요소 미지원
-   * - 색상/두께만 지원(라운드/hover는 제한적)
-   */
-  scrollbar-width: thin; /* auto | thin */
-
-  /* =========================
-   * WebKit 계열(크롬/엣지/사파리)
-   * ========================= */
-
-  // 스크롤바 전체(레일 크기)
   &::-webkit-scrollbar {
     width: var(--vits-scrollbar-size);
     height: var(--vits-scrollbar-size);
   }
 
-  // 트랙(레일 배경)
   &::-webkit-scrollbar-track,
   &::-webkit-scrollbar-track-piece {
-    background-color: var(--vits-scrollbar-track);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
   }
 
   &::-webkit-scrollbar-corner {
-    background-color: var(--vits-scrollbar-track);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
   }
 
-  // thumb(드래그 바)
   &::-webkit-scrollbar-thumb {
-    min-width: 36px;
-
-    // 너무 짧은 thumb 방지(콘텐츠 짧을 때도 잡기 쉬움)
-    min-height: 36px;
-    background-color: var(--vits-scrollbar-thumb);
-    background-clip: padding-box;
-
-    // 여백감: thumb에 트랙색 테두리를 주고, 실제 색은 padding 영역에만 표시
-    border: var(--vits-scrollbar-gap) solid var(--vits-scrollbar-track);
+    min-width: 30px;
+    min-height: 30px;
+    background: var(--vits-scrollbar-thumb);
+    border: 0;
     border-radius: var(--vits-scrollbar-radius);
+    box-shadow: none;
   }
 
-  // 상태(마우스 환경)
   &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--vits-scrollbar-thumb-hover);
+    background: var(--vits-scrollbar-thumb-hover);
   }
 
-  &::-webkit-scrollbar-thumb:active {
-    background-color: var(--vits-scrollbar-thumb-active);
-  }
-
-  // 리사이저(일부 환경에서만 노출)
   &::-webkit-resizer {
     background: transparent;
   }
@@ -101,13 +82,23 @@ body.vits-scope,
  * - 값은 wrapper에서 변경(가이드 기준 유지)
  * --------------------------------------------------------------------------- */
 /*
+   - 주문서: 더 얇게 + 붉은 톤
 .vits-wrapper.vits-wrapper-order {
+  --vits-scrollbar-size: 6px;
+  --vits-scrollbar-radius: 4px;
+  --vits-scrollbar-track: transparent;
+
   --vits-scrollbar-thumb: rgba(255, 120, 120, 0.35);
   --vits-scrollbar-thumb-hover: rgba(255, 120, 120, 0.50);
   --vits-scrollbar-thumb-active: rgba(255, 120, 120, 0.65);
 }
 
+   - 대시보드: 기본 두께 + 푸른 톤
 .vits-wrapper.vits-wrapper-dashboard {
+  --vits-scrollbar-size: 8px;
+  --vits-scrollbar-radius: 4px;
+  --vits-scrollbar-track: transparent;
+
   --vits-scrollbar-thumb: rgba(80, 160, 255, 0.35);
   --vits-scrollbar-thumb-hover: rgba(80, 160, 255, 0.50);
   --vits-scrollbar-thumb-active: rgba(80, 160, 255, 0.65);

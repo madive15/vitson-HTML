@@ -1,1 +1,55 @@
-<header class="vits-header">header 영역</header>
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- S: vits-header -->
+<header class="vits-header">
+  <!-- S: vits-header-topbar -->
+  <div class="vits-header-topbar">
+    <div class="vits-inner">
+      <div class="header-topbar-left">
+        <button type="button" class="vits-btn-favorite">
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'tag' }) %> </span>
+          <span class="text">즐겨찾기</span>
+        </button>
+      </div>
+      <ul class="header-topbar-right">
+        <li><%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '로그인' }) %></li>
+        <li class="header-topbar-right-spacer">
+          <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '회원가입' }) %> <%-
+          include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '고객센터' }) %>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- E: vits-header-topbar -->
+
+  <!-- S: vits-header-main -->
+  <div class="vits-header-main">
+    <div class="vits-inner">
+      <a href="/" class="header-main-logo">
+        <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+      </a>
+      <div class="header-main-search">
+        <!-- S: header-main-search-rank (실시간 검색어) -->
+        <%- include(`${_src}/views/layout/header/header-rank.ejs`) %>
+        <!-- E: header-main-search-rank (실시간 검색어) -->
+
+        <!-- S: hheader-main-search-form (통합 검색창) -->
+        <%- include(`${_src}/views/layout/header/header-search.ejs`) %>
+        <!-- E: hheader-main-search-form (통합 검색창) -->
+      </div>
+      <div class="header-main-util">
+        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag-check', label: '자주구매',
+        href: '/mypage/favorite' }) %> <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon:
+        'user', label: '마이페이지', href: '/mypage/favorite' }) %> <%-
+        include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag', label: '장바구니', badge:
+        3,href: '/mypage/favorite' }) %>
+      </div>
+    </div>
+  </div>
+  <!-- E: vits-header-main -->
+
+  <!-- S: vits-header-gnb -->
+  <%- include(`${_src}/views/layout/header/header-gnb.ejs`) %>
+  <!-- E: vits-header-gnb -->
+</header>
+<!-- E: vits-header -->

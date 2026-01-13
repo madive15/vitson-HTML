@@ -1,0 +1,639 @@
+// -----------------------------------------------------------------------------
+// pages/product.scss
+// - 상품상세 페이지에서 사용.
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+// 최상위 class
+.vits-wrapper-product {
+  @include mx.pc {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  // 상세페이지 default - 버튼 hover
+  [type='button'] {
+    background: none;
+    border: 0;
+  }
+
+  .vits-btn-horizon {
+    gap: fn.rem(4);
+    width: auto;
+    min-width: fn.rem(160);
+    padding: fn.rem(12) fn.rem(24);
+    background-color: color.$color-white;
+    border-radius: map.get(var.$radius, md);
+
+    @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '60'));
+    @include mx.flex($justify: center, $align: center);
+
+    .icon {
+      @include mx.flex($justify: center, $align: center);
+    }
+
+    .text {
+      @include typo.typography('b2m');
+    }
+
+    @include mx.common-mouse-event {
+      .icon {
+        color: map.get(color.$icon-colors, 'primary');
+      }
+
+      .text {
+        color: map.get(color.$text-colors, 'brand');
+      }
+      border-color: map.get(color.$border-colors, 'brand');
+    }
+  }
+}
+
+.vits-product-detail-container {
+  padding-top: map.get(var.$unit, 32);
+}
+
+.vits-deal-view {
+  @include mx.flex;
+  gap: 54px;
+
+  @include mx.pc {
+    max-width: 1280px;
+  }
+
+  .vits-deal-gallery {
+    // 운영소스 기반 상위 class로 스타일 재구성
+    &.deal_gallery {
+      position: relative;
+      width: 596px;
+      background: color.$color-white;
+
+      @include mx.common-mouse-event {
+        .vits-swiper-button-container {
+          opacity: 1;
+        }
+      }
+
+      .gallery-top {
+        height: 596px;
+        border-radius: map.get(var.$radius, lg);
+
+        @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+      }
+
+      .gallery-thumbs {
+        width: auto;
+        padding: 0;
+        margin: fn.rem(20) fn.rem(33.5);
+
+        .swiper-slide {
+          width: fn.rem(60);
+          height: fn.rem(60);
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: map.get(var.$radius, sm);
+
+            @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+          }
+        }
+      }
+
+      .vits-swiper-button-container {
+        opacity: 0;
+        transition: opacity 0.3s;
+
+        @include mx.position(absolute, $top: fn.rem(634), $left: fn.rem(0), $right: fn.rem(0));
+
+        // stylelint-disable-next-line at-rule-empty-line-before
+        .swiper-button-next {
+          right: 0;
+          width: map.get(var.$unit, 24);
+          height: map.get(var.$unit, 24);
+          margin-top: 0;
+          background: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') 50% 50% no-repeat;
+        }
+
+        .swiper-button-prev {
+          left: 0;
+          width: map.get(var.$unit, 24);
+          height: map.get(var.$unit, 24);
+          margin-top: 0;
+          background: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') 50% 50% no-repeat;
+        }
+      }
+
+      // 확대 이미지 영역
+      .magnified_container {
+        border-radius: map.get(var.$radius, lg);
+
+        @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+
+        img {
+          max-width: fit-content;
+        }
+      }
+    }
+
+    .vits-description-box {
+      padding: 0 fn.rem(33) fn.rem(14);
+
+      .vits-scrollbar {
+        height: 120px;
+        padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+        overflow-y: auto;
+        border-radius: map.get(var.$radius, sm);
+
+        @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+      }
+    }
+
+    .vits-description-btn {
+      gap: map.get(var.$unit, 12);
+      width: 530px;
+      padding-top: fn.rem(14);
+      margin: 0 auto;
+
+      @include mx.flex($justify: center);
+    }
+  }
+
+  // 상품 우측 상세 정보
+  .vits-deal-info {
+    position: relative;
+    flex: 1;
+
+    .vits-deal-info-inner {
+      .info-inner {
+        @include mx.flex($align: flex-start, $justify: space-between);
+      }
+
+      .product-brand-name {
+        padding-bottom: map.get(var.$unit, 16);
+
+        @include typo.font-style($size: 12, $color: map.get(color.$neutral-colors, '4'));
+        @include mx.flex($align: center);
+      }
+
+      .product {
+        &-name-info {
+          padding-bottom: map.get(var.$unit, 20);
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+          .product-name {
+            padding-bottom: map.get(var.$unit, 8);
+
+            @include typo.typography('h3b');
+          }
+
+          .like-btn.icon {
+            position: relative;
+            display: block;
+            width: map.get(var.$unit, 52);
+            height: map.get(var.$unit, 52);
+            cursor: pointer;
+            border: 1px solid map.get(color.$gray-shades, 'primary');
+            border-radius: map.get(var.$radius, xl);
+            transition: color 0.2s ease;
+
+            .ic {
+              @include mx.position(absolute, $top: 50%, $left: 50%);
+              @include icon.ic-size(map.get(var.$unit, 32));
+              transform: translate(-50%, -50%);
+            }
+
+            &:has(input[type='checkbox']:checked) {
+              background-color: map.get(color.$brand-colors, 'primary');
+              border-color: map.get(color.$brand-colors, 'primary');
+
+              .ic {
+                background-color: color.$color-white;
+              }
+            }
+
+            @include mx.common-mouse-event {
+              border-color: map.get(color.$brand-colors, 'primary');
+
+              .ic {
+                background-color: map.get(color.$brand-colors, 'primary');
+              }
+            }
+
+            input {
+              width: fn.rem(1);
+              height: fn.rem(1);
+              visibility: hidden;
+              border: 0;
+            }
+          }
+
+          .vits-product-chips {
+            @include mx.flex($align: center);
+            gap: map.get(var.$unit, 4);
+
+            &:has(.icon) {
+              .vits-label-chip {
+                gap: map.get(var.$unit, 4);
+              }
+            }
+
+            .vits-label-chip {
+              @include mx.flex($align: center);
+            }
+          }
+        }
+
+        &-price-info {
+          padding: map.get(var.$unit, 20) 0;
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+          .info-inner {
+            align-items: flex-end;
+          }
+
+          .original {
+            text-decoration: line-through;
+
+            @include typo.font-style($size: 12px, $color: map.get(color.$text-colors, 'mute'));
+          }
+
+          .discount {
+            @include mx.flex($align: center);
+            gap: map.get(var.$unit, 8);
+
+            .discount-rate {
+              @include typo.font-style($size: 24, $weight: 700, $color: map.get(color.$text-colors, 'brand'));
+            }
+
+            .discount-price {
+              @include typo.font-style($size: 24, $weight: 700, $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+
+          .delivery-benefit {
+            padding-top: 10px;
+
+            @include mx.flex($align: center);
+            @include typo.font-style($size: 14, $weight: 700, $color: map.get(color.$text-colors, 'brand'));
+          }
+
+          .discount-coupon {
+            .vits-btn-horizon {
+              border-color: map.get(color.$border-colors, 'brand');
+
+              .icon {
+                color: map.get(color.$brand-colors, 'primary');
+              }
+
+              .text {
+                @include typo.typography('b2s', $color: map.get(color.$text-colors, 'brand'));
+              }
+            }
+          }
+        }
+
+        &-minidetail {
+          padding: map.get(var.$unit, 20);
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+          .info-inner {
+            flex-wrap: wrap;
+
+            li {
+              gap: map.get(var.$unit, 12);
+              width: 50%;
+
+              @include mx.flex($align: start);
+
+              &:nth-of-type(even) {
+                padding-bottom: map.get(var.$unit, 16);
+              }
+
+              &:last-child {
+                padding-bottom: 0;
+              }
+
+              span {
+                flex: 1;
+              }
+            }
+          }
+
+          .label {
+            max-width: 74px;
+
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'quaternary'));
+          }
+
+          .value {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+
+        &-select-quick {
+          padding: map.get(var.$unit, 20) 0;
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+          .title {
+            padding-bottom: map.get(var.$unit, 20);
+
+            @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          // 수량선택 옵션
+          .option-list {
+            .option-item {
+              & ~ .option-item {
+                padding-top: map.get(var.$unit, 16);
+              }
+
+              label {
+                @include mx.flex($align: center);
+                @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+                gap: map.get(var.$unit, 4);
+                cursor: pointer;
+
+                input[type='radio'] {
+                  accent-color: map.get(color.$brand-colors, 'primary');
+                }
+              }
+
+              .option-text {
+                @include mx.flex($align: center);
+                gap: map.get(var.$unit, 12);
+
+                em {
+                  font-style: normal;
+                }
+
+                .name {
+                  min-width: 98px;
+                }
+
+                .price {
+                  @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+                }
+              }
+            }
+          }
+
+          .vits-btn-horizon {
+            min-width: auto;
+            padding: fn.rem(4) fn.rem(12);
+            border-radius: map.get(var.$radius, sm);
+
+            .text {
+              font-size: fn.rem(12);
+            }
+          }
+        }
+
+        &-select-unit {
+          padding: map.get(var.$unit, 20);
+
+          .info-inner li {
+            width: 100%;
+          }
+
+          .vits-input-unit {
+            @include mx.flex($align: center);
+            gap: map.get(var.$unit, 12);
+
+            .input-label {
+              width: 100%;
+
+              @include mx.flex($align: center);
+
+              .text {
+                flex: 1;
+
+                @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+              }
+
+              .input-unit {
+                @include mx.flex($align: center, $justify: space-between);
+                @include mx.border(all, 1px, solid, $color: map.get(color.$border-colors, 'tertiary'));
+                min-width: 186px;
+                padding: fn.rem(10) fn.rem(12);
+                border-radius: map.get(var.$radius, sm);
+
+                em {
+                  font-style: normal;
+
+                  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
+                }
+
+                input[type='text'] {
+                  font-size: fn.rem(16);
+                  border: 0;
+                }
+              }
+            }
+
+            .vits-btn-horizon {
+              min-width: auto;
+              padding: fn.rem(12) fn.rem(36);
+              background-color: map.get(color.$gray-shades, '60');
+              border-radius: map.get(var.$radius, sm);
+
+              &:hover {
+                border-color: map.get(color.$gray-shades, '60');
+              }
+
+              .text {
+                white-space: nowrap;
+
+                @include typo.typography('b2s', $color: color.$color-white);
+              }
+            }
+          }
+        }
+
+        &-select-result {
+          @include mx.flex($direction: column);
+          gap: map.get(var.$unit, 8);
+
+          .select-result-item {
+            position: relative;
+            padding: map.get(var.$unit, 20);
+            background-color: map.get(color.$surf-colors, 'sunken');
+            border-radius: map.get(var.$radius, sm);
+          }
+
+          .vits-btn-close {
+            @include mx.position(absolute, $top: 6px, $right: 6px);
+
+            &.icon {
+              width: fn.rem(36);
+              height: fn.rem(36);
+
+              @include mx.flex($justify: center, $align: center);
+
+              .ic {
+                @include icon.ic-size(fn.rem(18));
+              }
+            }
+          }
+
+          .prd-code {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'quaternary'));
+          }
+
+          .prd-name {
+            padding: fn.rem(8) 0;
+
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          .prd-size {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          .prd-group-row {
+            padding-top: fn.rem(16);
+
+            @include mx.flex($align: center, $justify: space-between);
+
+            // 수량 조절 버튼 * _button으로 따로 뺄것
+            .vits-count-box {
+              @include mx.flex($align: center);
+              gap: map.get(var.$unit, 8);
+            }
+
+            .quantity-control {
+              overflow: hidden;
+              background: color.$color-white;
+              border-radius: map.get(var.$radius, sm);
+
+              @include mx.flex($align: center);
+              @include mx.border(all, 1px, solid, $color: map.get(color.$border-colors, 'tertiary'));
+
+              .quantity-input {
+                width: fn.rem(48);
+                height: fn.rem(36);
+                padding: 0 fn.rem(8);
+                font-size: fn.rem(14);
+                text-align: center;
+                appearance: textfield;
+                border: 0;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                  margin: 0;
+                  appearance: none;
+                }
+              }
+
+              .unit {
+                padding: 0 fn.rem(8);
+                font-size: fn.rem(13);
+                color: map.get(color.$text-colors, 'quaternary');
+                white-space: nowrap;
+              }
+
+              .btn-step {
+                width: fn.rem(36);
+                height: fn.rem(36);
+                margin: 0;
+                cursor: pointer;
+                border: 0;
+
+                @include mx.flex($justify: center, $align: center);
+                @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
+
+                @include mx.common-mouse-event {
+                  .ic {
+                    color: map.get(color.$icon-neutral-colors, 'primary');
+                  }
+                  background: map.get(color.$gray-shades, '30');
+                }
+              }
+
+              /* -------------------------
+                 가로형 (- 1 M +)
+              ------------------------- */
+              &.type-horiz {
+                .btn-step {
+                  &.vits-minus-icon {
+                    border-right: 1px solid map.get(color.$surf-colors, 'tertiary');
+                  }
+
+                  &.vits-plus-icon {
+                    border-left: 1px solid map.get(color.$surf-colors, 'tertiary');
+                  }
+                }
+              }
+
+              /* -------------------------
+                 세로형 (1 M + / -)
+              ------------------------- */
+              &.type-vertical {
+                position: relative;
+                padding-right: fn.rem(32);
+
+                .quantity-input {
+                  width: fn.rem(56);
+                }
+
+                .btn-step {
+                  @include mx.position(absolute, $top: 0, $right: 0);
+                  width: fn.rem(32);
+                  height: fn.rem(18);
+                  font-size: fn.rem(12);
+
+                  &.vits-plus-icon {
+                    top: 0;
+
+                    @include mx.border(bottom, 1px, solid, $color: map.get(color.$surf-colors, 'tertiary'));
+                    @include mx.border(left, 1px, solid, $color: map.get(color.$surf-colors, 'tertiary'));
+                  }
+
+                  &.vits-minus-icon {
+                    top: auto;
+                    bottom: 0;
+
+                    @include mx.border(left, 1px, solid, $color: map.get(color.$surf-colors, 'tertiary'));
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &-total-praice {
+        }
+
+        // 옵션 팝업 버튼
+        &-select-options {
+          padding-bottom: map.get(var.$unit, 20);
+
+          em {
+            font-style: normal;
+          }
+
+          .vits-btn-horizon {
+            justify-content: space-between;
+            width: 100%;
+            padding: fn.rem(12) fn.rem(20);
+
+            .text {
+              text-align: left;
+            }
+
+            .icon {
+              @include icon.ic-size(map.get(var.$unit, 24));
+            }
+          }
+        }
+      }
+    }
+  }
+}

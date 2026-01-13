@@ -1,0 +1,108 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%# GNB %>
+<%
+  // 운영 타이틀 샘플(일부는 부제/2줄 케이스 포함)
+  const promoPagesDefault = [
+    { text: '복사용지 스페셜딜', href: '/promo/1' },
+    { text: '사무용품 올인원', href: '/promo/2' },
+    { text: '사무기기 기획전', href: '/promo/3' },
+    { text: '포장 솔루션 제안전', href: '/promo/4' },
+    { text: '장갑 끝판왕', href: '/promo/5' },
+    { text: '계양 기획전', href: '/promo/6' },
+    { text: '디월트 기획전', href: '/promo/7' },
+    { text: '안전 멀티탭', href: '/promo/8' },
+
+    { text: '비츠온 조명 기획전', href: '/promo/9' },
+    { text: '실속할인', href: '/promo/10' },
+    { text: '비츠온 PB 기획전', href: '/promo/11' },
+
+    // 운영 화면처럼 “작게 2줄” 들어가는 케이스 예시
+    { text: '뜯어보자', subText: '절삭공구류', href: '/promo/12' },
+    { text: '받아보자', subText: '피스,볼트류', href: '/promo/13' },
+
+    { text: '장비용품 총집합', href: '/promo/14' },
+    { text: 'F/W 음료모음전', href: '/promo/15' },
+    { text: '제설용품 총집합', href: '/promo/16' },
+    { text: '3M 기획전', href: '/promo/17' },
+
+    { text: '현진정밀 기획전', href: '/promo/18' },
+    { text: '케이텔 기획전', href: '/promo/19' },
+    { text: '서경 기획전', href: '/promo/20' },
+    { text: '소화기 기획전', href: '/promo/21' },
+    { text: '밀워키 기획전', href: '/promo/22' },
+    { text: '설 선물세트', href: '/promo/23' },
+  ];
+
+  const promoPages =
+    (typeof gnbPromoPages !== 'undefined' && Array.isArray(gnbPromoPages) && gnbPromoPages.length)
+      ? gnbPromoPages
+      : promoPagesDefault;
+%>
+
+<div class="vits-header-gnb" data-header-gnb>
+  <div class="gnb-bar-box" data-toggle-scope data-toggle-group="true">
+    <div class="gnb-bar vits-inner">
+      <!-- 좌: 전체카테고리/브랜드 (toggle.js 사용) -->
+      <div class="gnb-left" data-gnb-panel-scope>
+        <!-- 1) 전체카테고리 세트 -->
+        <%- include(`${_src}/views/layout/header/header-category.ejs`) %>
+
+        <!-- 2) 브랜드 세트 -->
+        <%- include(`${_src}/views/layout/header/header-brand.ejs`) %>
+      </div>
+
+      <!-- 중: 프로모션 + 고정 + 더보기 -->
+      <nav class="gnb-nav vits-scrollbar" data-gnb-nav>
+        <ul class="gnb-nav-list" data-gnb-nav-list>
+          <li class="gnb-item gnb-item-home"><a href="/" class="gnb-link">홈</a></li>
+          <li class="gnb-item gnb-item-deal"><a href="/" class="gnb-link">초특가</a></li>
+          <li class="gnb-item gnb-item-promo-list">
+            <div class="gnb-promo-list">
+              <% promoPages.forEach(function (it) { %>
+              <a href="<%- it.href || '#' %>" class="gnb-link">
+                <% if (it.subText) { %>
+                <em class="exhibition-item-sub"><%- it.subText %></em>
+                <span class="exhibition-item-text"><%- it.text || '' %></span>
+                <% } else { %> <%- it.text || '' %> <% } %>
+              </a>
+              <% }); %>
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div class="gnb-more-box">
+              <button
+                type="button"
+                class="gnb-more"
+                data-gnb-more
+                data-toggle-btn
+                data-toggle-target="gnb-more"
+                data-toggle-group-except="true"
+                aria-expanded="false"
+                aria-label="더보기"
+              >
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %>
+              </button>
+            </div>
+          </li>
+          <li class="gnb-item gnb-item-promo">
+            <a href="/plan" class="gnb-link">기획전</a>
+          </li>
+          <li class="gnb-item gnb-item-event">
+            <a href="/event" class="gnb-link">이벤트</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
+    <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
+      <div class="gnb-panel-inner">
+        <div class="gnb-panel-body">
+          <ul class="gnb-panel-list" data-gnb-more-list></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

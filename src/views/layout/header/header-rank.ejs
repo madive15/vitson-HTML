@@ -1,0 +1,90 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# 실시간 검색어 %>
+<%
+  const rankListDefault = [
+    { currRank: 1,  prevRank: 3,  word: '복사용지' },
+    { currRank: 2,  prevRank: 1,  word: '물티슈' },
+    { currRank: 3,  prevRank: 5,  word: '마스크' },
+    { currRank: 4,  prevRank: 4,  word: '핸드워시' },
+    { currRank: 5,  prevRank: 7,  word: '손소독제' },
+    { currRank: 6,  prevRank: 2,  word: '라벨지' },
+    { currRank: 7,  prevRank: 10, word: '박스테이프' },
+    { currRank: 8,  prevRank: 8,  word: '종이컵' },
+    { currRank: 9,  prevRank: 6,  word: '세정제' },
+    { currRank: 10, prevRank: 10, word: '건전지' },
+  ];
+
+  const list =
+    (typeof rankList !== 'undefined' && Array.isArray(rankList) && rankList.length)
+      ? rankList
+      : rankListDefault;
+
+  const first = list[0];
+%>
+<div
+  class="header-main-search-rank"
+  data-toggle-scope
+  data-toggle-group="true"
+  data-header-rank
+  data-rank-interval="2500"
+  data-rank-duration="600"
+>
+  <div class="header-rank-bar">
+    <!-- 현재 노출(롤링 영역) : JS가 내부를 track 방식으로 교체 -->
+    <a class="header-rank-link" href="/?keyword=<%= encodeURIComponent(first.word) %>" data-rank-current>
+      <span class="header-rank-num"><%= first.currRank %></span>
+      <span class="header-rank-word"><%= first.word %></span>
+      <span class="header-rank-move" aria-hidden="true"></span>
+    </a>
+
+    <!-- 토글 버튼: toggle.js 규칙 준수 -->
+    <button
+      type="button"
+      class="header-rank-btn"
+      data-toggle-btn
+      data-toggle-target="rankPanel"
+      aria-expanded="false"
+      data-aria-label-base="실시간 검색어 목록"
+      aria-label="실시간 검색어 목록 열기"
+    >
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+    </button>
+  </div>
+
+  <!-- 패널: toggle.js가 is-open 토글 -->
+  <div class="header-rank-panel" data-toggle-box="rankPanel" role="dialog" aria-label="실시간 검색어">
+    <div class="header-rank-panel-head">
+      <span class="header-rank-panel-title">실시간 검색어</span>
+
+      <!-- 닫기: 같은 target으로 닫힘 -->
+      <button
+        type="button"
+        class="header-rank-panel-close"
+        data-toggle-btn
+        data-toggle-target="rankPanel"
+        aria-label="실시간 검색어 닫기"
+      >
+        닫기
+      </button>
+    </div>
+
+    <ol class="header-rank-list" data-rank-list>
+      <% list.forEach(function (item) { %>
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="<%= item.prevRank %>"
+        data-curr-rank="<%= item.currRank %>"
+        data-word="<%= item.word %>"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num"><%= item.currRank %></span>
+          <span class="header-rank-word"><%= item.word %></span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      <% }) %>
+    </ol>
+  </div>
+</div>

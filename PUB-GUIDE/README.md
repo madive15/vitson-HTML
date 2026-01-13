@@ -184,6 +184,7 @@ scss/
 │  ├─ _typography.scss        # 타이포 토큰/믹스인/기본 텍스트 규칙
 │  └─ index.scss              # base 배럴(@forward 모음)
 ├─ components/                # 컴포넌트 스타일 엔트리(모듈 모음)
+│  ├─ _icon.scss              # 아이콘
 │  └─ index.scss              # 컴포넌트 SCSS 모듈 모음
 ├─ layout/                    # 레이아웃 스타일(그리드/헤더/푸터/컨테이너 등)
 │  ├─ _wrapper.scss           # [수정 금지] Layout Core: wrapper 프레임 + grid 기본 구조 + sticky 정책(body 스크롤 기준)
@@ -199,7 +200,71 @@ scss/
 
 <br />
 
-### 2.5. scrollbar.scss (스크롤바 커스텀 사용 규칙)
+### 2.5. SCSS 사용 예시
+
+#### 2.5.1. 유닛 토큰($unit) 사용 기준
+
+- **기본 원칙**
+
+  - 여백(`padding`, `margin` 등)은 유닛 토큰(`$unit`)을 사용
+  - `border`, `border-radius` `font-size` 제외
+
+- **유닛 토큰 사용 예시:**
+
+  ```scss
+  @use 'sass:map';
+  @use '@/assets/scss/abstracts/variables' as var;
+
+  .ex {
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+  }
+  ```
+
+- **예외: 직접 px 사용(border / radius 등):**
+
+  ```scss
+  @use '@/assets/scss/abstracts/mixins' as mx;
+
+  // border - px 적용
+  @include mx.border(); // 하단 1px solid primary
+  @include mx.border(all, 2px, dashed); // 전체 2px dashed 기본 색상
+
+  // border-radius -> px 적용
+  .ex {
+    border-radius: 10px;
+  }
+  ```
+
+  <br />
+
+#### 2.5.2. CON : 사이즈 / 색상 제어
+
+- **아이콘의 색상, 크기**는 부모(컴포넌트)에서 제어한다.<br />(크기: ic-size, 색상: color)
+
+  ```html
+  <button class="btn" type="button" aria-label="닫기">
+    <i class="ic ic-close" aria-hidden="true"></i>
+  </button>
+  ```
+
+  ```scss
+  @use 'sass:map';
+  @use '@/assets/scss/abstracts/variables' as var;
+  @use '@/assets/scss/base/colors' as color;
+  @use '@/assets/scss/components/icon' as icon;
+
+  .btn {
+    // 크기
+    @include icon.ic-size(map.get(var.$unit, 40));
+
+    // 색상
+    color: map.get(color.$gray-shades, '20');
+  }
+  ```
+
+<br />
+
+### 2.6. scrollbar.scss (스크롤바 커스텀 사용 규칙)
 
 `_scrollbar.scss`는 vits 화면에서만 스크롤바의 시각 스타일을 CSS로 커스텀하기 위한 파일이다.<br />
 스크롤 동작, 이벤트 제어, 라이브러리는 사용하지 않는다.
@@ -223,7 +288,7 @@ scss/
 
 <br />
 
-### 2.6. @include / @extend 작성 위치 규칙(Sass mixed-decls 예방)
+### 2.7. @include / @extend 작성 위치 규칙(Sass mixed-decls 예방)
 
 Sass에서는 **중첩 규칙(@media, @supports, &:hover 등) 뒤에** <br />
 **선언(display, padding 등)이 오는 구조를 mixed-decls로 판단**하며,<br />

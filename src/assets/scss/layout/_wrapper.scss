@@ -5,6 +5,8 @@
 // - 화면별 예외(스크롤 컨테이너 전환 등)는 vits-wrapper-{1depth} 확장 클래스로만 처리.
 // -----------------------------------------------------------------------------
 
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
 
 /* 
@@ -13,6 +15,15 @@
   - (현재 정책) 스크롤은 문서(body) 기준으로 운용한다.
   - reset.css에 없으면 프로젝트 공통(reset/root)에서 확정 반영 권장.
 */
+
+/* body min-w 1024 */
+body.vits-scope {
+  min-width: 1024px;
+
+  img {
+    max-width: 100%;
+  }
+}
 
 /* [수정 금지] 레이아웃 기준 파일(프레임).
    화면별 예외/변형은 vits-wrapper-{1depth} 확장 클래스에서만 처리.
@@ -72,4 +83,17 @@
    - “사이드 자체 스크롤” 요구는 별도 정책으로 분리 */
 .vits-grid-side {
   min-height: 0;
+}
+
+/* inner */
+.vits-inner {
+  width: 100%;
+  max-width: var.$desktop-width;
+  margin-right: auto;
+  margin-left: auto;
+
+  @include mx.pc-sm {
+    padding-right: var.$tablet-gutter;
+    padding-left: var.$tablet-gutter;
+  }
 }

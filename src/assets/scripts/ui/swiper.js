@@ -71,148 +71,6 @@ import Swiper from 'swiper/bundle';
     new Swiper(el, config);
   }
 
-  /** Deal Gallery : 상품상세페이지 deal_gallery 영역 */
-  function initDealGallery() {
-    if (typeof Swiper === 'undefined' || typeof $ === 'undefined') return;
-
-    var galleryTop = new Swiper('.gallery-top', {
-      spaceBetween: 10,
-      loop: false
-    });
-
-    var galleryThumbs = new Swiper('.gallery-thumbs', {
-      spaceBetween: 10,
-      centeredSlides: true,
-      slidesPerView: 5,
-      slideToClickedSlide: true,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      }
-    });
-
-    galleryTop.controller.control = galleryThumbs;
-    galleryThumbs.controller.control = galleryTop;
-
-    /*Zoom State */
-    var zoomState = {
-      naturalWidth: 0,
-      naturalHeight: 0,
-      zoomRatio: 3
-    };
-
-    function resetZoomState() {
-      zoomState.naturalWidth = 0;
-      zoomState.naturalHeight = 0;
-    }
-
-    /* Utils */
-    function loadImageSize($img, cb) {
-      if ($img[0].complete) {
-        cb($img[0].naturalWidth, $img[0].naturalHeight);
-      } else {
-        $img.one('load', function () {
-          cb(this.naturalWidth, this.naturalHeight);
-        });
-      }
-    }
-
-    function getMousePosition(e, $img) {
-      var offset = $img.offset();
-      return {
-        x: e.pageX - offset.left,
-        y: e.pageY - offset.top
-      };
-    }
-
-    /* Zoom Logic*/
-    function handleZoom(e) {
-      var $slide = $('.swiper-slide-active');
-      var $img = $slide.find('.original_image');
-      var $lens = $slide.find('.zoom_lens');
-      var $container = $('.magnified_container');
-      var $zoomImg = $('.magnified_image');
-
-      if (!$img.length || $slide.find('iframe').length) {
-        $lens.hide();
-        $container.hide();
-        return;
-      }
-
-      var iw = $img.outerWidth();
-      var ih = $img.outerHeight();
-
-      var mouse = getMousePosition(e, $img);
-
-      if (mouse.x < 0 || mouse.y < 0 || mouse.x > iw || mouse.y > ih) {
-        $lens.hide();
-        $container.hide();
-        return;
-      }
-
-      if (!zoomState.naturalWidth) {
-        loadImageSize($img, function (w, h) {
-          zoomState.naturalWidth = w;
-          zoomState.naturalHeight = h;
-        });
-        return;
-      }
-
-      $lens.show();
-      $container.show();
-
-      /* 확대 비율 */
-      var baseRatio = Math.max(zoomState.naturalWidth / iw, zoomState.naturalHeight / ih);
-      var ratio = baseRatio * zoomState.zoomRatio;
-
-      var zw = zoomState.naturalWidth * ratio;
-      var zh = zoomState.naturalHeight * ratio;
-
-      $zoomImg.css({width: zw, height: zh});
-
-      /* lens 이동 */
-      var lw = $lens.outerWidth();
-      var lh = $lens.outerHeight();
-
-      var px = Math.max(0, Math.min(mouse.x - lw / 2, iw - lw));
-      var py = Math.max(0, Math.min(mouse.y - lh / 2, ih - lh));
-
-      $lens.css({
-        left: px + $img.position().left,
-        top: py + $img.position().top
-      });
-
-      /* 확대 이미지 이동 */
-      var cw = $container.width();
-      var ch = $container.height();
-
-      var rx = (px / (iw - lw)) * (zw - cw);
-      var ry = (py / (ih - lh)) * (zh - ch);
-
-      $zoomImg.css({
-        left: -rx,
-        top: -ry
-      });
-    }
-
-    /*Events*/
-    $('.gallery-top')
-      .on('mousemove', handleZoom)
-      .on('mouseleave', function () {
-        $('.zoom_lens').hide();
-        $('.magnified_container').hide();
-      });
-
-    galleryTop.on('slideChange', function () {
-      resetZoomState();
-      var src = $('.swiper-slide-active .original_image').attr('src');
-      $('.magnified_image').attr('src', src);
-    });
-
-    $('.magnified_image').attr('src', $('.swiper-slide-active .original_image').attr('src'));
-  }
-  initDealGallery();
-
   window.UI.swiper = {
     /**
      * Swiper 초기화
@@ -226,6 +84,200 @@ import Swiper from 'swiper/bundle';
         initOne($(this));
       });
 
+      /** Deal Gallery : 상품상세페이지 deal_gallery 영역
+       * 기존 운영 소스 참고하여 개선하였습니다.
+       */
+      function initDealGallery() {
+        if (typeof Swiper === 'undefined' || typeof $ === 'undefined') return;
+
+        /* =====================
+         * Swiper
+         * ===================== */
+        var galleryTop = new Swiper('.gallery-top', {
+          spaceBetween: 0,
+          loop: false,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          },
+          thumbs: {
+            swiper: galleryThumbs
+          }
+        });
+
+        var galleryThumbs = new Swiper('.gallery-thumbs', {
+          spaceBetween: 7,
+          slidesPerView: 8,
+          centeredSlides: true, //중앙정렬렬
+          slideToClickedSlide: true, //클릭시 이동
+          watchSlidesProgress: true,
+          watchSlidesVisibility: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          }
+        });
+        // 기존 운영소스
+        // galleryTop.controller.control = galleryThumbs;
+        // galleryThumbs.controller.control = galleryTop;
+
+        galleryThumbs.on('click', function () {
+          var clickedIndex = galleryThumbs.clickedIndex;
+          if (typeof clickedIndex === 'undefined') return;
+
+          /* 1. 메인 Swiper 이동 */
+          galleryTop.slideTo(clickedIndex);
+
+          /* 2. 썸네일 active 처리 */
+          $(galleryThumbs.slides).removeClass('swiper-slide-active').eq(clickedIndex).addClass('swiper-slide-active');
+
+          /* 3. 메인 slide active 보정 */
+          $(galleryTop.slides).removeClass('swiper-slide-active').eq(clickedIndex).addClass('swiper-slide-active');
+
+          /* 4. 확대 상태 초기화 + 이미지 싱크 */
+          resetZoomState();
+
+          var $activeImg = $(galleryTop.slides[clickedIndex]).find('.original_image');
+
+          $('.magnified_image').attr('src', $activeImg.attr('src'));
+        });
+
+        /* =====================
+         * Zoom State
+         * ===================== */
+        var zoomState = {
+          naturalWidth: 0,
+          naturalHeight: 0,
+          zoomRatio: 3
+        };
+
+        function resetZoomState() {
+          zoomState.naturalWidth = 0;
+          zoomState.naturalHeight = 0;
+        }
+
+        /* =====================
+         * Utils
+         * ===================== */
+        function loadImageSize($img, cb) {
+          if ($img[0].complete) {
+            cb($img[0].naturalWidth, $img[0].naturalHeight);
+          } else {
+            $img.one('load', function () {
+              cb(this.naturalWidth, this.naturalHeight);
+            });
+          }
+        }
+
+        function getMousePosition(e, $img) {
+          var offset = $img.offset();
+          return {
+            x: e.pageX - offset.left,
+            y: e.pageY - offset.top
+          };
+        }
+
+        /* =====================
+         * Zoom Logic
+         * ===================== */
+        function handleZoom(e) {
+          var $img = $(e.target).closest('.original_image');
+          if (!$img.length) return;
+
+          var $slide = $img.closest('.swiper-slide');
+          var $lens = $slide.find('.zoom_lens');
+          var $container = $('.magnified_container');
+          var $zoomImg = $('.magnified_image');
+
+          if ($slide.find('iframe').length) {
+            $lens.hide();
+            $container.hide();
+            return;
+          }
+
+          var iw = $img.outerWidth();
+          var ih = $img.outerHeight();
+          var mouse = getMousePosition(e, $img);
+
+          if (mouse.x < 0 || mouse.y < 0 || mouse.x > iw || mouse.y > ih) {
+            $lens.hide();
+            $container.hide();
+            return;
+          }
+
+          if (!zoomState.naturalWidth) {
+            loadImageSize($img, function (w, h) {
+              zoomState.naturalWidth = w;
+              zoomState.naturalHeight = h;
+            });
+            return;
+          }
+
+          $lens.show();
+          $container.show();
+
+          /* 확대 비율 */
+          var baseRatio = Math.max(zoomState.naturalWidth / iw, zoomState.naturalHeight / ih);
+          var ratio = baseRatio * zoomState.zoomRatio;
+
+          var zw = zoomState.naturalWidth * ratio;
+          var zh = zoomState.naturalHeight * ratio;
+
+          $zoomImg.css({
+            width: zw,
+            height: zh
+          });
+
+          /* lens 이동 */
+          var lw = $lens.outerWidth();
+          var lh = $lens.outerHeight();
+
+          var px = Math.max(0, Math.min(mouse.x - lw / 2, iw - lw));
+          var py = Math.max(0, Math.min(mouse.y - lh / 2, ih - lh));
+
+          $lens.css({
+            left: px + $img.position().left,
+            top: py + $img.position().top
+          });
+
+          /* 확대 이미지 이동 */
+          var cw = $container.width();
+          var ch = $container.height();
+
+          var rx = (px / (iw - lw)) * (zw - cw);
+          var ry = (py / (ih - lh)) * (zh - ch);
+
+          $zoomImg.css({
+            left: -rx,
+            top: -ry
+          });
+        }
+
+        /* =====================
+         * Events
+         * ===================== */
+        $('.gallery-top')
+          .on('mousemove', handleZoom)
+          .on('mouseleave', function () {
+            $('.zoom_lens').hide();
+            $('.magnified_container').hide();
+          });
+
+        galleryTop.on('slideChangeTransitionEnd', function () {
+          resetZoomState();
+
+          var $activeImg = $(galleryTop.slides[galleryTop.activeIndex]).find('.original_image');
+
+          $('.magnified_image').attr('src', $activeImg.attr('src'));
+        });
+
+        /* 초기 확대 이미지 설정 */
+        var $initialImg = $(galleryTop.slides[galleryTop.activeIndex]).find('.original_image');
+
+        $('.magnified_image').attr('src', $initialImg.attr('src'));
+      }
+
+      initDealGallery();
       console.log('[swiper] init');
     }
   };

@@ -11,6 +11,11 @@
  */
 import '../ui/toggle.js';
 import '../ui/swiper.js';
+import '../ui/kendo/kendo-dropdown.js';
+import '../ui/header/header-rank.js';
+import '../ui/header/header-search.js';
+import '../ui/header/header-gnb.js';
+import '../ui/footer.js';
 
 (function (window) {
   'use strict';
@@ -27,6 +32,17 @@ import '../ui/swiper.js';
   window.UI.init = function () {
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
+
+    if (window.VitsKendoDropdown) {
+      window.VitsKendoDropdown.initAll(document);
+      window.VitsKendoDropdown.autoBindStart(document.body);
+    }
+
+    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
+    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
+    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
+    if (window.UI.headerGnbPanel && window.UI.headerGnbPanel.init) window.UI.headerGnbPanel.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
 
   console.log('[core/ui] loaded');

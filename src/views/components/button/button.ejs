@@ -1,14 +1,13 @@
 <button class="vits-btn vits-btn-<%= size %> <%= icon ? 'vits-btn-icon-' + iconPosition : '' %>">
-  <% if (icon && iconPosition === 'left') { %>
-  <i class="icon-<%= icon %>"></i>
-  <% } %>
-  <span><%= label %></span>
-  <% if (icon && iconPosition === 'right') { %>
-  <i class="icon-<%= icon %>"></i>
-  <% } %>
+  <% if (icon && iconPosition === 'left') { %> <%- include(`${_src}/views/components/icon.ejs`, { iconName: `${ icon }`
+  }) %> <% } %>
+  <span class="text"><%= label %></span>
+  <% if (icon && iconPosition === 'right') { %> <%- include(`${_src}/views/components/icon.ejs`, { iconName: `${ icon }`
+  }) %> <% } %>
 </button>
 
 <!-- 사용 예시
-<%- include('button', { label: '확인', size: 'xl', icon: 'check', iconPosition: 'left' }) %>
-<%- include('button', { label: '취소', size: 'm', icon: 'close', iconPosition: 'right' }) %>
+< %- include(`${_src}/views/components/button/button.ejs`, { label: '확인', size: 'xl', icon: 'tag', iconPosition: 'left' }) %>
+< %- include(`${_src}/views/components/button/button.ejs`, { label: '취소', size: 'm', icon: 'close', iconPosition: 'right' }) %>
 -->
+x

@@ -1,18 +1,19 @@
 /**
- * scripts/ui/toggle.js
- * @purpose 토글/아코디언 공통 UI
- * @assumption
- *  - data- 속성 기반으로 “스코프(data-toggle-scope)” 내부에서만 동작한다
- *  - 버튼(data-toggle-btn) ↔ 패널(data-toggle-box) 매핑은 data-toggle-target 값으로 연결한다
- * @options
- *  - data-toggle-group="true"   : 같은 스코프에서 하나만 열림(아코디언)
- *  - data-toggle-outside="true" : 스코프 외부 클릭 시 닫힘(기본 사용 지양)
+ * @file scripts/ui/toggle.js
+ * @purpose data-속성 기반 토글/아코디언 공통
+ * @description
+ *  - 스코프: [data-toggle-scope] 내부에서만 동작
+ *  - 매핑: [data-toggle-btn][data-toggle-target] ↔ [data-toggle-box="target"]
+ *  - 상태: is-open 클래스 + aria-expanded 값으로만 제어
+ * @option
+ *  - data-toggle-group="true"   : 스코프 내 1개만 오픈(아코디언)
+ *  - data-toggle-outside="true" : 스코프 외 클릭 시 closeAll 실행(document 이벤트)
+ * @a11y
+ *  - aria-expanded만 제어(aria-controls는 마크업 선택)
+ *  - (선택) data-aria-label-base가 있으면 aria-label을 "... 열기/닫기"로 동기화
  * @maintenance
- *  - 페이지 의미(gnb, detail 등) 분기 금지
- *  - 디자인 차이는 CSS로 처리(동작은 동일)
- *  - 토글 상태 클래스는 is-open만 사용한다
- *  - 접근성: aria-expanded만 최소 보장(aria-controls는 마크업에서 선택 적용)
- *  - outside 옵션은 document 이벤트를 사용하므로 남용 금지(필요한 스코프에만 제한 적용)
+ *  - 페이지별 분기 금지(동작 동일, 표현/스타일은 CSS에서만 처리)
+ *  - closeAll은 스코프 내부만 정리(외부 클릭/그룹 전환에 공용)
  */
 
 (function ($, window) {
@@ -26,58 +27,93 @@
   window.UI = window.UI || {};
 
   var ACTIVE = 'is-open';
+  var GROUP_EXCEPT_KEY = 'toggleGroupExceptActive';
+  var OUTSIDE_ACTIVE_KEY = 'toggleOutsideActive';
 
-  /**
-   * 패널 오픈
-   * @param {jQuery} $btn 토글 버튼
-   * @param {jQuery} $box 토글 패널
-   * @returns {void}
-   */
-  function open($btn, $box) {
-    $box.addClass(ACTIVE);
-    $btn.attr('aria-expanded', 'true');
+  // syncAriaLabel: aria-expanded(true/false)에 맞춰 aria-label("... 열기/닫기") 동기화(옵션)
+  function syncAriaLabel($btn) {
+    var base = $btn.attr('data-aria-label-base');
+    if (!base) return;
+
+    var isExpanded = $btn.attr('aria-expanded') === 'true';
+    $btn.attr('aria-label', base + ' ' + (isExpanded ? '닫기' : '열기'));
   }
 
-  /**
-   * 패널 클로즈
-   * @param {jQuery} $btn 토글 버튼
-   * @param {jQuery} $box 토글 패널
-   * @returns {void}
-   */
+  // open: 패널 오픈 + 버튼 aria-expanded(true) 갱신
+  function open($btn, $box) {
+    var shouldCloseOnOutside = $btn.data('toggleOutside') === true;
+    var isGroupExcept = $btn.data('toggleGroupExcept') === true;
+
+    $box.addClass(ACTIVE);
+    $box.data(OUTSIDE_ACTIVE_KEY, shouldCloseOnOutside);
+    $box.data(GROUP_EXCEPT_KEY, isGroupExcept);
+    $btn.attr('aria-expanded', 'true');
+    syncAriaLabel($btn);
+  }
+
+  // close: 패널 닫기 + 버튼 aria-expanded(false) 갱신
   function close($btn, $box) {
     $box.removeClass(ACTIVE);
+    $box.removeData(OUTSIDE_ACTIVE_KEY);
+    $box.removeData(GROUP_EXCEPT_KEY);
     $btn.attr('aria-expanded', 'false');
+    syncAriaLabel($btn);
   }
 
-  /**
-   * 스코프 내 열린 패널 모두 닫기(아코디언용)
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   */
+  // closeAll: 스코프 내 열린 패널/버튼을 일괄 닫기(그룹/외부클릭)
   function closeAll($scope) {
-    $scope.find('[data-toggle-box].' + ACTIVE).removeClass(ACTIVE);
-    $scope.find('[data-toggle-btn][aria-expanded="true"]').attr('aria-expanded', 'false');
-  }
+    // 패널: 예외로 표시된 패널은 닫지 않음
+    $scope.find('[data-toggle-box].' + ACTIVE).each(function () {
+      var $box = $(this);
+      if ($box.data(GROUP_EXCEPT_KEY) === true) return; // 그룹 제외 패널 유지
 
-  /**
-   * 스코프 외부 클릭 시 닫기 바인딩
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   * @example
-   * // <div data-toggle-scope data-toggle-outside="true">...</div>
-   */
-  function bindOutsideClose($scope) {
-    $(document).on('click.uiToggleOutside', function (e) {
-      if ($scope.has(e.target).length) return;
-      closeAll($scope);
+      $box.removeClass(ACTIVE);
+      $box.removeData(OUTSIDE_ACTIVE_KEY);
+      $box.removeData(GROUP_EXCEPT_KEY);
+    });
+
+    // 버튼: 열린 버튼 중 "유지되는 패널(예외)"에 연결된 버튼은 aria-expanded를 false로 내리지 않음
+    var $openBtns = $scope.find('[data-toggle-btn][aria-expanded="true"]');
+    $openBtns.each(function () {
+      var $btn = $(this);
+      var target = $btn.data('toggleTarget');
+      if (!target) return;
+
+      var $box = $scope.find('[data-toggle-box="' + target + '"]');
+      if ($box.length && $box.hasClass(ACTIVE) && $box.data(GROUP_EXCEPT_KEY) === true) {
+        return; // 예외 패널이 유지 중이면 버튼도 열린 상태 유지
+      }
+
+      $btn.attr('aria-expanded', 'false');
+      syncAriaLabel($btn);
     });
   }
 
-  /**
-   * 스코프 바인딩(이벤트 위임)
-   * @param {jQuery} $scope 스코프 루트
-   * @returns {void}
-   */
+  // bindOutsideClose: 스코프 밖 클릭 시, outside=true로 열린 패널만 닫기
+  function bindOutsideClose($scope) {
+    // 같은 스코프에 중복 바인딩 방지
+    if ($scope.data('toggleOutsideBound') === true) return;
+    $scope.data('toggleOutsideBound', true);
+
+    $(document).on('click.uiToggleOutside', function (e) {
+      // 스코프 내부 클릭은 무시(패널 유지)
+      if ($scope.has(e.target).length) return;
+
+      // outside=true 버튼으로 열린 패널만 닫기
+      $scope.find('[data-toggle-box].' + ACTIVE).each(function () {
+        var $box = $(this);
+        if ($box.data(OUTSIDE_ACTIVE_KEY) !== true) return;
+
+        var target = $box.attr('data-toggle-box');
+        var $btn = $scope.find('[data-toggle-btn][data-toggle-target="' + target + '"]').first();
+        if (!$btn.length) return;
+
+        close($btn, $box);
+      });
+    });
+  }
+
+  // bindScope: 스코프 내부에서 버튼 클릭 위임 처리(그룹이면 closeAll 후 open)
   function bindScope($scope) {
     $scope.on('click', '[data-toggle-btn]', function (e) {
       e.preventDefault();
@@ -91,29 +127,24 @@
 
       var isOpen = $box.hasClass(ACTIVE);
       var isGroup = $scope.data('toggleGroup') === true;
+      var isGroupExcept = $btn.data('toggleGroupExcept') === true;
 
       if (isOpen) {
         close($btn, $box);
         return;
       }
 
-      if (isGroup) closeAll($scope);
+      if (isGroup && !isGroupExcept) closeAll($scope);
       open($btn, $box);
     });
 
-    if ($scope.data('toggleOutside') === true) {
+    // data-toggle-outside="true"가 있는 버튼이 이 스코프에 존재하면 바인딩
+    if ($scope.find('[data-toggle-btn][data-toggle-outside="true"]').length) {
       bindOutsideClose($scope);
     }
   }
-
   window.UI.toggle = {
-    /**
-     * 토글 초기화
-     * @returns {void}
-     * @example
-     * // scripts/core/ui.js의 UI.init()에서 호출
-     * UI.toggle.init();
-     */
+    // init: [data-toggle-scope]별로 이벤트 위임 바인딩
     init: function () {
       $('[data-toggle-scope]').each(function () {
         bindScope($(this));

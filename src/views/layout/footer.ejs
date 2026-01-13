@@ -1,1 +1,171 @@
-<footer class="vits-footer">footer 영역</footer>
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  const datakendo = [
+    { ID: 1, ProductName: "Beds" },
+    { ID: 2, ProductName: "Chairs" },
+    { ID: 3, ProductName: "Sofas" },
+    { ID: 4, ProductName: "Dining Tables" },
+    { ID: 5, ProductName: "TV stoves" }
+  ];
+%>
+
+<footer class="vits-footer" data-toggle-scope>
+  <div class="vits-inner">
+    <div class="vits-footer-brand">
+      <h2 class="vits-footer-logo">
+        <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-footer.svg" alt="비츠온엠알오" />
+      </h2>
+    </div>
+    <div class="vits-footer-company">
+      <div class="vits-footer-links">
+        <a href="" class="footer-link">회사소개</a><a href="" class="footer-link">이용약관</a
+        ><a href="" class="footer-link link-bold">개인정보취급방침</a>
+      </div>
+      <ul class="vits-footer-info">
+        <li>
+          <p class="company-name">(주)일신비츠온</p>
+          <p>
+            <a href="mailto:online@vitson.co.kr" class="company-email">online@vitson.co.kr</a>
+          </p>
+        </li>
+        <li>
+          <p class="company-text">주소 : (12017) 경기도 남양주시 진접읍 팔야산단로12번길 55</p>
+          <p class="company-text">대표 : 진미애</p>
+        </li>
+        <li>
+          <p class="company-text">
+            사업자등록번호 : 132-81-52217
+            <button
+              type="button"
+              class="company-btn-lookup"
+              data-toggle-btn
+              data-toggle-target="modal-company"
+              aria-expanded="false"
+              data-biz-brno="1328152217"
+            >
+              [사업자정보확인]
+            </button>
+          </p>
+          <p class="company-text">통신판매업신고 : 제 2017-진접오남-0205호</p>
+        </li>
+        <li>
+          <p class="company-text">
+            <a href="tel:+82315107237" class="company-tel">TEL. 031-510-7237</a>
+          </p>
+          <p class="company-text">FAX. 031-951-1375</p>
+          <p class="company-text">개인정보책임관리자 : 이경덕</p>
+        </li>
+      </ul>
+      <p class="vits-footer-copyright">CopyrightⓒILSHIN All rights reserved</p>
+    </div>
+    <div class="vits-footer-utility">
+      <div class="vits-footer-utility-group">
+        <div class="vits-footer-sns">
+          <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
+            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+          </a>
+          <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
+            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+          </a>
+          <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
+            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+          </a>
+        </div>
+        <div class="footer-familysite">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/kendo/kendo-dropdown.ejs`, {
+            id: 'dropdownlist',
+            wrapClass: 'vits-dropdown--sm vits-dropdown--type-a',
+            handlerKey: 'productSelect',
+            options: {
+              dataTextField: "ProductName",
+              dataValueField: "ID",
+              dataSource: datakendo,
+              optionLabel: "FAMILY SITE",  // placeholder 문구
+              value: null                  // 초기 선택값 비움(placeholder가 유지되게)
+            }
+          }) %>
+        </div>
+      </div>
+      <div class="vits-footer-cert">
+        <div class="footer-cert-logos">
+          <a href="" class="footer-cert-logo cert-kftc">
+            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-kftc.png" alt="공정거래위원회" />
+          </a>
+          <a href="" class="footer-cert-logo cert-inipay">
+            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-inipay.png" alt="INIPAY" />
+          </a>
+        </div>
+        <div class="footer-cert-desc">
+          구매안전(에스크로)서비스 가맹점 가입확인<br />고객님의 안전한 거래를 위해 현금으로 결제 시 구매<br />안전(에스크로)서비스를
+          이용하실 수 있습니다
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- S: vits-footer-modal -->
+  <section class="vits-footer-modal" data-toggle-box="modal-company" aria-hidden="true">
+    <div class="vits-footer-modal-dim" data-toggle-dim="modal-company"></div>
+
+    <div class="vits-footer-modal-panel" role="dialog" aria-modal="true" aria-labelledby="footerBizInfoTitle">
+      <div class="vits-footer-modal-head">
+        <h2 id="footerBizInfoTitle" class="vits-footer-modal-title">사업자 정보</h2>
+
+        <button type="button" class="vits-footer-modal-close" data-toggle-btn data-toggle-target="modal-company">
+          닫기
+        </button>
+      </div>
+
+      <div class="vits-footer-modal-body">
+        <p class="vits-footer-modal-status" data-biz-status></p>
+
+        <div class="vits-footer-modal-table" data-biz-table hidden>
+          <table class="vits-footer-modal-table-inner">
+            <caption class="sr-only">
+              통신판매사업자 등록 정보
+            </caption>
+            <colgroup>
+              <col style="width: 34%" />
+              <col />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">상호</th>
+                <td data-biz-field="bzmnNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">사업자등록번호</th>
+                <td data-biz-field="brno">-</td>
+              </tr>
+              <tr>
+                <th scope="row">운영상태</th>
+                <td data-biz-field="operSttusCdNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">시/도</th>
+                <td data-biz-field="ctpvNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고기관</th>
+                <td data-biz-field="dclrInsttNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고일자</th>
+                <td data-biz-field="fromYmd">-</td>
+              </tr>
+              <tr>
+                <th scope="row">인허가(등록)번호</th>
+                <td data-biz-field="prmmiMnno">-</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="vits-footer-modal-note">표시 정보는 OpenAPI 조회 결과 기준입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- E: vits-footer-modal -->
+</footer>

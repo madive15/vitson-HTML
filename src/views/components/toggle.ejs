@@ -1,44 +1,14 @@
-<style>
-  /* -------------------------------------------
-  Toggle UI (TEST ONLY)
-  - data-toggle 동작 확인용
-  - 공유/가이드용 임시 스타일
-------------------------------------------- */
-
-  [data-toggle-scope] {
-    margin: 20px 0;
-  }
-
-  [data-toggle-scope] [data-toggle-btn] {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-    cursor: pointer;
-    font-size: 14px;
-  }
-
-  [data-toggle-scope] [data-toggle-btn]:hover {
-    background: #eee;
-  }
-
-  [data-toggle-scope] [data-toggle-box] {
-    display: none;
-    margin-top: 8px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    background: #fafafa;
-    font-size: 13px;
-  }
-
-  [data-toggle-scope] [data-toggle-box].is-open {
-    display: block;
-  }
-</style>
-
-<div data-toggle-scope data-toggle-group="true" data-toggle-outside="true">
-  <button type="button" data-toggle-btn data-toggle-target="panel" aria-expanded="false">토글 버튼</button>
+<div data-toggle-scope data-toggle-group="true">
+  <button
+    type="button"
+    data-toggle-btn
+    data-toggle-outside="true"
+    data-toggle-group-except="true"
+    data-toggle-target="panel"
+    aria-expanded="false"
+  >
+    토글 버튼
+  </button>
 
   <div data-toggle-box="panel">토글 패널</div>
 </div>
@@ -55,6 +25,7 @@
   - 옵션(선택):
     * data-toggle-group="true"
       : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
+      : 특정 영역은 예외 처리하고 싶을 때, button[data-toggle-group-except="true"] 추가
     * data-toggle-outside="true"
       : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
 

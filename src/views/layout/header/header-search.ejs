@@ -1,0 +1,135 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# 검색 패널(최근/연관/상품목록) %>
+<%
+  // 최근검색어(폴백)
+  const recentDefault = [
+    { text: '조명', href: '/search?kw=조명' },
+    { text: '용접봉', href: '/search?kw=용접봉' },
+  ];
+
+  // 연관검색어(폴백)
+  const relatedDefault = [
+    { key: 'r1', label: 'LED홈조명 > 조명부속', text: '크리스마스 조명', href: '/search?kw=크리스마스%20조명' },
+    { key: 'r2', label: 'LED홈조명 > 조명부속', text: '태양광 LED 정원등 조명색', href: '/search?kw=태양광%20LED%20정원등%20조명색' },
+    { key: 'r3', label: '삼성전자 가전제품 > 생활가전 > LED 조명 > 홈 > LED 생체리듬형', text: '', href: '/category/1234' },
+  ];
+
+  // 상품목록(폴백) - key(연관검색어 key)별 매핑
+  const productsDefault = {
+    r1: [
+      { name: '상품 A', href: '/product/1', img: '' },
+      { name: '상품 B', href: '/product/2', img: '' },
+      { name: '상품 C', href: '/product/3', img: '' },
+      { name: '상품 D', href: '/product/4', img: '' },
+    ],
+    r2: [
+      { name: '상품 E', href: '/product/5', img: '' },
+      { name: '상품 F', href: '/product/6', img: '' },
+    ],
+    r3: [
+      { name: '상품 G', href: '/product/7', img: '' },
+    ],
+  };
+
+  // 실제 데이터가 주입되면 그걸 우선 사용
+  const recentList =
+    (typeof recentKeywords !== 'undefined' && Array.isArray(recentKeywords) && recentKeywords.length)
+      ? recentKeywords
+      : recentDefault;
+
+  const relatedList =
+    (typeof relatedKeywords !== 'undefined' && Array.isArray(relatedKeywords) && relatedKeywords.length)
+      ? relatedKeywords
+      : relatedDefault;
+
+  const productsMap =
+    (typeof relatedProducts !== 'undefined' && relatedProducts && typeof relatedProducts === 'object')
+      ? relatedProducts
+      : productsDefault;
+%>
+
+<div class="header-main-search-form">
+  <form class="header-search" action="#" method="get" data-header-search data-toggle-scope data-search-test-key="ㅈ">
+    <div class="header-search-input">
+      <label for="ipt-header-search" class="sr-only">검색어</label>
+      <input
+        type="search"
+        id="ipt-header-search"
+        class="header-search-field"
+        name="ipt-header-search"
+        placeholder="할인 중인 믹스커피, 보러가실래요?"
+        data-toggle-btn
+        data-toggle-outside="true"
+        data-toggle-target="search-panel"
+        aria-expanded="false"
+      />
+      <button type="submit" class="header-search-submit" aria-label="검색">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+      </button>
+    </div>
+
+    <div class="header-search-panel" data-toggle-box="search-panel">
+      <div class="search-panel-wrap">
+        <!-- 좌: 최근 + 연관(고정) -->
+        <div class="search-panel-left">
+          <!-- 최근 검색어 -->
+          <div class="search-recent">
+            <div class="search-head">
+              <strong>최근 검색어</strong>
+              <button type="button" data-recent-clear>전체삭제</button>
+            </div>
+
+            <ul class="search-keyword-list" data-recent-list>
+              <% recentList.forEach(function (it) { %>
+              <li data-recent-item data-href="<%- it.href || '' %>">
+                <span><%- it.text || '' %></span>
+                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+
+          <!-- 연관 검색어 -->
+          <div class="search-related">
+            <strong class="search-title">연관검색어</strong>
+
+            <ul class="search-related-list" data-related-list>
+              <% relatedList.forEach(function (it) { %>
+              <li
+                class="search-related-item"
+                data-related-item="<%- it.key || '' %>"
+                data-related-href="<%- it.href || '' %>"
+              >
+                <span class="search-related-label"><%- it.label || '' %></span>
+
+                <% if (it.text && String(it.text).trim().length) { %>
+                <span class="search-related-text"><%- it.text %></span>
+                <% } %>
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 우: 상품목록(hover 때만 표시, JS가 is-active 붙임) -->
+        <div class="search-panel-right" data-related-products-wrap>
+          <% relatedList.forEach(function (rk) { %>
+          <div class="related-products-panel" data-related-products="<%- rk.key || '' %>">
+            <ul class="related-products-grid">
+              <% ((productsMap && productsMap[rk.key]) ? productsMap[rk.key] : []).forEach(function (p) { %>
+              <li class="product-card">
+                <a href="<%- p.href || '#' %>">
+                  <span class="thumb"></span>
+                  <span class="name"><%- p.name || '' %></span>
+                </a>
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,36 +1,4 @@
 // -----------------------------------------------------------------------------
 // base/_reset.scss
 // - 브라우저 기본 스타일 초기화, 모든 컴포넌트/레이아웃을 디자인 규칙으로 재정의.
-//  - .vits-wrapper 기준으로 margin/padding 초기화 및 box-sizing 재설정
 // -----------------------------------------------------------------------------
-
-@use 'sass:map';
-@use '@/assets/scss/abstracts/mixins' as mx;
-@use '@/assets/scss/abstracts/variables' as var;
-@use '@/assets/scss/base/typography' as typo;
-@use '@/assets/scss/base/colors' as color;
-
-@mixin vits-reset {
-  @include typo.typography('b2r');
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-/* Skip Navigation */
-.skip-nav {
-  @include mx.border('all', $color: map.get(color.$text-colors, 'default'));
-  @include typo.typography('b4m');
-  position: absolute;
-  top: -9999px; /* 기본은 화면 밖 */
-  left: 0;
-  z-index: var.$zindex-skipnav;
-  padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
-  background: color.$color-white;
-  outline: 0;
-
-  &:focus,
-  &:focus-visible {
-    top: 0; /* 포커스 시 노출 */
-  }
-}
