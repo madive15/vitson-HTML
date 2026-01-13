@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
-<script defer src="../../public/resources/scripts/swiper.bundle.js"></script><script defer src="../../public/resources/scripts/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
@@ -40,8 +40,925 @@
     <!-- E: Skip Navigation -->
 
     <!-- S: vits-wrapper -->
-    <section class="vits-wrapper vits-wrapper-{1depth 이름}">
-      <header class="vits-header">header 영역</header>
+    <section class="vits-wrapper">
+      
+
+<!-- S: vits-header -->
+<header class="vits-header">
+  <!-- S: vits-header-topbar -->
+  <div class="vits-header-topbar">
+    <div class="vits-inner">
+      <div class="header-topbar-left">
+        <button type="button" class="vits-btn-favorite">
+          <span class="icon"> <i class="ic ic-tag" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ </span>
+          <span class="text">즐겨찾기</span>
+        </button>
+      </div>
+      <ul class="header-topbar-right">
+        <li>
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  로그인
+</a>
+
+<!-- 
+  components/text-link.ejs
+
+  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
+  - 입력: href(필수), label(필수), target(선택)
+  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
+-->
+</li>
+        <li class="header-topbar-right-spacer">
+          
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  회원가입
+</a>
+
+<!-- 
+  components/text-link.ejs
+
+  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
+  - 입력: href(필수), label(필수), target(선택)
+  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
+-->
+ 
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  고객센터
+</a>
+
+<!-- 
+  components/text-link.ejs
+
+  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
+  - 입력: href(필수), label(필수), target(선택)
+  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
+-->
+
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- E: vits-header-topbar -->
+
+  <!-- S: vits-header-main -->
+  <div class="vits-header-main">
+    <div class="vits-inner">
+      <a href="/" class="header-main-logo">
+        <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+      </a>
+      <div class="header-main-search">
+        <!-- S: header-main-search-rank (실시간 검색어) -->
+        
+<!-- prettier-ignore -->
+
+
+<div
+  class="header-main-search-rank"
+  data-toggle-scope
+  data-toggle-group="true"
+  data-header-rank
+  data-rank-interval="2500"
+  data-rank-duration="600"
+>
+  <div class="header-rank-bar">
+    <!-- 현재 노출(롤링 영역) : JS가 내부를 track 방식으로 교체 -->
+    <a class="header-rank-link" href="/?keyword=%EB%B3%B5%EC%82%AC%EC%9A%A9%EC%A7%80" data-rank-current>
+      <span class="header-rank-num">1</span>
+      <span class="header-rank-word">복사용지</span>
+      <span class="header-rank-move" aria-hidden="true"></span>
+    </a>
+
+    <!-- 토글 버튼: toggle.js 규칙 준수 -->
+    <button
+      type="button"
+      class="header-rank-btn"
+      data-toggle-btn
+      data-toggle-target="rankPanel"
+      aria-expanded="false"
+      data-aria-label-base="실시간 검색어 목록"
+      aria-label="실시간 검색어 목록 열기"
+    >
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+
+  <!-- 패널: toggle.js가 is-open 토글 -->
+  <div class="header-rank-panel" data-toggle-box="rankPanel" role="dialog" aria-label="실시간 검색어">
+    <div class="header-rank-panel-head">
+      <span class="header-rank-panel-title">실시간 검색어</span>
+
+      <!-- 닫기: 같은 target으로 닫힘 -->
+      <button
+        type="button"
+        class="header-rank-panel-close"
+        data-toggle-btn
+        data-toggle-target="rankPanel"
+        aria-label="실시간 검색어 닫기"
+      >
+        닫기
+      </button>
+    </div>
+
+    <ol class="header-rank-list" data-rank-list>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="3"
+        data-curr-rank="1"
+        data-word="복사용지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">1</span>
+          <span class="header-rank-word">복사용지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="1"
+        data-curr-rank="2"
+        data-word="물티슈"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">2</span>
+          <span class="header-rank-word">물티슈</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="5"
+        data-curr-rank="3"
+        data-word="마스크"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">3</span>
+          <span class="header-rank-word">마스크</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="4"
+        data-curr-rank="4"
+        data-word="핸드워시"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">4</span>
+          <span class="header-rank-word">핸드워시</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="7"
+        data-curr-rank="5"
+        data-word="손소독제"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">5</span>
+          <span class="header-rank-word">손소독제</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="2"
+        data-curr-rank="6"
+        data-word="라벨지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">6</span>
+          <span class="header-rank-word">라벨지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="10"
+        data-curr-rank="7"
+        data-word="박스테이프"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">7</span>
+          <span class="header-rank-word">박스테이프</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="8"
+        data-curr-rank="8"
+        data-word="종이컵"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">8</span>
+          <span class="header-rank-word">종이컵</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="6"
+        data-curr-rank="9"
+        data-word="세정제"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">9</span>
+          <span class="header-rank-word">세정제</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="10"
+        data-curr-rank="10"
+        data-word="건전지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">10</span>
+          <span class="header-rank-word">건전지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+    </ol>
+  </div>
+</div>
+
+        <!-- E: header-main-search-rank (실시간 검색어) -->
+
+        <!-- S: hheader-main-search-form (통합 검색창) -->
+        
+<!-- prettier-ignore -->
+
+
+
+<div class="header-main-search-form">
+  <form class="header-search" action="#" method="get" data-header-search data-toggle-scope data-search-test-key="ㅈ">
+    <div class="header-search-input">
+      <label for="ipt-header-search" class="sr-only">검색어</label>
+      <input
+        type="search"
+        id="ipt-header-search"
+        class="header-search-field"
+        name="ipt-header-search"
+        placeholder="할인 중인 믹스커피, 보러가실래요?"
+        data-toggle-btn
+        data-toggle-outside="true"
+        data-toggle-target="search-panel"
+        aria-expanded="false"
+      />
+      <button type="submit" class="header-search-submit" aria-label="검색">
+        <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+      </button>
+    </div>
+
+    <div class="header-search-panel" data-toggle-box="search-panel">
+      <div class="search-panel-wrap">
+        <!-- 좌: 최근 + 연관(고정) -->
+        <div class="search-panel-left">
+          <!-- 최근 검색어 -->
+          <div class="search-recent">
+            <div class="search-head">
+              <strong>최근 검색어</strong>
+              <button type="button" data-recent-clear>전체삭제</button>
+            </div>
+
+            <ul class="search-keyword-list" data-recent-list>
+              
+              <li data-recent-item data-href="/search?kw=조명">
+                <span>조명</span>
+                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+              </li>
+              
+              <li data-recent-item data-href="/search?kw=용접봉">
+                <span>용접봉</span>
+                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+              </li>
+              
+            </ul>
+          </div>
+
+          <!-- 연관 검색어 -->
+          <div class="search-related">
+            <strong class="search-title">연관검색어</strong>
+
+            <ul class="search-related-list" data-related-list>
+              
+              <li
+                class="search-related-item"
+                data-related-item="r1"
+                data-related-href="/search?kw=크리스마스%20조명"
+              >
+                <span class="search-related-label">LED홈조명 > 조명부속</span>
+
+                
+                <span class="search-related-text">크리스마스 조명</span>
+                
+              </li>
+              
+              <li
+                class="search-related-item"
+                data-related-item="r2"
+                data-related-href="/search?kw=태양광%20LED%20정원등%20조명색"
+              >
+                <span class="search-related-label">LED홈조명 > 조명부속</span>
+
+                
+                <span class="search-related-text">태양광 LED 정원등 조명색</span>
+                
+              </li>
+              
+              <li
+                class="search-related-item"
+                data-related-item="r3"
+                data-related-href="/category/1234"
+              >
+                <span class="search-related-label">삼성전자 가전제품 > 생활가전 > LED 조명 > 홈 > LED 생체리듬형</span>
+
+                
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+
+        <!-- 우: 상품목록(hover 때만 표시, JS가 is-active 붙임) -->
+        <div class="search-panel-right" data-related-products-wrap>
+          
+          <div class="related-products-panel" data-related-products="r1">
+            <ul class="related-products-grid">
+              
+              <li class="product-card">
+                <a href="/product/1">
+                  <span class="thumb"></span>
+                  <span class="name">상품 A</span>
+                </a>
+              </li>
+              
+              <li class="product-card">
+                <a href="/product/2">
+                  <span class="thumb"></span>
+                  <span class="name">상품 B</span>
+                </a>
+              </li>
+              
+              <li class="product-card">
+                <a href="/product/3">
+                  <span class="thumb"></span>
+                  <span class="name">상품 C</span>
+                </a>
+              </li>
+              
+              <li class="product-card">
+                <a href="/product/4">
+                  <span class="thumb"></span>
+                  <span class="name">상품 D</span>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+          <div class="related-products-panel" data-related-products="r2">
+            <ul class="related-products-grid">
+              
+              <li class="product-card">
+                <a href="/product/5">
+                  <span class="thumb"></span>
+                  <span class="name">상품 E</span>
+                </a>
+              </li>
+              
+              <li class="product-card">
+                <a href="/product/6">
+                  <span class="thumb"></span>
+                  <span class="name">상품 F</span>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+          <div class="related-products-panel" data-related-products="r3">
+            <ul class="related-products-grid">
+              
+              <li class="product-card">
+                <a href="/product/7">
+                  <span class="thumb"></span>
+                  <span class="name">상품 G</span>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+        <!-- E: hheader-main-search-form (통합 검색창) -->
+      </div>
+      <div class="header-main-util">
+        
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-bag-check" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+      
+    </span>
+    <span class="text">자주구매</span>
+  </a>
+
+
+<!-- 
+  components/button/button-vertical-icon.ejs
+
+  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
+  - 입력:
+    - as(선택): 'a' | 'button' (기본: 'a')
+    - icon(필수): 아이콘 이름
+    - label(필수): 텍스트
+    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
+    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
+    - href(선택): as='a'일 때 링크 (기본: '#')
+    - target(선택): as='a'일 때 타겟
+    - type(선택): as='button'일 때 타입 (기본: 'button')
+    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
+
+  - 동작:
+    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+    - btnAction이 있으면 data-btn-vertical-action 속성 출력
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
+-->
+ 
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+      
+    </span>
+    <span class="text">마이페이지</span>
+  </a>
+
+
+<!-- 
+  components/button/button-vertical-icon.ejs
+
+  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
+  - 입력:
+    - as(선택): 'a' | 'button' (기본: 'a')
+    - icon(필수): 아이콘 이름
+    - label(필수): 텍스트
+    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
+    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
+    - href(선택): as='a'일 때 링크 (기본: '#')
+    - target(선택): as='a'일 때 타겟
+    - type(선택): as='button'일 때 타입 (기본: 'button')
+    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
+
+  - 동작:
+    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+    - btnAction이 있으면 data-btn-vertical-action 속성 출력
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
+-->
+ 
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-bag" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+      <span class="badge">3</span>
+    </span>
+    <span class="text">장바구니</span>
+  </a>
+
+
+<!-- 
+  components/button/button-vertical-icon.ejs
+
+  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
+  - 입력:
+    - as(선택): 'a' | 'button' (기본: 'a')
+    - icon(필수): 아이콘 이름
+    - label(필수): 텍스트
+    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
+    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
+    - href(선택): as='a'일 때 링크 (기본: '#')
+    - target(선택): as='a'일 때 타겟
+    - type(선택): as='button'일 때 타입 (기본: 'button')
+    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
+
+  - 동작:
+    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+    - btnAction이 있으면 data-btn-vertical-action 속성 출력
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
+-->
+
+      </div>
+    </div>
+  </div>
+  <!-- E: vits-header-main -->
+
+  <!-- S: vits-header-gnb -->
+  
+
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-header-gnb" data-header-gnb>
+  <div class="gnb-bar-box" data-toggle-scope data-toggle-group="true">
+    <div class="gnb-bar vits-inner">
+      <!-- 좌: 전체카테고리/브랜드 (toggle.js 사용) -->
+      <div class="gnb-left" data-gnb-panel-scope>
+        <!-- 1) 전체카테고리 세트 -->
+        
+
+<div class="gnb-left-item">
+  <button
+    type="button"
+    class="gnb-btn category"
+    data-toggle-btn
+    data-toggle-target="gnb-category"
+    aria-expanded="false"
+  >
+    <span class="icon left"> <i class="ic ic-menu" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ </span>
+    <span class="text">전체카테고리</span>
+    <span class="icon right"> <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ </span>
+  </button>
+
+  <div class="gnb-panel gnb-panel-category" data-toggle-box="gnb-category">
+    <div class="gnb-panel-inner">
+      <div class="gnb-panel-head">
+        <strong class="gnb-panel-title">전체카테고리</strong>
+      </div>
+      <div class="gnb-panel-body">
+        <ul class="gnb-panel-list">
+          <li><a href="/category/1">카테고리 1</a></li>
+          <li><a href="/category/2">카테고리 2</a></li>
+          <li><a href="/category/3">카테고리 3</a></li>
+          <li><a href="/category/4">카테고리 4</a></li>
+          <li><a href="/category/5">카테고리 5</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <!-- 2) 브랜드 세트 -->
+        
+
+<div class="gnb-left-item">
+  <button type="button" class="gnb-btn brand" data-toggle-btn data-toggle-target="gnb-brand" aria-expanded="false">
+    <span class="icon left"> <i class="ic ic-label" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ </span>
+    <span class="text">브랜드</span>
+    <span class="icon right"> <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ </span>
+  </button>
+
+  <div class="gnb-panel gnb-panel-brand" data-toggle-box="gnb-brand">
+    <div class="gnb-panel-inner">
+      <div class="gnb-panel-head">
+        <strong class="gnb-panel-title">브랜드</strong>
+      </div>
+      <div class="gnb-panel-body">
+        <ul class="gnb-panel-list">
+          <li><a href="/brand/1">브랜드 1</a></li>
+          <li><a href="/brand/2">브랜드 2</a></li>
+          <li><a href="/brand/3">브랜드 3</a></li>
+          <li><a href="/brand/4">브랜드 4</a></li>
+          <li><a href="/brand/5">브랜드 5</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+
+      <!-- 중: 프로모션 + 고정 + 더보기 -->
+      <nav class="gnb-nav vits-scrollbar" data-gnb-nav>
+        <ul class="gnb-nav-list" data-gnb-nav-list>
+          <li class="gnb-item gnb-item-home"><a href="/" class="gnb-link">홈</a></li>
+          <li class="gnb-item gnb-item-deal"><a href="/" class="gnb-link">초특가</a></li>
+          <li class="gnb-item gnb-item-promo-list">
+            <div class="gnb-promo-list">
+              
+              <a href="/promo/1" class="gnb-link">
+                 복사용지 스페셜딜 
+              </a>
+              
+              <a href="/promo/2" class="gnb-link">
+                 사무용품 올인원 
+              </a>
+              
+              <a href="/promo/3" class="gnb-link">
+                 사무기기 기획전 
+              </a>
+              
+              <a href="/promo/4" class="gnb-link">
+                 포장 솔루션 제안전 
+              </a>
+              
+              <a href="/promo/5" class="gnb-link">
+                 장갑 끝판왕 
+              </a>
+              
+              <a href="/promo/6" class="gnb-link">
+                 계양 기획전 
+              </a>
+              
+              <a href="/promo/7" class="gnb-link">
+                 디월트 기획전 
+              </a>
+              
+              <a href="/promo/8" class="gnb-link">
+                 안전 멀티탭 
+              </a>
+              
+              <a href="/promo/9" class="gnb-link">
+                 비츠온 조명 기획전 
+              </a>
+              
+              <a href="/promo/10" class="gnb-link">
+                 실속할인 
+              </a>
+              
+              <a href="/promo/11" class="gnb-link">
+                 비츠온 PB 기획전 
+              </a>
+              
+              <a href="/promo/12" class="gnb-link">
+                
+                <em class="exhibition-item-sub">절삭공구류</em>
+                <span class="exhibition-item-text">뜯어보자</span>
+                
+              </a>
+              
+              <a href="/promo/13" class="gnb-link">
+                
+                <em class="exhibition-item-sub">피스,볼트류</em>
+                <span class="exhibition-item-text">받아보자</span>
+                
+              </a>
+              
+              <a href="/promo/14" class="gnb-link">
+                 장비용품 총집합 
+              </a>
+              
+              <a href="/promo/15" class="gnb-link">
+                 F/W 음료모음전 
+              </a>
+              
+              <a href="/promo/16" class="gnb-link">
+                 제설용품 총집합 
+              </a>
+              
+              <a href="/promo/17" class="gnb-link">
+                 3M 기획전 
+              </a>
+              
+              <a href="/promo/18" class="gnb-link">
+                 현진정밀 기획전 
+              </a>
+              
+              <a href="/promo/19" class="gnb-link">
+                 케이텔 기획전 
+              </a>
+              
+              <a href="/promo/20" class="gnb-link">
+                 서경 기획전 
+              </a>
+              
+              <a href="/promo/21" class="gnb-link">
+                 소화기 기획전 
+              </a>
+              
+              <a href="/promo/22" class="gnb-link">
+                 밀워키 기획전 
+              </a>
+              
+              <a href="/promo/23" class="gnb-link">
+                 설 선물세트 
+              </a>
+              
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div class="gnb-more-box">
+              <button
+                type="button"
+                class="gnb-more"
+                data-gnb-more
+                data-toggle-btn
+                data-toggle-target="gnb-more"
+                data-toggle-group-except="true"
+                aria-expanded="false"
+                aria-label="더보기"
+              >
+                <i class="ic ic-plus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+              </button>
+            </div>
+          </li>
+          <li class="gnb-item gnb-item-promo">
+            <a href="/plan" class="gnb-link">기획전</a>
+          </li>
+          <li class="gnb-item gnb-item-event">
+            <a href="/event" class="gnb-link">이벤트</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
+    <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
+      <div class="gnb-panel-inner">
+        <div class="gnb-panel-body">
+          <ul class="gnb-panel-list" data-gnb-more-list></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- E: vits-header-gnb -->
+</header>
+<!-- E: vits-header -->
 
 
       <!-- S: vits-main -->
@@ -55,11 +972,11 @@
             <!-- E: vits-grid-side-left -->
 
             <!-- S: vits-grid-main -->
-            <div class="vits-grid-main">
+            <div class="vits-grid-main vits-main-{1depth 이름}">
               <!-- 섹션 단위 컴포넌트 삽입 -->
 
               <div style="height: 800px; background: darkcyan">영역1</div>
-              <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">스티키</div>
+              <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 100">스티키</div>
               <div style="height: 1500px; background: green">영역3</div>
 
               <section data-swiper data-swiper-loop="true" data-swiper-autoplay="3000">
@@ -82,47 +999,17 @@
     <button type="button" class="swiper-button-next" aria-label="다음"></button>
   </div>
 </section>
- <style>
-  /* -------------------------------------------
-  Toggle UI (TEST ONLY)
-  - data-toggle 동작 확인용
-  - 공유/가이드용 임시 스타일
-------------------------------------------- */
-
-  [data-toggle-scope] {
-    margin: 20px 0;
-  }
-
-  [data-toggle-scope] [data-toggle-btn] {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-    cursor: pointer;
-    font-size: 14px;
-  }
-
-  [data-toggle-scope] [data-toggle-btn]:hover {
-    background: #eee;
-  }
-
-  [data-toggle-scope] [data-toggle-box] {
-    display: none;
-    margin-top: 8px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    background: #fafafa;
-    font-size: 13px;
-  }
-
-  [data-toggle-scope] [data-toggle-box].is-open {
-    display: block;
-  }
-</style>
-
-<div data-toggle-scope data-toggle-group="true" data-toggle-outside="true">
-  <button type="button" data-toggle-btn data-toggle-target="panel" aria-expanded="false">토글 버튼</button>
+ <div data-toggle-scope data-toggle-group="true">
+  <button
+    type="button"
+    data-toggle-btn
+    data-toggle-outside="true"
+    data-toggle-group-except="true"
+    data-toggle-target="panel"
+    aria-expanded="false"
+  >
+    토글 버튼
+  </button>
 
   <div data-toggle-box="panel">토글 패널</div>
 </div>
@@ -139,6 +1026,7 @@
   - 옵션(선택):
     * data-toggle-group="true"
       : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
+      : 특정 영역은 예외 처리하고 싶을 때, button[data-toggle-group-except="true"] 추가
     * data-toggle-outside="true"
       : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
 
@@ -160,7 +1048,169 @@
       </main>
       <!-- E: vits-main -->
 
-      <footer class="vits-footer">footer 영역</footer>
+      
+
+<!-- prettier-ignore -->
+
+
+<footer class="vits-footer" data-toggle-scope>
+  <div class="vits-inner">
+    <div class="vits-footer-brand">
+      <h2 class="vits-footer-logo">
+        <img src="../../public/resources/img/mro/renewal/logo/logo-footer.svg" alt="비츠온엠알오" />
+      </h2>
+    </div>
+    <div class="vits-footer-company">
+      <div class="vits-footer-links">
+        <a href="" class="footer-link">회사소개</a><a href="" class="footer-link">이용약관</a
+        ><a href="" class="footer-link link-bold">개인정보취급방침</a>
+      </div>
+      <ul class="vits-footer-info">
+        <li>
+          <p class="company-name">(주)일신비츠온</p>
+          <p>
+            <a href="mailto:online@vitson.co.kr" class="company-email">online@vitson.co.kr</a>
+          </p>
+        </li>
+        <li>
+          <p class="company-text">주소 : (12017) 경기도 남양주시 진접읍 팔야산단로12번길 55</p>
+          <p class="company-text">대표 : 진미애</p>
+        </li>
+        <li>
+          <p class="company-text">
+            사업자등록번호 : 132-81-52217
+            <button
+              type="button"
+              class="company-btn-lookup"
+              data-toggle-btn
+              data-toggle-target="modal-company"
+              aria-expanded="false"
+              data-biz-brno="1328152217"
+            >
+              [사업자정보확인]
+            </button>
+          </p>
+          <p class="company-text">통신판매업신고 : 제 2017-진접오남-0205호</p>
+        </li>
+        <li>
+          <p class="company-text">
+            <a href="tel:+82315107237" class="company-tel">TEL. 031-510-7237</a>
+          </p>
+          <p class="company-text">FAX. 031-951-1375</p>
+          <p class="company-text">개인정보책임관리자 : 이경덕</p>
+        </li>
+      </ul>
+      <p class="vits-footer-copyright">CopyrightⓒILSHIN All rights reserved</p>
+    </div>
+    <div class="vits-footer-utility">
+      <div class="vits-footer-utility-group">
+        <div class="vits-footer-sns">
+          <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+          </a>
+          <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+          </a>
+          <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+          </a>
+        </div>
+        <div class="footer-familysite">
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-dropdown vits-dropdown--sm vits-dropdown--type-a">
+  <select
+    id="dropdownlist"
+    
+    data-ui="kendo-dropdown"
+    data-handler="productSelect"
+    data-opt='{"dataTextField":"ProductName","dataValueField":"ID","dataSource":[{"ID":1,"ProductName":"Beds"},{"ID":2,"ProductName":"Chairs"},{"ID":3,"ProductName":"Sofas"},{"ID":4,"ProductName":"Dining Tables"},{"ID":5,"ProductName":"TV stoves"}],"optionLabel":"FAMILY SITE","value":null}'
+  ></select>
+</div>
+
+        </div>
+      </div>
+      <div class="vits-footer-cert">
+        <div class="footer-cert-logos">
+          <a href="" class="footer-cert-logo cert-kftc">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-kftc.png" alt="공정거래위원회" />
+          </a>
+          <a href="" class="footer-cert-logo cert-inipay">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-inipay.png" alt="INIPAY" />
+          </a>
+        </div>
+        <div class="footer-cert-desc">
+          구매안전(에스크로)서비스 가맹점 가입확인<br />고객님의 안전한 거래를 위해 현금으로 결제 시 구매<br />안전(에스크로)서비스를
+          이용하실 수 있습니다
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- S: vits-footer-modal -->
+  <section class="vits-footer-modal" data-toggle-box="modal-company" aria-hidden="true">
+    <div class="vits-footer-modal-dim" data-toggle-dim="modal-company"></div>
+
+    <div class="vits-footer-modal-panel" role="dialog" aria-modal="true" aria-labelledby="footerBizInfoTitle">
+      <div class="vits-footer-modal-head">
+        <h2 id="footerBizInfoTitle" class="vits-footer-modal-title">사업자 정보</h2>
+
+        <button type="button" class="vits-footer-modal-close" data-toggle-btn data-toggle-target="modal-company">
+          닫기
+        </button>
+      </div>
+
+      <div class="vits-footer-modal-body">
+        <p class="vits-footer-modal-status" data-biz-status></p>
+
+        <div class="vits-footer-modal-table" data-biz-table hidden>
+          <table class="vits-footer-modal-table-inner">
+            <caption class="sr-only">
+              통신판매사업자 등록 정보
+            </caption>
+            <colgroup>
+              <col style="width: 34%" />
+              <col />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">상호</th>
+                <td data-biz-field="bzmnNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">사업자등록번호</th>
+                <td data-biz-field="brno">-</td>
+              </tr>
+              <tr>
+                <th scope="row">운영상태</th>
+                <td data-biz-field="operSttusCdNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">시/도</th>
+                <td data-biz-field="ctpvNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고기관</th>
+                <td data-biz-field="dclrInsttNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고일자</th>
+                <td data-biz-field="fromYmd">-</td>
+              </tr>
+              <tr>
+                <th scope="row">인허가(등록)번호</th>
+                <td data-biz-field="prmmiMnno">-</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="vits-footer-modal-note">표시 정보는 OpenAPI 조회 결과 기준입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- E: vits-footer-modal -->
+</footer>
 
     </section>
     <!-- E: vits-wrapper -->
