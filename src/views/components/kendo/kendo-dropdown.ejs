@@ -1,0 +1,41 @@
+<%
+  /**
+   * components/kendo/kendo-dropdown.ejs
+   *
+   * locals
+   * - id: 선택
+   * - name: 선택
+   * - wrapClass: 선택(vits- 멀티 클래스)
+   * - options: 선택(kendoDropDownList 옵션 객체 / 함수는 넣지 말 것)
+   * - handlerKey: 선택(이벤트 매핑 키)
+   * - renderEmpty: 선택(true면 options.dataSource 없어도 렌더)
+   *
+   * 정책
+   * - options가 없으면 기본 미렌더(없으면 안 보이게)
+   * - renderEmpty=true면 스켈레톤만 렌더(추후 setData 가능)
+   */
+
+  const _id = (typeof id === 'string' && id.trim()) ? id.trim() : '';
+  const _name = (typeof name === 'string' && name.trim()) ? name.trim() : '';
+  const _wrapClass = (typeof wrapClass === 'string' && wrapClass.trim()) ? wrapClass.trim() : '';
+  const _options = options || null;
+  const _handlerKey = (typeof handlerKey === 'string' && handlerKey.trim()) ? handlerKey.trim() : '';
+
+  // renderEmpty가 locals로 아예 안 넘어오는 케이스 방어(ReferenceError 방지)
+  const _renderEmpty = (typeof renderEmpty !== 'undefined' && renderEmpty === true);
+
+  // options 자체가 없으면 렌더하지 않음(요구: 없으면 안 보이게)
+  if (!_options && !_renderEmpty) { return; }
+
+  const _wrapperClassAttr = ['vits-dropdown', _wrapClass].filter(Boolean).join(' ');
+%>
+
+<div class="<%- _wrapperClassAttr %>">
+  <select
+    <% if (_id) { %>id="<%- _id %>"<% } %>
+    <% if (_name) { %>name="<%- _name %>"<% } %>
+    data-ui="kendo-dropdown"
+    <% if (_handlerKey) { %>data-handler="<%- _handlerKey %>"<% } %>
+    data-opt='<%- _options ? JSON.stringify(_options) : "{}" %>'
+  ></select>
+</div>

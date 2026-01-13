@@ -1,0 +1,70 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<%
+  const _as = typeof as !== 'undefined' ? as : 'a'; // 'a' | 'button'
+  const _href = typeof href !== 'undefined' ? href : '#';
+  const _label = typeof label !== 'undefined' ? label : '';
+  const _icon = typeof icon !== 'undefined' ? icon : '';
+
+  // badge: 0도 표시될 수 있으니(null/undefined/''만 제외)
+  const _badge = (typeof badge !== 'undefined' && badge !== null && badge !== '') ? badge : null;
+
+  // 타입(선택): 헤더/상품목록 등 변형용 클래스 추가
+  // - 예: type='v-header' → class="... type-v-header"
+  const _variant = (typeof variant !== 'undefined' && variant !== null && variant !== '') ? variant : null;
+  const _class = `vits-btn-vertical-icon${_variant ? ` type-${_variant}` : ''}`;
+
+  const _target = typeof target !== 'undefined' ? target : null;
+  const _rel = (_target === '_blank') ? 'noopener noreferrer' : null;
+
+  const _btnAction = (typeof btnAction !== 'undefined' && btnAction !== null && btnAction !== '') ? btnAction : null;
+  const _type = typeof type !== 'undefined' ? type : 'button';
+%>
+
+<% if (_as === 'button') { %>
+  <button class="<%= _class %>"
+          type="<%= _type %>"
+          <% if (_btnAction) { %> data-btn-vertical-action="<%= _btnAction %>"<% } %>>
+    <span class="icon">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: _icon }) %>
+      <% if (_badge !== null) { %><span class="badge"><%= _badge %></span><% } %>
+    </span>
+    <span class="text"><%= _label %></span>
+  </button>
+<% } else { %>
+  <a class="<%= _class %>"
+     href="<%= _href %>"
+     <% if (_target) { %> target="<%= _target %>"<% } %>
+     <% if (_rel) { %> rel="<%= _rel %>"<% } %>>
+    <span class="icon">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: _icon }) %>
+      <% if (_badge !== null) { %><span class="badge"><%= _badge %></span><% } %>
+    </span>
+    <span class="text"><%= _label %></span>
+  </a>
+<% } %>
+
+<!-- 
+  components/button/button-vertical-icon.ejs
+
+  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
+  - 입력:
+    - as(선택): 'a' | 'button' (기본: 'a')
+    - icon(필수): 아이콘 이름
+    - label(필수): 텍스트
+    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
+    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
+    - href(선택): as='a'일 때 링크 (기본: '#')
+    - target(선택): as='a'일 때 타겟
+    - type(선택): as='button'일 때 타입 (기본: 'button')
+    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
+
+  - 동작:
+    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+    - btnAction이 있으면 data-btn-vertical-action 속성 출력
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) %>
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) %>
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) %>
+  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) %>
+-->

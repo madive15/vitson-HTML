@@ -7,27 +7,39 @@
 @use 'sass:list';
 @use '@/assets/scss/abstracts/functions' as fn;
 
-/* brakpoint width */
-$breakpoints: (
-  pc-sm: 1024px,
-  pc: 1280px
+/* desktop width */
+$desktop: (
+  'min': 1024px,
+  'default': 1280px
 );
 
 /* width */
-$desktop-width: fn.rem(map.get($breakpoints, pc));
-$desktop-sm-width: fn.rem(map.get($breakpoints, pc-sm));
+$desktop-width-min: fn.rem(map.get($desktop, 'min'));
+$desktop-width: fn.rem(map.get($desktop, 'default'));
 
 /* height */
 
+/* header */
+$header-topbar-height: fn.rem(46);
+$header-main-height: fn.rem(100);
+$header-gnb-height: fn.rem(50);
+$header-gnb-full-height: calc(100vh - ($header-topbar-height + $header-main-height));
+$header-height: $header-topbar-height + $header-main-height + $header-gnb-height;
+$header-panel-height-max: 50vh;
+
 /* z-index */
+$zindex-base: 1;
 $zindex-skipnav: 9999;
+$zindex-header-rank: 100;
+$zindex-header-search: 50;
+$zindex-header-panel: 10;
 
 /* radius */
 $radius: (
-  'sm': '4px',
-  'md': '8px',
-  'lg': '12px',
-  'xl': '56px'
+  'sm': 4px,
+  'md': 8px,
+  'lg': 12px,
+  'xl': 56px
 );
 
 /* unit 단위 배수 리스트 */
@@ -47,3 +59,6 @@ $unit: (
   52: fn.rem(52),
   56: fn.rem(56)
 );
+
+/* 태블릿 구간 공통 안전 여백 (레이아웃 깨짐 방지용) */
+$tablet-gutter: map.get($unit, 20);

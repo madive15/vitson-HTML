@@ -3,6 +3,431 @@
 // - 푸터 내부 UI 전용. 레이아웃(높이/배치)은 layout/_wrapper.scss에서만 제어.
 // -----------------------------------------------------------------------------
 
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
 .vits-footer {
-  // footer 내부 스타일
+  padding: map.get(var.$unit, 44) 0;
+  background: map.get(color.$surf-colors, 'footer');
+
+  .vits-inner {
+    @include mx.flex(flex, row, flex-start, stretch);
+  }
+
+  &-brand {
+    width: fn.rem(144);
+    margin-right: fn.rem(84);
+  }
+
+  &-logo {
+    width: 100%;
+  }
+
+  &-company {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 12);
+  }
+
+  &-links {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 56);
+
+    .footer-link {
+      @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '9'));
+
+      &.link-bold {
+        font-weight: 700;
+      }
+    }
+  }
+
+  &-info {
+    > li {
+      &:not(:has(.company-name)) {
+        @include mx.divider('p', 1, 12, 6, $color: map.get(color.$neutral-colors, '6'));
+      }
+
+      &:has(.company-name) {
+        @include mx.divider('p', 1, 12, 12, $color: map.get(color.$gray-shades, '30'));
+      }
+    }
+
+    .company {
+      &-name,
+      &-email {
+        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '9'));
+      }
+
+      &-email {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      &-text {
+        @include mx.flex(flex, row, flex-start, center);
+        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '6'));
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-tel {
+        font: inherit;
+        color: currentcolor;
+
+        @include mx.hoverable-only {
+          cursor: text;
+        }
+      }
+
+      &-btn-lookup {
+        @include button.btn-reset;
+        @include mx.flex(inline-flex);
+        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '6'));
+      }
+    }
+  }
+
+  &-copyright {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'quaternary'));
+  }
+
+  &-utility {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    margin-left: auto;
+
+    &-group {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 40);
+
+      // dropdown
+      .footer-familysite {
+        width: fn.rem(178);
+
+        .vits-dropdown--type-a {
+          /* 입력 박스(기존 유지) */
+          .k-dropdownlist,
+          .k-picker {
+            position: relative;
+            width: 100%;
+            height: 42px;
+            background: transparent;
+            border: 1px solid rgb(255 255 255 / 18%);
+            border-radius: 6px;
+            box-shadow: none;
+          }
+
+          .k-input,
+          .k-input-inner,
+          .k-input-value-text {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 13px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: transparent;
+          }
+
+          .k-icon,
+          .k-svg-icon,
+          .k-i-arrow-60-down,
+          .k-i-caret-alt-down {
+            display: none !important;
+          }
+
+          .k-dropdownlist::after,
+          .k-picker::after {
+            position: absolute;
+            top: 50%;
+            right: 26px;
+            width: 8px;
+            height: 12px;
+            pointer-events: none;
+            content: '';
+            border-right: 2px solid rgb(255 255 255 / 35%);
+            border-bottom: 2px solid rgb(255 255 255 / 35%);
+            transform: translateY(-60%) rotate(45deg);
+          }
+        }
+
+        /* 옵션 리스트(팝업) - 팝업 루트에 vits-dropdown--type-a가 붙으니 여기서 확실히 먹음 */
+        .k-popup.vits-dropdown--type-a,
+        .k-list-container.vits-dropdown--type-a {
+          background: rgb(0 0 0 / 55%); /* 입력과 톤 맞추고 싶으면 여기만 조절 */
+          backdrop-filter: blur(2px); /* 필요 없으면 삭제 */
+          border: 1px solid rgb(255 255 255 / 18%);
+          border-radius: 6px;
+          box-shadow: none;
+        }
+
+        .k-popup.vits-dropdown--type-a .k-list,
+        .k-list-container.vits-dropdown--type-a .k-list {
+          background: transparent;
+        }
+
+        .k-popup.vits-dropdown--type-a .k-list .k-item,
+        .k-list-container.vits-dropdown--type-a .k-list .k-item,
+        .k-popup.vits-dropdown--type-a .k-list .k-list-item,
+        .k-list-container.vits-dropdown--type-a .k-list .k-list-item {
+          font-size: 14px;
+          font-weight: 600;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          background: transparent;
+        }
+
+        /* hover */
+        .k-popup.vits-dropdown--type-a .k-list .k-item:hover,
+        .k-list-container.vits-dropdown--type-a .k-list .k-item:hover,
+        .k-popup.vits-dropdown--type-a .k-list .k-list-item:hover,
+        .k-list-container.vits-dropdown--type-a .k-list .k-list-item:hover {
+          background: rgb(255 255 255 / 8%);
+        }
+
+        /* 선택됨(빨간색/회색 덮어쓰기) */
+        .k-popup.vits-dropdown--type-a .k-list .k-item.k-selected,
+        .k-popup.vits-dropdown--type-a .k-list .k-item[aria-selected='true'],
+        .k-list-container.vits-dropdown--type-a .k-list .k-item.k-selected,
+        .k-list-container.vits-dropdown--type-a .k-list .k-item[aria-selected='true'] {
+          color: #fff;
+          background: rgb(255 255 255 / 12%);
+        }
+      }
+    }
+  }
+
+  &-sns {
+    @include mx.flex;
+    gap: map.get(var.$unit, 8);
+
+    .footer-sns {
+      @include mx.flex(flex, row, center, center);
+      width: fn.rem(38);
+      height: fn.rem(38);
+      background: color.$color-footer-sns;
+      border-radius: 50%;
+    }
+  }
+
+  &-cert {
+    @include mx.flex(flex, row, flex-start, flex-start);
+    gap: fn.rem(10);
+    margin-top: auto;
+
+    .footer-cert {
+      &-logos {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: fn.rem(10);
+      }
+
+      &-logo {
+        display: block;
+
+        &.cert-kftc {
+          width: fn.rem(56);
+        }
+
+        &.cert-inipay {
+          height: fn.rem(46);
+
+          img {
+            width: auto;
+            height: 100%;
+          }
+        }
+      }
+
+      &-desc {
+        @include typo.typography('b4r', $color: color.$color-white);
+        opacity: 0.3;
+      }
+    }
+  }
+
+  /* 사업자정보조회 모달 팝업 */
+  &-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+
+    &.is-open {
+      display: block;
+    }
+
+    &-dim {
+      position: absolute;
+      inset: 0;
+      background: rgb(0 0 0 / 55%);
+    }
+
+    &-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 32px);
+      max-width: 520px;
+      max-height: calc(100% - 32px);
+      overflow: hidden;
+      background: #fff;
+      border-radius: 12px;
+      transform: translate(-50%, -50%);
+    }
+
+    &-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    &-title {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    &-close {
+      padding: 8px;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+    }
+
+    &-body {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    &-status {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #555;
+    }
+
+    &-foot {
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 16px;
+      border-top: 1px solid #e6e6e6;
+    }
+
+    &-btn {
+      padding: 10px 14px;
+      cursor: pointer;
+      background: #f6f6f6;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px;
+    }
+
+    &-table-inner {
+      width: 100%;
+      overflow: hidden;
+      border-collapse: collapse;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+
+      th,
+      td {
+        padding: 10px 12px;
+        font-size: 14px;
+        line-height: 1.4;
+        vertical-align: top;
+        border-top: 1px solid #e6e6e6;
+      }
+
+      tr:first-child {
+        th,
+        td {
+          border-top: 0;
+        }
+      }
+
+      th {
+        font-weight: 600;
+        color: #333;
+        text-align: left;
+        background: #fafafa;
+      }
+
+      td {
+        color: #444;
+        word-break: break-word;
+      }
+    }
+
+    &-note {
+      margin: 10px 2px 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #777;
+    }
+  }
+}
+
+// 디자인 나오면 수정해야 함.
+/* 옵션 리스트(팝업) - animation container까지 포함해서 타겟 */
+.k-animation-container.vits-dropdown--type-a,
+.k-popup.vits-dropdown--type-a,
+.k-list-container.vits-dropdown--type-a {
+  background: rgb(0 0 0 / 55%);
+  border: 3px solid rgb(255 255 255 / 18%);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+/* 실제 리스트 배경/아이템 (버전별 클래스 방어) */
+.k-animation-container.vits-dropdown--type-a .k-list,
+.k-popup.vits-dropdown--type-a .k-list,
+.k-list-container.vits-dropdown--type-a .k-list,
+.k-animation-container.vits-dropdown--type-a .k-list-content,
+.k-popup.vits-dropdown--type-a .k-list-content,
+.k-list-container.vits-dropdown--type-a .k-list-content {
+  background: transparent;
+}
+
+.k-animation-container.vits-dropdown--type-a .k-item,
+.k-popup.vits-dropdown--type-a .k-item,
+.k-list-container.vits-dropdown--type-a .k-item,
+.k-animation-container.vits-dropdown--type-a .k-list-item,
+.k-popup.vits-dropdown--type-a .k-list-item,
+.k-list-container.vits-dropdown--type-a .k-list-item {
+  font-size: 14px;
+  color: #fff;
+  background: transparent;
+}
+
+/* hover */
+.k-animation-container.vits-dropdown--type-a .k-item:hover,
+.k-popup.vits-dropdown--type-a .k-item:hover,
+.k-list-container.vits-dropdown--type-a .k-item:hover,
+.k-animation-container.vits-dropdown--type-a .k-list-item:hover,
+.k-popup.vits-dropdown--type-a .k-list-item:hover,
+.k-list-container.vits-dropdown--type-a .k-list-item:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+/* selected */
+.k-animation-container.vits-dropdown--type-a .k-selected,
+.k-popup.vits-dropdown--type-a .k-selected,
+.k-list-container.vits-dropdown--type-a .k-selected,
+.k-animation-container.vits-dropdown--type-a [aria-selected='true'],
+.k-popup.vits-dropdown--type-a [aria-selected='true'],
+.k-list-container.vits-dropdown--type-a [aria-selected='true'] {
+  color: #fff;
+  background: rgb(255 255 255 / 12%);
 }

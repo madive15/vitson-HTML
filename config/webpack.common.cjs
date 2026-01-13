@@ -9,7 +9,8 @@ module.exports = (dirPath, {envType, envRoot}) => ({
     [envRoot]: `./src/${envRoot}.${envType}`
   },
   output: {
-    filename: 'public/resources/scripts/[name].bundle.js',
+    filename: 'public/resources/js/mro/renewal/ui/[name].bundle.js',
+    chunkFilename: 'public/resources/js/mro/renewal/ui/[name].chunk.js',
     assetModuleFilename: '[file]',
     path: path.resolve(__dirname, parser.buildPath),
     clean: true,

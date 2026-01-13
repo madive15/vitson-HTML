@@ -1,0 +1,98 @@
+// -----------------------------------------------------------------------------
+// components/_button.scss
+// - 공통 버튼 컴포넌트 스타일 정의
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+/* 버튼 초기화 */
+@mixin btn-reset {
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  appearance: none;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+
+  // iOS Safari 탭 하이라이트(필요 시)
+  -webkit-tap-highlight-color: transparent;
+
+  // 비활성 기본
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: transparent;
+  }
+}
+
+/* 즐겨찾기 버튼 */
+.vits-btn-favorite {
+  @include btn-reset;
+  @include mx.flex(flex, row, center, center);
+  gap: map.get(var.$unit, 4);
+
+  .icon {
+    @include icon.ic-size(map.get(var.$unit, 20));
+  }
+
+  .text {
+    @include typo.typography('b3r');
+  }
+}
+
+/* 텍스트 버튼 (a) */
+.vits-text-link {
+  @include typo.typography('b3r');
+}
+
+/* vits-btn-vertical-icon */
+.vits-btn-vertical-icon {
+  @include mx.flex(flex, column, flex-start, center);
+  gap: map.get(var.$unit, 4);
+
+  .icon {
+    @include icon.ic-size(map.get(var.$unit, 32));
+    position: relative;
+    color: map.get(color.$icon-neutral-colors, 'primary');
+    transition: color 0.2s ease;
+  }
+
+  .badge {
+    @include mx.position(absolute, $top: 2px, $right: -3px);
+    @include mx.flex(flex, row, center, center);
+    @include typo.typography('b4r', $color: color.$color-white);
+    width: fn.rem(15);
+    height: fn.rem(15);
+    background: map.get(color.$brand-colors, '100');
+    border-radius: 80px;
+  }
+
+  .text {
+    @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '4'));
+    transition: color 0.2s ease;
+  }
+
+  @include mx.common-mouse-event {
+    .icon {
+      color: map.get(color.$icon-colors, 'primary');
+    }
+
+    .text {
+      color: map.get(color.$text-colors, 'brand');
+    }
+  }
+}

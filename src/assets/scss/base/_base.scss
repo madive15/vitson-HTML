@@ -1,0 +1,33 @@
+// -----------------------------------------------------------------------------
+// base/_base.scss
+// - 프로젝트 전역에서 사용하는 기본 스타일 및 공통 유틸(.sr-only 등)을 정의
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/base/colors' as color;
+
+/* Skip Navigation */
+.skip-nav {
+  @include mx.border('all', $color: map.get(color.$text-colors, 'default'));
+  @include typo.typography('b4m');
+  position: absolute;
+  top: -9999px; /* 기본은 화면 밖 */
+  left: 0;
+  z-index: var.$zindex-skipnav;
+  padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
+  background: color.$color-white;
+  outline: 0;
+
+  &:focus,
+  &:focus-visible {
+    top: 0; /* 포커스 시 노출 */
+  }
+}
+
+/* 스크린 리더 전용 숨김 처리 */
+.sr-only {
+  @include mx.sr-only;
+}

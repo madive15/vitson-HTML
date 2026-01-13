@@ -1,0 +1,32 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="gnb-left-item">
+  <button
+    type="button"
+    class="gnb-btn category"
+    data-toggle-btn
+    data-toggle-target="gnb-category"
+    aria-expanded="false"
+  >
+    <span class="icon left"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'menu' }) %> </span>
+    <span class="text">전체카테고리</span>
+    <span class="icon right"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+  </button>
+
+  <div class="gnb-panel gnb-panel-category" data-toggle-box="gnb-category">
+    <div class="gnb-panel-inner">
+      <div class="gnb-panel-head">
+        <strong class="gnb-panel-title">전체카테고리</strong>
+      </div>
+      <div class="gnb-panel-body">
+        <ul class="gnb-panel-list">
+          <li><a href="/category/1">카테고리 1</a></li>
+          <li><a href="/category/2">카테고리 2</a></li>
+          <li><a href="/category/3">카테고리 3</a></li>
+          <li><a href="/category/4">카테고리 4</a></li>
+          <li><a href="/category/5">카테고리 5</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@
 
 @use 'sass:map';
 @use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/functions' as fn;
 @use '@/assets/scss/base/colors' as color;
 
 /* -----------------------------------------------------------------------------
@@ -26,32 +27,43 @@
 /* -----------------------------------------------------------------------------
  * 반응형 브레이크포인트 사용 가이드
  *
+ * 전제(프로젝트 정책)
+ * - 최소 대응 폭은 1024px 이상을 기준으로 한다.
+ * - 1024 미만(모바일)은 본 프로젝트 범위 밖으로 간주한다.
+ *
+ * 기준(variables: $desktop)
+ * - min: 1024px
+ * - default: 1280px
+ *
+ * 구간 정의
  * - pc-sm: 1024px 이상 ~ 1279px 이하 (작은 PC)
- *   - 여백, 폰트, 레이아웃 폭 등 조정
- * - pc: 1280px 이상 (기본 시안)
- *   - 기본 레이아웃 및 여백 적용
+ *   - 1280 미만 구간에서 레이아웃/여백/폰트 보정
+ * - pc: 1280px 이상 (기본 PC 시안)
+ *   - 기본 레이아웃 폭/여백/그리드 적용
  *
  * 사용 예시:
  *   .container {
- *     // 1024~1279 구간만 여백 줄이기
- *     @include respond-to(pc-sm) {
+ *     // 1024~1279 구간만 보정
+ *     @include pc-sm {
  *       padding: 0 16px;
  *     }
  *
- *     // 1280 이상은 기본
- *     @include respond-to(pc) {
+ *     // 1280 이상 기본
+ *     @include pc {
  *       max-width: 1280px;
  *       margin: 0 auto;
  *     }
  *   }
  * --------------------------------------------------------------------------- */
-@mixin respond-to($key) {
-  $bp: map.get($breakpoints, $key);
+@mixin pc {
+  @media screen and (min-width: map.get(var.$desktop, 'default')) {
+    @content;
+  }
+}
 
-  @if $bp {
-    @media (min-width: $bp) {
-      @content;
-    }
+@mixin pc-sm {
+  @media screen and (max-width: map.get(var.$desktop, 'default') - 1px) {
+    @content;
   }
 }
 
@@ -235,5 +247,52 @@
     height: 100%;
     object-fit: $fit;
     object-position: $pos;
+  }
+}
+
+/* divider */
+@mixin divider($item: 'li', $w: 1, $h: 12, $gap: 12, $color: map.get(color.$gray-shades, '30')) {
+  @include flex(flex, row, flex-start, center);
+
+  > #{$item} {
+    &:not(:only-of-type, :last-of-type) {
+      padding-right: fn.rem($gap);
+    }
+
+    & + #{$item} {
+      position: relative;
+      padding-left: fn.rem($gap);
+
+      &::before {
+        @include position(absolute, $top: 50%, $left: 0);
+        width: fn.rem($w);
+        height: fn.rem($h);
+        content: '';
+        background-color: $color;
+        transform: translateY(-50%);
+      }
+    }
+  }
+}
+
+/* input search 초기화 */
+@mixin input-search-reset {
+  input[type='search'] {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+
+    &::placeholder {
+      color: map.get(color.$text-colors, 'quaternary');
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      appearance: none;
+    }
   }
 }

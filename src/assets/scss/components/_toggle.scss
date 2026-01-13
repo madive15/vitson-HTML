@@ -1,0 +1,40 @@
+// -----------------------------------------------------------------------------
+// components/_toggle.scss
+// - data-toggle-* 기반 토글 UI 공통 기본 스타일
+// -----------------------------------------------------------------------------
+
+/* 버튼 기본 확인용(필수 아님: 테스트 가독성용) */
+[data-toggle-btn] {
+  cursor: pointer;
+}
+
+/* 패널: 기능(열림/닫힘)만 담당 */
+[data-toggle-box] {
+  max-height: 0;
+  overflow: hidden;
+
+  /* 마스크처럼 위->아래로 드러나는 느낌 */
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.3s,
+    clip-path 0.3s,
+    opacity 0.2s,
+    visibility 0s 0.3s;
+}
+
+[data-toggle-box].is-open {
+  max-height: 100vh; /* “대충 큰 값” 대신 화면 기준 상한 */
+  overflow: auto;
+  clip-path: inset(0 0 0 0);
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    max-height 0.3s,
+    clip-path 0.3s,
+    opacity 0.2s,
+    visibility 0s 0s;
+}
