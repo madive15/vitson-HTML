@@ -1,0 +1,89 @@
+<header class="vits-plp-titlebar">
+  <nav class="vits-breadcrumb vits-plp-titlebar-breadcrumb">
+    <ul class="vits-breadcrumb-list">
+      <li class="vits-breadcrumb-menu">
+        <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '홈' }) %>
+      </li>
+
+      <li class="vits-breadcrumb-menu">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+          id: 'cat-depth1',
+          name: 'depth1Id',
+          root: 'cat',
+          depth: 1,
+          placeholder: '대분류',
+          disabled: false,
+          value: depth1Id,
+          options: lv1List.map(function(n){
+            return { value: n.categoryCode, text: n.categoryNm };
+          })
+        }) %>
+      </li>
+
+      <li class="vits-breadcrumb-menu">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+          id: 'cat-depth2',
+          name: 'depth2Id',
+          root: 'cat',
+          depth: 2,
+          placeholder: '중분류',
+          disabled: true,
+          value: depth2Id,
+          options: []
+        }) %>
+      </li>
+
+      <li class="vits-breadcrumb-menu">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+          id: 'cat-depth3',
+          name: 'depth3Id',
+          root: 'cat',
+          depth: 3,
+          placeholder: '소분류',
+          disabled: true,
+          value: depth3Id,
+          options: []
+        }) %>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="vits-plp-titlebar-main">
+    <div class="vits-plp-titlebar-head">
+      <div class="vits-plp-titlebar-heading" data-plp-category-title>현재 카테고리 이름</div>
+      <div class="vits-plp-titlebar-research">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-search.ejs`, {
+          idPrefix: 'plp',
+          action: '/search',
+          name: 'q',
+          placeholder: '결과 내 재검색'
+        }) %>
+      </div>
+    </div>
+
+    <!-- 검색 후 노출 -->
+    <div class="vits-plp-titlebar-chips is-hidden" data-chip-ui>
+      <button type="button" class="chip-nav chip-nav--prev" aria-label="이전 칩" data-chip-prev disabled></button>
+      <div class="vits-chip-button-group chip-scroller" data-chip-scroller></div>
+      <button type="button" class="chip-nav chip-nav--next" aria-label="다음 칩" data-chip-next disabled></button>
+    </div>
+  </div>
+
+  <!-- 연관검색어(검색 후 노출) -->
+  <div class="vits-plp-titlebar-related is-hidden" data-related-ui>
+    <p class="related-title">연관검색어</p>
+    <ul class="related-list" data-related-list>
+      <li><a href="#" data-related-item>전선</a></li>
+      <li><a href="#" data-related-item>장갑</a></li>
+      <li><a href="#" data-related-item>절연장갑</a></li>
+      <li><a href="#" data-related-item>작업보호구</a></li>
+      <li><a href="#" data-related-item>전선정리</a></li>
+
+      <li><%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '홈' }) %></li>
+    </ul>
+  </div>
+</header>

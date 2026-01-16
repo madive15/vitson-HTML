@@ -34,6 +34,112 @@
               <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 100">스티키</div>
               <div style="height: 1500px; background: green">영역3</div>
 
+              <div style="height: 400px; background: yellow; padding: 100px">
+                <!-- 증감 가변 인풋 (1) -->
+                <div
+                  class="stepper"
+                  data-step="5"
+                  data-min="0"
+                  data-max="9999"
+                  style="display: inline-flex; align-items: center; padding: 10px; background: palegreen; gap: 8px"
+                >
+                  <button
+                    type="button"
+                    class="stepper__btn stepper__btn--minus"
+                    style="
+                      flex: 0 0 40px;
+                      width: 40px;
+                      height: 40px;
+                      border: 1px solid #999;
+                      background: #eee;
+                      cursor: pointer;
+                    "
+                  >
+                    감소
+                  </button>
+
+                  <!-- 숫자 + 단위 묶음(내용에 따라 자연스럽게 늘어나도록 inline-flex) -->
+                  <div
+                    class="stepper__wrap"
+                    style="
+                      flex: 0 0 auto;
+                      display: inline-flex;
+                      align-items: center;
+                      height: 40px;
+                      padding: 0 10px;
+                      background: green;
+                      box-sizing: border-box;
+                    "
+                  >
+                    <input
+                      type="text"
+                      class="stepper__input"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      value="0"
+                      style="
+                        display: block;
+                        width: 40px;
+                        min-width: 40px;
+                        height: 100%;
+                        border: 0;
+                        outline: none;
+                        appearance: none;
+                        background: orange;
+                        box-sizing: border-box;
+                        text-align: center;
+                        font: 16px/1 sans-serif;
+                        padding: 0;
+                        margin: 0;
+                      "
+                    />
+
+                    <!-- 단위: 서버(EJS)에서 렌더링되는 텍스트 그대로 -->
+                    <span
+                      class="stepper__unit"
+                      style="
+                        display: inline-block;
+                        margin-left: 6px;
+                        white-space: nowrap;
+                        color: #fff;
+                        font: 16px/1 sans-serif;
+                      "
+                    >
+                      kg
+                    </span>
+
+                    <!-- 숫자 폭 측정용(숨김) -->
+                    <span
+                      class="stepper__measure"
+                      aria-hidden="true"
+                      style="
+                        position: absolute;
+                        visibility: hidden;
+                        white-space: pre;
+                        font: 16px/1 sans-serif;
+                        padding: 0;
+                        margin: 0;
+                      "
+                    ></span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="stepper__btn stepper__btn--plus"
+                    style="
+                      flex: 0 0 40px;
+                      width: 40px;
+                      height: 40px;
+                      border: 1px solid #999;
+                      background: #eee;
+                      cursor: pointer;
+                    "
+                  >
+                    증가
+                  </button>
+                </div>
+              </div>
+
               <%- include(`${_src}/views/components/swiper/swiper.ejs`) %> <%-
               include(`${_src}/views/components/toggle.ejs`) %>
             </div>
@@ -54,5 +160,109 @@
     <!-- E: vits-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- 증감 가변 인풋 (2) -->
+    <script>
+      (function ($) {
+        if (!$) return;
+
+        function toNumber(v, fallback) {
+          var n = Number(v);
+          return Number.isFinite(n) ? n : fallback;
+        }
+
+        function onlyDigits(str) {
+          return String(str || '').replace(/\D+/g, '');
+        }
+
+        function clamp(n, min, max) {
+          if (n < min) n = min;
+          if (n > max) n = max;
+          return n;
+        }
+
+        function syncMeasureFont($input, $measure) {
+          // input과 동일한 폰트로 측정(span)
+          var font = $input.css('font');
+          $measure.css({
+            font: font,
+            letterSpacing: $input.css('letter-spacing')
+          });
+        }
+
+        function resizeInput($input, $measure, minW) {
+          var v = $input.val();
+          var text = v && String(v).length ? String(v) : '0';
+          $measure.text(text);
+
+          // 커서 여유
+          var extra = 16;
+          var w = $measure[0].offsetWidth + extra;
+
+          if (w < minW) w = minW;
+          $input.css('width', w + 'px');
+        }
+
+        function getValue($input, min, max) {
+          var digits = onlyDigits($input.val());
+          if ($input.val() !== digits) $input.val(digits);
+          var n = digits === '' ? 0 : toNumber(digits, 0);
+          return clamp(n, min, max);
+        }
+
+        function setValue($input, n, min, max) {
+          $input.val(String(clamp(n, min, max)));
+        }
+
+        function syncDisabled($root, v, step, min, max) {
+          $root.find('.stepper__btn--minus').prop('disabled', v - step < min);
+          $root.find('.stepper__btn--plus').prop('disabled', v + step > max);
+        }
+
+        // 여러 개 stepper도 동작하도록 each 처리
+        $('.stepper').each(function () {
+          var $root = $(this);
+          var $input = $root.find('.stepper__input');
+          var $measure = $root.find('.stepper__measure');
+
+          var step = toNumber($root.data('step'), 1);
+          var min = toNumber($root.data('min'), -Infinity);
+          var max = toNumber($root.data('max'), Infinity);
+
+          var minW = 40;
+
+          syncMeasureFont($input, $measure);
+
+          function refresh() {
+            var v = getValue($input, min, max);
+            resizeInput($input, $measure, minW);
+            syncDisabled($root, v, step, min, max);
+          }
+
+          $root.on('click', '.stepper__btn--minus', function () {
+            var v = getValue($input, min, max);
+            setValue($input, v - step, min, max);
+            refresh();
+          });
+
+          $root.on('click', '.stepper__btn--plus', function () {
+            var v = getValue($input, min, max);
+            setValue($input, v + step, min, max);
+            refresh();
+          });
+
+          $root.on('input', '.stepper__input', function () {
+            refresh();
+          });
+
+          $(window).on('resize', function () {
+            syncMeasureFont($input, $measure);
+            resizeInput($input, $measure, minW);
+          });
+
+          refresh();
+        });
+      })(window.jQuery);
+    </script>
   </body>
 </html>

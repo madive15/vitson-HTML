@@ -1,0 +1,230 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 체크박스'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">체크박스</h2>
+
+        <h3 class="vits-guide-subtitle">type basic (01)</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+    variant: 'basic', // basic 타입
+    name: 'ckbox1',
+    list: 'column',   // column 또는 row 
+    gap: 16,          // list gap(간격)
+    datas: [
+      {
+        text: '오늘출발',
+        value:'오늘출발',
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+      {
+        text: '내일출발',
+        value:'내일출발',
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+    ]
+  }) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+                variant: 'basic',
+                name: 'ckbox2',
+                list: 'column',
+                gap: 16,
+                datas: [
+                  {
+                    text: '오늘출발',
+                    value:'오늘출발',
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                  {
+                    text: '내일출발',
+                    value:'내일출발',
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                ]
+              }) %>
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">type basic (2)</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+    variant: 'basic', // basic 타입
+    name: 'ckbox2',
+    list: 'column',   // column 또는 row
+    gap: 16,
+    datas: [
+      {
+        text: 'CRETOS 용접봉',
+        value:'CRETOS 용접봉',
+        qty: 15,
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+      {
+        text: 'GEMINI',
+        value:'GEMINI',
+        qty: 1,
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+    ]
+  }) %&gt;</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+                variant: 'basic',
+                name: 'ckbox1',
+                list: 'column',
+                gap: 16,
+                datas: [
+                  {
+                    text: 'CRETOS 용접봉',
+                    value:'CRETOS 용접봉',
+                    qty: 15,
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                  {
+                    text: 'GEMINI',
+                    value:'GEMINI',
+                    qty: 1,
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                ]
+              }) %>
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">type card</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+  variant: 'card',  // 카드 타입
+  name: 'ckbox3',
+  list: 'column',   // column 또는 row
+  gap: 18,
+  datas: [
+    {
+      text: '폴더명 입니다',
+      value: '폴더명 입니다',
+      total: 12,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+    {
+      text: 'ABCD',
+      value: 'ABCD',
+      total: 30,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+    {
+      text: '긴 폴더명 말줄임을 적용 긴 폴더명 말말줄줄이이이임!!',
+      value: '250',
+      total: 10,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    }
+  ]
+  }) %&gt;</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+                variant: 'card',
+                name: 'ckbox3',
+                list: 'column',
+                gap: 18,
+                datas: [
+                  {
+                    text: '폴더명 입니다',
+                    value: '폴더명 입니다',
+                    total: 12,
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                  {
+                    text: 'ABCD',
+                    value: 'ABCD',
+                    total: 30,
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  },
+                  {
+                    text: '긴 폴더명 말줄임을 적용 긴 폴더명 말말줄줄이이이임!!',
+                    value: '250',
+                    total: 10,
+                    checked: false,
+                    disabled: false,
+                    required: false,
+                  }
+                ]
+              }) %>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

@@ -1,10 +1,57 @@
-<div class="radio-wrpaper">
-  <div class="radio-item-group">
-    <% datas.forEach((data) => { %>
-      <div class="radio-item">
-        <input id="<%= `${name}-${data.value}` %>" name="<%= name %>" type="radio" value="<%= data.value %>" <% if (data.disabled) { %>disabled<% } %> />
-        <label for="<%= `${name}-${data.value}` %>"><%= data.label %></label>
-      </div>
-    <% }); %> 
-  </div>
+<%
+  const _variant = typeof variant !== 'undefined' ? variant : '';
+  const _list = typeof list !== 'undefined' ? list : '';   // 예: 'row'
+  const _gap = typeof gap !== 'undefined' ? gap : '';      // 예: 16
+
+  // 예) list-row-gap16 형태로 조합
+  const listClass = (_list && _gap !== '' && _gap !== null)
+    ? `list-${_list}-gap${_gap}`
+    : (_list ? `list-${_list}` : (_gap !== '' && _gap !== null ? `gap${_gap}` : ''));
+
+  const formatNumber = (num) => {
+    if (num === null || num === undefined || num === '') return '';
+    return Number(num).toLocaleString('ko-KR');
+  };
+%>
+
+<div class="radio-wrapper<% if (_variant) { %> <%= _variant %><% } %>">
+  <ul class="radio-item-area<% if (listClass) { %> <%= listClass %><% } %>">
+    <% datas.forEach((data) => { 
+        const hasPrice = data.price !== undefined && data.price !== null && data.price !== '';
+        const text = data.text ?? '';
+        const qty = data.qty ?? '';
+    %>
+      <li class="radio-item-box">
+        <label class="radio-item">
+          <input
+            type="radio"
+            name="<%= name %>"
+            value="<%= data.value %>"
+            <% if (data.disabled === true) { %>disabled<% } %>
+            <% if (data.checked === true) { %>checked<% } %>
+            <% if (data.required === true) { %>required<% } %>
+          />
+
+          <span class="radio-icon" aria-hidden="true"></span>
+
+          <% if (hasPrice) { %>
+            <span class="radio-price">
+              <span class="label-name"><%= text %>
+                <% if (data.qty !== undefined && data.qty !== null && data.qty !== '') { %>
+                  <em class="label-unit"><%= qty %></em>
+                <% } %>
+              </span>
+              <span class="label-price"><%= formatNumber(data.price) %></span>
+            </span>
+          <% } else { %>
+            <span class="label-name"><%= text %>
+              <% if (data.qty !== undefined && data.qty !== null && data.qty !== '') { %>
+                <em class="label-unit"><%= qty %></em>
+              <% } %>
+            </span>
+          <% } %>
+        </label>
+      </li>
+    <% }); %>
+  </ul>
 </div>

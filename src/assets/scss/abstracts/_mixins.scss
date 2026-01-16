@@ -143,7 +143,7 @@
  *       @include mx.background("ills/temp.png");
  *     }
  * ------------------------------------------------------------------------- */
-@mixin background($url: 'none', $color: colors.$color-white, $repeat: no-repeat, $position: center, $size: contain) {
+@mixin background($url: 'none', $color: color.$color-white, $repeat: no-repeat, $position: center, $size: contain) {
   @if $url == 'none' {
     background: $color $repeat $position / $size;
   }
@@ -171,7 +171,7 @@
  *       @include mx.border(all, 2px, dashed); // 전체 2px dashed 기본 색상
  *     }
  * ------------------------------------------------------------------------- */
-@mixin border($direct: bottom, $width: 1px, $style: solid, $color: map.get(color.$border-colors, 'tertiary')) {
+@mixin border($direct: bottom, $width: 1px, $style: solid, $color: map.get(color.$layout-border, 'tertiary')) {
   @if $direct == 'all' {
     border: $width $style $color;
   }
@@ -276,7 +276,7 @@
 }
 
 /* input search 초기화 */
-@mixin input-search-reset {
+@mixin input-search-reset($color: map.get(color.$text-colors, 'quaternary')) {
   input[type='search'] {
     appearance: none;
     background: transparent;
@@ -285,7 +285,7 @@
     outline: 0;
 
     &::placeholder {
-      color: map.get(color.$text-colors, 'quaternary');
+      color: $color;
     }
 
     &::-webkit-search-decoration,

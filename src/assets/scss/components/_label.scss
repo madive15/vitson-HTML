@@ -1,0 +1,135 @@
+// -----------------------------------------------------------------------------
+// components/_label.scss
+// - 라벨 및 선택형 UI 요소(라벨, 클릭 가능한 칩 버튼 등) 공통 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin common-chip-button($type: null) {
+  &-group {
+    width: 100%;
+
+    &:has(.vits-chip-button.type-outline) {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 12);
+      overflow: auto hidden;
+    }
+
+    &:has(.vits-chip-button.type-filled) {
+      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      gap: map.get(var.$unit, 8);
+      overflow: hidden;
+    }
+
+    button {
+      @include button.btn-reset;
+
+      &.remove {
+        @include icon.ic-size(map.get(var.$unit, 24));
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  &.type-#{$type} {
+    display: grid;
+    flex: 0 0 auto;
+    gap: map.get(var.$unit, 2);
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    height: map.get(var.$unit, 32);
+    padding: 0 map.get(var.$unit, 8) 0 map.get(var.$unit, 12);
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'xl');
+
+    // 카테고리 있을 때: category / name(ellipsis) / remove
+    &:has(.text.category) {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    // 카테고리 없을 때: name(ellipsis) / remove
+    &:not(:has(.text.category)) {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .text:not(.category) {
+      @include mx.ellipsis-single;
+      min-width: 0;
+    }
+
+    .remove,
+    .icon {
+      justify-self: end;
+    }
+
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 24));
+    }
+
+    .text.category {
+      white-space: nowrap;
+    }
+
+    @if $type == 'outline' {
+      @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+      background: map.get(color.$layout-surf, 'raised');
+
+      .text {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      .remove {
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      @include mx.common-mouse-event {
+        @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+        background: map.get(color.$layout-surf, 'raised');
+      }
+    }
+
+    @if $type == 'filled' {
+      background: map.get(color.$layout-surf, 'primary');
+
+      .text {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'inverse'));
+
+        &.category {
+          padding-right: map.get(var.$unit, 2);
+          font-weight: 400;
+          color: map.get(color.$text-colors, 'muted');
+          white-space: nowrap;
+        }
+      }
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+
+      .remove {
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+
+      @include mx.common-mouse-event {
+        background: map.get(color.$layout-surf, 'primary');
+      }
+    }
+  }
+}
+
+.vits-chip-button {
+  @include common-chip-button('outline');
+  @include common-chip-button('filled');
+}

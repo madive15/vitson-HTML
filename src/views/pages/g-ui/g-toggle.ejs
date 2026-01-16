@@ -1,0 +1,73 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- 아이콘 토큰(이름) 목록 -->
+<% const icons = [ 'calendar', 'print', 'filter', 'list', 'circles-four', 'arrow-right', 'arrow-left', 'arrow-up',
+'arrow-down', 'lightning', 'kakao', 'electric-bulb', 'compare', 'document-paper', 'document-question', 'textbox',
+'magnifying-glass', 'heart', 'menu', 'check', 'x', 'minus', 'plus', 'label', 'tag', 'user', 'bag-check', 'compare-on',
+'bag-on', 'bag' ] ; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 토글'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">토글</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;div <b>data-toggle-scope data-toggle-group="true"</b>&gt;
+  &lt;button
+    type="button"
+    <b>data-toggle-btn
+    data-toggle-outside="true"
+    data-toggle-group-except="true"
+    data-toggle-target="panel"
+    aria-expanded="false"</b>
+  &gt;
+    토글 버튼
+  &lt;/button&gt;
+
+  &lt;div <b>data-toggle-box="panel"</b>&gt;토글 패널&lt;/div&gt;
+&lt;/div&gt;
+          </pre>
+          </code>
+          <code>
+            <pre>
+&lt;!--
+  [Toggle UI 사용 예시]
+
+  - 기본 구조:
+    * data-toggle-scope : 토글 동작 범위
+    * data-toggle-btn   : 토글 트리거
+    * data-toggle-box   : 토글 대상 패널
+    * data-toggle-target ↔ data-toggle-box 값 매칭
+
+  - 옵션(선택):
+    * data-toggle-group="true"
+      : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
+      : 특정 영역은 예외 처리하고 싶을 때, button[data-toggle-group-except="true"] 추가
+    * data-toggle-outside="true"
+      : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
+
+  - 상태:
+    * 패널 열림 시 data-toggle-box에 'is-open' 클래스가 추가됨
+    * aria-expanded 값은 JS에서 자동 관리됨
+--&gt;
+            </pre>
+          </code>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

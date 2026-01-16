@@ -36,6 +36,6 @@
     <% if (_name) { %>name="<%- _name %>"<% } %>
     data-ui="kendo-dropdown"
     <% if (_handlerKey) { %>data-handler="<%- _handlerKey %>"<% } %>
-    data-opt='<%- _options ? JSON.stringify(_options) : "{}" %>'
+    data-opt='<%- JSON.stringify(options || {}).replace(/'/g, '&#39;') %>'
   ></select>
 </div>

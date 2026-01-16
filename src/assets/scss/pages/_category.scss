@@ -1,0 +1,105 @@
+// -----------------------------------------------------------------------------
+// pages/_category.scss
+// - 카테고리 팝업 및 대/중/소 카테고리 기준 상품 목록(PLP) 페이지 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+/* 대/중/소 카테고리 상품 목록 */
+.vits-plp {
+  // 상단 영역
+  &-titlebar {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 20);
+    width: 100%;
+    padding: map.get(var.$unit, 24) 0;
+
+    &::after {
+      display: block;
+      width: 100%;
+      height: 1px;
+      margin-top: map.get(var.$unit, 4);
+      content: '';
+      background: map.get(color.$layout-border, 'quaternary');
+    }
+
+    &-head {
+      @include mx.flex(flex, row, space-between, flex-start);
+      gap: map.get(var.$unit, 4);
+
+      & + .vits-plp-titlebar-chips {
+        margin-top: map.get(var.$unit, 8);
+      }
+    }
+
+    &-heading {
+      @include typo.typography('h1b', $color: #101828);
+      @include mx.ellipsis-single;
+      flex-grow: 1;
+      min-width: 0;
+      margin-top: fn.rem(6);
+    }
+
+    &-research {
+      flex-shrink: 0;
+      width: fn.rem(306);
+    }
+
+    &-chips {
+      position: relative;
+
+      .chip-nav {
+        z-index: 9999 !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 120px !important;
+        height: 80px !important;
+        font-size: 28px !important;
+        line-height: 1 !important;
+        color: #000 !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
+        background: yellow !important;
+        border: 6px solid red !important;
+        opacity: 1 !important;
+      }
+
+      .chip-nav--prev {
+        margin-right: 12px;
+      }
+
+      .chip-nav--next {
+        margin-left: 12px;
+      }
+
+      .chip-scroller {
+        overflow: auto hidden;
+        -webkit-overflow-scrolling: touch;
+
+        /* 스크롤바 숨김 */
+        scrollbar-width: none; // firefox
+        &::-webkit-scrollbar {
+          display: none;
+        } // chrome/safari
+      }
+
+      /* 칩은 한 줄로 */
+      .chip-list {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  // 왼쪽메뉴 + 오른쪽 컨텐츠
+}

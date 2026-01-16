@@ -1,0 +1,299 @@
+/**
+ * @file scripts/ui/form/textarea.js
+ * @purpose textarea 공통: 글자수 카운트/제한(그래핌 기준) + IME(조합) 대응 + 스크롤 상태 클래스 토글
+ * @scope .vits-textarea 컴포넌트 내부 textarea만 적용(전역 영향 없음)
+ *
+ * @rule
+ *  - 높이/줄수/리사이즈는 CSS에서만 관리(JS는 height에 관여하지 않음)
+ *  - 스크롤 발생 시에만 root에 .is-scroll
+ *
+ * @state
+ *  - root.is-scroll: textarea 실제 overflow 발생 시 토글
+ *
+ * @option (root) data-textarea-count="true|false"
+ * @option (textarea) data-max-length="500" // 입력 제한(선택, 그래핌 기준)
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) {
+    console.log('[textarea] jQuery not found');
+    return;
+  }
+
+  window.UI = window.UI || {};
+  window.UI.textarea = window.UI.textarea || {};
+
+  var ROOT = '.vits-textarea';
+  var TA = ROOT + ' textarea';
+  var NS = '.uiTextarea';
+
+  var MODE = {
+    SINGLE_FIXED: 'single-fixed',
+    SINGLE_AUTO: 'single-auto',
+    SINGLE_LOCK: 'single-lock',
+    MULTI_FIXED: 'multi-fixed'
+  };
+
+  // func: 숫자 data-속성 파싱(없으면 0)
+  function intAttr($el, name) {
+    var v = parseInt($el.attr(name), 10);
+    return Number.isFinite(v) ? v : 0;
+  }
+
+  // func: root 옵션 조회(문자열)
+  function rootOpt($root, name) {
+    return $root.attr(name) || '';
+  }
+
+  // func: root 옵션 조회(숫자)
+  function rootOptInt($root, name) {
+    return intAttr($root, name);
+  }
+
+  // func: 그래핌(사용자 체감 글자) 단위 카운트
+  function graphemeCount(str) {
+    try {
+      if (window.Intl && Intl.Segmenter) {
+        var seg = new Intl.Segmenter('ko', {granularity: 'grapheme'});
+        var c = 0;
+        for (var it = seg.segment(str)[Symbol.iterator](), s = it.next(); !s.done; s = it.next()) c++;
+        return c;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    return Array.from(str).length;
+  }
+
+  // func: 최대 글자수 기준 자르기(그래핌 우선)
+  function sliceToMax(str, max) {
+    if (!max) return str;
+
+    try {
+      if (window.Intl && Intl.Segmenter) {
+        var seg = new Intl.Segmenter('ko', {granularity: 'grapheme'});
+        var out = '';
+        var i = 0;
+        for (var it = seg.segment(str)[Symbol.iterator](), s = it.next(); !s.done; s = it.next()) {
+          if (i >= max) break;
+          out += s.value.segment;
+          i++;
+        }
+        return out;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    return Array.from(str).slice(0, max).join('');
+  }
+
+  // func: 입력 제한 적용(조합 중엔 미적용)
+  function enforceMaxLength($ta, isComposing) {
+    var maxLen = intAttr($ta, 'data-max-length');
+    if (!maxLen || isComposing) return;
+
+    var v = $ta.val() || '';
+    var next = sliceToMax(v, maxLen);
+    if (next !== v) $ta.val(next);
+  }
+
+  // func: css 값(px) 파싱
+  function pxNum(v) {
+    var n = parseFloat(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  // func: textarea 스타일 기반 line/extra 계산
+  function metrics($ta) {
+    var cs = window.getComputedStyle($ta[0]);
+
+    var lh = pxNum(cs.lineHeight);
+    if (!lh) lh = pxNum(cs.fontSize) * 1.5;
+
+    var pt = pxNum(cs.paddingTop);
+    var pb = pxNum(cs.paddingBottom);
+    var bt = pxNum(cs.borderTopWidth);
+    var bb = pxNum(cs.borderBottomWidth);
+
+    return {line: lh, extra: pt + pb + bt + bb};
+  }
+
+  // func: rows 기준 높이(px) 계산
+  function heightByRows($ta, rows) {
+    var m = metrics($ta);
+    var r = Math.max(1, rows || 1);
+    return m.line * r + m.extra;
+  }
+
+  // func: textarea 높이(px) 주입
+  function setHeightPx($ta, px) {
+    $ta[0].style.height = Math.max(0, px) + 'px';
+  }
+
+  // func: inline height 제거(CSS min-height/height 규칙으로 복귀)
+  function clearHeightPx($ta) {
+    $ta[0].style.height = '';
+    $ta.removeClass('is-clamped is-locked');
+  }
+
+  // func: scrollHeight 기반 자동 높이 계산(clamp)
+  function calcAutoHeightPx($ta, minPx, maxPx) {
+    $ta[0].style.height = 'auto';
+    var h = $ta[0].scrollHeight || 0;
+    if (minPx) h = Math.max(h, minPx);
+    if (maxPx) h = Math.min(h, maxPx);
+    return h;
+  }
+
+  // func: 카운트 UI 갱신(옵션 true일 때만)
+  function updateCountUI($root, $ta) {
+    if (rootOpt($root, 'data-textarea-count') !== 'true') return;
+
+    var $count = $root.find('[data-ui-textarea-count]');
+    if (!$count.length) return;
+
+    var v = $ta.val() || '';
+    $count.text(String(graphemeCount(v)));
+
+    var maxLen = intAttr($ta, 'data-max-length');
+    var $max = $root.find('[data-ui-textarea-max]');
+    if (maxLen && $max.length) $max.text(String(maxLen));
+  }
+
+  // func: 스크롤 발생 여부 감지(스크롤바 표시 시점 기준)
+  function syncScrollState($root, $ta) {
+    var el = $ta[0];
+    if (!el) return;
+
+    // 스크롤이 가능한 overflow 상태만 대상(visible/hidden이면 스크롤바가 안 뜸)
+    var oy = window.getComputedStyle(el).overflowY;
+    var canScroll = oy === 'auto' || oy === 'scroll';
+    if (!canScroll) {
+      $root.removeClass('is-scroll');
+      $ta.removeClass('vits-scrollbar');
+      return;
+    }
+
+    // 실제 overflow 판단(1px 버퍼로 오차 방지)
+    var isOverflow = el.scrollHeight - el.clientHeight > 1;
+
+    $root.toggleClass('is-scroll', isOverflow);
+    $ta.toggleClass('vits-scrollbar', isOverflow); // 내부 스크롤 스킨: 정책대로 직접 부여
+  }
+
+  // func: fixed 모드 처리(높이는 CSS가 담당)
+  function syncFixedByCss($root, $ta) {
+    $root.removeAttr('data-textarea-locked data-textarea-locked-px');
+    clearHeightPx($ta);
+  }
+
+  // func: single-auto 높이 동기화(1줄 → max-lines까지 확장)
+  function syncSingleAuto($root, $ta) {
+    var baseRows = intAttr($ta, 'rows') || 1;
+    var maxLines = rootOptInt($root, 'data-textarea-max-lines') || baseRows;
+
+    var minPx = heightByRows($ta, baseRows);
+    var maxPx = heightByRows($ta, maxLines);
+
+    var next = calcAutoHeightPx($ta, minPx, maxPx);
+    setHeightPx($ta, next);
+
+    $ta.toggleClass('is-clamped', next >= maxPx);
+    $ta.removeClass('is-locked');
+    $root.removeAttr('data-textarea-locked data-textarea-locked-px');
+  }
+
+  // func: single-lock 높이 동기화(지정 줄수 도달 시 고정 전환)
+  function syncSingleLock($root, $ta) {
+    var locked = rootOpt($root, 'data-textarea-locked') === 'true';
+    var lockLines = rootOptInt($root, 'data-textarea-lock-lines') || 1;
+    var baseRows = intAttr($ta, 'rows') || 1;
+
+    if (locked) {
+      var lockPx = rootOptInt($root, 'data-textarea-locked-px');
+      if (lockPx) setHeightPx($ta, lockPx);
+      $ta.addClass('is-locked');
+      return;
+    }
+
+    var minPx = heightByRows($ta, baseRows);
+    var maxPx = heightByRows($ta, lockLines);
+
+    var next = calcAutoHeightPx($ta, minPx, maxPx);
+    setHeightPx($ta, next);
+
+    var v = ($ta.val() || '').replace(/\r\n/g, '\n');
+    var lines = v.length ? v.split('\n').length : 1;
+
+    if (lines >= lockLines) {
+      $root.attr('data-textarea-locked', 'true');
+      $root.attr('data-textarea-locked-px', String(next));
+      $ta.addClass('is-locked');
+    }
+
+    $ta.toggleClass('is-clamped', next >= maxPx);
+  }
+
+  // func: 모드별 적용(제한 → 높이 → 카운트)
+  function apply($root, $ta, opts) {
+    var isComposing = !!(opts && opts.isComposing);
+    var mode = rootOpt($root, 'data-textarea-mode');
+
+    enforceMaxLength($ta, isComposing);
+
+    if (mode === MODE.SINGLE_FIXED || mode === MODE.MULTI_FIXED) syncFixedByCss($root, $ta);
+    if (mode === MODE.SINGLE_AUTO) syncSingleAuto($root, $ta);
+    if (mode === MODE.SINGLE_LOCK) syncSingleLock($root, $ta);
+
+    updateCountUI($root, $ta);
+
+    // 스크롤바 표시 시점에만 상태 클래스 토글
+    syncScrollState($root, $ta);
+  }
+
+  // func: 단일 인스턴스 초기화
+  function initOne($ta) {
+    var $root = $ta.closest(ROOT);
+    if (!$root.length) return;
+    apply($root, $ta, {isComposing: false});
+  }
+
+  // func: 이벤트 바인딩(위임 1회)
+  function bind() {
+    $(document)
+      .on('compositionstart' + NS, TA, function () {
+        $(this).data('isComposing', true);
+      })
+      .on('compositionend' + NS, TA, function () {
+        var $ta = $(this);
+        $ta.data('isComposing', false);
+        initOne($ta);
+      });
+
+    $(document).on('input' + NS, TA, function () {
+      var $ta = $(this);
+      var $root = $ta.closest(ROOT);
+      if (!$root.length) return;
+      apply($root, $ta, {isComposing: !!$ta.data('isComposing')});
+    });
+  }
+
+  // func: root 범위 초기화(부분 렌더 지원)
+  function init(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find(TA).each(function () {
+      initOne($(this));
+    });
+  }
+
+  window.UI.textarea.init = function (root) {
+    if (!window.UI.textarea.__bound) {
+      bind();
+      window.UI.textarea.__bound = true;
+    }
+    init(root);
+  };
+})(window.jQuery, window, document);

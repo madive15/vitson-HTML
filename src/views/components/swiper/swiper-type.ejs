@@ -1,0 +1,20 @@
+<div
+  class="<%= containerClass || 'swiper-container' %> vits-swiper js-swiper"
+  data-swiper-type="<%= swiperType || 'card' %>"
+  data-desktop="<%= desktop || 5 %>"
+  <% if (offsetBefore !== null && offsetBefore !== undefined) { %>data-offset-before="<%= offsetBefore %>"<% } %>
+  <% if (offsetAfter !== null && offsetAfter !== undefined) { %>data-offset-after="<%= offsetAfter %>"<% } %>
+>
+  <div class="swiper-wrapper">
+    <% (slides || []).forEach((slide) => { %>
+    <div class="swiper-slide"><%- slide %></div>
+    <% }); %>
+  </div>
+</div>
+<% if (showNavs !== false) { %>
+<div class="vits-swiper-navs">
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>
+<% } %>
+

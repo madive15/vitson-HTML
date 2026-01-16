@@ -1,0 +1,72 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<%
+  const _type = typeof type !== 'undefined' ? type : 'horiz';
+  const _variant = typeof variant !== 'undefined' ? variant : '';
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _value = typeof value !== 'undefined' ? value : 1;
+  const _min = typeof min !== 'undefined' ? min : 1;
+  const _max = typeof max !== 'undefined' ? max : Infinity;
+  const _step = typeof step !== 'undefined' ? step : 1;
+  const _unit = typeof unit !== 'undefined' ? unit : '';
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+  const _required = typeof required !== 'undefined' ? required : false;
+%>
+
+<% if (_type === 'horiz') { %>
+  <div class="quantity-control type-horiz<% if (_variant) { %> <%= _variant %><% } %>">
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소"<% if (_disabled) { %> disabled<% } %>>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'minus' }) %>
+    </button>
+
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      <% if (_name) { %>name="<%= _name %>"<% } %>
+      value="<%= _value %>"
+      data-min="<%= _min %>"
+      <% if (_max !== Infinity) { %>data-max="<%= _max %>"<% } %>
+      data-step="<%= _step %>"
+      aria-label="개수"
+      <% if (_disabled) { %>disabled<% } %>
+      <% if (_required) { %>required<% } %>
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+
+    <% if (_unit) { %>
+      <span class="unit"><%= _unit %></span>
+    <% } %>
+
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가"<% if (_disabled) { %> disabled<% } %>>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %>
+    </button>
+  </div>
+<% } else if (_type === 'vertical') { %>
+  <div class="quantity-control type-vertical<% if (_variant) { %> <%= _variant %><% } %>">
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      <% if (_name) { %>name="<%= _name %>"<% } %>
+      value="<%= _value %>"
+      data-min="<%= _min %>"
+      <% if (_max !== Infinity) { %>data-max="<%= _max %>"<% } %>
+      data-step="<%= _step %>"
+      aria-label="단위"
+      <% if (_disabled) { %>disabled<% } %>
+      <% if (_required) { %>required<% } %>
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+    <% if (_unit) { %>
+      <span class="unit"><%= _unit %></span>
+    <% } %>
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가"<% if (_disabled) { %> disabled<% } %>>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-up' }) %>
+    </button>
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소"<% if (_disabled) { %> disabled<% } %>>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+    </button>
+  </div>
+<% } %>

@@ -14,7 +14,7 @@
 
 .vits-footer {
   padding: map.get(var.$unit, 44) 0;
-  background: map.get(color.$surf-colors, 'footer');
+  background: map.get(color.$layout-surf, 'footer');
 
   .vits-inner {
     @include mx.flex(flex, row, flex-start, stretch);
@@ -39,7 +39,7 @@
     gap: map.get(var.$unit, 56);
 
     .footer-link {
-      @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '9'));
+      @include typo.typography('b3r', $color: map.get(color.$gray-shades, '20'));
 
       &.link-bold {
         font-weight: 700;
@@ -50,18 +50,18 @@
   &-info {
     > li {
       &:not(:has(.company-name)) {
-        @include mx.divider('p', 1, 12, 6, $color: map.get(color.$neutral-colors, '6'));
+        @include mx.divider('p', 1, 12, 6, $color: map.get(color.$text-colors, 'tertiary'));
       }
 
       &:has(.company-name) {
-        @include mx.divider('p', 1, 12, 12, $color: map.get(color.$gray-shades, '30'));
+        @include mx.divider('p', 1, 12, 12, $color: map.get(color.$text-colors, 'muted'));
       }
     }
 
     .company {
       &-name,
       &-email {
-        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '9'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       }
 
       &-email {
@@ -71,7 +71,7 @@
 
       &-text {
         @include mx.flex(flex, row, flex-start, center);
-        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '6'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
         gap: map.get(var.$unit, 4);
       }
 
@@ -93,7 +93,7 @@
   }
 
   &-copyright {
-    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'quaternary'));
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
   }
 
   &-utility {
@@ -213,7 +213,7 @@
       @include mx.flex(flex, row, center, center);
       width: fn.rem(38);
       height: fn.rem(38);
-      background: color.$color-footer-sns;
+      background: map.get(color.$gray-shades, '80');
       border-radius: 50%;
     }
   }
@@ -281,7 +281,7 @@
       max-height: calc(100% - 32px);
       overflow: hidden;
       background: #fff;
-      border-radius: 12px;
+      border-radius: map.get(var.$radius, 'lg');
       transform: translate(-50%, -50%);
     }
 

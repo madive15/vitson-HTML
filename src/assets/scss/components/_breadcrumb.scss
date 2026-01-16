@@ -1,0 +1,67 @@
+// -----------------------------------------------------------------------------
+// components/_breadcrumb.scss
+// - 카테고리 경로 표시 및 탐색을 위한 공통 UI 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-breadcrumb {
+  &-list,
+  &-menu {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 12);
+  }
+
+  &-list {
+    display: flex;
+    align-items: center;
+    min-width: 0; /* 자식 shrink 허용 */
+  }
+
+  &-menu {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: max-content;
+    color: map.get(color.$icon-neutral, 'primary');
+
+    .vits-select {
+      display: inline-block;
+      min-width: 0;
+      max-width: 100%;
+
+      &-value {
+        display: block;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      &-trigger {
+        width: fit-content;
+        min-width: 0;
+        max-width: 100%;
+      }
+    }
+
+    &:first-of-type {
+      flex: 0 0 auto;
+      min-width: auto;
+    }
+
+    &:not(:first-of-type, :only-of-type)::before {
+      display: block;
+      flex-shrink: 0;
+      width: map.get(var.$unit, 16);
+      height: map.get(var.$unit, 16);
+      content: '';
+      background-color: currentcolor;
+      mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') no-repeat center / contain;
+    }
+  }
+}

@@ -1,0 +1,128 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: ''}) %>
+
+  <body>
+    <%- include(`${_src}/views/layout/header.ejs`) %>
+    <section class="pd-gallery" data-test-gallery>
+      <style>
+        /* 1) 전체 래퍼: 갤러리 최대폭 500px, 반응형으로 줄어듦 */
+        .pd-gallery {
+          position: relative; /* 줌 absolute 기준 */
+          max-width: 500px; /* 요청값 */
+          width: 100%;
+        }
+
+        /* 2) 메인/썸네일 레이아웃은 갤러리 폭을 따름 */
+        .pd-gallery-main {
+          position: relative; /* 줌 기준을 메인 영역으로 잡아도 됨 */
+          display: block; /* 옆에 줌을 두지 않음(줌은 absolute) */
+        }
+
+        /* 3) 큰이미지(메인 swiper): 갤러리 폭에 맞추고, 정사각 유지 */
+        .pd-main-swiper {
+          position: relative;
+          width: 100%; /* max-width 500px 내부에서 100% */
+          aspect-ratio: 1 / 1; /* 정사각 유지(브라우저 지원 OK) */
+          height: auto; /* 고정 520 제거 */
+          overflow: hidden;
+          border: 1px solid #e5e7eb;
+          background: #fff;
+        }
+
+        /* 구형 대응이 필요하면 aspect-ratio 대신 아래로 대체
+.pd-main-swiper { width:100%; height: 0; padding-top: 100%; }
+.pd-main-swiper .swiper { position:absolute; inset:0; }  // 구조에 따라 조정
+*/
+
+        /* 메인 이미지 */
+        .pd-main-swiper .swiper-slide img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+
+        /* 4) 줌: 레이아웃에 포함되지 않도록 absolute로 띄움 */
+        .pd-zoom {
+          position: absolute;
+          left: calc(100% + 16px); /* 큰이미지 오른쪽 16px 간격 */
+          top: 0;
+          width: 100%; /* 큰이미지와 동일 폭 */
+          aspect-ratio: 1 / 1; /* 큰이미지와 동일 비율 */
+          height: auto;
+          border: 1px solid #e5e7eb;
+          overflow: hidden;
+          display: none;
+          background: #fff;
+          z-index: 10;
+        }
+
+        .pd-zoom.is-on {
+          display: block;
+        }
+
+        /* 확대 이미지 포지션은 기존대로 */
+        .pd-zoom img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: block;
+          max-width: none;
+          max-height: none;
+          user-select: none;
+          -webkit-user-drag: none;
+        }
+
+        /* 5) 썸네일도 갤러리 폭을 따름 */
+        .pd-gallery-thumbs {
+          margin-top: 12px;
+          width: 100%;
+        }
+        .pd-thumbs-swiper {
+          position: relative;
+          padding: 0 40px;
+        }
+
+        /* (선택) 모바일/좁은 화면에서 줌이 화면 밖으로 나가면 숨김 처리 */
+        @media (max-width: 1100px) {
+          .pd-zoom {
+            display: none !important;
+          }
+        }
+      </style>
+
+      <div class="pd-gallery-main">
+        <div class="swiper pd-main-swiper" data-main-swiper>
+          <div class="swiper-wrapper" data-main-wrapper></div>
+
+          <button type="button" class="pd-nav pd-nav-prev" aria-label="이전 이미지" data-main-prev></button>
+          <button type="button" class="pd-nav pd-nav-next" aria-label="다음 이미지" data-main-next></button>
+        </div>
+
+        <aside class="pd-zoom" data-zoom aria-hidden="true">
+          <img data-zoom-img alt="" />
+        </aside>
+      </div>
+
+      <div class="pd-gallery-thumbs">
+        <div class="swiper pd-thumbs-swiper" data-thumbs-swiper>
+          <div class="swiper-wrapper" data-thumbs-wrapper></div>
+
+          <button type="button" class="pd-thumb-nav pd-thumb-prev" aria-label="썸네일 이전" data-thumbs-prev></button>
+          <button type="button" class="pd-thumb-nav pd-thumb-next" aria-label="썸네일 다음" data-thumbs-next></button>
+        </div>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.ejs`) %> <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script></script>
+    <script>
+      kendo.ui.icon($('.facebook'), {icon: 'facebook'});
+      kendo.ui.icon($('.pinterest'), {icon: 'pinterest'});
+      kendo.ui.icon($('.twitter'), {icon: 'twitter'});
+    </script>
+  </body>
+</html>

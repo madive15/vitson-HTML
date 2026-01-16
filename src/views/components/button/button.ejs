@@ -1,13 +1,57 @@
-<button class="vits-btn vits-btn-<%= size %> <%= icon ? 'vits-btn-icon-' + iconPosition : '' %>">
-  <% if (icon && iconPosition === 'left') { %> <%- include(`${_src}/views/components/icon.ejs`, { iconName: `${ icon }`
-  }) %> <% } %>
-  <span class="text"><%= label %></span>
-  <% if (icon && iconPosition === 'right') { %> <%- include(`${_src}/views/components/icon.ejs`, { iconName: `${ icon }`
-  }) %> <% } %>
-</button>
+<% const _src = srcPath; const _public = publicPath; %>
+<%
+  const _size = typeof size !== 'undefined' ? size : 'md';
+  const _variant = typeof variant !== 'undefined' ? variant : 'primary';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _html = typeof html !== 'undefined' ? html : '';
+  const _iconLeft = typeof iconLeft !== 'undefined' ? iconLeft : false;
+  const _iconRight = typeof iconRight !== 'undefined' ? iconRight : false;
+  const _iconName = typeof iconName !== 'undefined' ? iconName : '';
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+  const _type = typeof type !== 'undefined' ? type : 'button';
+  const _className = typeof className !== 'undefined' ? className : '';
+  const _attrs = typeof attrs !== 'undefined' ? attrs : '';
+  
+  // attrs 문자열을 파싱하여 속성 배열로 변환
+  var _attrsArray = [];
+  if (_attrs) {
+    // 정규식으로 속성과 값을 추출
+    var regex = /(\w+(?:-\w+)*)(?:="([^"]*)")?/g;
+    var match;
+    while ((match = regex.exec(_attrs)) !== null) {
+      var key = match[1];
+      var value = match[2];
+      if (value !== undefined) {
+        _attrsArray.push({ key: key, value: value });
+      } else {
+        _attrsArray.push({ key: key, value: null });
+      }
+    }
+  }
+%>
 
-<!-- 사용 예시
-< %- include(`${_src}/views/components/button/button.ejs`, { label: '확인', size: 'xl', icon: 'tag', iconPosition: 'left' }) %>
-< %- include(`${_src}/views/components/button/button.ejs`, { label: '취소', size: 'm', icon: 'close', iconPosition: 'right' }) %>
--->
-x
+<button
+  type="<%= _type || 'button' %>"
+  class="vits-btn-<%= _size %> vits-btn-<%= _variant %> <%= _iconLeft ? 'icon-left' : '' %><%= _iconRight ? 'icon-right' : '' %><%= _disabled ? ' disabled' : '' %><%= _className ? ' ' + _className : '' %>"
+  <%= _disabled ? 'disabled' : '' %>
+  <% _attrsArray.forEach(function(attr) { 
+    if (attr.value === null) { %>
+  <%= attr.key %>
+    <% } else { %>
+  <%= attr.key %>="<%= attr.value %>"
+    <% }
+  }); %>>
+  <% if (_iconLeft) { %>
+    <span class="icon">
+      <i class="ic <%= _iconName %>" aria-hidden="true"></i>
+    </span>
+  <% } %>
+
+  <span class="text"><% if (_html) { %><%- _html %><% } else { %><%= _text %><% } %></span>
+
+  <% if (_iconRight) { %>
+    <span class="icon">
+      <i class="ic <%= _iconName %>" aria-hidden="true"></i>
+    </span>
+  <% } %>
+</button>
