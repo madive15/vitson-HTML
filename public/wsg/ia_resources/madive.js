@@ -94,6 +94,7 @@ var ia = {
           $(this).parent('tr').find('.col-memo').addClass('active row-del');
         } else if (text == '진행중') {
           $(this).parent('tr').addClass('row-ing'); //
+          $(this).parent('tr').find('.col-memo').addClass('active');
         }
       });
 

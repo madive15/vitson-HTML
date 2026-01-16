@@ -106,6 +106,18 @@
         height: 100%;
         object-fit: contain;
       }
+
+      .pd-iframe {
+        width: 100%;
+        height: 100%;
+
+        iframe {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+      }
     }
 
     &:hover,
@@ -211,6 +223,18 @@
 
     .swiper-slide {
       height: 60px;
+
+      .thumb-label {
+        padding: 0 fn.rem(6);
+        font-size: fn.rem(10);
+        font-weight: 100;
+        color: #fff;
+        background-color: map.get(color.$gray-shades, '80');
+        border-radius: map.get(var.$radius, sm);
+        opacity: 0.6;
+
+        @include mx.position(absolute, $top: 3px, $right: 2.5px);
+      }
     }
   }
 
@@ -218,6 +242,7 @@
   .pd-thumb {
     width: 60px !important;
     height: 60px !important;
+    overflow: hidden;
     cursor: pointer;
     background: color.$color-white;
     border: 1px solid map.get(color.$gray-shades, '30');
@@ -240,6 +265,18 @@
       height: 100%;
       max-height: none;
       object-fit: cover;
+    }
+
+    .pd-thumb-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-size: 12px;
+      font-weight: 600;
+      color: map.get(color.$gray-shades, '80');
+      background: map.get(color.$gray-shades, '10');
     }
   }
 

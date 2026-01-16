@@ -51,7 +51,7 @@ const galleryImages = [
     src: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
     large: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
     alt: '에디슨 LED 벌브7'
-  } 
+  }
 ];
 %>
 <div class="vits-deal-gallery">
@@ -59,6 +59,25 @@ const galleryImages = [
     <div class="pd-gallery-main">
       <div class="swiper pd-main-swiper" data-main-swiper>
         <div class="swiper-wrapper" data-main-wrapper>
+          <div class="swiper-slide">
+            <div class="pd-iframe" data-main-iframe>
+              <iframe
+                src="https://vitsonimg.co.kr/images/dev/productsNew/501/orbitvu/501501/501501.html"
+                width="100%"
+                height="600"
+                scrolling="no"
+                marginwidth="0"
+                marginheight="0"
+                frameborder="0"
+                vspace="0"
+                hspace="0"
+                allow="fullscreen"
+                webkitallowfullscreen=""
+                mozallowfullscreen=""
+                allowfullscreen=""
+              ></iframe>
+            </div>
+          </div>
           <% galleryImages.forEach(function(image, idx) { %>
           <div class="swiper-slide">
             <img src="<%= image.src %>" alt="<%= image.alt %>" data-main-img />
@@ -81,13 +100,21 @@ const galleryImages = [
 
         <div class="swiper pd-thumbs-swiper" data-thumbs-swiper>
           <div class="swiper-wrapper" data-thumbs-wrapper>
+            <button type="button" class="swiper-slide pd-thumb" data-thumb data-index="0" aria-label="썸네일 1 선택">
+              <img
+                src="https://vitsonimg.co.kr/images/dev/productsNew/501/orbitvu/501501/images/a_0_0_1000_0_0.jpg"
+                alt="360도 보기"
+              />
+              <!--360도 이미지 일 경우 라벨 표시 -->
+              <span class="thumb-label">360°</span>
+            </button>
             <% galleryImages.forEach(function(image, idx) { %>
             <button
               type="button"
               class="swiper-slide pd-thumb"
               data-thumb
-              data-index="<%= idx %>"
-              aria-label="썸네일 <%= idx + 1 %> 선택"
+              data-index="<%= idx + 1 %>"
+              aria-label="썸네일 <%= idx + 2 %> 선택"
             >
               <img src="<%= image.src %>" alt="" />
             </button>
