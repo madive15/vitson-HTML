@@ -30,14 +30,33 @@
             <div class="vits-grid-main vits-wrapper-product">
               <!-- 메인 컨텐츠 -->
               <!-- s: PC_PR_01010101 -->
-              <div class="vits-" style="background-color: red; height: 50px">BreadScrumb + 상품코드 영역</div>
-              <div class="vits-product-detail-container">
+              <div class="vits-breadscrumb">
+                <div class="vits-breadscrumb-inner">
+                  <div class="vits-breadscrumb-item">
+                    <a href="#" class="vits-breadscrumb-link">
+                      <span class="vits-breadscrumb-text">Home</span>
+                    </a>
+                  </div>
+                  <div class="vits-breadscrumb-item">
+                    <span class="vits-breadscrumb-text">Product</span>
+                  </div>
+                </div>
+                <div class="vits-product-code">
+                  <span class="text">상품코드: 1234567890</span>
+                  <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %></span>
+                </div>
+              </div>
+              <div class="vits-product-detail-container" data-toggle-scope data-toggle-group="true">
                 <div class="vits-deal-view">
-                  <%- include(`${_src}/views/components/pg/vits-deal-gallery`) %>
-
+                  <%- include(`${_src}/views/components/pg/swiper-gallery.ejs`) %>
                   <div class="vits-deal-info">
                     <div class="vits-deal-info-inner">
-                      <div class="product-brand-name">비츠온<i class="ic ic-arrow-right"></i></div>
+                      <div class="product-brand-name">
+                        <span class="text">비츠온</span>
+                        <span class="icon"
+                          ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %></span
+                        >
+                      </div>
                       <div class="product-name-info">
                         <!-- 상위분류명 +상품 이름 + 좋아요 + 라벨 -->
                         <ul class="info-inner">
@@ -63,8 +82,11 @@
                           </li>
                           <li>
                             <label for="like" class="vits-btn like-btn icon">
+                              <!-- 임시 -->
                               <input type="checkbox" name="like" id="like" aria-label="좋아요버튼" />
-                              <i class="ic ic-heart"></i>
+                              <span class="icon"
+                                ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'heart' }) %></span
+                              >
                             </label>
                           </li>
                         </ul>
@@ -81,15 +103,23 @@
                             </div>
 
                             <div class="delivery-benefit">
-                              <p><i class="ic ic-lightning"></i><span class="unit">1</span>개만 사도 무료배송</p>
+                              <span class="icon"
+                                ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %></span
+                              ><span class="unit">1</span><span class="text">개만 사도 무료배송</span>
                             </div>
                           </li>
                           <li>
                             <div class="discount-coupon">
-                              <button type="button" class="vits-btn-horizon left-icon">
-                                <span class="icon"><i class="ic ic-lightning"></i></span
-                                ><span class="text">할인쿠폰받기</span>
-                              </button>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                size:'lg', 
+                                variant: 'outline-primary', 
+                                text:'할인쿠폰받기', 
+                                iconLeft: true, 
+                                //disabled: true, class: 'disabled'
+                                iconName: 'ic-line-download',
+                                attrs: 'data-toggle-btn aria-expanded="false" data-toggle-target="get-coupon-modal" '
+                              }) %>
                             </div>
                           </li>
                         </ul>
@@ -117,37 +147,57 @@
                         <ul class="info-inner">
                           <li>
                             <h3 class="title">수량선택</h3>
-                            <div class="option-list">
-                              <ul>
-                                <li class="option-item">
-                                  <label>
-                                    <input type="radio" name="package" value="single" checked />
-                                    <span class="option-text">
-                                      <span class="name">낱개 <em>(1)</em></span>
-                                      <span class="price">₩4,150</span>
-                                    </span>
-                                  </label>
-                                </li>
 
-                                <li class="option-item">
-                                  <label>
-                                    <input type="radio" name="package" value="box" />
-                                    <span class="option-text">
-                                      <span class="name">대포장 <em>(250)</em></span>
-                                      <span class="price">₩103,750</span>
-                                    </span>
-                                  </label>
-                                </li>
-                              </ul>
-                            </div>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-radio.ejs`, {
+                              variant: 'option-list',
+                              name: 'rdo2',
+                              list: 'column',
+                              gap: 18,
+                              datas: [
+                                {
+                                  text: '낱개',
+                                  value: '1',
+                                  qty: 1,
+                                  price: 4150,
+                                  checked: false,
+                                  disabled: false,
+                                  required: false
+                                },
+                                {
+                                  text: '대포장',
+                                  value: '250', 
+                                  qty: 250,
+                                  price: 103750,
+                                  checked: false,
+                                  disabled: false,
+                                  required: false 
+                                }
+                              ]
+                            }) %>
                           </li>
                           <li>
-                            <button type="button" class="vits-btn-horizon left-icon">
-                              <span class="icon"><i class="ic ic-lightning"></i></span>
-                              <span class="text">단가할인</span>
-                            </button>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/button/button.ejs`, 
+                              {size:'xs', 
+                              variant: 'outline-secondary', 
+                              text:'단가할인', 
+                              iconLeft: true, 
+                              iconName: 'ic-line-graph',
+                              className: 'unit-price-info'
+                            }) %>
                           </li>
                         </ul>
+                        <!-- css hover 영역 -->
+                        <div class="unit-price-info-hover">
+                          <div class="unit-price-info-inner">
+                            <ul class="list-inner">
+                              <li class="list-item">50개 이상 사면 <span>1,543원</span></li>
+                              <li class="list-item">150개 이상 사면 <span>1,522원</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!-- //css hover  -->
                       </div>
                       <!-- case 02 :주문길이 입력 -->
                       <div class="product-select-unit">
@@ -161,108 +211,180 @@
                                   <em>M</em>
                                 </span>
                               </label>
-                              <button type="button" class="vits-btn-horizon none-icon">
-                                <span class="text">추가</span>
-                              </button>
+                              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'lg', variant:
+                              'secondary', text: '추가', iconLeft: false, }) %>
                             </div>
                           </li>
                         </ul>
                       </div>
-                      <div class="product-select-options">
-                        <!-- 옵션 버튼 (옵션 우측 슬라이드 팝업) -->
+                      <div class="product-select-buttons">
+                        <!-- case:01 옵션 버튼 (옵션 우측 슬라이드 팝업) -->
                         <div class="vits-btn-option">
-                          <button type="button" class="vits-btn-horizon right-icon">
-                            <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span
-                            ><span class="icon"><i class="ic ic-arrow-right"></i></span>
+                          <!-- prettier-ignore -->
+                          <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" 
+                            data-toggle-btn 
+                            aria-expanded="false"
+                            data-toggle-target="vits-options-modal" 
+                            >
+                            <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span>
+                            <span class="icon">
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                            </span>
                           </button>
                         </div>
+                        <!-- case 02 : 비로그인시 - 로그인 버튼 -->
+                        <div class="vits-btn-login">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'xxl',
+                            variant: 'primary',
+                            text: '로그인하고 가격 확인',
+                            iconLeft: true,
+                            iconName: 'ic-lock-close',
+                          }) %>
+                        </div>
                       </div>
+                      <div class="product-select-notice"></div>
+                      <!-- 상품선택 결과 영역 -->
                       <div class="product-select-result">
-                        <!-- 상품선택 결과 영역 -->
+                        <!-- prettier-ignore -->
+                        <%
+                          const selectedProducts = [
+                            {
+                              code: '1234567890',
+                              name: '[일반전선] VCTF',
+                              size: '1.5SQ * 3C(100M)',
+                              quantity: 999,
+                              quantityUnit: 'BOX',
+                              unitValue: 1,
+                              unitType: 'M',
+                              priceLabel: '쿠폰 적용가',
+                              price: 800000
+                            },
+                            {
+                              code: '1234567890',
+                              name: '[일반전선] VCTF',
+                              size: '1.5SQ * 3C(100M)',
+                              quantity: 999,
+                              quantityUnit: 'BOX',
+                              unitValue: 1,
+                              unitType: 'M',
+                              priceLabel: '쿠폰 적용가',
+                              price: 800000
+                            }
+                          ];
+                        %>
+                        <% selectedProducts.forEach(product => { %>
                         <div class="select-result-item">
-                          <div class="prd-code">상품코드: <span class="code">1234567890</span></div>
-                          <div class="prd-name">[일반전선] VCTF</div>
-                          <div class="prd-size">1.5SQ * 3C(100M)</div>
+                          <div class="prd-code">상품코드: <span class="code"><%= product.code %></span></div>
+                          <div class="prd-name"><%= product.name %></div>
+                          <div class="prd-size"><%= product.size %></div>
 
                           <div class="prd-group-row">
                             <div class="prd-input-count">
                               <div class="vits-count-box">
-                                <div class="quantity-control type-horiz">
-                                  <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
-                                    <i class="ic ic-minus"></i>
-                                  </button>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+                                  type: 'horiz',   
+                                  variant: '',    
+                                  name: 'quantity',   
+                                  value: 999,             
+                                  min: 1,              
+                                  step: 1,             
+                                  unit: '개',          
+                                  disabled: false,      
+                                  required: false       
+                                }) %>
 
-                                  <input
-                                    type="number"
-                                    class="quantity-input"
-                                    value="999"
-                                    min="1"
-                                    step="1"
-                                    aria-label="개수"
-                                  />
-
-                                  <span class="unit">BOX</span>
-
-                                  <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
-                                    <i class="ic ic-plus"></i>
-                                  </button>
-                                </div>
-
-                                <div class="quantity-control type-vertical">
-                                  <input
-                                    type="number"
-                                    class="quantity-input"
-                                    value="1"
-                                    min="1"
-                                    step="1"
-                                    aria-label="단위"
-                                  />
-
-                                  <span class="unit">M</span>
-
-                                  <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
-                                    <i class="ic ic-arrow-up"></i>
-                                  </button>
-                                  <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
-                                    <i class="ic ic-arrow-down"></i>
-                                  </button>
-                                </div>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+                                  type: 'vertical',
+                                  variant: '',
+                                  name: 'quantity2',
+                                  value: 12,
+                                  min: 1,
+                                  step: 1,
+                                  unit: 'BOX',
+                                  disabled: false,
+                                  required: false
+                                }) %>
                               </div>
                             </div>
 
                             <div class="prd-single-price">
-                              <span class="txt">쿠폰 적용가</span><span class="price">800,000</span
+                              <span class="text"><%= product.priceLabel %></span
+                              ><span class="price"><%= product.price.toLocaleString() %></span
                               ><span class="won">원</span>
                             </div>
-                            <button type="button" class="vits-btn-close icon"><i class="ic ic-x">닫기</i></button>
+                            <button type="button" class="vits-btn-close icon">
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+                            </button>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                      <div class="product-total-price">
+                        <div class="price-summary">
+                          <div class="price-info">
+                            <p class="price-title">총 상품 금액</p>
+                          </div>
+
+                          <div class="price-result">
+                            <p class="discount-info">
+                              <span class="icon"
+                                ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'coupon-fill' }) %></span
+                              >
+                              <span class="text"
+                                >쿠폰 적용 시
+                                <span class="price">12,400원</span>
+                              </span>
+                            </p>
+
+                            <p class="total-price">
+                              <span class="price-quantity"
+                                >총 수량 <span class="num">3</span><span class="unit">EA</span>
+                              </span>
+                              <span class="price">100,980,000</span><span class="won">원</span>
+                            </p>
+
+                            <p class="price-tax">(상품금액 100,800,000원 + VAT 10,080,000원)</p>
                           </div>
                         </div>
                       </div>
-                      <div class="product-total-praice">최종 결과 금액</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="vits-swiper-container" style="height: 400px; background-color: blue">
-                  스와이퍼 영역 / MD가 꼼꼼히 고른 추천 상품
-                </div>
-                <div class="vits-deal-detail">
-                  <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">
-                    스티키 + 탭 data-name
-                  </div>
-                  <div style="height: 1200px; background: green">
-                    <div class="vits-tab-area">상세내용</div>
-                    <div class="vits-tab-area">제원정보 및 고시정보</div>
-                    <div class="vits-tab-area">
-                      관련 및 연관상품
-                      <div class="vits-swiper-container" style="height: 400px; background-color: blue">
-                        스와이퍼 영역 / MD가 꼼꼼히 고른 추천 상품
-                      </div>
-                      <div class="vits-swiper-container" style="height: 400px; background-color: blue">
-                        스와이퍼 영역 / MD가 꼼꼼히 고른 추천 상품
+                      <div class="product-order-buttons">
+                        <div class="btn-buy">
+                          <%- include(`${_src}/views/components/button/button.ejs`,{size:'xxl', variant: 'secondary',
+                          text: '바로구매'}) %>
+                        </div>
+                        <div class="btn-cart">
+                          <%- include(`${_src}/views/components/button/button.ejs`,{size:'xxl', variant: 'primary',
+                          text: '장바구니'}) %>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- s: section - MD가 꼼꼼히 고른 추천 상품 -->
+                <div class="vits-product-recommend banner-md">
+                  <div class="recommend-title">
+                    <h2 class="title">MD가 꼼꼼히 고른 <span class="primary">추천 상품</span></h2>
+                  </div>
+                  <div class="vits-banner-swiper">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['Slide 1', 'Slide 2', 'Slide 3',
+                    'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], swiperType: 'card', desktop: 5,
+                    offsetBefore: 0, offsetAfter: 0, showNavs: true, containerClass: 'swiper-container' }) %>
+                  </div>
+                </div>
+                <!-- e: section - MD가 꼼꼼히 고른 추천 상품 -->
+
+                <!-- s: 상세상품보기 TAB bar 영역 -->
+                <%- include(`${_src}/views/components/pg/tab-scrollbar.ejs`) %>
+
+                <!-- s: Modal -->
+                <%- include(`${_src}/views/components/pg/_PC_CO_06010101_P.ejs`) %> <%-
+                include(`${_src}/views/components/pg/_PC_PR_01020101_P.ejs`) %>
+                <!-- e: Modal -->
               </div>
               <!-- e: PC_PR_01010101 -->
             </div>

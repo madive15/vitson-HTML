@@ -1,0 +1,1383 @@
+// -----------------------------------------------------------------------------
+// pages/product.scss
+// - 상품상세 페이지에서 사용.
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+// 최상위 class
+.vits-wrapper-product {
+  // S: 상세페이지 default
+  em {
+    font-style: normal;
+  }
+
+  // 아이콘 기본 정렬
+  .icon {
+    @include mx.flex($align: center);
+  }
+
+  .vits-breadscrumb {
+    @include mx.flex($justify: space-between);
+    max-width: 1280px;
+    padding: fn.rem(22) 0 fn.rem(25);
+    margin: 0 auto;
+
+    &-inner {
+      @include mx.flex(flex);
+
+      .vits-breadscrumb-item {
+        @include mx.flex($align: center);
+      }
+
+      .vits-breadscrumb-link {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    .vits-product-code {
+      @include mx.flex($align: center);
+
+      .text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .icon {
+        color: map.get(color.$layout-border, 'tertiary');
+      }
+    }
+  }
+}
+
+.vits-product-detail-container {
+  padding-top: map.get(var.$unit, 32);
+}
+
+.vits-deal-view {
+  @include mx.flex;
+  gap: 54px;
+
+  @include mx.pc {
+    min-width: 1024px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
+
+// S: 상품 좌측 상세 이미지 영역
+.vits-deal-gallery {
+  .pd-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 596px;
+    background: color.$color-white;
+
+    &-main {
+      position: relative;
+      display: block;
+    }
+  }
+
+  // Main Swiper
+  .pd-main-swiper {
+    position: relative;
+    width: 100%;
+    height: 596px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: color.$color-white;
+    border: 1px solid map.get(color.$gray-shades, '30');
+    border-radius: map.get(var.$radius, lg);
+
+    /* 메인 썸네일 화살표 미사용 시 */
+    .pd-nav {
+      display: none !important;
+    }
+
+    .swiper-slide {
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    &:hover,
+    &:focus-within {
+      .pd-nav {
+        pointer-events: auto;
+        opacity: 1;
+      }
+    }
+  }
+
+  // Navigation (Main)
+  .pd-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 44px;
+    height: 64px;
+    pointer-events: none;
+    cursor: pointer;
+    background: rgb(0 0 0 / 35%);
+    border: 0;
+    opacity: 0;
+    transform: translateY(-50%);
+
+    &-prev {
+      left: 0;
+    }
+
+    &-next {
+      right: 0;
+    }
+
+    &.swiper-button-disabled {
+      pointer-events: none;
+      opacity: 0.2;
+    }
+  }
+
+  // Zoom
+  .pd-zoom {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 16px);
+    z-index: 10;
+    display: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: color.$color-white;
+    border: 1px solid map.get(color.$gray-shades, '30');
+    border-radius: map.get(var.$radius, lg);
+
+    &.is-on {
+      display: block;
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      max-width: none !important;
+      max-height: none !important;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+  }
+
+  // Thumbs
+  .pd-gallery-thumbs {
+    display: block;
+    width: 100%;
+    padding-top: fn.rem(20);
+  }
+
+  .pd-thumbs-area {
+    position: relative;
+    width: 100%;
+    height: 60px;
+
+    &:hover,
+    &:focus-within {
+      .pd-thumb-nav {
+        pointer-events: auto;
+        opacity: 1;
+      }
+    }
+  }
+
+  .pd-thumbs-swiper {
+    position: relative;
+    width: auto;
+    height: 60px;
+    margin: 0 fn.rem(33.5);
+
+    .swiper-wrapper {
+      align-items: stretch;
+      justify-content: flex-start;
+      height: 60px;
+    }
+
+    .swiper-slide {
+      height: 60px;
+    }
+  }
+
+  // Thumb Item
+  .pd-thumb {
+    width: 60px !important;
+    height: 60px !important;
+    cursor: pointer;
+    background: color.$color-white;
+    border: 1px solid map.get(color.$gray-shades, '30');
+    border-radius: map.get(var.$radius, sm);
+    opacity: 0.3;
+    transition: opacity 0.3s;
+
+    &.is-active {
+      opacity: 1;
+    }
+
+    @include mx.common-mouse-event {
+      opacity: 1;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      max-height: none;
+      object-fit: cover;
+    }
+  }
+
+  // Thumb Navigation
+  .pd-thumb-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    cursor: pointer;
+    background: map.get(color.$layout-status, 'brand-bg-sub');
+    border: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    transform: translateY(-50%);
+
+    @include mx.common-mouse-event {
+      opacity: 1;
+    }
+
+    // &.is-hidden {
+    //   display: none;
+    // }
+
+    &.is-disabled {
+      pointer-events: none;
+      filter: invert(1);
+    }
+
+    &.pd-thumb-prev {
+      left: 0;
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+      margin-top: 0;
+      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') 50% 50% no-repeat;
+    }
+
+    &.pd-thumb-next {
+      right: 0;
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+      margin-top: 0;
+      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') 50% 50% no-repeat;
+    }
+  }
+
+  // Responsive
+  @media (width <= 1100px) {
+    .pd-zoom {
+      display: none !important;
+    }
+  }
+
+  .vits-description-box {
+    padding: fn.rem(20) fn.rem(33) fn.rem(14);
+
+    .vits-scrollbar {
+      height: 120px;
+      padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+      overflow-y: auto;
+      border-radius: map.get(var.$radius, sm);
+
+      @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+    }
+  }
+
+  .vits-description-btn {
+    gap: map.get(var.$unit, 12);
+    width: 530px;
+    padding: fn.rem(14) fn.rem(100) 0;
+    margin: 0 auto;
+
+    @include mx.flex($justify: center);
+
+    .btn-catalog,
+    .btn-inquiry {
+      flex-grow: 1;
+      width: 50%;
+      min-width: 0;
+
+      button {
+        gap: map.get(var.$unit, 4);
+        width: 100%;
+        padding: 0 fn.rem(28);
+        border-radius: map.get(var.$radius, sm);
+
+        @include mx.common-mouse-event {
+          color: map.get(color.$brand-colors, 'primary');
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .icon {
+            color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+
+        .text {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// S: 상품 우측 상세 정보
+.vits-deal-info {
+  position: relative;
+  flex: 1;
+
+  // 상품 우측 상세 정보 내부영역
+  .vits-deal-info-inner {
+    .info-inner {
+      @include mx.flex($align: flex-start, $justify: space-between);
+    }
+  }
+
+  .product-brand-name {
+    padding-bottom: map.get(var.$unit, 16);
+
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+    @include mx.flex($align: center);
+  }
+
+  .product {
+    &-name-info {
+      .info-inner li {
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 8);
+      }
+      padding-bottom: map.get(var.$unit, 20);
+      border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+      .product-name {
+        @include typo.typography('h3b');
+        @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
+      }
+
+      // 좋아요 버튼 checkbox
+      .like-btn.icon {
+        position: relative;
+        display: block;
+        width: map.get(var.$unit, 52);
+        height: map.get(var.$unit, 52);
+        cursor: pointer;
+        border: 1px solid map.get(color.$gray-shades, 'primary');
+        border-radius: map.get(var.$radius, xl);
+        transition: color 0.2s ease;
+
+        .ic {
+          @include mx.position(absolute, $top: 50%, $left: 50%);
+          @include icon.ic-size(map.get(var.$unit, 32));
+          transform: translate(-50%, -50%);
+        }
+
+        &:has(input[type='checkbox']:checked) {
+          background-color: map.get(color.$brand-colors, 'primary');
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            background-color: color.$color-white;
+          }
+        }
+
+        @include mx.common-mouse-event {
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            background-color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+
+        input {
+          width: fn.rem(1);
+          height: fn.rem(1);
+          visibility: hidden;
+          border: 0;
+        }
+      }
+
+      .vits-product-chips {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 4);
+
+        &:has(.icon) {
+          .vits-label-chip {
+            gap: map.get(var.$unit, 4);
+          }
+        }
+
+        .vits-label-chip {
+          @include mx.flex($align: center);
+        }
+      }
+    }
+
+    &-price-info {
+      padding: map.get(var.$unit, 20) 0;
+      border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+      .info-inner {
+        align-items: flex-end;
+      }
+
+      .original {
+        text-decoration: line-through;
+
+        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .discount {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 8);
+
+        .discount-rate {
+          @include typo.typography('h2b', $color: map.get(color.$text-status, 'brand'));
+        }
+
+        .discount-price {
+          @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      .delivery-benefit {
+        padding-top: fn.rem(10);
+
+        @include mx.flex($align: center);
+        @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
+
+        .icon {
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
+
+          .ic {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      .discount-coupon {
+        button {
+          padding: 0 fn.rem(28);
+
+          &.disabled {
+            color: map.get(color.$gray-shades, '40');
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border-color: map.get(color.$gray-shades, '40');
+
+            .icon {
+              color: map.get(color.$gray-shades, '40');
+            }
+          }
+        }
+
+        .text {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'brand'));
+        }
+
+        @include mx.common-mouse-event {
+          button:not(.disabled) {
+            background-color: map.get(color.$layout-status, 'brand-bg-sub');
+          }
+
+          &:active {
+            button:not(.disabled) {
+              .icon {
+                color: map.get(color.$text-colors, 'inverse');
+              }
+              color: map.get(color.$text-colors, 'inverse');
+              background-color: map.get(color.$brand-colors, 'primary');
+            }
+          }
+        }
+      }
+    }
+
+    &-minidetail {
+      padding: map.get(var.$unit, 20);
+      border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+      .info-inner {
+        flex-wrap: wrap;
+
+        li {
+          gap: map.get(var.$unit, 12);
+          width: 50%;
+
+          @include mx.flex($align: start);
+
+          &:nth-of-type(even) {
+            padding-bottom: map.get(var.$unit, 16);
+            padding-left: map.get(var.$unit, 32);
+          }
+
+          &:last-child {
+            padding-bottom: 0;
+          }
+
+          span {
+            flex: 1;
+          }
+        }
+      }
+
+      .label {
+        max-width: 74px;
+
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .value {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    &-select-quick {
+      position: relative;
+      padding: map.get(var.$unit, 20) 0;
+      border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+      .title {
+        padding-bottom: map.get(var.$unit, 20);
+
+        @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      .radio-item {
+        padding-left: map.get(var.$unit, 8);
+      }
+
+      .vits-btn-xs {
+        gap: map.get(var.$unit, 2);
+        border-radius: map.get(var.$radius, sm);
+
+        &.unit-price-info {
+          @include mx.common-mouse-event {
+            color: map.get(color.$brand-colors, 'primary');
+            background-color: transparent;
+            border-color: map.get(color.$brand-colors, 'primary') !important;
+
+            .icon {
+              color: map.get(color.$brand-colors, 'primary');
+            }
+          }
+        }
+
+        .text {
+          font-weight: 600;
+        }
+      }
+
+      .unit-price-info-hover {
+        @include mx.position(absolute, $top: 50px, $right: 0);
+        pointer-events: none;
+        visibility: hidden;
+        opacity: 0;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        transform: translateY(fn.rem(4));
+
+        .unit-price-info-inner {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          min-width: fn.rem(223);
+          padding: map.get(var.$unit, 16);
+          margin-top: fn.rem(10);
+          background-color: color.$color-white;
+          border: 1px solid map.get(color.$layout-border, 'tertiary');
+          border-radius: map.get(var.$radius, 'md');
+          box-shadow: 0 fn.rem(9) fn.rem(21) 0 rgb(0 0 0 / 10%);
+
+          .list-inner {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 8);
+
+            .list-item {
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+
+              span {
+                font-weight: 600;
+              }
+
+              &::before {
+                display: inline-block;
+                width: fn.rem(4);
+                height: fn.rem(4);
+                margin-right: map.get(var.$unit, 8);
+                vertical-align: middle;
+                content: '';
+                background-color: map.get(color.$gray-shades, '30');
+                border-radius: 50%;
+              }
+            }
+          }
+        }
+      }
+
+      /* 단가할인 버튼 hover 시 */
+      &:has(.unit-price-info:hover),
+      &:has(.unit-price-info:focus-visible),
+      &:has(.unit-price-info:active) {
+        .unit-price-info-hover {
+          pointer-events: auto;
+          visibility: visible;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* hover 유지 (툴팁에 마우스 올렸을 때 닫히지 않게) */
+      &:has(.unit-price-info-hover:hover),
+      &:has(.unit-price-info-hover:focus-visible),
+      &:has(.unit-price-info-hover:active) {
+        .unit-price-info-hover {
+          pointer-events: auto;
+          visibility: visible;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    &-select-unit {
+      padding: map.get(var.$unit, 20);
+
+      .info-inner {
+        li {
+          width: 100%;
+        }
+      }
+
+      .vits-input-unit {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 12);
+
+        .input-label {
+          width: 100%;
+
+          @include mx.flex($align: center);
+
+          .text {
+            flex: 1;
+
+            @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          .input-unit {
+            @include mx.flex($align: baseline, $justify: space-between);
+            @include mx.border(all, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
+            min-width: 186px;
+            padding: fn.rem(10) fn.rem(12);
+            border-radius: map.get(var.$radius, sm);
+
+            em {
+              font-style: normal;
+
+              @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
+            }
+
+            input[type='text'] {
+              padding-right: fn.rem(4);
+              font-size: fn.rem(16);
+              text-align: right;
+              border: 0;
+            }
+          }
+        }
+
+        .vits-btn-lg {
+          min-width: auto;
+          padding: fn.rem(12) fn.rem(36);
+          background-color: map.get(color.$gray-shades, '60');
+          border-color: map.get(color.$gray-shades, '60');
+          border-radius: map.get(var.$radius, sm);
+
+          @include mx.common-mouse-event {
+            background-color: map.get(color.$gray-shades, '70');
+            border-color: map.get(color.$gray-shades, '70');
+          }
+        }
+      }
+    }
+
+    &-select-result {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 8);
+
+      .select-result-item {
+        position: relative;
+        padding: map.get(var.$unit, 20);
+        background-color: map.get(color.$layout-surf, 'sunken');
+        border-radius: map.get(var.$radius, sm);
+      }
+
+      .vits-btn-close {
+        @include mx.position(absolute, $top: 6px, $right: 6px);
+
+        &.icon {
+          width: fn.rem(36);
+          height: fn.rem(36);
+          padding: 0;
+          border: 0;
+
+          @include mx.flex($justify: center, $align: center);
+
+          .ic {
+            @include icon.ic-size(fn.rem(18));
+          }
+        }
+      }
+
+      .prd-code {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .prd-name {
+        padding: fn.rem(8) 0;
+
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      .prd-size {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'Secondary'));
+      }
+
+      .prd-group-row {
+        padding-top: fn.rem(16);
+
+        @include mx.flex($align: flex-end, $justify: space-between);
+
+        .vits-count-box {
+          @include mx.flex($align: center);
+          gap: map.get(var.$unit, 8);
+          max-width: fn.rem(330);
+        }
+
+        .prd-single-price {
+          flex: 1;
+          text-align: right;
+
+          @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+
+          .text {
+            @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          .price {
+            max-width: fn.rem(135);
+            padding-left: map.get(var.$unit, 8);
+          }
+        }
+      }
+    }
+
+    // S: 총 상품 금액
+    &-total-price {
+      padding: fn.rem(32) 0;
+
+      .price-summary {
+        @include mx.flex($align: center, $justify: space-between);
+      }
+
+      .price-info {
+        .price-title {
+          @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      .price-result {
+        @include mx.flex($direction: column);
+        row-gap: map.get(var.$unit, 8);
+        text-align: right;
+
+        .discount-info {
+          @include typo.typography('b2m', $color: map.get(color.$text-status, 'brand'));
+          display: inline-flex;
+
+          @include mx.flex($align: flex-end, $justify: flex-end);
+          gap: fn.rem(4);
+
+          .icon {
+            width: map.get(var.$unit, 24);
+            height: map.get(var.$unit, 24);
+
+            .ic {
+              @include icon.ic-size(map.get(var.$unit, 24));
+            }
+          }
+        }
+
+        .total-price {
+          @include typo.typography('h1b', $color: map.get(color.$text-colors, 'primary'));
+
+          .price-quantity {
+            @include typo.typography('b3s', $color: map.get(color.$text-colors, 'default'));
+          }
+
+          .price {
+            padding-left: map.get(var.$unit, 20);
+          }
+        }
+
+        .price-tax {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+    }
+
+    &-order-buttons {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+
+      .btn-buy,
+      .btn-cart {
+        width: 100%;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+
+    // 옵션 팝업 버튼
+    &-select-buttons {
+      gap: map.get(var.$unit, 8);
+      padding-bottom: map.get(var.$unit, 20);
+
+      .vits-btn-login {
+        padding-top: map.get(var.$unit, 20);
+
+        .vits-btn-xxl {
+          width: 100%;
+        }
+
+        .text {
+          font-weight: 700;
+          text-align: center;
+        }
+      }
+
+      .vits-btn-option {
+        .vits-btn-xl {
+          justify-content: space-between;
+          width: 100%;
+          padding-left: map.get(var.$unit, 20);
+          border-radius: map.get(var.$radius, 'sm');
+
+          @include typo.typography('b2m', $color: map.get(color.$layout-border, 'primary'));
+
+          @include mx.common-mouse-event {
+            color: map.get(color.$brand-colors, 'primary');
+            border-color: map.get(color.$brand-colors, 'primary');
+
+            .icon {
+              color: map.get(color.$brand-colors, 'primary');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 상품상세 탭 영역
+.vits-deal-detail {
+  padding: fn.rem(76) 0 fn.rem(50);
+
+  .tab-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    gap: map.get(var.$unit, 8);
+
+    // max-width: 1280px;
+    margin: 0 auto;
+    background-color: color.$color-white;
+
+    @include mx.border(bottom, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
+
+    .tab-show-price {
+      max-width: 1280px;
+      height: 0;
+      margin: 0 auto;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+      transform: translateY(fn.rem(4));
+
+      &.is-open {
+        height: auto;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-inner {
+      @include mx.flex($align: center, $justify: space-between);
+      gap: fn.rem(20);
+      padding: fn.rem(16) 0 fn.rem(19);
+
+      li {
+        @include mx.flex($align: flex-end);
+        gap: fn.rem(20);
+        width: 50%;
+      }
+    }
+
+    .product-name {
+      @include typo.typography('h3b');
+      @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
+    }
+
+    .product-price {
+      @include mx.flex($align: center);
+      gap: fn.rem(10);
+
+      .original {
+        text-decoration: line-through;
+
+        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .calculated-price {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 6);
+
+        .rate {
+          @include typo.typography('h2b', $color: map.get(color.$text-status, 'brand'));
+        }
+
+        .price {
+          @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+    }
+
+    .product-order-buttons {
+      @include mx.flex($align: center, $justify: flex-end);
+      gap: fn.rem(10);
+
+      .btn-buy,
+      .btn-cart {
+        min-width: 156px;
+
+        .vits-btn-lg {
+          width: 100%;
+        }
+      }
+    }
+
+    .tab-nav {
+      position: relative;
+      max-width: 1280px;
+      margin: 0 auto;
+
+      @include mx.flex($align: center);
+      background-color: color.$color-white;
+
+      .tab-btn {
+        @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+        min-width: fn.rem(197);
+        padding: fn.rem(17) fn.rem(32);
+        text-align: center;
+        background-color: transparent;
+        border: 1px solid map.get(color.$layout-border, 'quaternary');
+        border-bottom: 0;
+
+        & ~ .tab-btn {
+          margin-left: -1px;
+        }
+
+        &.is-active {
+          margin-bottom: -1px;
+          border-bottom: 2px solid color.$color-white;
+
+          @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      .tab-bar {
+        @include mx.position(absolute, $top: 0, $left: 0);
+        width: fn.rem(197);
+        height: fn.rem(2);
+        background-color: map.get(color.$text-colors, 'primary');
+        transition: transform 0.25s ease;
+      }
+    }
+  }
+
+  .tab-section {
+    padding-top: fn.rem(52);
+
+    .section-title {
+      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+      max-width: 1280px;
+      padding: fn.rem(10) 0 fn.rem(21);
+      margin: 0 auto;
+    }
+
+    & ~ .tab-section {
+      padding-top: fn.rem(30);
+    }
+
+    .section-content {
+      max-width: 1280px;
+      margin: 0 auto;
+
+      img {
+        display: block;
+        max-width: 700px;
+        height: auto;
+        margin: 0 auto;
+        object-fit: cover;
+      }
+
+      .vits-img-detail {
+        // 임의값
+        max-height: 1330px;
+        overflow: hidden;
+
+        &.is-open {
+          max-height: 100%;
+        }
+      }
+
+      // spec 테이블 style
+      .vits-product-spec {
+        @include mx.flex($align: center);
+        gap: fn.rem(40);
+        border-top: 1px solid map.get(color.$gray-shades, 'primary');
+
+        &-col {
+          flex: 1;
+        }
+      }
+
+      .vits-spec-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        .vits-spec-item {
+          @include mx.flex($align: center);
+          min-height: fn.rem(44);
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+
+        .vits-spec-label {
+          flex: 0 0 fn.rem(197);
+          padding-left: fn.rem(20);
+          background-color: map.get(color.$layout-surf, 'raised');
+
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        .vits-spec-value {
+          flex: 1;
+
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+    }
+
+    .vits-more-view {
+      position: relative;
+      z-index: 1;
+
+      @include mx.flex($align: center, $justify: center);
+      padding: fn.rem(56) 0 fn.rem(100);
+      margin: fn.rem(0) auto 0;
+      background: linear-gradient(to top, #fff 70%, rgb(255 255 255 / 0%) 100%);
+    }
+
+    .section-content-download {
+      gap: map.get(var.$unit, 12);
+      max-width: 1280px;
+      margin: 0 auto;
+
+      @include mx.flex($align: center);
+
+      .vits-btn-xs {
+        gap: map.get(var.$unit, 4);
+        border-color: map.get(color.$layout-border, 'quaternary');
+        border-radius: map.get(var.$radius, sm);
+
+        @include mx.common-mouse-event {
+          color: map.get(color.$text-colors, 'secondary');
+          background-color: map.get(color.$layout-surf, 'sunken');
+          border: 1px solid map.get(color.$layout-border, 'secondary');
+
+          .icon {
+            color: map.get(color.$text-colors, 'secondary');
+          }
+        }
+      }
+    }
+  }
+}
+
+// swiper 컨테이너 영역 (추천 상품영역)
+.vits-product-recommend {
+  .recommend-title {
+    max-width: 1280px;
+    padding-top: fn.rem(50);
+    padding-bottom: fn.rem(30);
+    margin: 0 auto;
+
+    @include typo.typography('d2b');
+
+    .primary {
+      color: map.get(color.$brand-colors, 'primary');
+    }
+  }
+
+  .vits-banner-swiper {
+    position: relative;
+  }
+}
+
+// 상품상세 페이지 모달 팝업 영역
+.vits-modal-product {
+  &-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    // get-coupon-modal
+    &.get-coupon-modal {
+      display: none;
+
+      .vits-scrollbar {
+        max-height: 440px;
+        overflow: auto;
+      }
+
+      .coupon-list-box {
+        ul {
+          @include mx.flex($direction: column);
+          gap: map.get(var.$unit, 12);
+        }
+
+        .coupon-item {
+          @include mx.flex($align: center);
+          gap: map.get(var.$unit, 20);
+          padding: fn.rem(14) fn.rem(20);
+          border: 1px solid map.get(color.$layout-border, 'quaternary');
+          border-radius: map.get(var.$radius, 'md');
+
+          &.disabled {
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            opacity: 0.4;
+          }
+
+          @include mx.common-mouse-event {
+            background-color: map.get(color.$layout-surf, 'raised');
+            border-color: map.get(color.$layout-border, 'primary');
+
+            .vits-btn-md {
+              color: map.get(color.$text-colors, 'inverse');
+              background-color: map.get(color.$brand-colors, 'primary');
+
+              .icon {
+                color: map.get(color.$text-colors, 'inverse');
+              }
+            }
+          }
+
+          &-left {
+            .coupon-item-badge {
+              position: relative;
+              display: block;
+              width: fn.rem(96);
+              height: fn.rem(68);
+
+              @include mx.background('ic/ic-coupon-badge.svg');
+            }
+
+            .coupon-item-badge-value {
+              @include typo.typography('d2b', $color: map.get(color.$blue-shades, '100'));
+              display: block;
+              padding-top: fn.rem(22);
+              text-align: center;
+            }
+          }
+
+          &-body {
+            @include mx.ellipsis-single;
+            flex: 1;
+            min-width: 0; // 말줄임 등 대비
+            .coupon-item-title {
+              @include mx.ellipsis-single;
+              @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+            }
+
+            .coupon-item-period {
+              @include mx.ellipsis-single;
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+            }
+
+            .coupon-item-desc {
+              @include mx.ellipsis-single;
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+
+          &-right {
+            .vits-btn-md {
+              gap: 0;
+            }
+          }
+        }
+      }
+
+      .vits-modal-product-buttons {
+        .btn-cancel {
+          width: fn.rem(120);
+        }
+
+        .btn-all-receive {
+          flex: 1;
+        }
+      }
+    }
+
+    &.get-coupon-modal.is-open {
+      display: block;
+    }
+
+    // options-modal
+    &.vits-options-modal {
+      overflow: hidden;
+      transition: none;
+
+      .vits-modal-product-dim {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .vits-modal-product-panel {
+        inset: 0 0 0 auto;
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
+        transition: transform 0.3s ease;
+        transform: translateX(100%);
+      }
+
+      &.is-open {
+        transition: none;
+
+        .vits-modal-product-dim {
+          display: block;
+          opacity: 1;
+        }
+
+        .vits-modal-product-panel {
+          transform: translateX(0);
+        }
+      }
+    }
+  }
+
+  // 기본값
+  &-dim {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 55%);
+  }
+
+  &-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 32px);
+    max-width: 570px;
+    max-height: calc(100% - 32px);
+    overflow: hidden;
+    background: #fff;
+    border-radius: map.get(var.$radius, 'lg');
+    transform: translate(-50%, -50%);
+  }
+
+  &-head {
+    padding: map.get(var.$unit, 32);
+    padding-bottom: map.get(var.$unit, 44);
+
+    h2 {
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    .description {
+      padding-top: map.get(var.$unit, 4);
+
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+  }
+
+  &-body {
+    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
+  }
+
+  &-content {
+    min-height: 440px;
+  }
+
+  &-buttons {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    padding-top: map.get(var.$unit, 44);
+  }
+
+  &-close {
+    .icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+
+      .ic {
+        @include icon.ic-size(map.get(var.$unit, 32));
+      }
+    }
+
+    @include mx.position(absolute, $top: fn.rem(16), $right: fn.rem(16));
+  }
+}

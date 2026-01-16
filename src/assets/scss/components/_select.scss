@@ -1,0 +1,107 @@
+// -----------------------------------------------------------------------------
+// components/_select.scss
+// - 옵션 선택을 위한 셀렉트 UI 공통 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-select {
+  position: relative;
+  display: inline-block;
+  max-width: 100vw;
+
+  &-value {
+    @include typo.typography('b3r');
+    @include mx.ellipsis-single;
+    min-width: 0;
+    max-width: 100vw;
+  }
+
+  &-icon {
+    @include icon.ic-size(map.get(var.$unit, 20));
+    flex-shrink: 0;
+    color: map.get(color.$icon-neutral, 'primary');
+    transition: transform 0.3s;
+    will-change: transform;
+  }
+
+  &-trigger {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, flex-start, center);
+    @include mx.ellipsis-single;
+    gap: map.get(var.$unit, 8);
+    width: fit-content; /* 선택 텍스트 기준 */
+    min-width: 0;
+    max-width: 100vw;
+    height: map.get(var.$unit, 32);
+    padding: 0 map.get(var.$unit, 8);
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'sm');
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+    transition: box-shadow 0.3s;
+
+    &[aria-expanded='true'] {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+
+      .vits-select-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    @include mx.common-mouse-event {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+    }
+  }
+
+  &-list {
+    @include mx.position(absolute, calc(100% + 4px), $left: 0);
+    z-index: var.$zindex-select-option;
+    display: none;
+    width: max-content; /* 옵션 텍스트 기준 */
+    max-width: 100vw;
+    max-height: 70vh;
+    padding: map.get(var.$unit, 8) 1px;
+    overflow-y: auto;
+    background: color.$color-white;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px color.$color-black;
+  }
+
+  &-open .vits-select-list {
+    display: block;
+  }
+
+  &-option {
+    @include mx.flex(flex, row, flex-start, center);
+    @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '1'));
+    min-height: map.get(var.$unit, 32);
+    padding: 0 map.get(var.$unit, 16);
+    cursor: pointer;
+
+    @include mx.common-mouse-event {
+      font-weight: 600;
+      background: map.get(color.$layout-surf, 'sunken');
+    }
+  }
+
+  &-selected {
+    background: #e9f0ff;
+  }
+
+  &-option-disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  &-disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+}

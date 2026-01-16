@@ -1,34 +1,56 @@
-<div class="vits-checkbox-wrapper <%= extraClass || '' %>">
-  <% datas.forEach((data) => { %>
-    <label class="vits-checkbox-item <%= data.type || '' %>">
-      <input type="checkbox" name="<%= name %>" value="<%= data.value %>" <%= data.disabled ? 'disabled' : '' %> />
-      <% if (data.icon) { %>
-        <i class="ico <%= data.icon %>"></i>
-      <% } else { %>
-        <i class="ico default"></i>
-      <% } %>
-      <span class="text"><%= data.label %></span>
-    </label>
-  <% }); %>
+<% const _src = srcPath; const _public = publicPath; %>
+
+<%
+  const _list = typeof list !== 'undefined' ? list : '';   // 예: 'row'
+  const _gap = typeof gap !== 'undefined' ? gap : '';      // 예: 16
+
+  // 예) list-row-gap16 형태로 조합
+  const listClass = (_list && _gap !== '' && _gap !== null)
+    ? `list-${_list}-gap${_gap}`
+    : (_list ? `list-${_list}` : (_gap !== '' && _gap !== null ? `gap${_gap}` : ''));
+
+  const formatNumber = (num) => {
+    if (num === null || num === undefined || num === '') return '';
+    return Number(num).toLocaleString('ko-KR');
+  };
+%>
+
+<div class="checkbox-wrapper type-<%= variant %>">
+  <ul class="checkbox-item-area<% if (listClass) { %> <%= listClass %><% } %>">
+    <% datas.forEach((data) => { 
+        const text = data.text ?? '';
+        const qty = data.qty ?? '';
+    %>
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="<%= name %>"
+            value="<%= data.value %>"
+            <% if (data.disabled === true) { %>disabled<% } %>
+            <% if (data.checked === true) { %>checked<% } %>
+            <% if (data.required === true) { %>required<% } %>
+          />
+
+          <% if (variant === "basic") { %>
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            <%= text %>
+            <% if (data.qty !== undefined && data.qty !== null && data.qty !== '') { %>
+              <em class="label-unit"><%= data.qty %></em>
+            <% } %>
+          </span>
+          <% } else if (variant === "card") { %>
+          <!-- card -->
+          <span class="label-name"><%= text %></span>
+          <span class="label-total"><%= data.total %>개 항목</span>
+          <span class="checkbox-icon" aria-hidden="true">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> 
+          </span>
+          <% } %>
+        </label>
+      </li>
+    <% }); %>
+  </ul>
 </div>
-
-<!-- 사용 예시 -->
-<%- include('checkbox', { 
-      name: 'deliveryOptions', 
-      datas: [
-        { label: '오늘배송', value: 'today', icon: 'icon-check', type: 'case01' },
-        { label: '로켓배송', value: 'rocket', icon: 'icon-rocket', type: 'case01' }
-      ],
-      extraClass: 'case01'
-}) %>
-
-<!--
-설명:
-- name : 체크박스 그룹 이름
-- datas : 반복 항목 배열
-  - label : 화면에 표시될 텍스트
-  - value : 체크박스 value
-  - icon : 표시할 아이콘 클래스 (없으면 default)
-  - type : 개별 체크박스 스타일/케이스
-- extraClass : wrapper 클래스, 페이지/케이스별 스타일 지정 가능
--->

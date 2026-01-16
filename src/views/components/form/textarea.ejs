@@ -1,0 +1,39 @@
+<%
+  const _rootClass = typeof rootClass !== 'undefined' ? String(rootClass) : '';
+  const _count = typeof count !== 'undefined' ? !!count : false;
+
+  const _id = typeof id !== 'undefined' ? String(id) : '';
+  const _name = typeof name !== 'undefined' ? String(name) : '';
+  const _placeholder = typeof placeholder !== 'undefined' ? String(placeholder) : '';
+
+  const _value = typeof value !== 'undefined' ? String(value) : '';
+
+  const _rows = typeof rows !== 'undefined' ? parseInt(rows, 10) : 4;
+  const _maxLength = typeof maxLength !== 'undefined' ? parseInt(maxLength, 10) : 0;
+
+  // 필수 입력 기본값(필요 시 include에서 false로 끌 수 있게)
+  const _required = typeof required !== 'undefined' ? !!required : true;
+%>
+
+<div class="vits-textarea <%= _rootClass %>" data-textarea-count="<%= _count ? 'true' : 'false' %>">
+  <div class="textarea-box">
+    <textarea
+      rows="<%= _rows %>"
+      <% if (_id) { %> id="<%= _id %>" <% } %>
+      <% if (_name) { %> name="<%= _name %>" <% } %>
+      <% if (_placeholder) { %> placeholder="<%= _placeholder %>" <% } %>
+      <% if (_required) { %> required <% } %>
+      <% if (_maxLength) { %>
+        maxlength="<%= _maxLength %>"
+        data-max-length="<%= _maxLength %>"
+      <% } %>
+    ><%= _value %></textarea>
+  </div>
+
+  <% if (_count) { %>
+    <p class="textarea-meta">
+      <span class="textarea-count" data-ui-textarea-count>0</span>
+      <% if (_maxLength) { %><span class="textarea-max" data-ui-textarea-max><%= _maxLength %></span><% } %>
+    </p>
+  <% } %>
+</div>

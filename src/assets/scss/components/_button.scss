@@ -31,11 +31,234 @@
   &:disabled {
     cursor: not-allowed;
   }
+}
 
-  &:hover,
-  &:active,
-  &:focus {
-    background: transparent;
+/* -----------------------------------------------------------------------------
+ * 기본 버튼 컴포넌트 (.vits-btn-*)
+ * - Fill 타입: primary, secondary, tertiary
+ * - Outline 타입: outline-primary, outline-secondary, outline-tertiary
+ * - 크기: xxl, xl, lg, md, sm, xs, xxs
+ * --------------------------------------------------------------------------- */
+
+// 버튼 기본 스타일
+[class^='vits-btn-']:not(.vits-btn-vertical-icon) {
+  position: relative;
+  gap: map.get(var.$unit, 8);
+  padding: 0 map.get(var.$unit, 12);
+  margin: 0;
+  white-space: nowrap;
+  border-radius: map.get(var.$radius, 'md');
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  @include mx.flex(flex, row, center, center);
+
+  .icon {
+    @include mx.flex(flex, row, center, center);
+    flex-shrink: 0;
+  }
+
+  .text {
+    @include mx.flex(flex, row, center, center);
+  }
+
+  // 아이콘 위치
+  &.icon-left {
+    .icon {
+    }
+  }
+
+  &.icon-right {
+    .icon {
+    }
+  }
+
+  // 아이콘만 있는 경우
+  &:not(.icon-left, .icon-right) {
+    .icon {
+      margin: 0;
+    }
+  }
+
+  // .text가 없고 .icon만 있는 경우 padding 제거
+  &:has(.icon):not(:has(.text)) {
+    padding: 0;
+  }
+}
+
+// 버튼 크기 정의 (반복문)
+$button-sizes: (
+  'xxl': (
+    'min-height': 56,
+    'padding': 24,
+    'typography': 'b1r',
+    'icon-size': 32,
+    'font-size': 20
+  ),
+  'xl': (
+    'min-height': 48,
+    'padding': 20,
+    'typography': 'b2r',
+    'icon-size': 24,
+    'font-size': 16
+  ),
+  'lg': (
+    'min-height': 44,
+    'padding': 16,
+    'typography': 'b2r',
+    'icon-size': 24,
+    'font-size': 16
+  ),
+  'md': (
+    'min-height': 40,
+    'padding': 16,
+    'typography': 'b3r',
+    'icon-size': 20,
+    'font-size': 14
+  ),
+  'sm': (
+    'min-height': 36,
+    'padding': 12,
+    'typography': 'b3r',
+    'icon-size': 20,
+    'font-size': 14
+  ),
+  'xs': (
+    'min-height': 32,
+    'padding': 12,
+    'typography': 'b4r',
+    'icon-size': 16,
+    'font-size': 12
+  ),
+  'xxs': (
+    'min-height': 28,
+    'padding': 8,
+    'typography': 'b4r',
+    'icon-size': 16,
+    'font-size': 9
+  )
+);
+
+@each $size, $config in $button-sizes {
+  .vits-btn-#{$size} {
+    min-height: fn.rem(map.get($config, 'min-height'));
+    padding: 0 map.get(var.$unit, map.get($config, 'padding'));
+    font-size: fn.rem(map.get($config, 'font-size'));
+
+    @include typo.typography(map.get($config, 'typography'));
+
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, map.get($config, 'icon-size')));
+
+      .ic {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+// 버튼 색상 변수
+$button-colors: (
+  'primary': #e51e25,
+  'secondary': #444,
+  'tertiary': #767676,
+  'disabled': #bebebe
+);
+
+// Fill 타입 버튼 생성 (반복문)
+$fill-button-types: (
+  'primary': map.get($button-colors, 'primary'),
+  'secondary': map.get($button-colors, 'secondary'),
+  'tertiary': map.get($button-colors, 'tertiary'),
+  'disabled': map.get($button-colors, 'disabled')
+);
+
+@each $type, $color-value in $fill-button-types {
+  .vits-btn-#{$type} {
+    color: color.$color-white;
+    background-color: $color-value;
+    border-width: 0;
+
+    .icon {
+      color: color.$color-white;
+    }
+
+    &:disabled {
+      @if $type == 'primary' {
+        color: map.get(color.$brand-colors, '40');
+        background-color: map.get(color.$brand-colors, '10');
+      }
+      //stylelint-disable-next-line
+      @else if $type == 'secondary' {
+        color: map.get(color.$gray-shades, '40');
+        background-color: #f0f0f0;
+      }
+      //stylelint-disable-next-line
+      @else if $type == 'tertiary' {
+        color: map.get(color.$gray-shades, '40');
+        background-color: #f0f0f0;
+      }
+
+      .icon {
+        @if $type == 'primary' {
+          color: map.get(color.$brand-colors, '40');
+        }
+        //stylelint-disable-next-line
+        @else if $type == 'secondary' or $type == 'tertiary' {
+          color: map.get(color.$gray-shades, '40');
+        }
+      }
+    }
+  }
+}
+
+// Outline 타입 버튼 생성 (반복문)
+$outline-button-types: (
+  'primary': map.get($button-colors, 'primary'),
+  'secondary': map.get($button-colors, 'secondary'),
+  'tertiary': map.get($button-colors, 'tertiary')
+);
+
+@each $type, $color-value in $outline-button-types {
+  .vits-btn-outline-#{$type} {
+    color: $color-value;
+    background-color: color.$color-white;
+    border: 1px solid $color-value;
+
+    .icon {
+      color: $color-value;
+    }
+
+    &:disabled {
+      @if $type == 'primary' {
+        border-color: map.get(color.$brand-colors, '40');
+        color: map.get(color.$brand-colors, '40');
+      }
+      //stylelint-disable-next-line
+      @else if $type == 'secondary' {
+        border-color: map.get(color.$gray-shades, '40');
+        color: map.get(color.$gray-shades, '40');
+      }
+      //stylelint-disable-next-line
+      @else if $type == 'tertiary' {
+        border-color: map.get(color.$gray-shades, '40');
+        color: map.get(color.$gray-shades, '30');
+      }
+
+      .icon {
+        @if $type == 'primary' {
+          color: map.get(color.$brand-colors, '40');
+        }
+        //stylelint-disable-next-line
+        @else if $type == 'secondary' or $type == 'tertiary' {
+          color: map.get(color.$gray-shades, '40');
+        }
+      }
+    }
   }
 }
 
@@ -67,7 +290,7 @@
   .icon {
     @include icon.ic-size(map.get(var.$unit, 32));
     position: relative;
-    color: map.get(color.$icon-neutral-colors, 'primary');
+    color: map.get(color.$icon-neutral, 'primary');
     transition: color 0.2s ease;
   }
 
@@ -82,7 +305,7 @@
   }
 
   .text {
-    @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '4'));
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     transition: color 0.2s ease;
   }
 
@@ -93,6 +316,195 @@
 
     .text {
       color: map.get(color.$text-colors, 'brand');
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 수량 조절 컨트롤 (.quantity-control)
+ * - 가로형/세로형 수량 입력 및 조절 버튼 컴포넌트
+ * --------------------------------------------------------------------------- */
+.quantity-control {
+  overflow: hidden;
+  background: color.$color-white;
+  border-radius: fn.rem(6);
+
+  @include mx.flex($align: center);
+  @include mx.border(all, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+
+  /* 수량 입력 필드 */
+  .quantity-input {
+    width: auto;
+    min-width: fn.rem(48);
+    height: fn.rem(36);
+    padding: 0 map.get(var.$unit, 2) 0 map.get(var.$unit, 8);
+    font-size: fn.rem(14);
+    text-align: right;
+    appearance: textfield;
+    border: 0;
+    outline: 0;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      margin: 0;
+      appearance: none;
+    }
+  }
+
+  /* 수량 입력 필드 너비 측정용 (숨김) */
+  .quantity-input-measure {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    white-space: pre;
+    visibility: hidden;
+  }
+
+  /* 단위 표시 */
+  .unit {
+    padding: 0 map.get(var.$unit, 8);
+    font-size: fn.rem(13);
+    color: map.get(color.$text-colors, 'quaternary');
+    white-space: nowrap;
+    height: fn.rem(36);
+    background-color: color.$color-white;
+
+    @include mx.flex($flex: inline-flex, $align: center);
+  }
+
+  /* 증감 버튼 */
+  .btn-step {
+    @include btn-reset;
+    flex-shrink: 0;
+    width: fn.rem(36);
+    height: fn.rem(36);
+
+    @include mx.flex($justify: center, $align: center);
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+
+    .ic {
+      color: map.get(color.$icon-neutral, 'secondary');
+      transition: color 0.2s ease;
+    }
+
+    @include mx.common-mouse-event {
+      background-color: map.get(color.$layout-surf, 'sunken');
+
+      .ic {
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * 가로형 (- 1 M +)
+   * ----------------------------------------------------------------------- */
+  &.type-horiz {
+    .btn-step {
+      background-color: color.$color-white;
+
+      &.vits-minus-icon {
+        @include mx.border(right, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+        border-radius: map.get(var.$radius, 'sm') 0 0 map.get(var.$radius, 'sm');
+
+        @include mx.common-mouse-event {
+          &:hover {
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border: 1px solid map.get(color.$layout-border, 'secondary');
+          }
+
+          &:active {
+            border: 1px solid map.get(color.$layout-border, 'brand');
+            background-color: map.get(color.$red-shades, '20');
+
+            i.ic {
+              color: map.get(color.$brand-colors, '100');
+            }
+          }
+        }
+      }
+
+      &.vits-plus-icon {
+        top: 1px;
+
+        @include mx.border(left, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+        border-radius: 0 map.get(var.$radius, 'sm') map.get(var.$radius, 'sm') 0;
+
+        @include mx.common-mouse-event {
+          &:hover {
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border: 1px solid map.get(color.$layout-border, 'secondary');
+          }
+
+          &:active {
+            border: 1px solid map.get(color.$layout-border, 'brand');
+            background-color: map.get(color.$red-shades, '20');
+
+            i.ic {
+              color: map.get(color.$brand-colors, '100');
+            }
+          }
+        }
+      }
+    }
+
+    @include mx.common-mouse-event {
+      background-color: map.get(color.$layout-surf, 'sunken');
+    }
+
+    &:has(.quantity-input:hover),
+    &:has(.quantity-input:focus-visible),
+    &:has(.quantity-input:active) {
+      .quantity-input,
+      .unit {
+        background-color: map.get(color.$layout-surf, 'sunken');
+        border-top: 1px solid map.get(color.$layout-border, 'secondary');
+        border-bottom: 1px solid map.get(color.$layout-border, 'secondary');
+      }
+
+      .btn-step.vits-plus-icon {
+        @include mx.border(left, 1px, solid, $color: map.get(color.$layout-border, 'secondary'));
+      }
+
+      .btn-step.vits-minus-icon {
+        @include mx.border(right, 1px, solid, $color: map.get(color.$layout-border, 'secondary'));
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * 세로형 (1 M + / -)
+   * ----------------------------------------------------------------------- */
+  &.type-vertical {
+    position: relative;
+    padding-right: fn.rem(32);
+
+    .quantity-input {
+      min-width: fn.rem(56);
+    }
+
+    .btn-step {
+      @include mx.position(absolute, $top: 0, $right: 0);
+      width: fn.rem(32);
+      height: fn.rem(18);
+      font-size: fn.rem(12);
+
+      &.vits-plus-icon {
+        top: 0;
+
+        @include mx.border(bottom, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+        @include mx.border(left, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+      }
+
+      &.vits-minus-icon {
+        top: auto;
+        bottom: 0;
+
+        @include mx.border(left, 1px, solid, $color: map.get(color.$layout-border, 'quaternary'));
+      }
     }
   }
 }

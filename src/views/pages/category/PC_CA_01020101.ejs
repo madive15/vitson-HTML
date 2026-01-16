@@ -1,0 +1,118 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%# S: 카테고리 데이터 불러오기 %>
+<%- include(`${_src}/views/mock-data/common/category.mock.ejs`) %>
+
+<%
+  // category.mock.ejs가 mockData를 선언/세팅하는 방식이 섞여있을 수 있어 폴백
+  var mockData =
+    (typeof mockData !== 'undefined' && mockData)
+      ? mockData
+      : ((typeof globalThis !== 'undefined' && globalThis.__mockData) ? globalThis.__mockData : {});
+%>
+
+<%
+  /* 퍼블 테스트용 초기값(원하면 페이지에서만 설정) */
+  if (mockData && mockData.category && mockData.category.path) {
+    mockData.category.path.depth1Id = '074065';
+    mockData.category.path.depth2Id = '0740650629';
+    mockData.category.path.depth3Id = '';
+  }
+
+  var treeData = (mockData && mockData.category && Array.isArray(mockData.category.tree)) ? mockData.category.tree : [];
+  var lv1List = treeData.filter(function(n){ return n && n.categoryCode; });
+
+  var depth1Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth1Id || '') : '';
+  var depth2Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth2Id || '') : '';
+  var depth3Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth3Id || '') : '';
+%>
+<%# E: 카테고리 데이터 불러오기 %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '대/중/소 카테고리 상품목록'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-inner inner-column">
+              <%# plp-titlebar.ejs: expects {_src, lv1List, depth1Id, depth2Id, depth3Id} %>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/pg-category/plp-titlebar.ejs`, {
+                _src: _src,
+                lv1List: lv1List,
+                depth1Id: depth1Id,
+                depth2Id: depth2Id,
+                depth3Id: depth3Id
+              }) %>
+
+              <div>상품타이틀과 리스트 사이의 간격 및 가운데선이 있음.</div>
+
+              <div>
+                <aside class="vits-grid-side vits-grid-side-left vits-side-category">
+                  <div style="height: 300px; background: red"></div>
+
+                  <div class="vits-scrollbar" style="height: 200px; background: pink; overflow-y: auto">
+                    <div
+                      style="
+                        height: 400px;
+                        background: ivory;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                      "
+                    >
+                      <p>내부스크롤 시작</p>
+                      <p>내부스크롤 끝</p>
+                    </div>
+                  </div>
+
+                  <div style="height: 500px; background: yellow; position: sticky; top: 0">스티키</div>
+                </aside>
+
+                <div class="vits-grid-main vits-main-category">
+                  <div style="height: 800px; background: darkcyan">영역1</div>
+                  <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">스티키</div>
+                  <div style="height: 1500px; background: green">영역3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- EJS 출력은 JSON 스크립트로 넣기(에디터 Expression expected 경고 회피) -->
+    <script type="application/json" id="vits-mockdata">
+      <%- JSON.stringify(mockData || {}).replace(/</g, '\\u003c') %>
+    </script>
+
+    <script>
+      (function () {
+        var el = document.getElementById('vits-mockdata');
+
+        try {
+          window.__mockData = el ? JSON.parse(el.textContent || '{}') : {};
+        } catch (e) {
+          window.__mockData = {};
+        }
+
+        if (window.UI && window.UI.init) {
+          window.UI.init();
+        } else if (window.UI && window.UI.select && window.UI.select.init) {
+          window.UI.select.init();
+        }
+      })();
+    </script>
+  </body>
+</html>

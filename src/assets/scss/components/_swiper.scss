@@ -1,0 +1,109 @@
+// -----------------------------------------------------------------------------
+// components/_swiper.scss
+// - swiper 컴포넌트 스타일 정의
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+// swiper navs 여백까지 고려하여 컨테이너 영역 설정
+.vits-product-recommend {
+  position: relative;
+  max-width: 1432px;
+  margin: 0 auto;
+}
+
+.vits-swiper {
+  max-width: 1280px;
+
+  &.js-swiper {
+    .swiper-slide {
+      // 임의값
+      height: 399px;
+      cursor: pointer;
+      background-color: #fff;
+      border: 1px solid map.get(color.$layout-border, 'tertiary');
+      border-radius: map.get(var.$radius, md);
+      transition:
+        // border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+      @include mx.flex($align: center, $justify: center); // 임의값
+
+      @include mx.common-mouse-event {
+        border-color: map.get(color.$brand-colors, 'primary');
+        border-width: 2px;
+        box-shadow: 0 fn.rem(9) fn.rem(21) 0 rgb(0 0 0 / 10%);
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+     * Swiper 네비게이션 버튼
+     * ----------------------------------------------------------------------- */
+    & + .vits-swiper-navs {
+      div {
+        background-image: none;
+      }
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        @include button.btn-reset;
+        @include mx.flex($justify: center, $align: center);
+        @include mx.position(absolute, $top: 50%);
+        width: fn.rem(36);
+        height: fn.rem(36);
+        background-color: color.$color-white;
+        border: 1px solid map.get(color.$layout-border, 'tertiary');
+        border-radius: fn.rem(46);
+        box-shadow: 0 fn.rem(4) fn.rem(7) 0 rgb(0 0 0 / 4%);
+        transition: border-color 0.2s ease;
+        transform: translateY(-50%);
+
+        // Arrow_interaction
+        @include mx.hoverable-only {
+          &:hover {
+            border-color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+
+        &:active {
+          background-color: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+          border-color: map.get(color.$brand-colors, 'primary');
+        }
+
+        &::after {
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
+          content: '';
+          background-size: contain;
+        }
+      }
+
+      .swiper-button {
+        &-prev {
+          &::after {
+            background-image: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg');
+          }
+        }
+
+        &-next {
+          &::after {
+            background-image: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg');
+          }
+        }
+
+        &.swiper-button-disabled {
+          pointer-events: none;
+          cursor: not-allowed;
+          opacity: 0.35;
+        }
+      }
+    }
+  }
+}

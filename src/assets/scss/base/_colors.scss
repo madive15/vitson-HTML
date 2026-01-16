@@ -25,11 +25,12 @@ $blue-shades: (
   '50': #8ba7ec,
   '60': #7693dd,
   '70': #5e7ed1,
-  '80': #5e7ed1,
+  '80': #4a6bc2,
   '90': #3b5cb0,
-  '100': #3b5cb0
+  '100': #2f4f9e
 );
 $green-shades: (
+  '0': #fff,
   '10': #f5fdf9,
   '20': #ecfaf3,
   '30': #d4f0e0,
@@ -42,6 +43,7 @@ $green-shades: (
   '100': #177927
 );
 $gray-shades: (
+  '0': #fff,
   '10': #fafafa,
   '20': #f0f0f0,
   '30': #dadada,
@@ -51,14 +53,8 @@ $gray-shades: (
   '70': #5c5c5c,
   '80': #444,
   '90': #2e2e2e,
-  '100': #1b1b1b
-);
-$neutral-colors: (
-  '1': #161616,
-  '4': #515151,
-  '6': #989898,
-  '8': #e6e6e6,
-  '9': #f2f2f2
+  '100': #1b1b1b,
+  'cool': #f1f3f6
 );
 $brand-colors: (
   '10': map.get($red-shades, '10'),
@@ -77,68 +73,139 @@ $brand-colors: (
 );
 $info-colors: (
   'primary': map.get($blue-shades, '100'),
-  'bg': map.get($blue-shades, '50'),
-  'surface': map.get($blue-shades, '30')
+  'primary-bg': map.get($blue-shades, '50'),
+  'primary-surface': map.get($blue-shades, '30')
 );
 $success-colors: (
   'primary': map.get($green-shades, '100'),
-  'bg': map.get($green-shades, '60'),
-  'surface': map.get($green-shades, '30')
+  'primary-bg': map.get($green-shades, '60'),
+  'primary-surface': map.get($green-shades, '30')
 );
 $text-colors: (
   'primary': map.get($gray-shades, '100'),
   'default': map.get($gray-shades, '90'),
-  'tertiary': map.get($gray-shades, '80'),
-  'quaternary': map.get($gray-shades, '60'),
-  'mute': map.get($gray-shades, '40'),
-  'brand': map.get($brand-colors, '100'),
-  'brand-sub': map.get($brand-colors, '80'),
+  'secondary': map.get($gray-shades, '80'),
+  'tertiary': map.get($gray-shades, '60'),
+  'muted': map.get($gray-shades, '40'),
   'inverse': map.get($gray-shades, '0')
 );
-$surf-colors: (
+$text-status: (
+  'brand': map.get($brand-colors, '100'),
+  'brand-sub': map.get($brand-colors, '80'),
+  'info': map.get($blue-shades, '100'),
+  'info-sub': map.get($blue-shades, '80'),
+  'success': map.get($green-shades, '100'),
+  'success-sub': map.get($green-shades, '80')
+);
+$layout-surf: (
   'base': map.get($gray-shades, '0'),
   'dark': map.get($gray-shades, '100'),
-  'primary': map.get($brand-colors, '100'),
-  'secondary': map.get($gray-shades, '80'),
-  'tertiary': map.get($gray-shades, '30'),
+  'brand': map.get($brand-colors, '100'),
+  'primary': map.get($gray-shades, '80'),
+  'secondary': map.get($gray-shades, '30'),
   'raised': map.get($gray-shades, '10'),
   'sunken': map.get($gray-shades, '20'),
-  'info': map.get($blue-shades, '30'),
-  'sub': map.get($brand-colors, '30'),
-  'footer': map.get($gray-shades, '90')
+  'footer': map.get($gray-shades, '90'),
+  'mypage': map.get($gray-shades, 'cool')
 );
-$border-colors: (
+$layout-status: (
+  'info-bg-default': map.get($blue-shades, '30'),
+  'info-bg-sub': map.get($blue-shades, '20'),
+  'brand-bg-default': map.get($brand-colors, '30'),
+  'brand-bg-sub': map.get($brand-colors, '20'),
+  'success-bg-default': map.get($green-shades, '30'),
+  'success-bg-sub': map.get($green-shades, '30')
+);
+$layout-border: (
   'brand': map.get($brand-colors, '100'),
   'primary': map.get($gray-shades, '100'),
   'secondary': map.get($gray-shades, '70'),
   'tertiary': map.get($gray-shades, '40'),
-  'quaternary': map.get($gray-shades, '20')
+  'quaternary': map.get($gray-shades, '30'),
+  'quinary': map.get($gray-shades, '20')
+);
+$button-fill-primary: (
+  'fill-surf-primary-default': map.get($brand-colors, '80'),
+  'fill-surf-primary-hover': map.get($brand-colors, '70'),
+  'fill-surf-primary-disable': map.get($brand-colors, '10'),
+  'fill-on_surf-primary-default': map.get($gray-shades, '0'),
+  'fill-on_surf-primary-disable': map.get($brand-colors, '40')
+);
+$button-fill-secondary: (
+  'fill-surf-secondary-default': map.get($gray-shades, '80'),
+  'fill-surf-secondary-hover': map.get($gray-shades, '70'),
+  'fill-surf-secondary-disable': map.get($gray-shades, '20'),
+  'fill-on_surf-secondary-default': map.get($gray-shades, '0'),
+  'fill-on_surf-secondary-disable': map.get($gray-shades, '40')
+);
+$button-fill-tertiary: (
+  'fill-on_surf-tertiary-default': map.get($gray-shades, '0'),
+  'fill-on_surf-tertiary-disable': map.get($gray-shades, '40'),
+  'fill-surf-tertiary-default': map.get($gray-shades, '60'),
+  'fill-surf-tertiary-hover': map.get($gray-shades, '50'),
+  'fill-surf-tertiary-disable': map.get($gray-shades, '20')
+);
+$button-ghost-primary: (
+  'ghost-surf-primary-default': map.get($gray-shades, '0'),
+  'ghost-surf-primary-hover': map.get($brand-colors, '10'),
+  'ghost-surf-primary-disable': map.get($gray-shades, '0'),
+  'ghost-on_surf-primary-default': map.get($brand-colors, '80'),
+  'ghost-on_surf-primary-disable': map.get($brand-colors, '40'),
+  'ghost-border-primary-default': map.get($brand-colors, '80'),
+  'ghost-border-primary-disable': map.get($brand-colors, '40')
+);
+$button-ghost-secondary: (
+  'ghost-surf-secondary-default': map.get($gray-shades, '0'),
+  'ghost-surf-secondary-hover': map.get($gray-shades, '10'),
+  'ghost-surf-secondary-disable': map.get($gray-shades, '0'),
+  'ghost-on_surf-secondary-default': map.get($gray-shades, '80'),
+  'ghost-on_surf-secondary-disable': map.get($gray-shades, '40'),
+  'ghost-border-secondary-default': map.get($gray-shades, '80'),
+  'ghost-border-secondary-disable': map.get($gray-shades, '40')
+);
+$button-ghost-tertiary: (
+  'ghost-surf-tertiary-default': map.get($gray-shades, '0'),
+  'ghost-surf-tertiary-hover': map.get($gray-shades, '10'),
+  'ghost-surf-tertiary-disable': map.get($gray-shades, '0'),
+  'ghost-on_surf-tertiary-default': map.get($gray-shades, '60'),
+  'ghost-on_surf-tertiary-disable': map.get($gray-shades, '30'),
+  'ghost-border-tertiary-default': map.get($gray-shades, '50'),
+  'ghost-border-tertiary-disable': map.get($gray-shades, '30')
 );
 $icon-colors: (
   'primary': map.get($brand-colors, '100'),
   'hover': map.get($brand-colors, '90'),
-  'disabled': map.get($brand-colors, '40'),
+  'disabled': map.get($brand-colors, '40')
+);
+$icon-status: (
   'info': map.get($blue-shades, '100'),
   'info-surface': map.get($blue-shades, '30'),
-  'success': map.get($green-shades, '100'),
+  'seccess': map.get($green-shades, '100'),
   'success-surface': map.get($green-shades, '30')
 );
-$icon-neutral-colors: (
+$icon-neutral: (
   'primary': map.get($gray-shades, '80'),
   'secondary': map.get($gray-shades, '60'),
   'tertiary': map.get($gray-shades, '40'),
   'disabled': map.get($gray-shades, '30'),
   'inverse': map.get($gray-shades, '0')
 );
-$label-colors: (
+$label-shipping: (
   'today': map.get($brand-colors, '60'),
   'tomorrow': map.get($blue-shades, '50'),
   'free': map.get($green-shades, '50')
 );
-$color-white: #fff;
+
+// s: Neutral 확인 후 변경하기
+$neutral-colors: (
+  '1': #161616,
+  '7': #c4c4c4
+);
+
+// e Neutral 확인 후 변경하기
+
+$color-white: map.get($text-colors, 'inverse');
 $color-black: #000;
-$color-dim: rgb(0 0 0 / 35%);
-$color-footer-sns: #434343;
 
 /* 스크롤바 커스텀 */
 $scrollbar-thumb: map.get($gray-shades, '70');

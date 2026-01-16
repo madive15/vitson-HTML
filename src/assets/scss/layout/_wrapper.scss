@@ -60,16 +60,6 @@ body.vits-scope {
   min-height: 0;
 }
 
-/* .vits-grid [금지]
-   - overflow를 주지 않습니다(현재는 body 스크롤 기준)
-   - 스크롤 컨테이너로 전환하면 sticky 기준이 분산될 수 있음 */
-.vits-grid {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  -webkit-overflow-scrolling: touch; // (참고) overflow:auto 전환 시 iOS 관성 스크롤
-}
-
 /* 메인 */
 .vits-grid-main {
   flex: 1 1 auto;
@@ -92,8 +82,25 @@ body.vits-scope {
   margin-right: auto;
   margin-left: auto;
 
+  &.inner-column {
+    flex-direction: column;
+  }
+
   @include mx.pc-sm {
     padding-right: var.$tablet-gutter;
     padding-left: var.$tablet-gutter;
+  }
+}
+
+/* .vits-grid [금지]
+   - overflow를 주지 않습니다(현재는 body 스크롤 기준)
+   - 스크롤 컨테이너로 전환하면 sticky 기준이 분산될 수 있음 */
+.vits-grid {
+  &,
+  > .vits-inner {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch; // (참고) overflow:auto 전환 시 iOS 관성 스크롤
   }
 }

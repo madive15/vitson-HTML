@@ -1,0 +1,411 @@
+// -----------------------------------------------------------------------------
+// components/_form.scss
+// - 폼 요소(input, select, textarea 등) 공통 UI 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin textarea-reset {
+  box-sizing: border-box;
+  min-width: 0; // 기본 최소폭/높이 이슈 방지
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: inherit;
+  letter-spacing: inherit;
+  appearance: none; // 브라우저 기본 외형 제거(모바일 포함)
+  resize: none; // 리사이즈는 필요에 맞게: none | vertical | both
+  background: transparent;
+  border: 0;
+  outline: 0;
+
+  &::placeholder {
+    color: map.get(color.$text-colors, 'tertiary');
+  }
+}
+
+@mixin input-hover {
+  @include mx.hoverable-only {
+    &:not(:has(input:checked)):hover {
+      box-shadow: inset 0 0 0 1px map.get(color.$brand-colors, 'primary');
+      @content;
+    }
+  }
+}
+
+@mixin input-focus {
+  &:focus-visible,
+  &:active {
+    box-shadow: inset 0 0 0 1px map.get(color.$brand-colors, 'primary');
+    @content;
+  }
+}
+
+@mixin input-common($type: null) {
+  &-icon {
+    // (폰트사이즈 * line-height 1.3 - icon size) / 2
+    position: relative;
+    width: fn.rem(16);
+    height: fn.rem(16);
+    margin-top: calc((16px * 1.3 - 16px) / 2);
+    background: color.$color-white;
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+    transition: box-shadow 0.2s;
+
+    @if $type == 'radio' {
+      border-radius: 50%;
+    }
+
+    &::before {
+      @include mx.position(absolute, 50%, $left: 50%);
+      width: fn.rem(8);
+      height: fn.rem(8);
+      content: '';
+      background: color.$color-white;
+      transition: background 0.25s;
+      transform: translate(-50%, -50%);
+
+      @if $type == 'radio' {
+        border-radius: 50%;
+      }
+    }
+
+    @if $type == 'radio' {
+      border-radius: 50%;
+    }
+
+    @if $type == 'checkbox' {
+      border-radius: 4px;
+    }
+
+    @include input-focus;
+  }
+
+  &-item {
+    @include mx.flex(inline-flex, row, flex-start, flex-start);
+    position: relative;
+    gap: fn.rem(6);
+    cursor: pointer;
+    user-select: none;
+
+    input {
+      @include mx.sr-only;
+    }
+
+    .label {
+      &-name {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: map.get(var.$unit, 4);
+        min-width: fn.rem(98);
+        max-width: fn.rem(160);
+      }
+
+      &-unit {
+        font-style: normal;
+
+        &::before {
+          content: '\0028'; // (
+        }
+
+        &::after {
+          content: '\0029'; // )
+        }
+      }
+
+      &-price {
+        &::before {
+          content: '\0028'; // (
+        }
+
+        &::after {
+          content: '원\0029'; // )
+        }
+      }
+    }
+
+    span[class*='label-'] {
+      @if $type == 'radio' {
+        @include typo.typography('b2m', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      @if $type == 'checkbox' {
+        @include typo.font-style($size: 15, $line-height: 1.4, $color: map.get(color.$neutral-colors, '1'));
+        transition: font-weight 0.15s;
+      }
+    }
+
+    &:has(input:checked) {
+      .#{$type}-icon {
+        box-shadow: inset 0 0 0 1px map.get(color.$brand-colors, 'primary');
+
+        &::before {
+          background: map.get(color.$brand-colors, 'primary');
+        }
+      }
+
+      @if $type == 'checkbox' {
+        .label-name,
+        .label-unit {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+/* 라디오 버튼 */
+.radio {
+  @include input-common('radio');
+
+  &-price {
+    @include mx.flex(flex, row, flex-start, flex-start);
+    gap: fn.rem(10);
+  }
+}
+
+/* check box - basic */
+.checkbox-wrapper.type-basic {
+  .checkbox {
+    @include input-common('checkbox');
+  }
+}
+
+/* check box - card */
+.checkbox-wrapper.type-card {
+  .checkbox {
+    &-item {
+      @include mx.flex(flex, row, flex-start, center);
+      position: relative;
+      gap: map.get(var.$unit, 16);
+      width: 100%;
+      max-width: fn.rem(416);
+      height: fn.rem(68);
+      padding: 0 map.get(var.$unit, 16);
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+      transition: box-shadow 0.25s;
+
+      input {
+        @include mx.sr-only;
+      }
+
+      .label {
+        &-name {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+          @include mx.ellipsis-single;
+        }
+
+        &-total {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          flex-shrink: 0;
+        }
+      }
+
+      .checkbox-icon {
+        @include icon.ic-size(map.get(var.$unit, 32));
+        display: none;
+        flex-shrink: 0;
+        margin-left: auto;
+        color: color.$color-white;
+        background: map.get(color.$brand-colors, 'primary');
+        border-radius: map.get(var.$radius, 'md');
+      }
+
+      &:has(input:checked) {
+        box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
+
+        .checkbox-icon {
+          display: block;
+        }
+      }
+
+      @include input-hover {
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+      }
+    }
+  }
+}
+
+/* input text */
+$input-size: (
+  'default': fn.rem(32),
+  'large': fn.rem(44)
+);
+
+.vits-input {
+  @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'sm');
+
+  .input-item {
+    width: 100%;
+    height: 100%;
+
+    input {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      outline: 0;
+
+      &::placeholder {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  @each $key, $minh in $input-size {
+    &.size-#{$key} {
+      height: $minh;
+
+      @if $key == 'default' {
+        input {
+          @include typo.typography('b3r');
+          padding: 0 map.get(var.$unit, 12);
+        }
+      }
+
+      @if $key == 'large' {
+        input {
+          @include typo.typography('b2r');
+          padding: 0 map.get(var.$unit, 16);
+        }
+      }
+    }
+  }
+}
+
+/* input search */
+.vits-input-search {
+  @include mx.input-search-reset($color: map.get(color.$text-colors, 'tertiary'));
+  position: relative;
+  width: 100%;
+  height: map.get(var.$unit, 48);
+  overflow: hidden;
+  background: color.$color-white;
+  border-radius: map.get(var.$radius, 'sm');
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+  transition: box-shadow 0.3s;
+
+  &:has(.input-search:focus-visible),
+  &:has(.input-search:active) {
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+  }
+
+  @include mx.hoverable-only {
+    &:has(.input-search:hover) {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+    }
+  }
+
+  .input-search {
+    @include typo.typography('b2m');
+    width: 100%;
+    height: 100%;
+    padding: 0 map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
+    background: transparent;
+    border: 0;
+    outline: 0;
+
+    &-btn {
+      @include button.btn-reset;
+      @include mx.position(absolute, 50%, map.get(var.$unit, 20));
+      @include icon.ic-size(map.get(var.$unit, 24));
+      color: map.get(color.$icon-neutral, 'primary');
+      transform: translateY(-50%);
+    }
+  }
+}
+
+/* textarea */
+$textarea-size: (
+  'default': fn.rem(120),
+  'large': fn.rem(120)
+);
+
+.vits-textarea {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+  position: relative;
+  gap: map.get(var.$unit, 8);
+  width: 100%;
+  overflow: hidden;
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'sm');
+
+  .textarea-box {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+
+    textarea {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .textarea-meta {
+    @include mx.flex(flex, row, flex-end, center);
+    flex-shrink: 0;
+    gap: map.get(var.$unit, 4);
+    width: 100%;
+
+    span {
+      @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+      gap: map.get(var.$unit, 4);
+
+      &.textarea-count {
+        &::after {
+          content: '/';
+        }
+      }
+    }
+  }
+
+  @each $key, $minh in $textarea-size {
+    &.size-#{$key} {
+      height: $minh;
+
+      textarea {
+        @include textarea-reset;
+      }
+
+      @if $key == 'default' {
+        padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
+
+        textarea {
+          @include typo.typography('b3r');
+        }
+      }
+
+      @if $key == 'large' {
+        padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+
+        textarea {
+          @include typo.typography('b2r');
+        }
+      }
+    }
+  }
+
+  &.is-scroll {
+    padding-right: fn.rem(6);
+
+    .textarea-box textarea {
+      padding-right: fn.rem(6);
+    }
+  }
+}

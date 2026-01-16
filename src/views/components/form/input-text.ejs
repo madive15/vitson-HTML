@@ -1,0 +1,56 @@
+<%
+  // ===== 필수 =====
+  const _id = (typeof id !== 'undefined' && id) ? id : '';
+  const _label = (typeof label !== 'undefined' && label) ? label : '';
+
+  // ===== 옵션 =====
+  const _name = (typeof name !== 'undefined' && name) ? name : '';
+
+  const _placeholderRaw = (typeof placeholder !== 'undefined') ? placeholder : '';
+  const _hasPlaceholder = (_placeholderRaw !== null && _placeholderRaw !== undefined && _placeholderRaw !== '');
+  const _placeholder = _hasPlaceholder ? _placeholderRaw : '';
+
+  // value: null/undefined면 속성 미출력(빈 문자열은 "명시값"으로 출력)
+  const _valueRaw = (typeof value !== 'undefined') ? value : null;
+  const _hasValue = (_valueRaw !== null && _valueRaw !== undefined);
+  const _value = _hasValue ? _valueRaw : '';
+
+  const _required = (typeof required !== 'undefined') ? !!required : false;
+  const _disabled = (typeof disabled !== 'undefined') ? !!disabled : false;
+  const _readonly = (typeof readonly !== 'undefined') ? !!readonly : false;
+
+  const _message = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
+  const _hasMessage = !!_message;
+
+  const _isInvalidFlag = (typeof isInvalid !== 'undefined') ? (isInvalid === true) : false;
+  const _isInvalid = _isInvalidFlag || _hasMessage;
+
+  const _rootClass = (typeof rootClass !== 'undefined' && rootClass) ? rootClass : '';
+
+  const _validationId = _id ? `${_id}-validation` : '';
+%>
+
+<div class="vits-input <%= _rootClass %>">
+  <div class="input-item">
+    <label for="<%= _id %>" class="sr-only"><%= _label %></label>
+
+    <input
+      type="text"
+      <% if (_name) { %>name="<%= _name %>"<% } %>
+      id="<%= _id %>"
+      <% if (_hasPlaceholder) { %>placeholder="<%= _placeholder %>"<% } %>
+      <% if (_hasValue) { %>value="<%= _value %>"<% } %>
+
+      <% if (_required) { %>required<% } %>
+      <% if (_disabled) { %>disabled<% } %>
+      <% if (_readonly) { %>readonly<% } %>
+
+      <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
+      <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+    />
+  </div>
+
+  <div class="input-validation" <% if (!_hasMessage) { %>hidden<% } %>>
+    <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _message %></p>
+  </div>
+</div>

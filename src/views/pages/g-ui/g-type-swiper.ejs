@@ -1,0 +1,114 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - swiper-type'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">스와이퍼 타입</h2>
+
+        <h3 class="vits-guide-subtitle">스와이퍼 타입 사용 방법</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+              components/pg/swiper-type.ejs
+
+  - 사용:
+    < % - include(`${_src}/views/components/pg/swiper-type.ejs`, {
+      slides: ['Slide 1', 'Slide 2', 'Slide 3'],
+      swiperType: 'card',
+      desktop: 5,
+      offsetBefore: 75,
+      offsetAfter: 75,
+      showNavs: true,
+      containerClass: 'swiper-container'
+    }) % >
+
+  - 옵션:
+    - slides (필수): 슬라이드 데이터 배열 (문자열/HTML)
+    - swiperType: 스와이퍼 타입 ('card', 'list' 등, 기본값: 'card')
+      + 신규 타입은 src/assets/scripts/ui/swiper.js 에서 추가
+    - desktop: 데스크톱에서 보여줄 슬라이드 수 (기본값: 5)
+    - offsetBefore: 오프셋 before 값 (기본값: 75, null이면 속성 제거)
+    - offsetAfter: 오프셋 after 값 (기본값: 75, null이면 속성 제거)
+    - showNavs: 네비게이션 버튼 표시 여부 (기본값: true)
+    - containerClass: 컨테이너 클래스 (기본값: 'swiper-container')
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <h4 class="vits-guide-subtitle">예시 1) 카드 타입</h4>
+              <div class="vits-guide-code">
+                <code>
+                  <pre>
+&lt;%- include(`${_src}/views/components/pg/swiper-type.ejs`, {
+  slides: [
+    '&lt;div class="vits-card"&gt;카드 1&lt;/div&gt;',
+    '&lt;div class="vits-card"&gt;카드 2&lt;/div&gt;',
+    '&lt;div class="vits-card"&gt;카드 3&lt;/div&gt;',
+    '&lt;div class="vits-card"&gt;카드 4&lt;/div&gt;',
+    '&lt;div class="vits-card"&gt;카드 5&lt;/div&gt;'
+  ],
+  swiperType: 'card',
+  desktop: 3,
+  offsetBefore: 75,
+  offsetAfter: 75,
+  showNavs: true
+}) %&gt;
+                  </pre>
+                </code>
+              </div>
+              <div class="vits-guide-preview" style="position: relative;";">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['<img src="' + _public + '/resources/img/mro/renewal/temp/img-product-detail-1.jpg" alt="카드 1">', '<img src="' + _public + '/resources/img/mro/renewal/temp/img-product-detail-2.jpg" alt="카드 2">', '<img src="' + _public + '/resources/img/mro/renewal/temp/img-product-detail-3.jpg" alt="카드 3">',
+                'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], swiperType: 'card', desktop: 5,
+                offsetBefore: 0, offsetAfter: 0, showNavs: true, containerClass: 'swiper-container' }) %>
+              </div>
+            </li>
+            <li>
+              <h4 class="vits-guide-subtitle">예시 2) 리스트 타입 (네비게이션 숨김)</h4>
+              <div class="vits-guide-code">
+                <code>
+                  <pre>
+&lt;%- include(`${_src}/views/components/pg/swiper-type.ejs`, {
+  slides: [
+    '&lt;div class="vits-list-item"&gt;리스트 1&lt;/div&gt;',
+    '&lt;div class="vits-list-item"&gt;리스트 2&lt;/div&gt;',
+    '&lt;div class="vits-list-item"&gt;리스트 3&lt;/div&gt;'
+  ],
+  swiperType: 'list',
+  desktop: 3,
+  offsetBefore: null,
+  offsetAfter: null,
+  showNavs: false,
+  containerClass: 'swiper-container list-type'
+}) % >
+                  </pre>
+                </code>
+              </div>
+              <div class="vits-guide-preview" style="position: relative;">
+                <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['Slide 1', 'Slide 2', 'Slide 3',
+                'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], swiperType: 'card', desktop: 5,
+                offsetBefore: 0, offsetAfter: 0, showNavs: false, containerClass: 'swiper-container' }) %>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

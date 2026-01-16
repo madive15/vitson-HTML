@@ -11,11 +11,17 @@
  */
 import '../ui/toggle.js';
 import '../ui/swiper.js';
+import '../ui/chip-button.js';
+import '../ui/quantity-stepper.js';
+import '../ui/form/textarea.js';
 import '../ui/kendo/kendo-dropdown.js';
 import '../ui/header/header-rank.js';
 import '../ui/header/header-search.js';
 import '../ui/header/header-gnb.js';
 import '../ui/footer.js';
+import '../ui/product/tab-scrollbar.js';
+import '../ui/form/select.js';
+import '../ui/category/plp-titlebar-research.js';
 
 (function (window) {
   'use strict';
@@ -32,6 +38,9 @@ import '../ui/footer.js';
   window.UI.init = function () {
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
+    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
+    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
 
     if (window.VitsKendoDropdown) {
       window.VitsKendoDropdown.initAll(document);
@@ -41,8 +50,12 @@ import '../ui/footer.js';
     if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
     if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
     if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-    if (window.UI.headerGnbPanel && window.UI.headerGnbPanel.init) window.UI.headerGnbPanel.init();
     if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
+    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
+    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
+
+    if (window.UI.select && window.UI.select.init) window.UI.select.init();
+    if (window.UI && window.UI.plpTitlebarResearch) window.UI.plpTitlebarResearch.init();
   };
 
   console.log('[core/ui] loaded');

@@ -1,0 +1,120 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const galleryImages = [
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(2).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(2).jpg',
+    alt: '에디슨 LED 벌브'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(5).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(5).jpg',
+    alt: '에디슨 LED 벌브2'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(3).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(3).jpg',
+    alt: '에디슨 LED 벌브3'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(4).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(4).jpg',
+    alt: '에디슨 LED 벌브4'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(6).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(6).jpg',
+    alt: '에디슨 LED 벌브5'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(7).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(7).jpg',
+    alt: '에디슨 LED 벌브6'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    alt: '에디슨 LED 벌브7'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    alt: '에디슨 LED 벌브7'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    alt: '에디슨 LED 벌브7'
+  },
+  {
+    src: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    large: 'https://vitsonimg.co.kr/images/products/53823%20(8).jpg',
+    alt: '에디슨 LED 벌브7'
+  } 
+];
+%>
+<div class="vits-deal-gallery">
+  <div class="pd-gallery" data-test-gallery>
+    <div class="pd-gallery-main">
+      <div class="swiper pd-main-swiper" data-main-swiper>
+        <div class="swiper-wrapper" data-main-wrapper>
+          <% galleryImages.forEach(function(image, idx) { %>
+          <div class="swiper-slide">
+            <img src="<%= image.src %>" alt="<%= image.alt %>" data-main-img />
+          </div>
+          <% }); %>
+        </div>
+        <button type="button" class="pd-nav pd-nav-prev" aria-label="이전 이미지" data-main-prev></button>
+        <button type="button" class="pd-nav pd-nav-next" aria-label="다음 이미지" data-main-next></button>
+      </div>
+
+      <aside class="pd-zoom" data-zoom aria-hidden="true">
+        <img data-zoom-img alt="" />
+      </aside>
+    </div>
+
+    <div class="pd-gallery-thumbs">
+      <div class="pd-thumbs-area">
+        <button type="button" class="pd-thumb-nav pd-thumb-prev" aria-label="썸네일 이전" data-thumbs-prev></button>
+        <button type="button" class="pd-thumb-nav pd-thumb-next" aria-label="썸네일 다음" data-thumbs-next></button>
+
+        <div class="swiper pd-thumbs-swiper" data-thumbs-swiper>
+          <div class="swiper-wrapper" data-thumbs-wrapper>
+            <% galleryImages.forEach(function(image, idx) { %>
+            <button
+              type="button"
+              class="swiper-slide pd-thumb"
+              data-thumb
+              data-index="<%= idx %>"
+              aria-label="썸네일 <%= idx + 1 %> 선택"
+            >
+              <img src="<%= image.src %>" alt="" />
+            </button>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="vits-description-box">
+    <div class="vits-scrollbar">
+      <div class="content-text">
+        *제품특징 <br />- 방습 제품으로 우수한 품질(IP44) <br />- 긴 수명 시간(15000hr)<br />- 3'~8인치까지 다양한 규격
+        시리즈 제품<br />- 플리커프리 <br />
+        <br />*제품용도
+      </div>
+    </div>
+  </div>
+
+  <div class="vits-description-btn">
+    <a href="javascript:void(0)" class="btn-catalog" aria-label="카탈로그 링크">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {size:'md', variant: 'outline-secondary', text:'카탈로그 보러가기', iconLeft: true, iconName: 'ic-book' }) %>
+    </a>
+    <a href="javascript:void(0)" class="btn-inquiry" aria-label="문의 링크">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {size:'md', variant: 'outline-secondary', text:'문의 링크', iconLeft: true, iconName: 'ic-box' }) %>
+    </a>
+  </div>
+</div>

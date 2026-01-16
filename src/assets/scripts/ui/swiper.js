@@ -1,286 +1,384 @@
-/**
- * scripts/ui/swiper.js
- * @purpose Swiper 초기화 공통 UI(배너/상품 썸네일 등)
- * @assumption
- *  - Swiper는 npm 의존성(swiper@^11.x)으로 설치되어 번들에 포함된다
- *  - 마크업(data-swiper)로 선언된 영역만 초기화한다
- * @options
- *  - data-swiper-loop="true"        : loop 사용 여부
- *  - data-swiper-autoplay="3000"    : autoplay delay(ms). 값이 없으면 autoplay 비활성
- * @maintenance
- *  - 페이지 의미(main/detail 등) 분기 금지
- *  - 커스터마이징(옵션/규칙)은 이 파일에서만 관리
- */
+/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
+  - <button ... data-main-prev></button>
+  - <button ... data-main-next></button>
+  - var mainPrev = root.querySelector("[data-main-prev]");
+  - var mainNext = root.querySelector("[data-main-next]");
+  - mainPrev.addEventListener("click", ...);
+  - mainNext.addEventListener("click", ...);
+  - mainPrev.classList.add("swiper-button-disabled");
+  - mainNext.classList.add("swiper-button-disabled");
+  - mainPrev.classList.remove("swiper-button-disabled");
+  - mainNext.classList.remove("swiper-button-disabled");
+  - if (currentIndex <= 0) mainPrev... else ...
+  - if (currentIndex >= last) mainNext... else ...
+*/
 
 import Swiper from 'swiper/bundle';
 
-(function ($, window) {
+(function () {
   'use strict';
+  if (typeof Swiper === 'undefined') return;
 
-  if (!$) return;
+  var root = document.querySelector('[data-test-gallery]');
+  if (!root) return;
 
-  window.UI = window.UI || {};
+  var mainEl = root.querySelector('[data-main-swiper]');
+  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
+  var mainWrapper = root.querySelector('[data-main-wrapper]');
+  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
+  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
 
-  /**
-   * 문자열 값을 boolean으로 변환
-   * @param {*} v data- 값
-   * @returns {boolean}
-   */
-  function toBool(v) {
-    return String(v) === 'true';
-  }
+  var mainPrev = root.querySelector('[data-main-prev]');
+  var mainNext = root.querySelector('[data-main-next]');
+  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
+  var thumbsNext = root.querySelector('[data-thumbs-next]');
+  if (!mainPrev || !mainNext || !thumbsPrev || !thumbsNext) return;
 
-  /**
-   * 문자열 값을 number로 변환
-   * @param {*} v data- 값
-   * @returns {(number|null)}
-   */
-  function toNum(v) {
-    var n = parseInt(v, 10);
-    return isNaN(n) ? null : n;
-  }
+  var zoomBox = root.querySelector('[data-zoom]');
+  var zoomImg = root.querySelector('[data-zoom-img]');
 
-  /**
-   * 단일 Swiper 초기화
-   * @param {jQuery} $root data-swiper 루트
-   * @returns {void}
-   */
-  function initOne($root) {
-    var el = $root.find('.swiper')[0];
-    if (!el) return;
+  var ZOOM_RATIO = 3;
 
-    var loop = toBool($root.data('swiperLoop'));
-    var autoplayDelay = toNum($root.data('swiperAutoplay'));
-
-    var config = {
-      loop: loop,
-      pagination: {
-        el: $root.find('.swiper-pagination')[0] || null,
-        clickable: true
-      },
-      navigation: {
-        nextEl: $root.find('.swiper-button-next')[0] || null,
-        prevEl: $root.find('.swiper-button-prev')[0] || null
-      }
+  // 이미지 데이터는 EJS 템플릿에서 렌더링되므로, DOM에서 이미지 정보를 가져옴
+  var mainImgs = Array.prototype.slice.call(mainWrapper.querySelectorAll('[data-main-img]'));
+  var items = mainImgs.map(function (img) {
+    return {
+      src: img.src,
+      alt: img.alt || ''
     };
+  });
 
-    if (autoplayDelay) {
-      config.autoplay = {delay: autoplayDelay, disableOnInteraction: false};
+  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
+
+  var thumbsSwiper = new Swiper(thumbsEl, {
+    loop: false,
+    slidesPerView: 'auto',
+    spaceBetween: 7,
+    centeredSlides: false,
+    centeredSlidesBounds: false,
+    centerInsufficientSlides: false,
+    watchSlidesProgress: true,
+    allowTouchMove: false
+  });
+
+  var mainSwiper = new Swiper(mainEl, {
+    loop: false,
+    slidesPerView: 1,
+    allowTouchMove: false
+  });
+
+  var currentIndex = 0;
+
+  function clampIndex(i) {
+    var last = items.length - 1;
+    if (i < 0) return 0;
+    if (i > last) return last;
+    return i;
+  }
+
+  function setIndex(nextIndex) {
+    currentIndex = clampIndex(nextIndex);
+
+    mainSwiper.slideTo(currentIndex);
+    thumbsSwiper.slideTo(currentIndex);
+
+    thumbBtns.forEach(function (btn, i) {
+      if (i === currentIndex) btn.classList.add('is-active');
+      else btn.classList.remove('is-active');
+    });
+
+    var last = items.length - 1;
+
+    if (items.length <= 1) {
+      thumbsPrev.classList.add('is-hidden');
+      thumbsNext.classList.add('is-hidden');
+    } else {
+      thumbsPrev.classList.remove('is-hidden');
+      thumbsNext.classList.remove('is-hidden');
     }
 
-    new Swiper(el, config);
+    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');
+    else thumbsPrev.classList.remove('is-disabled');
+
+    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');
+    else thumbsNext.classList.remove('is-disabled');
+
+    if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');
+    else mainPrev.classList.remove('swiper-button-disabled');
+
+    if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');
+    else mainNext.classList.remove('swiper-button-disabled');
+
+    if (zoomImg) zoomImg.src = items[currentIndex].src;
   }
 
-  window.UI.swiper = {
-    /**
-     * Swiper 초기화
-     * @returns {void}
-     * @example
-     * // scripts/core/ui.js의 UI.init()에서 호출
-     * UI.swiper.init();
-     */
-    init: function () {
-      $('[data-swiper]').each(function () {
-        initOne($(this));
+  mainPrev.addEventListener('click', function () {
+    setIndex(currentIndex - 1);
+  });
+  mainNext.addEventListener('click', function () {
+    setIndex(currentIndex + 1);
+  });
+
+  thumbsPrev.addEventListener('click', function () {
+    setIndex(currentIndex - 1);
+  });
+  thumbsNext.addEventListener('click', function () {
+    setIndex(currentIndex + 1);
+  });
+
+  thumbBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = parseInt(btn.getAttribute('data-index'), 10);
+      if (isNaN(idx)) return;
+      setIndex(idx);
+    });
+  });
+
+  function hideZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.remove('is-on');
+    zoomBox.setAttribute('aria-hidden', 'true');
+  }
+  function showZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.add('is-on');
+    zoomBox.setAttribute('aria-hidden', 'false');
+  }
+
+  function ensureNatural(img, cb) {
+    if (!img) return;
+    if (img.complete && img.naturalWidth && img.naturalHeight) {
+      cb(img.naturalWidth, img.naturalHeight);
+      return;
+    }
+    img.addEventListener('load', function onLoad() {
+      img.removeEventListener('load', onLoad);
+      cb(img.naturalWidth, img.naturalHeight);
+    });
+  }
+
+  function getContainRect(containerW, containerH, naturalW, naturalH) {
+    var scale = Math.min(containerW / naturalW, containerH / naturalH);
+    var drawW = naturalW * scale;
+    var drawH = naturalH * scale;
+    var offsetX = (containerW - drawW) / 2;
+    var offsetY = (containerH - drawH) / 2;
+    return {x: offsetX, y: offsetY, w: drawW, h: drawH};
+  }
+
+  function getActiveImgEl() {
+    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
+  }
+
+  if (zoomBox && zoomImg) {
+    mainEl.addEventListener('mouseenter', function () {
+      showZoom();
+    });
+    mainEl.addEventListener('mouseleave', function () {
+      hideZoom();
+    });
+
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!zoomBox.classList.contains('is-on')) return;
+
+      var img = getActiveImgEl();
+      if (!img) return;
+
+      var contRect = mainEl.getBoundingClientRect();
+      var cx = e.clientX - contRect.left;
+      var cy = e.clientY - contRect.top;
+
+      ensureNatural(img, function (nw, nh) {
+        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
+
+        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
+          hideZoom();
+          return;
+        } else {
+          showZoom();
+        }
+
+        var rx = (cx - cr.x) / cr.w;
+        var ry = (cy - cr.y) / cr.h;
+
+        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
+        var ratio = baseRatio * ZOOM_RATIO;
+
+        var zoomW = nw * ratio;
+        var zoomH = nh * ratio;
+
+        zoomImg.style.width = zoomW + 'px';
+        zoomImg.style.height = zoomH + 'px';
+
+        var zw = zoomBox.clientWidth;
+        var zh = zoomBox.clientHeight;
+
+        var left = -(rx * (zoomW - zw));
+        var top = -(ry * (zoomH - zh));
+
+        if (left > 0) left = 0;
+        if (top > 0) top = 0;
+        if (left < -(zoomW - zw)) left = -(zoomW - zw);
+        if (top < -(zoomH - zh)) top = -(zoomH - zh);
+
+        zoomImg.style.left = left + 'px';
+        zoomImg.style.top = top + 'px';
       });
+    });
+  }
 
-      /** Deal Gallery : 상품상세페이지 deal_gallery 영역
-       * 기존 운영 소스 참고하여 개선하였습니다.
-       */
-      function initDealGallery() {
-        if (typeof Swiper === 'undefined' || typeof $ === 'undefined') return;
+  setIndex(0);
+})();
 
-        /* =====================
-         * Swiper
-         * ===================== */
-        var galleryTop = new Swiper('.gallery-top', {
-          spaceBetween: 0,
-          loop: false,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          },
-          thumbs: {
-            swiper: galleryThumbs
-          }
-        });
+/**
+ * Swiper 타입별 기본 옵션 정의
+ * - 여기만 수정하면 전체 Swiper에 반영됨
+ */
+(function () {
+  'use strict';
+  if (typeof Swiper === 'undefined') return;
 
-        var galleryThumbs = new Swiper('.gallery-thumbs', {
-          spaceBetween: 7,
-          slidesPerView: 8,
-          centeredSlides: true, //중앙정렬렬
-          slideToClickedSlide: true, //클릭시 이동
-          watchSlidesProgress: true,
-          watchSlidesVisibility: true,
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          }
-        });
-        // 기존 운영소스
-        // galleryTop.controller.control = galleryThumbs;
-        // galleryThumbs.controller.control = galleryTop;
-
-        galleryThumbs.on('click', function () {
-          var clickedIndex = galleryThumbs.clickedIndex;
-          if (typeof clickedIndex === 'undefined') return;
-
-          /* 1. 메인 Swiper 이동 */
-          galleryTop.slideTo(clickedIndex);
-
-          /* 2. 썸네일 active 처리 */
-          $(galleryThumbs.slides).removeClass('swiper-slide-active').eq(clickedIndex).addClass('swiper-slide-active');
-
-          /* 3. 메인 slide active 보정 */
-          $(galleryTop.slides).removeClass('swiper-slide-active').eq(clickedIndex).addClass('swiper-slide-active');
-
-          /* 4. 확대 상태 초기화 + 이미지 싱크 */
-          resetZoomState();
-
-          var $activeImg = $(galleryTop.slides[clickedIndex]).find('.original_image');
-
-          $('.magnified_image').attr('src', $activeImg.attr('src'));
-        });
-
-        /* =====================
-         * Zoom State
-         * ===================== */
-        var zoomState = {
-          naturalWidth: 0,
-          naturalHeight: 0,
-          zoomRatio: 3
-        };
-
-        function resetZoomState() {
-          zoomState.naturalWidth = 0;
-          zoomState.naturalHeight = 0;
-        }
-
-        /* =====================
-         * Utils
-         * ===================== */
-        function loadImageSize($img, cb) {
-          if ($img[0].complete) {
-            cb($img[0].naturalWidth, $img[0].naturalHeight);
-          } else {
-            $img.one('load', function () {
-              cb(this.naturalWidth, this.naturalHeight);
-            });
-          }
-        }
-
-        function getMousePosition(e, $img) {
-          var offset = $img.offset();
-          return {
-            x: e.pageX - offset.left,
-            y: e.pageY - offset.top
-          };
-        }
-
-        /* =====================
-         * Zoom Logic
-         * ===================== */
-        function handleZoom(e) {
-          var $img = $(e.target).closest('.original_image');
-          if (!$img.length) return;
-
-          var $slide = $img.closest('.swiper-slide');
-          var $lens = $slide.find('.zoom_lens');
-          var $container = $('.magnified_container');
-          var $zoomImg = $('.magnified_image');
-
-          if ($slide.find('iframe').length) {
-            $lens.hide();
-            $container.hide();
-            return;
-          }
-
-          var iw = $img.outerWidth();
-          var ih = $img.outerHeight();
-          var mouse = getMousePosition(e, $img);
-
-          if (mouse.x < 0 || mouse.y < 0 || mouse.x > iw || mouse.y > ih) {
-            $lens.hide();
-            $container.hide();
-            return;
-          }
-
-          if (!zoomState.naturalWidth) {
-            loadImageSize($img, function (w, h) {
-              zoomState.naturalWidth = w;
-              zoomState.naturalHeight = h;
-            });
-            return;
-          }
-
-          $lens.show();
-          $container.show();
-
-          /* 확대 비율 */
-          var baseRatio = Math.max(zoomState.naturalWidth / iw, zoomState.naturalHeight / ih);
-          var ratio = baseRatio * zoomState.zoomRatio;
-
-          var zw = zoomState.naturalWidth * ratio;
-          var zh = zoomState.naturalHeight * ratio;
-
-          $zoomImg.css({
-            width: zw,
-            height: zh
-          });
-
-          /* lens 이동 */
-          var lw = $lens.outerWidth();
-          var lh = $lens.outerHeight();
-
-          var px = Math.max(0, Math.min(mouse.x - lw / 2, iw - lw));
-          var py = Math.max(0, Math.min(mouse.y - lh / 2, ih - lh));
-
-          $lens.css({
-            left: px + $img.position().left,
-            top: py + $img.position().top
-          });
-
-          /* 확대 이미지 이동 */
-          var cw = $container.width();
-          var ch = $container.height();
-
-          var rx = (px / (iw - lw)) * (zw - cw);
-          var ry = (py / (ih - lh)) * (zh - ch);
-
-          $zoomImg.css({
-            left: -rx,
-            top: -ry
-          });
-        }
-
-        /* =====================
-         * Events
-         * ===================== */
-        $('.gallery-top')
-          .on('mousemove', handleZoom)
-          .on('mouseleave', function () {
-            $('.zoom_lens').hide();
-            $('.magnified_container').hide();
-          });
-
-        galleryTop.on('slideChangeTransitionEnd', function () {
-          resetZoomState();
-
-          var $activeImg = $(galleryTop.slides[galleryTop.activeIndex]).find('.original_image');
-
-          $('.magnified_image').attr('src', $activeImg.attr('src'));
-        });
-
-        /* 초기 확대 이미지 설정 */
-        var $initialImg = $(galleryTop.slides[galleryTop.activeIndex]).find('.original_image');
-
-        $('.magnified_image').attr('src', $initialImg.attr('src'));
+  const DEFAULT_OFFSET = {
+    before: 0,
+    after: 0
+  };
+  const SWIPER_PRESETS = {
+    test: {
+      spaceBetween: 32.5,
+      speed: 400,
+      breakpoints: {
+        1024: {slidesPerView: 2},
+        1280: {slidesPerView: 2}
       }
-
-      initDealGallery();
-      console.log('[swiper] init');
+    },
+    card: {
+      slidesPerView: 5,
+      spaceBetween: 27.5,
+      speed: 400,
+      breakpoints: {
+        1024: {slidesPerView: 4},
+        1280: {slidesPerView: 5}
+      }
+    },
+    list: {
+      spaceBetween: 19.6,
+      speed: 400,
+      breakpoints: {
+        1024: {slidesPerView: 4},
+        1280: {slidesPerView: 6}
+      }
     }
   };
 
-  console.log('[swiper] module loaded');
-})(window.jQuery || window.$, window);
+  function initSwipers() {
+    if (typeof Swiper === 'undefined') {
+      setTimeout(initSwipers, 100);
+      return;
+    }
+
+    document.querySelectorAll('.js-swiper').forEach(function (el) {
+      const type = el.dataset.swiperType;
+      if (!SWIPER_PRESETS[type]) return;
+
+      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
+      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
+
+      // offset 개별 제어
+      const offsetBeforeAttr = el.getAttribute('data-offset-before');
+      const offsetAfterAttr = el.getAttribute('data-offset-after');
+
+      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
+      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+
+      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
+      const desktopView = el.dataset.desktop;
+      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
+        preset.breakpoints[1280].slidesPerView = Number(desktopView);
+      }
+
+      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
+      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
+        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
+          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
+          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
+          }
+          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
+          }
+        });
+      }
+
+      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
+      var nextEl = el.querySelector('.swiper-button-next');
+      var prevEl = el.querySelector('.swiper-button-prev');
+
+      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
+      if (!nextEl || !prevEl) {
+        // container의 부모 요소에서 vits-swiper-navs 찾기
+        const parent = el.parentElement;
+        if (parent) {
+          const navsContainer = parent.querySelector('.vits-swiper-navs');
+          if (navsContainer) {
+            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
+          }
+        }
+
+        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
+        if ((!nextEl || !prevEl) && el.nextElementSibling) {
+          const nextSibling = el.nextElementSibling;
+          if (nextSibling.classList.contains('vits-swiper-navs')) {
+            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
+          }
+        }
+      }
+
+      new Swiper(el, {
+        slidesPerView: 1,
+        spaceBetween: preset.spaceBetween,
+        speed: preset.speed,
+        slidesOffsetBefore: offsetBefore,
+        slidesOffsetAfter: offsetAfter,
+        centeredSlides: false,
+        navigation: {
+          nextEl: nextEl,
+          prevEl: prevEl
+        },
+        pagination: {
+          el: el.querySelector('.swiper-pagination'),
+          clickable: true
+        },
+        breakpoints: preset.breakpoints
+      });
+    });
+  }
+
+  function waitForDependencies() {
+    if (typeof Swiper === 'undefined') {
+      setTimeout(waitForDependencies, 100);
+      return;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwipers);
+    } else {
+      initSwipers();
+    }
+  }
+
+  waitForDependencies();
+})();
+
+// window.UI.swiper로 등록 (선택적)
+(function (window) {
+  'use strict';
+  window.UI = window.UI || {};
+  window.UI.swiper = {
+    init: function () {
+      // 이미 자동 실행되므로 빈 함수로 유지
+      // 필요시 여기에 추가 초기화 로직 작성
+    }
+  };
+})(window);

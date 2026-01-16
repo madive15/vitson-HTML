@@ -1,0 +1,52 @@
+// -----------------------------------------------------------------------------
+// layout/_list.scss
+// - 반복 리스트(가로/세로) 배치 및 gap 간격 패턴만 공통 관리. (아이템 UI 제외)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+$list-gap: 16, 18;
+
+// 방향별 기본 스타일
+$list-directions: (
+  row: (
+    display: flex,
+    flex-direction: row,
+    flex-wrap: wrap
+  ),
+  column: (
+    display: flex,
+    flex-direction: column
+  )
+);
+
+@mixin common-list-gap {
+  display: flex;
+
+  // gap 클래스 자동 생성: .list-row-gap16, .list-column-gap18
+  @each $gap in $list-gap {
+    &-gap#{$gap} {
+      gap: fn.rem($gap);
+    }
+  }
+}
+
+// 조합 클래스만 생성: 예) .list-row-gap16, .list-column-gap18
+@each $name, $props in $list-directions {
+  @each $gap in $list-gap {
+    .list-#{$name}-gap#{$gap} {
+      // 방향별 기본 속성 출력
+      @each $prop, $value in $props {
+        #{$prop}: #{$value};
+      }
+      gap: fn.rem($gap);
+    }
+  }
+}

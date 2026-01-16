@@ -1,0 +1,54 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- 옵션선택 modal -->
+<div class="vits-modal-product-modal vits-options-modal" data-toggle-box="vits-options-modal">
+  <div class="vits-modal-product-dim" data-toggle-dim="vits-options-modal"></div>
+  <div class="vits-modal-product-panel">
+    <div class="vits-modal-product-head">
+      <h2>다른규격 선택</h2>
+      <button
+        type="button"
+        class="icon"
+        data-toggle-btn
+        data-toggle-group-except="true"
+        data-toggle-target="filter-box"
+      >
+        필터 열기
+      </button>
+    </div>
+    <div class="vits-modal-product-body">
+      <div class="vits-modal-product-content" data-toggle-box="filter-box">
+        전체 필터영역 <br />
+        옵션은 Max height 값 초과시 스크롤 생성 <br />
+        최대 옵션 갯수는 5개, 옵션당 기본 2줄까지 보여줌. <br />
+        이후는 더보기 버튼으로 열 수 있음
+        <div class="filter-box">
+          <div class="filter-item">
+            <div class="filter-item-title">
+              <span class="title-text">규격</span>
+              <button
+                type="button"
+                class="icon"
+                data-toggle-btn
+                data-toggle-group-except="true"
+                data-toggle-target="filter-item"
+              >
+                더보기 버튼
+              </button>
+            </div>
+            <div class="filter-item-content" data-toggle-box="filter-item">
+              관리책임자 , 사진촬영금지, 포멕스사인/통제구역관계자외출입금지 ...
+            </div>
+          </div>
+          <div class="filter-item"></div>
+          <div class="filter-item"></div>
+        </div>
+      </div>
+      <div class="vits-modal-product-content">옵션아이템 영역</div>
+    </div>
+    <div class="vits-modal-product-close">
+      <button type="button" class="icon" data-toggle-btn="" data-toggle-target="vits-options-modal">
+        <i class="ic ic-x"></i>
+      </button>
+    </div>
+  </div>
+</div>

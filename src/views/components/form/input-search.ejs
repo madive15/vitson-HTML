@@ -1,0 +1,27 @@
+<!-- prettier-ignore -->
+<%
+  const _id = (typeof idPrefix !== 'undefined' && idPrefix) ? idPrefix : 'plp';
+  const _inputId = `${_id}-searchKeyword`;
+  const _action = (typeof action !== 'undefined' && action) ? action : '';
+  const _name = (typeof name !== 'undefined' && name) ? name : 'q';
+  const _placeholder = (typeof placeholder !== 'undefined' && placeholder) ? placeholder : '결과 내 재검색';
+%>
+
+<form class="vits-input-search" role="search" action="<%= _action %>" method="get" data-search-form>
+  <label for="<%= _inputId %>" class="sr-only">검색어</label>
+
+  <input
+    type="search"
+    id="<%= _inputId %>"
+    class="input-search"
+    name="<%= _name %>"
+    autocomplete="off"
+    enterkeyhint="search"
+    placeholder="<%= _placeholder %>"
+    data-search-input
+  />
+
+  <button type="submit" class="input-search-btn" aria-label="검색">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+  </button>
+</form>

@@ -29,7 +29,7 @@ $header-common-gap: map.get(var.$unit, 32);
 }
 
 .vits-header {
-  @include mx.border($color: map.get(color.$border-colors, 'quaternary'));
+  @include mx.border($color: map.get(color.$layout-border, 'quaternary'));
   position: relative;
   background: color.$color-white;
 
@@ -172,7 +172,7 @@ $header-common-gap: map.get(var.$unit, 32);
               padding: 12px;
               background: #fff;
               border: 1px solid #dadada;
-              border-radius: 8px;
+              border-radius: map.get(var.$radius, 'md');
 
               &-head {
                 display: flex;
@@ -209,7 +209,7 @@ $header-common-gap: map.get(var.$unit, 32);
           .header-search {
             &-input {
               @include mx.flex(flex, row, space-between, center);
-              @include mx.border('all', $width: 2px, $color: map.get(color.$border-colors, 'primary'));
+              @include mx.border('all', $width: 2px, $color: map.get(color.$layout-border, 'primary'));
               @include mx.input-search-reset;
               gap: map.get(var.$unit, 8);
               width: $header-search-width;
@@ -376,7 +376,7 @@ $header-common-gap: map.get(var.$unit, 32);
 
         .icon {
           @include icon.ic-size(fn.rem(24));
-          color: map.get(color.$icon-neutral-colors, 'primary');
+          color: map.get(color.$icon-neutral, 'primary');
           transition: transform 0.3s;
           will-change: transform;
         }
@@ -518,7 +518,7 @@ $header-common-gap: map.get(var.$unit, 32);
       align-items: center;
       padding: 4px 8px;
       border: 1px solid #eee;
-      border-radius: 12px;
+      border-radius: map.get(var.$radius, 'lg');
     }
   }
 }
@@ -600,7 +600,7 @@ $header-common-gap: map.get(var.$unit, 32);
   width: 100%;
   padding-top: 100%;
   background: #f2f2f2;
-  border-radius: 8px;
+  border-radius: map.get(var.$radius, 'md');
 }
 
 .product-card .name {
