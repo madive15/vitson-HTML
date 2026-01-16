@@ -1,0 +1,219 @@
+
+<!-- prettier-ignore -->
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - Form</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">Form</h2>
+
+        <h3 class="vits-guide-subtitle">Input Text</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-text.ejs`, {
+  id: 'userName',
+  name: 'userName',
+  label: '이름',
+  placeholder: '이름을 입력하세요',
+  required: true,
+  _rootClass: 'size-default'
+}) %&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input size-default">
+  <div class="input-item">
+    <label for="company1" class="sr-only">회사명(기관명)</label>
+
+    <input
+      type="text"
+      name="company1"
+      id="company1"
+      placeholder="회사명(기관명)을 입력해주세요."
+      
+
+      required
+      
+      
+
+      
+      
+    />
+  </div>
+
+  <div class="input-validation" hidden>
+    <p id="company1-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input size-large">
+  <div class="input-item">
+    <label for="company2" class="sr-only">회사명(기관명)</label>
+
+    <input
+      type="text"
+      name="company3"
+      id="company2"
+      placeholder="회사명(기관명)을 입력해주세요."
+      
+
+      required
+      
+      
+
+      
+      
+    />
+  </div>
+
+  <div class="input-validation" hidden>
+    <p id="company2-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">Textarea</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/textarea.ejs`, {
+  id: 'memoB',
+  name: 'memoB',
+  placeholder: '내용을 입력해주세요.',
+  count: true, // 글자수 체크 시 true
+  maxLength: 200, // 최대 글자수
+  rootClass: 'size-large'
+}) %&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-textarea size-default" data-textarea-count="false">
+  <div class="textarea-box">
+    <textarea
+      rows="4"
+       id="memoA" 
+       name="memoA" 
+       placeholder="내용을 입력해주세요." 
+       required 
+      
+    ></textarea>
+  </div>
+
+  
+</div>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-textarea size-large" data-textarea-count="true">
+  <div class="textarea-box">
+    <textarea
+      rows="4"
+       id="memoB" 
+       name="memoB" 
+       placeholder="내용을 입력해주세요." 
+       required 
+      
+        maxlength="200"
+        data-max-length="200"
+      
+    ></textarea>
+  </div>
+
+  
+    <p class="textarea-meta">
+      <span class="textarea-count" data-ui-textarea-count>0</span>
+      <span class="textarea-max" data-ui-textarea-max>200</span>
+    </p>
+  
+</div>
+
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

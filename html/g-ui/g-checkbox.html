@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 체크박스</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">체크박스</h2>
+
+        <h3 class="vits-guide-subtitle">type basic (01)</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+    variant: 'basic', // basic 타입
+    name: 'ckbox1',
+    list: 'column',   // column 또는 row 
+    gap: 16,          // list gap(간격)
+    datas: [
+      {
+        text: '오늘출발',
+        value:'오늘출발',
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+      {
+        text: '내일출발',
+        value:'내일출발',
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+    ]
+  }) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+
+<div class="checkbox-wrapper type-basic">
+  <ul class="checkbox-item-area list-column-gap16">
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox2"
+            value="오늘출발"
+            
+            
+            
+          />
+
+          
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            오늘출발
+            
+          </span>
+          
+        </label>
+      </li>
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox2"
+            value="내일출발"
+            
+            
+            
+          />
+
+          
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            내일출발
+            
+          </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">type basic (2)</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+    variant: 'basic', // basic 타입
+    name: 'ckbox2',
+    list: 'column',   // column 또는 row
+    gap: 16,
+    datas: [
+      {
+        text: 'CRETOS 용접봉',
+        value:'CRETOS 용접봉',
+        qty: 15,
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+      {
+        text: 'GEMINI',
+        value:'GEMINI',
+        qty: 1,
+        checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+        disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+        required: false, // 기본값 false (true일 때만 기입해도 됨)
+      },
+    ]
+  }) %&gt;</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+
+<div class="checkbox-wrapper type-basic">
+  <ul class="checkbox-item-area list-column-gap16">
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox1"
+            value="CRETOS 용접봉"
+            
+            
+            
+          />
+
+          
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            CRETOS 용접봉
+            
+              <em class="label-unit">15</em>
+            
+          </span>
+          
+        </label>
+      </li>
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox1"
+            value="GEMINI"
+            
+            
+            
+          />
+
+          
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            GEMINI
+            
+              <em class="label-unit">1</em>
+            
+          </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">type card</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+  variant: 'card',  // 카드 타입
+  name: 'ckbox3',
+  list: 'column',   // column 또는 row
+  gap: 18,
+  datas: [
+    {
+      text: '폴더명 입니다',
+      value: '폴더명 입니다',
+      total: 12,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+    {
+      text: 'ABCD',
+      value: 'ABCD',
+      total: 30,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+    {
+      text: '긴 폴더명 말줄임을 적용 긴 폴더명 말말줄줄이이이임!!',
+      value: '250',
+      total: 10,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    }
+  ]
+  }) %&gt;</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+
+<div class="checkbox-wrapper type-card">
+  <ul class="checkbox-item-area list-column-gap18">
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox3"
+            value="폴더명 입니다"
+            
+            
+            
+          />
+
+          
+          <!-- card -->
+          <span class="label-name">폴더명 입니다</span>
+          <span class="label-total">12개 항목</span>
+          <span class="checkbox-icon" aria-hidden="true">
+            <i class="ic ic-check" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ 
+          </span>
+          
+        </label>
+      </li>
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox3"
+            value="ABCD"
+            
+            
+            
+          />
+
+          
+          <!-- card -->
+          <span class="label-name">ABCD</span>
+          <span class="label-total">30개 항목</span>
+          <span class="checkbox-icon" aria-hidden="true">
+            <i class="ic ic-check" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ 
+          </span>
+          
+        </label>
+      </li>
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="ckbox3"
+            value="250"
+            
+            
+            
+          />
+
+          
+          <!-- card -->
+          <span class="label-name">긴 폴더명 말줄임을 적용 긴 폴더명 말말줄줄이이이임!!</span>
+          <span class="label-total">10개 항목</span>
+          <span class="checkbox-icon" aria-hidden="true">
+            <i class="ic ic-check" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+ 
+          </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

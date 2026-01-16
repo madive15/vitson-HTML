@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 라디오</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">라디오</h2>
+
+        <h3 class="vits-guide-subtitle">list column</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-radio.ejs`, {
+  variant: '',        // 최상위 클래스 추가할 떄
+  name: 'rdo1',
+  list: 'column',
+  gap: 16,
+  datas: [
+    {
+      text: '낱개',
+      value: '1',
+      qty: 1,
+      price: 4150,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+    {
+      text: '대포장',
+      value: '250',
+      qty: 250,
+      price: 103750,
+      checked: false,  // 기본값 false (true일 때만 기입해도 됨)
+      disabled: false, // 기본값 false (true일 때만 기입해도 됨)
+      required: false, // 기본값 false (true일 때만 기입해도 됨)
+    },
+  ]
+}) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="radio-wrapper">
+  <ul class="radio-item-area list-column-gap16">
+    
+      <li class="radio-item-box">
+        <label class="radio-item">
+          <input
+            type="radio"
+            name="rdo1"
+            value="1"
+            
+            
+            
+          />
+
+          <span class="radio-icon" aria-hidden="true"></span>
+
+          
+            <span class="radio-price">
+              <span class="label-name">낱개
+                
+                  <em class="label-unit">1</em>
+                
+              </span>
+              <span class="label-price">4,150</span>
+            </span>
+          
+        </label>
+      </li>
+    
+      <li class="radio-item-box">
+        <label class="radio-item">
+          <input
+            type="radio"
+            name="rdo1"
+            value="250"
+            
+            
+            
+          />
+
+          <span class="radio-icon" aria-hidden="true"></span>
+
+          
+            <span class="radio-price">
+              <span class="label-name">대포장
+                
+                  <em class="label-unit">250</em>
+                
+              </span>
+              <span class="label-price">103,750</span>
+            </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">list row</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-radio.ejs`, {
+  variant: '',
+  name: 'rdo1',
+  list: 'row',
+  gap: 18,
+  datas: [
+    {
+      text: '낱개',
+      value: '1',
+      checked: false,
+      disabled: false,
+      required: false,
+    },
+    {
+      text: '대포장',
+      value: '250',
+      checked: false,
+      disabled: false,
+      required: false,
+    },
+  ]
+}) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="radio-wrapper">
+  <ul class="radio-item-area list-row-gap18">
+    
+      <li class="radio-item-box">
+        <label class="radio-item">
+          <input
+            type="radio"
+            name="rdo1"
+            value="1"
+            
+            
+            
+          />
+
+          <span class="radio-icon" aria-hidden="true"></span>
+
+          
+            <span class="label-name">낱개
+              
+            </span>
+          
+        </label>
+      </li>
+    
+      <li class="radio-item-box">
+        <label class="radio-item">
+          <input
+            type="radio"
+            name="rdo1"
+            value="250"
+            
+            
+            
+          />
+
+          <span class="radio-icon" aria-hidden="true"></span>
+
+          
+            <span class="label-name">대포장
+              
+            </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

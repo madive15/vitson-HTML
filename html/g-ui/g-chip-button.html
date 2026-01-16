@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 칩버튼</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">칩버튼</h2>
+
+        <h3 class="vits-guide-subtitle">전체 클릭 / outline</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/label/chip-button.ejs`, {
+  datas: [
+    {
+      action: 'full',        // full | x
+      variant: 'outline',    // outline | filled (기본값 outline)
+      value: 'chip01-1',
+      name: '오늘출발'
+    },
+  ]
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-chip-button-group">
+    
+  <button
+    type="button"
+    class="vits-chip-button type-outline"
+    data-chip-action="remove"
+    data-chip-value="chip01-1"
+  >
+    <span class="text">오늘출발</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-outline"
+    data-chip-action="remove"
+    data-chip-value="chip01-2"
+  >
+    <span class="text">내일배송</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-outline"
+    data-chip-action="remove"
+    data-chip-value="chip01-3"
+  >
+    <span class="text">나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+   
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">x 클릭 / outline</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/label/chip-button.ejs`, {
+  datas: [
+    {
+      action: 'x',           // full | x
+      variant: 'outline',    // outline | filled (기본값 outline)
+      value: 'chip01-1',
+      name: '오늘출발'
+    },
+  ]
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-chip-button-group">
+    
+  <div class="vits-chip-button type-outline" data-chip-value="chip01-1">
+    
+    <span class="text">오늘출발</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="오늘출발 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-outline" data-chip-value="chip01-3">
+    
+    <span class="text">나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-outline" data-chip-value="chip01-2">
+    
+    <span class="text">내일배송</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="내일배송 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+   
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">전체 클릭 / filled</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/label/chip-button.ejs`, {
+  datas: [
+    {
+      action: 'full',        // full | x
+      variant: 'filled',     // outline | filled (기본값 outline)
+      value: 'brand_adidas',
+      category: '브랜드',
+      name: '아디다스'
+    },
+  ]
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-chip-button-group">
+    
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="delivery"
+  >
+    <span class="text">오늘출발</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="brand_adidas"
+  >
+    <span class="text">아디다스</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="brand_NICHIAS"
+  >
+    <span class="text">니치아</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="brand_nike"
+  >
+    <span class="text">나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="chip01-2"
+  >
+    <span class="text">내일배송</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </span>
+  </button>
+
+   
+</div>
+
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">x 클릭 / filled</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/label/chip-button.ejs`, {
+  datas: [
+    {
+      action: 'x',        // full | x
+      variant: 'filled',     // outline | filled (기본값 outline)
+      value: 'brand_adidas',
+      category: '브랜드',
+      name: '아디다스'
+    },
+  ]
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-chip-button-group">
+    
+  <div class="vits-chip-button type-filled" data-chip-value="delivery">
+    
+    <span class="text">오늘출발</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="오늘출발 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="brand_adidas">
+    <span class="text category">브랜드</span>
+    <span class="text">아디다스</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="아디다스 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="brand_NICHIAS">
+    <span class="text category">브랜드</span>
+    <span class="text">니치아</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="니치아 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="brand_nike">
+    
+    <span class="text">나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="chip01-2">
+    
+    <span class="text">내일배송</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="내일배송 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="brand_nike">
+    <span class="text category">브랜드</span>
+    <span class="text">나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 나이키나이키 나이키 나이키 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+   
+</div>
+
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

@@ -72,18 +72,6 @@
    >
   로그인
 </a>
-
-<!-- 
-  components/text-link.ejs
-
-  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
-  - 입력: href(필수), label(필수), target(선택)
-  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
--->
 </li>
         <li class="header-topbar-right-spacer">
           
@@ -94,18 +82,6 @@
    >
   회원가입
 </a>
-
-<!-- 
-  components/text-link.ejs
-
-  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
-  - 입력: href(필수), label(필수), target(선택)
-  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
--->
  
 
 <a class="vits-text-link"
@@ -114,18 +90,6 @@
    >
   고객센터
 </a>
-
-<!-- 
-  components/text-link.ejs
-
-  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
-  - 입력: href(필수), label(필수), target(선택)
-  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
-  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
--->
 
         </li>
       </ul>
@@ -979,6 +943,112 @@
               <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 100">스티키</div>
               <div style="height: 1500px; background: green">영역3</div>
 
+              <div style="height: 400px; background: yellow; padding: 100px">
+                <!-- 증감 가변 인풋 (1) -->
+                <div
+                  class="stepper"
+                  data-step="5"
+                  data-min="0"
+                  data-max="9999"
+                  style="display: inline-flex; align-items: center; padding: 10px; background: palegreen; gap: 8px"
+                >
+                  <button
+                    type="button"
+                    class="stepper__btn stepper__btn--minus"
+                    style="
+                      flex: 0 0 40px;
+                      width: 40px;
+                      height: 40px;
+                      border: 1px solid #999;
+                      background: #eee;
+                      cursor: pointer;
+                    "
+                  >
+                    감소
+                  </button>
+
+                  <!-- 숫자 + 단위 묶음(내용에 따라 자연스럽게 늘어나도록 inline-flex) -->
+                  <div
+                    class="stepper__wrap"
+                    style="
+                      flex: 0 0 auto;
+                      display: inline-flex;
+                      align-items: center;
+                      height: 40px;
+                      padding: 0 10px;
+                      background: green;
+                      box-sizing: border-box;
+                    "
+                  >
+                    <input
+                      type="text"
+                      class="stepper__input"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      value="0"
+                      style="
+                        display: block;
+                        width: 40px;
+                        min-width: 40px;
+                        height: 100%;
+                        border: 0;
+                        outline: none;
+                        appearance: none;
+                        background: orange;
+                        box-sizing: border-box;
+                        text-align: center;
+                        font: 16px/1 sans-serif;
+                        padding: 0;
+                        margin: 0;
+                      "
+                    />
+
+                    <!-- 단위: 서버(EJS)에서 렌더링되는 텍스트 그대로 -->
+                    <span
+                      class="stepper__unit"
+                      style="
+                        display: inline-block;
+                        margin-left: 6px;
+                        white-space: nowrap;
+                        color: #fff;
+                        font: 16px/1 sans-serif;
+                      "
+                    >
+                      kg
+                    </span>
+
+                    <!-- 숫자 폭 측정용(숨김) -->
+                    <span
+                      class="stepper__measure"
+                      aria-hidden="true"
+                      style="
+                        position: absolute;
+                        visibility: hidden;
+                        white-space: pre;
+                        font: 16px/1 sans-serif;
+                        padding: 0;
+                        margin: 0;
+                      "
+                    ></span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="stepper__btn stepper__btn--plus"
+                    style="
+                      flex: 0 0 40px;
+                      width: 40px;
+                      height: 40px;
+                      border: 1px solid #999;
+                      background: #eee;
+                      cursor: pointer;
+                    "
+                  >
+                    증가
+                  </button>
+                </div>
+              </div>
+
               <section data-swiper data-swiper-loop="true" data-swiper-autoplay="3000">
   <div class="swiper" style="width: 100%; height: 400px">
     <div class="swiper-wrapper">
@@ -1013,27 +1083,6 @@
 
   <div data-toggle-box="panel">토글 패널</div>
 </div>
-
-<!--
-  [Toggle UI 사용 예시]
-
-  - 기본 구조:
-    * data-toggle-scope : 토글 동작 범위
-    * data-toggle-btn   : 토글 트리거
-    * data-toggle-box   : 토글 대상 패널
-    * data-toggle-target ↔ data-toggle-box 값 매칭
-
-  - 옵션(선택):
-    * data-toggle-group="true"
-      : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
-      : 특정 영역은 예외 처리하고 싶을 때, button[data-toggle-group-except="true"] 추가
-    * data-toggle-outside="true"
-      : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
-
-  - 상태:
-    * 패널 열림 시 data-toggle-box에 'is-open' 클래스가 추가됨
-    * aria-expanded 값은 JS에서 자동 관리됨
--->
 
             </div>
             <!-- E: vits-grid-main -->
@@ -1230,5 +1279,109 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <!-- 증감 가변 인풋 (2) -->
+    <script>
+      (function ($) {
+        if (!$) return;
+
+        function toNumber(v, fallback) {
+          var n = Number(v);
+          return Number.isFinite(n) ? n : fallback;
+        }
+
+        function onlyDigits(str) {
+          return String(str || '').replace(/\D+/g, '');
+        }
+
+        function clamp(n, min, max) {
+          if (n < min) n = min;
+          if (n > max) n = max;
+          return n;
+        }
+
+        function syncMeasureFont($input, $measure) {
+          // input과 동일한 폰트로 측정(span)
+          var font = $input.css('font');
+          $measure.css({
+            font: font,
+            letterSpacing: $input.css('letter-spacing')
+          });
+        }
+
+        function resizeInput($input, $measure, minW) {
+          var v = $input.val();
+          var text = v && String(v).length ? String(v) : '0';
+          $measure.text(text);
+
+          // 커서 여유
+          var extra = 16;
+          var w = $measure[0].offsetWidth + extra;
+
+          if (w < minW) w = minW;
+          $input.css('width', w + 'px');
+        }
+
+        function getValue($input, min, max) {
+          var digits = onlyDigits($input.val());
+          if ($input.val() !== digits) $input.val(digits);
+          var n = digits === '' ? 0 : toNumber(digits, 0);
+          return clamp(n, min, max);
+        }
+
+        function setValue($input, n, min, max) {
+          $input.val(String(clamp(n, min, max)));
+        }
+
+        function syncDisabled($root, v, step, min, max) {
+          $root.find('.stepper__btn--minus').prop('disabled', v - step < min);
+          $root.find('.stepper__btn--plus').prop('disabled', v + step > max);
+        }
+
+        // 여러 개 stepper도 동작하도록 each 처리
+        $('.stepper').each(function () {
+          var $root = $(this);
+          var $input = $root.find('.stepper__input');
+          var $measure = $root.find('.stepper__measure');
+
+          var step = toNumber($root.data('step'), 1);
+          var min = toNumber($root.data('min'), -Infinity);
+          var max = toNumber($root.data('max'), Infinity);
+
+          var minW = 40;
+
+          syncMeasureFont($input, $measure);
+
+          function refresh() {
+            var v = getValue($input, min, max);
+            resizeInput($input, $measure, minW);
+            syncDisabled($root, v, step, min, max);
+          }
+
+          $root.on('click', '.stepper__btn--minus', function () {
+            var v = getValue($input, min, max);
+            setValue($input, v - step, min, max);
+            refresh();
+          });
+
+          $root.on('click', '.stepper__btn--plus', function () {
+            var v = getValue($input, min, max);
+            setValue($input, v + step, min, max);
+            refresh();
+          });
+
+          $root.on('input', '.stepper__input', function () {
+            refresh();
+          });
+
+          $(window).on('resize', function () {
+            syncMeasureFont($input, $measure);
+            resizeInput($input, $measure, minW);
+          });
+
+          refresh();
+        });
+      })(window.jQuery);
+    </script>
   </body>
 </html>

@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 수량 조절</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">수량 조절</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, { type: 'horiz' }) %&gt;
+          </code>
+        </div>
+        <div class="vits-guide-code">
+          <pre>
+  사용 방법
+  
+  1) 기본(가로형)
+  &lt;%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+    type: 'horiz',
+    name: 'quantity',
+    value: 1,
+    min: 1,
+    max: 9999,
+    step: 1,
+    unit: '개'
+  }) %&gt;
+  
+  2) 세로형
+  &lt;%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+    type: 'vertical',
+    name: 'quantity2',
+    value: 10,
+    min: 1,
+    max: 9999,
+    step: 1,
+    unit: '박스'
+  }) %&gt;
+  
+  3) 옵션 추가
+  &lt;%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+    type: 'horiz',
+    variant: 'is-compact',
+    name: 'quantity3',
+    value: 1,
+    min: 1,
+    max: 5,
+    step: 1,
+    unit: 'EA',
+    disabled: false,
+    required: false
+  }) %&gt;
+  
+  파라미터
+  - type: 'horiz' | 'vertical' (기본값: 'horiz')
+  - variant: wrapper에 추가할 클래스
+  - name: input name
+  - value: 초기값
+  - min: 최소값 (기본값: 1)
+  - max: 최대값 (기본값: Infinity)
+  - step: 증감 단위 (기본값: 1)
+  - unit: 단위 텍스트 (미입력 시 숨김)
+  - disabled: 비활성화 여부 (기본값: false)
+  - required: 필수 여부 (기본값: false)
+          </pre>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <h4 class="vits-guide-subtitle">기본(가로형)</h4>
+              <!-- prettier-ignore -->
+              
+
+
+
+  <div class="quantity-control type-horiz">
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
+      <i class="ic ic-minus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      name="quantity"
+      value="1"
+      data-min="1"
+      
+      data-step="1"
+      aria-label="개수"
+      
+      
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+
+    
+      <span class="unit">개</span>
+    
+
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+
+
+            </li>
+            <li>
+              <h4 class="vits-guide-subtitle">기본(세로형)</h4>
+              <!-- prettier-ignore -->
+              
+
+
+
+  <div class="quantity-control type-vertical">
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      name="quantity2"
+      value="10"
+      data-min="1"
+      
+      data-step="1"
+      aria-label="단위"
+      
+      
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+    
+      <span class="unit">박스</span>
+    
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
+      <i class="ic ic-arrow-up" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+
+
+            </li>
+            <li>
+              <h4 class="vits-guide-subtitle">최소 1 개 , 최대 5 개</h4>
+              <!-- prettier-ignore -->
+              
+
+
+
+  <div class="quantity-control type-horiz is-compact">
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
+      <i class="ic ic-minus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      name="quantity3"
+      value="1"
+      data-min="1"
+      data-max="5"
+      data-step="1"
+      aria-label="개수"
+      
+      
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+
+    
+      <span class="unit">EA</span>
+    
+
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+
+
+            </li>
+            <li>
+              <h4 class="vits-guide-subtitle">input 입력 disabled 상태</h4>
+              <!-- prettier-ignore -->
+              
+
+
+
+  <div class="quantity-control type-horiz is-compact">
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
+      <i class="ic ic-minus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      name="quantity3"
+      value="1"
+      data-min="1"
+      data-max="5"
+      data-step="2"
+      aria-label="개수"
+      
+      
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+
+    
+      <span class="unit">EA</span>
+    
+
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+
+<!-- 
+  components/icon.ejs
+
+  - 사용: < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) % >
+  - 옵션: iconName(아이콘 이름)
+    - 아이콘 목록: g-foundations/g-icon.html
+-->
+
+    </button>
+  </div>
+
+
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

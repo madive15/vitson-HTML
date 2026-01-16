@@ -1,10 +1,6 @@
 
 <!DOCTYPE html>
-<!-- 
-  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
-    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
-  -->
-<html lang="ko" class="vits-scope">
+<html lang="ko">
   
 <head>
   <meta charset="UTF-8" />
@@ -14,7 +10,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>템플릿 메인</title>
+  <title></title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -33,15 +29,9 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
-  <!-- [D] vits-scope 적용(상단 주석 참고) -->
-  <body class="vits-scope">
-    <!-- S: Skip Navigation -->
-    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
-    <!-- E: Skip Navigation -->
 
-    <!-- S: vits-wrapper -->
-    <section class="vits-wrapper">
-      
+  <body>
+    
 
 <!-- S: vits-header -->
 <header class="vits-header">
@@ -924,34 +914,118 @@
 </header>
 <!-- E: vits-header -->
 
+    <section class="pd-gallery" data-test-gallery>
+      <style>
+        /* 1) 전체 래퍼: 갤러리 최대폭 500px, 반응형으로 줄어듦 */
+        .pd-gallery {
+          position: relative; /* 줌 absolute 기준 */
+          max-width: 500px; /* 요청값 */
+          width: 100%;
+        }
 
-      <!-- S: vits-main -->
-      <main id="skipNav" class="vits-main">
-        <!-- S: vits-wrap -->
-        <div class="vits-wrap">
-          <!-- S: vits-grid -->
-          <div class="vits-grid">
-            <!-- S: vits-grid-side-left -->
-            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-            <!-- E: vits-grid-side-left -->
+        /* 2) 메인/썸네일 레이아웃은 갤러리 폭을 따름 */
+        .pd-gallery-main {
+          position: relative; /* 줌 기준을 메인 영역으로 잡아도 됨 */
+          display: block; /* 옆에 줌을 두지 않음(줌은 absolute) */
+        }
 
-            <!-- S: vits-grid-main -->
-            <div class="vits-grid-main vits-main-{1depth 이름}">
-              <!-- 메인 컨텐츠 -->
-            </div>
-            <!-- E: vits-grid-main -->
+        /* 3) 큰이미지(메인 swiper): 갤러리 폭에 맞추고, 정사각 유지 */
+        .pd-main-swiper {
+          position: relative;
+          width: 100%; /* max-width 500px 내부에서 100% */
+          aspect-ratio: 1 / 1; /* 정사각 유지(브라우저 지원 OK) */
+          height: auto; /* 고정 520 제거 */
+          overflow: hidden;
+          border: 1px solid #e5e7eb;
+          background: #fff;
+        }
 
-            <!-- S: vits-grid-right -->
-            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
-            <!-- E: vits-grid-right -->
-          </div>
-          <!-- E: vits-grid -->
+        /* 구형 대응이 필요하면 aspect-ratio 대신 아래로 대체
+.pd-main-swiper { width:100%; height: 0; padding-top: 100%; }
+.pd-main-swiper .swiper { position:absolute; inset:0; }  // 구조에 따라 조정
+*/
+
+        /* 메인 이미지 */
+        .pd-main-swiper .swiper-slide img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+
+        /* 4) 줌: 레이아웃에 포함되지 않도록 absolute로 띄움 */
+        .pd-zoom {
+          position: absolute;
+          left: calc(100% + 16px); /* 큰이미지 오른쪽 16px 간격 */
+          top: 0;
+          width: 100%; /* 큰이미지와 동일 폭 */
+          aspect-ratio: 1 / 1; /* 큰이미지와 동일 비율 */
+          height: auto;
+          border: 1px solid #e5e7eb;
+          overflow: hidden;
+          display: none;
+          background: #fff;
+          z-index: 10;
+        }
+
+        .pd-zoom.is-on {
+          display: block;
+        }
+
+        /* 확대 이미지 포지션은 기존대로 */
+        .pd-zoom img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: block;
+          max-width: none;
+          max-height: none;
+          user-select: none;
+          -webkit-user-drag: none;
+        }
+
+        /* 5) 썸네일도 갤러리 폭을 따름 */
+        .pd-gallery-thumbs {
+          margin-top: 12px;
+          width: 100%;
+        }
+        .pd-thumbs-swiper {
+          position: relative;
+          padding: 0 40px;
+        }
+
+        /* (선택) 모바일/좁은 화면에서 줌이 화면 밖으로 나가면 숨김 처리 */
+        @media (max-width: 1100px) {
+          .pd-zoom {
+            display: none !important;
+          }
+        }
+      </style>
+
+      <div class="pd-gallery-main">
+        <div class="swiper pd-main-swiper" data-main-swiper>
+          <div class="swiper-wrapper" data-main-wrapper></div>
+
+          <button type="button" class="pd-nav pd-nav-prev" aria-label="이전 이미지" data-main-prev></button>
+          <button type="button" class="pd-nav pd-nav-next" aria-label="다음 이미지" data-main-next></button>
         </div>
-        <!-- E: vits-wrap -->
-      </main>
-      <!-- E: vits-main -->
 
-      
+        <aside class="pd-zoom" data-zoom aria-hidden="true">
+          <img data-zoom-img alt="" />
+        </aside>
+      </div>
+
+      <div class="pd-gallery-thumbs">
+        <div class="swiper pd-thumbs-swiper" data-thumbs-swiper>
+          <div class="swiper-wrapper" data-thumbs-wrapper></div>
+
+          <button type="button" class="pd-thumb-nav pd-thumb-prev" aria-label="썸네일 이전" data-thumbs-prev></button>
+          <button type="button" class="pd-thumb-nav pd-thumb-next" aria-label="썸네일 다음" data-thumbs-next></button>
+        </div>
+      </div>
+    </section>
+
+    
 
 <!-- prettier-ignore -->
 
@@ -1114,11 +1188,7 @@
   </section>
   <!-- E: vits-footer-modal -->
 </footer>
-
-    </section>
-    <!-- E: vits-wrapper -->
-
-    
+ 
 <!-- jquery -->
 <!-- Kendo UI Core JavaScript -->
 <script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
@@ -1133,5 +1203,12 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <script></script>
+    <script>
+      kendo.ui.icon($('.facebook'), {icon: 'facebook'});
+      kendo.ui.icon($('.pinterest'), {icon: 'pinterest'});
+      kendo.ui.icon($('.twitter'), {icon: 'twitter'});
+    </script>
   </body>
 </html>

@@ -1,0 +1,679 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 버튼</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">버튼</h2>
+
+        <!-- 기본 사용법 -->
+        <h3 class="vits-guide-subtitle">기본 사용법</h3>
+
+        <div class="vits-guide-code">
+          <style>
+            .vits-guide-list > li {
+              border-bottom: 0;
+            }
+          </style>
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'md', variant: 'primary', text: '버튼
+            텍스트' }) %&gt;
+            <!-- prettier-ignore -->
+            <div style="font-size: 12px;">
+              * Button Component <br>
+              * <br>
+              * @param {string} size        - xxl | xl | lg | md | sm | xs | xxs (필수, 기본값: 'md')<br>
+              * @param {string} variant     - primary | secondary | tertiary | outline-primary | outline-secondary | outline-tertiary (필수, 기본값: 'primary')<br>
+              * @param {string} text        - 버튼 텍스트<br>
+              * @param {boolean} iconLeft   - 좌측 아이콘 여부 (기본값: false)<br>
+              * @param {boolean} iconRight  - 우측 아이콘 여부 (기본값: false)<br>
+              * @param {string} iconName    - 아이콘 클래스명 (ex: 'ic-check')<br>
+              * @param {boolean} disabled   - 비활성 여부 (기본값: false)<br>
+              * @param {string} type        - button | submit | reset (기본값: 'button')<br>
+              * @param {string} className   - 추가 클래스명<br>
+              * @param {string} attrs       - 추가 _attrs 속성 (ex. data-toggle-btn , data-toggle-outside="true", data-toggle-group-except="true", data-toggle-target="panel", aria-expanded="false") <br>
+              *  ㄴ/g-ui/g-toggle.html 참고
+            </div>
+          </code>
+        </div>
+
+        <!-- Primary Variant -->
+        <h3 class="vits-guide-subtitle">Primary Variant</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'md', variant: 'primary', text: '버튼
+            텍스트' }) %&gt;
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">Primary 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-secondary "
+  
+  >
+  
+
+  <span class="text">Secondary 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-tertiary "
+  
+  >
+  
+
+  <span class="text">Tertiary 버튼</span>
+
+  
+</button>
+
+            </li>
+          </ul>
+        </div>
+
+        <!-- Outline Variant -->
+        <h3 class="vits-guide-subtitle">Outline Variant</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'md', variant: 'outline-primary', text:
+            '버튼 텍스트' }) %&gt;
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">Outline Primary 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">Outline Secondary 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-tertiary "
+  
+  >
+  
+
+  <span class="text">Outline Tertiary 버튼</span>
+
+  
+</button>
+
+            </li>
+          </ul>
+        </div>
+
+        <!-- 아이콘 버튼 -->
+        <h3 class="vits-guide-subtitle">아이콘 버튼</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'md', variant: 'primary', text: '버튼
+            텍스트', iconLeft: true, iconName: 'ic-check' }) %&gt;
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-check" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">왼쪽 아이콘 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary icon-right"
+  
+  >
+  
+
+  <span class="text">오른쪽 아이콘 버튼</span>
+
+  
+    <span class="icon">
+      <i class="ic ic-check" aria-hidden="true"></i>
+    </span>
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary icon-lefticon-right"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-check" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">양쪽 아이콘 버튼</span>
+
+  
+    <span class="icon">
+      <i class="ic ic-check" aria-hidden="true"></i>
+    </span>
+  
+</button>
+
+            </li>
+          </ul>
+        </div>
+
+        <!-- 크기 예시 -->
+        <h3 class="vits-guide-subtitle">크기 예시</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'xxl', // xxl | xl | lg | md | sm | xs
+            | xxs variant: 'primary', text: '버튼 텍스트' }) %&gt;
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xxl vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">XXL 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">XL 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">LG 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">MD 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">SM 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">XS 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">XXS 버튼</span>
+
+  
+</button>
+
+            </li>
+          </ul>
+        </div>
+
+        <!-- 상태 예시 -->
+        <h3 class="vits-guide-subtitle">상태 예시</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            &lt;%- include(`${_src}/views/components/button/button.ejs`, { size: 'md', variant: 'primary', text: '버튼
+            텍스트', disabled: true, type: 'submit' }) %&gt;
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-primary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-secondary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-tertiary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-primary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-secondary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-tertiary  disabled"
+  disabled
+  >
+  
+
+  <span class="text">비활성화 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="submit"
+  class="vits-btn-md vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">Submit 타입 버튼</span>
+
+  
+</button>
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="reset"
+  class="vits-btn-md vits-btn-primary "
+  
+  >
+  
+
+  <span class="text">Reset 타입 버튼</span>
+
+  
+</button>
+
+            </li>
+          </ul>
+        </div>
+
+        <!-- 텍스트 링크 버튼 -->
+        <h3 class="vits-guide-subtitle">텍스트 링크 버튼</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;!-- 
+  components/text-link.ejs
+
+  - 헤더/유틸 영역 등에서 사용하는 텍스트 링크(버튼 형태)
+  - 입력: href(필수), label(필수), target(선택)
+  - 동작: target 미지정 시 기본 동작(같은 탭), target='_blank'일 때 rel='noopener noreferrer' 자동 적용
+
+  - 사용:
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: '/mypage/favorite', label: '즐겨찾기' }) 
+  < %- include(`${_src}/views/components/button/text-link.ejs`, { href: 'https://external.site', label: '외부 링크', target: '_blank' }) 
+--&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  즐겨찾기
+</a>
+</li>
+            <li>
+              
+
+<a class="vits-text-link"
+   href="https://www.naver.com/"
+    target="_blank"
+    rel="noopener noreferrer">
+  네이버 새창열기
+</a>
+
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+    <!-- 
+      /**
+     * Button Component
+     *
+     * @param {string} size        - xxl | xl | lg | md | sm | xs | xxs (필수)
+     * @param {string} variant     - primary | secondary | tertiary | outline-primary | outline-secondary | outline-tertiary (필수)
+     * @param {string} text        - 버튼 텍스트
+     * @param {boolean} iconLeft   - 좌측 아이콘 여부
+     * @param {boolean} iconRight  - 우측 아이콘 여부
+     * @param {string} iconName    - 아이콘 클래스명 (ex: 'ic-check')
+     * @param {boolean} disabled   - 비활성 여부
+     * @param {string} type        - button | submit | reset
+     * @param {string} className   - 추가 클래스명
+     * @param {string} attrs       - 추가 HTML 속성
+     */ 
+    -->
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>
