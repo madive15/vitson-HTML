@@ -49,6 +49,38 @@
   <section id="sec1" class="tab-section">
     <!-- <h3 class="section-title">상세내용</h3> -->
     <div class="section-content">
+      <!-- s: 스펙영역 -->
+      <!-- prettier-ignore -->
+      <%
+        const specColumnscol3 = [
+          [
+            { label: '상품코드', value: '59509' },
+            { label: '모델명', value: 'LED-PARK-60W-S' },
+          ],
+          [
+            { label: '규격', value: '60W 1200 주광' },
+            { label: '품질보증', value: '2년 (A/S 무상)' },
+          ],
+          [
+            { label: '토크 단계', value: '20단계 + 드릴링' },
+            { label: '품질보증', value: '2년 (A/S 무상)' },
+          ],
+        ];
+      %>
+      <div class="vits-product-spec spec-col3">
+        <% specColumnscol3.forEach((column) => { %>
+        <div class="vits-product-spec-col">
+          <ul class="vits-spec-list">
+            <% column.forEach((item) => { %>
+            <li class="vits-spec-item">
+              <span class="vits-spec-label"><%= item.label %></span>
+              <span class="vits-spec-value"><%= item.value %></span>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+        <% }) %>
+      </div>
       <!-- 상세이미지 -->
       <div class="vits-img-detail" style="background-color: #000">
         <img src="<%= _public %>/resources/img/mro/renewal/temp/img-product-detail-1.jpg" alt="상품상세이미지" />

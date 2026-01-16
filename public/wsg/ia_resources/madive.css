@@ -876,3 +876,55 @@ td.col-url a:hover {
 .state.row-ing {
   background-color: #e2d6ff;
 }
+
+.history-box {
+  display: block;
+  width: 100%;
+}
+.history-box > ul > li:last-of-type {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+}
+.history-box > ul > li:first-of-type::before,
+.history-box > ul > li:last-of-type::before {
+  display: block;
+  font-weight: 700;
+}
+.history-box > ul > li:first-of-type::before {
+  content: '[작업 완료]';
+}
+.history-box > ul > li:last-of-type::before {
+  content: '[작업 예정]';
+}
+.history-box > ul > li.is-none {
+  display: none !important;
+}
+.history-title {
+  font-weight: 700;
+}
+.history-list > li {
+  display: flex;
+  align-items: flex-start;
+}
+.history-list > li::before {
+  content: attr(data-date);
+  font-weight: 700;
+}
+.history-list > li p {
+  position: relative;
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 17px;
+  color: #333;
+}
+.history-list > li p::before {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  width: 4px;
+  height: 1px;
+  z-index: 10;
+  background: #666;
+  content: '';
+}

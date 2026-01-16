@@ -32,19 +32,28 @@ import Swiper from 'swiper/bundle';
   var mainNext = root.querySelector('[data-main-next]');
   var thumbsPrev = root.querySelector('[data-thumbs-prev]');
   var thumbsNext = root.querySelector('[data-thumbs-next]');
-  if (!mainPrev || !mainNext || !thumbsPrev || !thumbsNext) return;
+  if (!thumbsPrev || !thumbsNext) return;
 
   var zoomBox = root.querySelector('[data-zoom]');
   var zoomImg = root.querySelector('[data-zoom-img]');
 
   var ZOOM_RATIO = 3;
 
-  // 이미지 데이터는 EJS 템플릿에서 렌더링되므로, DOM에서 이미지 정보를 가져옴
-  var mainImgs = Array.prototype.slice.call(mainWrapper.querySelectorAll('[data-main-img]'));
-  var items = mainImgs.map(function (img) {
+  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
+  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
+  var items = mainSlides.map(function (slide) {
+    var img = slide.querySelector('[data-main-img]');
+    if (img) {
+      return {
+        type: 'image',
+        src: img.src,
+        alt: img.alt || ''
+      };
+    }
     return {
-      src: img.src,
-      alt: img.alt || ''
+      type: 'iframe',
+      src: '',
+      alt: ''
     };
   });
 
@@ -64,7 +73,7 @@ import Swiper from 'swiper/bundle';
   var mainSwiper = new Swiper(mainEl, {
     loop: false,
     slidesPerView: 1,
-    allowTouchMove: false
+    allowTouchMove: true
   });
 
   var currentIndex = 0;
@@ -103,21 +112,33 @@ import Swiper from 'swiper/bundle';
     if (currentIndex >= last) thumbsNext.classList.add('is-disabled');
     else thumbsNext.classList.remove('is-disabled');
 
-    if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');
-    else mainPrev.classList.remove('swiper-button-disabled');
+    if (mainPrev) {
+      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');
+      else mainPrev.classList.remove('swiper-button-disabled');
+    }
 
-    if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');
-    else mainNext.classList.remove('swiper-button-disabled');
+    if (mainNext) {
+      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');
+      else mainNext.classList.remove('swiper-button-disabled');
+    }
 
-    if (zoomImg) zoomImg.src = items[currentIndex].src;
+    if (zoomImg) {
+      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;
+      else zoomImg.removeAttribute('src');
+    }
+    if (!items[currentIndex].src) hideZoom();
   }
 
-  mainPrev.addEventListener('click', function () {
-    setIndex(currentIndex - 1);
-  });
-  mainNext.addEventListener('click', function () {
-    setIndex(currentIndex + 1);
-  });
+  if (mainPrev) {
+    mainPrev.addEventListener('click', function () {
+      setIndex(currentIndex - 1);
+    });
+  }
+  if (mainNext) {
+    mainNext.addEventListener('click', function () {
+      setIndex(currentIndex + 1);
+    });
+  }
 
   thumbsPrev.addEventListener('click', function () {
     setIndex(currentIndex - 1);
@@ -172,6 +193,11 @@ import Swiper from 'swiper/bundle';
 
   if (zoomBox && zoomImg) {
     mainEl.addEventListener('mouseenter', function () {
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
       showZoom();
     });
     mainEl.addEventListener('mouseleave', function () {
@@ -182,7 +208,10 @@ import Swiper from 'swiper/bundle';
       if (!zoomBox.classList.contains('is-on')) return;
 
       var img = getActiveImgEl();
-      if (!img) return;
+      if (!img) {
+        hideZoom();
+        return;
+      }
 
       var contRect = mainEl.getBoundingClientRect();
       var cx = e.clientX - contRect.left;
