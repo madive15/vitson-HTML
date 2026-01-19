@@ -10,6 +10,8 @@
 var utils = __webpack_require__(918);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
 var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
+var ui_layer = __webpack_require__(847);
 // EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
 var swiper_bundle = __webpack_require__(111);
 ;// ./src/assets/scripts/ui/swiper.js
@@ -269,8 +271,8 @@ var swiper_bundle = __webpack_require__(111);
         }
       }
     },
-    list: {
-      spaceBetween: 19.6,
+    slim: {
+      spaceBetween: 17.6,
       speed: 400,
       breakpoints: {
         1024: {
@@ -409,8 +411,20 @@ var footer = __webpack_require__(795);
 var tab_scrollbar = __webpack_require__(986);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
 var form_select = __webpack_require__(865);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
+var input_search = __webpack_require__(882);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
 var plp_titlebar_research = __webpack_require__(809);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
+var category_tree = __webpack_require__(508);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
+var plp_chip_sync = __webpack_require__(504);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
+var plp_view_toggle = __webpack_require__(342);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
+var more_expand = __webpack_require__(146);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
+var filter_expand = __webpack_require__(19);
 ;// ./src/assets/scripts/core/ui.js
 /**
  * scripts/core/ui.js
@@ -423,6 +437,13 @@ var plp_titlebar_research = __webpack_require__(809);
  *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
+
+
+
+
+
+
+
 
 
 
@@ -450,6 +471,7 @@ var plp_titlebar_research = __webpack_require__(809);
    */
   window.UI.init = function () {
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
@@ -465,7 +487,13 @@ var plp_titlebar_research = __webpack_require__(809);
     if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
     if (window.UI.select && window.UI.select.init) window.UI.select.init();
-    if (window.UI && window.UI.plpTitlebarResearch) window.UI.plpTitlebarResearch.init();
+    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
+    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
+    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
+    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
+    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
+    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
+    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
   };
   console.log('[core/ui] loaded');
 })(window);
@@ -505,6 +533,98 @@ if (document.body?.dataset?.guide === 'true') {
 // console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
 // console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
 // console.log('%c ====================', 'color: green');
+
+/***/ }),
+
+/***/ 19:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/filter-expand.js
+ * @purpose 필터 항목 펼치기/접기(아이템 단위 토글)
+ * @scope .filter-box-item 내부에서만 동작, 이벤트는 document 위임
+ * @rule 버튼 클릭 → 해당 아이템의 chip-group is-open 토글 + aria-expanded/텍스트 갱신
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.filterExpand = window.UI.filterExpand || {};
+  var NS = '.uiFilterExpand';
+  var ITEM = '.filter-box-item';
+  var BTN = '.vits-filter-more';
+  var GROUP = '.filter-chip-group';
+  var ACTIVE = 'is-open';
+  var TEXT = '.text';
+  var CHIP = '.filter-chip';
+  var CHIP_ACTIVE = 'is-active';
+  var RESET_BTN = '.filter-box-buttons [type="reset"]';
+  var MODAL = '[data-toggle-box="vits-options-modal"]';
+  var MODAL_BTN = '[data-toggle-btn][data-toggle-target="vits-options-modal"]';
+  var MODAL_DIM = '[data-toggle-dim="vits-options-modal"]';
+  var BODY_SCOPE = 'body.vits-scope';
+  function setButtonState($btn, isOpen) {
+    $btn.attr('aria-expanded', isOpen ? 'true' : 'false');
+    var $text = $btn.find(TEXT).first();
+    if ($text.length) {
+      $text.text(isOpen ? '접기' : '더보기');
+    }
+  }
+  function toggleItem($item, $btn) {
+    var $group = $item.find(GROUP).first();
+    if (!$group.length) return;
+    var isOpen = $group.hasClass(ACTIVE);
+    $group.toggleClass(ACTIVE, !isOpen);
+    setButtonState($btn, !isOpen);
+  }
+  function syncModalScrollLock() {
+    var isOpen = $(MODAL).first().hasClass(ACTIVE);
+    $(BODY_SCOPE).css('overflow', isOpen ? 'hidden' : '');
+  }
+  function closeModal() {
+    var $box = $(MODAL).first();
+    if (!$box.length) return;
+    $box.removeClass(ACTIVE);
+    $(MODAL_BTN).attr('aria-expanded', 'false');
+    syncModalScrollLock();
+  }
+  function bind() {
+    $(document).off('click' + NS, BTN).on('click' + NS, BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $item = $btn.closest(ITEM);
+      if (!$item.length) return;
+      toggleItem($item, $btn);
+    });
+    $(document).off('click' + NS, CHIP).on('click' + NS, CHIP, function (e) {
+      e.preventDefault();
+      var $chip = $(this);
+      if ($chip.is(':disabled')) return;
+      var isActive = $chip.hasClass(CHIP_ACTIVE);
+      $chip.toggleClass(CHIP_ACTIVE, !isActive);
+      $chip.attr('aria-pressed', !isActive ? 'true' : 'false');
+    });
+    $(document).off('click' + NS, RESET_BTN).on('click' + NS, RESET_BTN, function () {
+      var $scope = $(this).closest('[data-toggle-box="filter-box"]');
+      var $chips = $scope.length ? $scope.find(CHIP) : $(CHIP);
+      $chips.removeClass(CHIP_ACTIVE).attr('aria-pressed', 'false');
+    });
+    $(document).off('click' + NS, MODAL_BTN).on('click' + NS, MODAL_BTN, function () {
+      // toggle.js 처리 이후 상태 반영
+      window.requestAnimationFrame(syncModalScrollLock);
+    });
+    $(document).off('click' + NS, MODAL_DIM).on('click' + NS, MODAL_DIM, function (e) {
+      e.preventDefault();
+      closeModal();
+    });
+  }
+  window.UI.filterExpand.init = function () {
+    // 필터 아이템 토글 이벤트(문서 위임) 바인딩
+    bind();
+    syncModalScrollLock();
+  };
+})(window.jQuery || window.$, window);
 
 /***/ }),
 
@@ -779,16 +899,21 @@ if (document.body?.dataset?.guide === 'true') {
 
 /**
  * @file scripts/ui/header/header-gnb.js
- * @purpose GNB 프로모션(가변) 클리핑 + more 노출 + more 패널 리스트 채우기
+ * @purpose GNB 프로모션(가변) 클리핑 + more 노출/패널 동기화 + (카테/브랜드) dim 동기화 + (전체카테고리) 1→2→3 hover 연동
  * @assumption
  *  - 클리핑 대상: .gnb-item-promo-list .gnb-promo-list > a.gnb-link
- *  - more 버튼/패널 open/close는 toggle.js가 담당(여긴 리스트/노출 동기화만)
- *  - 패널은 같은 data-toggle-scope 안에 존재: [data-toggle-box="gnb-more"]
+ *  - more/카테/브랜드 패널 open/close는 toggle.js가 담당(본 파일은 상태/리스트/hover 동기화만)
+ *  - 전체카테고리 마크업은 box 구조(data-d2-box / data-d3-box)로 고정
+ *  - 1뎁스/2뎁스는 a 태그이며 hover는 “옆 컬럼 내용 교체”만 수행(클릭 이동 유지)
  * @markup-control
  *  - [data-toggle-box="gnb-more"][data-gnb-more-mode="all"] : 패널에 전체 메뉴 노출
  *  - (default) data-gnb-more-mode 미지정                : 패널에 접힌 메뉴만 노출
  * @state
  *  - root.is-more-visible : more(+) 버튼 노출
+ *  - root.is-dim-on       : dim 노출
+ *  - .gnb-category-box.is-active : 해당 depth box 노출
+ *  - .gnb-category.is-col2-open  : 2뎁스 컬럼 표시(영역 차지)
+ *  - .gnb-category.is-col3-open  : 3뎁스 컬럼 표시(영역 차지)
  */
 
 (function ($, window) {
@@ -798,133 +923,125 @@ if (document.body?.dataset?.guide === 'true') {
   window.UI = window.UI || {};
   var ROOT_SEL = '[data-header-gnb]';
   var CLS_MORE_VISIBLE = 'is-more-visible';
+  var CLS_DIM_ON = 'is-dim-on';
+  var CLS_COL2_OPEN = 'is-col2-open';
+  var CLS_COL3_OPEN = 'is-col3-open';
 
-  // root 내부 주요 엘리먼트 캐시
+  // root 기준 필수 DOM 캐시(구조 변경 시 셀렉터부터 점검)
   function getEls($root) {
     var $navList = $root.find('[data-gnb-nav-list]').first();
     var $promoItem = $navList.find('.gnb-item-promo-list').first();
     var $promoList = $promoItem.find('.gnb-promo-list').first();
     var $morePanel = $root.find('[data-toggle-box="gnb-more"]').first();
+
+    // 카테/브랜드만 감지/닫기 범위를 제한(다른 패널 영향 방지)
+    var $panelScope = $root.find('[data-gnb-panel-scope]').first();
+
+    // dim은 header 하위 위치 변경 가능하므로 header 기준으로 탐색
+    var $dim = $root.closest('.vits-header').find('[data-gnb-dim]').first();
+
+    // 전체카테고리 hover 연동 대상(1~4컬럼 래퍼)
+    var $catRoot = $root.find('[data-gnb-category]').first();
     return {
       $root: $root,
-      $navList: $navList,
       $promoItem: $promoItem,
       $promoList: $promoList,
-      // 핵심: 직계 자식 a만 확실히 잡기(환경 차이 방지)
       $promoLinks: $promoList.children('a.gnb-link'),
       $moreBtn: $promoItem.find('[data-gnb-more]').first(),
       $moreBox: $promoItem.find('.gnb-more-box').first(),
       $morePanel: $morePanel,
-      $moreList: $morePanel.find('[data-gnb-more-list]').first()
+      $moreList: $morePanel.find('[data-gnb-more-list]').first(),
+      $panelScope: $panelScope,
+      $dim: $dim,
+      $catRoot: $catRoot
     };
   }
 
-  // more 노출 상태(root 클래스) 토글
+  // more 필요할 때만 root 클래스 토글(스타일 분기용)
   function setMoreVisible($root, on) {
     $root.toggleClass(CLS_MORE_VISIBLE, !!on);
   }
 
-  // 프로모션 링크 숨김 상태 초기화
+  // 클리핑 계산 전/후 숨김 상태 원복(누적 방지)
   function resetPromoHidden(els) {
     els.$promoLinks.removeClass('is-hidden');
   }
 
-  // promoList: 가로폭이 부족하면(겹침/오버플로우) 뒤쪽부터 is-hidden 처리
+  // 오버플로우 해소까지 마지막 보이는 링크부터 숨김
   function applyPromoClip(els) {
     if (!els.$promoList.length) return;
 
-    // promoItem이 남는 폭을 먹지 않게(우측 고정 메뉴와 여백 방지)
+    // promoItem이 폭을 과하게 먹지 않게(우측 고정 메뉴 침범 방지)
     if (els.$promoItem.length) els.$promoItem[0].style.flex = '0 1 auto';
-
-    // 측정 전 초기화
     resetPromoHidden(els);
     var promoEl = els.$promoList[0];
     if (!promoEl) return;
-
-    // 오버플로우가 해소될 때까지 "마지막 보이는 링크"부터 숨김
-    // (clientWidth = 실제 보이는 폭, scrollWidth = 콘텐츠 전체 폭)
     var safety = 0;
+
+    // scrollWidth > clientWidth면 실제 오버플로우(1px 오차 보정)
     while (promoEl.scrollWidth > promoEl.clientWidth + 1) {
       var $lastVisible = els.$promoLinks.not('.is-hidden').last();
       if (!$lastVisible.length) break;
       $lastVisible.addClass('is-hidden');
       safety += 1;
-      if (safety > els.$promoLinks.length) break; // 무한루프 방지
+      if (safety > els.$promoLinks.length) break;
     }
   }
 
-  // more 패널 모드 읽기(markup)
+  // more 패널 모드(all | hidden)
   function getMoreMode(els) {
     if (!els.$morePanel.length) return 'hidden';
     var mode = (els.$morePanel.attr('data-gnb-more-mode') || '').toLowerCase();
     return mode === 'all' ? 'all' : 'hidden';
   }
 
-  // 패널 리스트 비우기
+  // more 패널 리스트 초기화
   function clearMoreList(els) {
     if (els.$moreList.length) els.$moreList.empty();
   }
 
-  // 링크 1개를 패널용 li로 복제(2줄 케이스 유지: innerHTML 복사)
+  // 링크를 패널용 li로 복제(innerHTML로 2줄 구조 유지)
   function appendMoreItem(els, $a) {
-    var href = $a.attr('href') || '#';
+    if (!els.$moreList.length) return;
     var $li = $('<li/>');
     var $copy = $('<a class="gnb-link" />', {
-      href: href
+      href: $a.attr('href') || '#'
     });
     $copy.html($a.html());
     $li.append($copy);
     els.$moreList.append($li);
   }
 
-  // 패널 리스트 채우기(mode=all|hidden)
+  // more 패널 리스트 채우기(all: 전체 / hidden: 접힌 것만)
   function fillMoreList(els, mode) {
     if (!els.$moreList.length) return;
     clearMoreList(els);
     els.$promoLinks.each(function () {
       var $a = $(this);
-
-      // all: 전체 메뉴 그대로
       if (mode === 'all') {
         appendMoreItem(els, $a);
         return;
       }
-
-      // hidden: 접힌 메뉴만
       if ($a.hasClass('is-hidden')) appendMoreItem(els, $a);
     });
   }
 
-  // more 필요 여부: 현재 폭에서 오버플로우가 발생하면 true
+  // more 필요 여부(현재 폭에서 오버플로우 발생 여부)
   function getNeedMore(els) {
     if (!els.$promoList.length) return false;
-    var promoEl = els.$promoList[0];
-    return (promoEl.scrollWidth || 0) > (promoEl.clientWidth || 0) + 1; // 1px 오차 보정
+    var el = els.$promoList[0];
+    return (el.scrollWidth || 0) > (el.clientWidth || 0) + 1;
   }
 
   // 클리핑 + more 노출 + 패널 리스트 동기화
   function updatePromoMore(els) {
     if (!els.$promoList.length || !els.$moreBtn.length) return;
-
-    // 측정 왜곡 방지: 먼저 숨김 원복
     resetPromoHidden(els);
-
-    // 패널 모드(마크업 제어)
     var mode = getMoreMode(els);
-
-    // more 노출 여부(접힌 메뉴가 생길 때만)
     var needMore = getNeedMore(els);
-
-    // more 버튼/영역은 needMore일 때만 보임(영역 잡힘 방지)
     setMoreVisible(els.$root, needMore);
     if (els.$moreBox.length) els.$moreBox.toggleClass('is-active', needMore);
-
-    // 접힘 계산은 needMore일 때만 수행
     if (needMore) applyPromoClip(els);else resetPromoHidden(els);
-
-    // 패널 리스트 채우기
-    // - mode=all  : 접힘 유무와 관계없이 전체 노출(요구사항 케이스)
-    // - mode=hidden: 접힌 메뉴가 없으면 비움
     if (mode === 'all') {
       fillMoreList(els, 'all');
       return;
@@ -936,7 +1053,7 @@ if (document.body?.dataset?.guide === 'true') {
     fillMoreList(els, 'hidden');
   }
 
-  // 리사이즈 시 동기화(디바운스)
+  // 리사이즈 시 클리핑/패널 재계산(디바운스)
   function bindResize(els) {
     var t = null;
     $(window).on('resize.headerGnb', function () {
@@ -947,7 +1064,7 @@ if (document.body?.dataset?.guide === 'true') {
     });
   }
 
-  // 초기 렌더/폰트 지연 대비 재측정
+  // 초기 렌더/폰트 지연 대비(0/120/300ms 재측정)
   function scheduleInitialMeasure(els) {
     var delays = [0, 120, 300];
     for (var i = 0; i < delays.length; i += 1) {
@@ -959,19 +1076,324 @@ if (document.body?.dataset?.guide === 'true') {
     }
   }
 
+  // 카테/브랜드 열림 상태에 맞춰 dim 동기화
+  function updateDim(els) {
+    if (!els.$panelScope.length || !els.$dim.length) return;
+    var hasOpen = els.$panelScope.find('[data-toggle-box="gnb-category"].is-open, [data-toggle-box="gnb-brand"].is-open').length > 0;
+    els.$root.toggleClass(CLS_DIM_ON, hasOpen);
+    els.$dim.attr('aria-hidden', hasOpen ? 'false' : 'true');
+  }
+
+  // dim 클릭 시 카테/브랜드만 닫기(toggle.js 흐름 유지 위해 버튼 클릭)
+  function closePanelsLocal(els) {
+    if (!els.$panelScope.length) return;
+    els.$panelScope.find('[data-toggle-box="gnb-category"].is-open, [data-toggle-box="gnb-brand"].is-open').each(function () {
+      var target = $(this).attr('data-toggle-box');
+      var $btn = els.$panelScope.find('[data-toggle-btn][data-toggle-target="' + target + '"]').first();
+      if ($btn.length) $btn.trigger('click');else $(this).removeClass('is-open');
+    });
+  }
+
+  // dim 클릭 바인딩(dim 위치 변경 가능하므로 dim에 직접 바인딩)
+  function bindDimClose(els) {
+    if (!els.$dim.length) return;
+    els.$dim.off('click.headerGnbDim').on('click.headerGnbDim', function (e) {
+      e.preventDefault();
+      closePanelsLocal(els);
+      window.setTimeout(function () {
+        updateDim(els);
+      }, 0);
+    });
+  }
+
+  // 카테/브랜드 class 변화 감지로 dim 자동 동기화
+  function bindPanelObserver(els) {
+    if (!els.$panelScope.length) return;
+    var $cat = els.$panelScope.find('[data-toggle-box="gnb-category"]').first();
+    var $brand = els.$panelScope.find('[data-toggle-box="gnb-brand"]').first();
+    if (window.MutationObserver && ($cat.length || $brand.length)) {
+      var obs = new MutationObserver(function () {
+        updateDim(els);
+      });
+      if ($cat.length) obs.observe($cat[0], {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+      if ($brand.length) obs.observe($brand[0], {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+      return;
+    }
+    els.$panelScope.on('click', '[data-toggle-btn]', function () {
+      window.setTimeout(function () {
+        updateDim(els);
+      }, 0);
+    });
+  }
+
+  // 컬럼 표시/숨김(영역 차지 제어는 CSS가 담당, JS는 클래스만 토글)
+  function setCol2Open(els, on) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.toggleClass(CLS_COL2_OPEN, !!on);
+    if (!on) setCol3Open(els, false);
+  }
+  function setCol3Open(els, on) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.toggleClass(CLS_COL3_OPEN, !!on);
+  }
+
+  // 2뎁스/3뎁스 박스 전부 닫기(잔상 제거)
+  function hideDepth2And3(els) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.find('[data-gnb-d1] [data-d1]').removeClass('is-active');
+    els.$catRoot.find('[data-gnb-d1] [data-d1] > a[aria-expanded]').attr('aria-expanded', 'false');
+    els.$catRoot.find('[data-d2-box]').removeClass('is-active').attr('aria-hidden', 'true');
+    els.$catRoot.find('[data-d3-box]').removeClass('is-active').attr('aria-hidden', 'true');
+    els.$catRoot.find('[data-gnb-d2] [data-d2]').removeClass('is-active');
+    els.$catRoot.find('[data-gnb-d2] [data-d2] > a[aria-expanded]').attr('aria-expanded', 'false');
+    setCol2Open(els, false);
+  }
+
+  // 3뎁스만 닫기(2뎁스 유지)
+  function hideDepth3(els) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.find('[data-d3-box]').removeClass('is-active').attr('aria-hidden', 'true');
+    els.$catRoot.find('[data-gnb-d2] [data-d2] > a[aria-expanded]').attr('aria-expanded', 'false');
+    els.$catRoot.find('[data-gnb-d2] [data-d2]').removeClass('is-active');
+    setCol3Open(els, false);
+  }
+
+  // 초기 상태 강제(2/3뎁스는 항상 닫힌 상태로 시작)
+  function resetCategoryInitial(els) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.find('[data-gnb-d1] [data-d1]').removeClass('is-active');
+    els.$catRoot.find('[data-gnb-d1] [data-d1] > a[aria-expanded]').attr('aria-expanded', 'false');
+    els.$catRoot.find('[data-gnb-d2] [data-d2]').removeClass('is-active');
+    els.$catRoot.find('[data-gnb-d2] [data-d2] > a[aria-expanded]').attr('aria-expanded', 'false');
+    els.$catRoot.find('[data-d2-box]').removeClass('is-active').attr('aria-hidden', 'true');
+    els.$catRoot.find('[data-d3-box]').removeClass('is-active').attr('aria-hidden', 'true');
+    setCol2Open(els, false);
+  }
+
+  // d1에 매칭되는 d2 box가 있고 내부에 [data-d2]가 있으면 true
+  function hasDepth2(els, d1Key) {
+    if (!els.$catRoot.length || !d1Key) return false;
+    var $box = els.$catRoot.find('[data-d2-box="' + d1Key + '"]').first();
+    if (!$box.length) return false;
+    return $box.find('[data-d2]').length > 0;
+  }
+
+  // d2에 매칭되는 d3 box가 있고 내부 li가 있으면 true(“하위 없음”이면 영역 차지 금지)
+  function hasDepth3(els, d2Key) {
+    if (!els.$catRoot.length || !d2Key) return false;
+    var $box = els.$catRoot.find('[data-d3-box="' + d2Key + '"]').first();
+    if (!$box.length) return false;
+    return $box.find('li').length > 0;
+  }
+
+  // leaf용: 1뎁스만 active 유지하고 2/3뎁스는 닫기
+  function setDepth12Only(els, $d1Item) {
+    if (!els.$catRoot.length) return;
+    els.$catRoot.find('[data-gnb-d1] [data-d1]').removeClass('is-active');
+    if ($d1Item && $d1Item.length) $d1Item.addClass('is-active');
+    els.$catRoot.find('[data-gnb-d1] [data-d1] > a[aria-expanded]').attr('aria-expanded', 'false');
+    hideDepth2And3(els);
+  }
+
+  // 1뎁스 hover 시 해당 2뎁스 box만 활성화(3뎁스는 닫힌 상태로 유지)
+  function showDepth2(els, d1Key) {
+    if (!els.$catRoot.length || !d1Key) return;
+    var $d2Boxes = els.$catRoot.find('[data-d2-box]');
+    var $target = $d2Boxes.filter('[data-d2-box="' + d1Key + '"]');
+    $d2Boxes.removeClass('is-active').attr('aria-hidden', 'true');
+    els.$catRoot.find('[data-gnb-d2] [data-d2]').removeClass('is-active');
+
+    // 2뎁스가 없으면 col2/col3 자체를 닫아 “영역 차지”를 없앰
+    if (!$target.length || $target.find('[data-d2]').length === 0) {
+      setCol2Open(els, false);
+      hideDepth3(els);
+      return;
+    }
+    $target.addClass('is-active').attr('aria-hidden', 'false');
+    setCol2Open(els, true);
+
+    // 2뎁스가 바뀌면 3뎁스는 무조건 닫기
+    hideDepth3(els);
+  }
+
+  // 2뎁스 hover 시 해당 3뎁스 box만 활성화(하위 없으면 col3 닫기)
+  function showDepth3(els, d2Key) {
+    if (!els.$catRoot.length || !d2Key) return;
+    var $d3Boxes = els.$catRoot.find('[data-d3-box]');
+    var $target = $d3Boxes.filter('[data-d3-box="' + d2Key + '"]');
+    $d3Boxes.removeClass('is-active').attr('aria-hidden', 'true');
+
+    // 3뎁스 하위(li) 없으면 “영역 차지”가 없어야 하므로 col3을 닫음
+    if (!$target.length || $target.find('li').length === 0) {
+      setCol3Open(els, false);
+      return;
+    }
+    $target.addClass('is-active').attr('aria-hidden', 'false');
+    setCol3Open(els, true);
+  }
+
+  // 전체카테고리 hover 바인딩(1→2 이동 끊김 방지: leave 기반 지연 닫기)
+  function bindCategoryHover(els) {
+    if (!els.$catRoot.length) return;
+    var $col1 = els.$catRoot.find('.gnb-category-col-1').first();
+    var $col2 = els.$catRoot.find('[data-gnb-d2-col]').first();
+    var $col3 = els.$catRoot.find('[data-gnb-d3-col]').first();
+    var closeT = null;
+
+    // 닫기 타이머 해제(이동 중 끊김 방지)
+    function clearCloseTimer() {
+      if (closeT) {
+        window.clearTimeout(closeT);
+        closeT = null;
+      }
+    }
+
+    // 1→2 이동 시 스침 방지용 지연 닫기
+    function scheduleCloseAll(delay) {
+      clearCloseTimer();
+      closeT = window.setTimeout(function () {
+        hideDepth2And3(els);
+        closeT = null;
+      }, delay || 150);
+    }
+
+    // mouseleave에서만 판정 가능한 이동 타겟(relatedTarget)
+    function isMoveTo(e, $col) {
+      var next = e && e.relatedTarget ? e.relatedTarget : null;
+      if (!next || !$col || !$col.length) return false;
+      return $(next).closest($col).length > 0;
+    }
+
+    // 1뎁스 hover → 2뎁스 교체(leaf면 닫기)
+    els.$catRoot.find('[data-gnb-d1] [data-d1]').off('mouseenter.headerCatD1 mouseleave.headerCatD1').on('mouseenter.headerCatD1', function () {
+      var $item = $(this);
+      var key = $item.attr('data-d1');
+      if (!key) return;
+      clearCloseTimer();
+      if (!hasDepth2(els, key)) {
+        setDepth12Only(els, $item);
+        return;
+      }
+      $item.addClass('is-active').siblings().removeClass('is-active');
+      $item.find('> a[aria-expanded]').attr('aria-expanded', 'true');
+      $item.siblings().find('> a[aria-expanded]').attr('aria-expanded', 'false');
+      showDepth2(els, key);
+    }).on('mouseleave.headerCatD1', function (e) {
+      // 1 → 2 이동은 허용
+      if (isMoveTo(e, $col2)) return;
+      scheduleCloseAll(150);
+    });
+
+    // 1뎁스 컬럼 leave: 2로 이동은 허용, 그 외 닫기
+    $col1.off('mouseleave.headerCatCol1').on('mouseleave.headerCatCol1', function (e) {
+      if (isMoveTo(e, $col2)) return;
+      scheduleCloseAll(150);
+    });
+
+    // 2뎁스 컬럼 진입 시 닫기 타이머 해제
+    $col2.off('mouseenter.headerCatCol2Enter').on('mouseenter.headerCatCol2Enter', function () {
+      clearCloseTimer();
+    });
+
+    // 2뎁스 hover → 3뎁스 교체(하위 없으면 col3 자체 닫힘)
+    els.$catRoot.find('[data-gnb-d2-col]').off('mouseenter.headerCatD2 mouseleave.headerCatD2', '[data-d2]').on('mouseenter.headerCatD2', '[data-d2]', function () {
+      var $item = $(this);
+      var key = $item.attr('data-d2');
+      if (!key) return;
+      if (!$item.closest('[data-d2-box]').hasClass('is-active')) return;
+      clearCloseTimer();
+      $item.addClass('is-active').siblings().removeClass('is-active');
+      $item.find('> a[aria-expanded]').attr('aria-expanded', 'true');
+      $item.siblings().find('> a[aria-expanded]').attr('aria-expanded', 'false');
+
+      // 3뎁스 하위가 없으면 col3을 닫아 “영역 차지” 제거
+      if (!hasDepth3(els, key)) {
+        setCol3Open(els, false);
+        return;
+      }
+      showDepth3(els, key);
+    }).on('mouseleave.headerCatD2', '[data-d2]', function (e) {
+      // 2 → 3 이동은 허용
+      if (isMoveTo(e, $col3)) return;
+    });
+
+    // 2뎁스 컬럼 leave: 3으로 이동은 허용, 그 외 닫기
+    $col2.off('mouseleave.headerCatCol2').on('mouseleave.headerCatCol2', function (e) {
+      if (isMoveTo(e, $col3)) return;
+      scheduleCloseAll(120);
+    });
+
+    // 3뎁스 컬럼 leave: 2로 돌아가면 3만 닫기, 밖이면 전체 닫기
+    $col3.off('mouseleave.headerCatCol3').on('mouseleave.headerCatCol3', function (e) {
+      if (isMoveTo(e, $col2)) {
+        hideDepth3(els);
+        return;
+      }
+      scheduleCloseAll(120);
+    });
+
+    // 패널 전체 leave → 전부 초기화
+    els.$catRoot.off('mouseleave.headerCatLeave').on('mouseleave.headerCatLeave', function () {
+      clearCloseTimer();
+      resetCategoryInitial(els);
+    });
+  }
+
+  // 카테고리 패널이 열릴 때마다 초기 상태로 강제(기본 is-active/aria-hidden 오염 방지)
+  function bindCategoryPanelOpenReset(els) {
+    if (!els.$panelScope.length || !els.$catRoot.length) return;
+    var $catPanel = els.$panelScope.find('[data-toggle-box="gnb-category"]').first();
+    if (!$catPanel.length) return;
+    if (window.MutationObserver) {
+      var obs = new MutationObserver(function () {
+        if ($catPanel.hasClass('is-open')) resetCategoryInitial(els);
+      });
+      obs.observe($catPanel[0], {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+      return;
+    }
+    els.$panelScope.off('click.headerCatOpenReset').on('click.headerCatOpenReset', '[data-toggle-btn][data-toggle-target="gnb-category"]', function () {
+      window.setTimeout(function () {
+        if ($catPanel.hasClass('is-open')) resetCategoryInitial(els);
+      }, 0);
+    });
+  }
+
   // root 1개 초기화
   function initRoot($root) {
     var els = getEls($root);
+
+    // 프로모션 more 초기화
     if (els.$promoList.length && els.$moreBtn.length) {
       scheduleInitialMeasure(els);
       bindResize(els);
-
-      // more 클릭 전후로 레이아웃이 바뀌면 재측정
-      $root.on('click', '[data-gnb-more]', function () {
+      $root.off('click.headerGnbMore').on('click.headerGnbMore', '[data-gnb-more]', function () {
         window.setTimeout(function () {
           updatePromoMore(els);
         }, 0);
       });
+    }
+
+    // dim 초기화
+    if (els.$panelScope.length && els.$dim.length) {
+      updateDim(els);
+      bindDimClose(els);
+      bindPanelObserver(els);
+    }
+
+    // 전체카테고리 hover 초기화
+    if (els.$catRoot.length) {
+      resetCategoryInitial(els);
+      bindCategoryHover(els);
+      bindCategoryPanelOpenReset(els);
     }
   }
   window.UI.headerGnb = {
@@ -983,6 +1405,159 @@ if (document.body?.dataset?.guide === 'true') {
     }
   };
 })(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 146:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/more-expand.js
+ * @purpose 공통 더보기: 스코프 내 숨김 항목 일괄 노출(단방향)
+ * @scope [data-more-scope] 내부만, 이벤트는 document 위임
+ * @rule [data-more-btn] 클릭 → [data-more-hidden="true"] 해제 + .filter-more 제거
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.moreExpand = window.UI.moreExpand || {};
+  var NS = '.uiMoreExpand';
+  var BTN = '[data-more-btn]';
+  var SCOPE = '[data-more-scope]';
+  var HIDDEN = '[data-more-hidden="true"]';
+  function bind() {
+    // 더보기 클릭: 스코프 내 숨김 항목 노출 후 버튼 영역 제거(접기 없음)
+    $(document).off('click' + NS, BTN).on('click' + NS, BTN, function () {
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      $scope.find(HIDDEN).removeAttr('data-more-hidden');
+      $btn.closest('.filter-more').remove();
+    });
+  }
+  window.UI.moreExpand.init = function () {
+    // 공통 더보기 이벤트(문서 위임) 바인딩
+    bind();
+  };
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 342:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/category/plp-view-toggle.js
+ * @purpose PLP 상품목록 뷰 타입 토글(리스트/썸네일): 버튼/목록 컨테이너 클래스(view-list/view-thumb) 전환 + aria 동기화
+ * @scope [data-plp-view-toggle] / [data-plp-view-list] 주변(가까운 .vits-product-section)만 제어
+ *
+ * @assumption
+ *  - 토글 버튼: [data-plp-view-toggle] (1개 버튼 토글 방식)
+ *  - 변경 대상: [data-plp-view-list] (ex. .product-list)
+ *  - 타입 클래스: view-list / view-thumb (둘 중 하나만 유지, 버튼/타겟 동일 규칙)
+ *
+ * @event
+ *  - click.plpViewToggle: 버튼 클릭 시 타입 전환
+ *
+ * @maintenance
+ *  - 페이지 내 PLP 섹션이 여러 개일 수 있어 closest('.vits-product-section') 기준으로 타겟을 찾음
+ *  - 초기 타입 클래스가 없으면 view-list로 보정(마크업 누락 대비)
+ */
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var SECTION = '.vits-product-section';
+  var TOGGLE_BTN = '[data-plp-view-toggle]';
+  var TARGET = '[data-plp-view-list]';
+
+  // 버튼/타겟 공통 타입 클래스(요구사항: view-list <-> view-thumb)
+  var TYPE_LIST = 'view-list';
+  var TYPE_THUMB = 'view-thumb';
+
+  // 타입 클래스가 없으면 기본값(list) 부여 + 중복 방지(항상 1개만 유지)
+  function ensureInitialType($el) {
+    if (!$el || !$el.length) return;
+    var hasList = $el.hasClass(TYPE_LIST);
+    var hasThumb = $el.hasClass(TYPE_THUMB);
+    if (!hasList && !hasThumb) $el.addClass(TYPE_LIST);
+    if (hasList && hasThumb) $el.removeClass(TYPE_THUMB);
+  }
+
+  // 현재 thumb 여부 반환
+  function isThumb($el) {
+    return $el && $el.length ? $el.hasClass(TYPE_THUMB) : false;
+  }
+
+  // 해당 엘리먼트의 타입 클래스 교체 후 현재 thumb 여부 반환
+  function toggleType($el) {
+    if (!$el || !$el.length) return false;
+    if ($el.hasClass(TYPE_THUMB)) {
+      $el.removeClass(TYPE_THUMB).addClass(TYPE_LIST); // view-thumb -> view-list
+      return false;
+    }
+    $el.removeClass(TYPE_LIST).addClass(TYPE_THUMB); // view-list -> view-thumb
+    return true;
+  }
+
+  // 버튼 aria/상태 동기화 + 버튼 타입 클래스 교체
+  function syncBtnState($btn, thumb) {
+    if (!$btn || !$btn.length) return;
+
+    // 토글 버튼 접근성: 현재 상태를 pressed로 표현
+    $btn.attr('aria-pressed', thumb ? 'true' : 'false');
+
+    // 라벨은 "다음 동작" 기준(리스트 상태면 썸네일 전환, 썸네일 상태면 리스트 전환)
+    $btn.attr('aria-label', thumb ? '리스트형 전환' : '썸네일형 전환');
+
+    // 요구사항: 버튼도 view-list <-> view-thumb로 직접 교체
+    $btn.toggleClass(TYPE_THUMB, !!thumb);
+    $btn.toggleClass(TYPE_LIST, !thumb);
+  }
+
+  // 섹션 단위로 타겟 찾기(복수 PLP 대응)
+  function getTargetByBtn($btn) {
+    var $section = $btn.closest(SECTION);
+    return ($section.length ? $section : $(document)).find(TARGET).first();
+  }
+
+  // 이벤트 바인딩
+  function bind() {
+    // 문서 델리게이션(동적 렌더/재바인딩 이슈 방지)
+    $(document).on('click.plpViewToggle', TOGGLE_BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $target = getTargetByBtn($btn);
+
+      // 버튼/타겟 모두 타입 클래스 보정(마크업 누락 대비)
+      ensureInitialType($btn);
+      ensureInitialType($target);
+
+      // 타겟 기준으로 토글(상태의 단일 기준)
+      var nowThumb = toggleType($target);
+
+      // 버튼도 동일 상태로 맞춤
+      syncBtnState($btn, nowThumb);
+    });
+
+    // 초기 상태 동기화(타겟 기준으로 버튼 클래스/aria 맞춤)
+    $(TOGGLE_BTN).each(function () {
+      var $btn = $(this);
+      var $target = getTargetByBtn($btn);
+      ensureInitialType($btn);
+      ensureInitialType($target);
+      syncBtnState($btn, isThumb($target));
+    });
+  }
+  window.UI.plpViewToggle = {
+    init: function () {
+      bind();
+    }
+  };
+})(window.jQuery || window.$, window, document);
 
 /***/ }),
 
@@ -1276,6 +1851,643 @@ if (document.body?.dataset?.guide === 'true') {
   };
   console.log('[quantity-stepper] module loaded');
 })(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 504:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/category/plp-chip-sync.js
+ * @purpose 체크박스 ↔ 칩 UI 동기화(추가/삭제/전체해제) + 결과바 노출 제어(data-result-chips / data-result-actions)
+ * @assumption
+ *  - 칩 컨테이너: [data-chip-area] (내부에 .vits-chip-button DOM을 JS로 생성)
+ *  - 결과 칩 래퍼: [data-result-chips] (없으면 .result-chips 폴백)
+ *  - 결과 액션 래퍼: [data-result-actions] (없으면 .result-actions 폴백)
+ *  - 체크박스: input[type="checkbox"] (name: plpCommon/plpAttr/plpBrand)
+ *  - 칩 제거 버튼: [data-chip-action="remove"] + data-chip-value
+ *  - 전체 해제 버튼: [data-chip-clear] (없으면 .result-clear-button 폴백)
+ * @maintenance
+ *  - 칩은 JS 생성(디자인은 CSS로)
+ *  - 그룹 순서: 공통 > 속성 > 브랜드(좌측 메뉴 기준 고정)
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.chipSync = window.UI.chipSync || {};
+  var NS = '.uiChipSync';
+  var CHIP_AREA = '[data-chip-area]';
+  var CHIP_REMOVE = '[data-chip-action="remove"]';
+  var CHIP_VALUE = 'data-chip-value';
+  var RESULT_CHIPS = '[data-result-chips]';
+  var RESULT_ACTIONS = '[data-result-actions]';
+  var CLEAR_BTN = '[data-chip-clear], .result-clear-button';
+
+  // 공통 > 속성 > 브랜드 순으로 고정 렌더(클릭 순서 무시)
+  var GROUPS = [{
+    name: 'plpCommon',
+    title: '공통',
+    showCategory: false
+  }, {
+    name: 'plpAttr',
+    title: '속성',
+    showCategory: true
+  }, {
+    name: 'plpBrand',
+    title: '브랜드',
+    showCategory: true
+  }];
+
+  // 칩 영역 반환
+  function getChipArea() {
+    return $(CHIP_AREA).first();
+  }
+
+  // 체크박스 대상 여부(name 기준)
+  function isWatchedCheckbox(el) {
+    if (!el || el.type !== 'checkbox') return false;
+    var nm = String(el.name || '');
+    for (var i = 0; i < GROUPS.length; i += 1) {
+      if (GROUPS[i].name === nm) return true;
+    }
+    return false;
+  }
+
+  // 그룹 config
+  function getGroupByName(name) {
+    var nm = String(name || '');
+    for (var i = 0; i < GROUPS.length; i += 1) {
+      if (GROUPS[i].name === nm) return GROUPS[i];
+    }
+    return null;
+  }
+
+  // chip value(checkbox.value) 안전 문자열
+  function escAttr(v) {
+    return String(v || '').replace(/"/g, '\\"');
+  }
+
+  // 칩 value 기준 존재 여부
+  function hasChip($area, value) {
+    return $area.find('[' + CHIP_VALUE + '="' + escAttr(value) + '"]').length > 0;
+  }
+
+  // 체크박스 라벨 텍스트(.label-name 기준, 자식/배지 제거)
+  function getChipLabel($chk) {
+    var $label = $chk.closest('label');
+    var $name = $label.find('.label-name').first();
+    var txt = '';
+    if ($name.length) {
+      txt = $name.clone().children().remove().end().text();
+      txt = $.trim(txt || '');
+    } else {
+      txt = String($chk.val() || '');
+    }
+
+    // 브랜드(plpBrand)만 "(숫자)" 제거
+    if (String($chk.attr('name') || '') === 'plpBrand') {
+      txt = $.trim(String(txt || '').replace(/\s*\(\s*\d+\s*\)\s*$/, ''));
+    }
+    return txt;
+  }
+
+  // 그룹명(속성/브랜드는 무조건 노출)
+  function getChipCategoryName($chk) {
+    var cfg = getGroupByName($chk.attr('name'));
+    if (!cfg) return '';
+    return cfg.showCategory ? cfg.title : '';
+  }
+
+  // 칩 DOM 생성(action='x' 형태, 아이콘은 × 텍스트로 폴백)
+  function buildChipEl(groupName, value, name, category) {
+    var $chip = $('<div/>', {
+      class: 'vits-chip-button type-filled'
+    });
+    $chip.attr(CHIP_VALUE, value);
+    $chip.attr('data-chip-group', groupName);
+    if (category) {
+      $('<span/>', {
+        class: 'text category',
+        text: category
+      }).appendTo($chip);
+    }
+    $('<span/>', {
+      class: 'text',
+      text: name
+    }).appendTo($chip);
+    var $btn = $('<button/>', {
+      type: 'button',
+      class: 'remove',
+      'data-chip-action': 'remove',
+      'aria-label': name + ' 삭제',
+      text: '×'
+    });
+    $btn.attr(CHIP_VALUE, value);
+    $chip.append($btn);
+    return $chip;
+  }
+
+  // 그룹 순서대로 DOM 정렬(공통 > 속성 > 브랜드)
+  function sortChipsByGroup($area) {
+    if (!$area || !$area.length) return;
+    for (var i = 0; i < GROUPS.length; i += 1) {
+      var g = GROUPS[i].name;
+      $area.find('[data-chip-group="' + escAttr(g) + '"]').appendTo($area);
+    }
+  }
+
+  // 체크박스 → 칩 추가
+  function addChipFromCheckbox($chk) {
+    var $area = getChipArea();
+    if (!$area.length) return;
+    var value = String($chk.val() || '');
+    if (!value) return;
+    if (hasChip($area, value)) return;
+    var groupName = String($chk.attr('name') || '');
+    var name = getChipLabel($chk);
+    var category = getChipCategoryName($chk);
+    $area.append(buildChipEl(groupName, value, name, category));
+    sortChipsByGroup($area);
+  }
+
+  // value로 칩 제거
+  function removeChipByValue(value) {
+    var $area = getChipArea();
+    if (!$area.length) return;
+    $area.find('[' + CHIP_VALUE + '="' + escAttr(value) + '"]').remove();
+  }
+
+  // value로 체크박스 해제(해제 시 change를 태워 동기화 유지)
+  function uncheckByValue(value) {
+    var v = String(value || '');
+    if (!v) return;
+    $('input[type="checkbox"]').each(function () {
+      if (!isWatchedCheckbox(this)) return;
+      if (String(this.value || '') !== v) return;
+      if (this.checked) {
+        this.checked = false;
+        $(this).trigger('change');
+      }
+    });
+  }
+
+  // 칩 유무에 따라 결과 영역 토글(데이터 없으면 클래스 폴백)
+  function syncResultUi() {
+    var $area = getChipArea();
+    if (!$area.length) return;
+    var hasAny = $area.children().length > 0;
+
+    // result-chips 래퍼 토글: data-result-chips > .result-chips 폴백
+    var $chipsWrap = $area.closest(RESULT_CHIPS);
+    if (!$chipsWrap.length) $chipsWrap = $area.closest('.result-chips');
+    if ($chipsWrap.length) $chipsWrap.toggleClass('is-hidden', !hasAny);
+
+    // result-actions 래퍼 토글: data-result-actions > .result-actions 폴백
+    var $actionsWrap = $(RESULT_ACTIONS).first();
+    if (!$actionsWrap.length) $actionsWrap = $('.result-actions').first();
+    if ($actionsWrap.length) $actionsWrap.toggleClass('is-hidden', !hasAny);
+  }
+
+  // 전체 해제(체크박스/칩)
+  function clearAll() {
+    $('input[type="checkbox"]').each(function () {
+      if (!isWatchedCheckbox(this)) return;
+      if (!this.checked) return;
+      this.checked = false;
+      $(this).trigger('change');
+    });
+    var $area = getChipArea();
+    if ($area.length) $area.empty();
+    syncResultUi();
+  }
+
+  // 체크박스 change → 칩 반영
+  function bindCheckbox() {
+    $(document).off('change' + NS, 'input[type="checkbox"]').on('change' + NS, 'input[type="checkbox"]', function () {
+      if (!isWatchedCheckbox(this)) return;
+      var $chk = $(this);
+      var value = String($chk.val() || '');
+      if (!value) return;
+      if (this.checked) addChipFromCheckbox($chk);else removeChipByValue(value);
+      syncResultUi();
+    });
+  }
+
+  // 칩 X 클릭 → 체크 해제(체크 해제 후 change에서 칩 제거/토글 처리)
+  function bindChipRemove() {
+    $(document).off('click' + NS, CHIP_REMOVE).on('click' + NS, CHIP_REMOVE, function (ev) {
+      ev.preventDefault();
+
+      // value는 버튼 자체 또는 부모 칩에서 획득
+      var value = $(this).attr(CHIP_VALUE) || $(this).closest('[' + CHIP_VALUE + ']').attr(CHIP_VALUE) || '';
+      if (!value) return;
+      uncheckByValue(value);
+    });
+  }
+
+  // 전체 해제 버튼
+  function bindClear() {
+    $(document).off('click' + NS, CLEAR_BTN).on('click' + NS, CLEAR_BTN, function (ev) {
+      ev.preventDefault();
+      clearAll();
+    });
+  }
+
+  // 초기 렌더: 체크된 값 기준으로 칩 재생성
+  function buildInitialChips() {
+    var $area = getChipArea();
+    if (!$area.length) return;
+    $area.empty();
+    $('input[type="checkbox"]').each(function () {
+      if (!isWatchedCheckbox(this)) return;
+      if (!this.checked) return;
+      addChipFromCheckbox($(this));
+    });
+    syncResultUi();
+  }
+  window.UI.chipSync.init = function () {
+    // 이벤트 위임 바인딩
+    bindCheckbox();
+    bindChipRemove();
+    bindClear();
+
+    // 초기 동기화
+    buildInitialChips();
+  };
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 508:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/category/category-tree.js
+ * @purpose 좌측 카테고리 드릴다운(1~3뎁스): 트리/브레드크럼 동기화 + 4뎁스(속성) 체크박스 동적 렌더
+ * @scope .vits-category-tree / [data-plp-attr-anchor] 내부만 제어
+ *
+ * @assumption
+ *  - 트리 버튼: .category-tree-btn (data-depth="1|2|3", data-id="code")
+ *  - 상태 클래스: is-active, is-open, is-hidden
+ *  - 브레드크럼 셀렉트: [data-vits-select][data-root="cat"][data-depth="1|2|3"] + [data-vits-select-hidden]
+ *  - 4뎁스 앵커: [data-plp-attr-anchor] (li 권장, 기본 is-hidden 권장)
+ *  - 카테고리 트리 데이터: window.__mockData.category.tree (categoryCode/categoryNm/categoryList/categoryQty)
+ *  - 체크박스 마크업: input-checkbox.ejs 구조(checkbox-wrapper/checkbox-item-area/checkbox-item-box...)
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var TREE_ROOT = '.vits-category-tree';
+  var BTN = '.category-tree-btn';
+  var ITEM = '.category-tree-item';
+  var PANEL = '.category-tree-panel';
+  var CLS_ACTIVE = 'is-active';
+  var CLS_OPEN = 'is-open';
+  var CLS_HIDDEN = 'is-hidden';
+  var SELECT_ROOT = '[data-vits-select][data-root="cat"]';
+  var SELECT_OPT = '.vits-select-option';
+  var SELECT_HIDDEN = '[data-vits-select-hidden]';
+  var SELECT_VALUE = '[data-vits-select-value]';
+  var SELECT_LIST = '[data-vits-select-list]';
+  var SELECT_TRIGGER = '[data-vits-select-trigger]';
+  var ATTR_ANCHOR = '[data-plp-attr-anchor]';
+  var ATTR_NAME = 'plpAttr';
+  var ATTR_VARIANT = 'basic';
+  var ATTR_LIST = 'column';
+  var ATTR_GAP = 16;
+
+  // mockData 카테고리 트리를 안전하게 반환
+  function getTree() {
+    var md = window.__mockData;
+    return md && md.category && Array.isArray(md.category.tree) ? md.category.tree : [];
+  }
+
+  // 리스트에서 categoryCode로 노드를 찾음
+  function findByCode(list, code) {
+    if (!Array.isArray(list) || !code) return null;
+    var c = String(code || '');
+    for (var i = 0; i < list.length; i += 1) {
+      var n = list[i];
+      if (n && String(n.categoryCode) === c) return n;
+    }
+    return null;
+  }
+
+  // 브레드크럼 셀렉트 루트를 depth로 찾음
+  function getSelectRoot(depth) {
+    return $(SELECT_ROOT + '[data-depth="' + depth + '"]').first();
+  }
+
+  // 브레드크럼 hidden 값을 depth로 읽음
+  function getSelectValue(depth) {
+    var $sel = getSelectRoot(depth);
+    if (!$sel.length) return '';
+    var $hidden = $sel.find(SELECT_HIDDEN).first();
+    return $hidden.length ? String($hidden.val() || '') : '';
+  }
+
+  // 트리 버튼을 depth+code로 찾음
+  function findTreeBtnByCode($tree, depth, code) {
+    var c = String(code || '');
+    if (!c) return $();
+    return $tree.find(BTN + '[data-depth="' + depth + '"][data-id="' + c.replace(/"/g, '\\"') + '"]').first();
+  }
+
+  // 버튼 depth 값을 숫자로 반환
+  function getBtnDepth($btn) {
+    return parseInt($btn.attr('data-depth'), 10) || 0;
+  }
+
+  // 버튼 카테고리 코드를 반환
+  function getBtnId($btn) {
+    return String($btn.attr('data-id') || '');
+  }
+
+  // 아이템의 active/open 상태를 설정
+  function setItemState($btn, active) {
+    var $item = $btn.closest(ITEM);
+    var $panel = $item.children(PANEL).first();
+    $item.toggleClass(CLS_ACTIVE, !!active);
+    $btn.attr('aria-expanded', active ? 'true' : 'false');
+    if ($panel.length) $panel.toggleClass(CLS_OPEN, !!active);
+  }
+
+  // depth의 아이템 상태를 모두 초기화
+  function resetDepthState($tree, depth) {
+    $tree.find(BTN + '[data-depth="' + depth + '"]').each(function () {
+      setItemState($(this), false);
+    });
+  }
+
+  // depth의 아이템을 모두 노출
+  function showAllAtDepth($tree, depth) {
+    $tree.find(BTN + '[data-depth="' + depth + '"]').each(function () {
+      $(this).closest(ITEM).removeClass(CLS_HIDDEN);
+    });
+  }
+
+  // 현재 선택 버튼만 남기고 나머지 숨김
+  function keepOnly($tree, $btn) {
+    var depth = getBtnDepth($btn);
+    $tree.find(BTN + '[data-depth="' + depth + '"]').each(function () {
+      $(this).closest(ITEM).toggleClass(CLS_HIDDEN, !$(this).is($btn));
+    });
+  }
+
+  // 브레드크럼을 placeholder 상태로 리셋(표시/선택/hidden)
+  function resetSelectToPlaceholder($root) {
+    if (!$root || !$root.length) return;
+    var $value = $root.find(SELECT_VALUE).first();
+    var $hidden = $root.find(SELECT_HIDDEN).first();
+    var placeholder = $value.attr('data-placeholder') || '';
+    $root.find(SELECT_OPT).removeClass('vits-select-selected').attr('aria-selected', 'false');
+    if ($value.length) $value.text(placeholder);
+    if ($hidden.length) {
+      $hidden.val('');
+      $hidden.trigger('change');
+    }
+  }
+
+  // 브레드크럼을 “비활성+옵션 비움”까지 포함해서 리셋(1뎁스 변경 시 잔상 방지)
+  function disableSelectAndClear($root) {
+    if (!$root || !$root.length) return;
+    resetSelectToPlaceholder($root);
+    var $list = $root.find(SELECT_LIST).first();
+    if ($list.length) $list.empty();
+    $root.addClass('vits-select-disabled');
+    var $trigger = $root.find(SELECT_TRIGGER).first();
+    if ($trigger.length) $trigger.prop('disabled', true);
+  }
+
+  // 브레드크럼 옵션을 value로 찾아 click()로 선택 처리
+  function clickSelectOptionByValue($root, value) {
+    if (!$root || !$root.length) return false;
+    var v = String(value || '');
+    if (!v) return false;
+    var $opt = $root.find(SELECT_OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]').first();
+    if (!$opt.length) return false;
+    $opt.trigger('click');
+    return true;
+  }
+
+  // 4뎁스 후보를 “선택된 3뎁스의 하위(categoryList)”에서만 추출
+  function getDepth4ListFromBreadcrumb() {
+    var tree = getTree();
+    var d1 = getSelectValue(1);
+    var d2 = getSelectValue(2);
+    var d3 = getSelectValue(3);
+    if (!d1 || !d2 || !d3) return [];
+    var d1Node = findByCode(tree, d1);
+    var d2List = d1Node && Array.isArray(d1Node.categoryList) ? d1Node.categoryList : [];
+    var d2Node = findByCode(d2List, d2);
+    var d3List = d2Node && Array.isArray(d2Node.categoryList) ? d2Node.categoryList : [];
+    var d3Node = findByCode(d3List, d3);
+    var d4List = d3Node && Array.isArray(d3Node.categoryList) ? d3Node.categoryList : [];
+    return d4List.filter(function (n) {
+      return n && n.categoryCode && n.categoryNm;
+    });
+  }
+
+  // 속성 앵커(li)를 1개만 찾음
+  function getAttrAnchor() {
+    return $(ATTR_ANCHOR).first();
+  }
+
+  // 속성 앵커를 비우고 숨김 처리
+  function hideAttrAnchor() {
+    var $li = getAttrAnchor();
+    if (!$li.length) return;
+    $li.empty().addClass(CLS_HIDDEN);
+  }
+
+  // 체크박스 리스트 클래스(list/gap)를 조합
+  function getAttrListClass() {
+    return 'list-' + ATTR_LIST + '-gap' + ATTR_GAP;
+  }
+
+  // input-checkbox.ejs 구조로 “속성” 체크박스 영역을 렌더링
+  function renderAttrAnchor(d4List) {
+    var $li = getAttrAnchor();
+    if (!$li.length) return;
+    if (!Array.isArray(d4List) || !d4List.length) {
+      hideAttrAnchor();
+      return;
+    }
+    $li.removeClass(CLS_HIDDEN);
+    var $wrap = $('<div/>', {
+      class: 'plp-side-filter-item'
+    });
+    $('<p/>', {
+      class: 'plp-side-title',
+      text: '속성'
+    }).appendTo($wrap);
+    var $checkboxWrap = $('<div/>', {
+      class: 'checkbox-wrapper size-m type-' + ATTR_VARIANT
+    }).appendTo($wrap);
+    var $ul = $('<ul/>', {
+      class: 'checkbox-item-area ' + getAttrListClass()
+    }).appendTo($checkboxWrap);
+    for (var i = 0; i < d4List.length; i += 1) {
+      var n = d4List[i];
+      var code = n && n.categoryCode ? String(n.categoryCode) : '';
+      var name = n && n.categoryNm ? String(n.categoryNm) : '';
+      var qty = n && n.categoryQty !== undefined && n.categoryQty !== null ? String(n.categoryQty) : '';
+      if (!code || !name) continue;
+      var $liItem = $('<li/>', {
+        class: 'checkbox-item-box'
+      }).appendTo($ul);
+      var $label = $('<label/>', {
+        class: 'checkbox-item'
+      }).appendTo($liItem);
+      $('<input/>', {
+        type: 'checkbox',
+        name: ATTR_NAME,
+        value: code
+      }).appendTo($label);
+      $('<span/>', {
+        class: 'checkbox-icon',
+        'aria-hidden': 'true'
+      }).appendTo($label);
+      var $name = $('<span/>', {
+        class: 'label-name'
+      }).appendTo($label);
+      $name.append(document.createTextNode(name));
+      if (qty !== '') $('<em/>', {
+        class: 'label-unit',
+        text: qty
+      }).appendTo($name);
+    }
+    $li.empty().append($wrap);
+  }
+
+  // 브레드크럼 상태에 맞춰 4뎁스(속성) 앵커를 동기화
+  function syncDepth4Attr() {
+    var d4List = getDepth4ListFromBreadcrumb();
+    renderAttrAnchor(d4List);
+  }
+
+  // 브레드크럼 상태를 기준으로 트리 UI를 재구성
+  function applyFromBreadcrumb($tree) {
+    var d1 = getSelectValue(1);
+    var d2 = getSelectValue(2);
+    var d3 = getSelectValue(3);
+    showAllAtDepth($tree, 1);
+    showAllAtDepth($tree, 2);
+    showAllAtDepth($tree, 3);
+    resetDepthState($tree, 1);
+    resetDepthState($tree, 2);
+    resetDepthState($tree, 3);
+    if (!d1) {
+      syncDepth4Attr();
+      return;
+    }
+    var $b1 = findTreeBtnByCode($tree, 1, d1);
+    if ($b1.length) {
+      setItemState($b1, true);
+      keepOnly($tree, $b1);
+    }
+    if (!d2) {
+      syncDepth4Attr();
+      return;
+    }
+    var $b2 = findTreeBtnByCode($tree, 2, d2);
+    if ($b2.length) {
+      setItemState($b2, true);
+      keepOnly($tree, $b2);
+    }
+    if (!d3) {
+      syncDepth4Attr();
+      return;
+    }
+    var $b3 = findTreeBtnByCode($tree, 3, d3);
+    if ($b3.length) {
+      setItemState($b3, true);
+      keepOnly($tree, $b3);
+    }
+    syncDepth4Attr();
+  }
+
+  // 1뎁스 클릭을 처리(선택/되돌리기)
+  function handleDepth1($tree, $btn) {
+    var isActive = $btn.closest(ITEM).hasClass(CLS_ACTIVE);
+
+    // 1뎁스 해제 시: 1~3뎁스 모두 초기화
+    if (isActive) {
+      disableSelectAndClear(getSelectRoot(3));
+      disableSelectAndClear(getSelectRoot(2));
+      resetSelectToPlaceholder(getSelectRoot(1));
+      return;
+    }
+
+    // 1뎁스 변경/선택 시: 2/3뎁스는 반드시 먼저 비움(잔상 방지)
+    disableSelectAndClear(getSelectRoot(3));
+    disableSelectAndClear(getSelectRoot(2));
+    clickSelectOptionByValue(getSelectRoot(1), getBtnId($btn));
+  }
+
+  // 2뎁스 클릭을 처리(선택/되돌리기)
+  function handleDepth2($tree, $btn) {
+    var isActive = $btn.closest(ITEM).hasClass(CLS_ACTIVE);
+
+    // 2뎁스 해제 시: 2/3뎁스 초기화(1뎁스는 유지)
+    if (isActive) {
+      disableSelectAndClear(getSelectRoot(3));
+      resetSelectToPlaceholder(getSelectRoot(2));
+      return;
+    }
+
+    // 2뎁스 변경/선택 시: 3뎁스는 반드시 먼저 비움(잔상 방지)
+    disableSelectAndClear(getSelectRoot(3));
+    clickSelectOptionByValue(getSelectRoot(2), getBtnId($btn));
+  }
+
+  // 3뎁스 클릭을 처리(선택만)
+  function handleDepth3($tree, $btn) {
+    clickSelectOptionByValue(getSelectRoot(3), getBtnId($btn));
+  }
+
+  // 트리 클릭 이벤트를 바인딩
+  function bindTree($tree) {
+    $tree.on('click.categoryTree', BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var depth = getBtnDepth($btn);
+      if (!depth) return;
+      if (depth === 1) handleDepth1($tree, $btn);
+      if (depth === 2) handleDepth2($tree, $btn);
+      if (depth === 3) handleDepth3($tree, $btn);
+    });
+  }
+
+  // 브레드크럼 변경을 트리에 반영
+  function bindBreadcrumbSync($tree) {
+    $(document).on('change.categoryTree', SELECT_ROOT + ' ' + SELECT_HIDDEN, function () {
+      window.requestAnimationFrame(function () {
+        applyFromBreadcrumb($tree);
+      });
+    });
+  }
+
+  // 트리 루트를 초기화
+  function initTree($tree) {
+    hideAttrAnchor();
+    applyFromBreadcrumb($tree);
+    bindTree($tree);
+    bindBreadcrumbSync($tree);
+  }
+  window.UI.categoryTree = {
+    init: function () {
+      $(TREE_ROOT).each(function () {
+        initTree($(this));
+      });
+    }
+  };
+})(window.jQuery || window.$, window, document);
 
 /***/ }),
 
@@ -2164,16 +3376,19 @@ if (document.body?.dataset?.guide === 'true') {
 
 /**
  * @file scripts/ui/category/plp-titlebar-research.js
- * @purpose PLP 결과 내 재검색: submit 시 칩 생성 + 삭제(기존 UI.chipButton) + 좌/우(한 칩씩) + 연관검색어 노출
+ * @purpose PLP 결과 내 재검색: submit 시 칩 생성/삭제(UI.chipButton) + 좌/우(한 칩씩) + 연관검색어 노출
  * @assumption
  *  - root: .vits-plp-titlebar
  *  - search form: [data-search-form], input: [data-search-input]
- *  - chip ui: [data-chip-ui] 내부
- *    - scroller: [data-chip-scroller] (가로 스크롤 컨테이너)
- *    - group: .vits-chip-button-group (칩 컨테이너, UI.chipButton의 위임 대상)
- *    - nav: [data-chip-prev], [data-chip-next] (있으면 한 칩씩 이동)
- *  - related ui: [data-related-ui], list: [data-related-list]
+ *  - chip ui: [data-chip-ui]
+ *    - scroller: [data-chip-scroller]
+ *    - group: .vits-chip-button-group
+ *    - nav: [data-chip-prev], [data-chip-next]
+ *  - related ui: [data-related-ui], list: [data-related-list], item: [data-keyword]
  *  - remove: [data-chip-action="remove"] → UI.chipButton가 DOM 제거 + ui:chip-remove 트리거
+ *
+ * @dependency
+ *  - scripts/ui/form/input-search.js (정규화/validation 처리)
  */
 
 (function ($, window) {
@@ -2183,16 +3398,17 @@ if (document.body?.dataset?.guide === 'true') {
   window.UI = window.UI || {};
   var ROOT_SEL = '.vits-plp-titlebar';
   var CLS_HIDDEN = 'is-hidden';
+  var NAV_OFFSET = 45;
+  var THRESHOLD = 8;
+
+  // PLP titlebar 하위 요소들을 1회에 수집
   function getEls($root) {
     var $form = $root.find('[data-search-form]').first();
     var $input = $root.find('[data-search-input]').first();
+    var $validation = $input.closest('.vits-input-search.vits-validation').find('.input-validation').first();
     var $chipUI = $root.find('[data-chip-ui]').first();
     var $relatedUI = $root.find('[data-related-ui]').first();
-
-    // 칩 컨테이너(삭제 위임 대상)
     var $chipGroup = $chipUI.find('.vits-chip-button-group').first();
-
-    // 스크롤 컨테이너(없으면 group을 스크롤 컨테이너로 사용)
     var $scroller = $chipUI.find('[data-chip-scroller]').first();
     if (!$scroller.length) $scroller = $chipGroup;
     var $btnPrev = $chipUI.find('[data-chip-prev]').first();
@@ -2202,6 +3418,7 @@ if (document.body?.dataset?.guide === 'true') {
       $root: $root,
       $form: $form,
       $input: $input,
+      $validation: $validation,
       $chipUI: $chipUI,
       $chipGroup: $chipGroup,
       $scroller: $scroller,
@@ -2211,58 +3428,100 @@ if (document.body?.dataset?.guide === 'true') {
       $relatedList: $relatedList
     };
   }
-  function trimText(str) {
-    return String(str || '').replace(/^\s+|\s+$/g, '');
+
+  // 검색어 정규화를 공통(inputSearch.normalize)으로 일원화
+  function normalizeQuery(str) {
+    if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.normalize === 'function') {
+      return window.UI.inputSearch.normalize(str);
+    }
+    return String(str || '').replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
   }
-  function normalizeSpaces(str) {
-    return trimText(str).replace(/\s+/g, ' ');
-  }
+
+  // is-hidden 토글로 노출을 제어
   function setVisible($el, on) {
     if (!$el || !$el.length) return;
     $el.toggleClass(CLS_HIDDEN, !on);
   }
+
+  // 현재 칩이 1개라도 있는지 확인
   function hasAnyChip(els) {
-    return els.$chipGroup && els.$chipGroup.length && els.$chipGroup.find('.vits-chip-button').length > 0;
+    return !!(els.$chipGroup && els.$chipGroup.length && els.$chipGroup.find('.vits-chip-button').length);
   }
+
+  // data-chip-value 비교로 중복을 판정
   function hasChipValue(els, value) {
     if (!els.$chipGroup || !els.$chipGroup.length) return false;
-    return els.$chipGroup.find('.vits-chip-button[data-chip-value="' + value + '"]').length > 0;
+    var v = String(value || '');
+    if (!v) return false;
+    var found = false;
+    els.$chipGroup.find('.vits-chip-button').each(function () {
+      if (String($(this).attr('data-chip-value') || '') === v) found = true;
+    });
+    return found;
   }
 
-  // 칩 DOM 추가(삭제는 UI.chipButton이 처리)
+  // 칩 DOM을 생성해 추가(중복이면 false)
   function appendChip(els, text) {
-    var v = trimText(text);
+    var v = normalizeQuery(text);
     if (!v) return false;
-
-    // 중복 방지
     if (hasChipValue(els, v)) return false;
-
-    // chip-button.ejs action='x' 형태에 맞춤(아이콘은 CSS로 처리 권장)
-    var html = '' + '<div class="vits-chip-button type-outline" data-chip-value="' + v + '">' + '  <span class="text">' + v + '</span>' + '  <button type="button" class="remove" data-chip-action="remove" aria-label="' + v + ' 삭제">' + '    <span class="ic ic-x" aria-hidden="true"></span>' + '  </button>' + '</div>';
-    els.$chipGroup.append(html);
+    var $chip = $('<div/>', {
+      class: 'vits-chip-button type-outline',
+      'data-chip-value': v
+    });
+    $('<span/>', {
+      class: 'text',
+      text: v
+    }).appendTo($chip);
+    var $btn = $('<button/>', {
+      type: 'button',
+      class: 'remove',
+      'data-chip-action': 'remove',
+      'aria-label': v + ' 삭제'
+    });
+    $('<span/>', {
+      class: 'ic ic-x',
+      'aria-hidden': 'true'
+    }).appendTo($btn);
+    $btn.appendTo($chip);
+    els.$chipGroup.append($chip);
     return true;
   }
+
+  // 스크롤 가능한 최대 값을 계산
   function getMaxScrollLeft(scrollerEl) {
     return Math.max(0, (scrollerEl.scrollWidth || 0) - (scrollerEl.clientWidth || 0));
   }
+
+  // 좌/우 버튼의 노출/disabled 상태를 갱신
   function updateNav(els) {
-    // 버튼이 없으면(마크업 미추가) 네비 기능 자체를 생략
     if (!els.$btnPrev.length || !els.$btnNext.length) return;
     var scrollerEl = els.$scroller[0];
-    if (!scrollerEl) return;
-    var max = getMaxScrollLeft(scrollerEl);
+    var groupEl = els.$chipGroup[0];
+    if (!scrollerEl || !groupEl) return;
     var x = scrollerEl.scrollLeft || 0;
 
-    // 1px 오차 보정(모바일 관성 스크롤)
+    // overflow 판정: group 콘텐츠 폭이 scroller 가시폭을 넘는지
+    var groupWidth = groupEl.scrollWidth || 0;
+    var scrollerWidth = scrollerEl.clientWidth || 0;
+    var hasOverflow = groupWidth - scrollerWidth > THRESHOLD;
+
+    // 버튼은 overflow일 때만 노출
+    setVisible(els.$btnPrev, hasOverflow);
+    setVisible(els.$btnNext, hasOverflow);
+    if (!hasOverflow) return;
+    var max = getMaxScrollLeft(scrollerEl);
     els.$btnPrev.prop('disabled', x <= 1);
     els.$btnNext.prop('disabled', x >= max - 1);
   }
+
+  // 칩 엘리먼트 목록을 가져옴
   function getChipItems(els) {
     if (!els.$chipGroup.length) return [];
     return els.$chipGroup[0].querySelectorAll('.vits-chip-button');
   }
 
-  // 한 칩씩 이동(다음)
+  // 다음 칩 위치로 스크롤 이동
   function goNextChip(els) {
     var scrollerEl = els.$scroller[0];
     if (!scrollerEl) return;
@@ -2270,7 +3529,7 @@ if (document.body?.dataset?.guide === 'true') {
     if (!items || !items.length) return;
     var x = scrollerEl.scrollLeft || 0;
     for (var i = 0; i < items.length; i += 1) {
-      var left = items[i].offsetLeft || 0;
+      var left = (items[i].offsetLeft || 0) - NAV_OFFSET;
       if (left > x + 1) {
         scrollerEl.scrollTo({
           left: left,
@@ -2285,7 +3544,7 @@ if (document.body?.dataset?.guide === 'true') {
     });
   }
 
-  // 한 칩씩 이동(이전)
+  // 이전 칩 위치로 스크롤 이동
   function goPrevChip(els) {
     var scrollerEl = els.$scroller[0];
     if (!scrollerEl) return;
@@ -2293,7 +3552,7 @@ if (document.body?.dataset?.guide === 'true') {
     if (!items || !items.length) return;
     var x = scrollerEl.scrollLeft || 0;
     for (var i = items.length - 1; i >= 0; i -= 1) {
-      var left = items[i].offsetLeft || 0;
+      var left = (items[i].offsetLeft || 0) - NAV_OFFSET;
       if (left < x - 1) {
         scrollerEl.scrollTo({
           left: left,
@@ -2307,6 +3566,8 @@ if (document.body?.dataset?.guide === 'true') {
       behavior: 'smooth'
     });
   }
+
+  // 칩 존재 여부에 따라 칩/연관검색어 영역을 동기화
   function syncVisibility(els) {
     var show = hasAnyChip(els);
     setVisible(els.$chipUI, show);
@@ -2315,28 +3576,35 @@ if (document.body?.dataset?.guide === 'true') {
       updateNav(els);
     });
   }
-  function bindEvents(els) {
-    // 검색 submit: 페이지 이동 막고 칩 생성
-    els.$form.on('submit.plpResearch', function (e) {
-      e.preventDefault();
-      var q = normalizeSpaces(els.$input.val());
-      if (!q) return;
-      var tokens = q.split(' ');
-      var changed = false;
-      for (var i = 0; i < tokens.length; i += 1) {
-        if (appendChip(els, tokens[i])) changed = true;
+
+  // input-search 공통 JS를 해당 폼/인풋에 연결
+  function bindInputSearch(els) {
+    if (!window.UI || !window.UI.inputSearch || typeof window.UI.inputSearch.init !== 'function') return;
+    window.UI.inputSearch.init({
+      $form: els.$form,
+      $input: els.$input,
+      $validation: els.$validation
+    }, {
+      onSubmit: function (query) {
+        var q = normalizeQuery(query);
+        if (!q) return false;
+
+        // 중복이면 false 반환 → input-search가 invalid 처리
+        if (hasChipValue(els, q)) return false;
+        if (!appendChip(els, q)) return false;
+        syncVisibility(els);
+        els.$input.val('');
+        window.requestAnimationFrame(function () {
+          els.$input.trigger('focus');
+        });
+        return true;
       }
-      if (!changed) return;
-      syncVisibility(els);
-
-      // 추가 성공 시 입력창 비우고 포커스 유지
-      els.$input.val('');
-      window.requestAnimationFrame(function () {
-        els.$input.trigger('focus');
-      });
     });
+  }
 
-    // 좌/우 버튼(있을 때만)
+  // PLP titlebar 내 이벤트들을 바인딩
+  function bindEvents(els) {
+    // 좌/우 버튼이 있으면 한 칩씩 이동
     if (els.$btnNext.length && els.$btnPrev.length) {
       els.$btnNext.on('click.plpResearch', function () {
         goNextChip(els);
@@ -2352,7 +3620,7 @@ if (document.body?.dataset?.guide === 'true') {
       });
     }
 
-    // 스크롤/리사이즈 시 버튼 상태 갱신
+    // 스크롤/리사이즈 시 네비 상태 갱신
     els.$scroller.on('scroll.plpResearch', function () {
       updateNav(els);
     });
@@ -2360,35 +3628,59 @@ if (document.body?.dataset?.guide === 'true') {
       updateNav(els);
     });
 
-    // 연관검색어 클릭 → 칩 추가(원치 않으면 제거)
+    // 연관검색어 클릭 → 칩 추가(중복이면 invalid 표시)
     if (els.$relatedList.length) {
-      els.$relatedList.on('click.plpResearch', '[data-related-item]', function (e) {
+      els.$relatedList.on('click.plpResearch', '[data-keyword]', function (e) {
         e.preventDefault();
-        var kw = trimText($(this).text());
+        var kw = normalizeQuery($(this).attr('data-keyword') || $(this).text());
         if (!kw) return;
+        if (hasChipValue(els, kw)) {
+          if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+            window.UI.inputSearch.setInvalid({
+              $input: els.$input,
+              $validation: els.$validation
+            }, true);
+          }
+          return;
+        }
         if (appendChip(els, kw)) syncVisibility(els);
+        if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+          window.UI.inputSearch.setInvalid({
+            $input: els.$input,
+            $validation: els.$validation
+          }, false);
+        }
       });
     }
 
-    // chip-button.js 삭제 후 커스텀 이벤트 수신 → 노출/네비 동기화
+    // chip-button.js 삭제 후 이벤트 수신 → 노출/네비 동기화
     $(document).on('ui:chip-remove.plpResearch', function () {
       window.requestAnimationFrame(function () {
         syncVisibility(els);
       });
     });
   }
+
+  // titlebar 1개 루트를 초기화
   function initRoot($root) {
     var els = getEls($root);
-
-    // 필수
     if (!els.$form.length || !els.$input.length) return;
     if (!els.$chipUI.length || !els.$relatedUI.length) return;
-    if (!els.$chipGroup.length) return; // 현재 구조에서 가장 중요
+    if (!els.$chipGroup.length) return;
 
-    // 초기 숨김
+    // 초기 숨김(칩 0개면 UI를 숨김)
     setVisible(els.$chipUI, false);
     setVisible(els.$relatedUI, false);
+
+    // 초기 validation off
+    if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+      window.UI.inputSearch.setInvalid({
+        $input: els.$input,
+        $validation: els.$validation
+      }, false);
+    }
     syncVisibility(els);
+    bindInputSearch(els);
     bindEvents(els);
   }
   window.UI.plpTitlebarResearch = {
@@ -2402,64 +3694,308 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
-/***/ 865:
+/***/ 847:
 /***/ (function() {
 
 /**
- * @file scripts/ui/form/select.js
- * @purpose select 공통: 단독/브레드크럼(1~3뎁스) 셀렉트 UI + 옵션 렌더링 + placeholder/선택값 표시 + 연동 활성화 규칙
- * @scope [data-vits-select] 컴포넌트만 적용(전역 영향 없음)
- *
- * @rule
- *  - 브레드크럼:
- *    - 1뎁스 선택 → 2뎁스 옵션 주입/활성(옵션 없으면 disabled 유지 + is-no-option)
- *    - 2뎁스 선택 → 3뎁스 옵션 주입/활성(옵션 없으면 disabled 유지 + is-no-option)
- *    - placeholder(선택값 '')면 다음뎁스 비활성
- *  - 옵션 데이터는 window.__mockData.category.tree 기준(categoryCode/categoryNm/categoryList)
- *
- * @state
- *  - root.vits-select-open: 옵션 리스트 오픈 상태
- *  - root.vits-select-disabled: 비활성 상태(클릭 차단)
- *  - root.is-no-option: 하위 옵션 없음 상태(스타일링용)
- *  - option.vits-select-selected: 선택 옵션 표시
- *
- * @option (root) data-root="groupId" // 브레드크럼 그룹 식별자(같은 값끼리 연동)
- * @option (root) data-depth="1|2|3"  // 브레드크럼 뎁스(단독이면 생략 가능)
- * @hook  (list) data-vits-select-list // 옵션 컨테이너(ul)
- * @hook  (hidden) data-vits-select-hidden // 선택값 저장
+ * @file scripts/ui/layer.js
+ * @purpose data-속성 기반 레이어(모달/바텀시트/토스트) 공통 + 열림/닫힘 애니메이션(등장/퇴장)
+ * @description
+ *  - 매핑: [data-layer-btn][data-layer-target] ↔ [data-layer-box="target"]
+ *  - 상태:
+ *    - is-open    : display 제어(렌더링 on/off)
+ *    - is-active  : 실제 노출 상태(등장 완료)
+ *    - is-closing : 퇴장 애니메이션 중
+ *  - aria-expanded는 즉시 동기화(접근성), 화면 전환은 CSS transition으로 처리
+ * @option
+ *  - data-layer-group="true"    : 동일 scope(또는 문서) 내 1개만 오픈
+ *  - data-layer-outside="true"  : 바깥 클릭 시 close
+ *  - data-layer-esc="true"      : ESC 닫기
+ *  - data-layer-lock="true"     : body 스크롤 락(모달/바텀 권장)
+ * @a11y
+ *  - 버튼 aria-expanded만 제어(aria-controls는 마크업 선택)
+ *  - (선택) data-aria-label-base가 있으면 aria-label을 "... 열기/닫기"로 동기화
  */
 
 (function ($, window, document) {
   'use strict';
 
   if (!$) {
-    console.log('[select] jQuery not found');
+    console.log('[layer] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
+  var OPEN = 'is-open'; // display on
+  var ACTIVE = 'is-active'; // visible on
+  var CLOSING = 'is-closing';
+  var BODY_ACTIVE = 'is-layer-open';
+  var CLOSE_FALLBACK_MS = 450; // CSS transition 0.35s 기준 여유 포함
+
+  // syncAriaLabel: aria-expanded(true/false)에 맞춰 aria-label("... 열기/닫기") 동기화(옵션)
+  function syncAriaLabel($btn) {
+    var base = $btn.attr('data-aria-label-base');
+    if (!base) return;
+    var isExpanded = $btn.attr('aria-expanded') === 'true';
+    $btn.attr('aria-label', base + ' ' + (isExpanded ? '닫기' : '열기'));
+  }
+
+  // getPair: 버튼 기준으로 대상 레이어 박스 찾기
+  function getPair($btn) {
+    var target = $btn.data('layerTarget');
+    if (!target) return null;
+    var $box = $('[data-layer-box="' + target + '"]').first();
+    if (!$box.length) return null;
+    return {
+      target: target,
+      $box: $box
+    };
+  }
+
+  // lockScroll: body 스크롤 락(옵션)
+  function lockScroll(shouldLock) {
+    if (shouldLock) $('body').addClass(BODY_ACTIVE);else $('body').removeClass(BODY_ACTIVE);
+  }
+
+  // 내부 상태 플래그(중복 close 방지)
+  function setClosingFlag($box, v) {
+    $box.data('layerClosing', v === true);
+  }
+  function isClosing($box) {
+    return $box.data('layerClosing') === true;
+  }
+
+  // open: display 켠 뒤 다음 프레임에 is-active를 붙여 transition 확실히 실행
+  function open($btn, $box) {
+    var shouldLock = $btn.data('layerLock') === true;
+
+    // 닫힘 진행 중 상태 정리
+    setClosingFlag($box, false);
+    $box.removeClass(CLOSING);
+
+    // 렌더링 on
+    $box.addClass(OPEN);
+
+    // a11y 즉시 동기화
+    $btn.attr('aria-expanded', 'true');
+    syncAriaLabel($btn);
+    if (shouldLock) lockScroll(true);
+
+    // 다음 프레임에 visible on
+    window.requestAnimationFrame(function () {
+      $box.addClass(ACTIVE);
+    });
+  }
+
+  // close: is-active 제거 + is-closing 추가로 퇴장 transition 실행 후, 끝나면 is-open 제거(display off)
+  function close($btn, $box) {
+    var shouldLock = $btn.data('layerLock') === true;
+    if (!$box.hasClass(OPEN)) return;
+    if (isClosing($box)) return;
+    setClosingFlag($box, true);
+
+    // a11y 즉시 동기화(사용자 입력 기준으로 닫힘 확정)
+    $btn.attr('aria-expanded', 'false');
+    syncAriaLabel($btn);
+
+    // 퇴장 애니메이션 시작
+    $box.removeClass(ACTIVE).addClass(CLOSING);
+    var finished = false;
+    var finish = function () {
+      if (finished) return;
+      finished = true;
+
+      // display off
+      $box.removeClass(CLOSING).removeClass(OPEN);
+      setClosingFlag($box, false);
+      if (shouldLock) lockScroll(false);
+    };
+
+    // transitionend는 여러 번 올 수 있으니 opacity 1회만 사용
+    $box.off('transitionend.uiLayerClose').on('transitionend.uiLayerClose', function (e) {
+      if (e.target !== $box[0]) return;
+      if (e.originalEvent && e.originalEvent.propertyName && e.originalEvent.propertyName !== 'opacity') return;
+      $box.off('transitionend.uiLayerClose');
+      finish();
+    });
+
+    // fallback(transitionend 미발생 대비)
+    window.setTimeout(function () {
+      $box.off('transitionend.uiLayerClose');
+      finish();
+    }, CLOSE_FALLBACK_MS);
+  }
+
+  // closeAll: 열린 레이어 전부 닫기(그룹/전역 정리)
+  function closeAll() {
+    $('[data-layer-box].' + OPEN).each(function () {
+      var $box = $(this);
+      var target = $box.attr('data-layer-box');
+      var $btn = $('[data-layer-btn][data-layer-target="' + target + '"]').first();
+      if (!$btn.length) return;
+      close($btn, $box);
+    });
+  }
+
+  // outside close: 바깥 클릭 닫기(옵션)
+  function bindOutsideClose() {
+    $(document).on('click.uiLayerOutside', function (e) {
+      $('[data-layer-box].' + OPEN).each(function () {
+        var $box = $(this);
+        var target = $box.attr('data-layer-box');
+        var $btn = $('[data-layer-btn][data-layer-target="' + target + '"]').first();
+        if (!$btn.length) return;
+        var outside = $btn.data('layerOutside') === true;
+        if (!outside) return;
+
+        // 레이어 내부 클릭은 무시
+        if ($box.has(e.target).length) return;
+
+        // 버튼 자체 클릭으로 들어온 이벤트는 무시(토글 핸들러가 처리)
+        if ($btn.is(e.target) || $btn.has(e.target).length) return;
+        close($btn, $box);
+      });
+    });
+  }
+
+  // esc close: ESC 닫기(옵션)
+  function bindEscClose() {
+    $(document).on('keydown.uiLayerEsc', function (e) {
+      if (e.key !== 'Escape') return;
+      $('[data-layer-box].' + OPEN).each(function () {
+        var $box = $(this);
+        var target = $box.attr('data-layer-box');
+        var $btn = $('[data-layer-btn][data-layer-target="' + target + '"]').first();
+        if (!$btn.length) return;
+        var esc = $btn.data('layerEsc') === true;
+        if (!esc) return;
+        close($btn, $box);
+      });
+    });
+  }
+
+  // init
+  function bind() {
+    // 트리거
+    $(document).on('click.uiLayer', '[data-layer-btn]', function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var pair = getPair($btn);
+      if (!pair) return;
+      var $box = pair.$box;
+      var isOpen = $box.hasClass(OPEN);
+      var isGroup = $btn.data('layerGroup') === true;
+      if (!isOpen && isGroup) closeAll();
+      if (isOpen) close($btn, $box);else open($btn, $box);
+    });
+
+    // 레이어 내부 닫기 버튼
+    $(document).on('click.uiLayerClose', '[data-layer-close]', function (e) {
+      e.preventDefault();
+      var $box = $(this).closest('[data-layer-box]');
+      if (!$box.length) return;
+      var target = $box.attr('data-layer-box');
+      var $btn = $('[data-layer-btn][data-layer-target="' + target + '"]').first();
+      if (!$btn.length) return;
+      close($btn, $box);
+    });
+    bindOutsideClose();
+    bindEscClose();
+  }
+  window.UI.layer = {
+    init: function () {
+      bind();
+      console.log('[layer] init');
+    },
+    closeAll: closeAll
+  };
+  console.log('[layer] module loaded');
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
+/***/ 865:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/form/select.js
+ * @purpose 커스텀 셀렉트 공통: 단일/브레드크럼(1~3뎁스) UI + 옵션 렌더링 + 선택값 표시 + 연동 활성화
+ * @scope [data-vits-select] 컴포넌트 범위 내에서만 동작
+ *
+ * @rule
+ *  - 트리거 클릭: open/close 토글(외부 클릭 시 close)
+ *  - 옵션 클릭: 선택 표시/hidden 갱신 + (브레드크럼이면) 다음 뎁스 옵션 주입/활성
+ *  - placeholder(선택값 '')면 다음 뎁스 비활성
+ *
+ * @state
+ *  - root.vits-select-open: 옵션 리스트 오픈
+ *  - root.vits-select-dropup: 위로 오픈(공간 부족 시 자동)
+ *  - root.vits-select-disabled: 비활성(클릭 차단)
+ *  - root.is-no-option: 하위 옵션 없음
+ *  - option.vits-select-selected: 선택 옵션
+ *
+ * @a11y
+ *  - trigger[aria-expanded] 동기화
+ *  - option[aria-selected] 동기화
+ *
+ * @note
+ *  - 옵션 데이터: window.__mockData.category.tree 기준(categoryCode/categoryNm/categoryList)
+ *  - 옵션 url 지원: option[data-url]이 있으면 선택 후 새창으로 열고(이동)
+ *  - 강제 dropup 지원: 마크업에 vits-select-dropup이 이미 있으면 자동 방향 토글을 수행하지 않는다(클래스 유지)
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  // jQuery 의존(프로젝트 전제)
+  if (!$) {
+    console.log('[select] jQuery not found');
+    return;
+  }
+
+  // UI 네임스페이스 보장
+  window.UI = window.UI || {};
   window.UI.select = window.UI.select || {};
+
+  // 루트/훅 셀렉터
   var ROOT = '[data-vits-select]';
   var TRIGGER = '[data-vits-select-trigger]';
   var LIST = '[data-vits-select-list]';
   var VALUE = '[data-vits-select-value]';
   var HIDDEN = '[data-vits-select-hidden]';
   var OPT = '.vits-select-option';
+
+  // 이벤트 네임스페이스(중복 바인딩 방지)
   var NS = '.uiSelect';
+
+  // dropup 제어용 상수
+  var DROPUP = 'vits-select-dropup';
+  var GUTTER = 8;
+  var MIN_H = 120;
+
+  // mockData 카테고리 트리를 안전하게 반환
   function getTree() {
     var md = window.__mockData;
     return md && md.category && Array.isArray(md.category.tree) ? md.category.tree : [];
   }
+
+  // 루트의 브레드크럼 그룹 식별자를 반환
   function getGroup($root) {
     return $root.attr('data-root') || '';
   }
+
+  // 루트의 브레드크럼 뎁스(1~3)를 반환
   function getDepth($root) {
     return parseInt($root.attr('data-depth'), 10) || 0;
   }
+
+  // 동일 group에 속한 루트 셀렉트들을 수집
   function getGroupRoots(group) {
     return $(ROOT).filter(function () {
       return ($(this).attr('data-root') || '') === group;
     });
   }
+
+  // 그룹 루트들 중 특정 depth 루트를 찾음
   function findDepth($roots, depth) {
     var $found = $();
     $roots.each(function () {
@@ -2468,14 +4004,72 @@ if (document.body?.dataset?.guide === 'true') {
     });
     return $found;
   }
+
+  // 모든 셀렉트 옵션 리스트를 닫음
   function closeAll() {
     $(ROOT).removeClass('vits-select-open').find(TRIGGER).attr('aria-expanded', 'false');
+    $(ROOT).find(LIST).each(function () {
+      this.style.maxHeight = '0px';
+    });
   }
+
+  // trigger 기준으로 가장 가까운 스크롤 컨테이너를 찾음
+  function getScrollParent(el) {
+    var p = el && el.parentElement;
+    while (p && p !== document.body && p !== document.documentElement) {
+      var st = window.getComputedStyle(p);
+      var oy = st.overflowY;
+      if (oy === 'auto' || oy === 'scroll') return p;
+      p = p.parentElement;
+    }
+    return window;
+  }
+
+  // 오픈 직전: 공간 계산 후 dropup/최대 높이를 확정
+  function applyDropDirection($root) {
+    if (!$root || !$root.length) return;
+    var $trigger = $root.find(TRIGGER);
+    var $list = $root.find(LIST);
+    if (!$trigger.length || !$list.length) return;
+    var triggerEl = $trigger.get(0);
+    var listEl = $list.get(0);
+    if (!triggerEl || !listEl) return;
+    var scroller = getScrollParent(triggerEl);
+    var cRect;
+    if (scroller === window) cRect = {
+      top: 0,
+      bottom: window.innerHeight
+    };else cRect = scroller.getBoundingClientRect();
+    var tRect = triggerEl.getBoundingClientRect();
+    var spaceBelow = cRect.bottom - tRect.bottom;
+    var spaceAbove = tRect.top - cRect.top;
+    var prevMaxH = listEl.style.maxHeight;
+    listEl.style.maxHeight = 'none';
+    var listH = listEl.scrollHeight;
+    listEl.style.maxHeight = prevMaxH;
+    var shouldDropUp;
+    var isForcedDropup = $root.hasClass(DROPUP);
+    if (isForcedDropup) {
+      shouldDropUp = true;
+    } else {
+      shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
+      $root.toggleClass(DROPUP, shouldDropUp);
+    }
+    var maxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
+    if (maxH < MIN_H) maxH = MIN_H;
+    listEl.style.maxHeight = maxH + 'px';
+    listEl.style.overflowY = 'auto';
+  }
+
+  // 특정 루트만 오픈
   function openOne($root) {
     closeAll();
+    applyDropDirection($root);
     $root.addClass('vits-select-open');
     $root.find(TRIGGER).attr('aria-expanded', 'true');
   }
+
+  // 루트 비활성 상태를 동기화
   function setDisabled($root, disabled) {
     $root.toggleClass('vits-select-disabled', !!disabled);
     $root.find(TRIGGER).prop('disabled', !!disabled);
@@ -2483,51 +4077,62 @@ if (document.body?.dataset?.guide === 'true') {
       $root.removeClass('vits-select-open').find(TRIGGER).attr('aria-expanded', 'false');
     }
   }
+
+  // 하위 옵션 없음 상태 클래스를 토글
   function setNoOption($root, on) {
     $root.toggleClass('is-no-option', !!on);
   }
+
+  // placeholder/hidden/선택표시를 초기화
   function resetToPlaceholder($root, clearOptions) {
     var $value = $root.find(VALUE);
     if ($value.length) $value.text($value.attr('data-placeholder') || '');
     var $hidden = $root.find(HIDDEN);
-    if ($hidden.length) $hidden.val('');
+    if ($hidden.length) {
+      $hidden.val('');
+      $hidden.trigger('change'); // 하위 뎁스 리셋을 외부(트리/타이틀)에도 즉시 반영
+    }
     $root.find(OPT).removeClass('vits-select-selected').attr('aria-selected', 'false');
     if (clearOptions) $root.find(LIST).empty();
   }
+
+  // placeholder/옵션 제거 후 비활성 상태로 정리
+  function disableAndClear($root) {
+    resetToPlaceholder($root, true);
+    setDisabled($root, true);
+    setNoOption($root, false);
+  }
+
+  // hidden 값 기준으로 선택 상태를 복원
   function setSelectedByValue($root, value) {
     var v = String(value || '');
     if (!v) return false;
-
-    // // hidden 값 기준으로 옵션 선택 복원
     var $match = $root.find(OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]');
     if (!$match.length) return false;
     setSelected($root, $match.eq(0));
     return true;
   }
+
+  // 옵션 1개를 선택 처리하고 표시/hidden을 갱신
   function setSelected($root, $opt) {
-    // // 선택 옵션 1개만 유지
     $root.find(OPT).each(function () {
       var $el = $(this);
       var sel = $el.is($opt);
       $el.toggleClass('vits-select-selected', sel);
       $el.attr('aria-selected', sel ? 'true' : 'false');
     });
-
-    // // 표시 텍스트 갱신
     $root.find(VALUE).text($opt.text());
-
-    // // hidden 값 갱신(연동 기준)
     var $hidden = $root.find(HIDDEN);
     if ($hidden.length) {
       $hidden.val($opt.attr('data-value') || $opt.text());
-      $hidden.trigger('change');
+      $hidden.trigger('change'); // 외부 로직(트리/리스트 재조회 등) 연동 포인트
     }
   }
+
+  // items 배열을 옵션(li) 마크업으로 렌더링
   function renderOptions($root, items) {
     var $list = $root.find(LIST);
     if (!$list.length) return;
-
-    // // 옵션 DOM 생성(최소 마크업)
     var html = '';
     for (var i = 0; i < items.length; i++) {
       var it = items[i];
@@ -2536,6 +4141,8 @@ if (document.body?.dataset?.guide === 'true') {
     }
     $list.html(html);
   }
+
+  // 카테고리 코드로 트리/리스트에서 노드를 찾음
   function findNodeByCode(list, code) {
     if (!code) return null;
     for (var i = 0; i < list.length; i++) {
@@ -2544,7 +4151,7 @@ if (document.body?.dataset?.guide === 'true') {
     return null;
   }
 
-  // // categoryList가 null이어도 안전 처리
+  // 노드의 하위 categoryList를 options items로 변환
   function mapChildren(node) {
     var out = [];
     var children = node && Array.isArray(node.categoryList) ? node.categoryList : [];
@@ -2558,28 +4165,28 @@ if (document.body?.dataset?.guide === 'true') {
     }
     return out;
   }
+
+  // 옵션 없음 상태로 초기화
   function disableAsNoOption($root) {
-    // // 하위 옵션 없음: 비활성 + 스타일용 클래스
     resetToPlaceholder($root, true);
     setDisabled($root, true);
     setNoOption($root, true);
   }
+
+  // 옵션 주입 후 활성화 처리
   function enableWithOptions($root, items) {
-    // // 옵션 주입 + 활성
     setNoOption($root, false);
     renderOptions($root, items);
     setDisabled($root, false);
   }
+
+  // hidden 입력값을 안전하게 문자열로 반환
   function getHiddenVal($root) {
     var $hidden = $root.find(HIDDEN);
     return $hidden.length ? String($hidden.val() || '') : '';
   }
 
-  /**
-   * 그룹(cat) 기준 연동 갱신
-   * @param {$} $changedRoot - 변경된 root(클릭한 셀렉트 root)
-   * @param {number} reasonDepth - 0: 초기, 1: 1뎁스 변경, 2: 2뎁스 변경
-   */
+  // 브레드크럼 그룹 기준으로 2/3뎁스 옵션/활성을 갱신
   function applyBreadcrumb($changedRoot, reasonDepth) {
     var group = getGroup($changedRoot);
     if (!group) return;
@@ -2590,85 +4197,43 @@ if (document.body?.dataset?.guide === 'true') {
     var $d3 = findDepth($groupRoots, 3);
     if (!$d2.length && !$d3.length) return;
     var tree = getTree();
-
-    // // 1뎁스 선택값 기준으로 2뎁스 옵션 구성
     var d1Val = $d1.length ? getHiddenVal($d1) : '';
     var d1Node = d1Val ? findNodeByCode(tree, d1Val) : null;
 
-    // // 1뎁스 미선택: 2/3 비활성(옵션/상태 정리)
+    // 1뎁스 미선택이면 하위 뎁스는 무조건 비활성/초기화
     if (!d1Node) {
-      if ($d2.length) {
-        resetToPlaceholder($d2, true);
-        setDisabled($d2, true);
-        setNoOption($d2, false);
-      }
-      if ($d3.length) {
-        resetToPlaceholder($d3, true);
-        setDisabled($d3, true);
-        setNoOption($d3, false);
-      }
+      if ($d2.length) disableAndClear($d2);
+      if ($d3.length) disableAndClear($d3);
       return;
     }
 
-    // ----- 2뎁스 -----
+    // 2뎁스 옵션 주입/활성
     if ($d2.length) {
       var d2Items = mapChildren(d1Node);
       if (!d2Items.length) {
         disableAsNoOption($d2);
-
-        // // 2뎁스가 없으면 3뎁스도 의미 없음
-        if ($d3.length) {
-          resetToPlaceholder($d3, true);
-          setDisabled($d3, true);
-          setNoOption($d3, false);
-        }
+        if ($d3.length) disableAndClear($d3);
         return;
       }
-
-      // // 1뎁스가 바뀌면 2뎁스는 “선택 초기화”가 기본
-      if (reasonDepth === 1) {
-        resetToPlaceholder($d2, true);
-      }
-
-      // // 옵션 주입
+      if (reasonDepth === 1) resetToPlaceholder($d2, true);
       enableWithOptions($d2, d2Items);
-
-      // // 초기/유지 케이스면 hidden 값으로 선택 복원
-      if (reasonDepth === 0) {
-        setSelectedByValue($d2, getHiddenVal($d2));
-      } else if (reasonDepth !== 1) {
-        // // 2뎁스 변경(reasonDepth=2)에서는 선택이 이미 반영됨(유지)
-        setSelectedByValue($d2, getHiddenVal($d2));
-      }
-
-      // // 선택 복원이 안 됐으면 placeholder 유지(UX 안정)
+      if (reasonDepth === 0 || reasonDepth !== 1) setSelectedByValue($d2, getHiddenVal($d2));
       if (!getHiddenVal($d2)) {
-        // // 2뎁스 미선택이면 3뎁스는 비활성로 유지
-        if ($d3.length) {
-          resetToPlaceholder($d3, true);
-          setDisabled($d3, true);
-          setNoOption($d3, false);
-        }
+        if ($d3.length) disableAndClear($d3);
       }
     }
 
-    // ----- 3뎁스 -----
+    // 3뎁스 옵션 주입/활성
     if ($d3.length) {
       var d2Val = $d2.length ? getHiddenVal($d2) : '';
-
-      // // 2뎁스 미선택: 3뎁스 비활성
       if (!d2Val) {
-        resetToPlaceholder($d3, true);
-        setDisabled($d3, true);
-        setNoOption($d3, false);
+        disableAndClear($d3);
         return;
       }
       var d2ListSafe = Array.isArray(d1Node.categoryList) ? d1Node.categoryList : [];
       var d2Node = findNodeByCode(d2ListSafe, d2Val);
       if (!d2Node) {
-        resetToPlaceholder($d3, true);
-        setDisabled($d3, true);
-        setNoOption($d3, false);
+        disableAndClear($d3);
         return;
       }
       var d3Items = mapChildren(d2Node);
@@ -2676,114 +4241,90 @@ if (document.body?.dataset?.guide === 'true') {
         disableAsNoOption($d3);
         return;
       }
-
-      // // 2뎁스가 바뀌면 3뎁스는 “선택 초기화”가 기본
-      if (reasonDepth === 2) {
-        resetToPlaceholder($d3, true);
-      }
-
-      // // 옵션 주입
+      if (reasonDepth === 2) resetToPlaceholder($d3, true);
       enableWithOptions($d3, d3Items);
-
-      // // 초기/유지 케이스면 hidden 값으로 선택 복원
-      if (reasonDepth === 0) {
-        setSelectedByValue($d3, getHiddenVal($d3));
-      } else if (reasonDepth !== 2) {
-        setSelectedByValue($d3, getHiddenVal($d3));
-      }
+      if (reasonDepth === 0 || reasonDepth !== 2) setSelectedByValue($d3, getHiddenVal($d3));
     }
   }
 
-  /**
-   * 현재 선택된 브레드크럼 기준으로 PLP 상단 카테고리 타이틀 갱신
-   * - depth3 → depth2 → depth1 우선
-   */
-  function updateCategoryTitle() {
+  // 브레드크럼 선택값으로 PLP 타이틀을 갱신
+  function updateCategoryTitle(group) {
     var $title = $('[data-plp-category-title]');
     if (!$title.length) return;
-
-    // // 선택된 옵션이 없으면 placeholder 텍스트로 유지(원하면 여기서 비우기 처리 가능)
-    var $d3 = $('[data-vits-select][data-depth="3"] ' + OPT + '.vits-select-selected').last();
-    var $d2 = $('[data-vits-select][data-depth="2"] ' + OPT + '.vits-select-selected').last();
-    var $d1 = $('[data-vits-select][data-depth="1"] ' + OPT + '.vits-select-selected').last();
-    var $pick = $d3.length ? $d3 : $d2.length ? $d2 : $d1;
-    if ($pick && $pick.length) {
-      $title.text($pick.text());
+    var titleGroup = ($title.attr('data-root') || '').trim();
+    var g = titleGroup || (group || '').trim();
+    if (g) {
+      var $groupRoots = getGroupRoots(g);
+      if (!$groupRoots.length) return;
+      var $gD1 = findDepth($groupRoots, 1);
+      var $gD2 = findDepth($groupRoots, 2);
+      var $gD3 = findDepth($groupRoots, 3);
+      var $gD3Opt = $gD3.length ? $gD3.find(OPT + '.vits-select-selected').last() : $();
+      var $gD2Opt = $gD2.length ? $gD2.find(OPT + '.vits-select-selected').last() : $();
+      var $gD1Opt = $gD1.length ? $gD1.find(OPT + '.vits-select-selected').last() : $();
+      var $pickG = $gD3Opt.length ? $gD3Opt : $gD2Opt.length ? $gD2Opt : $gD1Opt;
+      if ($pickG.length) $title.text($pickG.text());
+      return;
     }
+    var $d3Sel = $('[data-vits-select][data-depth="3"] ' + OPT + '.vits-select-selected').last();
+    var $d2Sel = $('[data-vits-select][data-depth="2"] ' + OPT + '.vits-select-selected').last();
+    var $d1Sel = $('[data-vits-select][data-depth="1"] ' + OPT + '.vits-select-selected').last();
+    var $pick = $d3Sel.length ? $d3Sel : $d2Sel.length ? $d2Sel : $d1Sel;
+    if ($pick.length) $title.text($pick.text());
   }
+
+  // 이벤트 바인딩(트리거/옵션 클릭, 외부 클릭 닫기)
   function bind() {
-    // // 외부 클릭 시 전체 닫기
     $(document).on('mousedown' + NS, function (e) {
       if (!$(e.target).closest(ROOT).length) closeAll();
     });
-
-    // // 트리거 클릭(비활성이면 무시)
     $(document).on('click' + NS, ROOT + ' ' + TRIGGER, function (e) {
       e.preventDefault();
       var $root = $(this).closest(ROOT);
       if ($root.hasClass('vits-select-disabled')) return;
       if ($root.hasClass('vits-select-open')) closeAll();else openOne($root);
     });
-
-    // // 옵션 클릭(선택 + 연동 갱신)
     $(document).on('click' + NS, ROOT + ' ' + OPT, function (e) {
       e.preventDefault();
       var $opt = $(this);
       if ($opt.hasClass('vits-select-option-disabled')) return;
+      var url = String($opt.attr('data-url') || '').trim();
       var $root = $opt.closest(ROOT);
       var depth = getDepth($root);
       var group = getGroup($root);
-
-      // // 선택 반영(여기서 VALUE/hidden이 확정됨)
       setSelected($root, $opt);
       closeAll();
 
-      // // 하위뎁스는 선택 변경 시 초기화(옵션은 applyBreadcrumb에서 재결정)
+      // url이 있으면: 선택 후 새창 이동(패밀리 사이트 등)
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        return;
+      }
       if (group) {
         var $groupRoots = getGroupRoots(group);
-        var $d2 = findDepth($groupRoots, 2);
-        var $d3 = findDepth($groupRoots, 3);
+        var $depth2Root = findDepth($groupRoots, 2);
+        var $depth3Root = findDepth($groupRoots, 3);
         if (depth === 1) {
-          if ($d2.length) {
-            resetToPlaceholder($d2, true);
-            setDisabled($d2, true);
-            setNoOption($d2, false);
-          }
-          if ($d3.length) {
-            resetToPlaceholder($d3, true);
-            setDisabled($d3, true);
-            setNoOption($d3, false);
-          }
+          if ($depth2Root.length) disableAndClear($depth2Root);
+          if ($depth3Root.length) disableAndClear($depth3Root);
         }
         if (depth === 2) {
-          if ($d3.length) {
-            resetToPlaceholder($d3, true);
-            setDisabled($d3, true);
-            setNoOption($d3, false);
-          }
+          if ($depth3Root.length) disableAndClear($depth3Root);
         }
       }
-
-      // // 클릭한 depth를 reasonDepth로 넘겨서 “리셋 규칙”을 정확히 적용
       applyBreadcrumb($root, depth);
-
-      // // 현재 카테고리 타이틀 갱신
-      updateCategoryTitle();
+      updateCategoryTitle(group);
     });
   }
+
+  // 루트 스코프 내 셀렉트를 초기화
   function init(root) {
     var $roots = root ? $(root).find(ROOT) : $(ROOT);
-
-    // // aria 초기화
     $roots.find(TRIGGER).attr('aria-expanded', 'false');
-
-    // // 마크업 disabled 동기화
     $roots.each(function () {
       var $r = $(this);
       if ($r.hasClass('vits-select-disabled')) setDisabled($r, true);
     });
-
-    // // 초기 진입: 그룹별로 1회만 “옵션 주입 + 선택 복원” 실행
     var groups = {};
     $roots.each(function () {
       var g = getGroup($(this));
@@ -2792,12 +4333,12 @@ if (document.body?.dataset?.guide === 'true') {
     Object.keys(groups).forEach(function (g) {
       var $groupRoots = getGroupRoots(g);
       var $d1 = findDepth($groupRoots, 1);
-      if ($d1.length) {
-        applyBreadcrumb($d1.eq(0), 0); // // reasonDepth=0(초기) → 2/3뎁스 선택 복원까지 수행
-      }
+      if ($d1.length) applyBreadcrumb($d1.eq(0), 0);
     });
     updateCategoryTitle();
   }
+
+  // 외부에서 여러 번 init 호출되어도 이벤트는 1회만 바인딩
   window.UI.select.init = function (root) {
     if (!window.UI.select.__bound) {
       bind();
@@ -2806,6 +4347,146 @@ if (document.body?.dataset?.guide === 'true') {
     init(root);
   };
 })(window.jQuery, window, document);
+
+/***/ }),
+
+/***/ 882:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/form/input-search.js
+ * @purpose input-search 공통: submit 가로채기 + 검색어 정규화 + validation(aria-invalid/메시지) 토글 + submit 훅 제공
+ * @scope input-search.ejs 내부 요소만 제어(페이지별 UI 로직은 onSubmit에서 처리)
+ *
+ * @hook
+ *  - form: [data-search-form]
+ *  - input: [data-search-input]
+ *  - validation: .vits-input-search.vits-validation 내부 .input-validation (hidden 토글)
+ *
+ * @contract
+ *  - init(root?): 문서/루트 스캔 초기화
+ *  - init({$form,$input,$validation}, { onSubmit }): 단일 폼 초기화
+ *  - onSubmit(query, ctx) 반환값:
+ *    - false => invalid 표시(중복 등)
+ *    - 그 외 => invalid 해제(정상)
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.inputSearch = window.UI.inputSearch || {};
+  var NS = '.uiInputSearch';
+  var FORM = '[data-search-form]';
+  var INPUT = '[data-search-input]';
+
+  // 문자열 앞뒤 공백을 제거
+  function trimText(str) {
+    return String(str || '').replace(/^\s+|\s+$/g, '');
+  }
+
+  // 연속 공백을 1칸으로 정규화
+  function normalizeSpaces(str) {
+    return trimText(str).replace(/\s+/g, ' ');
+  }
+
+  // input 기준으로 validation 메시지 엘리먼트를 찾음
+  function findValidation($input) {
+    var $wrap = $input.closest('.vits-input-search.vits-validation');
+    return $wrap.length ? $wrap.find('.input-validation').first() : $();
+  }
+
+  // validation UI를 토글(input aria-invalid + 메시지 hidden)
+  function setInvalid($input, $validation, on) {
+    if ($input && $input.length) $input.attr('aria-invalid', on ? 'true' : null);
+    if ($validation && $validation.length) $validation.prop('hidden', !on);
+  }
+
+  // 입력 중이면 validation을 해제
+  function bindClearOnInput($input, $validation) {
+    if (!$input.length) return;
+    $input.off('input' + NS).on('input' + NS, function () {
+      setInvalid($input, $validation, false);
+    });
+  }
+
+  // submit 시 query를 정규화하고 onSubmit/이벤트로 전달
+  function bindSubmit($form, $input, $validation, opt) {
+    if (!$form.length || !$input.length) return;
+    var options = opt || {};
+    var onSubmit = typeof options.onSubmit === 'function' ? options.onSubmit : null;
+    $form.off('submit' + NS).on('submit' + NS, function (e) {
+      e.preventDefault();
+      var query = normalizeSpaces($input.val());
+
+      // 빈 값은 아무 것도 하지 않음(에러 표시도 하지 않음)
+      if (!query) return;
+      var ctx = {
+        $form: $form,
+        $input: $input,
+        $validation: $validation
+      };
+      var ok = true;
+
+      // 페이지 로직에서 false를 반환하면 invalid 처리
+      if (onSubmit) ok = onSubmit(query, ctx) !== false;
+      setInvalid($input, $validation, !ok);
+
+      // 공통 이벤트(필요 시 다른 레이어에서도 구독 가능)
+      $(document).trigger('ui:input-search-submit', {
+        query: query,
+        form: $form[0],
+        input: $input[0]
+      });
+    });
+  }
+
+  // 폼 1개 단위를 초기화
+  function initOne($form, opt) {
+    var $input = $form.find(INPUT).first();
+    if (!$input.length) return;
+    var $validation = findValidation($input);
+    setInvalid($input, $validation, false);
+    bindClearOnInput($input, $validation);
+    bindSubmit($form, $input, $validation, opt);
+  }
+
+  // root 범위에서 폼들을 스캔해 초기화
+  function initAll(root, opt) {
+    var $scope = root ? $(root) : $(document);
+    $scope.find(FORM).each(function () {
+      initOne($(this), opt);
+    });
+  }
+
+  // 검색어 정규화 결과를 반환
+  window.UI.inputSearch.normalize = function (str) {
+    return normalizeSpaces(str);
+  };
+
+  // 특정 input의 validation을 토글(외부 제어용)
+  window.UI.inputSearch.setInvalid = function (arg, on) {
+    var $input = arg && arg.$input ? arg.$input : $();
+    var $validation = arg && arg.$validation ? arg.$validation : $();
+    setInvalid($input, $validation, !!on);
+  };
+
+  // init 시그니처를 2가지로 지원(스캔형 / 단일형)
+  window.UI.inputSearch.init = function (arg, opt) {
+    // 단일형: init({$form,$input,$validation}, { onSubmit })
+    if (arg && arg.$form && arg.$input) {
+      var $validation = arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input);
+      setInvalid(arg.$input, $validation, false);
+      bindClearOnInput(arg.$input, $validation);
+      bindSubmit(arg.$form, arg.$input, $validation, opt);
+      return;
+    }
+
+    // 스캔형: init(root) 또는 init()
+    initAll(arg, opt);
+  };
+})(window.jQuery || window.$, window, document);
 
 /***/ }),
 

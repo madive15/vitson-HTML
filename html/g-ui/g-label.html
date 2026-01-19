@@ -15,7 +15,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>가이드 - 토글</title>
+  <title>가이드 - 라벨</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -39,51 +39,62 @@
     <main>
       <!-- S: vits-guide-wrapper -->
       <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
-        <h2 class="vits-guide-title" id="guide-icons-title">토글</h2>
+        <h2 class="vits-guide-title" id="guide-icons-title">라벨</h2>
 
         <div class="vits-guide-code">
           <code>
             <pre>
-&lt;div <b>data-toggle-scope data-toggle-group="true"</b>&gt;
-  &lt;button
-    type="button"
-    <b>data-toggle-btn
-    data-toggle-outside="true"
-    data-toggle-group-except="true"
-    data-toggle-target="panel"
-    aria-expanded="false"</b>
-  &gt;
-    토글 버튼
-  &lt;/button&gt;
+&lt;-- product-flags --&gt;
+&lt;%- include(`${_src}/views/components/label/product-flags.ejs`, {
+  today: true,    // 오늘출발
+  tomorrow: true, // 내일출발
+  hot: true       // 특가
+}) %&gt;
 
-  &lt;div <b>data-toggle-box="panel"</b>&gt;토글 패널&lt;/div&gt;
-&lt;/div&gt;
-          </pre>
+&lt;-- product-promo-badge --&gt;
+&lt;%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '무료배송', variant: 'free-ship' }) %&gt;
+</pre
+            >
           </code>
-          <code>
-            <pre>
-&lt;!--
-  [Toggle UI 사용 예시]
+        </div>
 
-  - 기본 구조:
-    * data-toggle-scope : 토글 동작 범위
-    * data-toggle-btn   : 토글 트리거
-    * data-toggle-box   : 토글 대상 패널
-    * data-toggle-target ↔ data-toggle-box 값 매칭
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list">
+            <li>
+              <!-- prettier-ignore -->
+              
+<!-- prettier-ignore -->
 
-  - 옵션(선택):
-    * data-toggle-group="true"
-      : 같은 스코프가 여러 개 있을 때 1개만 열림(아코디언)
-      : 특정 영역은 예외 처리하고 싶을 때, button[data-toggle-group-except="true"] 추가
-    * data-toggle-outside="true"
-      : 스코프 외부 클릭 시 닫힘(필요한 경우만 사용)
 
-  - 상태:
-    * 패널 열림 시 data-toggle-box에 'is-open' 클래스가 추가됨
-    * aria-expanded 값은 JS에서 자동 관리됨
---&gt;
-            </pre>
-          </code>
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+  
+</div>
+
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+            </li>
+          </ul>
         </div>
       </section>
       <!-- E: vits-guide-wrapper -->
