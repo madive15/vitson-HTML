@@ -1,7 +1,23 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // header.ejs는 여러 페이지에서 공용으로 include 되므로,
+  // 페이지에서 내려준 mockData/path가 없을 때를 대비해 안전 폴백을 둔다.
+  var _md =
+    (typeof mockData !== 'undefined' && mockData)
+      ? mockData
+      : ((typeof globalThis !== 'undefined' && globalThis.__mockData) ? globalThis.__mockData : {});
+
+  var _path = (_md && _md.category && _md.category.path) ? _md.category.path : {};
+
+  var _depth1Id = (typeof depth1Id !== 'undefined' && depth1Id) ? depth1Id : (_path.depth1Id || '');
+  var _depth2Id = (typeof depth2Id !== 'undefined' && depth2Id) ? depth2Id : (_path.depth2Id || '');
+  var _depth3Id = (typeof depth3Id !== 'undefined' && depth3Id) ? depth3Id : (_path.depth3Id || '');
+%>
 
 <!-- S: vits-header -->
 <header class="vits-header">
+  <div class="gnb-dim" data-gnb-dim aria-hidden="true"></div>
   <!-- S: vits-header-topbar -->
   <div class="vits-header-topbar">
     <div class="vits-inner">
@@ -38,18 +54,25 @@
         <!-- E: hheader-main-search-form (통합 검색창) -->
       </div>
       <div class="header-main-util">
-        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag-check', label: '자주구매',
-        href: '/mypage/favorite' }) %> <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon:
-        'user', label: '마이페이지', href: '/mypage/favorite' }) %> <%-
-        include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag', label: '장바구니', badge:
-        3,href: '/mypage/favorite' }) %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) %>
+        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'user', label: '마이페이지', href: '/mypage/favorite' }) %>
+        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'bag', label: '장바구니', badge: 3, href: '/mypage/favorite' }) %>
       </div>
     </div>
   </div>
   <!-- E: vits-header-main -->
 
   <!-- S: vits-header-gnb -->
-  <%- include(`${_src}/views/layout/header/header-gnb.ejs`) %>
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/layout/header/header-gnb.ejs`, {
+    _src: _src,
+    _public: _public,
+    mockData: _md,
+    depth1Id: _depth1Id,
+    depth2Id: _depth2Id,
+    depth3Id: _depth3Id
+  }) %>
   <!-- E: vits-header-gnb -->
 </header>
 <!-- E: vits-header -->

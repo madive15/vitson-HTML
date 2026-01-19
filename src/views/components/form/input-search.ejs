@@ -5,23 +5,41 @@
   const _action = (typeof action !== 'undefined' && action) ? action : '';
   const _name = (typeof name !== 'undefined' && name) ? name : 'q';
   const _placeholder = (typeof placeholder !== 'undefined' && placeholder) ? placeholder : '결과 내 재검색';
+
+  // ===== validation 옵션(추가) =====
+  const _message = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
+  const _hasMessage = !!_message;
+
+  const _isInvalidFlag = (typeof isInvalid !== 'undefined') ? (isInvalid === true) : false;
+  const _isInvalid = _isInvalidFlag || _hasMessage;
+
+  const _validationId = _inputId ? `${_inputId}-validation` : '';
 %>
 
-<form class="vits-input-search" role="search" action="<%= _action %>" method="get" data-search-form>
-  <label for="<%= _inputId %>" class="sr-only">검색어</label>
+<div class="vits-input-search vits-validation">
+  <form class="vits-input-search-form" role="search" action="<%= _action %>" method="get" data-search-form>
+    <label for="<%= _inputId %>" class="sr-only">검색어</label>
 
-  <input
-    type="search"
-    id="<%= _inputId %>"
-    class="input-search"
-    name="<%= _name %>"
-    autocomplete="off"
-    enterkeyhint="search"
-    placeholder="<%= _placeholder %>"
-    data-search-input
-  />
+    <input
+      type="search"
+      id="<%= _inputId %>"
+      class="input-search"
+      name="<%= _name %>"
+      autocomplete="off"
+      enterkeyhint="search"
+      placeholder="<%= _placeholder %>"
+      data-search-input
+      <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
+      <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+    />
 
-  <button type="submit" class="input-search-btn" aria-label="검색">
-    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
-  </button>
-</form>
+    <button type="submit" class="input-search-btn" aria-label="검색">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+    </button>
+  </form>
+
+  <!-- validation 영역(교체) -->
+  <div class="input-validation" <% if (!_hasMessage) { %>hidden<% } %>>
+    <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _message %></p>
+  </div>
+</div>

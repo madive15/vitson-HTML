@@ -30,17 +30,26 @@
             <div class="vits-grid-main vits-wrapper-product">
               <!-- 메인 컨텐츠 -->
               <!-- s: PC_PR_01010101 -->
-              <div class="vits-breadscrumb">
-                <div class="vits-breadscrumb-inner">
-                  <div class="vits-breadscrumb-item">
-                    <a href="#" class="vits-breadscrumb-link">
-                      <span class="vits-breadscrumb-text">Home</span>
-                    </a>
-                  </div>
-                  <div class="vits-breadscrumb-item">
-                    <span class="vits-breadscrumb-text">Product</span>
-                  </div>
-                </div>
+              <div class="vits-top-entry">
+                <nav class="vits-breadcrumb only-text-breadcrumb">
+                  <ul class="vits-breadcrumb-list">
+                    <li class="vits-breadcrumb-menu">
+                      <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '/main-page', label: '홈' })
+                      %>
+                    </li>
+
+                    <li class="vits-breadcrumb-menu">
+                      <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '/top-page', label:
+                      '팬던트/램프용홈조명' }) %>
+                    </li>
+
+                    <li class="vits-breadcrumb-menu">
+                      <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '/top-page', label:
+                      'LED팬던트' }) %>
+                    </li>
+                  </ul>
+                </nav>
+
                 <div class="vits-product-code">
                   <span class="text">상품코드: 1234567890</span>
                   <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %></span>
@@ -64,20 +73,9 @@
                             <div class="product-name">
                               팬던트 LED 팬던트 LED 팬던트 LED 제품명이 1줄일 경우 2줄일 경우 아래로 늘어남
                             </div>
-                            <div class="vits-product-chips">
-                              <!-- prettier-ignore -->
-                              <%
-                                const productChips = [
-                                  { text: '오늘출발', icon: 'ic-lightning' },
-                                  { text: '내일출발', icon: null },
-                                  { text: '롯데택배불가', icon: null }
-                                ];
-                              %>
-                              <% productChips.forEach(label => { %>
-                              <button type="button" class="vits-label-chip<%= label.icon ? ' icon' : '' %>">
-                                <% if (label.icon) { %><i class="ic <%= label.icon %>"></i><% } %><%= label.text %>
-                              </button>
-                              <% }); %>
+                            <div class="product-shipping-tags">
+                              <%- include(`${_src}/views/components/label/product-flags.ejs`, {today: true,tomorrow: true,hot: true }) %>
+                              <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '롯데택배불가', variant: 'free-ship' }) %>
                             </div>
                           </li>
                           <li>
@@ -244,7 +242,6 @@
                           }) %>
                         </div>
                       </div>
-                      <div class="product-select-notice"></div>
                       <!-- 상품선택 결과 영역 -->
                       <div class="product-select-result">
                         <!-- prettier-ignore -->
@@ -370,10 +367,7 @@
                     <h2 class="title">MD가 꼼꼼히 고른 <span class="primary">추천 상품</span></h2>
                   </div>
                   <div class="vits-banner-swiper">
-                    <!-- prettier-ignore -->
-                    <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['Slide 1', 'Slide 2', 'Slide 3',
-                    'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], swiperType: 'card', desktop: 5,
-                    offsetBefore: 0, offsetAfter: 0, showNavs: true, containerClass: 'swiper-container' }) %>
+                    <%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %>                       
                   </div>
                 </div>
                 <!-- e: section - MD가 꼼꼼히 고른 추천 상품 -->
@@ -382,8 +376,8 @@
                 <%- include(`${_src}/views/components/pg-product/tab-scrollbar.ejs`) %>
 
                 <!-- s: Modal -->
-                <%- include(`${_src}/views/components/pg-product/_PC_CO_06010101_P.ejs`) %> <%-
-                include(`${_src}/views/components/pg-product/_PC_PR_01020101_P.ejs`) %>
+                <%- include(`${_src}/views/components/pg-product/_PC_CO_06010101_P.ejs`) %> 
+                <%- include(`${_src}/views/components/pg-product/_PC_PR_01020101_P.ejs`) %>
                 <!-- e: Modal -->
               </div>
               <!-- e: PC_PR_01010101 -->

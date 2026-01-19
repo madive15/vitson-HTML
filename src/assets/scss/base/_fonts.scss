@@ -24,3 +24,13 @@ $pretendard-fonts: (
     font-display: swap;
   }
 }
+
+@each $weight, $name in $pretendard-fonts {
+  @font-face {
+    font-family: PretendardGOV;
+    font-style: normal;
+    font-weight: $weight;
+    src: url('/public/resources/css/fonts/Pretendard/PretendardGOV-#{$name}.otf') format('opentype');
+    font-display: swap;
+  }
+}

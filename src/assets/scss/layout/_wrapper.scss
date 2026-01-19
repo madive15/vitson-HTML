@@ -25,20 +25,6 @@ body.vits-scope {
   }
 }
 
-/* [수정 금지] 레이아웃 기준 파일(프레임).
-   화면별 예외/변형은 vits-wrapper-{1depth} 확장 클래스에서만 처리.
-   
-   .vits-wrapper [금지]
-   - wrapper에는 overflow를 주지 마세요(hidden/auto 포함)
-   - sticky 클리핑/기준 변경 이슈 방지(현재는 body 스크롤 기준) */
-.vits-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom); // iOS 하단 안전영역(미지원 환경은 0)
-
-  @include mx.full-height; // wrapper 최소 높이 확보(모바일 주소창 변동 대응)
-}
-
 .vits-header,
 .vits-footer {
   flex: 0 0 auto;
@@ -50,6 +36,7 @@ body.vits-scope {
 .vits-main {
   flex: 1 1 auto;
   min-height: 0;
+  padding-bottom: map.get(var.$unit, 24);
 }
 
 /* .vits-wrap [금지]
@@ -96,11 +83,53 @@ body.vits-scope {
    - overflow를 주지 않습니다(현재는 body 스크롤 기준)
    - 스크롤 컨테이너로 전환하면 sticky 기준이 분산될 수 있음 */
 .vits-grid {
+  &-area {
+    display: flex;
+  }
+
   &,
   > .vits-inner {
     display: flex;
     height: 100%;
     min-height: 0;
     -webkit-overflow-scrolling: touch; // (참고) overflow:auto 전환 시 iOS 관성 스크롤
+  }
+}
+
+/* [수정 금지] 레이아웃 기준 파일(프레임).
+   화면별 예외/변형은 vits-wrapper-{1depth} 확장 클래스에서만 처리.
+   
+   .vits-wrapper [금지]
+   - wrapper에는 overflow를 주지 마세요(hidden/auto 포함)
+   - sticky 클리핑/기준 변경 이슈 방지(현재는 body 스크롤 기준) */
+.vits-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom); // iOS 하단 안전영역(미지원 환경은 0)
+
+  @include mx.full-height; // wrapper 최소 높이 확보(모바일 주소창 변동 대응)
+
+  // 'inner-column' 페이지에서만 세로 레이아웃/높이 채움
+  &:has(.vits-grid > .vits-inner.inner-column > .vits-grid-area) {
+    .vits-wrap,
+    .vits-grid,
+    .vits-grid > .vits-inner {
+      height: auto;
+    }
+
+    .vits-main,
+    .vits-wrap,
+    .vits-grid,
+    .vits-inner.inner-column {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .vits-grid-area {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
   }
 }

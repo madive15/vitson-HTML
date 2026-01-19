@@ -75,17 +75,18 @@
         </div>
         <div class="footer-familysite">
           <!-- prettier-ignore -->
-          <%- include(`${_src}/views/components/kendo/kendo-dropdown.ejs`, {
-            id: 'dropdownlist',
-            wrapClass: 'vits-dropdown--sm vits-dropdown--type-a',
-            handlerKey: 'productSelect',
-            options: {
-              dataTextField: "ProductName",
-              dataValueField: "ID",
-              dataSource: datakendo,
-              optionLabel: "FAMILY SITE",  // placeholder 문구
-              value: null                  // 초기 선택값 비움(placeholder가 유지되게)
-            }
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'plp-sort',
+            name: 'sort',
+            placeholder: 'FAMILY SITE',
+            options: [
+              { value: '일신 비츠온', text: '일신 비츠온', url: 'https://www.vitson.co.kr/site/new_main/' },
+              { value: 'ISVM주문통합시스템', text: 'ISVM주문통합시스템', url: 'https://isvm.co.kr/' },
+              { value: 'SCM주문통합시스템', text: 'SCM주문통합시스템', url: 'https://isvm.co.kr/scm' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : 'FAMILY SITE',
+            disabled: false,
+            className: 'type-dark vits-select-dropup'
           }) %>
         </div>
       </div>

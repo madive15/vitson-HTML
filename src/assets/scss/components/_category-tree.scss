@@ -1,0 +1,85 @@
+// -----------------------------------------------------------------------------
+// components/_category-tree.scss
+// - 좌측 카테고리 드릴다운(1~3뎁스) 상태 클래스(is-hidden/is-open/is-active)만 제어
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-category-tree {
+  width: 100%;
+
+  .category-tree {
+    &-btn {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, space-between, center);
+      gap: map.get(var.$unit, 8);
+      width: 100%;
+      min-height: map.get(var.$unit, 32);
+      padding: fn.rem(6) map.get(var.$unit, 12);
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 20));
+        flex-shrink: 0;
+        transition: transform 0.45s;
+        transform: rotate(-90deg);
+      }
+
+      &[aria-expanded='true'] .icon {
+        transform: rotate(0deg);
+      }
+    }
+
+    &-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      text-align: left;
+    }
+
+    &-depth2,
+    &-depth3 {
+      padding-left: map.get(var.$unit, 12);
+    }
+
+    &-panel {
+      display: none;
+
+      &.is-open {
+        display: block;
+      }
+    }
+
+    &-item.is-active {
+      .category-tree-btn:not([data-depth='1']) {
+        .category-tree-text {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  // .category-tree-btn {
+  //   width: 100%;
+  //   text-align: left;
+  // }
+
+  // .category-tree-depth2,
+  // .category-tree-depth3 {
+  //   padding-left: 12px;
+  // }
+
+  // .category-tree-arrow {
+  //   display: inline-block;
+  //   margin-left: 8px;
+  // }
+
+  // // 1뎁스는 화살표 미노출(마크업에도 없지만 방어)
+  // .category-tree-depth1 .category-tree-arrow {
+  //   display: none;
+  // }
+}

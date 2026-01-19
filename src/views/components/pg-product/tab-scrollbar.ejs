@@ -31,6 +31,9 @@
               <%- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'primary',
               text: '장바구니' }) %>
             </div>
+            <!-- [D]조장상품 일때  -->
+            <!-- < %- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'secondary',
+            text: '주문 수량 입력하기' }) % > -->
           </div>
         </li>
       </ul>
@@ -68,21 +71,37 @@
         ];
       %>
       <div class="vits-product-spec spec-col3">
-        <% specColumnscol3.forEach((column) => { %>
-        <div class="vits-product-spec-col">
-          <ul class="vits-spec-list">
-            <% column.forEach((item) => { %>
-            <li class="vits-spec-item">
-              <span class="vits-spec-label"><%= item.label %></span>
-              <span class="vits-spec-value"><%= item.value %></span>
-            </li>
-            <% }) %>
-          </ul>
-        </div>
-        <% }) %>
+        <table class="vits-spec-table">
+          <tbody>
+            <% const specItemsCol3 = specColumnscol3.flat(); %>
+            <% for (let i = 0; i < specItemsCol3.length; i += 3) { %>
+            <% const firstItem = specItemsCol3[i]; %>
+            <% const secondItem = specItemsCol3[i + 1]; %>
+            <% const thirdItem = specItemsCol3[i + 2]; %>
+            <tr>
+              <th class="vits-spec-label" scope="row"><%= firstItem.label %></th>
+              <td class="vits-spec-value"><%= firstItem.value %></td>
+              <% if (secondItem) { %>
+              <th class="vits-spec-label" scope="row"><%= secondItem.label %></th>
+              <td class="vits-spec-value"><%= secondItem.value %></td>
+              <% } else { %>
+              <th class="vits-spec-label" scope="row"></th>
+              <td class="vits-spec-value"></td>
+              <% } %>
+              <% if (thirdItem) { %>
+              <th class="vits-spec-label" scope="row"><%= thirdItem.label %></th>
+              <td class="vits-spec-value"><%= thirdItem.value %></td>
+              <% } else { %>
+              <th class="vits-spec-label" scope="row"></th>
+              <td class="vits-spec-value"></td>
+              <% } %>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
       <!-- 상세이미지 -->
-      <div class="vits-img-detail" style="background-color: #000">
+      <div class="vits-img-detail">
         <img src="<%= _public %>/resources/img/mro/renewal/temp/img-product-detail-1.jpg" alt="상품상세이미지" />
         <img src="<%= _public %>/resources/img/mro/renewal/temp/img-product-detail-2.jpg" alt="상품상세이미지" />
         <img src="<%= _public %>/resources/img/mro/renewal/temp/img-product-detail-3.jpg" alt="상품상세이미지" />
@@ -91,17 +110,17 @@
       <!-- 상품 정보 더보기 -->
       <div class="vits-more-view">
         <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xl', variant: 'outline-tertiary', text: '상품 정보 더보기' , iconRight: true, iconName: 'ic-arrow-down'}) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xl', variant: 'outline-secondary', text: '상품 정보 더보기' , iconRight: true, iconName: 'ic-arrow-down'}) %>
       </div>
     </div>
     <h3 class="section-title">인증서 및 다운로드</h3>
     <div class="section-content">
       <div class="section-content-download">
         <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-tertiary', text: '물질안전보건자료' , iconLeft: true, iconName: 'ic-download-2' }) %>
-        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-tertiary', text: '물질안전보건자료2' , iconLeft: true, iconName: 'ic-download-2' }) %>
-        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-tertiary', text: '인증서 다운로드' , iconLeft: true, iconName: 'ic-download-2' }) %>
-        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-tertiary', text: '성적서 다운로드' , iconLeft: true, iconName: 'ic-download-2' }) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-tertiary', text: '물질안전보건자료' , iconLeft: true, iconName: 'ic-download-2' }) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-tertiary', text: '물질안전보건자료2' , iconLeft: true, iconName: 'ic-download-2' }) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-tertiary', text: '인증서 다운로드' , iconLeft: true, iconName: 'ic-download-2' }) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-tertiary', text: '성적서 다운로드' , iconLeft: true, iconName: 'ic-download-2' }) %>
       </div>
     </div>
   </section>
@@ -134,18 +153,26 @@
         ];
       %>
       <div class="vits-product-spec">
-        <% specColumns.forEach((column) => { %>
-        <div class="vits-product-spec-col">
-          <ul class="vits-spec-list">
-            <% column.forEach((item) => { %>
-            <li class="vits-spec-item">
-              <span class="vits-spec-label"><%= item.label %></span>
-              <span class="vits-spec-value"><%= item.value %></span>
-            </li>
-            <% }) %>
-          </ul>
-        </div>
-        <% }) %>
+        <table class="vits-spec-table">
+          <tbody>
+            <% const specItems = specColumns.flat(); %>
+            <% for (let i = 0; i < specItems.length; i += 2) { %>
+            <% const leftItem = specItems[i]; %>
+            <% const rightItem = specItems[i + 1]; %>
+            <tr>
+              <th class="vits-spec-label" scope="row"><%= leftItem.label %></th>
+              <td class="vits-spec-value"><%= leftItem.value %></td>
+              <% if (rightItem) { %>
+              <th class="vits-spec-label" scope="row"><%= rightItem.label %></th>
+              <td class="vits-spec-value"><%= rightItem.value %></td>
+              <% } else { %>
+              <th class="vits-spec-label" scope="row"></th>
+              <td class="vits-spec-value"></td>
+              <% } %>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </div>
     <!-- s: section - 이런 상품은 어때요?-->
@@ -154,15 +181,7 @@
         <h2 class="title">이런 상품은 <span class="primary"> 어때요?</span></h2>
       </div>
       <div class="vits-banner-swiper">
-        <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['Slide 1', 'Slide 2', 'Slide 3', 'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], 
-          swiperType: 'card', 
-          desktop: 5, 
-          offsetBefore: 0, 
-          offsetAfter: 0, 
-          showNavs: true, 
-          containerClass: 'swiper-container' 
-        }) %>
+        <%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %>   
       </div>
     </div>
     <!-- e: section - 이런 상품은 어때요?-->
@@ -177,15 +196,7 @@
         <h2 class="title">다른 고객이 <span class="primary">함께 본 상품</span></h2>
       </div>
       <div class="vits-banner-swiper">
-        <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, { slides: ['Slide 1', 'Slide 2', 'Slide 3', 'Slide 4', 'Slide 5', 'Slide 6', 'Slide 7', 'Slide 8', 'Slide 9'], 
-          swiperType: 'card', 
-          desktop: 6, 
-          offsetBefore: 0, 
-          offsetAfter: 0, 
-          showNavs: true, 
-          containerClass: 'swiper-container' 
-        }) %>
+        <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, {swiperType: 'slim', desktop: 6}) %>
       </div>
     </div>
     <!-- e: section - 다른 고객이 함께 본 상품-->

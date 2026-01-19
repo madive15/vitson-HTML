@@ -22,24 +22,52 @@
 .vits-swiper {
   max-width: 1280px;
 
+  // 상품유닛 리스트 뷰 제어용
+  .swiper-wrapper{
+    &.vits-product-list-items{
+      display: inherit;
+      grid-template-columns: inherit;
+      gap: 0;
+      align-items: inherit;
+    }
+  }
+
   &.js-swiper {
     .swiper-slide {
-      // 임의값
-      height: 399px;
+      @include mx.flex($align: flex-start, $justify: center);
+      height: auto;
+      overflow: hidden;
       cursor: pointer;
       background-color: #fff;
-      border: 1px solid map.get(color.$layout-border, 'tertiary');
+      border: 2px solid color.$color-white;
       border-radius: map.get(var.$radius, md);
       transition:
-        // border-color 0.2s ease,
-        box-shadow 0.2s ease;
-
-      @include mx.flex($align: center, $justify: center); // 임의값
+        border-color 0.2s ease,
+        border-width 0.2s ease,
+        box-shadow 0.2s ease,
+        padding 0.5s ease;
 
       @include mx.common-mouse-event {
+        border: 2px solid map.get(color.$brand-colors, 'primary');
         border-color: map.get(color.$brand-colors, 'primary');
-        border-width: 2px;
         box-shadow: 0 fn.rem(9) fn.rem(21) 0 rgb(0 0 0 / 10%);
+      }
+
+      // 상품유닛 리스트 뷰 제어용
+      .product-body{
+        padding: 0 fn.rem(12);
+
+        .product-extra{
+          flex-wrap: wrap;
+        }
+
+        .price-sale-row{
+          align-items: flex-start;
+
+          .price-sale{
+          // text-align: right;
+          }
+        }
       }
     }
 

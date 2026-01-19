@@ -3,6 +3,18 @@
 <!-- prettier-ignore -->
 <%# GNB %>
 <%
+  // header.ejs에서 mockData / depth1Id~depth3Id를 넘겨주지 않는 케이스 폴백
+  var _md =
+    (typeof mockData !== 'undefined' && mockData)
+      ? mockData
+      : ((typeof globalThis !== 'undefined' && globalThis.__mockData) ? globalThis.__mockData : {});
+
+  var _path = (_md && _md.category && _md.category.path) ? _md.category.path : {};
+
+  var _depth1Id = (typeof depth1Id !== 'undefined' && depth1Id) ? depth1Id : (_path.depth1Id || '');
+  var _depth2Id = (typeof depth2Id !== 'undefined' && depth2Id) ? depth2Id : (_path.depth2Id || '');
+  var _depth3Id = (typeof depth3Id !== 'undefined' && depth3Id) ? depth3Id : (_path.depth3Id || '');
+
   // 운영 타이틀 샘플(일부는 부제/2줄 케이스 포함)
   const promoPagesDefault = [
     { text: '복사용지 스페셜딜', href: '/promo/1' },
@@ -47,7 +59,15 @@
       <!-- 좌: 전체카테고리/브랜드 (toggle.js 사용) -->
       <div class="gnb-left" data-gnb-panel-scope>
         <!-- 1) 전체카테고리 세트 -->
-        <%- include(`${_src}/views/layout/header/header-category.ejs`) %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout/header/header-category.ejs`, {
+          _src: _src,
+          _public: _public,
+          mockData: _md,
+          depth1Id: _depth1Id,
+          depth2Id: _depth2Id,
+          depth3Id: _depth3Id
+        }) %>
 
         <!-- 2) 브랜드 세트 -->
         <%- include(`${_src}/views/layout/header/header-brand.ejs`) %>

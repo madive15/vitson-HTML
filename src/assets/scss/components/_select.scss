@@ -37,7 +37,7 @@
     @include mx.flex(flex, row, flex-start, center);
     @include mx.ellipsis-single;
     gap: map.get(var.$unit, 8);
-    width: fit-content; /* 선택 텍스트 기준 */
+    width: fit-content;
     min-width: 0;
     max-width: 100vw;
     height: map.get(var.$unit, 32);
@@ -61,21 +61,59 @@
   }
 
   &-list {
-    @include mx.position(absolute, calc(100% + 4px), $left: 0);
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
     z-index: var.$zindex-select-option;
-    display: none;
-    width: max-content; /* 옵션 텍스트 기준 */
+    display: block;
+    width: max-content;
     max-width: 100vw;
-    max-height: 70vh;
-    padding: map.get(var.$unit, 8) 1px;
-    overflow-y: auto;
+
+    /* 닫힘 상태: 스크롤 영역에 절대 영향을 주지 않게 "높이 0"으로 고정 */
+    max-height: 0; /* 열릴 때 JS 인라인 max-height로 덮어씀 */
+    padding: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
     background: color.$color-white;
     border-radius: 6px;
-    box-shadow: inset 0 0 0 1px color.$color-black;
+    box-shadow: none;
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      max-height 0s linear 0.2s,
+      visibility 0s linear 0.2s;
+    transform: translateY(-4px);
+    will-change: opacity, transform;
   }
 
   &-open .vits-select-list {
-    display: block;
+    // 열림 상태에서만 실제 패딩/그림자 적용
+    padding: map.get(var.$unit, 8) 1px;
+    overflow-y: auto;
+    pointer-events: auto;
+    visibility: visible;
+    box-shadow: inset 0 0 0 1px color.$color-black;
+    opacity: 1;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      max-height 0s,
+      visibility 0s;
+    transform: translateY(0);
+  }
+
+  &.vits-select-dropup {
+    .vits-select-list {
+      top: auto;
+      bottom: calc(100% + 4px);
+      transform: translateY(4px);
+    }
+
+    &.vits-select-open .vits-select-list {
+      transform: translateY(0);
+    }
   }
 
   &-option {
@@ -92,7 +130,7 @@
   }
 
   &-selected {
-    background: #e9f0ff;
+    background: map.get(color.$layout-surf, 'sunken');
   }
 
   &-option-disabled {
@@ -103,5 +141,77 @@
   &-disabled {
     pointer-events: none;
     opacity: 0.4;
+  }
+}
+
+/* 예시, footer family site */
+.vits-select.type-dark {
+  width: 100%;
+
+  .vits-select {
+    &-trigger {
+      justify-content: space-between;
+      width: 100%;
+      height: fn.rem(42);
+      padding: 0 13px 0 map.get(var.$unit, 16);
+      background: map.get(color.$gray-shades, '90');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'secondary');
+    }
+
+    &-value {
+      color: map.get(color.$text-colors, 'tertiary');
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    &-list {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0;
+    }
+
+    &-option {
+      height: fn.rem(42);
+      padding: 0 map.get(var.$unit, 16);
+      color: map.get(color.$text-colors, 'muted');
+      background: map.get(color.$gray-shades, '60');
+
+      &.vits-select-selected {
+        font-weight: 400;
+        background: map.get(color.$layout-surf, 'sunken');
+        background: map.get(color.$gray-shades, '70');
+      }
+
+      @include mx.common-mouse-event {
+        font-weight: 400;
+        background: map.get(color.$layout-surf, 'sunken');
+        background: map.get(color.$gray-shades, '70');
+      }
+    }
+  }
+
+  &.vits-select-open:not(.vits-select-dropup) .vits-select-list {
+    top: 100%;
+  }
+
+  &.vits-select-open.vits-select-dropup {
+    .vits-select-trigger {
+      background: map.get(color.$gray-shades, '60');
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+
+      .vits-select-value {
+        color: map.get(color.$text-colors, 'muted');
+      }
+
+      .vits-select-icon {
+        color: map.get(color.$icon-neutral, 'disabled');
+      }
+    }
+
+    .vits-select-list {
+      bottom: 100%;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 }

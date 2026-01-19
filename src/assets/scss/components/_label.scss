@@ -133,3 +133,52 @@
   @include common-chip-button('outline');
   @include common-chip-button('filled');
 }
+
+.vits-product {
+  &-flag {
+    @include mx.flex(flex, row, flex-start, center);
+    @include typo.typography('b5r');
+    height: fn.rem(18);
+    padding: 0 map.get(var.$unit, 4);
+    border-radius: map.get(var.$radius, 'sm');
+
+    &.is-today {
+      color: map.get(color.$text-status, 'brand-sub');
+      background: map.get(color.$layout-status, 'brand-bg-sub');
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 12));
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+
+    &.is-tomorrow {
+      color: map.get(color.$text-status, 'info');
+      background: map.get(color.$layout-status, 'info-bg-sub');
+    }
+
+    &.is-hot {
+      color: map.get(color.$text-status, 'success');
+      background: map.get(color.$layout-status, 'success-bg-sub');
+    }
+  }
+
+  &-flags {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 2);
+  }
+
+  &-promo {
+    @include mx.flex(flex, row, flex-start, center);
+
+    &-badge.is-free-ship {
+      @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('b5r');
+      height: fn.rem(18);
+      padding: 0 map.get(var.$unit, 4);
+      color: map.get(color.$text-status, 'info');
+      background: map.get(color.$layout-surf, 'mypage');
+      border-radius: map.get(var.$radius, 'sm');
+    }
+  }
+}

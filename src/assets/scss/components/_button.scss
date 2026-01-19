@@ -33,21 +33,56 @@
   }
 }
 
+/* 상품 목록 - 재검색 칩버튼 좌우 화살표 */
+@mixin btn-ico-circle(
+  $w,
+  $h: $w,
+  $ic-w,
+  $ic-h: $ic-w,
+  $bg: map.get(color.$layout-surf, base),
+  $border: 1px solid map.get(color.$layout-border, 'tertiary'),
+  $color: map.get(color.$icon-neutral, 'primary'),
+  $shadow: 0 4px 7px 0 rgb(0 0 0 / 4%)
+) {
+  @include btn-reset;
+  width: $w;
+  height: $h;
+  background: $bg;
+  border: $border;
+  border-radius: 50%;
+
+  .ic {
+    width: $ic-w;
+    height: $ic-h;
+  }
+
+  @if $shadow != 'none' {
+    box-shadow: $shadow;
+  }
+}
+
 /* -----------------------------------------------------------------------------
  * 기본 버튼 컴포넌트 (.vits-btn-*)
- * - Fill 타입: primary, secondary, tertiary
+ * - Fill 타입: primary, secondary, tertiary ,primary-soft
  * - Outline 타입: outline-primary, outline-secondary, outline-tertiary
  * - 크기: xxl, xl, lg, md, sm, xs, xxs
  * --------------------------------------------------------------------------- */
 
 // 버튼 기본 스타일
-[class^='vits-btn-']:not(.vits-btn-vertical-icon) {
+:is(
+  .vits-btn-xxl,
+  .vits-btn-xl,
+  .vits-btn-lg,
+  .vits-btn-md,
+  .vits-btn-sm,
+  .vits-btn-xs,
+  .vits-btn-xxs
+){
   position: relative;
   gap: map.get(var.$unit, 8);
   padding: 0 map.get(var.$unit, 12);
   margin: 0;
   white-space: nowrap;
-  border-radius: map.get(var.$radius, 'md');
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
@@ -63,17 +98,7 @@
 
   .text {
     @include mx.flex(flex, row, center, center);
-  }
-
-  // 아이콘 위치
-  &.icon-left {
-    .icon {
-    }
-  }
-
-  &.icon-right {
-    .icon {
-    }
+    line-height: normal;
   }
 
   // 아이콘만 있는 경우
@@ -92,50 +117,51 @@
 // 버튼 크기 정의 (반복문)
 $button-sizes: (
   'xxl': (
-    'min-height': 56,
-    'padding': 24,
-    'typography': 'b1r',
+    'min-height': 64,
+    'padding': 12,
+    'typography': 'b1b',
     'icon-size': 32,
     'font-size': 20
   ),
   'xl': (
-    'min-height': 48,
-    'padding': 20,
-    'typography': 'b2r',
+    'min-height': 52,
+    'padding': 12,
+    'typography': 'b2s',
     'icon-size': 24,
     'font-size': 16
   ),
   'lg': (
-    'min-height': 44,
-    'padding': 16,
-    'typography': 'b2r',
+    'min-height': 40,
+    'padding': 12,
+    'typography': 'b2s',
     'icon-size': 24,
     'font-size': 16
   ),
   'md': (
-    'min-height': 40,
-    'padding': 16,
-    'typography': 'b3r',
+    'min-height': 36,
+    'padding': 12,
+    'typography': 'b3s',
     'icon-size': 20,
     'font-size': 14
   ),
   'sm': (
-    'min-height': 36,
+    'min-height': 32,
     'padding': 12,
-    'typography': 'b3r',
+    'typography': 'b3s',
     'icon-size': 20,
     'font-size': 14
   ),
   'xs': (
-    'min-height': 32,
+    'min-height': 28,
     'padding': 12,
     'typography': 'b4r',
     'icon-size': 16,
     'font-size': 12
   ),
   'xxs': (
-    'min-height': 28,
-    'padding': 8,
+    'min-height': 24,
+    'padding': 9,
+    'border-radius': 6,
     'typography': 'b4r',
     'icon-size': 16,
     'font-size': 9
@@ -145,13 +171,21 @@ $button-sizes: (
 @each $size, $config in $button-sizes {
   .vits-btn-#{$size} {
     min-height: fn.rem(map.get($config, 'min-height'));
-    padding: 0 map.get(var.$unit, map.get($config, 'padding'));
+    padding: 0 fn.rem(map.get($config, 'padding'));
     font-size: fn.rem(map.get($config, 'font-size'));
+
+    @if map.has-key($config, 'border-radius') {
+      border-radius: fn.rem(map.get($config, 'border-radius'));
+    }
+
+    @else {
+      border-radius: map.get(var.$radius, 'md');
+    }
 
     @include typo.typography(map.get($config, 'typography'));
 
     .icon {
-      @include icon.ic-size(map.get(var.$unit, map.get($config, 'icon-size')));
+      @include icon.ic-size(fn.rem(map.get($config, 'icon-size')));
 
       .ic {
         width: 100%;
@@ -164,6 +198,7 @@ $button-sizes: (
 // 버튼 색상 변수
 $button-colors: (
   'primary': #e51e25,
+  'primary-soft': #f2555a,
   'secondary': #444,
   'tertiary': #767676,
   'disabled': #bebebe
@@ -172,9 +207,24 @@ $button-colors: (
 // Fill 타입 버튼 생성 (반복문)
 $fill-button-types: (
   'primary': map.get($button-colors, 'primary'),
+  'primary-soft': map.get($button-colors, 'primary-soft'),
   'secondary': map.get($button-colors, 'secondary'),
   'tertiary': map.get($button-colors, 'tertiary'),
   'disabled': map.get($button-colors, 'disabled')
+);
+$fill-button-hover-colors: (
+  'primary': map.get(color.$red-shades, '90'),
+  'primary-soft': map.get(color.$red-shades, '70'),
+  'secondary': map.get(color.$gray-shades, '70'),
+  'tertiary': map.get(color.$gray-shades, '50'),
+  'disabled': map.get($button-colors, 'disabled')
+);
+$fill-button-disabled-colors: (
+  'primary': map.get(color.$gray-shades, '20'),
+  'primary-soft': map.get(color.$gray-shades, '20'),
+  'secondary': map.get(color.$gray-shades, '20'),
+  'tertiary': map.get(color.$gray-shades, '20'),
+  'disabled': map.get(color.$gray-shades, '20')
 );
 
 @each $type, $color-value in $fill-button-types {
@@ -187,76 +237,69 @@ $fill-button-types: (
       color: color.$color-white;
     }
 
-    &:disabled {
-      @if $type == 'primary' {
-        color: map.get(color.$brand-colors, '40');
-        background-color: map.get(color.$brand-colors, '10');
-      }
-      //stylelint-disable-next-line
-      @else if $type == 'secondary' {
-        color: map.get(color.$gray-shades, '40');
-        background-color: #f0f0f0;
-      }
-      //stylelint-disable-next-line
-      @else if $type == 'tertiary' {
-        color: map.get(color.$gray-shades, '40');
-        background-color: #f0f0f0;
-      }
+    &:hover:not(:disabled) {
+      color: map.get(color.$icon-neutral, 'inverse');
+      background-color: map.get($fill-button-hover-colors, $type);
 
       .icon {
-        @if $type == 'primary' {
-          color: map.get(color.$brand-colors, '40');
-        }
-        //stylelint-disable-next-line
-        @else if $type == 'secondary' or $type == 'tertiary' {
-          color: map.get(color.$gray-shades, '40');
-        }
+        color: map.get(color.$icon-neutral, 'inverse');
+      }
+    }
+
+    &:disabled {
+      color: map.get(color.$icon-neutral, 'tertiary');
+      background-color: map.get($fill-button-disabled-colors, $type);
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'tertiary');
       }
     }
   }
 }
 
 // Outline 타입 버튼 생성 (반복문)
-$outline-button-types: (
-  'primary': map.get($button-colors, 'primary'),
-  'secondary': map.get($button-colors, 'secondary'),
-  'tertiary': map.get($button-colors, 'tertiary')
+$outline-button-border-colors: (
+  'primary': map.get(color.$red-shades, '80'),
+  'secondary': map.get(color.$gray-shades, '80'),
+  'tertiary': map.get(color.$gray-shades, '50')
+);
+$outline-button-hover-bg-colors: (
+  'primary': map.get(color.$red-shades, '10'),
+  'secondary': map.get(color.$gray-shades, '10'),
+  'tertiary': map.get(color.$gray-shades, '10')
+);
+$outline-button-disabled-colors: (
+  'primary': map.get(color.$red-shades, '40'),
+  'secondary': map.get(color.$gray-shades, '40'),
+  'tertiary': map.get(color.$gray-shades, '30')
+);
+$outline-button-disabled-bg-colors: (
+  'primary': map.get(color.$gray-shades, '0'),
+  'secondary': map.get(color.$gray-shades, '10'),
+  'tertiary': map.get(color.$gray-shades, '10')
 );
 
-@each $type, $color-value in $outline-button-types {
+@each $type, $border-color in $outline-button-border-colors {
   .vits-btn-outline-#{$type} {
-    color: $color-value;
+    color: $border-color;
     background-color: color.$color-white;
-    border: 1px solid $color-value;
+    border: 1px solid $border-color;
 
     .icon {
-      color: $color-value;
+      color: $border-color;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: map.get($outline-button-hover-bg-colors, $type);
     }
 
     &:disabled {
-      @if $type == 'primary' {
-        border-color: map.get(color.$brand-colors, '40');
-        color: map.get(color.$brand-colors, '40');
-      }
-      //stylelint-disable-next-line
-      @else if $type == 'secondary' {
-        border-color: map.get(color.$gray-shades, '40');
-        color: map.get(color.$gray-shades, '40');
-      }
-      //stylelint-disable-next-line
-      @else if $type == 'tertiary' {
-        border-color: map.get(color.$gray-shades, '40');
-        color: map.get(color.$gray-shades, '30');
-      }
+      color: map.get($outline-button-disabled-colors, $type);
+      background-color: map.get($outline-button-disabled-bg-colors, $type);
+      border-color: map.get($outline-button-disabled-colors, $type);
 
       .icon {
-        @if $type == 'primary' {
-          color: map.get(color.$brand-colors, '40');
-        }
-        //stylelint-disable-next-line
-        @else if $type == 'secondary' or $type == 'tertiary' {
-          color: map.get(color.$gray-shades, '40');
-        }
+        color: map.get($outline-button-disabled-colors, $type);
       }
     }
   }
@@ -282,11 +325,33 @@ $outline-button-types: (
   @include typo.typography('b3r');
 }
 
+/* 필터 더보기 버튼 */
+.filter-more-button {
+  @include btn-reset;
+  @include mx.flex(flex, row, center, center);
+  @include mx.border('all', $color: map.get(color.$button-ghost-tertiary, 'ghost-border-tertiary-default'));
+  width: 100%;
+  height: map.get(var.$unit, 32);
+  border-radius: map.get(var.$radius, 'md');
+
+  .text,
+  .count {
+    @include typo.typography('b3b', $color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default'));
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .icon {
+    @include icon.ic-size(map.get(var.$unit, 20));
+    color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
+  }
+}
+
 /* vits-btn-vertical-icon */
 .vits-btn-vertical-icon {
   @include mx.flex(flex, column, flex-start, center);
   gap: map.get(var.$unit, 4);
 
+  /* stylelint-disable-next-line no-descending-specificity */
   .icon {
     @include icon.ic-size(map.get(var.$unit, 32));
     position: relative;
@@ -362,11 +427,11 @@ $outline-button-types: (
 
   /* 단위 표시 */
   .unit {
+    height: fn.rem(36);
     padding: 0 map.get(var.$unit, 8);
     font-size: fn.rem(13);
     color: map.get(color.$text-colors, 'quaternary');
     white-space: nowrap;
-    height: fn.rem(36);
     background-color: color.$color-white;
 
     @include mx.flex($flex: inline-flex, $align: center);
@@ -417,8 +482,8 @@ $outline-button-types: (
           }
 
           &:active {
-            border: 1px solid map.get(color.$layout-border, 'brand');
             background-color: map.get(color.$red-shades, '20');
+            border: 1px solid map.get(color.$layout-border, 'brand');
 
             i.ic {
               color: map.get(color.$brand-colors, '100');
@@ -440,8 +505,8 @@ $outline-button-types: (
           }
 
           &:active {
-            border: 1px solid map.get(color.$layout-border, 'brand');
             background-color: map.get(color.$red-shades, '20');
+            border: 1px solid map.get(color.$layout-border, 'brand');
 
             i.ic {
               color: map.get(color.$brand-colors, '100');

@@ -15,9 +15,9 @@
 <%
   /* 퍼블 테스트용 초기값(원하면 페이지에서만 설정) */
   if (mockData && mockData.category && mockData.category.path) {
-    mockData.category.path.depth1Id = '074065';
-    mockData.category.path.depth2Id = '0740650629';
-    mockData.category.path.depth3Id = '';
+    mockData.category.path.depth1Id = '074069';
+    mockData.category.path.depth2Id = '0740690492';
+    mockData.category.path.depth3Id = '07406904922701';
   }
 
   var treeData = (mockData && mockData.category && Array.isArray(mockData.category.tree)) ? mockData.category.tree : [];
@@ -52,39 +52,67 @@
                 depth3Id: depth3Id
               }) %>
 
-              <div>상품타이틀과 리스트 사이의 간격 및 가운데선이 있음.</div>
-
-              <div>
-                <aside class="vits-grid-side vits-grid-side-left vits-side-category">
-                  <div style="height: 300px; background: red"></div>
-
-                  <div class="vits-scrollbar" style="height: 200px; background: pink; overflow-y: auto">
-                    <div
-                      style="
-                        height: 400px;
-                        background: ivory;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                      "
-                    >
-                      <p>내부스크롤 시작</p>
-                      <p>내부스크롤 끝</p>
-                    </div>
-                  </div>
-
-                  <div style="height: 500px; background: yellow; position: sticky; top: 0">스티키</div>
-                </aside>
-
-                <div class="vits-grid-main vits-main-category">
-                  <div style="height: 800px; background: darkcyan">영역1</div>
-                  <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">스티키</div>
-                  <div style="height: 1500px; background: green">영역3</div>
-                </div>
+              <div class="vits-grid-area">
+                <%# <aside class="vits-grid-side vits-grid-side-left vits-plp-side"> %>
+                <%- include(`${_src}/views/components/pg-category/plp-left-category.ejs`, {
+                  _src: _src,
+                  mockData: mockData,
+                  depth1Id: depth1Id,
+                  depth2Id: depth2Id,
+                  depth3Id: depth3Id
+                }) %>
+                
+                <%# <div class="vits-grid-main vits-plp-main"> %>
+                <%- include(`${_src}/views/components/pg-category/plp-main.ejs`, {
+                  _src: _src,
+                  totalCount: 60,
+                  productList: [],
+                  pagination: {}  
+                }) %>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- S: 비교함 담기 -->
+        <div class="vits-compare" data-layer-box="compareLayer" data-layer-type="compare">
+          <div class="vits-compare-list">
+            <!-- [D] 상품이 담기면 is-filled 추가, is-filled 상태에서 hover 시 삭제 버튼 노출 -->
+            <div class="vits-compare-item is-filled">
+              <!-- <img src="" alt=""> -->
+              <button type="button" class="vits-compare-item-delete" aria-label="삭제">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %> 
+              </button>
+            </div>
+
+            <!-- [D] + 버튼 클릭 시 vits-compare-item 추가 생성(동일 구조로 append) -->
+            <!-- <div class="vits-compare-item">
+              <! -- <img src="" alt=""> -- >
+               <button type="button" class="vits-compare-item-delete" aria-label="삭제">
+                < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) % > 
+               </button>
+            </div> -->
+          </div>
+
+          <div class="vits-compare-actions">
+            <div class="vits-compare-action">
+              <button type="button" class="vits-compare-add">
+                <span class="icon">
+                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %> 
+                </span>
+              </button>
+            </div>
+
+            <div class="vits-compare-action">
+              <!-- [D] 담긴 상품이 1개일 때 비교하기 비활성(2개 이상일 때 enabled) 
+                        ㄴ 비활성 : is-disabled 클래스 또는 disabled 추가
+               -->
+              <button type="button" class="vits-compare-submit is-disabled" disabled>비교하기</button>
+            </div>
+          </div>
+        </div>
+        <!-- E: 비교함 담기 -->
+
       </main>
 
       <%- include(`${_src}/views/layout/footer.ejs`) %>

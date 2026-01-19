@@ -1,0 +1,1816 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 상품유닛'}) %>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">상품 유닛</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;!--
+  [D] [상품 카드 상태/뷰 제어용 data & class 규칙]
+
+  1. 리스트 사용처 구분 (상위 컨테이너 .vits-product-list)
+  data-context="plp"       : 상품목록(PLP)
+  data-context="main"      : 메인 상품 리스트
+  data-context="wish"      : 좋아요 리스트
+  data-context="frequent"  : 자주구매 리스트
+  data-context="compare"   : 비교함 리스트
+
+  2. 리스트 뷰 타입 (상위 컨테이너 .vits-product-list)
+  vits-product-list view-thumb : 썸네일(카드형) 목록
+  vits-product-list view-list  : 리스트형 목록
+
+  3. 상품 상태 (li.vits-product-item)
+  data-member="true"  : 회원
+  data-member="false" : 비회원
+
+  data-stock="true"   : 판매중
+  data-stock="false"  : 일시품절
+
+  data-cut="true"     : 조장상품(절단/길이 주문형)
+  data-cut="false"    : 일반상품
+
+  ※ 모든 카드는 공통 마크업 구조를 사용하며
+    리스트 종류/뷰/상태는 상위 data-context + item data 조합으로 제어.
+
+  4. 상품 상세 링크 영역
+    - 링크 적용: 썸네일, 상품명+규격(product-summary)
+    - 링크 제외: 가격 영역, 좋아요/장바구니/비교 버튼 등 액션 영역
+--&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <h3 class="vits-guide-subtitle">썸네일형 (상품목록)</h3>
+
+        <div style="width: 960px">
+          <div class="vits-product-list view-thumb" data-plp-view-list data-context="plp">
+            <ul class="vits-product-list-items view-thumb">
+              <!-- 
+          [D] 상품 상태 (li.vits-product-item)
+              data-member="true"  : 회원
+              data-member="false" : 비회원
+
+              data-stock="true"   : 판매중
+              data-stock="false"  : 일시품절
+
+              data-cut="true"     : 조장상품(절단/길이 주문형)
+              data-cut="false"    : 일반상품
+        -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name"><span class="sr-only">상품명</span>튀김우동 컵라면 6개입</div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (상품명 길 때 - 말줄임) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>튀김우동 컵라면 6개입 상품명이 길어질 땐 말줄임으로 표시가
+                          됩니다 상품명이 길어요 길어요
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (상품명 길 때 - 말줄임) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0.4% 이하일 때) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>할인율이 0.4 이하일 때 - 할인율 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <!-- [D] 할인율이 0.4 이하일 때 - 할인율 비노출 -->
+                          <!-- <div class="price-rate"><span class="sr-only">할인율</span>99%</div> -->
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0.4% 이하일 때) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0과 같거나 작을 때) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>할인율이 0과 같거나 작을 때, 정상가/할인율 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <!-- [D] 할인율이 0과 같거나 작을 때, 정상가 비노출 -->
+                        <!-- <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div> -->
+
+                        <div class="price-sale-row">
+                          <!-- [D] 할인율이 0과 같거나 작을 때, 할인율 비노출 -->
+                          <!-- <div class="price-rate"><span class="sr-only">할인율</span>99%</div> -->
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0과 같거나 작을 때) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") - 조장상품(data-cut="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="true">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-02.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <!-- [D] 회원 판매중 조장상품 경우, 장바구니 비노출 (css로도 적용) -->
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>회원 판매중 조장상품 경우, 장바구니 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") - 조장상품(data-cut="true") -->
+
+              <!-- S: 회원(data-member="true") - 일시품절(data-stock="false") -->
+              <li class="vits-product-item" data-member="true" data-stock="false" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-03.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>회원 판매중 일시품절 상품입니다. 상품명은 길게 길게 회원
+                          판매중 일시품절 상품입니다.
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 일시품절(data-stock="false") -->
+
+              <!-- S: 회원(data-member="true") - 일시품절(data-stock="false") - 조장상품(data-cut="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="false" data-cut="true">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-04.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <!-- [D] 회원 일시품절 조장상품, 장바구니 비노출 (css로도 적용) -->
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name"><span class="sr-only">상품명</span>회원 일시품절, 조장상품입니다</div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 일시품절(data-stock="false") - 조장상품(data-cut="true") -->
+
+              <!-- S: 비회원(data-member="false") -->
+              <li class="vits-product-item" data-member="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-05.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <!-- [D] 비회원 시, CTA(좋아요, 장바구니, 비교담기) 비노출 (css로도 적용) -->
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>비회원 시, 장바구니 좋아요 비교담기 제거 & 가격정보 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">
+                            <span class="icon">
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'lock-close' }) %>
+                            </span>
+                            <span class="text">로그인하고 가격 확인</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 비회원(data-member="false") -->
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="vits-guide-subtitle">리스트형 (상품목록)</h3>
+
+        <div style="width: 960px; margin-top: 40px">
+          <div class="vits-product-list view-list" data-plp-view-list data-context="plp">
+            <ul class="vits-product-list-items view-thumb">
+              <!-- 
+          [D] 상품 상태 (li.vits-product-item)
+              data-member="true"  : 회원
+              data-member="false" : 비회원
+
+              data-stock="true"   : 판매중
+              data-stock="false"  : 일시품절
+
+              data-cut="true"     : 조장상품(절단/길이 주문형)
+              data-cut="false"    : 일반상품
+        -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name"><span class="sr-only">상품명</span>튀김우동 컵라면 6개입</div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (상품명 길 때 - 말줄임) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>튀김우동 컵라면 6개입 상품명이 길어질 땐 말줄임으로 표시가
+                          됩니다 상품명이 길어요 길어요
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (상품명 길 때 - 말줄임) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0.4% 이하일 때) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>할인율이 0.4 이하일 때 - 할인율 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <!-- [D] 할인율이 0.4 이하일 때 - 할인율 비노출 -->
+                          <!-- <div class="price-rate"><span class="sr-only">할인율</span>99%</div> -->
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0.4% 이하일 때) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0과 같거나 작을 때) -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>할인율이 0과 같거나 작을 때, 정상가/할인율 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <!-- [D] 할인율이 0과 같거나 작을 때, 정상가 비노출 -->
+                        <!-- <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div> -->
+
+                        <div class="price-sale-row">
+                          <!-- [D] 할인율이 0과 같거나 작을 때, 할인율 비노출 -->
+                          <!-- <div class="price-rate"><span class="sr-only">할인율</span>99%</div> -->
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") (할인율이 0과 같거나 작을 때) -->
+
+              <!-- S: 회원(data-member="true") - 판매중(data-stock="true") - 조장상품(data-cut="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="true" data-cut="true">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-02.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <!-- [D] 회원 판매중 조장상품 경우, 장바구니 비노출 (css로도 적용) -->
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>회원 판매중 조장상품 경우, 장바구니 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 판매중(data-stock="true") - 조장상품(data-cut="true") -->
+
+              <!-- S: 회원(data-member="true") - 일시품절(data-stock="false") -->
+              <li class="vits-product-item" data-member="true" data-stock="false" data-cut="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-03.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>회원 판매중 일시품절 상품입니다. 상품명은 길게 길게 회원
+                          판매중 일시품절 상품입니다.
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 일시품절(data-stock="false") -->
+
+              <!-- S: 회원(data-member="true") - 일시품절(data-stock="false") - 조장상품(data-cut="true") -->
+              <li class="vits-product-item" data-member="true" data-stock="false" data-cut="true">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-04.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <!-- [D] 회원 일시품절 조장상품, 장바구니 비노출 (css로도 적용) -->
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name"><span class="sr-only">상품명</span>회원 일시품절, 조장상품입니다</div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">로그인하고 가격 확인</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 회원(data-member="true") - 일시품절(data-stock="false") - 조장상품(data-cut="true") -->
+
+              <!-- S: 비회원(data-member="false") -->
+              <li class="vits-product-item" data-member="false">
+                <div class="vits-product-card">
+                  <div class="product-thumb">
+                    <a href="#!">
+                      <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-product-thumb-05.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-code"><span class="sr-only">상품코드</span>63531</div>
+
+                    <!-- [D] 비회원 시, CTA(좋아요, 장바구니, 비교담기) 비노출 (css로도 적용) -->
+                    <div class="product-actions">
+                      <button type="button" class="product-action-like" aria-label="좋아요">
+                        <i class="ic"></i>
+                        <span class="text">좋아요</span>
+                      </button>
+                      <button type="button" class="product-action-cart" aria-label="장바구니">
+                        <i class="ic"></i>
+                        <span class="text">장바구니</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="product-action-compare"
+                        aria-label="비교함 담기"
+                        data-layer-btn
+                        data-layer-target="compareLayer"
+                        data-layer-type="compare"
+                        data-layer-outside="true"
+                        data-layer-esc="true"
+                        data-layer-lock="true"
+                        aria-expanded="false"
+                      >
+                        <i class="ic"></i>
+                        <span class="text">비교 담기</span>
+                      </button>
+                    </div>
+
+                    <div class="product-meta">
+                      <div class="product-brand"><span class="sr-only">브랜드</span>농심</div>
+                      <div class="product-model"><span class="sr-only">모델명</span>CR-13</div>
+                    </div>
+
+                    <div class="product-summary">
+                      <a href="#!">
+                        <div class="product-name">
+                          <span class="sr-only">상품명</span>비회원 시, 장바구니 좋아요 비교담기 제거 & 가격정보 비노출
+                        </div>
+                        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+                      </a>
+                    </div>
+
+                    <div class="product-price">
+                      <!-- 
+                    [D] 가격 노출 
+                      ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                      ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                -->
+                      <div class="vits-price-box is-normal">
+                        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
+
+                        <div class="price-sale-row">
+                          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+                          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+                        </div>
+                      </div>
+
+                      <!-- 
+                    [D] 가격 비노출 => 일시품절
+                      ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                      ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-soldout">일시품절</div>
+
+                      <!-- 
+                    [D] 가격 비노출 (비회원)
+                      ㄴ data-member="true"  => 비노출 (css로도 적용)
+                -->
+                      <div class="product-price-alt is-guest">
+                        <div class="price-guest-text">
+                          <p class="price-guest-text-title">회원 전용 혜택가</p>
+                          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                        </div>
+                        <div class="price-guest-action">
+                          <button class="price-login-button">
+                            <span class="icon">
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'lock-close' }) %>
+                            </span>
+                            <span class="text">로그인하고 가격 확인</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- [D] data-member="false" : 비회원 => 비노출 (css로도 적용) -->
+                    <div class="product-extra">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true,
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                  text: '무료배송',
+                  variant: 'free-ship'
+                }) %>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- E: 비회원(data-member="false") -->
+            </ul>
+          </div>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

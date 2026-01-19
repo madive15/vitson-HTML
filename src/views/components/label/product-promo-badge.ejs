@@ -1,0 +1,21 @@
+<!-- prettier-ignore -->
+<%
+  /*
+    vits-product-promo
+    - 홍보/프로모션 배지(무료배송 등) 출력
+    - text가 비어있으면 렌더링하지 않음
+    - variant가 있으면 is-{variant} modifier로 스타일 분기
+
+    include params:
+    - text: string (필수에 가까움)
+    - variant: string (선택) ex) 'free-ship'
+  */
+  const t = (typeof text !== 'undefined' && text !== null) ? String(text) : '';
+  const v = (typeof variant !== 'undefined' && variant !== null) ? String(variant) : '';
+%>
+
+<% if (t) { %>
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge<%= v ? ' is-' + v : '' %>"><%= t %></span>
+</div>
+<% } %>

@@ -88,7 +88,7 @@ var ia = {
           $(this).text('수정');
         } else if (text == '완료') {
           $(this).parent('tr').addClass('row-done'); //하늘색
-        } else if (text == '삭제') {
+        } else if (text == '삭제' || text == '병합') {
           $(this).parent('tr').addClass('row-del'); //
           // $(this).parent('tr').find('.col-memo').empty();
           $(this).parent('tr').find('.col-memo').addClass('active row-del');
@@ -157,9 +157,10 @@ var ia = {
     $(obj)
       .find('button.btn-memo')
       .each(function () {
-        if ($(this).closest('tr').hasClass('row-done-new') || $(this).closest('tr').hasClass('row-done-update')) {
-          $(this).closest('tr').find('.col-memo').toggleClass('active');
-        }
+        // 완료 신규/수정 완료일 때 자동으로 열어버리는 로직 제거 (요구사항: 완료는 닫힘)
+        // if ($(this).closest('tr').hasClass('row-done-new') || $(this).closest('tr').hasClass('row-done-update')) {
+        //   $(this).closest('tr').find('.col-memo').toggleClass('active');
+        // }
         $(this).click(function () {
           $(this).closest('tr').find('.col-memo').toggleClass('active');
           return false;

@@ -1,0 +1,72 @@
+// -----------------------------------------------------------------------------
+// layout/_side.scss
+// - 콘텐츠 옆 사이드 영역 배치를 위한 공통 레이아웃 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+/* 커테고리 목록 - 왼쪽 side */
+.vits-plp-side {
+  box-sizing: content-box;
+  width: fn.rem(260);
+  padding-right: map.get(var.$unit, 32);
+  margin-right: map.get(var.$unit, 32);
+
+  .plp-side {
+    &-category,
+    &-filter-item {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 24);
+      width: 100%;
+    }
+
+    &-category {
+      padding-bottom: map.get(var.$unit, 32);
+    }
+
+    &-title {
+      @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-filter {
+      &-list {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 32);
+
+        > li {
+          @include mx.border('top', $color: map.get(color.$layout-border, 'quaternary'));
+          width: 100%;
+          padding-top: map.get(var.$unit, 32);
+
+          &[data-more-scope='brand'] {
+            .filter-more {
+              margin-top: map.get(var.$unit, 24);
+            }
+          }
+        }
+      }
+    }
+
+    &-filter-item {
+      & ~ .plp-side-filter-item {
+        margin-top: map.get(var.$unit, 16);
+      }
+    }
+
+    &-brand-list {
+      margin-top: map.get(var.$unit, 24);
+
+      &:not(:has(.filter-more)) {
+        max-height: 50vh;
+        overflow: hidden auto;
+      }
+    }
+  }
+}
