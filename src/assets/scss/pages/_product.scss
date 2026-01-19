@@ -375,7 +375,6 @@
 
     @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
     @include mx.flex($align: center);
-
   }
 
   .product {
@@ -392,12 +391,12 @@
         @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
       }
 
-      .product-shipping-tags{
+      .product-shipping-tags {
         @include mx.flex($wrap: wrap);
         gap: map.get(var.$unit, 4);
         padding-top: map.get(var.$unit, 5);
 
-        .vits-product-flags{
+        .vits-product-flags {
           gap: map.get(var.$unit, 4);
         }
       }
@@ -449,8 +448,22 @@
       padding: map.get(var.$unit, 20) 0;
       border-bottom: 1px solid map.get(color.$gray-shades, '30');
 
-      .info-inner {
-        align-items: flex-end;
+      &.is-guest {
+        // 비회원 상태 오른쪽 정렬
+        .info-inner {
+          justify-content: flex-end;
+          text-align: right;
+
+          .original {
+            @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+            text-decoration: none;
+          }
+        }
+      }
+
+      // 비회원 상태일 때 경계선 제거
+      &.is-guest + .product-minidetail {
+        border-bottom: 0;
       }
 
       .original {
@@ -874,27 +887,27 @@
       }
 
       .btn-cart {
-        button{
+        button {
           @include mx.common-mouse-event {
             background-color: map.get(color.$brand-colors, '60');
-  
-            .text{
+
+            .text {
               color: map.get(color.$text-colors, 'inverse');
             }
 
-            &:active{
+            &:active {
               border: 2px solid map.get(color.$layout-border, 'brand');
-              
-              .text{
-                color:map.get(color.$text-status, 'brand');
+
+              .text {
+                color: map.get(color.$text-status, 'brand');
               }
             }
           }
 
-          &.disabled{
+          &.disabled {
             background-color: map.get(color.$gray-shades, '20');
 
-            .text{
+            .text {
               color: map.get(color.$gray-shades, '40');
             }
           }
@@ -1027,41 +1040,40 @@
 
       :is(.btn-buy, .btn-cart) {
         min-width: fn.rem(156);
-        
+
         .vits-btn-lg {
           width: 100%;
           min-height: fn.rem(45);
           border-radius: map.get(var.$radius, 'sm');
         }
-
       }
 
-      div:only-child{
+      div:only-child {
         min-width: fn.rem(218);
       }
 
       .btn-cart {
-        button{
+        button {
           @include mx.common-mouse-event {
             background-color: map.get(color.$brand-colors, '60');
-  
-            .text{
+
+            .text {
               color: map.get(color.$text-colors, 'inverse');
             }
 
-            &:active{
+            &:active {
               border: 2px solid map.get(color.$layout-border, 'brand');
-              
-              .text{
-                color:map.get(color.$text-status, 'brand');
+
+              .text {
+                color: map.get(color.$text-status, 'brand');
               }
             }
           }
 
-          &.disabled{
+          &.disabled {
             background-color: map.get(color.$gray-shades, '20');
 
-            .text{
+            .text {
               color: map.get(color.$gray-shades, '40');
             }
           }
@@ -1158,28 +1170,33 @@
         padding-bottom: fn.rem(12);
         border-top: 1px solid map.get(color.$gray-shades, 'primary');
 
-        &.spec-col3{
+        &.spec-col3 {
           width: fn.rem(990);
           margin: 0 auto;
           border-top: 0;
 
           table th,
-          table td{
+          table td {
             height: fn.rem(26);
-            border:1px solid map.get(color.$layout-border, 'quinary');
+            border: 1px solid map.get(color.$layout-border, 'quinary');
             border-width: 1px 0;
+          }
 
-            .vits-spec-label {
-              width: fn.rem(110);
-              font-size: fn.rem(12);
-            }
+          .vits-spec-label {
+            width: fn.rem(110);
+            font-size: fn.rem(12);
+          }
+
+          .vits-spec-value {
+            font-size: fn.rem(12);
           }
         }
 
-        .vits-spec-table{
+        .vits-spec-table {
           width: 100%;
 
-          th,td{
+          th,
+          td {
             height: fn.rem(44);
             padding-left: fn.rem(20);
             text-align: left;
@@ -1191,12 +1208,11 @@
           width: fn.rem(197);
           background-color: map.get(color.$layout-surf, 'raised');
         }
-  
+
         .vits-spec-value {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
         }
       }
-
     }
 
     .vits-more-view {
@@ -1210,12 +1226,11 @@
         display: block;
         width: 100%;
         height: 400px;
-        content: "";
-        background: linear-gradient(180deg, rgb(255 255 255 / 0%) 25.07%, rgb(255 255 255 / 74%) 65.58%, #FFF 91.42%);
+        content: '';
+        background: linear-gradient(180deg, rgb(255 255 255 / 0%) 25.07%, rgb(255 255 255 / 74%) 65.58%, #fff 91.42%);
+      }
 
-    }
-
-      button{
+      button {
         padding: 0 fn.rem(60.5);
         margin: 0 auto;
         font-weight: 500;
@@ -1237,7 +1252,7 @@
         border-radius: map.get(var.$radius, sm);
 
         .icon,
-        .text{
+        .text {
           font-size: fn.rem(12);
           color: map.get(color.$text-colors, 'tertiary');
         }
@@ -1267,50 +1282,50 @@
 }
 
 // 상품상세 페이지 >  옵션- 필터영역 (우측 전체매뉴)
-.filter-box{
+.filter-box {
   background-color: map.get(color.$layout-surf, 'mypage');
-  
-  .vits-scrollbar{
+
+  .vits-scrollbar {
     max-height: fn.rem(452);
-    padding:map.get(var.$unit, 32) map.get(var.$unit, 20) 0;
-    margin:map.get(var.$unit, 24) map.get(var.$unit, 20) 0 ;
+    padding: map.get(var.$unit, 32) map.get(var.$unit, 20) 0;
+    margin: map.get(var.$unit, 24) map.get(var.$unit, 20) 0;
     overflow: auto;
     background-color: color.$color-white;
     border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
   }
 
-  .filter-box-list{
+  .filter-box-list {
     @include mx.flex($direction: column);
     gap: fn.rem(30);
 
-    .filter-box-item{
-      .filter-item-title{
-        @include mx.flex($align: center , $justify: space-between);
+    .filter-box-item {
+      .filter-item-title {
+        @include mx.flex($align: center, $justify: space-between);
         padding-bottom: fn.rem(14);
 
-        .vits-filter-more{
-          @include mx.flex($align: center , $justify: center);
+        .vits-filter-more {
+          @include mx.flex($align: center, $justify: center);
           @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
           gap: fn.rem(2);
           line-height: normal;
           background-color: transparent;
           border: none;
 
-          .icon{
-            width:fn.rem(7);
+          .icon {
+            width: fn.rem(7);
             height: fn.rem(6);
           }
         }
       }
 
-      .filter-item-content{
-        .filter-chip-group{
-          @include mx.flex($direction:row, $wrap: wrap);
+      .filter-item-content {
+        .filter-chip-group {
+          @include mx.flex($direction: row, $wrap: wrap);
           gap: fn.rem(6) fn.rem(8);
           max-height: fn.rem(28);
           overflow: hidden;
 
-          .filter-chip{
+          .filter-chip {
             @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
             padding: fn.rem(5) fn.rem(8);
             background-color: transparent;
@@ -1322,29 +1337,28 @@
               border-color: map.get(color.$layout-border, 'brand');
             }
 
-            &.is-active{
+            &.is-active {
               font-weight: 600;
               color: map.get(color.$text-status, 'brand');
               border-color: map.get(color.$layout-border, 'brand');
             }
 
-            &.disabled{
-            color: map.get(color.$text-colors, 'quaternary');
-            background-color: map.get(color.$layout-surf, 'sunken');            
-            border-color: map.get(color.$layout-border, 'tertiary');
+            &.disabled {
+              color: map.get(color.$text-colors, 'quaternary');
+              background-color: map.get(color.$layout-surf, 'sunken');
+              border-color: map.get(color.$layout-border, 'tertiary');
             }
           }
 
-          &.is-open{
+          &.is-open {
             max-height: fit-content;
           }
         }
-
       }
     }
   }
 
-  .filter-box-buttons{
+  .filter-box-buttons {
     @include mx.flex($align: center, $justify: center);
     gap: fn.rem(12);
     padding: fn.rem(36) 0;
@@ -1352,7 +1366,7 @@
     background-color: color.$color-white;
     border-radius: 0 0 map.get(var.$radius, 'md') map.get(var.$radius, 'md');
 
-    button{
+    button {
       flex-shrink: 0;
       min-width: fn.rem(130);
       border-radius: map.get(var.$radius, 'sm');
@@ -1383,7 +1397,7 @@
         cursor: pointer;
         background-color: map.get(color.$layout-surf, 'raised');
 
-        .product-option-name{
+        .product-option-name {
           color: map.get(color.$text-status, 'info');
           text-decoration: underline;
         }
@@ -1452,7 +1466,7 @@
       gap: map.get(var.$unit, 4);
       padding-top: map.get(var.$unit, 5);
 
-      .vits-product-flags{
+      .vits-product-flags {
         gap: map.get(var.$unit, 4);
       }
     }
@@ -1642,11 +1656,10 @@
             @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
           }
 
-          
           button[type='button'] {
             gap: 0;
             border-radius: map.get(var.$radius, 'sm');
-            
+
             .icon {
               @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
               width: fn.rem(18);
@@ -1659,8 +1672,8 @@
           }
 
           @include mx.common-mouse-event {
-            :active{
-            background-color: map.get(color.$layout-surf, 'secondary');
+            :active {
+              background-color: map.get(color.$layout-surf, 'secondary');
             }
           }
         }
@@ -1669,7 +1682,7 @@
           flex: 1;
           padding: 0;
 
-          &.vits-scrollbar{
+          &.vits-scrollbar {
             min-height: 0;
             overflow-y: auto;
           }

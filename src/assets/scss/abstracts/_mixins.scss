@@ -296,3 +296,23 @@
     }
   }
 }
+
+/* 상품 아이템 이미지 공통 속성 */
+@mixin common-list-thumb(
+  $thumb-bg-color: map.get(color.$gray-shades, '30'),
+  $img-bg-color: map.get(color.$gray-shades, '0')
+) {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: $thumb-bg-color;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background-color: $img-bg-color;
+  }
+}

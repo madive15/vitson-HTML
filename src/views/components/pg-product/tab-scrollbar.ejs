@@ -1,7 +1,8 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <div id="vits-deal-detail" class="vits-deal-detail">
   <div class="tab-wrap">
-    <!-- s: 가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
+    <!-- [D] s: 가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
+    <!-- [D] case :비회원 상태일 때 비노출 (tab-show-price 영역삭세) -->
     <div class="tab-show-price">
       <ul class="info-inner">
         <li>
@@ -73,11 +74,9 @@
       <div class="vits-product-spec spec-col3">
         <table class="vits-spec-table">
           <tbody>
-            <% const specItemsCol3 = specColumnscol3.flat(); %>
-            <% for (let i = 0; i < specItemsCol3.length; i += 3) { %>
-            <% const firstItem = specItemsCol3[i]; %>
-            <% const secondItem = specItemsCol3[i + 1]; %>
-            <% const thirdItem = specItemsCol3[i + 2]; %>
+            <% const specItemsCol3 = specColumnscol3.flat(); %> <% for (let i = 0; i < specItemsCol3.length; i += 3) {
+            %> <% const firstItem = specItemsCol3[i]; %> <% const secondItem = specItemsCol3[i + 1]; %> <% const
+            thirdItem = specItemsCol3[i + 2]; %>
             <tr>
               <th class="vits-spec-label" scope="row"><%= firstItem.label %></th>
               <td class="vits-spec-value"><%= firstItem.value %></td>
@@ -87,8 +86,7 @@
               <% } else { %>
               <th class="vits-spec-label" scope="row"></th>
               <td class="vits-spec-value"></td>
-              <% } %>
-              <% if (thirdItem) { %>
+              <% } %> <% if (thirdItem) { %>
               <th class="vits-spec-label" scope="row"><%= thirdItem.label %></th>
               <td class="vits-spec-value"><%= thirdItem.value %></td>
               <% } else { %>
@@ -155,10 +153,8 @@
       <div class="vits-product-spec">
         <table class="vits-spec-table">
           <tbody>
-            <% const specItems = specColumns.flat(); %>
-            <% for (let i = 0; i < specItems.length; i += 2) { %>
-            <% const leftItem = specItems[i]; %>
-            <% const rightItem = specItems[i + 1]; %>
+            <% const specItems = specColumns.flat(); %> <% for (let i = 0; i < specItems.length; i += 2) { %> <% const
+            leftItem = specItems[i]; %> <% const rightItem = specItems[i + 1]; %>
             <tr>
               <th class="vits-spec-label" scope="row"><%= leftItem.label %></th>
               <td class="vits-spec-value"><%= leftItem.value %></td>
@@ -180,16 +176,12 @@
       <div class="recommend-title">
         <h2 class="title">이런 상품은 <span class="primary"> 어때요?</span></h2>
       </div>
-      <div class="vits-banner-swiper">
-        <%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %>   
-      </div>
+      <div class="vits-banner-swiper"><%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %></div>
     </div>
     <!-- e: section - 이런 상품은 어때요?-->
   </section>
 
   <section id="sec3" class="tab-section">
-    <h3 class="section-title">관련 및 연관상품</h3>
-    <div class="section-content"></div>
     <!-- s: section - 다른 고객이 함께 본 상품-->
     <div class="vits-product-recommend banner-related">
       <div class="recommend-title">
