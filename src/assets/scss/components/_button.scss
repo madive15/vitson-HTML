@@ -69,15 +69,7 @@
  * --------------------------------------------------------------------------- */
 
 // 버튼 기본 스타일
-:is(
-  .vits-btn-xxl,
-  .vits-btn-xl,
-  .vits-btn-lg,
-  .vits-btn-md,
-  .vits-btn-sm,
-  .vits-btn-xs,
-  .vits-btn-xxs
-){
+:is(.vits-btn-xxl, .vits-btn-xl, .vits-btn-lg, .vits-btn-md, .vits-btn-sm, .vits-btn-xs, .vits-btn-xxs) {
   position: relative;
   gap: map.get(var.$unit, 8);
   padding: 0 map.get(var.$unit, 12);
@@ -177,7 +169,7 @@ $button-sizes: (
     @if map.has-key($config, 'border-radius') {
       border-radius: fn.rem(map.get($config, 'border-radius'));
     }
-
+    // stylelint-disable-next-line no-descending-specificity
     @else {
       border-radius: map.get(var.$radius, 'md');
     }
