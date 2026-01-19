@@ -1,0 +1,57 @@
+// -----------------------------------------------------------------------------
+// components/_pagination.scss
+// - 페이지 이동 및 목록 분할을 위한 페이지네이션 UI 스타일 정의
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin pagination-text {
+  @include mx.flex(flex, row, center, center);
+  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  min-width: fn.rem(38);
+  height: map.get(var.$unit, 32);
+  padding: fn.rem(6);
+}
+
+.vits-pagination {
+  @include mx.flex(flex, row, flex-start, center);
+
+  &-list {
+    @include mx.flex(flex, row, flex-start, center);
+    list-style: none;
+  }
+
+  &-btn {
+    @include mx.flex(flex, row, center, center);
+    @include icon.ic-size(map.get(var.$unit, 32));
+    padding: fn.rem(6);
+    color: map.get(color.$icon-neutral, 'primary');
+    background: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+    &.is-disabled {
+      pointer-events: none;
+    }
+  }
+
+  &-link {
+    @include pagination-text;
+
+    &.is-active {
+      font-weight: 600;
+      color: map.get(color.$text-status, 'brand');
+    }
+  }
+
+  &-ellipsis {
+    @include pagination-text;
+  }
+}

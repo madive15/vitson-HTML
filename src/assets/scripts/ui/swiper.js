@@ -289,8 +289,8 @@ import Swiper from 'swiper/bundle';
         1280: {slidesPerView: 5}
       }
     },
-    list: {
-      spaceBetween: 19.6,
+    slim: {
+      spaceBetween: 17.6,
       speed: 400,
       breakpoints: {
         1024: {slidesPerView: 4},

@@ -1,0 +1,253 @@
+// -----------------------------------------------------------------------------
+// components/_layer.scss
+// - data-layer-* 기반 레이어 공통 애니메이션 베이스 스타일
+// - 상태 클래스: is-open(display on) / is-active(visible on) / is-closing(leave)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+/* 기본: 숨김(렌더링 off) */
+[data-layer-box] {
+  display: none;
+  pointer-events: none;
+  visibility: hidden;
+
+  /* 기본(닫힘) 상태 값: 애니메이션 출발/도착점 */
+  opacity: 0;
+
+  /* 공통 transition(닫힘 기준: visibility는 마지막에 숨김) */
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+}
+
+/* 렌더링 on (아직 안 보이게 유지) */
+[data-layer-box].is-open {
+  display: block;
+}
+
+/* 실제 노출 상태(등장 완료) */
+[data-layer-box].is-open.is-active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0s;
+}
+
+/* 퇴장 애니메이션 중 */
+[data-layer-box].is-open.is-closing {
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+}
+
+/* 옵션: body 스크롤 락 */
+body.is-layer-open {
+  overflow: hidden;
+}
+
+/* 타입별 위치/연출 */
+/* 모달 */
+[data-layer-box][data-layer-type='modal'] {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  /* 닫힘 기본 모션(살짝 아래 + 축소) */
+  transform: translateY(8px) scale(0.98);
+}
+
+[data-layer-box][data-layer-type='modal'].is-open.is-active {
+  transform: translateY(0) scale(1);
+}
+
+[data-layer-box][data-layer-type='modal'].is-open.is-closing {
+  transform: translateY(8px) scale(0.98);
+}
+
+/* 바텀시트 */
+[data-layer-box][data-layer-type='bottom'] {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+
+  /* 닫힘 기본 모션(아래로) */
+  transform: translateY(16px);
+}
+
+[data-layer-box][data-layer-type='bottom'].is-open.is-active {
+  transform: translateY(0);
+}
+
+[data-layer-box][data-layer-type='bottom'].is-open.is-closing {
+  transform: translateY(16px);
+}
+
+/* 모션 최소화 환경 */
+@media (prefers-reduced-motion: reduce) {
+  [data-layer-box] {
+    transition: none;
+  }
+}
+
+/* compare */
+[data-layer-box][data-layer-type='compare'] {
+  pointer-events: none;
+  visibility: hidden;
+
+  /* 공통 베이스(닫힘 상태): is-open이 붙으면 display:block이 되니까 여기선 display 건드리지 않음 */
+  opacity: 0;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+
+  /* compare는 바 형태라 scale/slide가 자연스러움 */
+  transform: translateY(12px) scaleY(0.92);
+  transform-origin: 50% 100%;
+}
+
+[data-layer-box][data-layer-type='compare'].is-open {
+  display: flex;
+}
+
+[data-layer-box][data-layer-type='compare'].is-open.is-active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0s;
+  transform: translateY(0) scaleY(1);
+}
+
+[data-layer-box][data-layer-type='compare'].is-open.is-closing {
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+  transform: translateY(12px) scaleY(0.92);
+}
+
+/* ===========================================================
+  이 위는 공통 베이스라 변경 시 전 레이어 영향 가능. 
+  개별 레이어 스타일은 반드시 이 영역 아래에서 전용 선택자로만 추가 작성하세요.
+=========================================================== */
+
+/* 비교 담기 패널 바 */
+.vits-compare {
+  @include mx.position(fixed, $left: 50%, $bottom: fn.rem(170));
+  @include mx.border('all', $color: map.get(color.$layout-border, 'primary'));
+  z-index: var.$zindex-compare-layer;
+  gap: fn.rem(10);
+  height: fn.rem(80);
+  padding: 0 map.get(var.$unit, 16);
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+  transform: translateX(-50%);
+
+  &-list,
+  &-actions {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: fn.rem(10);
+  }
+
+  &-action {
+    &:last-of-type {
+      @include mx.flex(flex, row, flex-start, center);
+
+      &::before {
+        display: block;
+        width: 1px;
+        height: 23px;
+        margin: 0 map.get(var.$unit, 16) 0 fn.rem(6);
+        content: '';
+        background: #d9d9d9;
+      }
+    }
+  }
+
+  &-item {
+    @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+    position: relative;
+    flex-shrink: 0;
+    background: map.get(color.$layout-surf, 'base');
+
+    &-delete {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      @include icon.ic-size(map.get(var.$unit, 20));
+      @include mx.position(absolute, -6px, -6px);
+      color: map.get(color.$layout-surf, 'base');
+      pointer-events: none;
+      background: map.get(color.$layout-surf, 'primary');
+      border-radius: 50%;
+      opacity: 0;
+      transition: 0.15s;
+      transform: scale(0);
+    }
+
+    &.is-filled:hover {
+      .vits-compare-item-delete {
+        pointer-events: all;
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
+
+  &-add {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    background: map.get(color.$layout-surf, 'sunken');
+
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 32));
+      color: map.get(color.$icon-neutral, 'primary');
+    }
+  }
+
+  &-item,
+  &-add {
+    width: map.get(var.$unit, 52);
+    height: map.get(var.$unit, 52);
+    border-radius: map.get(var.$radius, 'sm');
+  }
+
+  &-submit {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    @include typo.typography('b2b', $color: map.get(color.$text-colors, 'inverse'));
+    height: map.get(var.$unit, 52);
+    padding: 0 map.get(var.$unit, 20);
+    background: map.get(color.$layout-surf, 'primary');
+    border-radius: map.get(var.$radius, 'md');
+
+    &.is-disabled,
+    &:disabled {
+      color: map.get(color.$text-colors, 'muted');
+      background: map.get(color.$layout-surf, 'sunken');
+    }
+  }
+}

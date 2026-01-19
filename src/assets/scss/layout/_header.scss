@@ -28,12 +28,26 @@ $header-common-gap: map.get(var.$unit, 32);
   }
 }
 
+@mixin header-common-relative($type: null) {
+  position: relative;
+
+  @if $type != 'main' {
+    z-index: var.$zindex-base;
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else {
+    z-index: var.$zindex-base + 1;
+  }
+  background: color.$color-white;
+}
+
 .vits-header {
   @include mx.border($color: map.get(color.$layout-border, 'quaternary'));
   position: relative;
   background: color.$color-white;
 
   &-topbar {
+    @include header-common-relative;
     @include mx.flex(flex, row, flex-start, center);
     @include mx.border($color: map.get(color.$gray-shades, '30'));
     height: var.$header-topbar-height;
@@ -56,6 +70,7 @@ $header-common-gap: map.get(var.$unit, 32);
   }
 
   &-main {
+    @include header-common-relative('main');
     @include mx.flex(flex, row, flex-start, center);
     height: var.$header-main-height;
 
@@ -268,7 +283,7 @@ $header-common-gap: map.get(var.$unit, 32);
   }
 
   &-gnb {
-    position: relative;
+    @include header-common-relative;
 
     .gnb {
       &-bar {
@@ -438,10 +453,11 @@ $header-common-gap: map.get(var.$unit, 32);
 
       &-panel {
         @include mx.position(absolute, 100%, $left: 0);
+        @include mx.border('top', $color: map.get(color.$layout-border, 'quaternary'));
         @include mx.border;
         z-index: var.$zindex-header-panel;
         width: 100%;
-        background: map.get(color.$gray-shades, '30');
+        background: color.$color-white;
 
         &.is-open {
           max-height: var.$header-panel-height-max;
@@ -463,6 +479,17 @@ $header-common-gap: map.get(var.$unit, 32);
       .gnb-more-box {
         display: block;
       }
+    }
+  }
+
+  .gnb-dim {
+    @include mx.position(fixed, 0, 0, 0, 0);
+    z-index: var.$zindex-base;
+    display: none;
+    background: color.$color-dim;
+
+    &[aria-hidden='false'] {
+      display: block;
     }
   }
 }
@@ -637,4 +664,97 @@ $header-common-gap: map.get(var.$unit, 32);
   .gnb-panel-inner {
     padding: 16px;
   }
+}
+
+// 테스트 적용 260118
+/* gnb-category: flex 4컬럼(2/3은 조건부 display), 컬럼별 스크롤 */
+.gnb-panel-category .gnb-category {
+  display: flex;
+  align-items: stretch;
+  height: 690px; /* 요청: 영역별 690px 기준 */
+}
+
+/* 1뎁스(항상 표시) */
+.gnb-panel-category .gnb-category-col-1 {
+  flex: 0 0 260px;
+  overflow: auto;
+}
+
+/* 2뎁스(기본 숨김: JS가 is-col2-open일 때만 표시) */
+.gnb-panel-category .gnb-category-col-2 {
+  display: none;
+  flex: 0 0 300px;
+  overflow: auto;
+  border-left: 1px solid #eee;
+}
+
+.gnb-panel-category .gnb-category.is-col2-open .gnb-category-col-2 {
+  display: block;
+}
+
+/* 3뎁스(기본 숨김: JS가 is-col3-open일 때만 표시) */
+.gnb-panel-category .gnb-category-col-3 {
+  display: none;
+  flex: 0 0 320px;
+  overflow: auto;
+  border-left: 1px solid #eee;
+}
+
+.gnb-panel-category .gnb-category.is-col3-open .gnb-category-col-3 {
+  display: block;
+}
+
+/* 추천(항상 표시, 오른쪽 고정) */
+.gnb-panel-category .gnb-category-col-4 {
+  flex: 0 0 520px;
+  overflow: auto;
+  border-left: 1px solid #eee;
+}
+
+/* box는 “표시”만 담당(시각 강조는 hover로만) */
+.gnb-panel-category .gnb-category-col-2 .gnb-category-box,
+.gnb-panel-category .gnb-category-col-3 .gnb-category-box {
+  display: none;
+}
+
+.gnb-panel-category .gnb-category-col-2 .gnb-category-box.is-active,
+.gnb-panel-category .gnb-category-col-3 .gnb-category-box.is-active {
+  display: block;
+}
+
+/* 리스트 기본 */
+.gnb-panel-category .gnb-category-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.gnb-panel-category .gnb-category-link {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+}
+
+/* 1/2뎁스 hover 시 강조(요청: 배경+굵기) */
+.gnb-panel-category .gnb-category-col-1 .gnb-category-link:hover,
+.gnb-panel-category .gnb-category-col-2 .gnb-category-link:hover {
+  font-weight: 700;
+  background: #f6f6f6;
+}
+
+/* 3뎁스도 hover 표현은 CSS로만 처리 */
+.gnb-panel-category .gnb-category-col-3 .gnb-category-link:hover {
+  font-weight: 700;
+  background: #f6f6f6;
+}
+
+/* 상태 클래스(is-active)에는 “강조 스타일”을 주지 않음(잔상 방지) */
+.gnb-panel-category .gnb-category-item.is-active > .gnb-category-link {
+  font-weight: inherit;
+  background: transparent;
+}
+
+.vits-header-gnb .gnb-panel.is-open {
+  max-height: none;
+  overflow: hidden;
 }

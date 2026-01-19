@@ -1,15 +1,18 @@
 /**
  * @file scripts/ui/category/plp-titlebar-research.js
- * @purpose PLP 결과 내 재검색: submit 시 칩 생성 + 삭제(기존 UI.chipButton) + 좌/우(한 칩씩) + 연관검색어 노출
+ * @purpose PLP 결과 내 재검색: submit 시 칩 생성/삭제(UI.chipButton) + 좌/우(한 칩씩) + 연관검색어 노출
  * @assumption
  *  - root: .vits-plp-titlebar
  *  - search form: [data-search-form], input: [data-search-input]
- *  - chip ui: [data-chip-ui] 내부
- *    - scroller: [data-chip-scroller] (가로 스크롤 컨테이너)
- *    - group: .vits-chip-button-group (칩 컨테이너, UI.chipButton의 위임 대상)
- *    - nav: [data-chip-prev], [data-chip-next] (있으면 한 칩씩 이동)
- *  - related ui: [data-related-ui], list: [data-related-list]
+ *  - chip ui: [data-chip-ui]
+ *    - scroller: [data-chip-scroller]
+ *    - group: .vits-chip-button-group
+ *    - nav: [data-chip-prev], [data-chip-next]
+ *  - related ui: [data-related-ui], list: [data-related-list], item: [data-keyword]
  *  - remove: [data-chip-action="remove"] → UI.chipButton가 DOM 제거 + ui:chip-remove 트리거
+ *
+ * @dependency
+ *  - scripts/ui/form/input-search.js (정규화/validation 처리)
  */
 
 (function ($, window) {
@@ -21,18 +24,21 @@
 
   var ROOT_SEL = '.vits-plp-titlebar';
   var CLS_HIDDEN = 'is-hidden';
+  var NAV_OFFSET = 45;
+  var THRESHOLD = 8;
 
+  // PLP titlebar 하위 요소들을 1회에 수집
   function getEls($root) {
     var $form = $root.find('[data-search-form]').first();
     var $input = $root.find('[data-search-input]').first();
 
+    var $validation = $input.closest('.vits-input-search.vits-validation').find('.input-validation').first();
+
     var $chipUI = $root.find('[data-chip-ui]').first();
     var $relatedUI = $root.find('[data-related-ui]').first();
 
-    // 칩 컨테이너(삭제 위임 대상)
     var $chipGroup = $chipUI.find('.vits-chip-button-group').first();
 
-    // 스크롤 컨테이너(없으면 group을 스크롤 컨테이너로 사용)
     var $scroller = $chipUI.find('[data-chip-scroller]').first();
     if (!$scroller.length) $scroller = $chipGroup;
 
@@ -43,96 +49,122 @@
 
     return {
       $root: $root,
-
       $form: $form,
       $input: $input,
-
+      $validation: $validation,
       $chipUI: $chipUI,
       $chipGroup: $chipGroup,
       $scroller: $scroller,
       $btnPrev: $btnPrev,
       $btnNext: $btnNext,
-
       $relatedUI: $relatedUI,
       $relatedList: $relatedList
     };
   }
 
-  function trimText(str) {
-    return String(str || '').replace(/^\s+|\s+$/g, '');
+  // 검색어 정규화를 공통(inputSearch.normalize)으로 일원화
+  function normalizeQuery(str) {
+    if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.normalize === 'function') {
+      return window.UI.inputSearch.normalize(str);
+    }
+    return String(str || '')
+      .replace(/^\s+|\s+$/g, '')
+      .replace(/\s+/g, ' ');
   }
 
-  function normalizeSpaces(str) {
-    return trimText(str).replace(/\s+/g, ' ');
-  }
-
+  // is-hidden 토글로 노출을 제어
   function setVisible($el, on) {
     if (!$el || !$el.length) return;
     $el.toggleClass(CLS_HIDDEN, !on);
   }
 
+  // 현재 칩이 1개라도 있는지 확인
   function hasAnyChip(els) {
-    return els.$chipGroup && els.$chipGroup.length && els.$chipGroup.find('.vits-chip-button').length > 0;
+    return !!(els.$chipGroup && els.$chipGroup.length && els.$chipGroup.find('.vits-chip-button').length);
   }
 
+  // data-chip-value 비교로 중복을 판정
   function hasChipValue(els, value) {
     if (!els.$chipGroup || !els.$chipGroup.length) return false;
-    return els.$chipGroup.find('.vits-chip-button[data-chip-value="' + value + '"]').length > 0;
-  }
 
-  // 칩 DOM 추가(삭제는 UI.chipButton이 처리)
-  function appendChip(els, text) {
-    var v = trimText(text);
+    var v = String(value || '');
     if (!v) return false;
 
-    // 중복 방지
+    var found = false;
+    els.$chipGroup.find('.vits-chip-button').each(function () {
+      if (String($(this).attr('data-chip-value') || '') === v) found = true;
+    });
+
+    return found;
+  }
+
+  // 칩 DOM을 생성해 추가(중복이면 false)
+  function appendChip(els, text) {
+    var v = normalizeQuery(text);
+    if (!v) return false;
+
     if (hasChipValue(els, v)) return false;
 
-    // chip-button.ejs action='x' 형태에 맞춤(아이콘은 CSS로 처리 권장)
-    var html =
-      '' +
-      '<div class="vits-chip-button type-outline" data-chip-value="' +
-      v +
-      '">' +
-      '  <span class="text">' +
-      v +
-      '</span>' +
-      '  <button type="button" class="remove" data-chip-action="remove" aria-label="' +
-      v +
-      ' 삭제">' +
-      '    <span class="ic ic-x" aria-hidden="true"></span>' +
-      '  </button>' +
-      '</div>';
+    var $chip = $('<div/>', {
+      class: 'vits-chip-button type-outline',
+      'data-chip-value': v
+    });
 
-    els.$chipGroup.append(html);
+    $('<span/>', {class: 'text', text: v}).appendTo($chip);
+
+    var $btn = $('<button/>', {
+      type: 'button',
+      class: 'remove',
+      'data-chip-action': 'remove',
+      'aria-label': v + ' 삭제'
+    });
+
+    $('<span/>', {class: 'ic ic-x', 'aria-hidden': 'true'}).appendTo($btn);
+    $btn.appendTo($chip);
+
+    els.$chipGroup.append($chip);
     return true;
   }
 
+  // 스크롤 가능한 최대 값을 계산
   function getMaxScrollLeft(scrollerEl) {
     return Math.max(0, (scrollerEl.scrollWidth || 0) - (scrollerEl.clientWidth || 0));
   }
 
+  // 좌/우 버튼의 노출/disabled 상태를 갱신
   function updateNav(els) {
-    // 버튼이 없으면(마크업 미추가) 네비 기능 자체를 생략
     if (!els.$btnPrev.length || !els.$btnNext.length) return;
 
     var scrollerEl = els.$scroller[0];
-    if (!scrollerEl) return;
+    var groupEl = els.$chipGroup[0];
+    if (!scrollerEl || !groupEl) return;
 
-    var max = getMaxScrollLeft(scrollerEl);
     var x = scrollerEl.scrollLeft || 0;
 
-    // 1px 오차 보정(모바일 관성 스크롤)
+    // overflow 판정: group 콘텐츠 폭이 scroller 가시폭을 넘는지
+    var groupWidth = groupEl.scrollWidth || 0;
+    var scrollerWidth = scrollerEl.clientWidth || 0;
+    var hasOverflow = groupWidth - scrollerWidth > THRESHOLD;
+
+    // 버튼은 overflow일 때만 노출
+    setVisible(els.$btnPrev, hasOverflow);
+    setVisible(els.$btnNext, hasOverflow);
+
+    if (!hasOverflow) return;
+
+    var max = getMaxScrollLeft(scrollerEl);
+
     els.$btnPrev.prop('disabled', x <= 1);
     els.$btnNext.prop('disabled', x >= max - 1);
   }
 
+  // 칩 엘리먼트 목록을 가져옴
   function getChipItems(els) {
     if (!els.$chipGroup.length) return [];
     return els.$chipGroup[0].querySelectorAll('.vits-chip-button');
   }
 
-  // 한 칩씩 이동(다음)
+  // 다음 칩 위치로 스크롤 이동
   function goNextChip(els) {
     var scrollerEl = els.$scroller[0];
     if (!scrollerEl) return;
@@ -143,7 +175,7 @@
     var x = scrollerEl.scrollLeft || 0;
 
     for (var i = 0; i < items.length; i += 1) {
-      var left = items[i].offsetLeft || 0;
+      var left = (items[i].offsetLeft || 0) - NAV_OFFSET;
       if (left > x + 1) {
         scrollerEl.scrollTo({left: left, behavior: 'smooth'});
         return;
@@ -153,7 +185,7 @@
     scrollerEl.scrollTo({left: getMaxScrollLeft(scrollerEl), behavior: 'smooth'});
   }
 
-  // 한 칩씩 이동(이전)
+  // 이전 칩 위치로 스크롤 이동
   function goPrevChip(els) {
     var scrollerEl = els.$scroller[0];
     if (!scrollerEl) return;
@@ -164,7 +196,7 @@
     var x = scrollerEl.scrollLeft || 0;
 
     for (var i = items.length - 1; i >= 0; i -= 1) {
-      var left = items[i].offsetLeft || 0;
+      var left = (items[i].offsetLeft || 0) - NAV_OFFSET;
       if (left < x - 1) {
         scrollerEl.scrollTo({left: left, behavior: 'smooth'});
         return;
@@ -174,8 +206,10 @@
     scrollerEl.scrollTo({left: 0, behavior: 'smooth'});
   }
 
+  // 칩 존재 여부에 따라 칩/연관검색어 영역을 동기화
   function syncVisibility(els) {
     var show = hasAnyChip(els);
+
     setVisible(els.$chipUI, show);
     setVisible(els.$relatedUI, show);
 
@@ -184,33 +218,38 @@
     });
   }
 
-  function bindEvents(els) {
-    // 검색 submit: 페이지 이동 막고 칩 생성
-    els.$form.on('submit.plpResearch', function (e) {
-      e.preventDefault();
+  // input-search 공통 JS를 해당 폼/인풋에 연결
+  function bindInputSearch(els) {
+    if (!window.UI || !window.UI.inputSearch || typeof window.UI.inputSearch.init !== 'function') return;
 
-      var q = normalizeSpaces(els.$input.val());
-      if (!q) return;
+    window.UI.inputSearch.init(
+      {$form: els.$form, $input: els.$input, $validation: els.$validation},
+      {
+        onSubmit: function (query) {
+          var q = normalizeQuery(query);
+          if (!q) return false;
 
-      var tokens = q.split(' ');
-      var changed = false;
+          // 중복이면 false 반환 → input-search가 invalid 처리
+          if (hasChipValue(els, q)) return false;
 
-      for (var i = 0; i < tokens.length; i += 1) {
-        if (appendChip(els, tokens[i])) changed = true;
+          if (!appendChip(els, q)) return false;
+
+          syncVisibility(els);
+
+          els.$input.val('');
+          window.requestAnimationFrame(function () {
+            els.$input.trigger('focus');
+          });
+
+          return true;
+        }
       }
+    );
+  }
 
-      if (!changed) return;
-
-      syncVisibility(els);
-
-      // 추가 성공 시 입력창 비우고 포커스 유지
-      els.$input.val('');
-      window.requestAnimationFrame(function () {
-        els.$input.trigger('focus');
-      });
-    });
-
-    // 좌/우 버튼(있을 때만)
+  // PLP titlebar 내 이벤트들을 바인딩
+  function bindEvents(els) {
+    // 좌/우 버튼이 있으면 한 칩씩 이동
     if (els.$btnNext.length && els.$btnPrev.length) {
       els.$btnNext.on('click.plpResearch', function () {
         goNextChip(els);
@@ -227,7 +266,7 @@
       });
     }
 
-    // 스크롤/리사이즈 시 버튼 상태 갱신
+    // 스크롤/리사이즈 시 네비 상태 갱신
     els.$scroller.on('scroll.plpResearch', function () {
       updateNav(els);
     });
@@ -236,19 +275,30 @@
       updateNav(els);
     });
 
-    // 연관검색어 클릭 → 칩 추가(원치 않으면 제거)
+    // 연관검색어 클릭 → 칩 추가(중복이면 invalid 표시)
     if (els.$relatedList.length) {
-      els.$relatedList.on('click.plpResearch', '[data-related-item]', function (e) {
+      els.$relatedList.on('click.plpResearch', '[data-keyword]', function (e) {
         e.preventDefault();
 
-        var kw = trimText($(this).text());
+        var kw = normalizeQuery($(this).attr('data-keyword') || $(this).text());
         if (!kw) return;
 
+        if (hasChipValue(els, kw)) {
+          if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+            window.UI.inputSearch.setInvalid({$input: els.$input, $validation: els.$validation}, true);
+          }
+          return;
+        }
+
         if (appendChip(els, kw)) syncVisibility(els);
+
+        if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+          window.UI.inputSearch.setInvalid({$input: els.$input, $validation: els.$validation}, false);
+        }
       });
     }
 
-    // chip-button.js 삭제 후 커스텀 이벤트 수신 → 노출/네비 동기화
+    // chip-button.js 삭제 후 이벤트 수신 → 노출/네비 동기화
     $(document).on('ui:chip-remove.plpResearch', function () {
       window.requestAnimationFrame(function () {
         syncVisibility(els);
@@ -256,19 +306,25 @@
     });
   }
 
+  // titlebar 1개 루트를 초기화
   function initRoot($root) {
     var els = getEls($root);
 
-    // 필수
     if (!els.$form.length || !els.$input.length) return;
     if (!els.$chipUI.length || !els.$relatedUI.length) return;
-    if (!els.$chipGroup.length) return; // 현재 구조에서 가장 중요
+    if (!els.$chipGroup.length) return;
 
-    // 초기 숨김
+    // 초기 숨김(칩 0개면 UI를 숨김)
     setVisible(els.$chipUI, false);
     setVisible(els.$relatedUI, false);
 
+    // 초기 validation off
+    if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
+      window.UI.inputSearch.setInvalid({$input: els.$input, $validation: els.$validation}, false);
+    }
+
     syncVisibility(els);
+    bindInputSearch(els);
     bindEvents(els);
   }
 

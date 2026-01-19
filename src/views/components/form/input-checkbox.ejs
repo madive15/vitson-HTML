@@ -3,6 +3,8 @@
 <%
   const _list = typeof list !== 'undefined' ? list : '';   // 예: 'row'
   const _gap = typeof gap !== 'undefined' ? gap : '';      // 예: 16
+  const _size = (typeof size !== 'undefined' && size) ? String(size) : ''; // 'm' | 's'
+  const sizeClass = _size ? `size-${_size}` : '';
 
   // 예) list-row-gap16 형태로 조합
   const listClass = (_list && _gap !== '' && _gap !== null)
@@ -15,7 +17,7 @@
   };
 %>
 
-<div class="checkbox-wrapper type-<%= variant %>">
+<div class="checkbox-wrapper type-<%= variant %><% if (sizeClass) { %> <%= sizeClass %><% } %>">
   <ul class="checkbox-item-area<% if (listClass) { %> <%= listClass %><% } %>">
     <% datas.forEach((data) => { 
         const text = data.text ?? '';

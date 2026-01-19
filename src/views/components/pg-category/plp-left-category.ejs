@@ -1,0 +1,124 @@
+<%# PLP 전용 좌측 메뉴(카테고리/필터) %>
+<aside class="vits-grid-side vits-grid-side-left vits-plp-side">
+  <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
+  <div class="plp-side-category">
+    <p class="plp-side-title">카테고리</p>
+    <%- include(`${_src}/views/components/category/category-tree.ejs`, { treeData: (mockData && mockData.category &&
+    Array.isArray(mockData.category.tree)) ? mockData.category.tree : [], depth1Id: depth1Id, depth2Id: depth2Id,
+    depth3Id: depth3Id }) %>
+  </div>
+
+  <div class="plp-side-filter">
+    <ul class="plp-side-filter-list">
+      <li>
+        <div class="plp-side-filter-item">
+          <p class="plp-side-title">공통</p>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+            variant: 'basic',
+            size: 'm',
+            name: 'plpCommon',
+            list: 'column',
+            gap: 16,
+            datas: [
+              { text: '오늘출발', value: '오늘출발', checked: false, disabled: false, required: false },
+              { text: '내일출발', value: '내일출발', checked: false, disabled: false, required: false },
+              { text: '특가', value: '특가', checked: false, disabled: false, required: false },
+            ]
+          }) %>
+        </div>
+      </li>
+
+      <%# 4뎁스(속성) JS 삽입 위치 %>
+      <li class="plp-side-filter-item is-hidden" data-plp-attr-anchor></li>
+
+      <!-- prettier-ignore -->
+      <%
+        var _brandList = [
+          { code: 'brand_01', name: '삼성', count: 128 },
+          { code: 'brand_02', name: 'LG', count: 94 },
+          { code: 'brand_03', name: '현대', count: 61 },
+          { code: 'brand_04', name: 'SK', count: 37 },
+          { code: 'brand_05', name: '롯데', count: 42 },
+          { code: 'brand_06', name: '포스코', count: 18 },
+          { code: 'brand_07', name: '한화', count: 25 },
+          { code: 'brand_08', name: 'CJ', count: 33 },
+          { code: 'brand_09', name: '농심', count: 16 },
+          { code: 'brand_10', name: '오뚜기', count: 21 },
+          { code: 'brand_11', name: '아모레퍼시픽', count: 29 },
+          { code: 'brand_12', name: '코웨이', count: 14 },
+          { code: 'brand_13', name: '쿠쿠', count: 19 },
+          { code: 'brand_14', name: '락앤락', count: 12 },
+          { code: 'brand_15', name: '신세계', count: 27 }
+        ];
+
+        var _brandTotal = _brandList.length;
+        var _brandVisibleCount = 7;
+        var _brandVisible = _brandList.slice(0, _brandVisibleCount);
+
+        var _brandDatas = _brandVisible.map(function (b) {
+          return {
+            text: (b.name || '') + ' (' + (b.count || 0) + ')',
+            value: String(b.code || ''),
+            checked: false,
+            disabled: false,
+            required: false
+          };
+        });
+      %>
+      <li data-more-scope="brand">
+        <p class="plp-side-title">브랜드</p>
+        <div class="plp-side-brand-list">
+          <div class="plp-side-filter-item">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+              variant: 'basic',
+              size: 'm',
+              name: 'plpBrand',
+              list: 'column',
+              gap: 16,
+              datas: _brandDatas
+            }) %>
+          </div>
+
+          <% if (_brandTotal > _brandVisibleCount) { %>
+          <div class="filter-more">
+            <button type="button" class="filter-more-button" data-more-btn>
+              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+              <span class="text">더보기</span>
+              <span class="count"><%= _brandTotal %></span>
+            </button>
+          </div>
+          <% } %> <% /* 더보기로 노출될 나머지 브랜드(숨김) */ %>
+          <!-- prettier-ignore -->
+          <%
+            var _brandHidden = _brandList.slice(_brandVisibleCount);
+            var _brandHiddenDatas = _brandHidden.map(function (b) {
+              return {
+                text: (b.name || '') + ' (' + (b.count || 0) + ')',
+                value: String(b.code || ''),
+                checked: false,
+                disabled: false,
+                required: false
+              };
+            });
+          %>
+  
+          <% if (_brandHiddenDatas.length) { %>
+          <div class="plp-side-filter-item" data-more-hidden="true">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+              variant: 'basic',
+              size: 'm',
+              name: 'plpBrand',
+              list: 'column',
+              gap: 16,
+              datas: _brandHiddenDatas
+            }) %>
+          </div>
+          <% } %>
+        </div>
+      </li>
+    </ul>
+  </div>
+</aside>

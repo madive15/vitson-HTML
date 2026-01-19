@@ -107,100 +107,6 @@
       // dropdown
       .footer-familysite {
         width: fn.rem(178);
-
-        .vits-dropdown--type-a {
-          /* 입력 박스(기존 유지) */
-          .k-dropdownlist,
-          .k-picker {
-            position: relative;
-            width: 100%;
-            height: 42px;
-            background: transparent;
-            border: 1px solid rgb(255 255 255 / 18%);
-            border-radius: 6px;
-            box-shadow: none;
-          }
-
-          .k-input,
-          .k-input-inner,
-          .k-input-value-text {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding: 0 13px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            background: transparent;
-          }
-
-          .k-icon,
-          .k-svg-icon,
-          .k-i-arrow-60-down,
-          .k-i-caret-alt-down {
-            display: none !important;
-          }
-
-          .k-dropdownlist::after,
-          .k-picker::after {
-            position: absolute;
-            top: 50%;
-            right: 26px;
-            width: 8px;
-            height: 12px;
-            pointer-events: none;
-            content: '';
-            border-right: 2px solid rgb(255 255 255 / 35%);
-            border-bottom: 2px solid rgb(255 255 255 / 35%);
-            transform: translateY(-60%) rotate(45deg);
-          }
-        }
-
-        /* 옵션 리스트(팝업) - 팝업 루트에 vits-dropdown--type-a가 붙으니 여기서 확실히 먹음 */
-        .k-popup.vits-dropdown--type-a,
-        .k-list-container.vits-dropdown--type-a {
-          background: rgb(0 0 0 / 55%); /* 입력과 톤 맞추고 싶으면 여기만 조절 */
-          backdrop-filter: blur(2px); /* 필요 없으면 삭제 */
-          border: 1px solid rgb(255 255 255 / 18%);
-          border-radius: 6px;
-          box-shadow: none;
-        }
-
-        .k-popup.vits-dropdown--type-a .k-list,
-        .k-list-container.vits-dropdown--type-a .k-list {
-          background: transparent;
-        }
-
-        .k-popup.vits-dropdown--type-a .k-list .k-item,
-        .k-list-container.vits-dropdown--type-a .k-list .k-item,
-        .k-popup.vits-dropdown--type-a .k-list .k-list-item,
-        .k-list-container.vits-dropdown--type-a .k-list .k-list-item {
-          font-size: 14px;
-          font-weight: 600;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          background: transparent;
-        }
-
-        /* hover */
-        .k-popup.vits-dropdown--type-a .k-list .k-item:hover,
-        .k-list-container.vits-dropdown--type-a .k-list .k-item:hover,
-        .k-popup.vits-dropdown--type-a .k-list .k-list-item:hover,
-        .k-list-container.vits-dropdown--type-a .k-list .k-list-item:hover {
-          background: rgb(255 255 255 / 8%);
-        }
-
-        /* 선택됨(빨간색/회색 덮어쓰기) */
-        .k-popup.vits-dropdown--type-a .k-list .k-item.k-selected,
-        .k-popup.vits-dropdown--type-a .k-list .k-item[aria-selected='true'],
-        .k-list-container.vits-dropdown--type-a .k-list .k-item.k-selected,
-        .k-list-container.vits-dropdown--type-a .k-list .k-item[aria-selected='true'] {
-          color: #fff;
-          background: rgb(255 255 255 / 12%);
-        }
       }
     }
   }
@@ -247,8 +153,7 @@
       }
 
       &-desc {
-        @include typo.typography('b4r', $color: color.$color-white);
-        opacity: 0.3;
+        @include typo.typography('b4r', $color: map.get(color.$gray-shades, '60'));
       }
     }
   }
@@ -377,57 +282,4 @@
       color: #777;
     }
   }
-}
-
-// 디자인 나오면 수정해야 함.
-/* 옵션 리스트(팝업) - animation container까지 포함해서 타겟 */
-.k-animation-container.vits-dropdown--type-a,
-.k-popup.vits-dropdown--type-a,
-.k-list-container.vits-dropdown--type-a {
-  background: rgb(0 0 0 / 55%);
-  border: 3px solid rgb(255 255 255 / 18%);
-  border-radius: 6px;
-  box-shadow: none;
-}
-
-/* 실제 리스트 배경/아이템 (버전별 클래스 방어) */
-.k-animation-container.vits-dropdown--type-a .k-list,
-.k-popup.vits-dropdown--type-a .k-list,
-.k-list-container.vits-dropdown--type-a .k-list,
-.k-animation-container.vits-dropdown--type-a .k-list-content,
-.k-popup.vits-dropdown--type-a .k-list-content,
-.k-list-container.vits-dropdown--type-a .k-list-content {
-  background: transparent;
-}
-
-.k-animation-container.vits-dropdown--type-a .k-item,
-.k-popup.vits-dropdown--type-a .k-item,
-.k-list-container.vits-dropdown--type-a .k-item,
-.k-animation-container.vits-dropdown--type-a .k-list-item,
-.k-popup.vits-dropdown--type-a .k-list-item,
-.k-list-container.vits-dropdown--type-a .k-list-item {
-  font-size: 14px;
-  color: #fff;
-  background: transparent;
-}
-
-/* hover */
-.k-animation-container.vits-dropdown--type-a .k-item:hover,
-.k-popup.vits-dropdown--type-a .k-item:hover,
-.k-list-container.vits-dropdown--type-a .k-item:hover,
-.k-animation-container.vits-dropdown--type-a .k-list-item:hover,
-.k-popup.vits-dropdown--type-a .k-list-item:hover,
-.k-list-container.vits-dropdown--type-a .k-list-item:hover {
-  background: rgb(255 255 255 / 8%);
-}
-
-/* selected */
-.k-animation-container.vits-dropdown--type-a .k-selected,
-.k-popup.vits-dropdown--type-a .k-selected,
-.k-list-container.vits-dropdown--type-a .k-selected,
-.k-animation-container.vits-dropdown--type-a [aria-selected='true'],
-.k-popup.vits-dropdown--type-a [aria-selected='true'],
-.k-list-container.vits-dropdown--type-a [aria-selected='true'] {
-  color: #fff;
-  background: rgb(255 255 255 / 12%);
 }

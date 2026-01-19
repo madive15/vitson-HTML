@@ -1,0 +1,74 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# components/pagination.ejs %>
+<%
+  // type: 'default' | 'expanded' | 'truncated'
+  const type = locals.type || 'default';
+
+  // 상태
+  const isPrevDisabled = locals.isPrevDisabled || false;
+  const isNextDisabled = locals.isNextDisabled || false;
+
+  // 현재 페이지
+  const current = locals.current || (type === 'truncated' ? 25 : 2);
+
+  // 전체 페이지 수
+  const total = locals.total || (type === 'truncated' ? 32 : 12);
+
+  // 타입별 페이지 배열
+  let pages = [];
+  if (type === 'default') pages = [1, 2, 3];
+  if (type === 'expanded') pages = [1, 2, 3, 4, 5, '…', 12];
+  if (type === 'truncated') pages = [1, '…', 23, 24, 25, 26, 27, '…', 32];
+%>
+
+<nav
+  class="vits-pagination"
+  aria-label="페이지네이션"
+  data-pagination
+  data-pagination-type="<%= type %>"
+  data-pagination-current="<%= current %>"
+  data-pagination-total="<%= total %>"
+>
+  <%# 이전 %>
+  <!-- prettier-ignore -->
+  <% if (isPrevDisabled) { %>
+  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+  </span>
+  <% } else { %>
+  <a href="#" class="vits-pagination-btn is-prev" data-pagination-prev aria-label="이전">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+  </a>
+  <% } %>
+
+  <!-- prettier-ignore -->
+  <%# 페이지 리스트 %>
+  <ol class="vits-pagination-list">
+    <% pages.forEach((p) => { %>
+    <li class="vits-pagination-item">
+      <% if (p === '…') { %>
+      <span class="vits-pagination-ellipsis" aria-hidden="true">…</span>
+      <% } else if (p === current) { %>
+      <span class="vits-pagination-link is-active" data-pagination-page data-page="<%= p %>" aria-current="page">
+        <%= p %>
+      </span>
+      <% } else { %>
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="<%= p %>"><%= p %></a>
+      <% } %>
+    </li>
+    <% }); %>
+  </ol>
+
+  <%# 다음 %>
+  <!-- prettier-ignore -->
+  <% if (isNextDisabled) { %>
+  <span class="vits-pagination-btn is-next is-disabled" data-pagination-next aria-disabled="true" aria-label="다음">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+  </span>
+  <% } else { %>
+  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+  </a>
+  <% } %>
+</nav>

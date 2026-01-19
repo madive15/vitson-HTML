@@ -53,37 +53,51 @@
 
   <div class="vits-plp-titlebar-main">
     <div class="vits-plp-titlebar-head">
-      <div class="vits-plp-titlebar-heading" data-plp-category-title>현재 카테고리 이름</div>
+      <div class="vits-plp-titlebar-heading" data-plp-category-title data-root="cat">현재 카테고리 이름</div>
       <div class="vits-plp-titlebar-research">
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/form/input-search.ejs`, {
           idPrefix: 'plp',
           action: '/search',
           name: 'q',
-          placeholder: '결과 내 재검색'
+          placeholder: '결과 내 재검색',
+          isInvalid: false,
+          validationMessage: '이미 적용 중인 검색어입니다.'
         }) %>
       </div>
     </div>
 
     <!-- 검색 후 노출 -->
     <div class="vits-plp-titlebar-chips is-hidden" data-chip-ui>
-      <button type="button" class="chip-nav chip-nav--prev" aria-label="이전 칩" data-chip-prev disabled></button>
+      <button type="button" class="chip-nav chip-nav-prev" aria-label="이전 칩" data-chip-prev disabled>
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+      </button>
       <div class="vits-chip-button-group chip-scroller" data-chip-scroller></div>
-      <button type="button" class="chip-nav chip-nav--next" aria-label="다음 칩" data-chip-next disabled></button>
+      <button type="button" class="chip-nav chip-nav-next" aria-label="다음 칩" data-chip-next disabled>
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+      </button>
     </div>
   </div>
 
   <!-- 연관검색어(검색 후 노출) -->
+  <% const relatedKeywords = [
+  '스니커즈','러닝화','운동화','캔버스화','슬립온','하이탑','로우탑','트레이닝화','워킹화','테니스화',
+  '후드티','맨투맨','니트','가디건','셔츠','블라우스','반팔티','긴팔티','폴로셔츠','터틀넥',
+  '패딩','자켓','코트','블루종','바람막이','베스트','아노락','야상','무스탕','다운점퍼',
+  '청바지','슬랙스','면바지','조거팬츠','트레이닝팬츠','와이드팬츠','스키니진','카고팬츠','반바지','레깅스',
+  '원피스','미니스커트','롱스커트','플리츠','데님스커트','니트원피스','셔츠원피스','후드원피스','점프수트','오버롤',
+  '백팩','토트백','숄더백','크로스백','미니백','에코백','클러치','파우치','여행가방','서류가방',
+  '모자','볼캡','버킷햇','비니','선글라스','안경테','머플러','스카프','장갑','벨트',
+  '지갑','카드지갑','반지갑','장지갑','시계','팔찌','목걸이','반지','귀걸이','헤어밴드' ]; %>
+
   <div class="vits-plp-titlebar-related is-hidden" data-related-ui>
     <p class="related-title">연관검색어</p>
     <ul class="related-list" data-related-list>
-      <li><a href="#" data-related-item>전선</a></li>
-      <li><a href="#" data-related-item>장갑</a></li>
-      <li><a href="#" data-related-item>절연장갑</a></li>
-      <li><a href="#" data-related-item>작업보호구</a></li>
-      <li><a href="#" data-related-item>전선정리</a></li>
-
-      <li><%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '홈' }) %></li>
+      <% relatedKeywords.forEach(function(item) { %>
+      <li>
+        <button type="button" class="related-button" data-keyword="<%= item %>"><%= item %></button>
+      </li>
+      <% }) %>
     </ul>
   </div>
 </header>

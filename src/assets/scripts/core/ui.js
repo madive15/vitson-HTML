@@ -10,6 +10,7 @@
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
 import '../ui/toggle.js';
+import '../ui/layer.js';
 import '../ui/swiper.js';
 import '../ui/chip-button.js';
 import '../ui/quantity-stepper.js';
@@ -21,7 +22,13 @@ import '../ui/header/header-gnb.js';
 import '../ui/footer.js';
 import '../ui/product/tab-scrollbar.js';
 import '../ui/form/select.js';
+import '../ui/form/input-search.js';
 import '../ui/category/plp-titlebar-research.js';
+import '../ui/category/category-tree.js';
+import '../ui/category/plp-chip-sync.js';
+import '../ui/category/plp-view-toggle.js';
+import '../ui/more-expand.js';
+import '../ui/filter-expand.js';
 
 (function (window) {
   'use strict';
@@ -37,6 +44,7 @@ import '../ui/category/plp-titlebar-research.js';
    */
   window.UI.init = function () {
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
@@ -55,7 +63,13 @@ import '../ui/category/plp-titlebar-research.js';
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
 
     if (window.UI.select && window.UI.select.init) window.UI.select.init();
-    if (window.UI && window.UI.plpTitlebarResearch) window.UI.plpTitlebarResearch.init();
+    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
+    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
+    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
+    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
+    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
+    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
+    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
   };
 
   console.log('[core/ui] loaded');
