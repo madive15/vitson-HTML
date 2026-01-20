@@ -79017,5 +79017,25 @@
         }
       })();
     </script>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 없을 때만 클래스 변경
+      if (!type) {
+        // jQuery 로드 여부 체크
+        if (typeof jQuery !== 'undefined') {
+          $('.vits-product-list').removeClass('view-thumb').addClass('view-list');
+        } else {
+          // jQuery 없으면 순수 JS로
+          document.querySelectorAll('.vits-product-list').forEach(el => {
+            el.classList.remove('view-thumb');
+            el.classList.add('view-list');
+          });
+        }
+      }
+    </script>
   </body>
 </html>

@@ -39118,7 +39118,7 @@
 </span>
                 </div>
               </div>
-              <div class="vits-product-detail-container" data-toggle-scope data-toggle-group="true">
+              <div class="vits-product-detail-container">
                 <div class="vits-deal-view">
                   
 <!-- prettier-ignore -->
@@ -39322,9 +39322,13 @@
   <div class="vits-description-box">
     <div class="vits-scrollbar">
       <div class="content-text">
-        *제품특징 <br />- 방습 제품으로 우수한 품질(IP44) <br />- 긴 수명 시간(15000hr)<br />- 3'~8인치까지 다양한 규격
-        시리즈 제품<br />- 플리커프리 <br />
-        <br />*제품용도
+*제품특징
+
+*제품용도
+ -욕실등
+
+*주의사항
+ -전자식 스위치 사용시 잔불 현상이 일어날수 있음
       </div>
     </div>
   </div>
@@ -39457,6 +39461,7 @@
                           </li>
                           <li>
                             <div class="discount-coupon">
+                              <!-- [D] 쿠폰받기 비활성화시 disabled 추가 -->
                               <!-- prettier-ignore -->
                               
 
@@ -39466,11 +39471,15 @@
   class="vits-btn-lg vits-btn-outline-primary icon-left"
   
   
-  data-toggle-btn
+  data-layer-btn
+    
+  aria-controls="get-coupon-modal"
+    
+  data-layer-target="get-coupon-modal"
+    
+  data-aria-label-base="쿠폰받기 모달"
     
   aria-expanded="false"
-    
-  data-toggle-target="get-coupon-modal"
     >
   
     <span class="icon">
@@ -39648,9 +39657,11 @@
                         <div class="vits-btn-option">
                           <!-- prettier-ignore -->
                           <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" 
-                            data-toggle-btn 
+                            data-layer-btn
+                            aria-controls="vits-options-modal"
+                            data-layer-target="vits-options-modal"
                             aria-expanded="false"
-                            data-toggle-target="vits-options-modal" 
+                            data-aria-label-base="다른규격 선택 모달"
                             >
                             <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span>
                             <span class="icon">
@@ -42504,13 +42515,23 @@
                 <!-- s: Modal -->
                 
 <!-- 쿠폰받기 modal -->
-<div class="vits-modal-product-modal get-coupon-modal" data-toggle-box="get-coupon-modal">
-  <div class="vits-modal-product-dim" data-toggle-dim="get-coupon-modal"></div>
+<!-- prettier-ignore -->
+<div class="vits-modal-product-modal get-coupon-modal" 
+  id="get-coupon-modal"
+  data-layer-box="get-coupon-modal"
+  data-layer-type="modal"
+  data-layer-lock="true"
+  data-layer-outside="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="coupon-title"
+>
+  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
   <div class="vits-modal-product-panel">
     <div class="vits-modal-product-head">
-      <h2>쿠폰 다운로드 및 적용<span class="description">해당 상품에 제공되는 전체 쿠폰 목록입니다.</span></h2>
+      <h2 id="coupon-title">쿠폰 다운로드 및 적용<span class="description">해당 상품에 제공되는 전체 쿠폰 목록입니다.</span></h2>
       <div class="vits-modal-product-close">
-        <button type="button" class="icon" data-toggle-btn="" data-toggle-target="get-coupon-modal">
+        <button type="button" class="icon" data-layer-close>
           <i class="ic ic-x"></i>
         </button>
       </div>
@@ -42720,11 +42741,24 @@
  
                 
 <!-- 옵션선택 modal -->
-<div class="vits-modal-product-modal vits-options-modal" data-toggle-box="vits-options-modal">
-  <div class="vits-modal-product-dim" data-toggle-dim="vits-options-modal"></div>
+<!-- prettier-ignore -->
+<div class="vits-modal-product-modal vits-options-modal" 
+  data-toggle-scope
+  
+  id="vits-options-modal"
+  data-layer-box="vits-options-modal"
+  data-layer-type="slide-right"
+  data-layer-lock="true"
+  data-layer-outside="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="options-title"
+>
+  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
+
   <div class="vits-modal-product-panel">
     <div class="vits-modal-product-head">
-      <h2>다른규격 선택</h2>
+      <h2 id="options-title">다른규격 선택</h2>
       <!-- prettier-ignore -->
       
 
@@ -42754,7 +42788,7 @@
 </button>
 
       <div class="vits-modal-product-close">
-        <button type="button" class="icon" data-toggle-btn="" data-toggle-target="vits-options-modal">
+        <button type="button" class="icon" aria-label="닫기" data-layer-close>
           <i class="ic ic-x"></i>
         </button>
       </div>
