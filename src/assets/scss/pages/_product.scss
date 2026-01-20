@@ -9,9 +9,66 @@
 @use '@/assets/scss/base/colors' as color;
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
 
 // 최상위 class
 .vits-wrapper-product {
+  // PC_SM 반응형
+  @include mx.pc-sm {
+    min-width: 1024px;
+    padding: fn.rem(10) map.get(var.$unit, 20) 0;
+
+    .vits-deal-gallery{
+      max-width: 400px;
+
+      .pd-gallery{
+        max-width: 400px;
+
+        .pd-main-swiper{
+          height: 400px;
+        }
+
+        .pd-thumbs-area{
+          height: 40px !important;
+
+          .pd-thumb,.pd-thumbs-swiper ,.swiper-wrapper{
+            height: 40px !important;
+          }
+
+          .pd-thumb{
+            width: 40px !important;
+          }
+        }
+      }
+
+      .vits-description-btn{
+        width: auto;
+        padding: fn.rem(14) fn.rem(34);
+      }
+
+    }
+
+    .vits-product-recommend{
+      .vits-banner-swiper{
+        min-width: 1024px;
+      }
+    }
+
+    .tab-show-price{
+      .info-inner{
+        li{
+          &:first-child{
+            width: 40%;
+          }
+
+          &:last-child{
+            width: 60%;
+          }
+        }
+      }
+    }
+  }
+
   // S: 상세페이지 default
   em {
     font-style: normal;
@@ -991,6 +1048,10 @@
         opacity: 1;
         transform: translateY(0);
       }
+
+      &.is-guest{
+        display: none;
+      }
     }
 
     .info-inner {
@@ -1022,7 +1083,7 @@
 
       .calculated-price {
         @include mx.flex($align: center);
-        gap: map.get(var.$unit, 6);
+        gap: fn.rem(6);
 
         .rate {
           @include typo.typography('h2b', $color: map.get(color.$text-status, 'brand'));
@@ -1279,6 +1340,7 @@
   .vits-banner-swiper {
     position: relative;
   }
+  
 }
 
 // 상품상세 페이지 >  옵션- 필터영역 (우측 전체매뉴)
@@ -1649,15 +1711,16 @@
 
         .vits-modal-product-head {
           @include mx.flex($justify: space-between);
-          padding: fn.rem(19) fn.rem(52) fn.rem(19) fn.rem(20);
+          padding: fn.rem(19) fn.rem(20);
           border-bottom: 1px solid map.get(color.$layout-surf, 'secondary');
 
           h2 {
             @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+            flex: 1;
           }
 
-          button[type='button'] {
-            gap: 0;
+          .vits-btn-xs {
+            gap: 0; 
             border-radius: map.get(var.$radius, 'sm');
 
             .icon {
@@ -1672,7 +1735,7 @@
           }
 
           @include mx.common-mouse-event {
-            :active {
+            .vits-btn-xs:active {
               background-color: map.get(color.$layout-surf, 'secondary');
             }
           }
@@ -1689,8 +1752,7 @@
         }
 
         .vits-modal-product-close {
-          top: 14px;
-          right: 0;
+          margin-left: 12px;
         }
       }
 
@@ -1733,31 +1795,21 @@
   }
 
   &-head {
+    @include mx.flex($justify: space-between);
     padding: map.get(var.$unit, 32);
     padding-bottom: map.get(var.$unit, 44);
 
     h2 {
       @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+
+      .description {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        display: block;
+        padding-top: map.get(var.$unit, 4);
+  
+      }
     }
 
-    .description {
-      padding-top: map.get(var.$unit, 4);
-
-      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-    }
-  }
-
-  &-body {
-    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
-  }
-
-  &-content {
-  }
-
-  &-buttons {
-    @include mx.flex($align: center);
-    gap: map.get(var.$unit, 12);
-    padding-top: map.get(var.$unit, 44);
   }
 
   &-close {
@@ -1772,7 +1824,15 @@
         @include icon.ic-size(map.get(var.$unit, 32));
       }
     }
+  }
 
-    @include mx.position(absolute, $top: fn.rem(16), $right: fn.rem(16));
+  &-body {
+    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
+  }
+
+  &-buttons {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    padding-top: map.get(var.$unit, 44);
   }
 }

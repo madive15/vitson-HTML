@@ -1,0 +1,221 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+-->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, { meta_title: '모달 예시(레이어 테스트)' }) %>
+
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-template">
+              <!-- 테스트용 인라인 스타일 -->
+              <style>
+                .demo-section {
+                  padding: 24px;
+                }
+                .demo-row {
+                  display: flex;
+                  gap: 12px;
+                  flex-wrap: wrap;
+                  align-items: center;
+                }
+                .demo-btn {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  height: 40px;
+                  padding: 0 14px;
+                  border: 1px solid #d9d9d9;
+                  background: #fff;
+                  cursor: pointer;
+                }
+                .demo-btn:disabled {
+                  opacity: 0.5;
+                  cursor: not-allowed;
+                }
+
+                /* 모달 내부 구조만 테스트용으로 최소 */
+                .demo-modal-dim {
+                  position: absolute;
+                  inset: 0;
+                  background: rgba(0, 0, 0, 0.45);
+                }
+                .demo-modal-panel {
+                  position: absolute;
+                  left: 50%;
+                  top: 50%;
+                  width: min(520px, calc(100% - 32px));
+                  background: #fff;
+                  border-radius: 12px;
+                  transform: translate(-50%, -50%);
+                  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                  overflow: hidden;
+                }
+                .demo-modal-head {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  padding: 16px 16px 12px;
+                  border-bottom: 1px solid #eee;
+                }
+                .demo-modal-title {
+                  margin: 0;
+                  font-size: 16px;
+                }
+                .demo-modal-body {
+                  padding: 16px;
+                }
+                .demo-modal-foot {
+                  display: flex;
+                  gap: 10px;
+                  justify-content: flex-end;
+                  padding: 12px 16px 16px;
+                  border-top: 1px solid #eee;
+                }
+
+                /* 닫기 버튼(테스트용) */
+                .demo-x {
+                  width: 36px;
+                  height: 36px;
+                  border: 1px solid #e5e5e5;
+                  background: #fff;
+                  border-radius: 8px;
+                  cursor: pointer;
+                }
+
+                /* 접근성: 화면 밖 숨김 텍스트 */
+                .sr-only {
+                  position: absolute;
+                  width: 1px;
+                  height: 1px;
+                  padding: 0;
+                  margin: -1px;
+                  overflow: hidden;
+                  clip: rect(0, 0, 0, 0);
+                  white-space: nowrap;
+                  border: 0;
+                }
+              </style>
+
+              <section class="demo-section">
+                <h1 style="margin: 0 0 16px; font-size: 18px">레이어(모달) 테스트</h1>
+
+                <div class="demo-row">
+                  <!-- [D] data-layer-target과 data-layer-box 값을 1:1로 맞추면 됨 -->
+                  <button
+                    type="button"
+                    class="demo-btn"
+                    data-layer-btn
+                    data-layer-target="demoModal"
+                    data-aria-label-base="데모 모달"
+                    aria-expanded="false"
+                    aria-controls="demoModalBox"
+                  >
+                    모달 열기
+                  </button>
+
+                  <!-- 같은 target 공유(여러 버튼이 1개 레이어를 열 수 있음) -->
+                  <button
+                    type="button"
+                    class="demo-btn"
+                    data-layer-btn
+                    data-layer-target="demoModal"
+                    aria-expanded="false"
+                    aria-controls="demoModalBox"
+                  >
+                    같은 모달 또 열기
+                  </button>
+                </div>
+
+                <p style="margin: 16px 0 0; color: #666; line-height: 1.5">
+                  테스트 항목: dim 바깥 클릭 닫기 / ESC 닫기 / body 스크롤 락 / 내부 닫기 버튼.
+                </p>
+              </section>
+
+              <!-- S: layer modal -->
+              <!--
+                [D] 옵션은 "박스 우선"이므로, 테스트 편의상 박스에 선언.
+                  - data-layer-lock="true"    : body 스크롤 락
+                  - data-layer-outside="true" : 바깥 클릭 닫기
+                  - data-layer-esc="true"     : ESC 닫기
+                  - data-layer-group="true"   : 그룹 단일 오픈(필요 시)
+              -->
+              <section
+                id="demoModalBox"
+                data-layer-box="demoModal"
+                data-layer-type="modal"
+                data-layer-lock="true"
+                data-layer-outside="true"
+                data-layer-esc="true"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="demoModalTitle"
+              >
+                <!-- dim(박스 내부) -->
+                <div class="demo-modal-dim" aria-hidden="true" data-layer-close></div>
+
+                <!-- panel -->
+                <div class="demo-modal-panel" role="document">
+                  <header class="demo-modal-head">
+                    <h2 id="demoModalTitle" class="demo-modal-title">데모 모달</h2>
+
+                    <!-- [D] 내부 닫기 트리거 -->
+                    <button type="button" class="demo-x" data-layer-close>
+                      <span class="sr-only">닫기</span>
+                      ✕
+                    </button>
+                  </header>
+
+                  <div class="demo-modal-body">
+                    <p style="margin: 0 0 10px; line-height: 1.6">
+                      이 영역은 내용 테스트용입니다. 애니메이션/상태 클래스는 공통 layer.scss를 따라갑니다.
+                    </p>
+                    <ul style="margin: 0; padding-left: 18px; line-height: 1.7">
+                      <li>dim 바깥 클릭: 닫힘 (data-layer-outside="true")</li>
+                      <li>ESC: 닫힘 (data-layer-esc="true")</li>
+                      <li>body 스크롤 락: on (data-layer-lock="true")</li>
+                    </ul>
+                  </div>
+
+                  <footer class="demo-modal-foot">
+                    <button type="button" class="demo-btn" data-layer-close>닫기</button>
+                    <button type="button" class="demo-btn" data-layer-close>확인(닫기)</button>
+                  </footer>
+                </div>
+              </section>
+              <!-- E: layer modal -->
+            </div>
+          </div>
+        </div>
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [D] layer.js 로드 이후 init 필요(프로젝트에서 common/ui init 흐름이 있으면 거기에 맞추기) -->
+    <script>
+      (function () {
+        if (window.UI && window.UI.layer && typeof window.UI.layer.init === 'function') {
+          window.UI.layer.init();
+        }
+      })();
+    </script>
+  </body>
+</html>

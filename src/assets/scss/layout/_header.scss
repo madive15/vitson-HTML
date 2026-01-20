@@ -41,6 +41,19 @@ $header-common-gap: map.get(var.$unit, 32);
   background: color.$color-white;
 }
 
+@mixin gnb-category-link {
+  background: map.get(color.$layout-status, 'info-bg-sub');
+
+  .text {
+    font-weight: 700;
+    color: map.get(color.$text-status, 'info-sub');
+  }
+
+  &:has(> .icon) {
+    padding-right: map.get(var.$unit, 24);
+  }
+}
+
 .vits-header {
   @include mx.border($color: map.get(color.$layout-border, 'quaternary'));
   position: relative;
@@ -254,6 +267,8 @@ $header-common-gap: map.get(var.$unit, 32);
 
               .search-panel {
                 &-left {
+                  position: relative;
+                  z-index: var.$zindex-base;
                   width: $header-search-width;
                 }
 
@@ -473,6 +488,126 @@ $header-common-gap: map.get(var.$unit, 32);
           }
         }
       }
+
+      // 전체 카테고리 패널
+      &-panel-category {
+        &.is-open {
+          max-height: 100vh;
+          overflow: hidden;
+        }
+
+        .gnb-category {
+          @include mx.flex(flex, row, flex-start, stretch);
+          height: fn.rem(690);
+
+          &-col {
+            overflow: hidden auto;
+
+            &:not(:last-of-type) {
+              @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+            }
+          }
+
+          &-col:not(.gnb-category-col-4) {
+            flex: 0 0 fn.rem(220);
+          }
+
+          &-link {
+            @include mx.flex(flex, row, flex-start, center);
+            position: relative;
+            display: block;
+            min-height: map.get(var.$unit, 40);
+            padding: fn.rem(10) 0 fn.rem(10) map.get(var.$unit, 16);
+            overflow: hidden;
+
+            .text {
+              @include typo.typography('b3r');
+            }
+
+            .icon {
+              @include mx.position(absolute, 50%, fn.rem(6));
+              @include icon.ic-size(fn.rem(18));
+              flex-shrink: 0;
+              color: map.get(color.$icon-status, 'info');
+              opacity: 0;
+              transition:
+                transform 0.35s ease,
+                opacity 0.25s ease;
+              transform: translate(100%, -50%);
+            }
+
+            @include mx.common-mouse-event {
+              @include gnb-category-link;
+            }
+          }
+
+          // 전체카테고리 > 추천 상품
+          .gnb-category-col-4 {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding-left: fn.rem(58);
+          }
+
+          .gnb-reco {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 20);
+            padding: map.get(var.$unit, 32) 0;
+
+            &-title {
+              &-point {
+                @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
+              }
+
+              &-text {
+                @include typo.typography('b2b', $color: map.get(color.$text-status, 'secondary'));
+              }
+            }
+
+            &-list {
+              @include mx.flex(flex, row, flex-start, stretch);
+              gap: map.get(var.$unit, 20);
+            }
+
+            &-item {
+              flex-shrink: 0;
+              width: fn.rem(168);
+            }
+          }
+
+          // 현재 포커스(마우스 기준) 표시
+          &-item.is-current > .gnb-category-link {
+            @include gnb-category-link;
+          }
+
+          // view - none
+          .gnb-category-col-2,
+          .gnb-category-col-2 .gnb-category-box,
+          .gnb-category-col-3,
+          .gnb-category-col-3 .gnb-category-box,
+          .gnb-category-col-3 .gnb-category-box:not(:has(.gnb-category-list-3 li)) {
+            // 3뎁스 박스는 하위(li)가 없으면 아예 숨김(영역 차지 방지)
+            display: none;
+          }
+
+          .gnb-category-col-2 .gnb-category-box.is-active,
+          .gnb-category-col-3 .gnb-category-box.is-active,
+          &.is-col2-open .gnb-category-col-2,
+          &.is-col3-open .gnb-category-col-3 {
+            display: block;
+          }
+
+          // 하위 메뉴 있으면 화살표 아이콘 노출
+          &.is-col2-open .gnb-category-col-1 .gnb-category-item.is-active .gnb-category-link,
+          &.is-col3-open .gnb-category-col-2 .gnb-category-item.is-active .gnb-category-link {
+            padding-right: map.get(var.$unit, 24);
+
+            .icon {
+              opacity: 1;
+              transform: translate(0, -50%);
+            }
+          }
+        }
+      }
     }
 
     &.is-more-visible {
@@ -490,6 +625,130 @@ $header-common-gap: map.get(var.$unit, 32);
 
     &[aria-hidden='false'] {
       display: block;
+    }
+  }
+}
+
+/* HEADER GNB 추천 상품 아이템 */
+.gnb-reco-item {
+  // 회원 시, 비노출
+  &[data-member='true'] {
+    .product-price-alt.is-guest {
+      display: none !important;
+    }
+  }
+
+  // 비회원 시, 비노출
+  &[data-member='false'] {
+    .product-extra,
+    .vits-price-box.is-normal,
+    .product-price-alt.is-soldout,
+    .product-actions {
+      display: none !important;
+    }
+  }
+
+  // 판매중, 비노출
+  &[data-stock='true'] {
+    .product-price-alt.is-soldout {
+      display: none !important;
+    }
+  }
+
+  // 일시품절, 비노출
+  &[data-stock='false'] {
+    .vits-price-box.is-normal {
+      display: none !important;
+    }
+  }
+
+  // 상품 아이템
+  &-card {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 8);
+
+    .product {
+      &-thumb {
+        @include mx.common-list-thumb;
+      }
+
+      &-body {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+      }
+
+      &-name {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        @include mx.ellipsis-multi(1.3, 2);
+      }
+
+      &-price {
+        .price-origin-label {
+          @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+          text-decoration: line-through;
+          text-decoration-line: line-through;
+        }
+
+        .price-sale-row {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 4);
+
+          .price-rate {
+            @include typo.typography('b1b', $color: map.get(color.$text-status, 'brand'));
+          }
+
+          .price-sale {
+            @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+
+        .product-price-alt.is-soldout {
+          @include typo.typography('b1b', $color: map.get(color.$label-shipping, 'today'));
+        }
+
+        .product-price-alt.is-guest {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 12);
+
+          .price-guest-text {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 2);
+
+            &-title {
+              @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-sub'));
+            }
+
+            &-desc {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+            }
+          }
+
+          .price-guest-action {
+            width: 100%;
+
+            .price-login-button {
+              @include button.btn-reset;
+              @include mx.flex(flex, row, center, center);
+              @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+              gap: fn.rem(10);
+              width: 100%;
+              height: map.get(var.$unit, 32);
+              padding: 0 map.get(var.$unit, 8);
+              border-radius: map.get(var.$radius, 'sm');
+
+              .icon {
+                @include icon.ic-size(map.get(var.$unit, 16));
+                color: map.get(color.$icon-neutral, 'primary');
+              }
+
+              .text {
+                @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -637,25 +896,11 @@ $header-common-gap: map.get(var.$unit, 32);
   line-height: 1.3;
 }
 
+// == header-search.ejs 끝
+
 /* header gnb */
 
 .vits-header-gnb {
-  /* 접힘(클리핑 룰): JS가 상태/폭을 제어 */
-
-  .gnb-link.is-clip {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    /* max-width는 JS가 "보이는 폭" 기준으로 인라인 지정 */
-  }
-
-  .gnb-nav.is-expanded .gnb-nav-list {
-    flex-wrap: wrap; /* 항목 줄바꿈 허용 */
-    min-width: 0;
-    white-space: normal;
-  }
-
   /* 펼침에서 "한 항목이 부모 100%를 넘어가는 경우"만 말줄임 처리 */
   .gnb-nav.is-expanded .gnb-item {
     max-width: 100%;
@@ -664,97 +909,4 @@ $header-common-gap: map.get(var.$unit, 32);
   .gnb-panel-inner {
     padding: 16px;
   }
-}
-
-// 테스트 적용 260118
-/* gnb-category: flex 4컬럼(2/3은 조건부 display), 컬럼별 스크롤 */
-.gnb-panel-category .gnb-category {
-  display: flex;
-  align-items: stretch;
-  height: 690px; /* 요청: 영역별 690px 기준 */
-}
-
-/* 1뎁스(항상 표시) */
-.gnb-panel-category .gnb-category-col-1 {
-  flex: 0 0 260px;
-  overflow: auto;
-}
-
-/* 2뎁스(기본 숨김: JS가 is-col2-open일 때만 표시) */
-.gnb-panel-category .gnb-category-col-2 {
-  display: none;
-  flex: 0 0 300px;
-  overflow: auto;
-  border-left: 1px solid #eee;
-}
-
-.gnb-panel-category .gnb-category.is-col2-open .gnb-category-col-2 {
-  display: block;
-}
-
-/* 3뎁스(기본 숨김: JS가 is-col3-open일 때만 표시) */
-.gnb-panel-category .gnb-category-col-3 {
-  display: none;
-  flex: 0 0 320px;
-  overflow: auto;
-  border-left: 1px solid #eee;
-}
-
-.gnb-panel-category .gnb-category.is-col3-open .gnb-category-col-3 {
-  display: block;
-}
-
-/* 추천(항상 표시, 오른쪽 고정) */
-.gnb-panel-category .gnb-category-col-4 {
-  flex: 0 0 520px;
-  overflow: auto;
-  border-left: 1px solid #eee;
-}
-
-/* box는 “표시”만 담당(시각 강조는 hover로만) */
-.gnb-panel-category .gnb-category-col-2 .gnb-category-box,
-.gnb-panel-category .gnb-category-col-3 .gnb-category-box {
-  display: none;
-}
-
-.gnb-panel-category .gnb-category-col-2 .gnb-category-box.is-active,
-.gnb-panel-category .gnb-category-col-3 .gnb-category-box.is-active {
-  display: block;
-}
-
-/* 리스트 기본 */
-.gnb-panel-category .gnb-category-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.gnb-panel-category .gnb-category-link {
-  display: block;
-  padding: 10px 12px;
-  text-decoration: none;
-}
-
-/* 1/2뎁스 hover 시 강조(요청: 배경+굵기) */
-.gnb-panel-category .gnb-category-col-1 .gnb-category-link:hover,
-.gnb-panel-category .gnb-category-col-2 .gnb-category-link:hover {
-  font-weight: 700;
-  background: #f6f6f6;
-}
-
-/* 3뎁스도 hover 표현은 CSS로만 처리 */
-.gnb-panel-category .gnb-category-col-3 .gnb-category-link:hover {
-  font-weight: 700;
-  background: #f6f6f6;
-}
-
-/* 상태 클래스(is-active)에는 “강조 스타일”을 주지 않음(잔상 방지) */
-.gnb-panel-category .gnb-category-item.is-active > .gnb-category-link {
-  font-weight: inherit;
-  background: transparent;
-}
-
-.vits-header-gnb .gnb-panel.is-open {
-  max-height: none;
-  overflow: hidden;
 }

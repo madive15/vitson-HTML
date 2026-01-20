@@ -9,10 +9,10 @@
  *  - 칩 제거 버튼: [data-chip-action="remove"] + data-chip-value
  *  - 전체 해제 버튼: [data-chip-clear] (없으면 .result-clear-button 폴백)
  * @maintenance
- *  - 칩은 JS 생성(디자인은 CSS로)
- *  - 그룹 순서: 공통 > 속성 > 브랜드(좌측 메뉴 기준 고정)
+ *  - 필터 칩은 체크박스가 상태의 기준이므로, X 클릭 시 반드시 체크박스 해제를 우선한다.
+ *  - 공통 chip-button.js가 함께 로드되어도 충돌하지 않도록 remove 클릭은 stopPropagation으로 차단한다.
  */
-(function ($, window) {
+(function ($, window, document) {
   'use strict';
 
   if (!$) return;
@@ -31,19 +31,16 @@
 
   var CLEAR_BTN = '[data-chip-clear], .result-clear-button';
 
-  // 공통 > 속성 > 브랜드 순으로 고정 렌더(클릭 순서 무시)
   var GROUPS = [
     {name: 'plpCommon', title: '공통', showCategory: false},
     {name: 'plpAttr', title: '속성', showCategory: true},
     {name: 'plpBrand', title: '브랜드', showCategory: true}
   ];
 
-  // 칩 영역 반환
   function getChipArea() {
     return $(CHIP_AREA).first();
   }
 
-  // 체크박스 대상 여부(name 기준)
   function isWatchedCheckbox(el) {
     if (!el || el.type !== 'checkbox') return false;
     var nm = String(el.name || '');
@@ -53,7 +50,6 @@
     return false;
   }
 
-  // 그룹 config
   function getGroupByName(name) {
     var nm = String(name || '');
     for (var i = 0; i < GROUPS.length; i += 1) {
@@ -62,17 +58,14 @@
     return null;
   }
 
-  // chip value(checkbox.value) 안전 문자열
   function escAttr(v) {
     return String(v || '').replace(/"/g, '\\"');
   }
 
-  // 칩 value 기준 존재 여부
   function hasChip($area, value) {
     return $area.find('[' + CHIP_VALUE + '="' + escAttr(value) + '"]').length > 0;
   }
 
-  // 체크박스 라벨 텍스트(.label-name 기준, 자식/배지 제거)
   function getChipLabel($chk) {
     var $label = $chk.closest('label');
     var $name = $label.find('.label-name').first();
@@ -85,7 +78,6 @@
       txt = String($chk.val() || '');
     }
 
-    // 브랜드(plpBrand)만 "(숫자)" 제거
     if (String($chk.attr('name') || '') === 'plpBrand') {
       txt = $.trim(String(txt || '').replace(/\s*\(\s*\d+\s*\)\s*$/, ''));
     }
@@ -93,23 +85,18 @@
     return txt;
   }
 
-  // 그룹명(속성/브랜드는 무조건 노출)
   function getChipCategoryName($chk) {
     var cfg = getGroupByName($chk.attr('name'));
     if (!cfg) return '';
     return cfg.showCategory ? cfg.title : '';
   }
 
-  // 칩 DOM 생성(action='x' 형태, 아이콘은 × 텍스트로 폴백)
   function buildChipEl(groupName, value, name, category) {
     var $chip = $('<div/>', {class: 'vits-chip-button type-filled'});
     $chip.attr(CHIP_VALUE, value);
     $chip.attr('data-chip-group', groupName);
 
-    if (category) {
-      $('<span/>', {class: 'text category', text: category}).appendTo($chip);
-    }
-
+    if (category) $('<span/>', {class: 'text category', text: category}).appendTo($chip);
     $('<span/>', {class: 'text', text: name}).appendTo($chip);
 
     var $btn = $('<button/>', {
@@ -126,7 +113,6 @@
     return $chip;
   }
 
-  // 그룹 순서대로 DOM 정렬(공통 > 속성 > 브랜드)
   function sortChipsByGroup($area) {
     if (!$area || !$area.length) return;
 
@@ -136,7 +122,6 @@
     }
   }
 
-  // 체크박스 → 칩 추가
   function addChipFromCheckbox($chk) {
     var $area = getChipArea();
     if (!$area.length) return;
@@ -154,7 +139,6 @@
     sortChipsByGroup($area);
   }
 
-  // value로 칩 제거
   function removeChipByValue(value) {
     var $area = getChipArea();
     if (!$area.length) return;
@@ -162,7 +146,6 @@
     $area.find('[' + CHIP_VALUE + '="' + escAttr(value) + '"]').remove();
   }
 
-  // value로 체크박스 해제(해제 시 change를 태워 동기화 유지)
   function uncheckByValue(value) {
     var v = String(value || '');
     if (!v) return;
@@ -178,25 +161,21 @@
     });
   }
 
-  // 칩 유무에 따라 결과 영역 토글(데이터 없으면 클래스 폴백)
   function syncResultUi() {
     var $area = getChipArea();
     if (!$area.length) return;
 
     var hasAny = $area.children().length > 0;
 
-    // result-chips 래퍼 토글: data-result-chips > .result-chips 폴백
     var $chipsWrap = $area.closest(RESULT_CHIPS);
     if (!$chipsWrap.length) $chipsWrap = $area.closest('.result-chips');
     if ($chipsWrap.length) $chipsWrap.toggleClass('is-hidden', !hasAny);
 
-    // result-actions 래퍼 토글: data-result-actions > .result-actions 폴백
     var $actionsWrap = $(RESULT_ACTIONS).first();
     if (!$actionsWrap.length) $actionsWrap = $('.result-actions').first();
     if ($actionsWrap.length) $actionsWrap.toggleClass('is-hidden', !hasAny);
   }
 
-  // 전체 해제(체크박스/칩)
   function clearAll() {
     $('input[type="checkbox"]').each(function () {
       if (!isWatchedCheckbox(this)) return;
@@ -212,7 +191,6 @@
     syncResultUi();
   }
 
-  // 체크박스 change → 칩 반영
   function bindCheckbox() {
     $(document)
       .off('change' + NS, 'input[type="checkbox"]')
@@ -230,14 +208,13 @@
       });
   }
 
-  // 칩 X 클릭 → 체크 해제(체크 해제 후 change에서 칩 제거/토글 처리)
   function bindChipRemove() {
     $(document)
       .off('click' + NS, CHIP_REMOVE)
       .on('click' + NS, CHIP_REMOVE, function (ev) {
         ev.preventDefault();
+        ev.stopPropagation(); // chip-button.js 등 공통 remove 처리와 충돌 방지(체크박스 기준 유지)
 
-        // value는 버튼 자체 또는 부모 칩에서 획득
         var value =
           $(this).attr(CHIP_VALUE) ||
           $(this)
@@ -250,7 +227,6 @@
       });
   }
 
-  // 전체 해제 버튼
   function bindClear() {
     $(document)
       .off('click' + NS, CLEAR_BTN)
@@ -260,7 +236,6 @@
       });
   }
 
-  // 초기 렌더: 체크된 값 기준으로 칩 재생성
   function buildInitialChips() {
     var $area = getChipArea();
     if (!$area.length) return;
@@ -278,12 +253,9 @@
   }
 
   window.UI.chipSync.init = function () {
-    // 이벤트 위임 바인딩
     bindCheckbox();
     bindChipRemove();
     bindClear();
-
-    // 초기 동기화
     buildInitialChips();
   };
-})(window.jQuery || window.$, window);
+})(window.jQuery || window.$, window, document);

@@ -8,34 +8,50 @@
  *  - 하이라이트: 연관검색어 text만(카테고리 label 제외), 초성 1글자(ㄱ~ㅎ) 입력 지원
  * @requires jQuery
  * @note toggle.js의 is-open 토글과 연동(패널 open/close는 click 트리거)
+ *
+ * @maintenance
+ *  - 콘솔 출력 제거(운영 품질)
+ *  - 문서 위임 이벤트는 1회만 바인딩(__bound)하여 init 재호출에도 안전하게 유지
+ *  - 스코프 인스턴스(data)로 observer/스코프 이벤트를 관리(destroy로 정리)
+ *  - 패널 닫힘 감지는 MutationObserver 사용(미지원 환경은 reset 생략: UX 영향만)
+ *  - 최근검색어가 0개면 "전체삭제" 버튼도 숨김 처리(syncRecentClearBtn)
  */
 
-(function ($, window) {
+(function ($, window, document) {
   'use strict';
 
-  if (!$) {
-    console.log('[header-search] jQuery not found');
-    return;
-  }
+  if (!$) return;
 
   window.UI = window.UI || {};
 
+  var MODULE_KEY = 'headerSearch';
+
   var SCOPE_SEL = '[data-header-search]';
-  var ACTIVE = 'is-active';
-  var OPEN = 'is-open';
+
+  var CLS = {
+    ACTIVE: 'is-active',
+    OPEN: 'is-open',
+    HIDDEN: 'is-hidden'
+  };
+
   var PANEL_TARGET = 'search-panel';
 
-  // escHtml: innerHTML 출력 안전 처리
-  function escHtml(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
+  var SEL = {
+    INPUT: '.header-search-input input[type="search"]',
+    RIGHT: '.search-panel-right',
+    RELATED_ITEM: '.search-related-item[data-related-item]',
+    RELATED_TEXT: '.search-related-text',
+    PRODUCTS_PANEL: '.related-products-panel',
 
-  // 초성 하이라이트(ㄱ~ㅎ 1글자) 지원
+    RECENT_WRAP: '.search-recent',
+    RECENT_CLEAR: '[data-recent-clear]',
+    RECENT_LIST: '[data-recent-list]',
+    RECENT_ITEM: '[data-recent-item]',
+
+    TOGGLE_BOX: '[data-toggle-box="' + PANEL_TARGET + '"]',
+    TOGGLE_BTN: '.btn-search[data-toggle-btn][data-toggle-target="' + PANEL_TARGET + '"]'
+  };
+
   var CHO = [
     'ㄱ',
     'ㄲ',
@@ -58,21 +74,33 @@
     'ㅎ'
   ];
 
-  // isChoJamo1: 초성 1글자인지 판별
+  // innerHTML 출력 안전 처리
+  function escHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // 초성 1글자인지 판별
   function isChoJamo1(k) {
     return typeof k === 'string' && k.length === 1 && CHO.indexOf(k) >= 0;
   }
 
-  // getChoseongOfSyllable: 한글 완성형 음절의 초성 추출
+  // 한글 완성형 음절의 초성 추출
   function getChoseongOfSyllable(ch) {
     var code = ch.charCodeAt(0);
     if (code < 0xac00 || code > 0xd7a3) return null;
+
     var sIndex = code - 0xac00;
     var choIndex = Math.floor(sIndex / 588);
+
     return CHO[choIndex] || null;
   }
 
-  // applyHighlight: text에 keyword 하이라이트 적용(<em> 감싸기)
+  // text에 keyword 하이라이트 적용(<em> 감싸기)
   function applyHighlight(text, keyword) {
     var t = String(text || '');
     var k = String(keyword || '').trim();
@@ -80,19 +108,18 @@
     if (!t) return '';
     if (!k) return escHtml(t);
 
-    // 초성 1글자 입력: 해당 초성 음절(예: 조/자/지)을 통째로 하이라이트
+    // 초성 1글자 입력: 해당 초성 음절을 통째로 하이라이트
     if (isChoJamo1(k)) {
       var out1 = '';
-      for (var i = 0; i < t.length; i++) {
+      for (var i = 0; i < t.length; i += 1) {
         var ch = t.charAt(i);
         var cho = getChoseongOfSyllable(ch);
-        if (cho === k) out1 += '<em>' + escHtml(ch) + '</em>';
-        else out1 += escHtml(ch);
+        out1 += cho === k ? '<em>' + escHtml(ch) + '</em>' : escHtml(ch);
       }
       return out1;
     }
 
-    // 일반 문자열 하이라이트
+    // 일반 문자열 하이라이트(정규식 escape)
     var safeK = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     var re = new RegExp(safeK, 'g');
 
@@ -102,19 +129,20 @@
     var matches = t.match(re) || [];
     var out = '';
 
-    for (var j = 0; j < parts.length; j++) {
+    for (var j = 0; j < parts.length; j += 1) {
       out += escHtml(parts[j]);
       if (j < matches.length) out += '<em>' + escHtml(matches[j]) + '</em>';
     }
+
     return out;
   }
 
-  // bindPreventAutoToggleOpen: focus/click이 toggle.js로 전달되어 패널이 "자동 오픈"되는 케이스 차단
-  function bindPreventAutoToggleOpen($scope) {
-    var $input = $scope.find('.header-search-input input[type="search"]').first();
-    if (!$input.length) return;
+  // toggle.js로 전달되는 focus/click 전파를 차단(자동 오픈 방지)
+  function bindPreventAutoToggleOpen($input) {
+    if (!$input || !$input.length) return;
 
     var el = $input[0];
+
     el.addEventListener(
       'focusin',
       function (e) {
@@ -122,6 +150,7 @@
       },
       true
     );
+
     el.addEventListener(
       'click',
       function (e) {
@@ -131,33 +160,24 @@
     );
   }
 
-  // bindRecentActions: 최근검색어 전체삭제/개별삭제/이동
-  function bindRecentActions($scope) {
-    $scope.on('click', '[data-recent-clear]', function (e) {
-      e.preventDefault();
-      $scope.find('[data-recent-list]').empty();
-    });
+  // 최근검색어 개수에 따라 "전체삭제" 버튼 노출 동기화
+  function syncRecentClearBtn($ctx) {
+    if (!$ctx || !$ctx.length) return;
 
-    $scope.on('click', '[data-recent-del]', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $(this).closest('[data-recent-item]').remove();
-    });
+    var $wrap = $ctx.is(SEL.RECENT_WRAP) ? $ctx : $ctx.closest(SEL.RECENT_WRAP);
+    if (!$wrap.length) $wrap = $ctx.find(SEL.RECENT_WRAP).first();
+    if (!$wrap.length) return;
 
-    $scope.on('click', '[data-recent-item]', function () {
-      var href = ($(this).attr('data-href') || '').trim();
-      if (!href) return;
-      window.location.href = href;
-    });
+    var hasAny = $wrap.find(SEL.RECENT_ITEM).length > 0;
+    $wrap.find(SEL.RECENT_CLEAR).first().toggleClass(CLS.HIDDEN, !hasAny);
   }
 
-  // updateRelatedHighlightTextOnly: 연관검색어 "text만" 하이라이트(카테고리 label 제외)
+  // 연관검색어 text만 하이라이트(카테고리 label 제외)
   function updateRelatedHighlightTextOnly($scope, keyword) {
-    $scope.find('.search-related-item').each(function () {
+    $scope.find(SEL.RELATED_ITEM).each(function () {
       var $it = $(this);
-      var $text = $it.find('.search-related-text').first();
-
-      if (!$text.length) return; // text 없으면(카테고리만) 아무 처리 안 함
+      var $text = $it.find(SEL.RELATED_TEXT).first();
+      if (!$text.length) return;
 
       var rawText = $text.attr('data-raw') || $text.text();
       $text.attr('data-raw', rawText);
@@ -171,17 +191,16 @@
     });
   }
 
-  // createPanelController: toggle.js(버튼 click) 기반으로 패널 open/close를 제어하는 래퍼
+  // toggle.js(버튼 click) 기반으로 패널 open/close를 제어하는 래퍼
   function createPanelController($scope) {
-    var $input = $scope.find('.header-search-input input[type="search"]').first();
-    var $panel = $scope.find('[data-toggle-box="' + PANEL_TARGET + '"]').first();
+    var $input = $scope.find(SEL.INPUT).first();
+    var $panel = $scope.find(SEL.TOGGLE_BOX).first();
 
-    // toggle.js 단일화: 패널 제어는 클래스 직접 제어 대신 click 트리거로 위임
-    var $toggleBtn = $scope.find('.btn-search[data-toggle-btn][data-toggle-target="' + PANEL_TARGET + '"]').first();
+    var $toggleBtn = $scope.find(SEL.TOGGLE_BTN).first();
     if (!$toggleBtn.length) $toggleBtn = $input;
 
     function isOpen() {
-      return $panel.length && $panel.hasClass(OPEN);
+      return $panel.length && $panel.hasClass(CLS.OPEN);
     }
 
     function openPanel() {
@@ -203,18 +222,17 @@
     };
   }
 
-  // data-search-test-key가 있으면 테스트 모드(해당 글자 입력 시에만 오픈)
-  // isAllowedToOpen: (테스트키 등) 현재 입력값이 패널 오픈 조건을 만족하는지
+  // (테스트키 등) 현재 입력값이 패널 오픈 조건을 만족하는지
   function isAllowedToOpen($scope, value) {
     var testKey = String($scope.attr('data-search-test-key') || '').trim();
     var vt = String(value || '').trim();
 
     if (!vt.length) return false;
-    if (!testKey) return true; // 운영 모드: 한 글자라도 있으면 OK
-    return vt === testKey; // 테스트 모드: 지정 글자와 정확히 일치할 때만 OK
+    if (!testKey) return true;
+    return vt === testKey;
   }
 
-  // syncPanelByValue: 현재 input 값 기준으로 패널/하이라이트를 동기화(입력/재포커스 공용)
+  // 현재 input 값 기준으로 패널/하이라이트를 동기화(입력/재포커스 공용)
   function syncPanelByValue($scope, panelCtrl) {
     var v = panelCtrl.$input.val();
     var vt = String(v || '').trim();
@@ -229,91 +247,161 @@
     updateRelatedHighlightTextOnly($scope, vt);
   }
 
-  // bindInputOpenPolicy: input 시에만 오픈(기본) + 값 유지된 재포커스 시 재오픈(요구사항)
+  // input 시 오픈 + 값 유지된 재포커스 시 재오픈
   function bindInputOpenPolicy($scope, panelCtrl) {
-    // 입력 발생 시 동기화
-    $scope.on('input', '.header-search-input input[type="search"]', function () {
+    $scope.on('input', SEL.INPUT, function () {
       syncPanelByValue($scope, panelCtrl);
     });
 
-    // 재포커스 시(값이 남아있으면) 동일하게 동기화
-    $scope.on('focusin', '.header-search-input input[type="search"]', function () {
+    $scope.on('focusin', SEL.INPUT, function () {
       syncPanelByValue($scope, panelCtrl);
     });
 
-    // 클릭으로 다시 커서 찍는 케이스도 동일 처리
-    $scope.on('click', '.header-search-input input[type="search"]', function () {
+    $scope.on('click', SEL.INPUT, function () {
       syncPanelByValue($scope, panelCtrl);
     });
   }
 
-  // bindRelatedProducts: 연관검색어 hover -> 우측 상품목록 전환 / 클릭 이동 / 패널 닫힐 때만 초기화
+  // 연관검색어 hover -> 우측 상품목록 전환 / 클릭 이동 / 패널 닫힐 때만 초기화
   function bindRelatedProducts($scope, panelCtrl) {
-    var ITEM_SEL = '.search-related-item[data-related-item]';
-    var $rightCol = $scope.find('.search-panel-right').first();
+    var $rightCol = $scope.find(SEL.RIGHT).first();
 
     function resetProducts() {
-      if ($rightCol.length) $rightCol.removeClass(ACTIVE);
-      $scope.find('.related-products-panel.' + ACTIVE).removeClass(ACTIVE);
+      if ($rightCol.length) $rightCol.removeClass(CLS.ACTIVE);
+      $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
     }
 
     function showProducts(key) {
       if (!key) return;
       if (!panelCtrl.isOpen()) return;
 
-      if ($rightCol.length) $rightCol.addClass(ACTIVE);
+      if ($rightCol.length) $rightCol.addClass(CLS.ACTIVE);
 
-      $scope.find('.related-products-panel.' + ACTIVE).removeClass(ACTIVE);
-      var $p = $scope.find('.related-products-panel[data-related-products="' + key + '"]');
+      $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
+      var $p = $scope.find(SEL.PRODUCTS_PANEL + '[data-related-products="' + key + '"]');
       if (!$p.length) return;
 
-      $p.addClass(ACTIVE);
+      $p.addClass(CLS.ACTIVE);
     }
 
-    $scope.on('mouseenter', ITEM_SEL, function () {
+    $scope.on('mouseenter', SEL.RELATED_ITEM, function () {
       showProducts($(this).attr('data-related-item'));
     });
 
-    $scope.on('click', ITEM_SEL, function () {
+    $scope.on('click', SEL.RELATED_ITEM, function () {
       var href = ($(this).attr('data-related-href') || '').trim();
       if (!href) return;
       window.location.href = href;
     });
 
-    // toggle.js가 class만 토글하므로, 닫힘 시점 감지는 class 변경 관찰로 처리
-    // 패널이 닫힐 때만 우측 초기화(요구사항: 패널 열린 동안은 마지막 hover 유지)
     if (panelCtrl.$panel.length && window.MutationObserver) {
       var obs = new MutationObserver(function () {
-        if (!panelCtrl.$panel.hasClass(OPEN)) {
+        if (!panelCtrl.$panel.hasClass(CLS.OPEN)) {
           resetProducts();
         }
       });
+
       obs.observe(panelCtrl.$panel[0], {attributes: true, attributeFilter: ['class']});
+      $scope.data('headerSearchObserver', obs);
     }
   }
 
+  // 최근검색어 전체삭제/개별삭제/이동(문서 위임 1회)
+  function bindRecentActionsOnce() {
+    if (window.UI.headerSearch && window.UI.headerSearch.__recentBound) return;
+
+    // 전체삭제
+    $(document).on('click', SEL.RECENT_CLEAR, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var $wrap = $(this).closest(SEL.RECENT_WRAP);
+      if (!$wrap.length) {
+        var $scope0 = $(this).closest(SCOPE_SEL);
+        if ($scope0.length) $wrap = $scope0.find(SEL.RECENT_WRAP).first();
+      }
+      if (!$wrap.length) return;
+
+      $wrap.find(SEL.RECENT_LIST).first().empty();
+      syncRecentClearBtn($wrap);
+    });
+
+    // 개별삭제
+    $(document).on('click', '[data-recent-del]', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var $wrap = $(this).closest(SEL.RECENT_WRAP);
+      $(this).closest(SEL.RECENT_ITEM).remove();
+      syncRecentClearBtn($wrap);
+    });
+
+    // 항목 클릭 이동
+    $(document).on('click', SEL.RECENT_ITEM, function () {
+      var href = ($(this).attr('data-href') || '').trim();
+      if (!href) return;
+
+      window.location.href = href;
+    });
+
+    window.UI.headerSearch = window.UI.headerSearch || {};
+    window.UI.headerSearch.__recentBound = true;
+  }
+
+  // 스코프 1개 초기화
   function initScope($scope) {
+    var prev = $scope.data(MODULE_KEY);
+    if (prev && typeof prev.destroy === 'function') prev.destroy();
+
     var panelCtrl = createPanelController($scope);
 
-    bindPreventAutoToggleOpen($scope);
-    bindRecentActions($scope);
+    bindPreventAutoToggleOpen(panelCtrl.$input);
     bindInputOpenPolicy($scope, panelCtrl);
     bindRelatedProducts($scope, panelCtrl);
 
-    // 초기 상태: 우측 상품목록 숨김 + 하이라이트 제거
-    $scope.find('.search-panel-right').removeClass(ACTIVE);
-    $scope.find('.related-products-panel.' + ACTIVE).removeClass(ACTIVE);
+    $scope.find(SEL.RIGHT).removeClass(CLS.ACTIVE);
+    $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
     updateRelatedHighlightTextOnly($scope, '');
+
+    // 초기 UI: 최근검색어 0개면 전체삭제 숨김
+    syncRecentClearBtn($scope);
+
+    var api = {
+      destroy: function () {
+        $scope.off();
+
+        var obs = $scope.data('headerSearchObserver');
+        if (obs && typeof obs.disconnect === 'function') obs.disconnect();
+        $scope.removeData('headerSearchObserver');
+
+        $scope.removeData(MODULE_KEY);
+      }
+    };
+
+    $scope.data(MODULE_KEY, api);
   }
 
-  window.UI.headerSearch = {
-    init: function () {
-      $(SCOPE_SEL).each(function () {
-        initScope($(this));
-      });
-      console.log('[header-search] init');
-    }
+  window.UI.headerSearch = window.UI.headerSearch || {};
+
+  window.UI.headerSearch.init = function (root) {
+    bindRecentActionsOnce();
+
+    var $root = root ? $(root) : $(document);
+
+    $root.find(SCOPE_SEL).each(function () {
+      initScope($(this));
+    });
   };
 
-  console.log('[header-search] module loaded');
-})(window.jQuery || window.$, window);
+  window.UI.headerSearch.destroy = function (root) {
+    var $root = root ? $(root) : $(document);
+
+    $root.find(SCOPE_SEL).each(function () {
+      var $scope = $(this);
+      var api = $scope.data(MODULE_KEY);
+
+      if (api && typeof api.destroy === 'function') api.destroy();
+      else $scope.removeData(MODULE_KEY);
+    });
+  };
+})(window.jQuery || window.$, window, document);

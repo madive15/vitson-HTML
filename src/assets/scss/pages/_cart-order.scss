@@ -1,0 +1,328 @@
+// -----------------------------------------------------------------------------
+// pages/cart-order.scss
+// - 장바구니/주문하기 페이지에서 사용.
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+/* 최상위 class: vits-main-cart-order */
+/* 장바구니 */
+.vits-cart {
+  width: 100%;
+
+  &-header {
+    padding: fn.rem(17) fn.rem(32);
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+  }
+
+  &-title {
+    @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &-toolbar {
+    @include mx.flex($align: center, $justify: space-between);
+    gap: map.get(var.$unit, 16);
+    padding: fn.rem(32) fn.rem(32) fn.rem(16);
+
+    &-left,
+    &-right {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 16);
+    }
+  }
+
+  &-body {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
+    padding: 0 fn.rem(32) fn.rem(20);
+  }
+
+  &-check {
+    @include mx.flex(inline-flex, row, flex-start, center);
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    gap: map.get(var.$unit, 8);
+
+    input {
+      width: fn.rem(16);
+      height: fn.rem(16);
+      accent-color: map.get(color.$brand-colors, 'primary');
+    }
+  }
+
+  &-toolbar-right {
+    button {
+      @include button.btn-reset;
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
+      border-radius: map.get(var.$radius, 'sm');
+
+      @include mx.common-mouse-event {
+        color: map.get(color.$text-status, 'brand');
+        background: map.get(color.$layout-surf, 'sunken');
+      }
+    }
+  }
+
+  &-list {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
+  }
+
+  &-item {
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
+    background: map.get(color.$layout-surf, 'base'); // ??
+    border-radius: map.get(var.$radius, 'md');
+
+
+    /* 상단 util (비교 / 삭제) */
+    &-top {
+      @include mx.flex($justify: flex-end);
+      padding: map.get(var.$unit, 12) map.get(var.$unit, 8) map.get(var.$unit, 8);
+      border-bottom: 1px solid map.get(color.$layout-border, 'quinary'); 
+    }
+
+    &-util {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+
+      button {
+        @include button.btn-reset;
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
+        border-radius: map.get(var.$radius, 'sm');
+
+        @include mx.common-mouse-event {
+          color: map.get(color.$text-colors, 'primary');
+          background: map.get(color.$layout-surf, 'sunken');
+        }
+      }
+    }
+
+    /* 메인 영역 */
+    &-main {
+      @include mx.flex($align: flex-start);
+      gap: map.get(var.$unit, 12);
+      align-items: flex-start;
+      padding: 0 map.get(var.$unit, 24);
+    }
+
+    &-check {
+      flex: 0 0 auto;
+      margin-top: map.get(var.$unit, 4);
+
+      input {
+        width: fn.rem(16);
+        height: fn.rem(16);
+        accent-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
+    &-thumb {
+      flex: 0 0 fn.rem(80);
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'md');
+
+      @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quinary'));
+
+      a {
+        display: block;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    &-info {
+      @include mx.flex($direction: column);
+      flex: 1 1 auto;
+      gap: map.get(var.$unit, 8);
+      min-width: 0;
+    }
+
+    &-brand {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+
+      .brand {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      .code {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+
+    &-name {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.ellipsis-single;
+    }
+
+    &-option {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-badge {
+      @include mx.flex($align: center);
+      gap: fn.rem(6);
+    }
+
+    &-quantity {
+      margin-top: map.get(var.$unit, 8);
+    }
+
+    /* 가격 영역 */
+    &-price {
+      @include mx.flex($direction: column, $align: flex-end);
+      flex: 0 0 fn.rem(200);
+      text-align: right;
+
+      .price-origin {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        text-decoration: line-through;
+      }
+
+      .price-sale {
+        @include mx.flex(inline-flex, row, flex-end, center);
+        flex-wrap: wrap;
+        gap: map.get(var.$unit, 4);
+
+        .rate {
+          @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
+        }
+
+        .price {
+          @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        .vat {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          width: 100%;
+        }
+      }
+
+      .vits-cart-coupon-btn {
+        @include button.btn-reset;
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand'));
+        padding: map.get(var.$unit, 4) map.get(var.$unit, 10);
+        background: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'sm');
+
+        @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'tertiary'));
+
+        @include mx.common-mouse-event {
+          background: map.get(color.$layout-surf, 'sunken');
+          border-color: map.get(color.$layout-border, 'secondary');
+        }
+      }
+
+      .vits-cart-coupon-desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+
+    /* =========================
+     * 하단 금액 요약
+     * ========================= */
+    &-bottom {
+      @include mx.flex($align: flex-start, $direction: column);
+      @include mx.border(top, 1px, solid, map.get(color.$layout-border, 'quinary'));
+      gap: map.get(var.$unit, 12);
+      padding: map.get(var.$unit, 16) map.get(var.$unit, 24);
+      background: map.get(color.$layout-surf, 'raised');
+    }
+  }
+  
+  /* 금액 요약 */
+  &-price-summary {
+    @include mx.flex($align: flex-start, $wrap: wrap);
+    gap: map.get(var.$unit, 44);
+    width: 100%;
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+    .vits-cart-summary-item {
+      @include mx.flex($align: center);
+      flex:1;
+      gap: map.get(var.$unit, 8);
+
+      .has-discount{
+        @include mx.flex($align: center);
+        gap: fn.rem(39);
+      }
+
+      .vits-cart-discount-detail{
+        display: none;
+      }
+
+      &.is-toggle{
+        flex-direction: column;
+        align-items: flex-start;
+
+        .vits-cart-discount-detail{
+          display: block;
+        }
+      }
+
+      span {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      strong {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &.is-discount strong {
+        color: map.get(color.$text-status, 'brand');
+      }
+    }
+  }
+
+  &-order-total {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    align-self: flex-end;
+    text-align: right;
+
+    span {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    strong {
+      @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  /* 더보기 */
+  &-more {
+    @include mx.flex($justify: center);
+    margin-top: map.get(var.$unit, 24);
+
+    button {
+      @include button.btn-reset;
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      min-width: fn.rem(120);
+      height: fn.rem(36);
+      padding: 0 map.get(var.$unit, 16);
+      background: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'md');
+
+      @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'tertiary'));
+
+      @include mx.common-mouse-event {
+        color: map.get(color.$text-colors, 'primary');
+        background: map.get(color.$layout-surf, 'sunken');
+        border-color: map.get(color.$layout-border, 'secondary');
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@
  * @maintenance
  *  - 페이지 내 PLP 섹션이 여러 개일 수 있어 closest('.vits-product-section') 기준으로 타겟을 찾음
  *  - 초기 타입 클래스가 없으면 view-list로 보정(마크업 누락 대비)
+ *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
  */
 (function ($, window, document) {
   'use strict';
@@ -22,57 +23,63 @@
 
   window.UI = window.UI || {};
 
-  var SECTION = '.vits-product-section';
+  var MODULE_KEY = 'plpViewToggle';
+  var NS = '.' + MODULE_KEY;
 
+  var SECTION = '.vits-product-section';
   var TOGGLE_BTN = '[data-plp-view-toggle]';
   var TARGET = '[data-plp-view-list]';
 
-  // 버튼/타겟 공통 타입 클래스(요구사항: view-list <-> view-thumb)
   var TYPE_LIST = 'view-list';
   var TYPE_THUMB = 'view-thumb';
 
-  // 타입 클래스가 없으면 기본값(list) 부여 + 중복 방지(항상 1개만 유지)
-  function ensureInitialType($el) {
+  // 타입 클래스 보정(누락 대비) + 중복 방지(항상 1개만 유지)
+  function normalizeTypeClass($el) {
     if (!$el || !$el.length) return;
 
     var hasList = $el.hasClass(TYPE_LIST);
     var hasThumb = $el.hasClass(TYPE_THUMB);
 
-    if (!hasList && !hasThumb) $el.addClass(TYPE_LIST);
+    // 아무 것도 없으면 list 기본
+    if (!hasList && !hasThumb) {
+      $el.addClass(TYPE_LIST);
+      return;
+    }
+
+    // 둘 다 있으면 list만 유지(정책: 1개만)
     if (hasList && hasThumb) $el.removeClass(TYPE_THUMB);
   }
 
-  // 현재 thumb 여부 반환
+  // thumb 여부
   function isThumb($el) {
     return $el && $el.length ? $el.hasClass(TYPE_THUMB) : false;
   }
 
-  // 해당 엘리먼트의 타입 클래스 교체 후 현재 thumb 여부 반환
-  function toggleType($el) {
-    if (!$el || !$el.length) return false;
+  // 타입을 thumb 기준으로 강제 적용
+  function applyType($el, thumb) {
+    if (!$el || !$el.length) return;
 
-    if ($el.hasClass(TYPE_THUMB)) {
-      $el.removeClass(TYPE_THUMB).addClass(TYPE_LIST); // view-thumb -> view-list
-      return false;
-    }
-
-    $el.removeClass(TYPE_LIST).addClass(TYPE_THUMB); // view-list -> view-thumb
-    return true;
+    $el.toggleClass(TYPE_THUMB, !!thumb);
+    $el.toggleClass(TYPE_LIST, !thumb);
   }
 
-  // 버튼 aria/상태 동기화 + 버튼 타입 클래스 교체
+  // 타겟의 타입 토글 후 결과(thumb 여부) 반환
+  function toggleTargetType($target) {
+    if (!$target || !$target.length) return false;
+
+    var nowThumb = !$target.hasClass(TYPE_THUMB);
+    applyType($target, nowThumb);
+    return nowThumb;
+  }
+
+  // 버튼 aria/상태 동기화(요구사항: 버튼도 타입 클래스 동일 규칙)
   function syncBtnState($btn, thumb) {
     if (!$btn || !$btn.length) return;
 
-    // 토글 버튼 접근성: 현재 상태를 pressed로 표현
     $btn.attr('aria-pressed', thumb ? 'true' : 'false');
-
-    // 라벨은 "다음 동작" 기준(리스트 상태면 썸네일 전환, 썸네일 상태면 리스트 전환)
     $btn.attr('aria-label', thumb ? '리스트형 전환' : '썸네일형 전환');
 
-    // 요구사항: 버튼도 view-list <-> view-thumb로 직접 교체
-    $btn.toggleClass(TYPE_THUMB, !!thumb);
-    $btn.toggleClass(TYPE_LIST, !thumb);
+    applyType($btn, thumb);
   }
 
   // 섹션 단위로 타겟 찾기(복수 PLP 대응)
@@ -81,41 +88,49 @@
     return ($section.length ? $section : $(document)).find(TARGET).first();
   }
 
-  // 이벤트 바인딩
-  function bind() {
-    // 문서 델리게이션(동적 렌더/재바인딩 이슈 방지)
-    $(document).on('click.plpViewToggle', TOGGLE_BTN, function (e) {
-      e.preventDefault();
+  // 클릭 1회 처리(타겟 기준 단일 소스)
+  function handleToggle($btn) {
+    var $target = getTargetByBtn($btn);
 
-      var $btn = $(this);
-      var $target = getTargetByBtn($btn);
+    // 마크업 누락 대비 보정(버튼/타겟)
+    normalizeTypeClass($btn);
+    normalizeTypeClass($target);
 
-      // 버튼/타겟 모두 타입 클래스 보정(마크업 누락 대비)
-      ensureInitialType($btn);
-      ensureInitialType($target);
+    // 타겟 토글 → 버튼 동기화
+    var nowThumb = toggleTargetType($target);
+    syncBtnState($btn, nowThumb);
+  }
 
-      // 타겟 기준으로 토글(상태의 단일 기준)
-      var nowThumb = toggleType($target);
-
-      // 버튼도 동일 상태로 맞춤
-      syncBtnState($btn, nowThumb);
-    });
-
-    // 초기 상태 동기화(타겟 기준으로 버튼 클래스/aria 맞춤)
+  // 초기 상태 동기화(타겟 기준으로 버튼 클래스/aria 맞춤)
+  function syncInitialState() {
     $(TOGGLE_BTN).each(function () {
       var $btn = $(this);
       var $target = getTargetByBtn($btn);
 
-      ensureInitialType($btn);
-      ensureInitialType($target);
+      normalizeTypeClass($btn);
+      normalizeTypeClass($target);
 
       syncBtnState($btn, isThumb($target));
     });
   }
 
+  // 이벤트 바인딩(init 재호출 대비)
+  function bind() {
+    $(document)
+      .off('click' + NS, TOGGLE_BTN)
+      .on('click' + NS, TOGGLE_BTN, function (e) {
+        e.preventDefault();
+        handleToggle($(this));
+      });
+  }
+
   window.UI.plpViewToggle = {
     init: function () {
       bind();
+      syncInitialState();
+    },
+    destroy: function () {
+      $(document).off(NS);
     }
   };
 })(window.jQuery || window.$, window, document);
