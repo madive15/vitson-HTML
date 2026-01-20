@@ -1,0 +1,166 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%# S: 카테고리 데이터 불러오기 %>
+<%- include(`${_src}/views/mock-data/common/category.mock.ejs`) %>
+
+<%
+  // category.mock.ejs가 mockData를 선언/세팅하는 방식이 섞여있을 수 있어 폴백
+  var mockData =
+    (typeof mockData !== 'undefined' && mockData)
+      ? mockData
+      : ((typeof globalThis !== 'undefined' && globalThis.__mockData) ? globalThis.__mockData : {});
+%>
+
+<%
+  /* 퍼블 테스트용 초기값(원하면 페이지에서만 설정) */
+  if (mockData && mockData.category && mockData.category.path) {
+    mockData.category.path.depth1Id = '074069';
+    mockData.category.path.depth2Id = '0740690492';
+    mockData.category.path.depth3Id = '07406904922701';
+  }
+
+  var treeData = (mockData && mockData.category && Array.isArray(mockData.category.tree)) ? mockData.category.tree : [];
+  var lv1List = treeData.filter(function(n){ return n && n.categoryCode; });
+
+  var depth1Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth1Id || '') : '';
+  var depth2Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth2Id || '') : '';
+  var depth3Id = (mockData && mockData.category && mockData.category.path) ? (mockData.category.path.depth3Id || '') : '';
+%>
+<%# E: 카테고리 데이터 불러오기 %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '대/중/소 카테고리 상품목록'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-inner inner-column">
+              <%# plp-titlebar.ejs: expects {_src, lv1List, depth1Id, depth2Id, depth3Id} %>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/pg-category/plp-titlebar.ejs`, {
+                _src: _src,
+                lv1List: lv1List,
+                depth1Id: depth1Id,
+                depth2Id: depth2Id,
+                depth3Id: depth3Id
+              }) %>
+
+              <div class="vits-grid-area">
+                <%# <aside class="vits-grid-side vits-grid-side-left vits-plp-side"> %>
+                <%- include(`${_src}/views/components/pg-category/plp-left-category.ejs`, {
+                  _src: _src,
+                  mockData: mockData,
+                  depth1Id: depth1Id,
+                  depth2Id: depth2Id,
+                  depth3Id: depth3Id
+                }) %>
+                
+                <%# <div class="vits-grid-main vits-plp-main"> %>
+                <%- include(`${_src}/views/components/pg-category/plp-main.ejs`, {
+                  _src: _src,
+                  totalCount: 60,
+                  productList: [],
+                  pagination: {}  
+                }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- S: 비교함 담기 -->
+        <div class="vits-compare" data-layer-box="compareLayer" data-layer-type="compare">
+          <div class="vits-compare-list">
+            <!-- [D] 상품이 담기면 is-filled 추가, is-filled 상태에서 hover 시 삭제 버튼 노출 -->
+            <div class="vits-compare-item is-filled">
+              <!-- <img src="" alt=""> -->
+              <button type="button" class="vits-compare-item-delete" aria-label="삭제">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %> 
+              </button>
+            </div>
+
+            <!-- [D] + 버튼 클릭 시 vits-compare-item 추가 생성(동일 구조로 append) -->
+            <!-- <div class="vits-compare-item">
+              <! -- <img src="" alt=""> -- >
+               <button type="button" class="vits-compare-item-delete" aria-label="삭제">
+                < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) % > 
+               </button>
+            </div> -->
+          </div>
+
+          <div class="vits-compare-actions">
+            <div class="vits-compare-action">
+              <button type="button" class="vits-compare-add">
+                <span class="icon">
+                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %> 
+                </span>
+              </button>
+            </div>
+
+            <div class="vits-compare-action">
+              <!-- [D] 담긴 상품이 1개일 때 비교하기 비활성(2개 이상일 때 enabled) 
+                        ㄴ 비활성 : is-disabled 클래스 또는 disabled 추가
+               -->
+              <button type="button" class="vits-compare-submit is-disabled" disabled>비교하기</button>
+            </div>
+          </div>
+        </div>
+        <!-- E: 비교함 담기 -->
+
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- EJS 출력은 JSON 스크립트로 넣기(에디터 Expression expected 경고 회피) -->
+    <script type="application/json" id="vits-mockdata">
+      <%- JSON.stringify(mockData || {}).replace(/</g, '\\u003c') %>
+    </script>
+
+    <script>
+      (function () {
+        var el = document.getElementById('vits-mockdata');
+
+        try {
+          window.__mockData = el ? JSON.parse(el.textContent || '{}') : {};
+        } catch (e) {
+          window.__mockData = {};
+        }
+
+        if (window.UI && window.UI.init) {
+          window.UI.init();
+        } else if (window.UI && window.UI.select && window.UI.select.init) {
+          window.UI.select.init();
+        }
+      })();
+    </script>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 없을 때만 클래스 변경
+      if (!type) {
+        // jQuery 로드 여부 체크
+        if (typeof jQuery !== 'undefined') {
+          $('.vits-product-list').removeClass('view-thumb').addClass('view-list');
+        } else {
+          // jQuery 없으면 순수 JS로
+          document.querySelectorAll('.vits-product-list').forEach(el => {
+            el.classList.remove('view-thumb');
+            el.classList.add('view-list');
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

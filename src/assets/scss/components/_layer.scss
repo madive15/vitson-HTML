@@ -150,6 +150,45 @@ body.is-layer-open {
   transform: translateY(12px) scaleY(0.92);
 }
 
+// slide-right (오른쪽에서 외쪽으로 슬라이드 ex: 옵션 모달)
+[data-layer-box][data-layer-type='slide-right'] {
+  [class$="-panel"] {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+    transform: translateX(100%);
+    transform-origin: right center;
+  }
+}
+
+[data-layer-box][data-layer-type='slide-right'].is-open.is-active {
+  [class$="-dim"]{
+    transition: none;
+    transform: none;
+  }
+
+  [class$="-panel"] {
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      visibility 0s 0s;
+    transform: translateX(0);
+  }
+}
+
+[data-layer-box][data-layer-type='slide-right'].is-open.is-closing {
+  [class$="-panel"] {
+    transform: translateX(100%);
+  }
+  
+}
+
 /* ===========================================================
   이 위는 공통 베이스라 변경 시 전 레이어 영향 가능. 
   개별 레이어 스타일은 반드시 이 영역 아래에서 전용 선택자로만 추가 작성하세요.

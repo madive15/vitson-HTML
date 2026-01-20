@@ -1,11 +1,21 @@
 /**
  * @file scripts/ui/category/category-tree.js
- * @purpose 좌측 카테고리 드릴다운(1~3뎁스): 트리/브레드크럼 동기화 + 4뎁스(속성) 체크박스 동적 렌더
+ * @purpose 좌측 카테고리 드릴다운(1~3뎁스): 트리/브레드크럼 동기화 + 1촌 상위 표시 규칙 + 4뎁스(속성) 체크박스 동적 렌더
  * @scope .vits-category-tree 내부 + [data-plp-attr-anchor] 렌더(트리 내부 우선, 없으면 문서 fallback)
  *
+ * @display_rules
+ *  - 1뎁스 선택: 1뎁스(is-active) + 하위 2뎁스 목록
+ *  - 2뎁스 선택: 1뎁스(1촌 상위) + 2뎁스(is-active) + 하위 3뎁스 목록
+ *  - 3뎁스 선택: 2뎁스(1촌 상위) + 3뎁스(is-active) 형제 목록 (1뎁스 버튼 숨김)
+ *
+ * @click_behavior
+ *  - 1뎁스 재클릭: 2뎁스, 3뎁스 초기화 (1뎁스 + 2뎁스 목록 상태로 복귀)
+ *  - 2뎁스 재클릭: 3뎁스 초기화 (하위 없으면 무동작)
+ *  - 3뎁스 클릭: 브레드크럼 선택 후 트리 동기화
+ *
  * @assumption
- *  - 트리 버튼: .category-tree-btn (data-depth="1|2|3", data-id="code")
- *  - 상태 클래스: is-active, is-open, is-hidden
+ *  - 트리 버튼: .category-tree-btn (data-depth="1|2|3", data-id="code", data-has-children="true|false")
+ *  - 상태 클래스: is-active(최종 선택), is-open(패널 열림), is-hidden(요소 숨김)
  *  - 브레드크럼 셀렉트: [data-vits-select][data-root="cat"][data-depth="1|2|3"] + [data-vits-select-hidden]
  *  - 4뎁스 앵커: [data-plp-attr-anchor] (li 권장, 기본 is-hidden 권장)
  *  - 카테고리 트리 데이터: window.__mockData.category.tree (categoryCode/categoryNm/categoryList/categoryQty)
@@ -15,7 +25,8 @@
  *  - 문서 change 바인딩은 모듈에서 1회만 수행(중복 바인딩 방지)
  *  - 트리는 DOM 1개당 인스턴스로 분리(상태 충돌 방지)
  *  - 브레드크럼 셀렉트는 문서에서 depth별 1세트 전제(getSelectRoot는 first() 사용)
- *  - 4뎁스 앵커가 트리 외부에 있는 기존 구조를 위해 “트리 내부 우선 + 문서 fallback”을 사용
+ *  - 4뎁스 앵커가 트리 외부에 있는 기존 구조를 위해 "트리 내부 우선 + 문서 fallback"을 사용
+ *  - 3뎁스 선택 시 1뎁스 li는 유지하되 버튼만 is-hidden 처리 (하위 2,3뎁스 표시 위해)
  */
 
 (function ($, window, document) {
@@ -110,7 +121,7 @@
     }
   }
 
-  // 브레드크럼을 “비활성+옵션 비움”까지 포함해서 리셋(상위 변경 시 잔상 방지)
+  // 브레드크럼을 "비활성+옵션 비움"까지 포함해서 리셋(상위 변경 시 잔상 방지)
   function disableSelectAndClear($root) {
     if (!$root || !$root.length) return;
 
@@ -155,6 +166,11 @@
       return String($btn.attr('data-id') || '');
     }
 
+    // 버튼에 자식이 있는지 확인
+    function hasChildren($btn) {
+      return $btn.attr('data-has-children') === 'true';
+    }
+
     // 트리 버튼을 depth+code로 찾음
     function findTreeBtnByCode(depth, code) {
       var c = String(code || '');
@@ -162,12 +178,11 @@
       return $tree.find(BTN + '[data-depth="' + depth + '"][data-id="' + escAttrValue(c) + '"]').first();
     }
 
-    // 아이템의 active/open 상태를 설정
+    // 아이템의 open 상태를 설정 (패널 열림용)
     function setItemState($btn, active) {
       var $item = $btn.closest(ITEM);
       var $panel = $item.children(PANEL).first();
 
-      $item.toggleClass(CLS_ACTIVE, !!active);
       $btn.attr('aria-expanded', active ? 'true' : 'false');
 
       if ($panel.length) $panel.toggleClass(CLS_OPEN, !!active);
@@ -195,6 +210,23 @@
       });
     }
 
+    // 같은 부모를 가진 형제 버튼들을 모두 표시
+    function showSiblings($btn) {
+      var depth = getBtnDepth($btn);
+      var $item = $btn.closest(ITEM);
+      var $parentPanel = $item.parent().closest(PANEL);
+
+      if ($parentPanel.length) {
+        // 같은 부모 패널 안의 같은 depth 아이템들만 표시
+        $parentPanel.find(BTN + '[data-depth="' + depth + '"]').each(function () {
+          $(this).closest(ITEM).removeClass(CLS_HIDDEN);
+        });
+      } else {
+        // depth1인 경우 모든 depth1 표시
+        showAllAtDepth(depth);
+      }
+    }
+
     // 속성 앵커를 비우고 숨김 처리
     function hideAttrAnchor() {
       if (!$attrAnchor.length) return;
@@ -206,7 +238,7 @@
       return 'list-' + ATTR_LIST + '-gap' + ATTR_GAP;
     }
 
-    // 4뎁스 후보를 “선택된 3뎁스의 하위(categoryList)”에서만 추출
+    // 4뎁스 후보를 "선택된 3뎁스의 하위(categoryList)"에서만 추출
     function getDepth4ListFromBreadcrumb() {
       var tree = getTree();
 
@@ -228,7 +260,7 @@
       });
     }
 
-    // input-checkbox.ejs 구조로 “속성” 체크박스 영역을 렌더링
+    // input-checkbox.ejs 구조로 "속성" 체크박스 영역을 렌더링
     function renderAttrAnchor(d4List) {
       if (!$attrAnchor.length) return;
 
@@ -291,6 +323,12 @@
       resetDepthState(2);
       resetDepthState(3);
 
+      // 모든 is-active 초기화
+      $tree.find(ITEM).removeClass(CLS_ACTIVE);
+
+      // 모든 버튼 보이기
+      $tree.find(BTN).removeClass(CLS_HIDDEN);
+
       if (!d1) {
         syncDepth4Attr();
         return;
@@ -300,6 +338,11 @@
       if ($b1.length) {
         setItemState($b1, true);
         keepOnly($b1);
+
+        // 2뎁스가 없으면 1뎁스에 is-active
+        if (!d2) {
+          $b1.closest(ITEM).addClass(CLS_ACTIVE);
+        }
       }
 
       if (!d2) {
@@ -310,7 +353,23 @@
       var $b2 = findTreeBtnByCode(2, d2);
       if ($b2.length) {
         setItemState($b2, true);
-        keepOnly($b2);
+
+        // 1뎁스 is-active 제거
+        if ($b1 && $b1.length) {
+          $b1.closest(ITEM).removeClass(CLS_ACTIVE);
+        }
+
+        // 3뎁스가 없으면 2뎁스에 is-active
+        if (!d3) {
+          $b2.closest(ITEM).addClass(CLS_ACTIVE);
+        }
+
+        // 2뎁스가 마지막 레벨이면 형제 표시
+        if (!hasChildren($b2)) {
+          showSiblings($b2);
+        } else {
+          keepOnly($b2);
+        }
       }
 
       if (!d3) {
@@ -320,39 +379,51 @@
 
       var $b3 = findTreeBtnByCode(3, d3);
       if ($b3.length) {
-        setItemState($b3, true);
-        keepOnly($b3);
+        // 3뎁스 선택 시: 1뎁스 버튼만 숨김 (li는 유지)
+        if ($b1 && $b1.length) {
+          $b1.addClass(CLS_HIDDEN); // 버튼만 숨김
+        }
+
+        // 2뎁스 is-active 제거, 3뎁스에 is-active 적용
+        if ($b2 && $b2.length) {
+          $b2.closest(ITEM).removeClass(CLS_ACTIVE);
+        }
+
+        $b3.closest(ITEM).addClass(CLS_ACTIVE);
+        showSiblings($b3);
       }
 
       syncDepth4Attr();
     }
 
-    // 1뎁스 클릭을 처리(선택/되돌리기)
+    // 1뎁스 클릭을 처리
     function handleDepth1($btn) {
       var isActive = $btn.closest(ITEM).hasClass(CLS_ACTIVE);
 
       if (isActive) {
-        disableSelectAndClear(getSelectRoot(3));
-        disableSelectAndClear(getSelectRoot(2));
-        resetSelectToPlaceholder(getSelectRoot(1));
-        return;
-      }
-
-      disableSelectAndClear(getSelectRoot(3));
-      disableSelectAndClear(getSelectRoot(2));
-      clickSelectOptionByValue(getSelectRoot(1), getBtnId($btn));
-    }
-
-    // 2뎁스 클릭을 처리(선택/되돌리기)
-    function handleDepth2($btn) {
-      var isActive = $btn.closest(ITEM).hasClass(CLS_ACTIVE);
-
-      if (isActive) {
+        // 이미 선택된 1뎁스를 다시 클릭하면 2뎁스, 3뎁스 초기화
         disableSelectAndClear(getSelectRoot(3));
         resetSelectToPlaceholder(getSelectRoot(2));
         return;
       }
 
+      // 새로운 1뎁스 선택
+      disableSelectAndClear(getSelectRoot(3));
+      disableSelectAndClear(getSelectRoot(2));
+      clickSelectOptionByValue(getSelectRoot(1), getBtnId($btn));
+    }
+
+    // 2뎁스 클릭을 처리
+    function handleDepth2($btn) {
+      var isActive = $btn.closest(ITEM).hasClass(CLS_ACTIVE);
+
+      if (isActive) {
+        // 이미 선택된 2뎁스를 다시 클릭하면 3뎁스 초기화
+        disableSelectAndClear(getSelectRoot(3));
+        return;
+      }
+
+      // 새로운 2뎁스 선택
       disableSelectAndClear(getSelectRoot(3));
       clickSelectOptionByValue(getSelectRoot(2), getBtnId($btn));
     }

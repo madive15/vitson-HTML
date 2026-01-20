@@ -7,6 +7,7 @@
   var _d3 = String(depth3Id || '');
 
   function _eq(a, b) { return String(a || '') === String(b || ''); }
+  function _hasChildren(list) { return Array.isArray(list) && list.length > 0; }
 %>
 
 <nav class="vits-category-tree" aria-label="카테고리">
@@ -20,6 +21,7 @@
         class="category-tree-btn"
         data-depth="1"
         data-id="<%= d1Code %>"
+        data-has-children="<%= _hasChildren(lv2List) ? 'true' : 'false' %>"
         aria-expanded="<%= d1On ? 'true' : 'false' %>"
       >
         <span class="category-tree-text"><%= lv1.categoryNm || '' %></span>
@@ -29,40 +31,36 @@
         <% if (lv2List.length) { %>
         <ul class="category-tree-depth2">
           <% lv2List.forEach(function (lv2) { if (!lv2 || !lv2.categoryCode) return; var d2Code =
-          String(lv2.categoryCode); var d2On = d1On && _d2 && _eq(d2Code, _d2); var hideD2 = (d1On && _d2) ? !d2On :
-          false; var lv3List = Array.isArray(lv2.categoryList) ? lv2.categoryList : []; %>
+          String(lv2.categoryCode); var d2On = d1On && _d2 && _eq(d2Code, _d2); var lv3List =
+          Array.isArray(lv2.categoryList) ? lv2.categoryList : []; var hideD2 = _hasChildren(lv3List) ? ((d1On && _d2) ?
+          !d2On : false) : false; %>
           <li class="category-tree-item <%= d2On ? 'is-active' : '' %><%= hideD2 ? ' is-hidden' : '' %>">
             <button
               type="button"
               class="category-tree-btn"
               data-depth="2"
               data-id="<%= d2Code %>"
+              data-has-children="<%= _hasChildren(lv3List) ? 'true' : 'false' %>"
               aria-expanded="<%= d2On ? 'true' : 'false' %>"
             >
               <span class="category-tree-text"><%= lv2.categoryNm || '' %></span>
-              <span class="icon" aria-hidden="true">
-                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
-              </span>
             </button>
 
             <div class="category-tree-panel <%= d2On ? 'is-open' : '' %>">
               <% if (lv3List.length) { %>
               <ul class="category-tree-depth3">
                 <% lv3List.forEach(function (lv3) { if (!lv3 || !lv3.categoryCode) return; var d3Code =
-                String(lv3.categoryCode); var d3On = d2On && _d3 && _eq(d3Code, _d3); var hideD3 = (d2On && _d3) ? !d3On
-                : false; %>
-                <li class="category-tree-item <%= d3On ? 'is-active' : '' %><%= hideD3 ? ' is-hidden' : '' %>">
+                String(lv3.categoryCode); var d3On = d2On && _d3 && _eq(d3Code, _d3); %>
+                <li class="category-tree-item <%= d3On ? 'is-active' : '' %>">
                   <button
                     type="button"
                     class="category-tree-btn"
                     data-depth="3"
                     data-id="<%= d3Code %>"
+                    data-has-children="false"
                     aria-expanded="false"
                   >
                     <span class="category-tree-text"><%= lv3.categoryNm || '' %></span>
-                    <span class="icon" aria-hidden="true">
-                      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
-                    </span>
                   </button>
                 </li>
                 <% }) %>

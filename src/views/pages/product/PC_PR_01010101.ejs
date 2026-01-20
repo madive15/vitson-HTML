@@ -55,7 +55,7 @@
                   <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %></span>
                 </div>
               </div>
-              <div class="vits-product-detail-container" data-toggle-scope data-toggle-group="true">
+              <div class="vits-product-detail-container">
                 <div class="vits-deal-view">
                   <%- include(`${_src}/views/components/pg-product/swiper-gallery.ejs`) %>
                   <div class="vits-deal-info">
@@ -108,15 +108,15 @@
                           </li>
                           <li>
                             <div class="discount-coupon">
+                              <!-- [D] 쿠폰받기 비활성화시 disabled 추가 -->
                               <!-- prettier-ignore -->
                               <%- include(`${_src}/views/components/button/button.ejs`, {
                                 size:'lg', 
                                 variant: 'outline-primary', 
                                 text:'할인쿠폰받기', 
                                 iconLeft: true, 
-                                //disabled: true, class: 'disabled'
                                 iconName: 'ic-line-download',
-                                attrs: 'data-toggle-btn aria-expanded="false" data-toggle-target="get-coupon-modal" '
+                                attrs: 'data-layer-btn aria-controls="get-coupon-modal" data-layer-target="get-coupon-modal" data-aria-label-base="쿠폰받기 모달" aria-expanded="false"'
                               }) %>
                             </div>
                           </li>
@@ -220,9 +220,11 @@
                         <div class="vits-btn-option">
                           <!-- prettier-ignore -->
                           <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" 
-                            data-toggle-btn 
+                            data-layer-btn
+                            aria-controls="vits-options-modal"
+                            data-layer-target="vits-options-modal"
                             aria-expanded="false"
-                            data-toggle-target="vits-options-modal" 
+                            data-aria-label-base="다른규격 선택 모달"
                             >
                             <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span>
                             <span class="icon">
