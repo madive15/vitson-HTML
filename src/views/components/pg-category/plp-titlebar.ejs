@@ -1,4 +1,13 @@
+<!-- prettier-ignore -->
+<% 
+  // hideBreadcrumb: true면 breadcrumb 숨김, false 또는 미전달 시 breadcrumb 노출
+  const hideBreadcrumb = locals.hideBreadcrumb === true; 
+  // breadcrumb 숨길 때 표시할 타이틀 (기본: '현재 카테고리 이름')
+  const customTitle = locals.customTitle || '현재 카테고리 이름';
+%>
+
 <header class="vits-plp-titlebar">
+  <% if (!hideBreadcrumb) { %>
   <nav class="vits-breadcrumb vits-plp-titlebar-breadcrumb">
     <ul class="vits-breadcrumb-list">
       <li class="vits-breadcrumb-menu">
@@ -50,10 +59,11 @@
       </li>
     </ul>
   </nav>
+  <% } %>
 
   <div class="vits-plp-titlebar-main">
     <div class="vits-plp-titlebar-head">
-      <div class="vits-plp-titlebar-heading" data-plp-category-title data-root="cat">현재 카테고리 이름</div>
+      <div class="vits-plp-titlebar-heading" data-plp-category-title data-root="cat"><%= customTitle %></div>
       <div class="vits-plp-titlebar-research">
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/form/input-search.ejs`, {

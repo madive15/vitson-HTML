@@ -263,14 +263,15 @@ $list-directions: (
   &-section,
   &-list {
     @include mx.flex(flex, column);
-    gap: map.get(var.$unit, 40);
   }
 
-  &-section:has(.vits-product-list-items.view-thumb) {
+  &-section {
     gap: map.get(var.$unit, 24);
   }
 
   &-list {
+    gap: map.get(var.$unit, 40);
+
     // 회원 시, 비노출
     [data-member='true'] {
       .product-price-alt.is-guest {
@@ -312,113 +313,6 @@ $list-directions: (
 
   &-pagination {
     @include mx.flex(flex, row, center, center);
-  }
-}
-
-// 리스트형
-.vits-product-list.view-list {
-  .vits-product {
-    &-list-items {
-      @include mx.flex(flex, column, flex-start, flex-start);
-    }
-
-    &-item {
-      @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
-      width: 100%;
-      padding: map.get(var.$unit, 16) 0;
-
-      &:first-of-type {
-        @include mx.border('top', $color: map.get(color.$layout-surf, 'secondary'));
-      }
-    }
-  }
-
-  .vits-product-card {
-    @include mx.flex(flex, row, flex-start, stretch);
-    gap: map.get(var.$unit, 20);
-
-    .product {
-      &-thumb {
-        flex: 0 0 fn.rem(160);
-      }
-
-      &-body {
-        flex-grow: 1;
-        grid-template:
-          'meta    price actions' auto
-          'summary price actions' auto
-          'code    price actions' auto
-          'extra   price actions' 1fr
-          / 35.51% 29.23% 24.1%;
-        column-gap: 41px;
-        min-width: 0;
-      }
-
-      &-code {
-        grid-area: code;
-        width: fit-content;
-      }
-
-      &-actions {
-        grid-area: actions;
-        gap: map.get(var.$unit, 16);
-        justify-content: center;
-
-        button[class*='product-action-'] {
-          @include mx.flex(flex, column, center, center);
-          gap: map.get(var.$unit, 8);
-          text-align: center;
-
-          .ic {
-            width: map.get(var.$unit, 32);
-            height: map.get(var.$unit, 32);
-          }
-
-          .text {
-            @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '1'));
-          }
-        }
-      }
-
-      &-meta {
-        grid-area: meta;
-      }
-
-      &-price,
-      &-actions {
-        position: relative;
-        display: flex;
-        place-self: stretch;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-
-        &::before {
-          @include mx.position(absolute, 0, $left: calc(41px / 2 * -1), $bottom: 0);
-          width: 1px;
-          content: '';
-          background: map.get(color.$layout-surf, 'secondary');
-        }
-      }
-
-      &-price {
-        flex-direction: column;
-        grid-area: price;
-      }
-
-      &-summary {
-        grid-area: summary;
-
-        @include mx.flex(flex, column);
-        gap: map.get(var.$unit, 2);
-        padding: map.get(var.$unit, 2) 0 map.get(var.$unit, 8);
-      }
-
-      &-extra {
-        grid-area: extra;
-        align-self: flex-end;
-      }
-    }
   }
 }
 
@@ -503,6 +397,173 @@ $list-directions: (
       &-extra {
         grid-area: extra;
         margin-top: map.get(var.$unit, 4);
+      }
+    }
+  }
+}
+
+// 리스트형
+.vits-product-list.view-list {
+  .vits-product {
+    &-list-items {
+      @include mx.flex(flex, column, flex-start, flex-start);
+    }
+
+    &-item {
+      @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
+      width: 100%;
+      padding: map.get(var.$unit, 16) 0;
+
+      &:first-of-type {
+        @include mx.border('top', $color: map.get(color.$layout-surf, 'secondary'));
+      }
+    }
+  }
+
+  .vits-product-card {
+    @include mx.flex(flex, row, flex-start, stretch);
+    gap: map.get(var.$unit, 20);
+
+    .product {
+      &-thumb {
+        flex: 0 0 fn.rem(160);
+      }
+
+      &-body {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      &-code {
+        width: fit-content;
+      }
+
+      &-actions {
+        gap: map.get(var.$unit, 16);
+        justify-content: center;
+
+        button[class*='product-action-'] {
+          @include mx.flex(flex, column, center, center);
+          gap: map.get(var.$unit, 8);
+          text-align: center;
+
+          .ic {
+            width: map.get(var.$unit, 32);
+            height: map.get(var.$unit, 32);
+          }
+
+          .text {
+            @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '1'));
+          }
+        }
+      }
+
+      &-price,
+      &-actions {
+        position: relative;
+        display: flex;
+        place-self: stretch;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+
+        &::before {
+          @include mx.position(absolute, 0, $left: calc(41px / 2 * -1), $bottom: 0);
+          width: 1px;
+          content: '';
+          background: map.get(color.$layout-surf, 'secondary');
+        }
+      }
+
+      &-price {
+        flex-direction: column;
+      }
+
+      &-summary {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 2);
+        padding: map.get(var.$unit, 2) 0 map.get(var.$unit, 8);
+      }
+
+      &-extra {
+        align-self: flex-end;
+      }
+    }
+  }
+
+  // 회원용 그리드 템플릿
+  &:has(.vits-product-item[data-member='true']) {
+    .vits-product-item[data-member='true'] .vits-product-card .product {
+      &-body {
+        grid-template:
+          'meta    price actions' auto
+          'summary price actions' auto
+          'code    price actions' auto
+          'extra   price actions' 1fr
+          / 35.51% 29.23% 24.1%;
+        column-gap: 41px;
+      }
+
+      &-actions {
+        grid-area: actions;
+      }
+
+      &-meta {
+        grid-area: meta;
+      }
+
+      &-summary {
+        grid-area: summary;
+      }
+
+      &-code {
+        grid-area: code;
+      }
+
+      &-price {
+        grid-area: price;
+      }
+
+      &-extra {
+        grid-area: extra;
+      }
+    }
+  }
+
+  // 비회원용 그리드 템플릿
+  &:has(.vits-product-item[data-member='false']) {
+    .vits-product-item[data-member='false'] .vits-product-card .product {
+      &-body {
+        grid-template-rows: auto auto auto 1fr;
+        grid-template-columns: 35.51% 29.23% 24.1%;
+        column-gap: 41px;
+      }
+
+      &-meta {
+        grid-area: 1 / 1;
+      }
+
+      &-summary {
+        grid-area: 2 / 1;
+      }
+
+      &-code {
+        grid-area: 3 / 1;
+      }
+
+      &-price {
+        grid-row: 1 / 5; // 1~4번째 행
+        grid-column: 2 / 4; // 2~3번째 컬럼
+        align-items: flex-end;
+
+        .product-price-alt.is-guest {
+          width: 45.19%;
+        }
+
+        .product-price-alt.is-guest,
+        .price-guest-text {
+          align-items: center;
+        }
       }
     }
   }

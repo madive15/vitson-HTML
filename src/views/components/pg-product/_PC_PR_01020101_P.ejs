@@ -1,10 +1,23 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- 옵션선택 modal -->
-<div class="vits-modal-product-modal vits-options-modal" data-toggle-box="vits-options-modal">
-  <div class="vits-modal-product-dim" data-toggle-dim="vits-options-modal"></div>
+<!-- prettier-ignore -->
+<div class="vits-modal-product-modal vits-options-modal" 
+  data-toggle-scope
+  
+  id="vits-options-modal"
+  data-layer-box="vits-options-modal"
+  data-layer-type="slide-right"
+  data-layer-lock="true"
+  data-layer-outside="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="options-title"
+>
+  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
+
   <div class="vits-modal-product-panel">
     <div class="vits-modal-product-head">
-      <h2>다른규격 선택</h2>
+      <h2 id="options-title">다른규격 선택</h2>
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, {
         size:'xs', 
@@ -15,7 +28,7 @@
         attrs: 'data-toggle-btn aria-expanded="false" data-toggle-group-except="true" data-toggle-target="filter-box" '
       }) %>
       <div class="vits-modal-product-close">
-        <button type="button" class="icon" data-toggle-btn="" data-toggle-target="vits-options-modal">
+        <button type="button" class="icon" aria-label="닫기" data-layer-close>
           <i class="ic ic-x"></i>
         </button>
       </div>

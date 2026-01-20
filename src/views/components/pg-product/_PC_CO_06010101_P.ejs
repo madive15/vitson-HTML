@@ -1,12 +1,22 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- 쿠폰받기 modal -->
-<div class="vits-modal-product-modal get-coupon-modal" data-toggle-box="get-coupon-modal">
-  <div class="vits-modal-product-dim" data-toggle-dim="get-coupon-modal"></div>
+<!-- prettier-ignore -->
+<div class="vits-modal-product-modal get-coupon-modal" 
+  id="get-coupon-modal"
+  data-layer-box="get-coupon-modal"
+  data-layer-type="modal"
+  data-layer-lock="true"
+  data-layer-outside="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="coupon-title"
+>
+  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
   <div class="vits-modal-product-panel">
     <div class="vits-modal-product-head">
-      <h2>쿠폰 다운로드 및 적용<span class="description">해당 상품에 제공되는 전체 쿠폰 목록입니다.</span></h2>
+      <h2 id="coupon-title">쿠폰 다운로드 및 적용<span class="description">해당 상품에 제공되는 전체 쿠폰 목록입니다.</span></h2>
       <div class="vits-modal-product-close">
-        <button type="button" class="icon" data-toggle-btn="" data-toggle-target="get-coupon-modal">
+        <button type="button" class="icon" data-layer-close>
           <i class="ic ic-x"></i>
         </button>
       </div>

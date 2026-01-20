@@ -387,6 +387,10 @@
       border-radius: map.get(var.$radius, sm);
 
       @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
+
+      .content-text {
+        white-space: pre-wrap;
+      }
     }
   }
 
@@ -1692,13 +1696,10 @@
 
     // options-modal
     &.vits-options-modal {
-      overflow: hidden;
-      transition: none;
-
       .vits-modal-product-dim {
-        display: none;
+        pointer-events: none;
+        visibility: hidden;
         opacity: 0;
-        transition: opacity 0.3s ease;
       }
 
       .vits-modal-product-panel {
@@ -1706,8 +1707,6 @@
         height: 100vh;
         max-height: none;
         border-radius: 0;
-        transition: transform 0.3s ease;
-        transform: translateX(100%);
 
         .vits-modal-product-head {
           @include mx.flex($justify: space-between);
@@ -1757,16 +1756,14 @@
       }
 
       &.is-open {
-        transition: none;
-
         .vits-modal-product-dim {
-          display: block;
+          pointer-events: auto;
+          visibility: visible;
           opacity: 1;
         }
 
         .vits-modal-product-panel {
           max-width: 512px;
-          transform: translateX(0);
         }
       }
     }
