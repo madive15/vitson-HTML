@@ -293,7 +293,7 @@ import Swiper from 'swiper/bundle';
       spaceBetween: 17.6,
       speed: 400,
       breakpoints: {
-        1024: {slidesPerView: 4},
+        1024: {slidesPerView: 5},
         1280: {slidesPerView: 6}
       }
     }
@@ -365,7 +365,7 @@ import Swiper from 'swiper/bundle';
       }
 
       new Swiper(el, {
-        slidesPerView: 1,
+        slidesPerView: 5, //기본값
         spaceBetween: preset.spaceBetween,
         speed: preset.speed,
         slidesOffsetBefore: offsetBefore,

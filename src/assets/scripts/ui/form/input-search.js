@@ -14,6 +14,10 @@
  *  - onSubmit(query, ctx) 반환값:
  *    - false => invalid 표시(중복 등)
  *    - 그 외 => invalid 해제(정상)
+ *
+ * @maintenance
+ *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
+ *  - 빈 값 submit은 무시(에러 표시 없음)하는 정책을 유지
  */
 
 (function ($, window, document) {
@@ -24,11 +28,15 @@
   window.UI = window.UI || {};
   window.UI.inputSearch = window.UI.inputSearch || {};
 
-  var NS = '.uiInputSearch';
+  var MODULE_KEY = 'inputSearch';
+  var NS = '.' + MODULE_KEY;
+
   var FORM = '[data-search-form]';
   var INPUT = '[data-search-input]';
+  var VALID_WRAP = '.vits-input-search.vits-validation';
+  var VALID_MSG = '.input-validation';
 
-  // 문자열 앞뒤 공백을 제거
+  // 문자열 앞뒤 공백 제거
   function trimText(str) {
     return String(str || '').replace(/^\s+|\s+$/g, '');
   }
@@ -40,8 +48,9 @@
 
   // input 기준으로 validation 메시지 엘리먼트를 찾음
   function findValidation($input) {
-    var $wrap = $input.closest('.vits-input-search.vits-validation');
-    return $wrap.length ? $wrap.find('.input-validation').first() : $();
+    if (!$input || !$input.length) return $();
+    var $wrap = $input.closest(VALID_WRAP);
+    return $wrap.length ? $wrap.find(VALID_MSG).first() : $();
   }
 
   // validation UI를 토글(input aria-invalid + 메시지 hidden)
@@ -50,9 +59,14 @@
     if ($validation && $validation.length) $validation.prop('hidden', !on);
   }
 
+  // 옵션에서 onSubmit 훅을 안전하게 추출
+  function getOnSubmit(opt) {
+    return opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
+  }
+
   // 입력 중이면 validation을 해제
   function bindClearOnInput($input, $validation) {
-    if (!$input.length) return;
+    if (!$input || !$input.length) return;
 
     $input.off('input' + NS).on('input' + NS, function () {
       setInvalid($input, $validation, false);
@@ -61,10 +75,9 @@
 
   // submit 시 query를 정규화하고 onSubmit/이벤트로 전달
   function bindSubmit($form, $input, $validation, opt) {
-    if (!$form.length || !$input.length) return;
+    if (!$form || !$form.length || !$input || !$input.length) return;
 
-    var options = opt || {};
-    var onSubmit = typeof options.onSubmit === 'function' ? options.onSubmit : null;
+    var onSubmit = getOnSubmit(opt);
 
     $form.off('submit' + NS).on('submit' + NS, function (e) {
       e.preventDefault();
@@ -83,20 +96,46 @@
       setInvalid($input, $validation, !ok);
 
       // 공통 이벤트(필요 시 다른 레이어에서도 구독 가능)
-      $(document).trigger('ui:input-search-submit', {query: query, form: $form[0], input: $input[0]});
+      $(document).trigger('ui:input-search-submit', {
+        query: query,
+        form: $form[0],
+        input: $input[0]
+      });
     });
+  }
+
+  // 단일 폼에 필요한 요소를 정규화해 반환($validation은 없으면 자동 탐색)
+  function resolveElements(arg) {
+    // 단일형: init({$form,$input,$validation}, opt)
+    if (arg && arg.$form && arg.$input) {
+      return {
+        $form: arg.$form,
+        $input: arg.$input,
+        $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
+      };
+    }
+
+    // 내부용(스캔형): initOne($form, opt)
+    if (arg && arg.$form && !arg.$input) {
+      var $input = arg.$form.find(INPUT).first();
+      return {
+        $form: arg.$form,
+        $input: $input,
+        $validation: $input.length ? findValidation($input) : $()
+      };
+    }
+
+    return null;
   }
 
   // 폼 1개 단위를 초기화
   function initOne($form, opt) {
-    var $input = $form.find(INPUT).first();
-    if (!$input.length) return;
+    var el = resolveElements({$form: $form});
+    if (!el || !el.$input || !el.$input.length) return;
 
-    var $validation = findValidation($input);
-
-    setInvalid($input, $validation, false);
-    bindClearOnInput($input, $validation);
-    bindSubmit($form, $input, $validation, opt);
+    setInvalid(el.$input, el.$validation, false);
+    bindClearOnInput(el.$input, el.$validation);
+    bindSubmit(el.$form, el.$input, el.$validation, opt);
   }
 
   // root 범위에서 폼들을 스캔해 초기화
@@ -123,12 +162,11 @@
   // init 시그니처를 2가지로 지원(스캔형 / 단일형)
   window.UI.inputSearch.init = function (arg, opt) {
     // 단일형: init({$form,$input,$validation}, { onSubmit })
-    if (arg && arg.$form && arg.$input) {
-      var $validation = arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input);
-
-      setInvalid(arg.$input, $validation, false);
-      bindClearOnInput(arg.$input, $validation);
-      bindSubmit(arg.$form, arg.$input, $validation, opt);
+    var el = resolveElements(arg);
+    if (el && el.$form && el.$input && el.$input.length) {
+      setInvalid(el.$input, el.$validation, false);
+      bindClearOnInput(el.$input, el.$validation);
+      bindSubmit(el.$form, el.$input, el.$validation, opt);
       return;
     }
 

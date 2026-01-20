@@ -10,6 +10,7 @@
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
 import '../ui/toggle.js';
+import '../ui/scroll-boundary.js';
 import '../ui/layer.js';
 import '../ui/swiper.js';
 import '../ui/chip-button.js';
@@ -44,6 +45,7 @@ import '../ui/filter-expand.js';
    */
   window.UI.init = function () {
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
@@ -62,7 +64,7 @@ import '../ui/filter-expand.js';
     if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
 
-    if (window.UI.select && window.UI.select.init) window.UI.select.init();
+    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
     if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
     if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
     if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();

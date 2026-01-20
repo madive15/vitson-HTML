@@ -13,9 +13,12 @@
  *
  * @dependency
  *  - scripts/ui/form/input-search.js (정규화/validation 처리)
+ *
+ * @maintenance
+ *  - ui:chip-remove는 "모든 칩" 이벤트이므로, 삭제된 칩이 현재 root 내부일 때만 동기화한다(페이지/영역 혼재 대비).
  */
 
-(function ($, window) {
+(function ($, window, document) {
   'use strict';
 
   if (!$) return;
@@ -24,6 +27,7 @@
 
   var ROOT_SEL = '.vits-plp-titlebar';
   var CLS_HIDDEN = 'is-hidden';
+
   var NAV_OFFSET = 45;
   var THRESHOLD = 8;
 
@@ -298,8 +302,20 @@
       });
     }
 
-    // chip-button.js 삭제 후 이벤트 수신 → 노출/네비 동기화
-    $(document).on('ui:chip-remove.plpResearch', function () {
+    // chip-button.js 삭제 이벤트 수신 → "현재 root 내부 칩 삭제"일 때만 동기화
+    $(document).on('ui:chip-remove.plpResearch', function (e, payload) {
+      var chipEl = payload && payload.chipEl ? payload.chipEl : null;
+      if (!chipEl) {
+        // payload가 없는 구버전이라면, 페이지가 분리된 전제에서만 동기화(최소 유지)
+        window.requestAnimationFrame(function () {
+          syncVisibility(els);
+        });
+        return;
+      }
+
+      if (!els.$root.length) return;
+      if (!els.$root[0].contains(chipEl)) return;
+
       window.requestAnimationFrame(function () {
         syncVisibility(els);
       });
@@ -335,4 +351,4 @@
       });
     }
   };
-})(window.jQuery || window.$, window);
+})(window.jQuery || window.$, window, document);
