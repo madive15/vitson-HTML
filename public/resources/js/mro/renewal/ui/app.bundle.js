@@ -1,546 +1,6 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
-var utils = __webpack_require__(918);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
-var toggle = __webpack_require__(344);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
-var scroll_boundary = __webpack_require__(160);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
-var ui_layer = __webpack_require__(847);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(111);
-;// ./src/assets/scripts/ui/swiper.js
-/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
-  - <button ... data-main-prev></button>
-  - <button ... data-main-next></button>
-  - var mainPrev = root.querySelector("[data-main-prev]");
-  - var mainNext = root.querySelector("[data-main-next]");
-  - mainPrev.addEventListener("click", ...);
-  - mainNext.addEventListener("click", ...);
-  - mainPrev.classList.add("swiper-button-disabled");
-  - mainNext.classList.add("swiper-button-disabled");
-  - mainPrev.classList.remove("swiper-button-disabled");
-  - mainNext.classList.remove("swiper-button-disabled");
-  - if (currentIndex <= 0) mainPrev... else ...
-  - if (currentIndex >= last) mainNext... else ...
-*/
-
-
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  var root = document.querySelector('[data-test-gallery]');
-  if (!root) return;
-  var mainEl = root.querySelector('[data-main-swiper]');
-  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
-  var mainWrapper = root.querySelector('[data-main-wrapper]');
-  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
-  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
-  var mainPrev = root.querySelector('[data-main-prev]');
-  var mainNext = root.querySelector('[data-main-next]');
-  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
-  var thumbsNext = root.querySelector('[data-thumbs-next]');
-  if (!thumbsPrev || !thumbsNext) return;
-  var zoomBox = root.querySelector('[data-zoom]');
-  var zoomImg = root.querySelector('[data-zoom-img]');
-  var ZOOM_RATIO = 3;
-
-  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
-  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
-  var items = mainSlides.map(function (slide) {
-    var img = slide.querySelector('[data-main-img]');
-    if (img) {
-      return {
-        type: 'image',
-        src: img.src,
-        alt: img.alt || ''
-      };
-    }
-    return {
-      type: 'iframe',
-      src: '',
-      alt: ''
-    };
-  });
-  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
-  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
-    loop: false,
-    slidesPerView: 'auto',
-    spaceBetween: 7,
-    centeredSlides: false,
-    centeredSlidesBounds: false,
-    centerInsufficientSlides: false,
-    watchSlidesProgress: true,
-    allowTouchMove: false
-  });
-  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
-    loop: false,
-    slidesPerView: 1,
-    allowTouchMove: true
-  });
-  var currentIndex = 0;
-  function clampIndex(i) {
-    var last = items.length - 1;
-    if (i < 0) return 0;
-    if (i > last) return last;
-    return i;
-  }
-  function setIndex(nextIndex) {
-    currentIndex = clampIndex(nextIndex);
-    mainSwiper.slideTo(currentIndex);
-    thumbsSwiper.slideTo(currentIndex);
-    thumbBtns.forEach(function (btn, i) {
-      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
-    });
-    var last = items.length - 1;
-    if (items.length <= 1) {
-      thumbsPrev.classList.add('is-hidden');
-      thumbsNext.classList.add('is-hidden');
-    } else {
-      thumbsPrev.classList.remove('is-hidden');
-      thumbsNext.classList.remove('is-hidden');
-    }
-    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
-    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
-    if (mainPrev) {
-      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
-    }
-    if (mainNext) {
-      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
-    }
-    if (zoomImg) {
-      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
-    }
-    if (!items[currentIndex].src) hideZoom();
-  }
-  if (mainPrev) {
-    mainPrev.addEventListener('click', function () {
-      setIndex(currentIndex - 1);
-    });
-  }
-  if (mainNext) {
-    mainNext.addEventListener('click', function () {
-      setIndex(currentIndex + 1);
-    });
-  }
-  thumbsPrev.addEventListener('click', function () {
-    setIndex(currentIndex - 1);
-  });
-  thumbsNext.addEventListener('click', function () {
-    setIndex(currentIndex + 1);
-  });
-  thumbBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var idx = parseInt(btn.getAttribute('data-index'), 10);
-      if (isNaN(idx)) return;
-      setIndex(idx);
-    });
-  });
-  function hideZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.remove('is-on');
-    zoomBox.setAttribute('aria-hidden', 'true');
-  }
-  function showZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.add('is-on');
-    zoomBox.setAttribute('aria-hidden', 'false');
-  }
-  function ensureNatural(img, cb) {
-    if (!img) return;
-    if (img.complete && img.naturalWidth && img.naturalHeight) {
-      cb(img.naturalWidth, img.naturalHeight);
-      return;
-    }
-    img.addEventListener('load', function onLoad() {
-      img.removeEventListener('load', onLoad);
-      cb(img.naturalWidth, img.naturalHeight);
-    });
-  }
-  function getContainRect(containerW, containerH, naturalW, naturalH) {
-    var scale = Math.min(containerW / naturalW, containerH / naturalH);
-    var drawW = naturalW * scale;
-    var drawH = naturalH * scale;
-    var offsetX = (containerW - drawW) / 2;
-    var offsetY = (containerH - drawH) / 2;
-    return {
-      x: offsetX,
-      y: offsetY,
-      w: drawW,
-      h: drawH
-    };
-  }
-  function getActiveImgEl() {
-    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
-  }
-  if (zoomBox && zoomImg) {
-    mainEl.addEventListener('mouseenter', function () {
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      showZoom();
-    });
-    mainEl.addEventListener('mouseleave', function () {
-      hideZoom();
-    });
-    mainEl.addEventListener('mousemove', function (e) {
-      if (!zoomBox.classList.contains('is-on')) return;
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      var contRect = mainEl.getBoundingClientRect();
-      var cx = e.clientX - contRect.left;
-      var cy = e.clientY - contRect.top;
-      ensureNatural(img, function (nw, nh) {
-        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
-        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
-          hideZoom();
-          return;
-        } else {
-          showZoom();
-        }
-        var rx = (cx - cr.x) / cr.w;
-        var ry = (cy - cr.y) / cr.h;
-        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
-        var ratio = baseRatio * ZOOM_RATIO;
-        var zoomW = nw * ratio;
-        var zoomH = nh * ratio;
-        zoomImg.style.width = zoomW + 'px';
-        zoomImg.style.height = zoomH + 'px';
-        var zw = zoomBox.clientWidth;
-        var zh = zoomBox.clientHeight;
-        var left = -(rx * (zoomW - zw));
-        var top = -(ry * (zoomH - zh));
-        if (left > 0) left = 0;
-        if (top > 0) top = 0;
-        if (left < -(zoomW - zw)) left = -(zoomW - zw);
-        if (top < -(zoomH - zh)) top = -(zoomH - zh);
-        zoomImg.style.left = left + 'px';
-        zoomImg.style.top = top + 'px';
-      });
-    });
-  }
-  setIndex(0);
-})();
-
-/**
- * Swiper 타입별 기본 옵션 정의
- * - 여기만 수정하면 전체 Swiper에 반영됨
- */
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  const DEFAULT_OFFSET = {
-    before: 0,
-    after: 0
-  };
-  const SWIPER_PRESETS = {
-    test: {
-      spaceBetween: 32.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 2
-        },
-        1280: {
-          slidesPerView: 2
-        }
-      }
-    },
-    card: {
-      slidesPerView: 5,
-      spaceBetween: 27.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 4
-        },
-        1280: {
-          slidesPerView: 5
-        }
-      }
-    },
-    slim: {
-      spaceBetween: 17.6,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 5
-        },
-        1280: {
-          slidesPerView: 6
-        }
-      }
-    }
-  };
-  function initSwipers() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(initSwipers, 100);
-      return;
-    }
-    document.querySelectorAll('.js-swiper').forEach(function (el) {
-      const type = el.dataset.swiperType;
-      if (!SWIPER_PRESETS[type]) return;
-
-      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
-      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
-
-      // offset 개별 제어
-      const offsetBeforeAttr = el.getAttribute('data-offset-before');
-      const offsetAfterAttr = el.getAttribute('data-offset-after');
-      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
-      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
-
-      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
-      const desktopView = el.dataset.desktop;
-      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
-        preset.breakpoints[1280].slidesPerView = Number(desktopView);
-      }
-
-      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
-      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
-        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
-          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
-          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
-          }
-          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
-          }
-        });
-      }
-
-      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
-      var nextEl = el.querySelector('.swiper-button-next');
-      var prevEl = el.querySelector('.swiper-button-prev');
-
-      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
-      if (!nextEl || !prevEl) {
-        // container의 부모 요소에서 vits-swiper-navs 찾기
-        const parent = el.parentElement;
-        if (parent) {
-          const navsContainer = parent.querySelector('.vits-swiper-navs');
-          if (navsContainer) {
-            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
-          }
-        }
-
-        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
-        if ((!nextEl || !prevEl) && el.nextElementSibling) {
-          const nextSibling = el.nextElementSibling;
-          if (nextSibling.classList.contains('vits-swiper-navs')) {
-            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
-          }
-        }
-      }
-      new swiper_bundle/* default */.A(el, {
-        slidesPerView: 5,
-        //기본값
-        spaceBetween: preset.spaceBetween,
-        speed: preset.speed,
-        slidesOffsetBefore: offsetBefore,
-        slidesOffsetAfter: offsetAfter,
-        centeredSlides: false,
-        navigation: {
-          nextEl: nextEl,
-          prevEl: prevEl
-        },
-        pagination: {
-          el: el.querySelector('.swiper-pagination'),
-          clickable: true
-        },
-        breakpoints: preset.breakpoints
-      });
-    });
-  }
-  function waitForDependencies() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(waitForDependencies, 100);
-      return;
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSwipers);
-    } else {
-      initSwipers();
-    }
-  }
-  waitForDependencies();
-})();
-
-// window.UI.swiper로 등록 (선택적)
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  window.UI.swiper = {
-    init: function () {
-      // 이미 자동 실행되므로 빈 함수로 유지
-      // 필요시 여기에 추가 초기화 로직 작성
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
-var chip_button = __webpack_require__(755);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
-var quantity_stepper = __webpack_require__(397);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
-var form_textarea = __webpack_require__(803);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
-var kendo_dropdown = __webpack_require__(47);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
-var header_rank = __webpack_require__(596);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
-var header_search = __webpack_require__(978);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
-var header_gnb = __webpack_require__(105);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
-var footer = __webpack_require__(795);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
-var tab_scrollbar = __webpack_require__(986);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
-var form_select = __webpack_require__(865);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
-var input_search = __webpack_require__(882);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
-var plp_titlebar_research = __webpack_require__(809);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
-var category_tree = __webpack_require__(508);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
-var plp_chip_sync = __webpack_require__(504);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
-var plp_view_toggle = __webpack_require__(342);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
-var more_expand = __webpack_require__(146);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
-var filter_expand = __webpack_require__(19);
-;// ./src/assets/scripts/core/ui.js
-/**
- * scripts/core/ui.js
- * @purpose UI 기능 모음
- * @assumption
- *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
- *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
- * @maintenance
- *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
- *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
- *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-
-  /**
-   * 공통 UI 초기화 진입점
-   * @returns {void}
-   * @example
-   * // scripts/core/common.js에서 DOMReady 시점에 호출
-   * UI.init();
-   */
-  window.UI.init = function () {
-    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
-    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
-    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
-    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
-    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
-    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
-    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-    if (window.VitsKendoDropdown) {
-      window.VitsKendoDropdown.initAll(document);
-      window.VitsKendoDropdown.autoBindStart(document.body);
-    }
-    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
-    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
-    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
-    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
-    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
-    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
-    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
-    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
-    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
-    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
-    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
-    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
-    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
-  };
-  console.log('[core/ui] loaded');
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
-var common = __webpack_require__(538);
-;// ./src/assets/scripts/index.js
-/**
- * scripts/index.js
- * @purpose 번들 엔트리(진입점)
- * @assumption
- *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
- *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
- * @maintenance
- *  - index.js는 짧게 유지한다(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
- *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
- */
-
-
-
-
-console.log('[index] entry 실행');
-;// ./src/app.js
-
-
-
-
-
-
-
-if (document.body?.dataset?.guide === 'true') {
-  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
-  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
-}
-
-// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
-// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
-// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
-// console.log('%c ====================', 'color: green');
-
-/***/ }),
-
 /***/ 19:
 /***/ (function() {
 
@@ -1738,6 +1198,733 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 205:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
+var utils = __webpack_require__(918);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
+var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
+var scroll_boundary = __webpack_require__(160);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
+var ui_layer = __webpack_require__(847);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(111);
+;// ./src/assets/scripts/ui/swiper.js
+/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
+  - <button ... data-main-prev></button>
+  - <button ... data-main-next></button>
+  - var mainPrev = root.querySelector("[data-main-prev]");
+  - var mainNext = root.querySelector("[data-main-next]");
+  - mainPrev.addEventListener("click", ...);
+  - mainNext.addEventListener("click", ...);
+  - mainPrev.classList.add("swiper-button-disabled");
+  - mainNext.classList.add("swiper-button-disabled");
+  - mainPrev.classList.remove("swiper-button-disabled");
+  - mainNext.classList.remove("swiper-button-disabled");
+  - if (currentIndex <= 0) mainPrev... else ...
+  - if (currentIndex >= last) mainNext... else ...
+*/
+
+
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  var root = document.querySelector('[data-test-gallery]');
+  if (!root) return;
+  var mainEl = root.querySelector('[data-main-swiper]');
+  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
+  var mainWrapper = root.querySelector('[data-main-wrapper]');
+  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
+  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
+  var mainPrev = root.querySelector('[data-main-prev]');
+  var mainNext = root.querySelector('[data-main-next]');
+  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
+  var thumbsNext = root.querySelector('[data-thumbs-next]');
+  if (!thumbsPrev || !thumbsNext) return;
+  var zoomBox = root.querySelector('[data-zoom]');
+  var zoomImg = root.querySelector('[data-zoom-img]');
+  var ZOOM_RATIO = 3;
+
+  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
+  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
+  var items = mainSlides.map(function (slide) {
+    var img = slide.querySelector('[data-main-img]');
+    if (img) {
+      return {
+        type: 'image',
+        src: img.src,
+        alt: img.alt || ''
+      };
+    }
+    return {
+      type: 'iframe',
+      src: '',
+      alt: ''
+    };
+  });
+  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
+  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
+    loop: false,
+    slidesPerView: 'auto',
+    spaceBetween: 7,
+    centeredSlides: false,
+    centeredSlidesBounds: false,
+    centerInsufficientSlides: false,
+    watchSlidesProgress: true,
+    allowTouchMove: false
+  });
+  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+    loop: false,
+    slidesPerView: 1,
+    allowTouchMove: true
+  });
+  var currentIndex = 0;
+  function clampIndex(i) {
+    var last = items.length - 1;
+    if (i < 0) return 0;
+    if (i > last) return last;
+    return i;
+  }
+  function setIndex(nextIndex) {
+    currentIndex = clampIndex(nextIndex);
+    mainSwiper.slideTo(currentIndex);
+    thumbsSwiper.slideTo(currentIndex);
+    thumbBtns.forEach(function (btn, i) {
+      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
+    });
+    var last = items.length - 1;
+    if (items.length <= 1) {
+      thumbsPrev.classList.add('is-hidden');
+      thumbsNext.classList.add('is-hidden');
+    } else {
+      thumbsPrev.classList.remove('is-hidden');
+      thumbsNext.classList.remove('is-hidden');
+    }
+    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
+    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
+    if (mainPrev) {
+      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
+    }
+    if (mainNext) {
+      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
+    }
+    if (zoomImg) {
+      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
+    }
+    if (!items[currentIndex].src) hideZoom();
+  }
+  if (mainPrev) {
+    mainPrev.addEventListener('click', function () {
+      setIndex(currentIndex - 1);
+    });
+  }
+  if (mainNext) {
+    mainNext.addEventListener('click', function () {
+      setIndex(currentIndex + 1);
+    });
+  }
+  thumbsPrev.addEventListener('click', function () {
+    setIndex(currentIndex - 1);
+  });
+  thumbsNext.addEventListener('click', function () {
+    setIndex(currentIndex + 1);
+  });
+  thumbBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = parseInt(btn.getAttribute('data-index'), 10);
+      if (isNaN(idx)) return;
+      setIndex(idx);
+    });
+  });
+  function hideZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.remove('is-on');
+    zoomBox.setAttribute('aria-hidden', 'true');
+  }
+  function showZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.add('is-on');
+    zoomBox.setAttribute('aria-hidden', 'false');
+  }
+  function ensureNatural(img, cb) {
+    if (!img) return;
+    if (img.complete && img.naturalWidth && img.naturalHeight) {
+      cb(img.naturalWidth, img.naturalHeight);
+      return;
+    }
+    img.addEventListener('load', function onLoad() {
+      img.removeEventListener('load', onLoad);
+      cb(img.naturalWidth, img.naturalHeight);
+    });
+  }
+  function getContainRect(containerW, containerH, naturalW, naturalH) {
+    var scale = Math.min(containerW / naturalW, containerH / naturalH);
+    var drawW = naturalW * scale;
+    var drawH = naturalH * scale;
+    var offsetX = (containerW - drawW) / 2;
+    var offsetY = (containerH - drawH) / 2;
+    return {
+      x: offsetX,
+      y: offsetY,
+      w: drawW,
+      h: drawH
+    };
+  }
+  function getActiveImgEl() {
+    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
+  }
+  if (zoomBox && zoomImg) {
+    mainEl.addEventListener('mouseenter', function () {
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      showZoom();
+    });
+    mainEl.addEventListener('mouseleave', function () {
+      hideZoom();
+    });
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!zoomBox.classList.contains('is-on')) return;
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      var contRect = mainEl.getBoundingClientRect();
+      var cx = e.clientX - contRect.left;
+      var cy = e.clientY - contRect.top;
+      ensureNatural(img, function (nw, nh) {
+        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
+        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
+          hideZoom();
+          return;
+        } else {
+          showZoom();
+        }
+        var rx = (cx - cr.x) / cr.w;
+        var ry = (cy - cr.y) / cr.h;
+        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
+        var ratio = baseRatio * ZOOM_RATIO;
+        var zoomW = nw * ratio;
+        var zoomH = nh * ratio;
+        zoomImg.style.width = zoomW + 'px';
+        zoomImg.style.height = zoomH + 'px';
+        var zw = zoomBox.clientWidth;
+        var zh = zoomBox.clientHeight;
+        var left = -(rx * (zoomW - zw));
+        var top = -(ry * (zoomH - zh));
+        if (left > 0) left = 0;
+        if (top > 0) top = 0;
+        if (left < -(zoomW - zw)) left = -(zoomW - zw);
+        if (top < -(zoomH - zh)) top = -(zoomH - zh);
+        zoomImg.style.left = left + 'px';
+        zoomImg.style.top = top + 'px';
+      });
+    });
+  }
+  setIndex(0);
+})();
+
+/**
+ * Swiper 타입별 기본 옵션 정의
+ * - 여기만 수정하면 전체 Swiper에 반영됨
+ */
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  const DEFAULT_OFFSET = {
+    before: 0,
+    after: 0
+  };
+  const SWIPER_PRESETS = {
+    test: {
+      spaceBetween: 32.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 2
+        },
+        1280: {
+          slidesPerView: 2
+        }
+      }
+    },
+    card: {
+      slidesPerView: 5,
+      spaceBetween: 27.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 4
+        },
+        1280: {
+          slidesPerView: 5
+        }
+      }
+    },
+    slim: {
+      spaceBetween: 19.6,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 5
+        },
+        1280: {
+          slidesPerView: 6
+        }
+      }
+    }
+  };
+  function initSwipers() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(initSwipers, 100);
+      return;
+    }
+    document.querySelectorAll('.js-swiper').forEach(function (el) {
+      const type = el.dataset.swiperType;
+      if (!SWIPER_PRESETS[type]) return;
+
+      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
+      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
+
+      // offset 개별 제어
+      const offsetBeforeAttr = el.getAttribute('data-offset-before');
+      const offsetAfterAttr = el.getAttribute('data-offset-after');
+      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
+      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+
+      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
+      const desktopView = el.dataset.desktop;
+      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
+        preset.breakpoints[1280].slidesPerView = Number(desktopView);
+      }
+
+      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
+      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
+        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
+          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
+          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
+          }
+          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
+          }
+        });
+      }
+
+      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
+      var nextEl = el.querySelector('.swiper-button-next');
+      var prevEl = el.querySelector('.swiper-button-prev');
+
+      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
+      if (!nextEl || !prevEl) {
+        // container의 부모 요소에서 vits-swiper-navs 찾기
+        const parent = el.parentElement;
+        if (parent) {
+          const navsContainer = parent.querySelector('.vits-swiper-navs');
+          if (navsContainer) {
+            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
+          }
+        }
+
+        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
+        if ((!nextEl || !prevEl) && el.nextElementSibling) {
+          const nextSibling = el.nextElementSibling;
+          if (nextSibling.classList.contains('vits-swiper-navs')) {
+            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
+          }
+        }
+      }
+      new swiper_bundle/* default */.A(el, {
+        slidesPerView: 5,
+        //기본값
+        spaceBetween: preset.spaceBetween,
+        speed: preset.speed,
+        slidesOffsetBefore: offsetBefore,
+        slidesOffsetAfter: offsetAfter,
+        centeredSlides: false,
+        navigation: {
+          nextEl: nextEl,
+          prevEl: prevEl
+        },
+        pagination: {
+          el: el.querySelector('.swiper-pagination'),
+          clickable: true
+        },
+        breakpoints: preset.breakpoints
+      });
+    });
+  }
+  function waitForDependencies() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(waitForDependencies, 100);
+      return;
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwipers);
+    } else {
+      initSwipers();
+    }
+  }
+  waitForDependencies();
+})();
+
+// window.UI.swiper로 등록 (선택적)
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  window.UI.swiper = {
+    init: function () {
+      // 이미 자동 실행되므로 빈 함수로 유지
+      // 필요시 여기에 추가 초기화 로직 작성
+    }
+  };
+})(window);
+;// ./src/assets/scripts/ui/swiper-boxed.js
+/**
+ * @file scripts/ui/swiper-boxed.js
+ * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
+ * @description
+ *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
+ *  - 구조(정석): [data-swiper-options] > .swiper-wrapper > .swiper-slide
+ *  - 초기화: 각 컨테이너마다 별도 Swiper 인스턴스 생성
+ *  - 파괴: destroy 메서드로 인스턴스 정리 가능
+ * @option (data-swiper-options JSON 내부)
+ *  - slidesPerView: 보여질 슬라이드 개수 (number | 'auto')
+ *  - spaceBetween: 슬라이드 간격 (px)
+ *  - slidesOffsetBefore: 첫 슬라이드 왼쪽 여백 (px)
+ *  - slidesOffsetAfter: 마지막 슬라이드 오른쪽 여백 (px)
+ *  - slidesPerGroup: 한 번에 이동할 슬라이드 개수
+ *  - navigation: 화살표 버튼 사용 여부 (boolean) // false면 비활성
+ *  - pagination: 페이지네이션 사용 여부 (boolean) // true면 활성
+ *  - centerWhenSingle: 슬라이드 1개일 때 중앙 정렬 (boolean)
+ *  - hideNavWhenSingle: 슬라이드 1개일 때 화살표 숨김 (boolean, 기본 true)
+ *  - speed: 전환 속도 (ms, 기본 300)
+ *  - loop: 무한 루프 (boolean)
+ *  - autoplay: 자동 재생 설정 (object | boolean)
+ * @a11y
+ *  - 키보드 제어 기본 활성화
+ * @maintenance
+ *  - Swiper 번들 의존 (swiper/bundle)
+ *  - 인스턴스는 DOM 요소에 data로 저장 (재초기화 방지)
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[swiper-boxed] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var SWIPER_INSTANCE_KEY = 'swiperInstance';
+
+  /**
+   * 단일 Swiper 초기화
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function initSwiper($wrapper) {
+    // 이미 초기화된 경우 중복 방지
+    if ($wrapper.data(SWIPER_INSTANCE_KEY)) {
+      return;
+    }
+
+    // [정석] 컨테이너는 래퍼 자체
+    var $container = $wrapper;
+
+    // [정석] 컨테이너 바로 아래 wrapper 필수
+    var $swiperWrapper = $container.children('.swiper-wrapper').first();
+    if (!$swiperWrapper.length) {
+      console.warn('[swiper-boxed] .swiper-wrapper not found in', $wrapper[0]);
+      return;
+    }
+
+    // data-swiper-options에서 설정 파싱
+    var optionsStr = $wrapper.attr('data-swiper-options');
+    var userOptions = {};
+    try {
+      userOptions = optionsStr ? JSON.parse(optionsStr) : {};
+    } catch (e) {
+      console.error('[swiper-boxed] Invalid JSON in data-swiper-options', e);
+      return;
+    }
+
+    // [정석] 직계 slide 기준
+    var slideCount = $swiperWrapper.children('.swiper-slide').length;
+
+    // navigation/pagination 플래그는 미리 보존 (병합 시 덮어쓰기 방지용)
+    var navEnabled = userOptions.navigation !== false;
+    var paginationEnabled = userOptions.pagination === true;
+
+    // navigation/pagination은 아래에서 엘리먼트 바인딩 객체로 세팅하므로, boolean 덮어쓰기 방지
+    delete userOptions.navigation;
+    delete userOptions.pagination;
+
+    // 기본 설정
+    var defaultOptions = {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 300,
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true
+      },
+      a11y: {
+        enabled: true,
+        prevSlideMessage: '이전 슬라이드',
+        nextSlideMessage: '다음 슬라이드',
+        firstSlideMessage: '첫 번째 슬라이드',
+        lastSlideMessage: '마지막 슬라이드'
+      }
+    };
+
+    // Navigation 설정
+    if (navEnabled) {
+      var $prevBtn = $wrapper.children('.swiper-button-prev');
+      var $nextBtn = $wrapper.children('.swiper-button-next');
+      if ($prevBtn.length && $nextBtn.length) {
+        defaultOptions.navigation = {
+          prevEl: $prevBtn[0],
+          nextEl: $nextBtn[0]
+        };
+
+        // 슬라이드 1개일 때 버튼 숨김 옵션(기본 true)
+        if (slideCount === 1 && userOptions.hideNavWhenSingle !== false) {
+          $prevBtn.hide();
+          $nextBtn.hide();
+        }
+      }
+    }
+
+    // Pagination 설정
+    if (paginationEnabled) {
+      var $pagination = $wrapper.children('.swiper-pagination');
+      if ($pagination.length) {
+        defaultOptions.pagination = {
+          el: $pagination[0],
+          clickable: true,
+          type: 'bullets'
+        };
+      }
+    }
+
+    // 슬라이드 1개일 때 중앙 정렬 옵션
+    if (slideCount === 1 && userOptions.centerWhenSingle === true) {
+      defaultOptions.centeredSlides = true;
+    }
+
+    // 사용자 옵션 병합
+    var finalOptions = $.extend(true, {}, defaultOptions, userOptions);
+    delete finalOptions.centerWhenSingle;
+    delete finalOptions.hideNavWhenSingle;
+
+    // Swiper 인스턴스 생성
+    try {
+      var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
+      $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
+      console.log('[swiper-boxed] initialized:', $wrapper.attr('class'));
+    } catch (e) {
+      console.error('[swiper-boxed] Initialization failed', e);
+    }
+  }
+
+  /**
+   * 단일 Swiper 파괴
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function destroySwiper($wrapper) {
+    var instance = $wrapper.data(SWIPER_INSTANCE_KEY);
+    if (instance && typeof instance.destroy === 'function') {
+      instance.destroy(true, true);
+      $wrapper.removeData(SWIPER_INSTANCE_KEY);
+      console.log('[swiper-boxed] destroyed:', $wrapper.attr('class'));
+    }
+  }
+  window.UI.swiperBoxed = {
+    init: function () {
+      $('[data-swiper-options]').each(function () {
+        initSwiper($(this));
+      });
+      console.log('[swiper-boxed] init');
+    },
+    destroy: function () {
+      $('[data-swiper-options]').each(function () {
+        destroySwiper($(this));
+      });
+      console.log('[swiper-boxed] destroy');
+    },
+    reinit: function (selector) {
+      var $target = typeof selector === 'string' ? $(selector) : selector;
+      $target.each(function () {
+        var $wrapper = $(this);
+        destroySwiper($wrapper);
+        initSwiper($wrapper);
+      });
+    }
+  };
+  console.log('[swiper-boxed] module loaded');
+})(window.jQuery || window.$, window);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
+var chip_button = __webpack_require__(755);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
+var quantity_stepper = __webpack_require__(397);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
+var form_textarea = __webpack_require__(803);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
+var kendo_dropdown = __webpack_require__(47);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
+var header_rank = __webpack_require__(596);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
+var header_search = __webpack_require__(978);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
+var header_gnb = __webpack_require__(105);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
+var footer = __webpack_require__(795);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
+var tab_scrollbar = __webpack_require__(986);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
+var form_select = __webpack_require__(865);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
+var input_search = __webpack_require__(882);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
+var plp_titlebar_research = __webpack_require__(809);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
+var category_tree = __webpack_require__(508);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
+var plp_chip_sync = __webpack_require__(504);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
+var plp_view_toggle = __webpack_require__(342);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
+var more_expand = __webpack_require__(146);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
+var filter_expand = __webpack_require__(19);
+;// ./src/assets/scripts/core/ui.js
+/**
+ * scripts/core/ui.js
+ * @purpose UI 기능 모음
+ * @assumption
+ *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
+ *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
+ * @maintenance
+ *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
+ *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
+ *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+
+  /**
+   * 공통 UI 초기화 진입점
+   * @returns {void}
+   * @example
+   * // scripts/core/common.js에서 DOMReady 시점에 호출
+   * UI.init();
+   */
+  window.UI.init = function () {
+    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
+    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
+    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
+    if (window.UI.swiperBoxed && window.UI.swiperBoxed.init) window.UI.swiperBoxed.init();
+    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
+    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
+    if (window.VitsKendoDropdown) {
+      window.VitsKendoDropdown.initAll(document);
+      window.VitsKendoDropdown.autoBindStart(document.body);
+    }
+    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
+    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
+    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
+    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
+    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
+    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
+    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
+    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
+    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
+    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
+    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
+    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
+    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
+  };
+  console.log('[core/ui] loaded');
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
+var common = __webpack_require__(538);
+;// ./src/assets/scripts/index.js
+/**
+ * scripts/index.js
+ * @purpose 번들 엔트리(진입점)
+ * @assumption
+ *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
+ *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
+ * @maintenance
+ *  - index.js는 짧게 유지한다(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
+ *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
+ */
+
+
+
+
+console.log('[index] entry 실행');
+;// ./src/app.js
+
+
+
+
+
+
+
+if (document.body?.dataset?.guide === 'true') {
+  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
+  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
+}
+
+// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
+// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
+// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
+// console.log('%c ====================', 'color: green');
+
+/***/ }),
+
 /***/ 342:
 /***/ (function() {
 
@@ -2197,6 +2384,10 @@ if (document.body?.dataset?.guide === 'true') {
     name: 'plpAttr',
     title: '속성',
     showCategory: true
+  }, {
+    name: 'plpCommonCategory',
+    title: '카테고리',
+    showCategory: false
   }, {
     name: 'plpBrand',
     title: '브랜드',
@@ -4077,7 +4268,10 @@ if (document.body?.dataset?.guide === 'true') {
   function syncVisibility(els) {
     var show = hasAnyChip(els);
     setVisible(els.$chipUI, show);
-    setVisible(els.$relatedUI, show);
+
+    // 연관검색어는 초기 표시 상태거나 칩이 있을 때만 표시
+    var initialShowRelated = els.$relatedUI.data('initial-show') === true;
+    setVisible(els.$relatedUI, show || initialShowRelated);
     window.requestAnimationFrame(function () {
       updateNav(els);
     });
@@ -4176,17 +4370,20 @@ if (document.body?.dataset?.guide === 'true') {
       });
     });
   }
-
-  // titlebar 1개 루트를 초기화
   function initRoot($root) {
     var els = getEls($root);
     if (!els.$form.length || !els.$input.length) return;
     if (!els.$chipUI.length || !els.$relatedUI.length) return;
     if (!els.$chipGroup.length) return;
 
+    // 연관검색어가 초기에 표시되어야 하는지 확인하고 data에 저장
+    var initialShowRelated = !els.$relatedUI.hasClass(CLS_HIDDEN);
+    if (initialShowRelated) {
+      els.$relatedUI.data('initial-show', true);
+    }
+
     // 초기 숨김(칩 0개면 UI를 숨김)
     setVisible(els.$chipUI, false);
-    setVisible(els.$relatedUI, false);
 
     // 초기 validation off
     if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {
@@ -6051,7 +6248,7 @@ if (document.body?.dataset?.guide === 'true') {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(3); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(205); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
