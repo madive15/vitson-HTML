@@ -34,6 +34,7 @@
   var GROUPS = [
     {name: 'plpCommon', title: '공통', showCategory: false},
     {name: 'plpAttr', title: '속성', showCategory: true},
+    {name: 'plpCommonCategory', title: '카테고리', showCategory: false},
     {name: 'plpBrand', title: '브랜드', showCategory: true}
   ];
 

@@ -1,20 +1,30 @@
+<!-- prettier-ignore -->
+<%
+  // 카테고리 트리 표시 여부 (기본: true)
+  var showCategoryTree = locals.showCategoryTree !== false;
+  // 공통 카테고리 필터 표시 여부 (기본: false)
+  var showCommonCategory = locals.showCommonCategory === true;
+%>
+
 <%# PLP 전용 좌측 메뉴(카테고리/필터) %>
 <aside class="vits-grid-side vits-grid-side-left vits-plp-side">
-  <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
+  <% if (showCategoryTree) { %> <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
   <div class="plp-side-category">
     <p class="plp-side-title">카테고리</p>
     <%- include(`${_src}/views/components/category/category-tree.ejs`, { treeData: (mockData && mockData.category &&
     Array.isArray(mockData.category.tree)) ? mockData.category.tree : [], depth1Id: depth1Id, depth2Id: depth2Id,
     depth3Id: depth3Id }) %>
   </div>
+  <% } %>
 
   <div class="plp-side-filter">
     <ul class="plp-side-filter-list">
       <li>
-        <div class="plp-side-filter-item">
-          <p class="plp-side-title">공통</p>
-          <!-- prettier-ignore -->
-          <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+        <p class="plp-side-title">공통</p>
+        <div class="plp-side-filter-items">
+          <div class="plp-side-filter-item">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
             variant: 'basic',
             size: 'm',
             name: 'plpCommon',
@@ -26,11 +36,96 @@
               { text: '특가', value: '특가', checked: false, disabled: false, required: false },
             ]
           }) %>
+          </div>
         </div>
       </li>
 
-      <%# 4뎁스(속성) JS 삽입 위치 %>
+      <% if (showCommonCategory) { %>
+      <!-- prettier-ignore -->
+      <%
+        var _commonCategoryList = [
+          { code: 'cat_01', name: '전자제품', count: 245 },
+          { code: 'cat_02', name: '생활용품', count: 183 },
+          { code: 'cat_03', name: '식품', count: 156 },
+          { code: 'cat_04', name: '의류', count: 298 },
+          { code: 'cat_05', name: '스포츠', count: 124 },
+          { code: 'cat_06', name: '뷰티', count: 167 },
+          { code: 'cat_07', name: '문구', count: 89 },
+          { code: 'cat_08', name: '가구', count: 72 },
+          { code: 'cat_09', name: '주방용품', count: 134 },
+          { code: 'cat_10', name: '완구', count: 95 }
+        ];
+
+        var _commonCategoryTotal = _commonCategoryList.length;
+        var _commonCategoryVisibleCount = 7;
+        var _commonCategoryVisible = _commonCategoryList.slice(0, _commonCategoryVisibleCount);
+
+        var _commonCategoryDatas = _commonCategoryVisible.map(function (c) {
+          return {
+            text: (c.name || '') + ' (' + (c.count || 0) + ')',
+            value: String(c.code || ''),
+            checked: false,
+            disabled: false,
+            required: false
+          };
+        });
+      %>
+      <li data-more-scope="commonCategory">
+        <p class="plp-side-title">카테고리</p>
+        <div class="plp-side-filter-items">
+          <div class="plp-side-filter-item">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+              variant: 'basic',
+              size: 'm',
+              name: 'plpCommonCategory',
+              list: 'column',
+              gap: 16,
+              datas: _commonCategoryDatas
+            }) %>
+          </div>
+
+          <% if (_commonCategoryTotal > _commonCategoryVisibleCount) { %>
+          <div class="filter-more">
+            <button type="button" class="filter-more-button" data-more-btn>
+              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+              <span class="text">더보기</span>
+              <span class="count">(<%= _commonCategoryTotal %>개)</span>
+            </button>
+          </div>
+          <% } %>
+          <!-- prettier-ignore -->
+          <%
+            var _commonCategoryHidden = _commonCategoryList.slice(_commonCategoryVisibleCount);
+            var _commonCategoryHiddenDatas = _commonCategoryHidden.map(function (c) {
+              return {
+                text: (c.name || '') + ' (' + (c.count || 0) + ')',
+                value: String(c.code || ''),
+                checked: false,
+                disabled: false,
+                required: false
+              };
+            });
+          %>
+
+          <% if (_commonCategoryHiddenDatas.length) { %>
+          <div class="plp-side-filter-item" data-more-hidden="true">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+              variant: 'basic',
+              size: 'm',
+              name: 'plpCommonCategory',
+              list: 'column',
+              gap: 16,
+              datas: _commonCategoryHiddenDatas
+            }) %>
+          </div>
+          <% } %>
+        </div>
+      </li>
+      <% } %> <%# 4뎁스(속성) JS 삽입 위치 - 카테고리 트리가 표시될 때만 렌더링 %> <% if (showCategoryTree) { %>
       <li class="plp-side-filter-item is-hidden" data-plp-attr-anchor></li>
+      <% } %>
 
       <!-- prettier-ignore -->
       <%
@@ -68,7 +163,7 @@
       %>
       <li data-more-scope="brand">
         <p class="plp-side-title">브랜드</p>
-        <div class="plp-side-brand-list">
+        <div class="plp-side-filter-items">
           <div class="plp-side-filter-item">
             <!-- prettier-ignore -->
             <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
@@ -103,7 +198,7 @@
               };
             });
           %>
-  
+
           <% if (_brandHiddenDatas.length) { %>
           <div class="plp-side-filter-item" data-more-hidden="true">
             <!-- prettier-ignore -->

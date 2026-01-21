@@ -89,23 +89,13 @@
       &::before {
         left: 0;
         background: #fff;
-        background: linear-gradient(
-          90deg,
-          rgb(255 255 255 / 100%) 0%,
-          rgb(255 255 255 / 80%) 20%,
-          rgb(255 255 255 / 0%) 70%
-        );
+        background: linear-gradient(90deg, #fff 0%, rgb(255 255 255 / 0%) 100%);
       }
 
       &::after {
         right: 0;
-        background: #2a7b9b;
-        background: linear-gradient(
-          90deg,
-          rgb(255 255 255 / 0%) 0%,
-          rgb(255 255 255 / 50%) 50%,
-          rgb(255 255 255 / 100%) 100%
-        );
+        background: #fff;
+        background: linear-gradient(-90deg, #fff 0%, rgb(255 255 255 / 0%) 100%);
       }
 
       &:has(.chip-nav-prev:disabled),
@@ -152,6 +142,8 @@
         &-button {
           @include button.btn-reset;
           @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+          display: block;
+          margin-top: fn.rem(1);
         }
       }
     }

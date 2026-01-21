@@ -55,18 +55,9 @@
     }
 
     &-item.is-active {
-      > .category-tree-btn[data-depth='1'] {
-        .category-tree-text {
-          font-weight: 600;
-          color: blue;
-        }
-      }
-
-      > .category-tree-btn:not([data-depth='1']) {
-        .category-tree-text {
-          font-weight: 600;
-          color: red;
-        }
+      > .category-tree-btn .category-tree-text {
+        font-weight: 600;
+        color: map.get(color.$text-status, 'brand');
       }
     }
   }
