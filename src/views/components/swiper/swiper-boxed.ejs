@@ -1,0 +1,28 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% 
+  const wrapperClass = locals.wrapperClass || 'swiper'; 
+  const options = locals.options || {}; const contents = locals.contents || ''; 
+%>
+
+<!-- prettier-ignore -->
+<div
+  class="<%= wrapperClass %>"
+  data-swiper-options='<%- JSON.stringify(options || {}) %>'
+>
+
+  <div class="swiper-wrapper"><%- contents %></div>
+
+  <% if (options.navigation !== false) { %>
+  <button type="button" class="swiper-button-prev" aria-label="이전">
+    <i class="ic"></i>
+    <span class="blind">이전</span>
+  </button>
+  <button type="button" class="swiper-button-next" aria-label="다음">
+    <i class="ic"></i>
+    <span class="blind">이전</span>
+  </button>
+  <% } %> <% if (options.pagination) { %>
+  <div class="swiper-pagination"></div>
+  <% } %>
+</div>

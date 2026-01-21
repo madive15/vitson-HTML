@@ -215,7 +215,10 @@
     var show = hasAnyChip(els);
 
     setVisible(els.$chipUI, show);
-    setVisible(els.$relatedUI, show);
+
+    // 연관검색어는 초기 표시 상태거나 칩이 있을 때만 표시
+    var initialShowRelated = els.$relatedUI.data('initial-show') === true;
+    setVisible(els.$relatedUI, show || initialShowRelated);
 
     window.requestAnimationFrame(function () {
       updateNav(els);
@@ -322,7 +325,6 @@
     });
   }
 
-  // titlebar 1개 루트를 초기화
   function initRoot($root) {
     var els = getEls($root);
 
@@ -330,9 +332,14 @@
     if (!els.$chipUI.length || !els.$relatedUI.length) return;
     if (!els.$chipGroup.length) return;
 
+    // 연관검색어가 초기에 표시되어야 하는지 확인하고 data에 저장
+    var initialShowRelated = !els.$relatedUI.hasClass(CLS_HIDDEN);
+    if (initialShowRelated) {
+      els.$relatedUI.data('initial-show', true);
+    }
+
     // 초기 숨김(칩 0개면 UI를 숨김)
     setVisible(els.$chipUI, false);
-    setVisible(els.$relatedUI, false);
 
     // 초기 validation off
     if (window.UI && window.UI.inputSearch && typeof window.UI.inputSearch.setInvalid === 'function') {

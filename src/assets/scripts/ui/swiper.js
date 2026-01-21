@@ -290,7 +290,7 @@ import Swiper from 'swiper/bundle';
       }
     },
     slim: {
-      spaceBetween: 17.6,
+      spaceBetween: 19.6,
       speed: 400,
       breakpoints: {
         1024: {slidesPerView: 5},

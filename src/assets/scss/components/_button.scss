@@ -297,6 +297,63 @@ $outline-button-disabled-bg-colors: (
   }
 }
 
+// Scoped 타입 버튼
+$scoped-button-configs: (
+  'info': (
+    'border': map.get(color.$layout-border, 'info'),
+    'text': map.get(color.$text-status, 'info'),
+    'hover-bg': map.get(color.$layout-status, 'info-bg-sub'),
+    'active-border': map.get(color.$label-shipping, 'tomorrow'),
+    'active-text': map.get(color.$layout-border, 'info'),
+    'active-bg': map.get(color.$label-shipping, 'tomorrow'),
+    'padding-x': 25
+  ),
+  'primary': (
+    'border': map.get(color.$layout-border, 'brand'),
+    'text': map.get(color.$text-status, 'brand'),
+    'hover-bg': map.get(color.$layout-status, 'brand-bg-sub'),
+    'active-border': map.get(color.$layout-border, 'brand'),
+    'active-text': color.$color-white,
+    'active-bg': map.get(color.$layout-status, 'brand-bg-sub')
+  )
+);
+
+@mixin scoped-button-base($config) {
+  @include mx.border(all, 1px, solid, map.get($config, 'border'));
+  color: map.get($config, 'text');
+  background-color: color.$color-white;
+  border-radius: map.get(var.$radius, 'sm');
+
+  @if map.has-key($config, 'padding-x') {
+    padding: 0 fn.rem(map.get($config, 'padding-x'));
+  }
+
+  @include mx.common-mouse-event {
+    background-color: map.get($config, 'hover-bg');
+
+    &:active {
+      @include mx.border(all, 1px, solid, map.get($config, 'active-border'));
+      color: map.get($config, 'active-text');
+      background-color: map.get($config, 'active-bg');
+    }
+  }
+
+  &:disabled {
+    color: map.get(color.$text-colors, 'muted');
+    pointer-events: none;
+    background-color: map.get(color.$gray-shades, '20');
+    border-color: map.get(color.$gray-shades, '20');
+  }
+}
+
+.vits-btn-scoped {
+  @each $type, $config in $scoped-button-configs {
+    &-#{$type} {
+      @include scoped-button-base($config);
+    }
+  }
+}
+
 /* 즐겨찾기 버튼 */
 .vits-btn-favorite {
   @include btn-reset;

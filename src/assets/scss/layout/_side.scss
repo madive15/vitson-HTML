@@ -41,16 +41,25 @@
         gap: map.get(var.$unit, 32);
 
         > li {
+          @include mx.flex(flex, column, flex-start, flex-start);
           @include mx.border('top', $color: map.get(color.$layout-border, 'quaternary'));
+          gap: map.get(var.$unit, 24);
           width: 100%;
           padding-top: map.get(var.$unit, 32);
 
-          &[data-more-scope='brand'] {
-            .filter-more {
-              margin-top: map.get(var.$unit, 24);
-            }
+          .filter-more {
+            margin-top: map.get(var.$unit, 24);
           }
         }
+      }
+    }
+
+    &-filter-items {
+      width: 100%;
+
+      &:not(:has(.filter-more)) {
+        max-height: 50vh;
+        overflow: hidden auto;
       }
     }
 
@@ -59,13 +68,13 @@
         margin-top: map.get(var.$unit, 16);
       }
     }
+  }
 
-    &-brand-list {
-      margin-top: map.get(var.$unit, 24);
-
-      &:not(:has(.filter-more)) {
-        max-height: 50vh;
-        overflow: hidden auto;
+  &:not(:has(.vits-category-tree)) {
+    .plp-side-filter-list > li {
+      &:first-of-type {
+        padding-top: 0;
+        border-top: 0;
       }
     }
   }

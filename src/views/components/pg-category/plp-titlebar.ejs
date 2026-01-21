@@ -4,6 +4,8 @@
   const hideBreadcrumb = locals.hideBreadcrumb === true; 
   // breadcrumb 숨길 때 표시할 타이틀 (기본: '현재 카테고리 이름')
   const customTitle = locals.customTitle || '현재 카테고리 이름';
+  // 연관검색어 초기 표시 여부 (기본: false)
+  const showRelatedKeywords = locals.showRelatedKeywords === true;
 %>
 
 <header class="vits-plp-titlebar">
@@ -89,7 +91,7 @@
     </div>
   </div>
 
-  <!-- 연관검색어(검색 후 노출) -->
+  <!-- 연관검색어(검색 후 노출 또는 showRelatedKeywords: true로 초기 표시) -->
   <% const relatedKeywords = [
   '스니커즈','러닝화','운동화','캔버스화','슬립온','하이탑','로우탑','트레이닝화','워킹화','테니스화',
   '후드티','맨투맨','니트','가디건','셔츠','블라우스','반팔티','긴팔티','폴로셔츠','터틀넥',
@@ -99,8 +101,12 @@
   '백팩','토트백','숄더백','크로스백','미니백','에코백','클러치','파우치','여행가방','서류가방',
   '모자','볼캡','버킷햇','비니','선글라스','안경테','머플러','스카프','장갑','벨트',
   '지갑','카드지갑','반지갑','장지갑','시계','팔찌','목걸이','반지','귀걸이','헤어밴드' ]; %>
-
+  
+  <% if (showRelatedKeywords) { %>
+  <div class="vits-plp-titlebar-related" data-related-ui>
+  <% } else { %>
   <div class="vits-plp-titlebar-related is-hidden" data-related-ui>
+  <% } %>
     <p class="related-title">연관검색어</p>
     <ul class="related-list" data-related-list>
       <% relatedKeywords.forEach(function(item) { %>
