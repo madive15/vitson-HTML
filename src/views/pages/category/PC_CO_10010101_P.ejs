@@ -1,0 +1,90 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '보관함담기팝업'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-side-left -->
+            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
+            <!-- E: vits-grid-side-left -->
+
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <!-- 트리거 버튼 -->
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-modal-btn
+                  data-modal-target="likeModal"
+                  data-modal-type="modal"
+                  data-modal-outside="true"
+                  data-modal-esc="true"
+                  data-modal-lock="true"
+                  aria-expanded="false"
+                >
+                  <span class="text">비교함팝업</span>
+                </button>
+              </div>
+
+              <!-- 모달 -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/modal/modal.ejs`, {
+                  id: 'likeModal',
+                  type: 'modal',
+                  size: '480',
+                  theme: 'theme-like',
+                  title: '좋아요',
+                  subtitle: '상품을 담을 폴더를 선택하세요',
+                  contentPath: `${_src}/views/pages/modal/modal-content-PC_CO_10010101_P.ejs`,
+                  buttons: [
+                    {
+                      text: '취소',
+                      variant: 'secondary',
+                      action: 'close'
+                    },
+                    {
+                      text: '확인',
+                      variant: 'primary',
+                      action: 'close'
+                    }
+                  ]
+                }) %>
+            </div>
+            <!-- E: vits-grid-main -->
+
+            <!-- S: vits-grid-right -->
+            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
+            <!-- E: vits-grid-right -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 기본값 설정
+  const tooltipData = {
+    triggerText: triggerText || '툴팁제목',
+    heading: heading || '툴팁 타이틀',
+    items: items || ['툴팁 내용 입력'],
+    position: position || 'left'
+  };
+%>
+
+<div class="vits-tooltip" data-tooltip="<%= tooltipData.position %>">
+  <button type="button" class="vits-tooltip-trigger" aria-label="광고 안내">
+    <span class="text"><%= tooltipData.triggerText %></span>
+    <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'tip-info' }) %> </span>
+  </button>
+  <div class="vits-tooltip-content" role="tooltip" aria-hidden="true">
+    <div class="vits-tooltip-heading">
+      <p class="text"><%= tooltipData.heading %></p>
+      <button type="button" class="button" aria-label="닫기">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </div>
+    <ul class="vits-tooltip-list">
+      <% tooltipData.items.forEach(function(item) { %>
+      <li class="vits-tooltip-item"><%- item %></li>
+      <% }); %>
+    </ul>
+  </div>
+</div>

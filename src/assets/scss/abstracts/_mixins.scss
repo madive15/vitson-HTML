@@ -316,3 +316,23 @@
     background-color: $img-bg-color;
   }
 }
+
+@mixin bullet-style() {
+  > li {
+    position: relative;
+    padding-left: map.get(var.$unit, 12);
+
+    &::before {
+      @include position(absolute, 7px, $left: 0);
+      width: map.get(var.$unit, 4);
+      height: map.get(var.$unit, 4);
+      content: '';
+      background: map.get(color.$layout-surf, 'secondary');
+      border-radius: 50%;
+    }
+
+    & + li {
+      margin-top: map.get(var.$unit, 8);
+    }
+  }
+}

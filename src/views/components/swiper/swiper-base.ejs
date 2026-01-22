@@ -1,0 +1,28 @@
+<!-- prettier-ignore -->
+<% 
+  const _src = srcPath; const _public = publicPath;
+  const _desktop = typeof desktop !== 'undefined' ? desktop : 5;
+  const _swiperType = typeof swiperType !== 'undefined' ? swiperType : 'card'; 
+  const contents = locals.contents || '';
+%>
+
+<!-- /* 초기화 규칙은 `swiper-type.ejs`와 동일합니다. */ -->
+
+<div
+  class="swiper-container vits-swiper js-swiper vits-base-swiper-container"
+  data-swiper-type="<%= _swiperType %>"
+  data-desktop="<%= _desktop %>"
+>
+  <ul class="swiper-wrapper vits-base-swiper-wrapper">
+    <% contents.forEach(function(item) { %>
+    <li class="swiper-slide vits-base-swiper-slide"><%- item %></li>
+    <% }); %>
+  </ul>
+</div>
+
+<!-- s: swiper navs -->
+<div class="vits-swiper-navs vits-base-swiper-navs">
+  <div class="swiper-button-prev vits-base-swiper-prev"></div>
+  <div class="swiper-button-next vits-base-swiper-next"></div>
+</div>
+<!-- e: swiper navs -->

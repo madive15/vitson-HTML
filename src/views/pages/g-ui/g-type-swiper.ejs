@@ -1,5 +1,49 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
+<!-- prettier-ignore -->
+<% const productSlides = `
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">1111</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">22</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">333333</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">24444442</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">1111</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">22</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">333333</div>
+  </div>
+</div>
+<div class="swiper-slide">
+  <div class="vits-product-item" data-member="true" data-stock="true" data-cut="false">
+    <div class="vits-product-card">24444442</div>
+  </div>
+</div>
+`; %>
+
 <!DOCTYPE html>
 <!-- 
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -77,6 +121,25 @@ components/swiper/swiper-type.ejs
               </div>
             </li>
           </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">다른 타입의 스와이프</h3>
+        <div class="vits-guide-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/swiper/swiper-test.ejs`, {
+            wrapperClass: 'test-swiper',
+            options: {
+              slidesPerView: 4,           // 4개 보이기
+              slidesPerGroup: 1,          // 4개 묶음
+              spaceBetween: 12,           // 간격 20px
+              slidesOffsetBefore: 0,     // 왼쪽 여백 40px
+              slidesOffsetAfter: 0,      // 오른쪽 여백 40px
+              navigation: true,           // 화살표 버튼 표시
+              pagination: false,          // 페이지네이션 숨김
+              speed: 300                  // 전환 속도
+            },
+            contents: productSlides
+          }) %>
         </div>
       </section>
       <!-- E: vits-guide-wrapper -->

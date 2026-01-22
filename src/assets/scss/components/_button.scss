@@ -297,7 +297,7 @@ $outline-button-disabled-bg-colors: (
   }
 }
 
-// Scoped 타입 버튼
+// Scoped 타입 버튼 (info, primary)
 $scoped-button-configs: (
   'info': (
     'border': map.get(color.$layout-border, 'info'),
@@ -314,42 +314,46 @@ $scoped-button-configs: (
     'hover-bg': map.get(color.$layout-status, 'brand-bg-sub'),
     'active-border': map.get(color.$layout-border, 'brand'),
     'active-text': color.$color-white,
-    'active-bg': map.get(color.$layout-status, 'brand-bg-sub')
+    'active-bg': map.get(color.$layout-surf, 'brand') ,
+    'padding-x': 25
   )
 );
-
-@mixin scoped-button-base($config) {
-  @include mx.border(all, 1px, solid, map.get($config, 'border'));
-  color: map.get($config, 'text');
-  background-color: color.$color-white;
-  border-radius: map.get(var.$radius, 'sm');
-
-  @if map.has-key($config, 'padding-x') {
-    padding: 0 fn.rem(map.get($config, 'padding-x'));
-  }
-
-  @include mx.common-mouse-event {
-    background-color: map.get($config, 'hover-bg');
-
-    &:active {
-      @include mx.border(all, 1px, solid, map.get($config, 'active-border'));
-      color: map.get($config, 'active-text');
-      background-color: map.get($config, 'active-bg');
-    }
-  }
-
-  &:disabled {
-    color: map.get(color.$text-colors, 'muted');
-    pointer-events: none;
-    background-color: map.get(color.$gray-shades, '20');
-    border-color: map.get(color.$gray-shades, '20');
-  }
-}
 
 .vits-btn-scoped {
   @each $type, $config in $scoped-button-configs {
     &-#{$type} {
-      @include scoped-button-base($config);
+      $border: map.get($config, 'border');
+      $text: map.get($config, 'text');
+      $hover-bg: if(map.has-key($config, 'hover-bg'), map.get($config, 'hover-bg'), color.$color-white);
+      $active-border: if(map.has-key($config, 'active-border'), map.get($config, 'active-border'), $border);
+      $active-text: if(map.has-key($config, 'active-text'), map.get($config, 'active-text'), $text);
+      $active-bg: if(map.has-key($config, 'active-bg'), map.get($config, 'active-bg'), $hover-bg);
+
+      @include mx.border(all, 1px, solid, $border);
+      color: $text;
+      background-color: color.$color-white;
+      border-radius: map.get(var.$radius, 'sm');
+
+      @if map.has-key($config, 'padding-x') {
+        padding: 0 fn.rem(map.get($config, 'padding-x'));
+      }
+
+      @include mx.common-mouse-event {
+        background-color: $hover-bg;
+
+        &:active {
+          @include mx.border(all, 1px, solid, $active-border);
+          color: $active-text;
+          background-color: $active-bg;
+        }
+      }
+
+      &:disabled {
+        color: map.get(color.$text-colors, 'muted');
+        pointer-events: none;
+        background-color: map.get(color.$gray-shades, '20');
+        border-color: map.get(color.$gray-shades, '20');
+      }
     }
   }
 }

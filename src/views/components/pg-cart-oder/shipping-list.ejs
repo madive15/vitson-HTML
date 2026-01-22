@@ -1,0 +1,196 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<div class="vits-shipping">
+  <!-- 섹션 타이틀 -->
+  <div class="vits-shipping-header">
+    <h2 class="vits-shipping-title">배송정보</h2>
+  </div>
+
+  <!-- 안내 메시지 -->
+  <div class="vits-shipping-alert">
+    <p class="vits-shipping-alert-text">총 2건으로 나뉘어 발송될 예정입니다.</p>
+  </div>
+  
+  <!-- 배송 방법 선택 -->
+  <div class="vits-shipping-method">
+    
+    <h3 class="vits-shipping-method-title">배송 방법 선택</h3>
+
+    <div class="vits-shipping-method-tabs">
+      <button type="button" class="vits-shipping-method-btn is-active" data-method="parcel">
+        <span class="icon">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %>
+        </span>
+        <span class="text">택배</span>
+      </button>
+
+      <button type="button" class="vits-shipping-method-btn" data-method="quick">
+        <span class="icon">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %>
+        </span>
+        <span class="text">퀵배송</span>
+      </button>
+
+      <button type="button" class="vits-shipping-method-btn" data-method="freight">
+        
+        <span class="icon">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'freight' }) %>
+        </span>
+        <span class="text">화물</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 배송 방법별 내용 -->
+  <div class="vits-shipping-body">
+    <!-- ================= 택배 ================= -->
+    <div class="vits-shipping-panel is-active" data-panel="parcel">
+      <!-- 안내 문구 -->
+      <div class="vits-shipping-guide">
+        <ul>
+          <li>선택하신 택배로 배송되는 것을 원칙으로 합니다.</li>
+          <li class="is-warning">
+            단, 비츠영업용 차량으로 직배송될 수도 있습니다.
+          </li>
+          <li>발송 마감 시간은 16시입니다.</li>
+        </ul>
+      </div>
+
+      <!-- 택배사 선택 -->
+      <div class="vits-shipping-form">
+        <div class="vits-form-row">
+          <label class="vits-form-label">택배사 선택</label>
+          <div class="vits-form-field">
+            <select>
+              <option>선택</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 퀵배송 ================= -->
+    <div class="vits-shipping-panel" data-panel="quick">
+      <div class="vits-shipping-guide">
+        <ul>
+          <li>용달 차량으로 배송하는 방법입니다.</li>
+          <li>용달 비용은 담당자와 별도 협의가 필요합니다.</li>
+          <li>발송 마감 시간은 16시입니다.</li>
+        </ul>
+      </div>
+
+      <div class="vits-shipping-form">
+        <div class="vits-form-row-group">
+          <div class="vits-form-row">
+            <label class="vits-form-label">도착 희망일</label>
+            <div class="vits-form-field">
+              <input type="text" placeholder="날짜 선택" />
+            </div>
+          </div>
+
+          <div class="vits-form-row">
+            <label class="vits-form-label">도착 희망 시간</label>
+            <div class="vits-form-field">
+              <select>
+                <option>시간 선택</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 화물 ================= -->
+    <div class="vits-shipping-panel" data-panel="freight">
+      <div class="vits-shipping-guide">
+        <ul>
+          <li>경동/대신화물 지점으로 배송하는 방법입니다.</li>
+          <li>지점 수령 시 출고 후 해당 지점에 별도 방문해 주세요.</li>
+          <li>발송 마감 시간은 16시입니다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 받는 사람 -->
+  <div class="vits-shipping-receiver">
+    <h3 class="vits-shipping-section-title">받는 사람</h3>
+
+    <div class="vits-form-box">
+      <div class="vits-form-row">
+        <label class="vits-form-label">배송지 선택</label>
+        <div class="vits-form-field is-flex">
+          <select>
+            <option>여의도 본사</option>
+          </select>
+          <button type="button">배송지 변경</button>
+        </div>
+      </div>
+
+      <div class="vits-form-row-group">
+        <div class="vits-form-row">
+          <label class="vits-form-label">받는 사람</label>
+          <input type="text" />
+        </div>
+
+        <div class="vits-form-row">
+          <label class="vits-form-label">받는 사람 연락처</label>
+          <input type="text" />
+        </div>
+      </div>
+
+      <div class="vits-form-row">
+        <label class="vits-form-label">배송지 주소</label>
+        <div class="vits-form-field is-flex">
+          <input type="text" />
+          <button type="button">우편번호 찾기</button>
+        </div>
+      </div>
+
+      <div class="vits-form-row">
+        <label class="vits-form-label">상세 주소</label>
+        <input type="text" />
+      </div>
+
+      <div class="vits-form-row">
+        <label class="vits-form-label">배송 메모</label>
+        <textarea></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 보내는 사람 -->
+  <div class="vits-shipping-sender">
+    <h3 class="vits-shipping-section-title">보내는 사람</h3>
+
+    <div class="vits-form-box">
+      <div class="vits-form-row-group">
+        <div class="vits-form-row">
+          <label class="vits-form-label">발송처 선택</label>
+          <select>
+            <option>메가존</option>
+          </select>
+        </div>
+
+        <div class="vits-form-row">
+          <label class="vits-form-label">운임 선택</label>
+          <select>
+            <option>운임 지불 방법 선택</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="vits-form-row-group">
+        <div class="vits-form-row">
+          <label class="vits-form-label">보내는 사람</label>
+          <input type="text" />
+        </div>
+
+        <div class="vits-form-row">
+          <label class="vits-form-label">보내는 사람 연락처</label>
+          <input type="text" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

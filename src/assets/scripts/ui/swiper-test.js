@@ -1,5 +1,5 @@
 /**
- * @file scripts/ui/swiper-boxed.js
+ * @file scripts/ui/swiper-test.js
  * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
  * @description
  *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
@@ -32,7 +32,7 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   if (!$) {
-    console.log('[swiper-boxed] jQuery not found');
+    console.log('[swiper-test] jQuery not found');
     return;
   }
 
@@ -56,7 +56,7 @@ import Swiper from 'swiper/bundle';
     // [정석] 컨테이너 바로 아래 wrapper 필수
     var $swiperWrapper = $container.children('.swiper-wrapper').first();
     if (!$swiperWrapper.length) {
-      console.warn('[swiper-boxed] .swiper-wrapper not found in', $wrapper[0]);
+      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
       return;
     }
 
@@ -67,7 +67,7 @@ import Swiper from 'swiper/bundle';
     try {
       userOptions = optionsStr ? JSON.parse(optionsStr) : {};
     } catch (e) {
-      console.error('[swiper-boxed] Invalid JSON in data-swiper-options', e);
+      console.error('[swiper-test] Invalid JSON in data-swiper-options', e);
       return;
     }
 
@@ -145,9 +145,9 @@ import Swiper from 'swiper/bundle';
     try {
       var swiperInstance = new Swiper($container[0], finalOptions);
       $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
-      console.log('[swiper-boxed] initialized:', $wrapper.attr('class'));
+      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
     } catch (e) {
-      console.error('[swiper-boxed] Initialization failed', e);
+      console.error('[swiper-test] Initialization failed', e);
     }
   }
 
@@ -160,23 +160,23 @@ import Swiper from 'swiper/bundle';
     if (instance && typeof instance.destroy === 'function') {
       instance.destroy(true, true);
       $wrapper.removeData(SWIPER_INSTANCE_KEY);
-      console.log('[swiper-boxed] destroyed:', $wrapper.attr('class'));
+      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
     }
   }
 
-  window.UI.swiperBoxed = {
+  window.UI.swiperTest = {
     init: function () {
       $('[data-swiper-options]').each(function () {
         initSwiper($(this));
       });
-      console.log('[swiper-boxed] init');
+      console.log('[swiper-test] init');
     },
 
     destroy: function () {
       $('[data-swiper-options]').each(function () {
         destroySwiper($(this));
       });
-      console.log('[swiper-boxed] destroy');
+      console.log('[swiper-test] destroy');
     },
 
     reinit: function (selector) {
@@ -189,5 +189,5 @@ import Swiper from 'swiper/bundle';
     }
   };
 
-  console.log('[swiper-boxed] module loaded');
+  console.log('[swiper-test] module loaded');
 })(window.jQuery || window.$, window);

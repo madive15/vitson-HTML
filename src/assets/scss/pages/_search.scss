@@ -1,0 +1,44 @@
+// -----------------------------------------------------------------------------
+// pages/_search.scss
+// - 검색/검색결과 페이지 공통 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/swiper' as swiper;
+
+/* 검색 결과 페이지 */
+.vits-main-search-list {
+  .vits-product-list.view-thumb .vits-product-list-items {
+    gap: map.get(var.$unit, 32) map.get(var.$unit, 24);
+  }
+}
+
+/* 검색 결과 - 함께 보면 좋아요 */
+.vits-related {
+  &-header {
+    @include mx.flex(flex, row, flex-start, flex-end);
+    @include mx.border('top', $color: map.get(color.$layout-surf, 'secondary'));
+    gap: map.get(var.$unit, 8);
+    padding-top: map.get(var.$unit, 56);
+    margin-top: map.get(var.$unit, 24);
+  }
+
+  &-title {
+    @include swiper.swiper-title('h2');
+  }
+
+  &-body {
+    padding-top: fn.rem(28);
+
+    .vits-base-swiper-card {
+      padding: 0;
+    }
+  }
+}

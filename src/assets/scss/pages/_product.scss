@@ -10,6 +10,7 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/swiper' as swiper;
 
 // 최상위 class
 .vits-wrapper-product {
@@ -1330,22 +1331,28 @@
 // swiper 컨테이너 영역 (추천 상품영역)
 .vits-product-recommend {
   .recommend-title {
+    @include swiper.swiper-title;
     max-width: 1280px;
     padding-top: fn.rem(50);
     padding-bottom: fn.rem(30);
     margin: 0 auto;
 
-    @include typo.typography('d2b');
-
-    .primary {
-      color: map.get(color.$brand-colors, 'primary');
-    }
   }
 
   .vits-banner-swiper {
     position: relative;
   }
-  
+
+  /* [상품상세 페이지 상품유닛 (회원, 비회원 구분)] */
+  .vits-product-slide {
+    .vits-base-swiper-card {
+      padding:0;
+    }
+
+    .product-price{
+      width: 100%;
+    }
+  }
 }
 
 // 상품상세 페이지 >  옵션- 필터영역 (우측 전체매뉴)
@@ -1411,7 +1418,8 @@
             }
 
             &.disabled {
-              color: map.get(color.$text-colors, 'quaternary');
+              color: map.get(color.$text-colors, 'tertiary');
+              pointer-events: none;
               background-color: map.get(color.$layout-surf, 'sunken');
               border-color: map.get(color.$layout-border, 'tertiary');
             }

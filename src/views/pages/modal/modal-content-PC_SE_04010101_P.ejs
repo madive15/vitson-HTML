@@ -1,0 +1,144 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<form class="vits-form">
+  <div class="vits-form-group">
+    <ul class="vits-form-list">
+      <li class="vits-form-item">
+        <p class="vits-form-item-label is-required" aria-hidden="true">회사명(기관명)</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'company1',
+          name: 'company1',
+          label: '회사명(기관명)',
+          placeholder: '회사명(기관명)을 입력해주세요.',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </li>
+
+      <li class="vits-form-item">
+        <p class="vits-form-item-label is-required" aria-hidden="true">담당자</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'company2',
+          name: 'company2',
+          label: '담당자',
+          placeholder: '담당자를 입력해주세요.',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </li>
+
+      <li class="vits-form-item">
+        <p class="vits-form-item-label is-required" aria-hidden="true">연락처</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'company3',
+          name: 'company3',
+          label: '연락처',
+          placeholder: '연락처를 입력해주세요.',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </li>
+
+      <li class="vits-form-item">
+        <p class="vits-form-item-label is-required" aria-hidden="true">이메일</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'company4',
+          name: 'company4',
+          label: '이메일',
+          placeholder: '이메일을 입력해주세요.',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </li>
+
+      <li class="vits-form-item">
+        <p class="vits-form-item-label is-required" aria-hidden="true">내용</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/textarea.ejs`, {
+          id: 'memoB',
+          name: 'memoB',
+          label: '내용',
+          placeholder: '내용을 입력해주세요.',
+          count: true,
+          maxLength: 200,
+          rootClass: 'size-large'
+        }) %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="vits-form-agree">
+    <div class="vits-form-agree-inner">
+      <div>
+        <p>1. 개인정보 수집, 이용 목적- 신청서 접수를 통한 서비스 제공에 관련한 목적으로 개인정보를 처리(수집·이용)합니다.</p>
+      </div>
+      
+      <div>
+        <p>2. 개인정보의 보유 및 이용기간</p>
+        <p>- 수집하는 개인정보의 항목 - 이름,소속, 연락처, 이메일 등 관련정보</p>
+      </div>
+  
+      <div>
+        <p>3. 개인정보의 보유 및 이용기간</p>
+        <p>- 원칙적으로 개인정보 이용 목적이 달성된 후에는 해당 정보를 지체없이 파기함.</p>
+        <p>- 일신비츠온이 제공하는 서비스를 받으시는 동안 안전하게 보유되고, 이용 목적에 부하는 경우에만 이용하게 됨.</p>
+      </div>
+  
+      <div>
+        <p>4. 개인정보 수집 및 이용에 대한 동의를 거부할 수 있으며, 거부시 정보서비스 이용에 제한이 있을 수 있습니다.</p>
+      </div>
+  
+      <div>
+        <p>5. 이용자 개인정보보호를 위하여 수집된 개인정보는 제3자에게 제공하지 않습니다.</p>
+      </div>
+      
+      <div>
+        <p>1. 개인정보 수집, 이용 목적- 신청서 접수를 통한 서비스 제공에 관련한 목적으로 개인정보를 처리(수집·이용)합니다.</p>
+      </div>
+      
+      <div>
+        <p>2. 개인정보의 보유 및 이용기간</p>
+        <p>- 수집하는 개인정보의 항목 - 이름,소속, 연락처, 이메일 등 관련정보</p>
+      </div>
+  
+      <div>
+        <p>3. 개인정보의 보유 및 이용기간</p>
+        <p>- 원칙적으로 개인정보 이용 목적이 달성된 후에는 해당 정보를 지체없이 파기함.</p>
+        <p>- 일신비츠온이 제공하는 서비스를 받으시는 동안 안전하게 보유되고, 이용 목적에 부하는 경우에만 이용하게 됨.</p>
+      </div>
+  
+      <div>
+        <p>4. 개인정보 수집 및 이용에 대한 동의를 거부할 수 있으며, 거부시 정보서비스 이용에 제한이 있을 수 있습니다.</p>
+      </div>
+  
+      <div>
+        <p>5. 이용자 개인정보보호를 위하여 수집된 개인정보는 제3자에게 제공하지 않습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="vits-form-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+      variant: 'basic',
+      size: 'm',
+      name: 'ckbox1',
+      list: 'column',
+      gap: 16,
+      datas: [
+        {
+          text: '개인정보 수집, 이용에 대한 동의 절차에 동의합니다.',
+          value:'개인정보 수집, 이용에 대한 동의 절차에 동의합니다.',
+          checked: false,
+          disabled: false,
+          required: false,
+        }
+      ]
+    }) %>
+  </div>
+</form>

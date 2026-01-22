@@ -133,7 +133,11 @@ $typo-weight: (
   // stylelint-disable-next-line at-rule-empty-line-before
   @else if $group == 'd' {
     $style: map.get($typo-deco, $key);
-    $family: 'PretendardGOV';
+
+    // d3일 때만 PretendardGOV 적용
+    @if $key == 'd3' {
+      $family: 'PretendardGOV';
+    }
   }
 
   @if not $style {

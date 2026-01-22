@@ -1,0 +1,99 @@
+// -----------------------------------------------------------------------------
+// components/_tooltip.scss
+// - 툴팁(정보/도움말/설명) 컴포넌트 공통 스타일 정의. (트리거/포지션/노출상태 포함)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+
+/* 툴팁 스타일 */
+.vits-tooltip {
+  position: relative;
+  display: inline-block;
+
+  &-trigger {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 4);
+    background: transparent;
+
+    .text {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 16));
+      color: #989898;
+    }
+  }
+
+  &-content {
+    @include mx.position(absolute, calc(100% + map.get(var.$unit, 4)));
+    @include mx.flex(flex, column, flex-start, flex-start);
+    @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+    z-index: var.$zindex-tooltip;
+    gap: map.get(var.$unit, 12);
+    width: max-content;
+    padding: map.get(var.$unit, 16);
+    visibility: hidden;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: 0 9px 21px 0 rgb(0 0 0 / 10%);
+    opacity: 0;
+    transition:
+      opacity 0.2s,
+      visibility 0.2s,
+      transform 0.2s;
+    transform: translateY(-4px);
+
+    &[aria-hidden='false'] {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &-heading {
+    @include mx.flex(flex, row, space-between, center);
+    width: 100%;
+
+    .text {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      padding-top: map.get(var.$unit, 2);
+    }
+
+    .button {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      @include icon.ic-size(fn.rem(28));
+      color: map.get(color.$icon-neutral, 'primary');
+    }
+  }
+
+  &-list {
+    @include mx.bullet-style;
+  }
+
+  &-item {
+    @include typo.typography('b3r');
+  }
+
+  &[data-tooltip='left'] {
+    .vits-tooltip-content {
+      left: 0;
+    }
+  }
+
+  &[data-tooltip='right'] {
+    .vits-tooltip-content {
+      right: -18px;
+    }
+  }
+}

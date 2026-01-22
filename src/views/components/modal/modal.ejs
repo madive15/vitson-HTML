@@ -1,0 +1,138 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<%
+/**
+ * Modal Component
+ * 
+ * @param {string} id - 모달 고유 ID (필수)
+ * @param {string} type - 모달 타입: 'modal' | 'bottom' (기본값: 'modal')
+ * @param {string} size - 모달 사이즈: '320' | '480' | '640' | '800' 등 (선택)
+ * @param {string} theme - 모달 테마: 'like' | 'recommend' | 'terms' | 'filter' 등 (선택)
+ * @param {string} title - 헤더 타이틀 (필수)
+ * @param {string} subtitle - 헤더 서브타이틀 (선택)
+ * @param {string} contentPath - 컨텐츠 EJS 파일 경로 (선택, content와 둘 중 하나)
+ * @param {string} content - 직접 전달할 HTML 컨텐츠 (선택, contentPath와 둘 중 하나)
+ * @param {array} buttons - 푸터 버튼 배열 (선택)
+ *   - {string} text: 버튼 텍스트
+ *   - {string} type: 버튼 타입 'button' | 'submit' (기본값: 'button')
+ *   - {string} variant: 버튼 스타일 'primary' | 'secondary' | 'text' (기본값: 'primary')
+ *   - {string} size: 버튼 크기 'full' | 'half' | 'flex-1' | 'flex-2' (기본값: 'full')
+ *   - {string} action: 'close' 입력 시 data-modal-close 추가 (기본값: '')
+ *   - {object} attrs: 추가 속성들 (선택)
+ * @param {boolean} hasFooter - 푸터 표시 여부 (기본값: buttons 있으면 true)
+ */
+
+// 기본값 설정
+const modalId = id;
+const modalType = (typeof type !== 'undefined' && type) ? type : 'modal';
+const modalSize = (typeof size !== 'undefined' && size) ? size : '';
+const modalTheme = (typeof theme !== 'undefined' && theme) ? theme : '';
+const modalTitle = (typeof title !== 'undefined' && title) ? title : '';
+const modalSubtitle = (typeof subtitle !== 'undefined' && subtitle) ? subtitle : '';
+const modalContentPath = (typeof contentPath !== 'undefined' && contentPath) ? contentPath : '';
+const modalContent = (typeof content !== 'undefined' && content) ? content : '';
+const modalButtons = (typeof buttons !== 'undefined' && buttons) ? buttons : [];
+const modalHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (modalButtons.length > 0);
+
+// 모달 클래스 구성
+let modalClasses = [];
+
+// 타입 클래스 (기본 클래스 역할)
+if (modalType === 'bottom') {
+  modalClasses.push('vits-modal-bottom');
+} else {
+  modalClasses.push('vits-modal');
+}
+
+// 사이즈 클래스
+if (modalSize) {
+  modalClasses.push(`width-${modalSize}`);
+}
+
+// 테마 클래스
+if (modalTheme) {
+  modalClasses.push(modalTheme);
+}
+
+const modalClass = modalClasses.join(' ');
+%>
+
+<!-- 모달 -->
+<div 
+  class="<%= modalClass %>"
+  data-modal-box="<%= modalId %>"
+  data-modal-type="<%= modalType %>"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="<%= modalId %>-title"
+  <% if (modalSubtitle) { %>aria-describedby="<%= modalId %>-subtitle"<% } %>
+>
+  <!-- 딤 레이어 -->
+  <div class="vits-modal-dim" data-modal-dim="<%= modalId %>"></div>
+
+  <!-- 모달 Inner -->
+  <div class="vits-modal-inner">
+    <!-- 헤더 -->
+    <div class="vits-modal-header">
+      <div class="vits-modal-header-content">
+        <h2 class="vits-modal-title" id="<%= modalId %>-title">
+          <%= modalTitle %>
+        </h2>
+        <% if (modalSubtitle) { %>
+          <p class="vits-modal-subtitle" id="<%= modalId %>-subtitle">
+            <%= modalSubtitle %>
+          </p>
+        <% } %>
+      </div>
+      <button 
+        type="button" 
+        class="vits-modal-close"
+        data-modal-close 
+        aria-label="닫기"
+      >
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </div>
+
+    <!-- 컨텐츠 -->
+    <div class="vits-modal-content">
+      <div class="vits-modal-content-inner">
+        <% if (modalContentPath) { %>
+          <%- include(modalContentPath, { size: undefined }) %>
+        <% } else if (modalContent) { %>
+          <%- modalContent %>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- 푸터 -->
+    <% if (modalHasFooter) { %>
+      <div class="vits-modal-footer">
+        <% if (modalButtons.length > 0) { %>
+          <div class="vits-modal-buttons <%= modalButtons.length === 1 ? 'is-single' : 'is-double' %>">
+            <% modalButtons.forEach(function(btn) { 
+              const btnType = btn.type || 'button';
+              const btnVariant = btn.variant || 'primary';
+              const btnSize = btn.size || 'full';
+              const btnAction = btn.action || '';
+              const btnAttrs = btn.attrs || {};
+            %>
+              <button
+                type="<%= btnType %>"
+                class="vits-modal-btn vits-modal-btn-<%= btnVariant %>"
+                <% if (btnAction === 'close') { %>
+                  data-modal-close
+                <% } %>
+                <% Object.keys(btnAttrs).forEach(function(attrKey) { %>
+                  <%= attrKey %>="<%= btnAttrs[attrKey] %>"
+                <% }); %>
+              >
+                <span class="text"><%= btn.text %></span>
+              </button>
+            <% }); %>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>

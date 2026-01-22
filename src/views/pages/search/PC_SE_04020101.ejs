@@ -1,6 +1,9 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 
+<%# 스와이프 아이템 - 함께 본 상품 데이터 불러오기 %>
+<% include(`${_src}/views/components/swiper/swiper-card-templates.ejs`) %>
+
 <%# S: 카테고리 데이터 불러오기 %>
 <%- include(`${_src}/views/mock-data/common/category.mock.ejs`) %>
 
@@ -56,7 +59,7 @@
               }) %>
 
               <div class="vits-grid-area">
-                <%# <aside class="vits-grid-side vits-grid-side-left vits-plp-side"> %>
+                <%# <aside class="vits-grid-side vits-grid-side-left vits-side-plp"> %>
                 <%- include(`${_src}/views/components/pg-category/plp-left-category.ejs`, {
                   _src: _src,
                   mockData: mockData,
@@ -67,17 +70,45 @@
                   showCommonCategory: true
                 }) %>
                 
-                <%# <div class="vits-grid-main vits-plp-main"> %>
+                <%# <div class="vits-grid-main vits-main-plp"> %>
                 <%- include(`${_src}/views/components/pg-category/plp-main.ejs`, {
                   _src: _src,
                   totalCount: 60,
                   productList: [],
-                  pagination: {}  
+                  pagination: {},
+                  showAlsoViewedSection: true,
+                  plpMainClass: 'vits-main-search-list',
+                  swiperBaseCard: swiperBaseCard
                 }) %>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- S: 함께 보면 좋아요 -->
+        <section class="vits-related-section">
+          <div class="vits-related-container vits-product-recommend">
+            <div class="vits-related-header vits-inner">
+              <h2 class="vits-related-title">함께보면 <span class="point-color">좋아요</span></h2>
+              <%- include(`${_src}/views/components/tooltip.ejs`, {
+                  _src: _src,
+                  triggerText: '광고',
+                  heading: 'AD 상품 등록 안내',
+                  items: [
+                    'special 상품 광고를 구매한 상품으로<br />입찰가순으로 전시됩니다.',
+                    '구매상황에 따라 추천광고를 구매한<br />상품 중 연관도순으로 정렬됩니다..'
+                  ],
+                  position: 'right'
+                }) %>
+            </div>
+            <div class="vits-related-body">
+              <div class="vits-base-swiper">
+                <%- include(`${_src}/views/components/swiper/swiper-type.ejs`, {swiperType: 'slim', desktop: 6}) %>
+              </div>
+            </div>
+          </div>           
+        </section>
+        <!-- E: 함께 보면 좋아요 -->
 
         <!-- S: 비교함 담기 -->
         <div class="vits-compare" data-layer-box="compareLayer" data-layer-type="compare">
