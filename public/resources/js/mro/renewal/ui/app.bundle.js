@@ -359,6 +359,419 @@
 
 /***/ }),
 
+/***/ 95:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/modal.js
+ * @purpose data-속성 기반 레이어(모달/바텀시트/토스트) 공통 + 열림/닫힘 애니메이션(등장/퇴장)
+ * @description
+ *  - 매핑: [data-modal-btn][data-modal-target] ↔ [data-modal-box="target"]
+ *  - 상태:
+ *    - is-open    : display 제어(렌더링 on/off)
+ *    - is-active  : 실제 노출 상태(등장 완료)
+ *    - is-closing : 퇴장 애니메이션 중
+ *  - aria-expanded는 즉시 동기화(접근성), 화면 전환은 CSS transition으로 처리
+ * @rule
+ *  - 여러 버튼이 1개 레이어를 열 수 있음(동일 data-modal-target 공유 가능)
+ *  - 옵션(lock/outside/esc/group)은 data-modal-box(박스) 우선, 없으면 버튼 값으로 판정
+ * @option
+ *  - data-modal-group="true"    : 동일 scope(또는 문서) 내 1개만 오픈
+ *  - data-modal-outside="true"  : 바깥 클릭 시 close
+ *  - data-modal-esc="true"      : ESC 닫기
+ *  - data-modal-lock="true"     : body 스크롤 락(모달/바텀 권장)
+ * @a11y
+ *  - 동일 target의 모든 버튼 aria-expanded/aria-label 동기화
+ *  - (선택) data-aria-label-base가 있으면 aria-label을 "... 열기/닫기"로 동기화
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) {
+    console.log('[modal] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  window.UI.modal = window.UI.modal || {};
+  var OPEN = 'is-open';
+  var ACTIVE = 'is-active';
+  var CLOSING = 'is-closing';
+  var BODY_ACTIVE = 'is-layer-open';
+  var CLOSE_FALLBACK_MS = 450;
+  var SEL_BTN = '[data-modal-btn]';
+  var SEL_BOX = '[data-modal-box]';
+  var SEL_OPEN_BOX = SEL_BOX + '.' + OPEN;
+  var SEL_CLOSE = '[data-modal-close]';
+  var NS = '.uiModal';
+
+  // [width] 현재 렌더링된 모달 inner width를 CSS 변수로 주입
+  function syncModalInnerWidth($box) {
+    if (!$box || !$box.length) return;
+    var $inner = $box.find('.vits-modal-inner').first();
+    if (!$inner.length) return;
+
+    // transform 영향 없음(레이아웃 width)
+    var w = parseFloat(window.getComputedStyle($inner[0]).width);
+    $box[0].style.setProperty('--modal-inner-w', w + 'px');
+  }
+
+  // [width] 열린 모달들만 일괄 갱신(리사이즈 대응)
+  function syncOpenModalsInnerWidth() {
+    $(SEL_OPEN_BOX).each(function () {
+      syncModalInnerWidth($(this));
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // [vh] iOS 주소창/툴바 가변 대응: 실제 innerHeight 기반 1vh 값을 --vh로 저장
+  // - CSS에서 calc(var(--vh, 1vh) * N) 형태로 사용
+  // - 전역 변수는 :root(html)에 1개만 저장(다른 곳 영향 최소)
+  // ---------------------------------------------------------------------------
+  function setVhVar() {
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  var _vhRaf = 0;
+  function onResizeVh() {
+    if (_vhRaf) window.cancelAnimationFrame(_vhRaf);
+    _vhRaf = window.requestAnimationFrame(function () {
+      _vhRaf = 0;
+      setVhVar();
+    });
+  }
+  // ---------------------------------------------------------------------------
+
+  // data-modal-box/target가 셀렉터로 안전하게 쓰이도록 최소 이스케이프 처리
+  function escAttr(v) {
+    var s = String(v == null ? '' : v);
+    if (!s) return s;
+    if (window.CSS && typeof window.CSS.escape === 'function') return window.CSS.escape(s);
+    return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  }
+
+  // camelCase 키를 data-xxxx로 변환
+  function toDataAttrName(key) {
+    return 'data-modal-' + String(key || '').replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^modal-/, '');
+  }
+
+  // data()/attr() 값들을 안전하게 boolean으로 변환
+  function toBool(v) {
+    if (v === true) return true;
+    if (v === false) return false;
+    if (v == null) return false;
+    if (v === '') return true;
+    var s = String(v).toLowerCase();
+    return s === 'true' || s === '1';
+  }
+
+  // 옵션 값 읽기(박스 우선 → 없으면 버튼), 값이 없어도 "속성 존재"면 true 처리
+  function readOptBool($box, $btn, key) {
+    var attrName = toDataAttrName(key);
+    if ($box && $box.length) {
+      var boxData = $box.data(key);
+      if (boxData !== undefined) return toBool(boxData);
+      var boxAttr = $box.attr(attrName);
+      if (boxAttr !== undefined) return toBool(boxAttr);
+    }
+    if ($btn && $btn.length) {
+      var btnData = $btn.data(key);
+      if (btnData !== undefined) return toBool(btnData);
+      var btnAttr = $btn.attr(attrName);
+      if (btnAttr !== undefined) return toBool(btnAttr);
+    }
+    return false;
+  }
+
+  // 동일 target 버튼 전체 조회
+  function findBtnsByTarget(target) {
+    if (!target) return $();
+    return $('[data-modal-btn][data-modal-target="' + escAttr(target) + '"]');
+  }
+
+  // target 기준 레이어 박스 조회
+  function findBoxByTarget(target) {
+    if (!target) return $();
+    return $('[data-modal-box="' + escAttr(target) + '"]').first();
+  }
+
+  // aria-expanded 기준으로 aria-label("... 열기/닫기") 동기화(옵션)
+  function syncAriaLabel($btn) {
+    var base = $btn.attr('data-aria-label-base');
+    if (!base) return;
+    var expanded = $btn.attr('aria-expanded') === 'true';
+    $btn.attr('aria-label', base + ' ' + (expanded ? '닫기' : '열기'));
+  }
+
+  // 동일 target의 모든 버튼 aria 상태 동기화
+  function syncBtnsA11y($btns, expanded) {
+    if (!$btns || !$btns.length) return;
+    $btns.each(function () {
+      var $b = $(this);
+      $b.attr('aria-expanded', expanded ? 'true' : 'false');
+      syncAriaLabel($b);
+    });
+  }
+
+  // body 스크롤 락 + 레이어 상태 클래스 동기화
+  function syncBodyLock() {
+    // 열려있는 박스 중 lock 옵션이 true인 게 하나라도 있으면 유지
+    var needLock = false;
+    $(SEL_OPEN_BOX).each(function () {
+      var $box = $(this);
+      var target = $box.attr('data-modal-box');
+      var $btns = findBtnsByTarget(target);
+      if (readOptBool($box, $btns.eq(0), 'modalLock')) needLock = true;
+    });
+    var $body = $('body');
+    if (needLock) {
+      // 현재 스크롤 위치 저장
+      var currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      // 스크롤이 실제로 있는지 확인
+      var hasScroll = document.documentElement.scrollHeight > window.innerHeight;
+
+      // body에 position fixed + top으로 스크롤 위치 고정
+      $body.css({
+        position: 'fixed',
+        top: -currentScrollY + 'px',
+        left: '0',
+        right: '0',
+        'overflow-y': hasScroll ? 'scroll' : 'hidden' // 스크롤 있을 때만 scroll
+      });
+
+      // 나중에 복원하기 위해 스크롤 위치 저장
+      $body.data('scroll-position', currentScrollY);
+      $body.addClass(BODY_ACTIVE);
+    } else {
+      // 스크롤 위치 복원
+      var savedScrollY = $body.data('scroll-position') || 0;
+      $body.css({
+        position: '',
+        top: '',
+        left: '',
+        right: '',
+        'overflow-y': ''
+      });
+      window.scrollTo(0, savedScrollY);
+      $body.removeData('scroll-position');
+      $body.removeClass(BODY_ACTIVE);
+    }
+  }
+
+  // 중복 close 방지 플래그
+  function setClosingFlag($box, on) {
+    $box.data('modalClosing', on === true);
+  }
+  function isClosing($box) {
+    return $box.data('modalClosing') === true;
+  }
+
+  // 열기: display on → 다음 프레임에 is-active로 transition 실행
+  function openLayer(target, $btn, $box) {
+    var $btns = findBtnsByTarget(target);
+    var $dim = $('[data-modal-dim="' + escAttr(target) + '"]');
+
+    // [vh] 열림 시점에 한번 더 갱신(모바일에서 주소창 상태 변화 대응)
+    setVhVar();
+    setClosingFlag($box, false);
+    $box.removeClass(CLOSING).addClass(OPEN);
+
+    // [width] display 켠 직후 측정(처음 렌더링 폭 확보)
+    syncModalInnerWidth($box);
+
+    // 딤도 같이 열기 (딤이 있을 때만)
+    if ($dim.length) {
+      $dim.removeClass(CLOSING).addClass(OPEN);
+    }
+    syncBtnsA11y($btns, true);
+    if (readOptBool($box, $btn, 'modalLock')) syncBodyLock();
+    window.requestAnimationFrame(function () {
+      $box.addClass(ACTIVE);
+      if ($dim.length) {
+        $dim.addClass(ACTIVE);
+      }
+
+      // [width] active 반영 후 1회 더 동기화(레이아웃 안정화)
+      syncModalInnerWidth($box);
+    });
+  }
+
+  // 닫기: is-active 제거 + is-closing 추가 → transition 후 display off
+  function closeLayer(target, $btn, $box) {
+    var $btns = findBtnsByTarget(target);
+    var $dim = $('[data-modal-dim="' + escAttr(target) + '"]');
+    if (!$box.hasClass(OPEN)) return;
+    if (isClosing($box)) return;
+    setClosingFlag($box, true);
+    syncBtnsA11y($btns, false);
+    $box.removeClass(ACTIVE).addClass(CLOSING);
+
+    // 딤도 같이 닫기 (딤이 있을 때만)
+    if ($dim.length) {
+      $dim.removeClass(ACTIVE).addClass(CLOSING);
+    }
+    var finished = false;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      $box.off('transitionend' + NS + 'Close');
+      $box.removeClass(CLOSING).removeClass(OPEN);
+      if ($dim.length) {
+        $dim.removeClass(CLOSING).removeClass(OPEN);
+      }
+      setClosingFlag($box, false);
+      syncBodyLock();
+    }
+
+    // transitionend는 여러 번 올 수 있으니 opacity 1회만 처리
+    $box.off('transitionend' + NS + 'Close').on('transitionend' + NS + 'Close', function (e) {
+      if (e.target !== $box[0]) return;
+      var pn = e.originalEvent && e.originalEvent.propertyName;
+      if (pn && pn !== 'opacity') return;
+      finish();
+    });
+    window.setTimeout(function () {
+      finish();
+    }, CLOSE_FALLBACK_MS);
+  }
+
+  // group 옵션이면 열린 레이어를 전부 닫음
+  function closeAll() {
+    $(SEL_OPEN_BOX).each(function () {
+      var $box = $(this);
+      var target = $box.attr('data-modal-box');
+      if (!target) return;
+
+      // 버튼 하나를 대표로 넘기되, 내부에서 버튼 전체 동기화 처리
+      var $btn = findBtnsByTarget(target).first();
+      closeLayer(target, $btn, $box);
+    });
+  }
+
+  // 바깥 클릭 닫기(옵션): 열려있는 박스만 순회
+  function onOutsideClick(e) {
+    var $t = $(e.target);
+    $(SEL_OPEN_BOX).each(function () {
+      var $box = $(this);
+      var target = $box.attr('data-modal-box');
+      if (!target) return;
+      var $btns = findBtnsByTarget(target);
+      var $btn = $btns.first();
+      if (!$btn.length) return;
+      if (!readOptBool($box, $btn, 'modalOutside')) return;
+      // 딤 클릭은 "outside 닫기"로 처리 (딤이 박스 내부에 있어도 닫히게)
+      var $dim = $('[data-modal-dim="' + escAttr(target) + '"]');
+      if ($dim.length && ($t.is($dim) || $t.closest($dim).length)) {
+        closeLayer(target, $btn, $box);
+        return;
+      }
+
+      // 레이어 내부 클릭은 무시
+      if ($box.has($t).length) return;
+
+      // 어떤 트리거 버튼 클릭은 토글 핸들러가 처리
+      if ($btns.is($t) || $btns.has($t).length) return;
+      closeLayer(target, $btn, $box);
+    });
+  }
+
+  // ESC 닫기(옵션): 열려있는 박스만 순회
+  function onEsc(e) {
+    if (e.key !== 'Escape') return;
+    $(SEL_OPEN_BOX).each(function () {
+      var $box = $(this);
+      var target = $box.attr('data-modal-box');
+      if (!target) return;
+      var $btns = findBtnsByTarget(target);
+      var $btn = $btns.first();
+      if (!$btn.length) return;
+      if (!readOptBool($box, $btn, 'modalEsc')) return;
+      closeLayer(target, $btn, $box);
+    });
+  }
+
+  // 트리거 토글
+  function onToggle(e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var target = $btn.data('modalTarget');
+    if (!target) return;
+    var $box = findBoxByTarget(target);
+    if (!$box.length) return;
+    var isOpen = $box.hasClass(OPEN);
+
+    // group 옵션은 열기 전에만 전체 닫기
+    if (!isOpen && readOptBool($box, $btn, 'modalGroup')) closeAll();
+    if (isOpen) closeLayer(target, $btn, $box);else openLayer(target, $btn, $box);
+  }
+
+  // 레이어 내부 닫기 버튼
+  function onInnerClose(e) {
+    e.preventDefault();
+    var $box = $(this).closest(SEL_BOX);
+    if (!$box.length) return;
+    var target = $box.attr('data-modal-box');
+    if (!target) return;
+    var $btn = findBtnsByTarget(target).first();
+    closeLayer(target, $btn, $box);
+  }
+
+  // 이벤트 바인딩(1회)
+  function bind() {
+    $(document).off('click' + NS, SEL_BTN).on('click' + NS, SEL_BTN, onToggle);
+    $(document).off('click' + NS + 'InnerClose', SEL_CLOSE).on('click' + NS + 'InnerClose', SEL_CLOSE, onInnerClose);
+    $(document).off('click' + NS + 'Outside').on('click' + NS + 'Outside', onOutsideClick);
+    $(document).off('keydown' + NS + 'Esc').on('keydown' + NS + 'Esc', onEsc);
+  }
+
+  // 이벤트 언바인딩(페이지 전환/테스트용)
+  function unbind() {
+    $(document).off(NS);
+    $(document).off(NS + 'InnerClose');
+    $(document).off(NS + 'Outside');
+    $(document).off(NS + 'Esc');
+  }
+  window.UI.modal.init = function () {
+    if (window.UI.modal.__bound) return;
+    bind();
+    window.UI.modal.__bound = true;
+
+    // [vh] 초기 1회 세팅 + 리사이즈/방향전환 갱신 바인딩
+    // - 모바일(iOS) 주소창/툴바로 innerHeight가 변할 수 있어 1vh 기준값을 변수로 보정
+    setVhVar();
+    $(window).off('resize' + NS + 'Vh orientationchange' + NS + 'Vh').on('resize' + NS + 'Vh orientationchange' + NS + 'Vh', onResizeVh);
+
+    // [width] 리사이즈/방향전환 시 "열려있는" 모달만 폭 재측정 → CSS 변수 갱신
+    // - transform 영향 없는 computed width 기준으로 --modal-inner-w 업데이트
+    $(window).off('resize' + NS + 'W orientationchange' + NS + 'W').on('resize' + NS + 'W orientationchange' + NS + 'W', syncOpenModalsInnerWidth);
+
+    // 초기 상태에 열린 레이어가 있으면 body lock 동기화
+    syncBodyLock();
+    console.log('[modal] init');
+  };
+  window.UI.modal.destroy = function () {
+    if (!window.UI.modal.__bound) return;
+    unbind();
+    window.UI.modal.__bound = false;
+
+    // [vh] viewport 높이 보정 이벤트 해제
+    $(window).off('resize' + NS + 'Vh orientationchange' + NS + 'Vh');
+
+    // [width] 모달 폭 동기화 이벤트 해제
+    $(window).off('resize' + NS + 'W orientationchange' + NS + 'W');
+
+    // (선택) 변수 자체는 남겨도 무방하지만, 테스트/페이지 전환에서 흔적 제거가 필요하면 해제
+    // document.documentElement.style.removeProperty('--vh');
+
+    console.log('[modal] destroy');
+  };
+  window.UI.modal.closeAll = closeAll;
+  console.log('[modal] module loaded');
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
 /***/ 105:
 /***/ (function() {
 
@@ -1198,730 +1611,128 @@
 
 /***/ }),
 
-/***/ 205:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
-var utils = __webpack_require__(918);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
-var toggle = __webpack_require__(344);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
-var scroll_boundary = __webpack_require__(160);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
-var ui_layer = __webpack_require__(847);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(111);
-;// ./src/assets/scripts/ui/swiper.js
-/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
-  - <button ... data-main-prev></button>
-  - <button ... data-main-next></button>
-  - var mainPrev = root.querySelector("[data-main-prev]");
-  - var mainNext = root.querySelector("[data-main-next]");
-  - mainPrev.addEventListener("click", ...);
-  - mainNext.addEventListener("click", ...);
-  - mainPrev.classList.add("swiper-button-disabled");
-  - mainNext.classList.add("swiper-button-disabled");
-  - mainPrev.classList.remove("swiper-button-disabled");
-  - mainNext.classList.remove("swiper-button-disabled");
-  - if (currentIndex <= 0) mainPrev... else ...
-  - if (currentIndex >= last) mainNext... else ...
-*/
-
-
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  var root = document.querySelector('[data-test-gallery]');
-  if (!root) return;
-  var mainEl = root.querySelector('[data-main-swiper]');
-  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
-  var mainWrapper = root.querySelector('[data-main-wrapper]');
-  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
-  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
-  var mainPrev = root.querySelector('[data-main-prev]');
-  var mainNext = root.querySelector('[data-main-next]');
-  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
-  var thumbsNext = root.querySelector('[data-thumbs-next]');
-  if (!thumbsPrev || !thumbsNext) return;
-  var zoomBox = root.querySelector('[data-zoom]');
-  var zoomImg = root.querySelector('[data-zoom-img]');
-  var ZOOM_RATIO = 3;
-
-  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
-  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
-  var items = mainSlides.map(function (slide) {
-    var img = slide.querySelector('[data-main-img]');
-    if (img) {
-      return {
-        type: 'image',
-        src: img.src,
-        alt: img.alt || ''
-      };
-    }
-    return {
-      type: 'iframe',
-      src: '',
-      alt: ''
-    };
-  });
-  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
-  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
-    loop: false,
-    slidesPerView: 'auto',
-    spaceBetween: 7,
-    centeredSlides: false,
-    centeredSlidesBounds: false,
-    centerInsufficientSlides: false,
-    watchSlidesProgress: true,
-    allowTouchMove: false
-  });
-  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
-    loop: false,
-    slidesPerView: 1,
-    allowTouchMove: true
-  });
-  var currentIndex = 0;
-  function clampIndex(i) {
-    var last = items.length - 1;
-    if (i < 0) return 0;
-    if (i > last) return last;
-    return i;
-  }
-  function setIndex(nextIndex) {
-    currentIndex = clampIndex(nextIndex);
-    mainSwiper.slideTo(currentIndex);
-    thumbsSwiper.slideTo(currentIndex);
-    thumbBtns.forEach(function (btn, i) {
-      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
-    });
-    var last = items.length - 1;
-    if (items.length <= 1) {
-      thumbsPrev.classList.add('is-hidden');
-      thumbsNext.classList.add('is-hidden');
-    } else {
-      thumbsPrev.classList.remove('is-hidden');
-      thumbsNext.classList.remove('is-hidden');
-    }
-    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
-    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
-    if (mainPrev) {
-      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
-    }
-    if (mainNext) {
-      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
-    }
-    if (zoomImg) {
-      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
-    }
-    if (!items[currentIndex].src) hideZoom();
-  }
-  if (mainPrev) {
-    mainPrev.addEventListener('click', function () {
-      setIndex(currentIndex - 1);
-    });
-  }
-  if (mainNext) {
-    mainNext.addEventListener('click', function () {
-      setIndex(currentIndex + 1);
-    });
-  }
-  thumbsPrev.addEventListener('click', function () {
-    setIndex(currentIndex - 1);
-  });
-  thumbsNext.addEventListener('click', function () {
-    setIndex(currentIndex + 1);
-  });
-  thumbBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var idx = parseInt(btn.getAttribute('data-index'), 10);
-      if (isNaN(idx)) return;
-      setIndex(idx);
-    });
-  });
-  function hideZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.remove('is-on');
-    zoomBox.setAttribute('aria-hidden', 'true');
-  }
-  function showZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.add('is-on');
-    zoomBox.setAttribute('aria-hidden', 'false');
-  }
-  function ensureNatural(img, cb) {
-    if (!img) return;
-    if (img.complete && img.naturalWidth && img.naturalHeight) {
-      cb(img.naturalWidth, img.naturalHeight);
-      return;
-    }
-    img.addEventListener('load', function onLoad() {
-      img.removeEventListener('load', onLoad);
-      cb(img.naturalWidth, img.naturalHeight);
-    });
-  }
-  function getContainRect(containerW, containerH, naturalW, naturalH) {
-    var scale = Math.min(containerW / naturalW, containerH / naturalH);
-    var drawW = naturalW * scale;
-    var drawH = naturalH * scale;
-    var offsetX = (containerW - drawW) / 2;
-    var offsetY = (containerH - drawH) / 2;
-    return {
-      x: offsetX,
-      y: offsetY,
-      w: drawW,
-      h: drawH
-    };
-  }
-  function getActiveImgEl() {
-    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
-  }
-  if (zoomBox && zoomImg) {
-    mainEl.addEventListener('mouseenter', function () {
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      showZoom();
-    });
-    mainEl.addEventListener('mouseleave', function () {
-      hideZoom();
-    });
-    mainEl.addEventListener('mousemove', function (e) {
-      if (!zoomBox.classList.contains('is-on')) return;
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      var contRect = mainEl.getBoundingClientRect();
-      var cx = e.clientX - contRect.left;
-      var cy = e.clientY - contRect.top;
-      ensureNatural(img, function (nw, nh) {
-        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
-        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
-          hideZoom();
-          return;
-        } else {
-          showZoom();
-        }
-        var rx = (cx - cr.x) / cr.w;
-        var ry = (cy - cr.y) / cr.h;
-        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
-        var ratio = baseRatio * ZOOM_RATIO;
-        var zoomW = nw * ratio;
-        var zoomH = nh * ratio;
-        zoomImg.style.width = zoomW + 'px';
-        zoomImg.style.height = zoomH + 'px';
-        var zw = zoomBox.clientWidth;
-        var zh = zoomBox.clientHeight;
-        var left = -(rx * (zoomW - zw));
-        var top = -(ry * (zoomH - zh));
-        if (left > 0) left = 0;
-        if (top > 0) top = 0;
-        if (left < -(zoomW - zw)) left = -(zoomW - zw);
-        if (top < -(zoomH - zh)) top = -(zoomH - zh);
-        zoomImg.style.left = left + 'px';
-        zoomImg.style.top = top + 'px';
-      });
-    });
-  }
-  setIndex(0);
-})();
+/***/ 265:
+/***/ (function() {
 
 /**
- * Swiper 타입별 기본 옵션 정의
- * - 여기만 수정하면 전체 Swiper에 반영됨
- */
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  const DEFAULT_OFFSET = {
-    before: 0,
-    after: 0
-  };
-  const SWIPER_PRESETS = {
-    test: {
-      spaceBetween: 32.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 2
-        },
-        1280: {
-          slidesPerView: 2
-        }
-      }
-    },
-    card: {
-      slidesPerView: 5,
-      spaceBetween: 27.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 4
-        },
-        1280: {
-          slidesPerView: 5
-        }
-      }
-    },
-    slim: {
-      spaceBetween: 19.6,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 5
-        },
-        1280: {
-          slidesPerView: 6
-        }
-      }
-    }
-  };
-  function initSwipers() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(initSwipers, 100);
-      return;
-    }
-    document.querySelectorAll('.js-swiper').forEach(function (el) {
-      const type = el.dataset.swiperType;
-      if (!SWIPER_PRESETS[type]) return;
-
-      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
-      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
-
-      // offset 개별 제어
-      const offsetBeforeAttr = el.getAttribute('data-offset-before');
-      const offsetAfterAttr = el.getAttribute('data-offset-after');
-      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
-      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
-
-      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
-      const desktopView = el.dataset.desktop;
-      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
-        preset.breakpoints[1280].slidesPerView = Number(desktopView);
-      }
-
-      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
-      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
-        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
-          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
-          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
-          }
-          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
-          }
-        });
-      }
-
-      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
-      var nextEl = el.querySelector('.swiper-button-next');
-      var prevEl = el.querySelector('.swiper-button-prev');
-
-      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
-      if (!nextEl || !prevEl) {
-        // container의 부모 요소에서 vits-swiper-navs 찾기
-        const parent = el.parentElement;
-        if (parent) {
-          const navsContainer = parent.querySelector('.vits-swiper-navs');
-          if (navsContainer) {
-            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
-          }
-        }
-
-        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
-        if ((!nextEl || !prevEl) && el.nextElementSibling) {
-          const nextSibling = el.nextElementSibling;
-          if (nextSibling.classList.contains('vits-swiper-navs')) {
-            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
-          }
-        }
-      }
-      new swiper_bundle/* default */.A(el, {
-        slidesPerView: 5,
-        //기본값
-        spaceBetween: preset.spaceBetween,
-        speed: preset.speed,
-        slidesOffsetBefore: offsetBefore,
-        slidesOffsetAfter: offsetAfter,
-        centeredSlides: false,
-        navigation: {
-          nextEl: nextEl,
-          prevEl: prevEl
-        },
-        pagination: {
-          el: el.querySelector('.swiper-pagination'),
-          clickable: true
-        },
-        breakpoints: preset.breakpoints
-      });
-    });
-  }
-  function waitForDependencies() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(waitForDependencies, 100);
-      return;
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSwipers);
-    } else {
-      initSwipers();
-    }
-  }
-  waitForDependencies();
-})();
-
-// window.UI.swiper로 등록 (선택적)
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  window.UI.swiper = {
-    init: function () {
-      // 이미 자동 실행되므로 빈 함수로 유지
-      // 필요시 여기에 추가 초기화 로직 작성
-    }
-  };
-})(window);
-;// ./src/assets/scripts/ui/swiper-boxed.js
-/**
- * @file scripts/ui/swiper-boxed.js
- * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
+ * @file scripts/ui/tooltip.js
+ * @purpose data-tooltip 기반 툴팁 공통
  * @description
- *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
- *  - 구조(정석): [data-swiper-options] > .swiper-wrapper > .swiper-slide
- *  - 초기화: 각 컨테이너마다 별도 Swiper 인스턴스 생성
- *  - 파괴: destroy 메서드로 인스턴스 정리 가능
- * @option (data-swiper-options JSON 내부)
- *  - slidesPerView: 보여질 슬라이드 개수 (number | 'auto')
- *  - spaceBetween: 슬라이드 간격 (px)
- *  - slidesOffsetBefore: 첫 슬라이드 왼쪽 여백 (px)
- *  - slidesOffsetAfter: 마지막 슬라이드 오른쪽 여백 (px)
- *  - slidesPerGroup: 한 번에 이동할 슬라이드 개수
- *  - navigation: 화살표 버튼 사용 여부 (boolean) // false면 비활성
- *  - pagination: 페이지네이션 사용 여부 (boolean) // true면 활성
- *  - centerWhenSingle: 슬라이드 1개일 때 중앙 정렬 (boolean)
- *  - hideNavWhenSingle: 슬라이드 1개일 때 화살표 숨김 (boolean, 기본 true)
- *  - speed: 전환 속도 (ms, 기본 300)
- *  - loop: 무한 루프 (boolean)
- *  - autoplay: 자동 재생 설정 (object | boolean)
- * @a11y
- *  - 키보드 제어 기본 활성화
- * @maintenance
- *  - Swiper 번들 의존 (swiper/bundle)
- *  - 인스턴스는 DOM 요소에 data로 저장 (재초기화 방지)
+ *  - 버튼 클릭 시 툴팁 토글
+ *  - 외부 클릭 시 자동 닫기
+ *  - ESC 키로 닫기
+ *  - 툴팁 내부 닫기 버튼 지원
+ * @option
+ *  - data-tooltip="right|left|top|bottom" : 툴팁 위치 (CSS에서 처리)
  */
-
 
 (function ($, window) {
   'use strict';
 
   if (!$) {
-    console.log('[swiper-boxed] jQuery not found');
+    console.log('[tooltip] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
-  var SWIPER_INSTANCE_KEY = 'swiperInstance';
+  var ACTIVE = 'is-open';
 
-  /**
-   * 단일 Swiper 초기화
-   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
-   */
-  function initSwiper($wrapper) {
-    // 이미 초기화된 경우 중복 방지
-    if ($wrapper.data(SWIPER_INSTANCE_KEY)) {
-      return;
-    }
+  // 툴팁 열기
+  function openTooltip($trigger, $content) {
+    $content.addClass(ACTIVE).attr('aria-hidden', 'false');
+    $trigger.attr('aria-expanded', 'true');
+  }
 
-    // [정석] 컨테이너는 래퍼 자체
-    var $container = $wrapper;
+  // 툴팁 닫기
+  function closeTooltip($trigger, $content) {
+    $content.removeClass(ACTIVE).attr('aria-hidden', 'true');
+    $trigger.attr('aria-expanded', 'false');
+  }
 
-    // [정석] 컨테이너 바로 아래 wrapper 필수
-    var $swiperWrapper = $container.children('.swiper-wrapper').first();
-    if (!$swiperWrapper.length) {
-      console.warn('[swiper-boxed] .swiper-wrapper not found in', $wrapper[0]);
-      return;
-    }
+  // 모든 열린 툴팁 닫기
+  function closeAllTooltips() {
+    $('.vits-tooltip-content.' + ACTIVE).each(function () {
+      var $content = $(this);
+      var $tooltip = $content.closest('[data-tooltip]');
+      var $trigger = $tooltip.find('.vits-tooltip-trigger');
+      closeTooltip($trigger, $content);
+    });
+  }
 
-    // data-swiper-options에서 설정 파싱
-    var optionsStr = $wrapper.attr('data-swiper-options');
-    var userOptions = {};
-    try {
-      userOptions = optionsStr ? JSON.parse(optionsStr) : {};
-    } catch (e) {
-      console.error('[swiper-boxed] Invalid JSON in data-swiper-options', e);
-      return;
-    }
+  // 툴팁 초기화
+  function bindTooltip($tooltip) {
+    var $trigger = $tooltip.find('.vits-tooltip-trigger');
+    var $content = $tooltip.find('.vits-tooltip-content');
+    var $closeBtn = $content.find('.vits-tooltip-heading .button');
+    if (!$trigger.length || !$content.length) return;
 
-    // [정석] 직계 slide 기준
-    var slideCount = $swiperWrapper.children('.swiper-slide').length;
+    // 트리거 버튼 클릭
+    $trigger.on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isOpen = $content.hasClass(ACTIVE);
 
-    // navigation/pagination 플래그는 미리 보존 (병합 시 덮어쓰기 방지용)
-    var navEnabled = userOptions.navigation !== false;
-    var paginationEnabled = userOptions.pagination === true;
+      // 다른 툴팁 모두 닫기
+      closeAllTooltips();
 
-    // navigation/pagination은 아래에서 엘리먼트 바인딩 객체로 세팅하므로, boolean 덮어쓰기 방지
-    delete userOptions.navigation;
-    delete userOptions.pagination;
-
-    // 기본 설정
-    var defaultOptions = {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      speed: 300,
-      keyboard: {
-        enabled: true,
-        onlyInViewport: true
-      },
-      a11y: {
-        enabled: true,
-        prevSlideMessage: '이전 슬라이드',
-        nextSlideMessage: '다음 슬라이드',
-        firstSlideMessage: '첫 번째 슬라이드',
-        lastSlideMessage: '마지막 슬라이드'
+      // 현재 툴팁 토글
+      if (isOpen) {
+        closeTooltip($trigger, $content);
+      } else {
+        openTooltip($trigger, $content);
       }
-    };
+    });
 
-    // Navigation 설정
-    if (navEnabled) {
-      var $prevBtn = $wrapper.children('.swiper-button-prev');
-      var $nextBtn = $wrapper.children('.swiper-button-next');
-      if ($prevBtn.length && $nextBtn.length) {
-        defaultOptions.navigation = {
-          prevEl: $prevBtn[0],
-          nextEl: $nextBtn[0]
-        };
+    // 툴팁 내부 닫기 버튼
+    if ($closeBtn.length) {
+      $closeBtn.on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeTooltip($trigger, $content);
+        $trigger.focus();
+      });
+    }
 
-        // 슬라이드 1개일 때 버튼 숨김 옵션(기본 true)
-        if (slideCount === 1 && userOptions.hideNavWhenSingle !== false) {
-          $prevBtn.hide();
-          $nextBtn.hide();
+    // 툴팁 내부 클릭 시 전파 방지 (툴팁이 닫히지 않도록)
+    $content.on('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  // 외부 클릭 시 모든 툴팁 닫기
+  function bindOutsideClick() {
+    $(document).on('click.uiTooltip', function (e) {
+      if (!$(e.target).closest('[data-tooltip]').length) {
+        closeAllTooltips();
+      }
+    });
+  }
+
+  // ESC 키로 툴팁 닫기
+  function bindEscKey() {
+    $(document).on('keydown.uiTooltip', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        var $openContent = $('.vits-tooltip-content.' + ACTIVE);
+        if ($openContent.length) {
+          var $tooltip = $openContent.closest('[data-tooltip]');
+          var $trigger = $tooltip.find('.vits-tooltip-trigger');
+          closeTooltip($trigger, $openContent);
+          $trigger.focus();
         }
       }
-    }
-
-    // Pagination 설정
-    if (paginationEnabled) {
-      var $pagination = $wrapper.children('.swiper-pagination');
-      if ($pagination.length) {
-        defaultOptions.pagination = {
-          el: $pagination[0],
-          clickable: true,
-          type: 'bullets'
-        };
-      }
-    }
-
-    // 슬라이드 1개일 때 중앙 정렬 옵션
-    if (slideCount === 1 && userOptions.centerWhenSingle === true) {
-      defaultOptions.centeredSlides = true;
-    }
-
-    // 사용자 옵션 병합
-    var finalOptions = $.extend(true, {}, defaultOptions, userOptions);
-    delete finalOptions.centerWhenSingle;
-    delete finalOptions.hideNavWhenSingle;
-
-    // Swiper 인스턴스 생성
-    try {
-      var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
-      $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
-      console.log('[swiper-boxed] initialized:', $wrapper.attr('class'));
-    } catch (e) {
-      console.error('[swiper-boxed] Initialization failed', e);
-    }
+    });
   }
-
-  /**
-   * 단일 Swiper 파괴
-   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
-   */
-  function destroySwiper($wrapper) {
-    var instance = $wrapper.data(SWIPER_INSTANCE_KEY);
-    if (instance && typeof instance.destroy === 'function') {
-      instance.destroy(true, true);
-      $wrapper.removeData(SWIPER_INSTANCE_KEY);
-      console.log('[swiper-boxed] destroyed:', $wrapper.attr('class'));
-    }
-  }
-  window.UI.swiperBoxed = {
+  window.UI.tooltip = {
     init: function () {
-      $('[data-swiper-options]').each(function () {
-        initSwiper($(this));
+      $('[data-tooltip]').each(function () {
+        bindTooltip($(this));
       });
-      console.log('[swiper-boxed] init');
-    },
-    destroy: function () {
-      $('[data-swiper-options]').each(function () {
-        destroySwiper($(this));
-      });
-      console.log('[swiper-boxed] destroy');
-    },
-    reinit: function (selector) {
-      var $target = typeof selector === 'string' ? $(selector) : selector;
-      $target.each(function () {
-        var $wrapper = $(this);
-        destroySwiper($wrapper);
-        initSwiper($wrapper);
-      });
+      bindOutsideClick();
+      bindEscKey();
+      console.log('[tooltip] init');
     }
   };
-  console.log('[swiper-boxed] module loaded');
+  console.log('[tooltip] module loaded');
 })(window.jQuery || window.$, window);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
-var chip_button = __webpack_require__(755);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
-var quantity_stepper = __webpack_require__(397);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
-var form_textarea = __webpack_require__(803);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
-var kendo_dropdown = __webpack_require__(47);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
-var header_rank = __webpack_require__(596);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
-var header_search = __webpack_require__(978);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
-var header_gnb = __webpack_require__(105);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
-var footer = __webpack_require__(795);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
-var tab_scrollbar = __webpack_require__(986);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
-var form_select = __webpack_require__(865);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
-var input_search = __webpack_require__(882);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
-var plp_titlebar_research = __webpack_require__(809);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
-var category_tree = __webpack_require__(508);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
-var plp_chip_sync = __webpack_require__(504);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
-var plp_view_toggle = __webpack_require__(342);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
-var more_expand = __webpack_require__(146);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
-var filter_expand = __webpack_require__(19);
-;// ./src/assets/scripts/core/ui.js
-/**
- * scripts/core/ui.js
- * @purpose UI 기능 모음
- * @assumption
- *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
- *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
- * @maintenance
- *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
- *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
- *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-
-  /**
-   * 공통 UI 초기화 진입점
-   * @returns {void}
-   * @example
-   * // scripts/core/common.js에서 DOMReady 시점에 호출
-   * UI.init();
-   */
-  window.UI.init = function () {
-    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
-    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
-    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
-    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
-    if (window.UI.swiperBoxed && window.UI.swiperBoxed.init) window.UI.swiperBoxed.init();
-    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
-    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
-    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-    if (window.VitsKendoDropdown) {
-      window.VitsKendoDropdown.initAll(document);
-      window.VitsKendoDropdown.autoBindStart(document.body);
-    }
-    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
-    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
-    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
-    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
-    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
-    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
-    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
-    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
-    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
-    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
-    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
-    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
-    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
-  };
-  console.log('[core/ui] loaded');
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
-var common = __webpack_require__(538);
-;// ./src/assets/scripts/index.js
-/**
- * scripts/index.js
- * @purpose 번들 엔트리(진입점)
- * @assumption
- *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
- *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
- * @maintenance
- *  - index.js는 짧게 유지한다(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
- *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
- */
-
-
-
-
-console.log('[index] entry 실행');
-;// ./src/app.js
-
-
-
-
-
-
-
-if (document.body?.dataset?.guide === 'true') {
-  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
-  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
-}
-
-// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
-// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
-// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
-// console.log('%c ====================', 'color: green');
 
 /***/ }),
 
@@ -2342,6 +2153,101 @@ if (document.body?.dataset?.guide === 'true') {
     }
   };
   console.log('[quantity-stepper] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 421:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/cart-order/cart-order.js
+ * @purpose 장바구니 , 배송정보 , 결제 페이지에 대한 공통 UI 처리
+ * @description
+ *  - 할인금액 토글 처리 (클릭 시 할인금액 상세 표시/숨김)
+ *  - 배송방법 탭과 패널 매칭 처리 (data-method/data-panel 기반)
+ * @maintenance
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[cart-order] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  window.UI.cartOrder = {
+    init: function () {
+      //vits-cart-body 영역
+      var discountItemSelector = '.vits-cart-summary-item.has-discount';
+      var shippingWrapSelector = '.vits-shipping';
+      var shippingBtnSelector = '.vits-shipping-method-btn[data-method]';
+      var shippingPanelSelector = '.vits-shipping-panel[data-panel]';
+      function setDiscountState($item, isActive) {
+        var $toggle = $item.find('.discount-toggle').first();
+        var $info = $item.find('.discount-info').first();
+        var $detail = $item.find('.discount-info-detail').first();
+        var $icon = $toggle.find('.ic').first();
+        var nextActive = !!isActive;
+        if (!$toggle.length || !$info.length || !$detail.length) return;
+        $info.toggleClass('is-active', nextActive);
+        $toggle.attr('aria-expanded', nextActive ? 'true' : 'false');
+        $detail.attr('aria-hidden', nextActive ? 'true' : 'false');
+        if ($icon.length) {
+          $icon.toggleClass('ic-arrow-down', !nextActive);
+          $icon.toggleClass('ic-arrow-up', nextActive);
+        }
+      }
+      function setShippingState($wrap, method) {
+        if (!$wrap.length || !method) return;
+        var $buttons = $wrap.find(shippingBtnSelector);
+        var $panels = $wrap.find(shippingPanelSelector);
+        var methodValue = String(method);
+        var hasPanel = $panels.filter('[data-panel="' + methodValue + '"]').length > 0;
+        if (!hasPanel) return;
+        $buttons.each(function () {
+          var $btn = $(this);
+          var isActive = $btn.attr('data-method') === methodValue;
+          $btn.toggleClass('is-active', isActive);
+        });
+        $panels.each(function () {
+          var $panel = $(this);
+          var isActive = $panel.attr('data-panel') === methodValue;
+          $panel.toggleClass('is-active', isActive);
+        });
+      }
+      $(discountItemSelector).each(function () {
+        var $item = $(this);
+        var isActive = $item.find('.discount-info').first().hasClass('is-active');
+        setDiscountState($item, isActive);
+      });
+      $(shippingWrapSelector).each(function () {
+        var $wrap = $(this);
+        var $activeBtn = $wrap.find(shippingBtnSelector + '.is-active').first();
+        var activeMethod = $activeBtn.attr('data-method');
+        if (!activeMethod) {
+          activeMethod = $wrap.find(shippingBtnSelector).first().attr('data-method');
+        }
+        if (activeMethod) {
+          setShippingState($wrap, activeMethod);
+        }
+      });
+      $(document).off('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle').on('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle', function () {
+        var $toggle = $(this);
+        var $item = $toggle.closest(discountItemSelector);
+        var isActive = $item.find('.discount-info').first().hasClass('is-active');
+        setDiscountState($item, !isActive);
+      });
+      $(document).off('click.cartOrderShipping', shippingWrapSelector + ' ' + shippingBtnSelector).on('click.cartOrderShipping', shippingWrapSelector + ' ' + shippingBtnSelector, function () {
+        var $btn = $(this);
+        var $wrap = $btn.closest(shippingWrapSelector);
+        var method = $btn.attr('data-method');
+        setShippingState($wrap, method);
+      });
+    }
+  };
+  console.log('[cart-order] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -3375,6 +3281,767 @@ if (document.body?.dataset?.guide === 'true') {
     }
   };
 })(window.jQuery || window.$, window, document);
+
+/***/ }),
+
+/***/ 713:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
+var utils = __webpack_require__(918);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
+var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
+var scroll_boundary = __webpack_require__(160);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
+var ui_layer = __webpack_require__(847);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/modal.js
+var modal = __webpack_require__(95);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/tooltip.js
+var tooltip = __webpack_require__(265);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(111);
+;// ./src/assets/scripts/ui/swiper.js
+/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
+  - <button ... data-main-prev></button>
+  - <button ... data-main-next></button>
+  - var mainPrev = root.querySelector("[data-main-prev]");
+  - var mainNext = root.querySelector("[data-main-next]");
+  - mainPrev.addEventListener("click", ...);
+  - mainNext.addEventListener("click", ...);
+  - mainPrev.classList.add("swiper-button-disabled");
+  - mainNext.classList.add("swiper-button-disabled");
+  - mainPrev.classList.remove("swiper-button-disabled");
+  - mainNext.classList.remove("swiper-button-disabled");
+  - if (currentIndex <= 0) mainPrev... else ...
+  - if (currentIndex >= last) mainNext... else ...
+*/
+
+
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  var root = document.querySelector('[data-test-gallery]');
+  if (!root) return;
+  var mainEl = root.querySelector('[data-main-swiper]');
+  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
+  var mainWrapper = root.querySelector('[data-main-wrapper]');
+  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
+  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
+  var mainPrev = root.querySelector('[data-main-prev]');
+  var mainNext = root.querySelector('[data-main-next]');
+  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
+  var thumbsNext = root.querySelector('[data-thumbs-next]');
+  if (!thumbsPrev || !thumbsNext) return;
+  var zoomBox = root.querySelector('[data-zoom]');
+  var zoomImg = root.querySelector('[data-zoom-img]');
+  var ZOOM_RATIO = 3;
+
+  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
+  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
+  var items = mainSlides.map(function (slide) {
+    var img = slide.querySelector('[data-main-img]');
+    if (img) {
+      return {
+        type: 'image',
+        src: img.src,
+        alt: img.alt || ''
+      };
+    }
+    return {
+      type: 'iframe',
+      src: '',
+      alt: ''
+    };
+  });
+  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
+  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
+    loop: false,
+    slidesPerView: 'auto',
+    spaceBetween: 7,
+    centeredSlides: false,
+    centeredSlidesBounds: false,
+    centerInsufficientSlides: false,
+    watchSlidesProgress: true,
+    allowTouchMove: false
+  });
+  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+    loop: false,
+    slidesPerView: 1,
+    allowTouchMove: true
+  });
+  var currentIndex = 0;
+  function clampIndex(i) {
+    var last = items.length - 1;
+    if (i < 0) return 0;
+    if (i > last) return last;
+    return i;
+  }
+  function setIndex(nextIndex) {
+    currentIndex = clampIndex(nextIndex);
+    if (mainSwiper.activeIndex !== currentIndex) mainSwiper.slideTo(currentIndex);
+    if (thumbsSwiper.activeIndex !== currentIndex) thumbsSwiper.slideTo(currentIndex);
+    thumbBtns.forEach(function (btn, i) {
+      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
+    });
+    var last = items.length - 1;
+    if (items.length <= 1) {
+      thumbsPrev.classList.add('is-hidden');
+      thumbsNext.classList.add('is-hidden');
+    } else {
+      thumbsPrev.classList.remove('is-hidden');
+      thumbsNext.classList.remove('is-hidden');
+    }
+    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
+    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
+    if (mainPrev) {
+      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
+    }
+    if (mainNext) {
+      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
+    }
+    if (zoomImg) {
+      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
+    }
+    if (!items[currentIndex].src) hideZoom();
+  }
+  if (mainPrev) {
+    mainPrev.addEventListener('click', function () {
+      setIndex(currentIndex - 1);
+    });
+  }
+  if (mainNext) {
+    mainNext.addEventListener('click', function () {
+      setIndex(currentIndex + 1);
+    });
+  }
+  thumbsPrev.addEventListener('click', function () {
+    setIndex(currentIndex - 1);
+  });
+  thumbsNext.addEventListener('click', function () {
+    setIndex(currentIndex + 1);
+  });
+  thumbBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = parseInt(btn.getAttribute('data-index'), 10);
+      if (isNaN(idx)) return;
+      setIndex(idx);
+    });
+  });
+  mainSwiper.on('slideChange', function () {
+    setIndex(mainSwiper.realIndex);
+  });
+  thumbsSwiper.on('slideChange', function () {
+    setIndex(thumbsSwiper.realIndex);
+  });
+  function hideZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.remove('is-on');
+    zoomBox.setAttribute('aria-hidden', 'true');
+  }
+  function showZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.add('is-on');
+    zoomBox.setAttribute('aria-hidden', 'false');
+  }
+  function ensureNatural(img, cb) {
+    if (!img) return;
+    if (img.complete && img.naturalWidth && img.naturalHeight) {
+      cb(img.naturalWidth, img.naturalHeight);
+      return;
+    }
+    img.addEventListener('load', function onLoad() {
+      img.removeEventListener('load', onLoad);
+      cb(img.naturalWidth, img.naturalHeight);
+    });
+  }
+  function getContainRect(containerW, containerH, naturalW, naturalH) {
+    var scale = Math.min(containerW / naturalW, containerH / naturalH);
+    var drawW = naturalW * scale;
+    var drawH = naturalH * scale;
+    var offsetX = (containerW - drawW) / 2;
+    var offsetY = (containerH - drawH) / 2;
+    return {
+      x: offsetX,
+      y: offsetY,
+      w: drawW,
+      h: drawH
+    };
+  }
+  function getActiveImgEl() {
+    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
+  }
+  if (zoomBox && zoomImg) {
+    mainEl.addEventListener('mouseenter', function () {
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      showZoom();
+    });
+    mainEl.addEventListener('mouseleave', function () {
+      hideZoom();
+    });
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!zoomBox.classList.contains('is-on')) return;
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      var contRect = mainEl.getBoundingClientRect();
+      var cx = e.clientX - contRect.left;
+      var cy = e.clientY - contRect.top;
+      ensureNatural(img, function (nw, nh) {
+        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
+        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
+          hideZoom();
+          return;
+        } else {
+          showZoom();
+        }
+        var rx = (cx - cr.x) / cr.w;
+        var ry = (cy - cr.y) / cr.h;
+        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
+        var ratio = baseRatio * ZOOM_RATIO;
+        var zoomW = nw * ratio;
+        var zoomH = nh * ratio;
+        zoomImg.style.width = zoomW + 'px';
+        zoomImg.style.height = zoomH + 'px';
+        var zw = zoomBox.clientWidth;
+        var zh = zoomBox.clientHeight;
+        var left = -(rx * (zoomW - zw));
+        var top = -(ry * (zoomH - zh));
+        if (left > 0) left = 0;
+        if (top > 0) top = 0;
+        if (left < -(zoomW - zw)) left = -(zoomW - zw);
+        if (top < -(zoomH - zh)) top = -(zoomH - zh);
+        zoomImg.style.left = left + 'px';
+        zoomImg.style.top = top + 'px';
+      });
+    });
+  }
+  setIndex(0);
+})();
+
+/**
+ * Swiper 타입별 기본 옵션 정의
+ * - 여기만 수정하면 전체 Swiper에 반영됨
+ */
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  const DEFAULT_OFFSET = {
+    before: 0,
+    after: 0
+  };
+  const SWIPER_PRESETS = {
+    test: {
+      spaceBetween: 32.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 2
+        },
+        1280: {
+          slidesPerView: 2
+        }
+      }
+    },
+    card: {
+      slidesPerView: 5,
+      spaceBetween: 27.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 4
+        },
+        1280: {
+          slidesPerView: 5
+        }
+      }
+    },
+    slim: {
+      spaceBetween: 20,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 5
+        },
+        1280: {
+          slidesPerView: 6
+        }
+      }
+    },
+    boxed: {
+      slidesPerView: 4,
+      spaceBetween: 13,
+      speed: 400,
+      breakpoints: {
+        0: {
+          slidesPerView: 3
+        },
+        1024: {
+          slidesPerView: 3
+        },
+        1200: {
+          slidesPerView: 4
+        }
+      }
+    }
+  };
+  function initSwipers() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(initSwipers, 100);
+      return;
+    }
+    document.querySelectorAll('.js-swiper').forEach(function (el) {
+      const type = el.dataset.swiperType;
+      if (!SWIPER_PRESETS[type]) return;
+
+      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
+      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
+
+      // offset 개별 제어
+      const offsetBeforeAttr = el.getAttribute('data-offset-before');
+      const offsetAfterAttr = el.getAttribute('data-offset-after');
+      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
+      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+
+      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
+      const desktopView = el.dataset.desktop;
+      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
+        preset.breakpoints[1280].slidesPerView = Number(desktopView);
+      }
+
+      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
+      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
+        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
+          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
+          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
+          }
+          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
+          }
+        });
+      }
+
+      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
+      var nextEl = el.querySelector('.swiper-button-next');
+      var prevEl = el.querySelector('.swiper-button-prev');
+
+      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
+      if (!nextEl || !prevEl) {
+        // container의 부모 요소에서 vits-swiper-navs 찾기
+        const parent = el.parentElement;
+        if (parent) {
+          const navsContainer = parent.querySelector('.vits-swiper-navs');
+          if (navsContainer) {
+            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
+          }
+        }
+
+        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
+        if ((!nextEl || !prevEl) && el.nextElementSibling) {
+          const nextSibling = el.nextElementSibling;
+          if (nextSibling.classList.contains('vits-swiper-navs')) {
+            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
+          }
+        }
+      }
+      new swiper_bundle/* default */.A(el, {
+        slidesPerView: 5,
+        //기본값
+        spaceBetween: preset.spaceBetween,
+        speed: preset.speed,
+        slidesOffsetBefore: offsetBefore,
+        slidesOffsetAfter: offsetAfter,
+        centeredSlides: false,
+        navigation: {
+          nextEl: nextEl,
+          prevEl: prevEl
+        },
+        pagination: {
+          el: el.querySelector('.swiper-pagination'),
+          clickable: true
+        },
+        breakpoints: preset.breakpoints
+      });
+    });
+  }
+  function waitForDependencies() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(waitForDependencies, 100);
+      return;
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwipers);
+    } else {
+      initSwipers();
+    }
+  }
+  waitForDependencies();
+})();
+
+// window.UI.swiper로 등록 (선택적)
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  window.UI.swiper = {
+    init: function () {
+      // 이미 자동 실행되므로 빈 함수로 유지
+      // 필요시 여기에 추가 초기화 로직 작성
+    }
+  };
+})(window);
+;// ./src/assets/scripts/ui/swiper-test.js
+/**
+ * @file scripts/ui/swiper-test.js
+ * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
+ * @description
+ *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
+ *  - 구조(정석): [data-swiper-options] > .swiper-wrapper > .swiper-slide
+ *  - 초기화: 각 컨테이너마다 별도 Swiper 인스턴스 생성
+ *  - 파괴: destroy 메서드로 인스턴스 정리 가능
+ * @option (data-swiper-options JSON 내부)
+ *  - slidesPerView: 보여질 슬라이드 개수 (number | 'auto')
+ *  - spaceBetween: 슬라이드 간격 (px)
+ *  - slidesOffsetBefore: 첫 슬라이드 왼쪽 여백 (px)
+ *  - slidesOffsetAfter: 마지막 슬라이드 오른쪽 여백 (px)
+ *  - slidesPerGroup: 한 번에 이동할 슬라이드 개수
+ *  - navigation: 화살표 버튼 사용 여부 (boolean) // false면 비활성
+ *  - pagination: 페이지네이션 사용 여부 (boolean) // true면 활성
+ *  - centerWhenSingle: 슬라이드 1개일 때 중앙 정렬 (boolean)
+ *  - hideNavWhenSingle: 슬라이드 1개일 때 화살표 숨김 (boolean, 기본 true)
+ *  - speed: 전환 속도 (ms, 기본 300)
+ *  - loop: 무한 루프 (boolean)
+ *  - autoplay: 자동 재생 설정 (object | boolean)
+ * @a11y
+ *  - 키보드 제어 기본 활성화
+ * @maintenance
+ *  - Swiper 번들 의존 (swiper/bundle)
+ *  - 인스턴스는 DOM 요소에 data로 저장 (재초기화 방지)
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[swiper-test] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var SWIPER_INSTANCE_KEY = 'swiperInstance';
+
+  /**
+   * 단일 Swiper 초기화
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function initSwiper($wrapper) {
+    // 이미 초기화된 경우 중복 방지
+    if ($wrapper.data(SWIPER_INSTANCE_KEY)) {
+      return;
+    }
+
+    // [정석] 컨테이너는 래퍼 자체
+    var $container = $wrapper;
+
+    // [정석] 컨테이너 바로 아래 wrapper 필수
+    var $swiperWrapper = $container.children('.swiper-wrapper').first();
+    if (!$swiperWrapper.length) {
+      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
+      return;
+    }
+
+    // data-swiper-options에서 설정 파싱
+    var optionsStr = $wrapper.attr('data-swiper-options');
+    var userOptions = {};
+    try {
+      userOptions = optionsStr ? JSON.parse(optionsStr) : {};
+    } catch (e) {
+      console.error('[swiper-test] Invalid JSON in data-swiper-options', e);
+      return;
+    }
+
+    // [정석] 직계 slide 기준
+    var slideCount = $swiperWrapper.children('.swiper-slide').length;
+
+    // navigation/pagination 플래그는 미리 보존 (병합 시 덮어쓰기 방지용)
+    var navEnabled = userOptions.navigation !== false;
+    var paginationEnabled = userOptions.pagination === true;
+
+    // navigation/pagination은 아래에서 엘리먼트 바인딩 객체로 세팅하므로, boolean 덮어쓰기 방지
+    delete userOptions.navigation;
+    delete userOptions.pagination;
+
+    // 기본 설정
+    var defaultOptions = {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 300,
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true
+      },
+      a11y: {
+        enabled: true,
+        prevSlideMessage: '이전 슬라이드',
+        nextSlideMessage: '다음 슬라이드',
+        firstSlideMessage: '첫 번째 슬라이드',
+        lastSlideMessage: '마지막 슬라이드'
+      }
+    };
+
+    // Navigation 설정
+    if (navEnabled) {
+      var $prevBtn = $wrapper.children('.swiper-button-prev');
+      var $nextBtn = $wrapper.children('.swiper-button-next');
+      if ($prevBtn.length && $nextBtn.length) {
+        defaultOptions.navigation = {
+          prevEl: $prevBtn[0],
+          nextEl: $nextBtn[0]
+        };
+
+        // 슬라이드 1개일 때 버튼 숨김 옵션(기본 true)
+        if (slideCount === 1 && userOptions.hideNavWhenSingle !== false) {
+          $prevBtn.hide();
+          $nextBtn.hide();
+        }
+      }
+    }
+
+    // Pagination 설정
+    if (paginationEnabled) {
+      var $pagination = $wrapper.children('.swiper-pagination');
+      if ($pagination.length) {
+        defaultOptions.pagination = {
+          el: $pagination[0],
+          clickable: true,
+          type: 'bullets'
+        };
+      }
+    }
+
+    // 슬라이드 1개일 때 중앙 정렬 옵션
+    if (slideCount === 1 && userOptions.centerWhenSingle === true) {
+      defaultOptions.centeredSlides = true;
+    }
+
+    // 사용자 옵션 병합
+    var finalOptions = $.extend(true, {}, defaultOptions, userOptions);
+    delete finalOptions.centerWhenSingle;
+    delete finalOptions.hideNavWhenSingle;
+
+    // Swiper 인스턴스 생성
+    try {
+      var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
+      $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
+      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
+    } catch (e) {
+      console.error('[swiper-test] Initialization failed', e);
+    }
+  }
+
+  /**
+   * 단일 Swiper 파괴
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function destroySwiper($wrapper) {
+    var instance = $wrapper.data(SWIPER_INSTANCE_KEY);
+    if (instance && typeof instance.destroy === 'function') {
+      instance.destroy(true, true);
+      $wrapper.removeData(SWIPER_INSTANCE_KEY);
+      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
+    }
+  }
+  window.UI.swiperTest = {
+    init: function () {
+      $('[data-swiper-options]').each(function () {
+        initSwiper($(this));
+      });
+      console.log('[swiper-test] init');
+    },
+    destroy: function () {
+      $('[data-swiper-options]').each(function () {
+        destroySwiper($(this));
+      });
+      console.log('[swiper-test] destroy');
+    },
+    reinit: function (selector) {
+      var $target = typeof selector === 'string' ? $(selector) : selector;
+      $target.each(function () {
+        var $wrapper = $(this);
+        destroySwiper($wrapper);
+        initSwiper($wrapper);
+      });
+    }
+  };
+  console.log('[swiper-test] module loaded');
+})(window.jQuery || window.$, window);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
+var chip_button = __webpack_require__(755);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
+var quantity_stepper = __webpack_require__(397);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
+var form_textarea = __webpack_require__(803);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
+var kendo_dropdown = __webpack_require__(47);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
+var header_rank = __webpack_require__(596);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
+var header_search = __webpack_require__(978);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
+var header_gnb = __webpack_require__(105);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
+var footer = __webpack_require__(795);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
+var tab_scrollbar = __webpack_require__(986);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
+var form_select = __webpack_require__(865);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
+var input_search = __webpack_require__(882);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
+var plp_titlebar_research = __webpack_require__(809);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
+var category_tree = __webpack_require__(508);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
+var plp_chip_sync = __webpack_require__(504);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
+var plp_view_toggle = __webpack_require__(342);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
+var more_expand = __webpack_require__(146);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
+var filter_expand = __webpack_require__(19);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/cart-order/cart-order.js
+var cart_order = __webpack_require__(421);
+;// ./src/assets/scripts/core/ui.js
+/**
+ * scripts/core/ui.js
+ * @purpose UI 기능 모음
+ * @assumption
+ *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
+ *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
+ * @maintenance
+ *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
+ *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
+ *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+
+  /**
+   * 공통 UI 초기화 진입점
+   * @returns {void}
+   * @example
+   * // scripts/core/common.js에서 DOMReady 시점에 호출
+   * UI.init();
+   */
+  window.UI.init = function () {
+    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
+    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
+    if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
+    if (window.UI.tooltip && window.UI.tooltip.init) window.UI.tooltip.init();
+    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
+    if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
+    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
+    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
+    if (window.VitsKendoDropdown) {
+      window.VitsKendoDropdown.initAll(document);
+      window.VitsKendoDropdown.autoBindStart(document.body);
+    }
+    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
+    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
+    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
+    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
+    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
+    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
+    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
+    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
+    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
+    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
+    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
+    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
+    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
+    if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
+  };
+  console.log('[core/ui] loaded');
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
+var common = __webpack_require__(538);
+;// ./src/assets/scripts/index.js
+/**
+ * scripts/index.js
+ * @purpose 번들 엔트리(진입점)
+ * @assumption
+ *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
+ *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
+ * @maintenance
+ *  - index.js는 짧게 유지한다(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
+ *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
+ */
+
+
+
+
+console.log('[index] entry 실행');
+;// ./src/app.js
+
+
+
+
+
+
+
+if (document.body?.dataset?.guide === 'true') {
+  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
+  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
+}
+
+// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
+// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
+// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
+// console.log('%c ====================', 'color: green');
 
 /***/ }),
 
@@ -6248,7 +6915,7 @@ if (document.body?.dataset?.guide === 'true') {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(205); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(713); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

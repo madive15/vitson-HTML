@@ -1,0 +1,199 @@
+<head><script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+<!-- prettier-ignore -->
+<section class="vits-plp-compare" aria-label="상품 비교" data-compare>
+  <div class="vits-plp-compare-scroll">
+    <table class="vits-plp-compare-table" data-compare-table>
+      <caption class="sr-only">상품 비교표</caption>
+
+      <colgroup>
+        <!-- [D] [비교표 colgroup 규칙]
+          - 라벨 열: 90px 고정
+          - 상품 열: 156px 고정 × span
+          - span = 현재 비교 상품 개수(필수 동기화)
+        -->
+        <col style="width: 90px;">
+        <col style="width: 156px;" span="3">
+      </colgroup>
+
+      <tbody>
+        <!-- 상단 상품 요약 행(헤더 역할) -->
+        <tr class="vits-plp-compare-row-head">
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell is-head" aria-hidden="true"></th>
+
+          <th scope="col" class="vits-plp-compare-td vits-plp-compare-cell is-head">
+            <article class="vits-plp-compare-product">
+              <span class="vits-plp-compare-thumb" aria-label="상품 상세로 이동">
+                <img src="https://vitsonimg.co.kr/images/productsNew/MD_2_20220310/209782.png" alt="">
+              </span>
+
+              <button
+                type="button"
+                class="vits-plp-compare-remove"
+                data-compare-remove
+                aria-label="비교 상품 삭제"
+              >
+                <i class="ic ic-x" aria-hidden="true"></i>
+
+              </button>
+
+              <div class="vits-plp-compare-info">
+                <p class="vits-plp-compare-brand">서경</p>
+                <p class="vits-plp-compare-name">더블 OPP 접착테이프 투명 더블 OPP 접착테이프 투명 더블 OPP 접착테이프 투명</p>
+                <p class="vits-plp-compare-meta">2.6mm(광~5kg)</p>
+              </div>
+            </article>
+          </th>
+
+          <th scope="col" class="vits-plp-compare-td vits-plp-compare-cell is-head">
+            <article class="vits-plp-compare-product">
+              <span class="vits-plp-compare-thumb" aria-label="상품 상세로 이동">
+                <img src="https://vitsonimg.co.kr/images/isvm/upload/prod/537210/537210.jpg" alt="">
+              </span>
+              <button type="button" class="vits-plp-compare-remove" data-compare-remove aria-label="비교 상품 삭제">
+                <span aria-hidden="true">×</span>
+              </button>
+
+              <div class="vits-plp-compare-info">
+                <p class="vits-plp-compare-brand">그린터치</p>
+                <p class="vits-plp-compare-name">무형광 27m*30롤무형광 27m*30롤무형광 27m*30롤</p>
+                <p class="vits-plp-compare-meta">27m / 30롤</p>
+              </div>
+            </article>
+          </th>
+          <th scope="col" class="vits-plp-compare-td vits-plp-compare-cell is-head">
+            <article class="vits-plp-compare-product">
+              <span class="vits-plp-compare-thumb" aria-label="상품 상세로 이동">
+                <img src="https://vitsonimg.co.kr/images/isvm/upload/prod/537210/537210.jpg" alt="">
+              </span>
+              <button type="button" class="vits-plp-compare-remove" data-compare-remove aria-label="비교 상품 삭제">
+                <span aria-hidden="true">×</span>
+              </button>
+
+              <div class="vits-plp-compare-info">
+                <p class="vits-plp-compare-brand">그린터치</p>
+                <p class="vits-plp-compare-name">무형광 27m*30롤무형광 27m*30롤무형광 27m*30롤</p>
+                <p class="vits-plp-compare-meta">27m / 30롤</p>
+              </div>
+            </article>
+          </th>
+        </tr>
+
+        <!-- 상품명 -->
+        <tr>
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell vits-plp-compare-label">상품명</th>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">물티슈(보급형)물티슈(보급형)</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">화장지</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">화장지</td>
+        </tr>
+
+        <!-- 상품코드 -->
+        <tr>
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell vits-plp-compare-label">상품코드</th>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">53750</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">108876</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">108876</td>
+        </tr>
+
+        <!-- 규격 -->
+        <tr>
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell vits-plp-compare-label">규격</th>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">그린터치 100매 캡형</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">무형광27m*30롤</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">무형광27m*30롤</td>
+        </tr>
+
+        <!-- 브랜드 -->
+        <tr>
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell vits-plp-compare-label">브랜드</th>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">그린터치</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">그린터치</td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">그린터치</td>
+        </tr>
+
+        <!-- 가격/단가 -->
+        <tr>
+          <th scope="row" class="vits-plp-compare-th vits-plp-compare-cell vits-plp-compare-label">가격/단가</th>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">
+            <div class="vits-plp-compare-price">
+              <p class="price-onrigin">32,000원</p>
+              <p class="price-sale-row">
+                <span class="price-rate">30%</span><span class="price-sale">100,240,900원</span>
+              </p>
+            </div>
+          </td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">
+            <div class="vits-plp-compare-price">
+              <p class="price-onrigin">32,000원</p>
+              <p class="price-sale-row">
+                <span class="price-rate">30%</span><span class="price-sale">100,240,900원</span>
+              </p>
+            </div>
+          </td>
+          <td class="vits-plp-compare-td vits-plp-compare-cell">
+            <div class="vits-plp-compare-price">
+              <p class="price-onrigin">32,000원</p>
+              <p class="price-sale-row">
+                <span class="price-rate">30%</span><span class="price-sale">100,240,900원</span>
+              </p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  /**
+   * vits-plp-compare: 비교표 열(상품) 삭제 (Vanilla)
+   * - 삭제 버튼이 있는 th/td의 column index를 구해
+   *   colgroup + 모든 tr의 동일 index 셀을 제거
+   */
+  (function () {
+    function removeColumn(table, colIndex) {
+      if (!table) return;
+      if (colIndex <= 0) return; // 라벨 열 보호
+
+      var col = table.querySelector('colgroup col:nth-child(' + (colIndex + 1) + ')');
+      if (col) col.remove();
+
+      var rows = table.querySelectorAll('tbody tr');
+      rows.forEach(function (tr) {
+        var cell = tr.children[colIndex];
+        if (cell) cell.remove();
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-compare-remove]');
+      if (!btn) return;
+
+      var root = btn.closest('[data-compare]');
+      if (!root) return;
+
+      var table = root.querySelector('[data-compare-table]');
+      if (!table) return;
+
+      var cell = btn.closest('th, td');
+      if (!cell) return;
+
+      var colIndex = Array.prototype.indexOf.call(cell.parentNode.children, cell);
+      if (colIndex <= 0) return;
+
+      // (선택) 포커스 이동용 후보
+      var headRow = table.querySelector('.vits-plp-compare-row-head');
+      var nextCell = headRow && (headRow.children[colIndex + 1] || headRow.children[colIndex - 1]);
+      var nextFocus = nextCell ? nextCell.querySelector('[data-compare-remove]') : null;
+
+      removeColumn(table, colIndex);
+
+      // (선택) 빈 상태 처리
+      var remain = table.querySelectorAll('colgroup col').length - 1;
+      var emptyEl = root.querySelector('[data-compare-empty]');
+      if (emptyEl) emptyEl.hidden = remain !== 0;
+
+      if (nextFocus && typeof nextFocus.focus === 'function') nextFocus.focus();
+    });
+  })();
+</script>
