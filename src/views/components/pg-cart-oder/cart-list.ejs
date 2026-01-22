@@ -7,22 +7,51 @@
   <!-- 상단 컨트롤 영역 -->
   <div class="vits-cart-toolbar">
     <div class="vits-cart-toolbar-left">
-      <label class="vits-cart-check">
-        <input type="checkbox" />
-        <span>전체선택</span>
-      </label>
-
-      <label class="vits-cart-check">
-        <input type="checkbox" />
-        <span>오늘출발만 보기</span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+        variant: 'basic', 
+        size: 's', 
+        name: 'vits-cart-checkbox',
+        list: 'row',
+        gap: '12',          
+        datas: [
+          {
+            text: '전체선택',
+            value:'전체선택',
+            checked: true,  
+          },
+          {
+            text: '오늘출발만 보기',
+            value:'오늘출발만 보기 ',
+          },
+        ]
+      }) %>
     </div>
 
     <div class="vits-cart-toolbar-right">
-      <button type="button">품절 상품 삭제</button>
-      <button type="button">선택 상품 삭제</button>
-      <button type="button">견적서 출력</button>
-      <button type="button">엑셀 다운로드</button>
+      <%- include(`${_src}/views/components/button/button.ejs`, { 
+        size: 'xs', 
+        variant: 'outline-secondary', 
+        text: '품절 상품 삭제', 
+      }) %>
+      <%- include(`${_src}/views/components/button/button.ejs`, { 
+        size: 'xs', 
+        variant: 'outline-secondary', 
+        text: '선택 상품 삭제', 
+      }) %>
+      <%- include(`${_src}/views/components/button/button.ejs`, { 
+        size: 'xs', 
+        variant: 'outline-secondary', 
+        text: '견적서 출력', 
+        iconLeft: true, 
+        iconName: 'ic-print' 
+      }) %>
+      <%- include(`${_src}/views/components/button/button.ejs`, { 
+        size: 'xs', 
+        variant: 'outline-secondary', 
+        text: '엑셀 다운로드', 
+        iconLeft: true, 
+        iconName: 'ic-download-2' 
+      }) %>
     </div>
   </div>
 
@@ -31,21 +60,39 @@
     <!-- 상품 리스트 -->
     <div class="vits-cart-list">
       
+      <% for (let i = 0; i < 3; i++) { %>
       <!-- 상품 카드 -->
-      <div class="vits-cart-item">
+      <!-- [D]일시 품절 일때 is-sold-out 클래스 추가 -->
+      <div class="<%= i === 0 ? 'vits-cart-item is-sold-out' : 'vits-cart-item' %>">
         <!-- 상단 영역 -->
         <div class="vits-cart-item-top">
+          <% if (i === 0) { %>
+          <!-- [D]일시 품절 일때 노출  -->
+          <div class="vits-cart-item-soldout">
+            <span class="sold-out-text">일시 품절</span>
+          </div>
+          <% } %>
           <!-- 비교 / 삭제 -->
           <div class="vits-cart-item-util">
-            <button type="button">비교함 담기</button>
-            <button type="button" aria-label="삭제">삭제</button>
+            <button class="vits-btn-compare">
+              <span class="icon">
+                <i class="ic ic-compare" aria-hidden="true"></i>
+              </span>
+              <span class="text">비교함 담기</span>
+            </button>
+            <button class="vits-btn-delete" aria-label="주문리스트삭제">
+              <i class="ic ic-x"></i>
+            </button>
           </div>
         </div>
         <!-- 상품 정보 메인 영역 -->
         <div class="vits-cart-item-main">
           <!-- 체크 -->
           <div class="vits-cart-item-check">
-            <input type="checkbox" />
+            <label class="checkbox-item">
+              <input type="checkbox" name="vits-cart-checkbox" value=" ">
+              <span class="checkbox-icon" aria-hidden="true"></span>
+            </label>
           </div>
       
           <!-- 썸네일 -->
@@ -57,53 +104,96 @@
       
           <!-- 상품 정보 -->
           <div class="vits-cart-item-info">
-            <div class="vits-cart-item-brand">
-              <span class="brand">서경</span>
-              <span class="code">63531</span>
-            </div>
+            <a href="#!" class="vits-cart-item-link">
+              <div class="vits-cart-item-brand">
+                <span class="brand">서경</span>
+                <span class="code">63531</span>
+              </div>
+        
+              <div class="vits-cart-item-name">
+                <span class="name-text">더블 OPP 접착테이프 투명 (초강력 접착제)</span>
+              </div>
+        
+              <div class="vits-cart-item-option">
+                <span class="option-label">2.6mm(공~5kg)</span>
+                <span class="option-value">낱개(1)</span>
+              </div>
+
+              <div class="vits-cart-item-badge">
+                <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                  today: true, 
+                  tomorrow: true,
+                  hot: true
+                }) %>
+                <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { 
+                  text: '무료배송', 
+                  variant: 'free-ship' 
+                }) %>
+              </div>
+            </a>
       
-            <div class="vits-cart-item-name">
-              <span class="name-text">더블 OPP 접착테이프 투명 (초강력 접착제)</span>
-              <span class="name-text-alt">323M</span>
-            </div>
-      
-            <div class="vits-cart-item-option">
-              2.6mm(공~5kg) · 날개(1)
-            </div>
-      
-            <div class="vits-cart-item-badge">
-              
-            </div>
-      
-            <!-- 수량 -->
+            <!-- 수량조절 -->
             <div class="vits-cart-item-quantity">
-              
+              <div class="unit-control">
+                <!-- 낱개 ,   -->
+                <button type="button" class="unit-control-btn" aria-label="낱개(1)">
+                  <span class="unit-text">낱개(1)</span>
+                </button>
+                <!-- 대포장 -->
+                <button type="button" class="unit-control-btn" aria-label="대포장(250)">
+                  <span class="unit-text">대포장(250)</span>
+                </button>
+                <button type="button" class="unit-control-input" aria-label="길이">
+                  <input type="text" id="" class="unit-input" value="12">
+                  <span class="unit-text">BOX</span>
+                </button>
+              </div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+                type: 'horiz', 
+                name: 'quantity',
+                value: 999,
+                min: 1,
+                max: 999,
+                step: 1,
+                unit: 'BOX'
+              }) %>
+
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size: 'xs',
+                variant: 'tertiary',
+                text: '추가',
+                className: 'unit-add-btn',
+              }) %>
             </div>
           </div>
 
           <!-- 가격 / 쿠폰 -->
           <div class="vits-cart-item-price">
-            <div class="price-origin">32,000원</div>
-      
-            <div class="price-sale">
-              <span class="rate">30%</span>
-              <strong class="price">1,224,900원</strong>
-              <span class="vat">(VAT별도)</span>
+            <div class="price-group">
+              <div class="price-origin">32,000원</div>
+              <div class="price-sale">
+                <span class="rate">30%</span>
+                <strong class="price">1,224,900원</strong>
+                <span class="vat">(VAT별도)</span>
+              </div>
             </div>
-      
-            <button type="button" class="vits-cart-coupon-btn">
-              쿠폰적용
-            </button>
-      
-            <p class="vits-cart-coupon-desc">
-              쿠폰 적용 시 최대 2,000원 할인
-            </p>
+
+            <div class="price-discount">
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size: 'xs',
+                variant: 'scoped-primary',
+                text: '쿠폰적용',
+              }) %>
+              <p class="vits-cart-coupon-desc">
+                쿠폰 적용 시 최대 2,000원 할인
+              </p>
+            </div>
           </div>
         </div>
       
         <!-- 하단 금액 요약 -->
         <div class="vits-cart-item-bottom">
-
           <div class="vits-cart-price-summary">
 
             <!-- 상품금액 -->
@@ -112,17 +202,19 @@
               <strong class="value">14,500원</strong>
             </div>
         
-            <!-- 할인금액 (토글) -->
-            <div class="vits-cart-summary-item is-toggle">
-              <div class="has-discount">
-                <button type="button" class="vits-cart-summary-toggle" aria-expanded="false">
+            <!-- s: 할인금액 (토글) -->
+            <!-- [D] 할인금액 없을 시 해당 영역 비노출 -->
+            <div class="vits-cart-summary-item has-discount">
+              <div class="discount-info is-active">
+                <button type="button" class="discount-toggle" aria-expanded="true">
                   <span class="label">할인금액</span>
+                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
                 </button>
-                <span class="value is-discount">-2,000원</span>
+                <span class="value">-2,000원</span>
               </div>
         
               <!-- 할인 상세 -->
-              <div class="vits-cart-discount-detail" aria-hidden="true">
+              <div class="discount-info-detail" aria-hidden="false">
                 <div class="detail-row">
                   <span class="label">ㄴ 쿠폰할인</span>
                   <span class="value">-2,000원</span>
@@ -133,6 +225,7 @@
                 </div>
               </div>
             </div>
+            <!-- e: 할인금액 -->
         
             <!-- VAT -->
             <div class="vits-cart-summary-item">
@@ -156,12 +249,19 @@
         
       </div>
       <!-- // vits-cart-item -->
+      <% } %>
     </div>
     <!-- // vits-cart-list -->
 
     <!-- 더보기 -->
     <div class="vits-cart-more">
-      <button type="button">더보기</button>
+      <%- include(`${_src}/views/components/button/button.ejs`, { 
+        size: 'lg', 
+        variant: 'outline-secondary', 
+        iconRight: true, 
+        iconName: 'ic-arrow-down',
+        text: '더보기', 
+      }) %>
     </div>
   </div>
 </div>

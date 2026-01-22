@@ -151,6 +151,15 @@
   }
 }
 
+/* 상태 */
+.is-required {
+  &::after {
+    @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand'));
+    padding-left: map.get(var.$unit, 2);
+    content: '\002A';
+  }
+}
+
 /* 라디오 버튼 */
 .radio {
   @include input-common('radio');
@@ -260,12 +269,13 @@ $input-size: (
 );
 
 .vits-input {
-  @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
   position: relative;
   width: 100%;
   overflow: hidden;
   background: map.get(color.$layout-surf, 'base');
   border-radius: map.get(var.$radius, 'sm');
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+  transition: box-shadow 0.3s;
 
   .input-item {
     width: 100%;
@@ -274,6 +284,7 @@ $input-size: (
     input {
       width: 100%;
       height: 100%;
+      background: transparent;
       border: 0;
       outline: 0;
 
@@ -300,6 +311,14 @@ $input-size: (
           padding: 0 map.get(var.$unit, 16);
         }
       }
+    }
+  }
+
+  &:has(input:hover),
+  &:has(input:focus-visible),
+  &:has(input:active) {
+    @include mx.common-mouse-event {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
     }
   }
 }
@@ -356,13 +375,14 @@ $textarea-size: (
 
 .vits-textarea {
   @include mx.flex(flex, column, flex-start, flex-start);
-  @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
   position: relative;
   gap: map.get(var.$unit, 8);
   width: 100%;
   overflow: hidden;
   background: map.get(color.$layout-surf, 'base');
   border-radius: map.get(var.$radius, 'sm');
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+  transition: box-shadow 0.3s;
 
   .textarea-box {
     flex: 1 1 auto;
@@ -427,6 +447,14 @@ $textarea-size: (
       padding-right: fn.rem(6);
     }
   }
+
+  &:has(textarea:hover),
+  &:has(textarea:focus-visible),
+  &:has(textarea:active) {
+    @include mx.common-mouse-event {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+    }
+  }
 }
 
 /* 유효성 */
@@ -438,6 +466,63 @@ $textarea-size: (
 
     p {
       @include typo.typography('b3r', $color: map.get(color.$brand-colors, 'primary'));
+    }
+  }
+}
+
+/* form list */
+.vits-form {
+  &-item {
+    @include mx.flex(flex, row, flex-start, flex-start);
+    gap: map.get(var.$unit, 24);
+
+    &-label {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      flex-shrink: 0;
+      width: fn.rem(140);
+      line-height: map.get(var.$unit, 44);
+    }
+
+    & + .vits-form-item {
+      margin-top: map.get(var.$unit, 12);
+    }
+  }
+
+  &-agree {
+    height: fn.rem(240);
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 4) map.get(var.$unit, 16) map.get(var.$unit, 16);
+    margin-top: map.get(var.$unit, 32);
+    overflow: hidden;
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+
+    p {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-inner {
+      height: 100%;
+      overflow: hidden auto;
+
+      > div + div {
+        margin-top: fn.rem(16);
+      }
+    }
+  }
+
+  &-actions {
+    padding-top: map.get(var.$unit, 24);
+
+    .checkbox-wrapper {
+      width: 100%;
+
+      .checkbox-item {
+        @include mx.flex(flex, row, center, center);
+
+        .label-name {
+          max-width: 100%;
+        }
+      }
     }
   }
 }

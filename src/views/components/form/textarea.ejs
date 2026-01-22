@@ -4,6 +4,7 @@
 
   const _id = typeof id !== 'undefined' ? String(id) : '';
   const _name = typeof name !== 'undefined' ? String(name) : '';
+  const _label = (typeof label !== 'undefined' && label) ? label : '';
   const _placeholder = typeof placeholder !== 'undefined' ? String(placeholder) : '';
 
   const _value = typeof value !== 'undefined' ? String(value) : '';
@@ -17,6 +18,7 @@
 
 <div class="vits-textarea <%= _rootClass %>" data-textarea-count="<%= _count ? 'true' : 'false' %>">
   <div class="textarea-box">
+    <label for="<%= _id %>" class="sr-only"><%= _label %></label>
     <textarea
       rows="<%= _rows %>"
       <% if (_id) { %> id="<%= _id %>" <% } %>

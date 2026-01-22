@@ -12,7 +12,7 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
-$list-gap: 16, 18;
+$list-gap: 12, 16, 18;
 
 // 방향별 기본 스타일
 $list-directions: (
@@ -51,36 +51,7 @@ $list-directions: (
   }
 }
 
-/* 상품 목록 리스트 */
-/* --
-    [상품 카드 상태/뷰 제어용 data & class 규칙]
-
-    1. 리스트 사용처 구분 (상위 컨테이너 .vits-product-list)
-    data-context="plp"       : 상품목록(PLP)
-    data-context="main"      : 메인 상품 리스트
-    data-context="wish"      : 좋아요 리스트
-    data-context="frequent"  : 자주구매 리스트
-    data-context="compare"   : 비교함 리스트
-
-    2. 리스트 뷰 타입 (상위 컨테이너 .vits-product-list)
-    vits-product-list view-thumb : 썸네일(카드형) 목록
-    vits-product-list view-list  : 리스트형 목록
-
-    3. 상품 상태 (li.vits-product-item)
-    data-member="true"  : 회원
-    data-member="false" : 비회원
-
-    data-stock="true"   : 판매중
-    data-stock="false"  : 일시품절
-
-    data-cut="true"     : 조장상품(절단/길이 주문형)
-    data-cut="false"    : 일반상품
-
-    ※ 모든 카드는 공통 마크업 구조를 사용하며
-      리스트 종류/뷰/상태는 상위 data-context + item data 조합으로 제어.
--- */
-/* 상품 카드 아이템 */
-.vits-product-card {
+@mixin common-product-card-info {
   .product {
     &-thumb {
       position: relative;
@@ -92,14 +63,11 @@ $list-directions: (
       }
     }
 
-    &-body {
-      display: grid;
-    }
-
     &-code {
       @include mx.flex(inline-flex, row, center, center);
       @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
       @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+      min-width: 0;
       height: map.get(var.$unit, 16);
       padding: 0 map.get(var.$unit, 4);
     }
@@ -163,16 +131,8 @@ $list-directions: (
       }
     }
 
-    &-meta {
-      @include mx.flex(flex, row, space-between, center);
-    }
-
     &-brand {
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-    }
-
-    &-model {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
     }
 
     &-name {
@@ -182,7 +142,6 @@ $list-directions: (
 
     &-spec {
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-      margin-top: map.get(var.$unit, 2);
     }
 
     &-price {
@@ -253,8 +212,32 @@ $list-directions: (
     }
 
     &-extra {
-      @include mx.flex(flex, row, flex-start, center);
+      @include mx.flex(flex, row, flex-start, center, wrap);
       gap: map.get(var.$unit, 2);
+    }
+  }
+}
+
+/* 상품 목록 리스트 */
+/* 상품 카드 아이템 */
+.vits-product-card {
+  @include common-product-card-info;
+
+  .product {
+    &-body {
+      display: grid;
+    }
+
+    &-meta {
+      @include mx.flex(flex, row, space-between, center);
+    }
+
+    &-model {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
+    }
+
+    &-spec {
+      margin-top: map.get(var.$unit, 2);
     }
   }
 }
@@ -271,44 +254,6 @@ $list-directions: (
 
   &-list {
     gap: map.get(var.$unit, 40);
-
-    // 회원 시, 비노출
-    [data-member='true'] {
-      .product-price-alt.is-guest {
-        display: none !important;
-      }
-    }
-
-    // 비회원 시, 비노출
-    [data-member='false'] {
-      .product-extra,
-      .vits-price-box.is-normal,
-      .product-price-alt.is-soldout,
-      .product-actions {
-        display: none !important;
-      }
-    }
-
-    // 판매중, 비노출
-    [data-stock='true'] {
-      .product-price-alt.is-soldout {
-        display: none !important;
-      }
-    }
-
-    // 일시품절, 비노출
-    [data-stock='false'] {
-      .vits-price-box.is-normal {
-        display: none !important;
-      }
-    }
-
-    // 일시품절 & 조장상품 비노출
-    [data-cut='true'] {
-      .product-action-cart {
-        display: none !important;
-      }
-    }
   }
 
   &-pagination {
@@ -493,80 +438,80 @@ $list-directions: (
         align-self: flex-end;
       }
     }
-  }
 
-  // 회원용 그리드 템플릿
-  &:has(.vits-product-item[data-member='true']) {
-    .vits-product-item[data-member='true'] .vits-product-card .product {
-      &-body {
-        grid-template:
-          'meta    price actions' auto
-          'summary price actions' auto
-          'code    price actions' auto
-          'extra   price actions' 1fr
-          / 35.51% 29.23% 24.1%;
-        column-gap: 41px;
-      }
-
-      &-actions {
-        grid-area: actions;
-      }
-
-      &-meta {
-        grid-area: meta;
-      }
-
-      &-summary {
-        grid-area: summary;
-      }
-
-      &-code {
-        grid-area: code;
-      }
-
-      &-price {
-        grid-area: price;
-      }
-
-      &-extra {
-        grid-area: extra;
-      }
-    }
-  }
-
-  // 비회원용 그리드 템플릿
-  &:has(.vits-product-item[data-member='false']) {
-    .vits-product-item[data-member='false'] .vits-product-card .product {
-      &-body {
-        grid-template-rows: auto auto auto 1fr;
-        grid-template-columns: 35.51% 29.23% 24.1%;
-        column-gap: 41px;
-      }
-
-      &-meta {
-        grid-area: 1 / 1;
-      }
-
-      &-summary {
-        grid-area: 2 / 1;
-      }
-
-      &-code {
-        grid-area: 3 / 1;
-      }
-
-      &-price {
-        grid-row: 1 / 5; // 1~4번째 행
-        grid-column: 2 / 4; // 2~3번째 컬럼
-        align-items: flex-end;
-
-        .product-price-alt.is-guest {
-          width: 45.19%;
+    // 회원용 그리드 템플릿
+    &.is-member {
+      .product {
+        &-body {
+          grid-template:
+            'meta    price actions' auto
+            'summary price actions' auto
+            'code    price actions' auto
+            'extra   price actions' 1fr
+            / 35.51% 29.23% 24.1%;
+          column-gap: 41px;
         }
 
-        .product-price-alt.is-guest,
-        .price-guest-text {
-          align-items: center;
+        &-actions {
+          grid-area: actions;
+        }
+
+        &-meta {
+          grid-area: meta;
+        }
+
+        &-summary {
+          grid-area: summary;
+        }
+
+        &-code {
+          grid-area: code;
+        }
+
+        &-price {
+          grid-area: price;
+        }
+
+        &-extra {
+          grid-area: extra;
+        }
+      }
+    }
+
+    // 비회원용 그리드 템플릿
+    &.is-guest {
+      .product {
+        &-body {
+          grid-template-rows: auto auto auto 1fr;
+          grid-template-columns: 35.51% 29.23% 24.1%;
+          column-gap: 41px;
+        }
+
+        &-meta {
+          grid-area: 1 / 1;
+        }
+
+        &-summary {
+          grid-area: 2 / 1;
+        }
+
+        &-code {
+          grid-area: 3 / 1;
+        }
+
+        &-price {
+          grid-row: 1 / 5; // 1~4번째 행
+          grid-column: 2 / 4; // 2~3번째 컬럼
+          align-items: flex-end;
+
+          .product-price-alt.is-guest {
+            width: 45.19%;
+          }
+
+          .product-price-alt.is-guest,
+          .price-guest-text {
+            align-items: center;
+          }
         }
       }
     }

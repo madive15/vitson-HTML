@@ -88,8 +88,8 @@ import Swiper from 'swiper/bundle';
   function setIndex(nextIndex) {
     currentIndex = clampIndex(nextIndex);
 
-    mainSwiper.slideTo(currentIndex);
-    thumbsSwiper.slideTo(currentIndex);
+    if (mainSwiper.activeIndex !== currentIndex) mainSwiper.slideTo(currentIndex);
+    if (thumbsSwiper.activeIndex !== currentIndex) thumbsSwiper.slideTo(currentIndex);
 
     thumbBtns.forEach(function (btn, i) {
       if (i === currentIndex) btn.classList.add('is-active');
@@ -153,6 +153,14 @@ import Swiper from 'swiper/bundle';
       if (isNaN(idx)) return;
       setIndex(idx);
     });
+  });
+
+  mainSwiper.on('slideChange', function () {
+    setIndex(mainSwiper.realIndex);
+  });
+
+  thumbsSwiper.on('slideChange', function () {
+    setIndex(thumbsSwiper.realIndex);
   });
 
   function hideZoom() {
@@ -290,11 +298,21 @@ import Swiper from 'swiper/bundle';
       }
     },
     slim: {
-      spaceBetween: 19.6,
+      spaceBetween: 20,
       speed: 400,
       breakpoints: {
         1024: {slidesPerView: 5},
         1280: {slidesPerView: 6}
+      }
+    },
+    boxed: {
+      slidesPerView: 4,
+      spaceBetween: 13,
+      speed: 400,
+      breakpoints: {
+        0: {slidesPerView: 3},
+        1024: {slidesPerView: 3},
+        1200: {slidesPerView: 4}
       }
     }
   };

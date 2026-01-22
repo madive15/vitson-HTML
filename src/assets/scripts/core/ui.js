@@ -12,8 +12,10 @@
 import '../ui/toggle.js';
 import '../ui/scroll-boundary.js';
 import '../ui/layer.js';
+import '../ui/modal.js';
+import '../ui/tooltip.js';
 import '../ui/swiper.js';
-import '../ui/swiper-boxed.js';
+import '../ui/swiper-test.js';
 import '../ui/chip-button.js';
 import '../ui/quantity-stepper.js';
 import '../ui/form/textarea.js';
@@ -31,6 +33,7 @@ import '../ui/category/plp-chip-sync.js';
 import '../ui/category/plp-view-toggle.js';
 import '../ui/more-expand.js';
 import '../ui/filter-expand.js';
+import '../ui/cart-order/cart-order.js';
 
 (function (window) {
   'use strict';
@@ -48,8 +51,10 @@ import '../ui/filter-expand.js';
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
     if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
+    if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
+    if (window.UI.tooltip && window.UI.tooltip.init) window.UI.tooltip.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
-    if (window.UI.swiperBoxed && window.UI.swiperBoxed.init) window.UI.swiperBoxed.init();
+    if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
@@ -74,6 +79,7 @@ import '../ui/filter-expand.js';
     if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
     if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
+    if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
   };
 
   console.log('[core/ui] loaded');

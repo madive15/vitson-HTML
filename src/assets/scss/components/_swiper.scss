@@ -11,6 +11,18 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+
+@mixin swiper-title($fz: 'h1', $fw: 'b', $color: map.get(color.$text-status, 'brand')) {
+  $typo-type: $fz + $fw;
+
+  @include typo.typography($typo-type);
+
+  .point-color,
+  .primary {
+    color: $color;
+  }
+}
 
 // swiper navs 여백까지 고려하여 컨테이너 영역 설정
 .vits-product-recommend {
@@ -127,196 +139,10 @@
   }
 }
 
-/* [상품상세 페이지 상품유닛 (회원, 비회원 구분)] */
-.vits-product-list-slide {
-  .vits-product-slide-card {
-    @include mx.flex(flex, column, flex-start, flex-start);
-    gap: map.get(var.$unit, 12);
-
-    .product {
-      &-thumb {
-        width: 100%;
-      }
-
-      &-body {
-        gap: map.get(var.$unit, 8) 0;
-        width: 100%;
-        padding: 0 fn.rem(10) fn.rem(14);
-      }
-
-      &-code {
-        @include mx.flex(inline-flex, row, center, center);
-        @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
-        height: map.get(var.$unit, 16);
-        padding: 0 map.get(var.$unit, 4);
-      }
-
-      &-meta {
-        @include mx.flex(flex, row, space-between, center);
-        gap: map.get(var.$unit, 4);
-      }
-
-      &-brand {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-      }
-
-      &-model {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-        flex: 1;
-
-        &::before {
-          display: inline-block;
-          width: 1px;
-          height: map.get(var.$unit, 8);
-          margin: 0 map.get(var.$unit, 8);
-          content: '';
-          background-color: map.get(color.$layout-border, 'tertiary');
-        }
-      }
-
-      &-name {
-        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
-        @include mx.ellipsis-multi(1.3, 2);
-        padding-top: map.get(var.$unit, 4);
-      }
-
-      &-spec {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-        margin-top: map.get(var.$unit, 4);
-      }
-
-      &-price {
-        .price-origin-label {
-          @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
-          margin-top: map.get(var.$unit, 4);
-          text-decoration: line-through;
-          text-decoration-line: line-through;
-        }
-
-        .price-sale-row {
-          @include mx.flex(flex, row, $wrap: wrap, $align: flex-start, $justify: flex-start);
-          gap: map.get(var.$unit, 4);
-
-          .price-rate {
-            @include typo.typography('b1b', $color: map.get(color.$text-status, 'brand'));
-          }
-
-          .price-sale {
-            @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
-            white-space: nowrap;
-          }
-        }
-
-        .product-price-alt.is-soldout {
-          @include typo.typography('b1b', $color: map.get(color.$label-shipping, 'today'));
-        }
-
-        .product-price-alt.is-guest {
-          @include mx.flex(flex, column, flex-start, flex-start);
-          gap: map.get(var.$unit, 12);
-
-          .price-guest-text {
-            @include mx.flex(flex, column, flex-start, flex-start);
-            gap: map.get(var.$unit, 2);
-
-            &-title {
-              @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-sub'));
-            }
-
-            &-desc {
-              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-            }
-          }
-
-          .price-guest-action {
-            width: 100%;
-
-            .price-login-button {
-              @include button.btn-reset;
-              @include mx.flex(flex, row, center, center);
-              @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
-              gap: fn.rem(10);
-              width: 100%;
-              height: map.get(var.$unit, 32);
-              padding: 0 map.get(var.$unit, 8);
-              border-radius: map.get(var.$radius, 'sm');
-
-              .icon {
-                @include icon.ic-size(map.get(var.$unit, 16));
-                color: map.get(color.$icon-neutral, 'primary');
-              }
-
-              .text {
-                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-              }
-            }
-          }
-        }
-      }
-
-      &-summary {
-        grid-area: summary;
-      }
-
-      &-price {
-        grid-area: price;
-
-        .product-price-alt.is-guest {
-          margin-top: map.get(var.$unit, 4);
-        }
-      }
-
-      &-extra {
-        @include mx.flex(flex, row, flex-start, center);
-        flex-wrap: wrap;
-        grid-area: extra;
-        margin-top: map.get(var.$unit, 4);
-      }
-    }
-  }
-
-  // 회원 시, 비노출
-  &[data-member='true'] {
-    .product-price-alt.is-guest {
-      display: none !important;
-    }
-  }
-
-  // 비회원 시, 비노출
-  &[data-member='false'] {
-    .product-extra,
-    .vits-price-box.is-normal,
-    .product-price-alt.is-soldout,
-    .product-actions {
-      display: none !important;
-    }
-  }
-
-  // 판매중, 비노출
-  &[data-stock='true'] {
-    .product-price-alt.is-soldout {
-      display: none !important;
-    }
-  }
-
-  // 일시품절, 비노출
-  &[data-stock='false'] {
-    .vits-price-box.is-normal {
-      display: none !important;
-    }
-  }
-
-  // 일시품절 & 조장상품 비노출
-  &[data-cut='true'] {
-    .product-action-cart {
-      display: none !important;
-    }
-  }
-}
-
-/* vits-boxed-swiper */
-.vits-boxed-swiper {
+/* ============================================================
+text swiper - 추후 삭제 예정
+============================================================ */
+.test-swiper {
   position: relative;
   padding: map.get(var.$unit, 32);
   overflow: hidden;
@@ -334,14 +160,108 @@
       background: green;
     }
   }
+}
 
-  // .swiper-wrapper {
-  //   padding-left: 32px;
-  // }
+/* vits-base-swiper (예시, 검색결과 목록 스와이프) */
+.vits-base-swiper {
+  position: relative;
+  width: 100%;
 
-  // .swiper-slide {
-  //   &:last-child {
-  //     padding-right: 32px; // 마지막도 여백 확보
-  //   }
-  // }
+  &-section {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 32) map.get(var.$unit, 32) fn.rem(14);
+    background: map.get(color.$layout-status, 'brand-bg-default');
+    border-radius: map.get(var.$radius, 'lg');
+  }
+
+  &-title {
+    @include swiper-title('h2');
+  }
+
+  // 상품 아이템
+  &-card {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 8);
+    height: 100%;
+    padding: 0;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+
+    .product {
+      &-thumb {
+        width: 100%;
+      }
+
+      &-body {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 2);
+        width: 100%;
+        padding: 0 fn.rem(12);
+      }
+
+      &-meta {
+        @include mx.flex(flex, row, flex-start, center);
+        @include mx.divider('div', 1, 8, 8, map.get(color.$icon-neutral, 'disabled'));
+        width: 100%;
+      }
+
+      &-code {
+        margin-left: auto;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      &-model {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        flex: 1;
+      }
+
+      &-spec {
+        margin-top: map.get(var.$unit, 2);
+      }
+
+      &-price {
+        margin-top: map.get(var.$unit, 2);
+      }
+
+      &-extra {
+        margin-top: map.get(var.$unit, 4);
+      }
+    }
+
+    &.swiper-boxed {
+      padding: map.get(var.$unit, 8);
+    }
+
+    @include list.common-product-card-info;
+  }
+
+  // swiper 커스텀
+  &-container.vits-swiper.js-swiper {
+    .vits-base-swiper {
+      &-slide {
+        background: transparent;
+      }
+    }
+
+    & + .vits-base-swiper-navs {
+      [class*='vits-base-swiper'] {
+        top: 41.19%;
+        width: map.get(var.$unit, 44);
+        height: map.get(var.$unit, 44);
+        transform: translateY(0);
+      }
+
+      .vits-base-swiper-prev {
+        left: -19px;
+      }
+
+      .vits-base-swiper-next {
+        right: -19px;
+      }
+    }
+  }
 }

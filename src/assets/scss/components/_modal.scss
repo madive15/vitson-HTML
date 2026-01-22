@@ -1,0 +1,333 @@
+// -----------------------------------------------------------------------------
+// components/_modal.scss
+// - data-modal-* 기반 레이어 공통 애니메이션 베이스 스타일
+// - 상태 클래스: is-open(display on) / is-active(visible on) / is-closing(leave)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+/* 공통 믹스인 */
+
+@mixin layer-hidden {
+  display: none;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+@mixin layer-visible {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+@mixin layer-transition($delay: 0.35s) {
+  transition:
+    transform $delay ease,
+    opacity $delay ease,
+    visibility 0s $delay;
+}
+
+@mixin layer-transition-active {
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0s;
+}
+
+/* 딤 레이어 */
+
+[data-modal-dim] {
+  @include layer-hidden;
+  @include mx.position(absolute, 0, 0, 0, 0);
+  z-index: var.$zindex-modal-dim;
+  background-color: color.$color-dim;
+  transition:
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+
+  &.is-open {
+    display: block;
+  }
+
+  &.is-open.is-active {
+    @include layer-visible;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s 0s;
+  }
+
+  &.is-open.is-closing {
+    @include layer-hidden;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s 0.35s;
+  }
+}
+
+/* 모달 박스 (공통) */
+
+[data-modal-box] {
+  @include layer-hidden;
+  @include layer-transition;
+
+  &.is-open {
+    display: block;
+  }
+
+  &.is-open.is-active {
+    @include layer-visible;
+    @include layer-transition-active;
+  }
+
+  &.is-open.is-closing {
+    @include layer-hidden;
+    @include layer-transition;
+  }
+}
+
+/* 타입별 스타일 */
+
+// 모달
+[data-modal-box][data-modal-type='modal'] {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: var.$zindex-modal;
+  transform: translateY(8px) scale(0.98);
+
+  &.is-open.is-active {
+    transform: translateY(0) scale(1);
+  }
+
+  &.is-open.is-closing {
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+// 바텀시트
+[data-modal-box][data-modal-type='bottom'] {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: var.$zindex-modal;
+  transform: translateY(16px);
+
+  &.is-open.is-active {
+    transform: translateY(0);
+  }
+
+  &.is-open.is-closing {
+    transform: translateY(16px);
+  }
+}
+
+// 슬라이드 (오른쪽에서 왼쪽으로)
+[data-modal-box][data-modal-type='slide-right'] {
+  [class$='-panel'] {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+    transform: translateX(100%);
+    transform-origin: right center;
+  }
+
+  &.is-open.is-active {
+    [class$='-dim'] {
+      transition: none;
+      transform: none;
+    }
+
+    [class$='-panel'] {
+      transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        visibility 0s 0s;
+      transform: translateX(0);
+    }
+  }
+
+  &.is-open.is-closing {
+    [class$='-panel'] {
+      transform: translateX(100%);
+    }
+  }
+}
+
+/* 접근성 */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-modal-box],
+  [data-modal-dim] {
+    transition: none;
+  }
+}
+
+/* =============================================================
+  🚫 DO NOT MODIFY ABOVE THIS LINE
+  위 스타일은 전체 레이어 시스템 공통 베이스입니다.
+  개별 레이어 스타일은 이 영역 아래에서만 작성하세요.
+============================================================= */
+
+/* 개별 모달 스타일 영역 */
+// 모달 Inner (실제 모달 박스)
+$modal-widths: (
+  480: 480,
+  710: 710
+);
+
+.vits-modal {
+  --modal-footer-secondary-width: #{fn.rem(120)}; // 기본값
+
+  &-inner {
+    @include mx.position(absolute, 50%, $left: 50%);
+    @include mx.flex(flex, column, flex-start, flex-start);
+    z-index: var.$zindex-base;
+    min-width: fn.rem(320);
+    max-height: calc(var(--vh, 1vh) * 95);
+    transform: translate(-50%, -50%);
+
+    > div[class*='vits-modal-'] {
+      width: 100%;
+    }
+
+    @at-root .vits-modal:not([class*='width-']) & {
+      max-width: 95vw;
+    }
+
+    @each $key, $w in $modal-widths {
+      @at-root .vits-modal.width-#{$key} & {
+        width: fn.rem($w);
+      }
+    }
+  }
+
+  [class*='vits-modal-'][class*='-header'],
+  [class*='vits-modal-'][class*='::-moz-focus-outer'] {
+    flex-shrink: 0;
+  }
+
+  // header
+  &-header {
+    @include mx.flex(flex, row, space-between, center);
+    padding: map.get(var.$unit, 32) map.get(var.$unit, 32) map.get(var.$unit, 40);
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+
+    &-content {
+      flex-grow: 1;
+      min-width: 0;
+      max-width: calc(100% - map.get(var.$unit, 32));
+      overflow: hidden;
+    }
+  }
+
+  &-title,
+  &-subtitle {
+    @include mx.ellipsis-single;
+    width: 100%;
+  }
+
+  &-title {
+    @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &-subtitle {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    margin-top: map.get(var.$unit, 4);
+  }
+
+  &-close {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    @include icon.ic-size(map.get(var.$unit, 32));
+  }
+
+  // 컨텐츠
+  &-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden auto;
+    background: color.$color-white;
+
+    &-inner {
+      max-width: 710px;
+      padding: 0 map.get(var.$unit, 32);
+      margin-right: fn.rem(-20); // 스크롤바 너비만큼 밀어내기
+    }
+  }
+
+  // footer
+  &-footer {
+    padding: fn.rem(44) map.get(var.$unit, 32) map.get(var.$unit, 32);
+    background: color.$color-white;
+    border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+  }
+
+  &-btn {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    height: map.get(var.$unit, 64);
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 12);
+    border-radius: map.get(var.$radius, 'md');
+
+    &-primary {
+      background: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+    }
+
+    &-secondary {
+      background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+    }
+
+    .text {
+      @include typo.typography('h3b', $color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default'));
+    }
+  }
+
+  &-buttons {
+    @include mx.flex(flex, row, center, center);
+    gap: map.get(var.$unit, 12);
+
+    &.is-single {
+      .vits-modal-btn {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+    }
+
+    &.is-double {
+      .vits-modal-btn-secondary {
+        flex: 2 1 0;
+        min-width: 0;
+      }
+
+      .vits-modal-btn-primary {
+        flex: 3 1 0;
+        min-width: 0;
+      }
+    }
+  }
+
+  &:not(:has(.vits-modal-footer)) {
+    .vits-modal-content {
+      padding-bottom: map.get(var.$unit, 32);
+      border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+    }
+  }
+
+  &.theme-compare {
+    .vits-modal-content-inner {
+      max-width: none !important;
+      margin-right: 0 !important;
+    }
+  }
+}

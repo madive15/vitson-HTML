@@ -28,11 +28,16 @@
               <!-- E: vits-grid-side-left -->
 
               <!-- S: vits-grid-main -->
-              <div class="vits-grid-main vits-main-cart-order" style="height: 1800px; background: darkcyan">
+              <div class="vits-grid-main vits-main-cart-order" style="min-height: 1800px; background: darkcyan">
                 <!-- 메인 컨텐츠 -->
                 <section class="main-cart-section">
                   <div style="padding: 20px; background-color: black; color: white">장바구니 영역</div>
                   <%- include(`${_src}/views/components/pg-cart-oder/cart-list.ejs`) %>
+                </section>
+
+                <section class="main-shipping-section">
+                  <div style="padding: 20px; background-color: black; color: white">배송정보 영역</div>
+                  <%- include(`${_src}/views/components/pg-cart-oder/shipping-list.ejs`) %>
                 </section>
               </div>
               <!-- E: vits-grid-main -->

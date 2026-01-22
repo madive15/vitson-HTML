@@ -13,6 +13,38 @@
 @use '@/assets/scss/components/button' as button;
 
 /* 대/중/소 카테고리 상품 목록 */
+
+// 왼쪽메뉴
+.vits-side-plp {
+  @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+  flex-shrink: 0;
+}
+
+// 오른쪽 컨텐츠
+.vits-main-plp {
+  .result {
+    &-bar {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 24);
+
+      &:has(> :not(.is-hidden)) {
+        margin-bottom: map.get(var.$unit, 24);
+      }
+    }
+
+    &-clear-button {
+      @include button.btn-reset;
+      @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+      flex: 1 1 auto;
+      min-width: 0;
+      height: map.get(var.$unit, 24);
+      margin-top: map.get(var.$unit, 4);
+      white-space: nowrap;
+    }
+  }
+}
+
 .vits-plp {
   // 상단 영역
   &-titlebar {
@@ -148,37 +180,6 @@
       }
     }
   }
-
-  // 왼쪽메뉴
-  &-side {
-    @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
-    flex-shrink: 0;
-  }
-
-  // 오른쪽 컨텐츠
-  &-main {
-    .result {
-      &-bar {
-        @include mx.flex(flex, row, flex-start, flex-start);
-        gap: map.get(var.$unit, 24);
-
-        &:has(> :not(.is-hidden)) {
-          margin-bottom: map.get(var.$unit, 24);
-        }
-      }
-
-      &-clear-button {
-        @include button.btn-reset;
-        @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
-        @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
-        flex: 1 1 auto;
-        min-width: 0;
-        height: map.get(var.$unit, 24);
-        margin-top: map.get(var.$unit, 4);
-        white-space: nowrap;
-      }
-    }
-  }
 }
 
 /* 상품 목록 */
@@ -248,6 +249,142 @@
         @include mx.common-mouse-event {
           box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
         }
+      }
+    }
+  }
+}
+
+/* 제품 비교하기 팝업 */
+.vits-plp-compare {
+  @include mx.border('top', $color: map.get(color.$layout-border, 'tertiary'));
+  @include mx.border('bottom', $color: map.get(color.$layout-border, 'tertiary'));
+
+  &-scroll {
+    overflow: auto hidden;
+
+    // 터치 스크롤 사용성
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &-table {
+    // 비교 열이 많을 때 가로 스크롤이 생기도록 최소 너비 확보
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    tr {
+      &:not(:last-child) {
+        @include mx.border('bottom', $color: map.get(color.$layout-surf, 'sunken'));
+      }
+
+      &:last-child {
+        th,
+        td {
+          padding-bottom: fn.rem(16);
+        }
+      }
+    }
+  }
+
+  &-col-product {
+    width: fn.rem(156);
+  }
+
+  &-th,
+  &-td {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    padding: map.get(var.$unit, 12);
+    text-align: left;
+    word-break: break-word;
+
+    &:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    &.is-head {
+      padding-bottom: map.get(var.$unit, 24);
+      vertical-align: top;
+    }
+
+    &:not(.is-head) {
+      vertical-align: middle;
+    }
+  }
+
+  &-label {
+    @include typo.typography('b3r');
+    width: fn.rem(90);
+    padding-right: 0;
+    padding-left: map.get(var.$unit, 8);
+    vertical-align: top;
+  }
+
+  &-product {
+    position: relative;
+  }
+
+  &-thumb {
+    display: block;
+    width: fn.rem(140);
+    aspect-ratio: 1 / 1;
+    background: map.get(color.$gray-shades, '30');
+  }
+
+  &-remove {
+    @include button.btn-reset;
+    @include mx.position(absolute, 4px, 4px);
+    @include icon.ic-size(map.get(var.$unit, 20));
+    color: map.get(color.$icon-neutral, 'primary');
+    background: map.get(color.$layout-surf, 'sunken');
+    border-radius: 50%;
+    transition:
+      color 0.3s,
+      background 0.2s;
+
+    @include mx.common-mouse-event {
+      color: color.$color-white;
+      background-color: map.get(color.$layout-surf, 'primary');
+    }
+  }
+
+  &-info {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 4);
+    padding: map.get(var.$unit, 8);
+  }
+
+  &-brand {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-name {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &-meta {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-price {
+    @include mx.flex(flex, column, flex-start, flex-start);
+
+    .price {
+      &-onrigin {
+        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'muted'));
+        text-decoration: line-through;
+        text-decoration-line: line-through;
+      }
+
+      &-sale-row {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-rate {
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand'));
+      }
+
+      &-sale {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
       }
     }
   }

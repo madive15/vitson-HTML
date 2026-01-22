@@ -56,50 +56,6 @@
     visibility 0s 0.35s;
 }
 
-/* 옵션: body 스크롤 락 */
-body.is-layer-open {
-  overflow: hidden;
-}
-
-/* 타입별 위치/연출 */
-/* 모달 */
-[data-layer-box][data-layer-type='modal'] {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-
-  /* 닫힘 기본 모션(살짝 아래 + 축소) */
-  transform: translateY(8px) scale(0.98);
-}
-
-[data-layer-box][data-layer-type='modal'].is-open.is-active {
-  transform: translateY(0) scale(1);
-}
-
-[data-layer-box][data-layer-type='modal'].is-open.is-closing {
-  transform: translateY(8px) scale(0.98);
-}
-
-/* 바텀시트 */
-[data-layer-box][data-layer-type='bottom'] {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-
-  /* 닫힘 기본 모션(아래로) */
-  transform: translateY(16px);
-}
-
-[data-layer-box][data-layer-type='bottom'].is-open.is-active {
-  transform: translateY(0);
-}
-
-[data-layer-box][data-layer-type='bottom'].is-open.is-closing {
-  transform: translateY(16px);
-}
-
 /* 모션 최소화 환경 */
 @media (prefers-reduced-motion: reduce) {
   [data-layer-box] {
@@ -148,45 +104,6 @@ body.is-layer-open {
     opacity 0.35s ease,
     visibility 0s 0.35s;
   transform: translateY(12px) scaleY(0.92);
-}
-
-// slide-right (오른쪽에서 외쪽으로 슬라이드 ex: 옵션 모달)
-[data-layer-box][data-layer-type='slide-right'] {
-  [class$="-panel"] {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    transition:
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.3s ease,
-      visibility 0s 0.3s;
-    transform: translateX(100%);
-    transform-origin: right center;
-  }
-}
-
-[data-layer-box][data-layer-type='slide-right'].is-open.is-active {
-  [class$="-dim"]{
-    transition: none;
-    transform: none;
-  }
-
-  [class$="-panel"] {
-    transition:
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.3s ease,
-      visibility 0s 0s;
-    transform: translateX(0);
-  }
-}
-
-[data-layer-box][data-layer-type='slide-right'].is-open.is-closing {
-  [class$="-panel"] {
-    transform: translateX(100%);
-  }
-  
 }
 
 /* ===========================================================
