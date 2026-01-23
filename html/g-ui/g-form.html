@@ -67,7 +67,7 @@
               <!-- prettier-ignore -->
               
 
-<div class="vits-input size-default">
+<div class="vits-input size-default ">
   <div class="input-item">
     <label for="company1" class="sr-only">회사명(기관명)</label>
 
@@ -84,20 +84,22 @@
 
       
       
+      
     />
   </div>
 
-  <div class="input-validation" hidden>
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
     <p id="company1-validation" aria-live="polite"></p>
   </div>
 </div>
-
             </li>
             <li>
               <!-- prettier-ignore -->
               
 
-<div class="vits-input size-large">
+<div class="vits-input size-large ">
   <div class="input-item">
     <label for="company2" class="sr-only">회사명(기관명)</label>
 
@@ -114,14 +116,48 @@
 
       
       
+      
     />
   </div>
 
-  <div class="input-validation" hidden>
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
     <p id="company2-validation" aria-live="polite"></p>
   </div>
 </div>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
 
+<div class="vits-input size-large vits-validation is-invalid">
+  <div class="input-item">
+    <label for="user-email" class="sr-only">이메일</label>
+
+    <input
+      type="text"
+      name="email"
+      id="user-email"
+      placeholder="이메일을 입력하세요"
+      value="test@example.com"
+
+      required
+      
+      
+
+      aria-describedby="user-email-validation"
+      aria-invalid="true"
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" >
+    <p id="user-email-validation" aria-live="polite">필수 입력 항목입니다.</p>
+  </div>
+</div>
             </li>
           </ul>
         </div>
@@ -150,51 +186,110 @@
               <!-- prettier-ignore -->
               
 
-<div class="vits-textarea size-default" data-textarea-count="false">
-  <div class="textarea-box">
-    <label for="memoA" class="sr-only"></label>
-    <textarea
-      rows="4"
-       id="memoA" 
-       name="memoA" 
-       placeholder="내용을 입력해주세요." 
-       required 
-      
-    ></textarea>
+<div class="vits-textarea-box size-default " data-textarea-count="false">
+  <div class="vits-textarea">
+    <div class="textarea-box">
+      <label for="memoA" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoA"
+        name="memoA"
+        placeholder="내용을 입력해주세요."
+        required
+        
+        
+        
+        
+      ></textarea>
+    </div>
+  
+    
   </div>
 
-  
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoA-validation" aria-live="polite"></p>
+  </div>
 </div>
-
             </li>
             <li>
               <!-- prettier-ignore -->
               
 
-<div class="vits-textarea size-large" data-textarea-count="true">
-  <div class="textarea-box">
-    <label for="memoB" class="sr-only"></label>
-    <textarea
-      rows="4"
-       id="memoB" 
-       name="memoB" 
-       placeholder="내용을 입력해주세요." 
-       required 
-      
-        maxlength="200"
-        data-max-length="200"
-      
-    ></textarea>
+<div class="vits-textarea-box size-large " data-textarea-count="true">
+  <div class="vits-textarea">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요."
+        required
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      ></textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
   </div>
 
-  
-    <p class="textarea-meta">
-      <span class="textarea-count" data-ui-textarea-count>0</span>
-      <span class="textarea-max" data-ui-textarea-max>200</span>
-    </p>
-  
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
 </div>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
 
+<div class="vits-textarea-box size-large vits-validation is-invalid" data-textarea-count="true">
+  <div class="vits-textarea">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요."
+        required
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        aria-describedby="memoB-validation"
+        aria-invalid="true"
+        
+      >입력했어요</textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" >
+    <p id="memoB-validation" aria-live="polite">필수 입력 항목입니다.</p>
+  </div>
+</div>
             </li>
           </ul>
         </div>

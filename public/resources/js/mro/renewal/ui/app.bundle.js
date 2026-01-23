@@ -359,6 +359,792 @@
 
 /***/ }),
 
+/***/ 64:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
+var utils = __webpack_require__(918);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
+var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
+var scroll_boundary = __webpack_require__(160);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
+var ui_layer = __webpack_require__(847);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/modal.js
+var modal = __webpack_require__(95);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/tooltip.js
+var tooltip = __webpack_require__(265);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(111);
+;// ./src/assets/scripts/ui/swiper.js
+/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
+  - <button ... data-main-prev></button>
+  - <button ... data-main-next></button>
+  - var mainPrev = root.querySelector("[data-main-prev]");
+  - var mainNext = root.querySelector("[data-main-next]");
+  - mainPrev.addEventListener("click", ...);
+  - mainNext.addEventListener("click", ...);
+  - mainPrev.classList.add("swiper-button-disabled");
+  - mainNext.classList.add("swiper-button-disabled");
+  - mainPrev.classList.remove("swiper-button-disabled");
+  - mainNext.classList.remove("swiper-button-disabled");
+  - if (currentIndex <= 0) mainPrev... else ...
+  - if (currentIndex >= last) mainNext... else ...
+*/
+
+
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  var root = document.querySelector('[data-test-gallery]');
+  if (!root) return;
+  var mainEl = root.querySelector('[data-main-swiper]');
+  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
+  var mainWrapper = root.querySelector('[data-main-wrapper]');
+  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
+  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
+  var mainPrev = root.querySelector('[data-main-prev]');
+  var mainNext = root.querySelector('[data-main-next]');
+  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
+  var thumbsNext = root.querySelector('[data-thumbs-next]');
+  if (!thumbsPrev || !thumbsNext) return;
+  var zoomBox = root.querySelector('[data-zoom]');
+  var zoomImg = root.querySelector('[data-zoom-img]');
+  var ZOOM_RATIO = 3;
+
+  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
+  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
+  var items = mainSlides.map(function (slide) {
+    var img = slide.querySelector('[data-main-img]');
+    if (img) {
+      return {
+        type: 'image',
+        src: img.src,
+        alt: img.alt || ''
+      };
+    }
+    return {
+      type: 'iframe',
+      src: '',
+      alt: ''
+    };
+  });
+  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
+  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
+    loop: false,
+    slidesPerView: 'auto',
+    spaceBetween: 7,
+    centeredSlides: false,
+    centeredSlidesBounds: false,
+    centerInsufficientSlides: false,
+    watchSlidesProgress: true,
+    allowTouchMove: false
+  });
+  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+    loop: false,
+    slidesPerView: 1,
+    allowTouchMove: true
+  });
+  var currentIndex = 0;
+  function clampIndex(i) {
+    var last = items.length - 1;
+    if (i < 0) return 0;
+    if (i > last) return last;
+    return i;
+  }
+  function setIndex(nextIndex) {
+    currentIndex = clampIndex(nextIndex);
+    if (mainSwiper.activeIndex !== currentIndex) mainSwiper.slideTo(currentIndex);
+    if (thumbsSwiper.activeIndex !== currentIndex) thumbsSwiper.slideTo(currentIndex);
+    thumbBtns.forEach(function (btn, i) {
+      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
+    });
+    var last = items.length - 1;
+    if (items.length <= 1) {
+      thumbsPrev.classList.add('is-hidden');
+      thumbsNext.classList.add('is-hidden');
+    } else {
+      thumbsPrev.classList.remove('is-hidden');
+      thumbsNext.classList.remove('is-hidden');
+    }
+    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
+    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
+    if (mainPrev) {
+      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
+    }
+    if (mainNext) {
+      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
+    }
+    if (zoomImg) {
+      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
+    }
+    if (!items[currentIndex].src) hideZoom();
+  }
+  if (mainPrev) {
+    mainPrev.addEventListener('click', function () {
+      setIndex(currentIndex - 1);
+    });
+  }
+  if (mainNext) {
+    mainNext.addEventListener('click', function () {
+      setIndex(currentIndex + 1);
+    });
+  }
+  thumbsPrev.addEventListener('click', function () {
+    setIndex(currentIndex - 1);
+  });
+  thumbsNext.addEventListener('click', function () {
+    setIndex(currentIndex + 1);
+  });
+  thumbBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = parseInt(btn.getAttribute('data-index'), 10);
+      if (isNaN(idx)) return;
+      setIndex(idx);
+    });
+  });
+  mainSwiper.on('slideChange', function () {
+    setIndex(mainSwiper.realIndex);
+  });
+  thumbsSwiper.on('slideChange', function () {
+    setIndex(thumbsSwiper.realIndex);
+  });
+  function hideZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.remove('is-on');
+    zoomBox.setAttribute('aria-hidden', 'true');
+  }
+  function showZoom() {
+    if (!zoomBox) return;
+    zoomBox.classList.add('is-on');
+    zoomBox.setAttribute('aria-hidden', 'false');
+  }
+  function ensureNatural(img, cb) {
+    if (!img) return;
+    if (img.complete && img.naturalWidth && img.naturalHeight) {
+      cb(img.naturalWidth, img.naturalHeight);
+      return;
+    }
+    img.addEventListener('load', function onLoad() {
+      img.removeEventListener('load', onLoad);
+      cb(img.naturalWidth, img.naturalHeight);
+    });
+  }
+  function getContainRect(containerW, containerH, naturalW, naturalH) {
+    var scale = Math.min(containerW / naturalW, containerH / naturalH);
+    var drawW = naturalW * scale;
+    var drawH = naturalH * scale;
+    var offsetX = (containerW - drawW) / 2;
+    var offsetY = (containerH - drawH) / 2;
+    return {
+      x: offsetX,
+      y: offsetY,
+      w: drawW,
+      h: drawH
+    };
+  }
+  function getActiveImgEl() {
+    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
+  }
+  if (zoomBox && zoomImg) {
+    mainEl.addEventListener('mouseenter', function () {
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      showZoom();
+    });
+    mainEl.addEventListener('mouseleave', function () {
+      hideZoom();
+    });
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!zoomBox.classList.contains('is-on')) return;
+      var img = getActiveImgEl();
+      if (!img) {
+        hideZoom();
+        return;
+      }
+      var contRect = mainEl.getBoundingClientRect();
+      var cx = e.clientX - contRect.left;
+      var cy = e.clientY - contRect.top;
+      ensureNatural(img, function (nw, nh) {
+        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
+        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
+          hideZoom();
+          return;
+        } else {
+          showZoom();
+        }
+        var rx = (cx - cr.x) / cr.w;
+        var ry = (cy - cr.y) / cr.h;
+        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
+        var ratio = baseRatio * ZOOM_RATIO;
+        var zoomW = nw * ratio;
+        var zoomH = nh * ratio;
+        zoomImg.style.width = zoomW + 'px';
+        zoomImg.style.height = zoomH + 'px';
+        var zw = zoomBox.clientWidth;
+        var zh = zoomBox.clientHeight;
+        var left = -(rx * (zoomW - zw));
+        var top = -(ry * (zoomH - zh));
+        if (left > 0) left = 0;
+        if (top > 0) top = 0;
+        if (left < -(zoomW - zw)) left = -(zoomW - zw);
+        if (top < -(zoomH - zh)) top = -(zoomH - zh);
+        zoomImg.style.left = left + 'px';
+        zoomImg.style.top = top + 'px';
+      });
+    });
+  }
+  setIndex(0);
+})();
+
+/**
+ * Swiper 타입별 기본 옵션 정의
+ * - 여기만 수정하면 전체 Swiper에 반영됨
+ */
+(function () {
+  'use strict';
+
+  if (typeof swiper_bundle/* default */.A === 'undefined') return;
+  const DEFAULT_OFFSET = {
+    before: 0,
+    after: 0
+  };
+  const SWIPER_PRESETS = {
+    test: {
+      spaceBetween: 32.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 2
+        },
+        1280: {
+          slidesPerView: 2
+        }
+      }
+    },
+    card: {
+      slidesPerView: 5,
+      spaceBetween: 27.5,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 4
+        },
+        1280: {
+          slidesPerView: 5
+        }
+      }
+    },
+    slim: {
+      spaceBetween: 20,
+      speed: 400,
+      breakpoints: {
+        1024: {
+          slidesPerView: 5
+        },
+        1280: {
+          slidesPerView: 6
+        }
+      }
+    },
+    boxed: {
+      slidesPerView: 4,
+      spaceBetween: 13,
+      speed: 400,
+      breakpoints: {
+        0: {
+          slidesPerView: 3
+        },
+        1024: {
+          slidesPerView: 3
+        },
+        1200: {
+          slidesPerView: 4
+        }
+      }
+    }
+  };
+  function initSwipers() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(initSwipers, 100);
+      return;
+    }
+    document.querySelectorAll('.js-swiper').forEach(function (el) {
+      const type = el.dataset.swiperType;
+      if (!SWIPER_PRESETS[type]) return;
+
+      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
+      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
+
+      // offset 개별 제어
+      const offsetBeforeAttr = el.getAttribute('data-offset-before');
+      const offsetAfterAttr = el.getAttribute('data-offset-after');
+      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
+      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+
+      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
+      const desktopView = el.dataset.desktop;
+      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
+        preset.breakpoints[1280].slidesPerView = Number(desktopView);
+      }
+
+      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
+      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
+        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
+          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
+          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
+          }
+          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
+            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
+          }
+        });
+      }
+
+      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
+      var nextEl = el.querySelector('.swiper-button-next');
+      var prevEl = el.querySelector('.swiper-button-prev');
+
+      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
+      if (!nextEl || !prevEl) {
+        // container의 부모 요소에서 vits-swiper-navs 찾기
+        const parent = el.parentElement;
+        if (parent) {
+          const navsContainer = parent.querySelector('.vits-swiper-navs');
+          if (navsContainer) {
+            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
+          }
+        }
+
+        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
+        if ((!nextEl || !prevEl) && el.nextElementSibling) {
+          const nextSibling = el.nextElementSibling;
+          if (nextSibling.classList.contains('vits-swiper-navs')) {
+            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
+            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
+          }
+        }
+      }
+      new swiper_bundle/* default */.A(el, {
+        slidesPerView: 5,
+        //기본값
+        spaceBetween: preset.spaceBetween,
+        speed: preset.speed,
+        slidesOffsetBefore: offsetBefore,
+        slidesOffsetAfter: offsetAfter,
+        centeredSlides: false,
+        navigation: {
+          nextEl: nextEl,
+          prevEl: prevEl
+        },
+        pagination: {
+          el: el.querySelector('.swiper-pagination'),
+          clickable: true
+        },
+        breakpoints: preset.breakpoints
+      });
+    });
+  }
+  function waitForDependencies() {
+    if (typeof swiper_bundle/* default */.A === 'undefined') {
+      setTimeout(waitForDependencies, 100);
+      return;
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwipers);
+    } else {
+      initSwipers();
+    }
+  }
+  waitForDependencies();
+})();
+
+// window.UI.swiper로 등록 (선택적)
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  window.UI.swiper = {
+    init: function () {
+      // 이미 자동 실행되므로 빈 함수로 유지
+      // 필요시 여기에 추가 초기화 로직 작성
+    }
+  };
+})(window);
+;// ./src/assets/scripts/ui/swiper-test.js
+/**
+ * @file scripts/ui/swiper-test.js
+ * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
+ * @description
+ *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
+ *  - 구조(정석): [data-swiper-options] > .swiper-wrapper > .swiper-slide
+ *  - 초기화: 각 컨테이너마다 별도 Swiper 인스턴스 생성
+ *  - 파괴: destroy 메서드로 인스턴스 정리 가능
+ * @option (data-swiper-options JSON 내부)
+ *  - slidesPerView: 보여질 슬라이드 개수 (number | 'auto')
+ *  - spaceBetween: 슬라이드 간격 (px)
+ *  - slidesOffsetBefore: 첫 슬라이드 왼쪽 여백 (px)
+ *  - slidesOffsetAfter: 마지막 슬라이드 오른쪽 여백 (px)
+ *  - slidesPerGroup: 한 번에 이동할 슬라이드 개수
+ *  - navigation: 화살표 버튼 사용 여부 (boolean) // false면 비활성
+ *  - pagination: 페이지네이션 사용 여부 (boolean) // true면 활성
+ *  - centerWhenSingle: 슬라이드 1개일 때 중앙 정렬 (boolean)
+ *  - hideNavWhenSingle: 슬라이드 1개일 때 화살표 숨김 (boolean, 기본 true)
+ *  - speed: 전환 속도 (ms, 기본 300)
+ *  - loop: 무한 루프 (boolean)
+ *  - autoplay: 자동 재생 설정 (object | boolean)
+ * @a11y
+ *  - 키보드 제어 기본 활성화
+ * @maintenance
+ *  - Swiper 번들 의존 (swiper/bundle)
+ *  - 인스턴스는 DOM 요소에 data로 저장 (재초기화 방지)
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[swiper-test] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var SWIPER_INSTANCE_KEY = 'swiperInstance';
+
+  /**
+   * 단일 Swiper 초기화
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function initSwiper($wrapper) {
+    // 이미 초기화된 경우 중복 방지
+    if ($wrapper.data(SWIPER_INSTANCE_KEY)) {
+      return;
+    }
+
+    // [정석] 컨테이너는 래퍼 자체
+    var $container = $wrapper;
+
+    // [정석] 컨테이너 바로 아래 wrapper 필수
+    var $swiperWrapper = $container.children('.swiper-wrapper').first();
+    if (!$swiperWrapper.length) {
+      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
+      return;
+    }
+
+    // data-swiper-options에서 설정 파싱
+    var optionsStr = $wrapper.attr('data-swiper-options');
+    var userOptions = {};
+    try {
+      userOptions = optionsStr ? JSON.parse(optionsStr) : {};
+    } catch (e) {
+      console.error('[swiper-test] Invalid JSON in data-swiper-options', e);
+      return;
+    }
+
+    // [정석] 직계 slide 기준
+    var slideCount = $swiperWrapper.children('.swiper-slide').length;
+
+    // navigation/pagination 플래그는 미리 보존 (병합 시 덮어쓰기 방지용)
+    var navEnabled = userOptions.navigation !== false;
+    var paginationEnabled = userOptions.pagination === true;
+
+    // navigation/pagination은 아래에서 엘리먼트 바인딩 객체로 세팅하므로, boolean 덮어쓰기 방지
+    delete userOptions.navigation;
+    delete userOptions.pagination;
+
+    // 기본 설정
+    var defaultOptions = {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 300,
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true
+      },
+      a11y: {
+        enabled: true,
+        prevSlideMessage: '이전 슬라이드',
+        nextSlideMessage: '다음 슬라이드',
+        firstSlideMessage: '첫 번째 슬라이드',
+        lastSlideMessage: '마지막 슬라이드'
+      }
+    };
+
+    // Navigation 설정
+    if (navEnabled) {
+      var $prevBtn = $wrapper.children('.swiper-button-prev');
+      var $nextBtn = $wrapper.children('.swiper-button-next');
+      if ($prevBtn.length && $nextBtn.length) {
+        defaultOptions.navigation = {
+          prevEl: $prevBtn[0],
+          nextEl: $nextBtn[0]
+        };
+
+        // 슬라이드 1개일 때 버튼 숨김 옵션(기본 true)
+        if (slideCount === 1 && userOptions.hideNavWhenSingle !== false) {
+          $prevBtn.hide();
+          $nextBtn.hide();
+        }
+      }
+    }
+
+    // Pagination 설정
+    if (paginationEnabled) {
+      var $pagination = $wrapper.children('.swiper-pagination');
+      if ($pagination.length) {
+        defaultOptions.pagination = {
+          el: $pagination[0],
+          clickable: true,
+          type: 'bullets'
+        };
+      }
+    }
+
+    // 슬라이드 1개일 때 중앙 정렬 옵션
+    if (slideCount === 1 && userOptions.centerWhenSingle === true) {
+      defaultOptions.centeredSlides = true;
+    }
+
+    // 사용자 옵션 병합
+    var finalOptions = $.extend(true, {}, defaultOptions, userOptions);
+    delete finalOptions.centerWhenSingle;
+    delete finalOptions.hideNavWhenSingle;
+
+    // Swiper 인스턴스 생성
+    try {
+      var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
+      $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
+      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
+    } catch (e) {
+      console.error('[swiper-test] Initialization failed', e);
+    }
+  }
+
+  /**
+   * 단일 Swiper 파괴
+   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
+   */
+  function destroySwiper($wrapper) {
+    var instance = $wrapper.data(SWIPER_INSTANCE_KEY);
+    if (instance && typeof instance.destroy === 'function') {
+      instance.destroy(true, true);
+      $wrapper.removeData(SWIPER_INSTANCE_KEY);
+      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
+    }
+  }
+  window.UI.swiperTest = {
+    init: function () {
+      $('[data-swiper-options]').each(function () {
+        initSwiper($(this));
+      });
+      console.log('[swiper-test] init');
+    },
+    destroy: function () {
+      $('[data-swiper-options]').each(function () {
+        destroySwiper($(this));
+      });
+      console.log('[swiper-test] destroy');
+    },
+    reinit: function (selector) {
+      var $target = typeof selector === 'string' ? $(selector) : selector;
+      $target.each(function () {
+        var $wrapper = $(this);
+        destroySwiper($wrapper);
+        initSwiper($wrapper);
+      });
+    }
+  };
+  console.log('[swiper-test] module loaded');
+})(window.jQuery || window.$, window);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
+var chip_button = __webpack_require__(755);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
+var quantity_stepper = __webpack_require__(397);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
+var form_textarea = __webpack_require__(803);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
+var header_rank = __webpack_require__(596);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
+var header_search = __webpack_require__(978);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
+var header_gnb = __webpack_require__(105);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
+var footer = __webpack_require__(795);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
+var tab_scrollbar = __webpack_require__(986);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
+var form_select = __webpack_require__(865);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
+var input_search = __webpack_require__(882);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
+var plp_titlebar_research = __webpack_require__(809);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
+var category_tree = __webpack_require__(508);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
+var plp_chip_sync = __webpack_require__(504);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
+var plp_view_toggle = __webpack_require__(342);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
+var more_expand = __webpack_require__(146);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
+var filter_expand = __webpack_require__(19);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/cart-order/cart-order.js
+var cart_order = __webpack_require__(421);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
+var kendo_dropdown = __webpack_require__(47);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-datepicker.js
+var kendo_datepicker = __webpack_require__(952);
+;// ./src/assets/scripts/ui/kendo/kendo.js
+/**
+ * scripts/ui/kendo/kendo.js
+ * @purpose Kendo UI 관련 모듈 통합 관리
+ */
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  window.UI.kendo = {
+    init: function () {
+      if (window.VitsKendoDropdown) {
+        window.VitsKendoDropdown.initAll(document);
+        window.VitsKendoDropdown.autoBindStart(document.body);
+      }
+      if (window.VitsKendoDatepicker) {
+        window.VitsKendoDatepicker.initAll(document);
+        window.VitsKendoDatepicker.autoBindStart(document.body);
+      }
+      console.log('[kendo] all modules initialized');
+    }
+  };
+  console.log('[kendo] loaded');
+})(window);
+;// ./src/assets/scripts/core/ui.js
+/**
+ * scripts/core/ui.js
+ * @purpose UI 기능 모음
+ * @assumption
+ *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
+ *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
+ * @maintenance
+ *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
+ *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
+ *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+
+  /**
+   * 공통 UI 초기화 진입점
+   * @returns {void}
+   * @example
+   * // scripts/core/common.js에서 DOMReady 시점에 호출
+   * UI.init();
+   */
+  window.UI.init = function () {
+    if (window.UI.kendo && window.UI.kendo.init) window.UI.kendo.init();
+    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
+    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
+    if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
+    if (window.UI.tooltip && window.UI.tooltip.init) window.UI.tooltip.init();
+    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
+    if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
+    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
+    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
+    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
+    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
+    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
+    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
+    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
+    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
+    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
+    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
+    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
+    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
+    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
+    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
+    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
+    if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
+  };
+  console.log('[core/ui] loaded');
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
+var common = __webpack_require__(538);
+;// ./src/assets/scripts/index.js
+/**
+ * scripts/index.js
+ * @purpose 번들 엔트리(진입점)
+ * @assumption
+ *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
+ *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
+ * @maintenance
+ *  - index.js는 짧게 유지한다(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
+ *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
+ */
+
+
+
+
+console.log('[index] entry 실행');
+;// ./src/app.js
+
+
+
+
+
+
+
+if (document.body?.dataset?.guide === 'true') {
+  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
+  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
+}
+
+// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
+// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
+// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
+// console.log('%c ====================', 'color: green');
+
+/***/ }),
+
 /***/ 95:
 /***/ (function() {
 
@@ -3284,767 +4070,6 @@
 
 /***/ }),
 
-/***/ 713:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts/core/utils.js
-var utils = __webpack_require__(918);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
-var toggle = __webpack_require__(344);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
-var scroll_boundary = __webpack_require__(160);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
-var ui_layer = __webpack_require__(847);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/modal.js
-var modal = __webpack_require__(95);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/tooltip.js
-var tooltip = __webpack_require__(265);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(111);
-;// ./src/assets/scripts/ui/swiper.js
-/* s: 메인 썸네일(큰 이미지)에서 좌우 화살표 사용 안 할 떄, 아래 삭제
-  - <button ... data-main-prev></button>
-  - <button ... data-main-next></button>
-  - var mainPrev = root.querySelector("[data-main-prev]");
-  - var mainNext = root.querySelector("[data-main-next]");
-  - mainPrev.addEventListener("click", ...);
-  - mainNext.addEventListener("click", ...);
-  - mainPrev.classList.add("swiper-button-disabled");
-  - mainNext.classList.add("swiper-button-disabled");
-  - mainPrev.classList.remove("swiper-button-disabled");
-  - mainNext.classList.remove("swiper-button-disabled");
-  - if (currentIndex <= 0) mainPrev... else ...
-  - if (currentIndex >= last) mainNext... else ...
-*/
-
-
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  var root = document.querySelector('[data-test-gallery]');
-  if (!root) return;
-  var mainEl = root.querySelector('[data-main-swiper]');
-  var thumbsEl = root.querySelector('[data-thumbs-swiper]');
-  var mainWrapper = root.querySelector('[data-main-wrapper]');
-  var thumbsWrapper = root.querySelector('[data-thumbs-wrapper]');
-  if (!mainEl || !thumbsEl || !mainWrapper || !thumbsWrapper) return;
-  var mainPrev = root.querySelector('[data-main-prev]');
-  var mainNext = root.querySelector('[data-main-next]');
-  var thumbsPrev = root.querySelector('[data-thumbs-prev]');
-  var thumbsNext = root.querySelector('[data-thumbs-next]');
-  if (!thumbsPrev || !thumbsNext) return;
-  var zoomBox = root.querySelector('[data-zoom]');
-  var zoomImg = root.querySelector('[data-zoom-img]');
-  var ZOOM_RATIO = 3;
-
-  // EJS 템플릿에서 렌더링된 슬라이드 기준으로 아이템 구성
-  var mainSlides = Array.prototype.slice.call(mainWrapper.querySelectorAll('.swiper-slide'));
-  var items = mainSlides.map(function (slide) {
-    var img = slide.querySelector('[data-main-img]');
-    if (img) {
-      return {
-        type: 'image',
-        src: img.src,
-        alt: img.alt || ''
-      };
-    }
-    return {
-      type: 'iframe',
-      src: '',
-      alt: ''
-    };
-  });
-  var thumbBtns = Array.prototype.slice.call(root.querySelectorAll('[data-thumb]'));
-  var thumbsSwiper = new swiper_bundle/* default */.A(thumbsEl, {
-    loop: false,
-    slidesPerView: 'auto',
-    spaceBetween: 7,
-    centeredSlides: false,
-    centeredSlidesBounds: false,
-    centerInsufficientSlides: false,
-    watchSlidesProgress: true,
-    allowTouchMove: false
-  });
-  var mainSwiper = new swiper_bundle/* default */.A(mainEl, {
-    loop: false,
-    slidesPerView: 1,
-    allowTouchMove: true
-  });
-  var currentIndex = 0;
-  function clampIndex(i) {
-    var last = items.length - 1;
-    if (i < 0) return 0;
-    if (i > last) return last;
-    return i;
-  }
-  function setIndex(nextIndex) {
-    currentIndex = clampIndex(nextIndex);
-    if (mainSwiper.activeIndex !== currentIndex) mainSwiper.slideTo(currentIndex);
-    if (thumbsSwiper.activeIndex !== currentIndex) thumbsSwiper.slideTo(currentIndex);
-    thumbBtns.forEach(function (btn, i) {
-      if (i === currentIndex) btn.classList.add('is-active');else btn.classList.remove('is-active');
-    });
-    var last = items.length - 1;
-    if (items.length <= 1) {
-      thumbsPrev.classList.add('is-hidden');
-      thumbsNext.classList.add('is-hidden');
-    } else {
-      thumbsPrev.classList.remove('is-hidden');
-      thumbsNext.classList.remove('is-hidden');
-    }
-    if (currentIndex <= 0) thumbsPrev.classList.add('is-disabled');else thumbsPrev.classList.remove('is-disabled');
-    if (currentIndex >= last) thumbsNext.classList.add('is-disabled');else thumbsNext.classList.remove('is-disabled');
-    if (mainPrev) {
-      if (currentIndex <= 0) mainPrev.classList.add('swiper-button-disabled');else mainPrev.classList.remove('swiper-button-disabled');
-    }
-    if (mainNext) {
-      if (currentIndex >= last) mainNext.classList.add('swiper-button-disabled');else mainNext.classList.remove('swiper-button-disabled');
-    }
-    if (zoomImg) {
-      if (items[currentIndex].src) zoomImg.src = items[currentIndex].src;else zoomImg.removeAttribute('src');
-    }
-    if (!items[currentIndex].src) hideZoom();
-  }
-  if (mainPrev) {
-    mainPrev.addEventListener('click', function () {
-      setIndex(currentIndex - 1);
-    });
-  }
-  if (mainNext) {
-    mainNext.addEventListener('click', function () {
-      setIndex(currentIndex + 1);
-    });
-  }
-  thumbsPrev.addEventListener('click', function () {
-    setIndex(currentIndex - 1);
-  });
-  thumbsNext.addEventListener('click', function () {
-    setIndex(currentIndex + 1);
-  });
-  thumbBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var idx = parseInt(btn.getAttribute('data-index'), 10);
-      if (isNaN(idx)) return;
-      setIndex(idx);
-    });
-  });
-  mainSwiper.on('slideChange', function () {
-    setIndex(mainSwiper.realIndex);
-  });
-  thumbsSwiper.on('slideChange', function () {
-    setIndex(thumbsSwiper.realIndex);
-  });
-  function hideZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.remove('is-on');
-    zoomBox.setAttribute('aria-hidden', 'true');
-  }
-  function showZoom() {
-    if (!zoomBox) return;
-    zoomBox.classList.add('is-on');
-    zoomBox.setAttribute('aria-hidden', 'false');
-  }
-  function ensureNatural(img, cb) {
-    if (!img) return;
-    if (img.complete && img.naturalWidth && img.naturalHeight) {
-      cb(img.naturalWidth, img.naturalHeight);
-      return;
-    }
-    img.addEventListener('load', function onLoad() {
-      img.removeEventListener('load', onLoad);
-      cb(img.naturalWidth, img.naturalHeight);
-    });
-  }
-  function getContainRect(containerW, containerH, naturalW, naturalH) {
-    var scale = Math.min(containerW / naturalW, containerH / naturalH);
-    var drawW = naturalW * scale;
-    var drawH = naturalH * scale;
-    var offsetX = (containerW - drawW) / 2;
-    var offsetY = (containerH - drawH) / 2;
-    return {
-      x: offsetX,
-      y: offsetY,
-      w: drawW,
-      h: drawH
-    };
-  }
-  function getActiveImgEl() {
-    return mainEl.querySelector('.swiper-slide-active [data-main-img]');
-  }
-  if (zoomBox && zoomImg) {
-    mainEl.addEventListener('mouseenter', function () {
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      showZoom();
-    });
-    mainEl.addEventListener('mouseleave', function () {
-      hideZoom();
-    });
-    mainEl.addEventListener('mousemove', function (e) {
-      if (!zoomBox.classList.contains('is-on')) return;
-      var img = getActiveImgEl();
-      if (!img) {
-        hideZoom();
-        return;
-      }
-      var contRect = mainEl.getBoundingClientRect();
-      var cx = e.clientX - contRect.left;
-      var cy = e.clientY - contRect.top;
-      ensureNatural(img, function (nw, nh) {
-        var cr = getContainRect(contRect.width, contRect.height, nw, nh);
-        if (cx < cr.x || cy < cr.y || cx > cr.x + cr.w || cy > cr.y + cr.h) {
-          hideZoom();
-          return;
-        } else {
-          showZoom();
-        }
-        var rx = (cx - cr.x) / cr.w;
-        var ry = (cy - cr.y) / cr.h;
-        var baseRatio = Math.max(nw / cr.w, nh / cr.h);
-        var ratio = baseRatio * ZOOM_RATIO;
-        var zoomW = nw * ratio;
-        var zoomH = nh * ratio;
-        zoomImg.style.width = zoomW + 'px';
-        zoomImg.style.height = zoomH + 'px';
-        var zw = zoomBox.clientWidth;
-        var zh = zoomBox.clientHeight;
-        var left = -(rx * (zoomW - zw));
-        var top = -(ry * (zoomH - zh));
-        if (left > 0) left = 0;
-        if (top > 0) top = 0;
-        if (left < -(zoomW - zw)) left = -(zoomW - zw);
-        if (top < -(zoomH - zh)) top = -(zoomH - zh);
-        zoomImg.style.left = left + 'px';
-        zoomImg.style.top = top + 'px';
-      });
-    });
-  }
-  setIndex(0);
-})();
-
-/**
- * Swiper 타입별 기본 옵션 정의
- * - 여기만 수정하면 전체 Swiper에 반영됨
- */
-(function () {
-  'use strict';
-
-  if (typeof swiper_bundle/* default */.A === 'undefined') return;
-  const DEFAULT_OFFSET = {
-    before: 0,
-    after: 0
-  };
-  const SWIPER_PRESETS = {
-    test: {
-      spaceBetween: 32.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 2
-        },
-        1280: {
-          slidesPerView: 2
-        }
-      }
-    },
-    card: {
-      slidesPerView: 5,
-      spaceBetween: 27.5,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 4
-        },
-        1280: {
-          slidesPerView: 5
-        }
-      }
-    },
-    slim: {
-      spaceBetween: 20,
-      speed: 400,
-      breakpoints: {
-        1024: {
-          slidesPerView: 5
-        },
-        1280: {
-          slidesPerView: 6
-        }
-      }
-    },
-    boxed: {
-      slidesPerView: 4,
-      spaceBetween: 13,
-      speed: 400,
-      breakpoints: {
-        0: {
-          slidesPerView: 3
-        },
-        1024: {
-          slidesPerView: 3
-        },
-        1200: {
-          slidesPerView: 4
-        }
-      }
-    }
-  };
-  function initSwipers() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(initSwipers, 100);
-      return;
-    }
-    document.querySelectorAll('.js-swiper').forEach(function (el) {
-      const type = el.dataset.swiperType;
-      if (!SWIPER_PRESETS[type]) return;
-
-      // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
-      const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
-
-      // offset 개별 제어
-      const offsetBeforeAttr = el.getAttribute('data-offset-before');
-      const offsetAfterAttr = el.getAttribute('data-offset-after');
-      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
-      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
-
-      // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
-      const desktopView = el.dataset.desktop;
-      if (desktopView && preset.breakpoints && preset.breakpoints[1280]) {
-        preset.breakpoints[1280].slidesPerView = Number(desktopView);
-      }
-
-      // breakpoints에도 offset 적용 (사용자가 명시적으로 설정한 경우)
-      if (preset.breakpoints && (offsetBefore !== DEFAULT_OFFSET.before || offsetAfter !== DEFAULT_OFFSET.after)) {
-        Object.keys(preset.breakpoints).forEach(function (breakpoint) {
-          // breakpoint에 이미 offset이 설정되어 있지 않은 경우에만 적용
-          if (offsetBefore !== DEFAULT_OFFSET.before && !('slidesOffsetBefore' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetBefore = offsetBefore;
-          }
-          if (offsetAfter !== DEFAULT_OFFSET.after && !('slidesOffsetAfter' in preset.breakpoints[breakpoint])) {
-            preset.breakpoints[breakpoint].slidesOffsetAfter = offsetAfter;
-          }
-        });
-      }
-
-      // navigation 버튼 찾기: container 내부 또는 외부의 vits-swiper-navs에서 찾기
-      var nextEl = el.querySelector('.swiper-button-next');
-      var prevEl = el.querySelector('.swiper-button-prev');
-
-      // container 내부에서 찾지 못한 경우, container 밖의 vits-swiper-navs에서 찾기
-      if (!nextEl || !prevEl) {
-        // container의 부모 요소에서 vits-swiper-navs 찾기
-        const parent = el.parentElement;
-        if (parent) {
-          const navsContainer = parent.querySelector('.vits-swiper-navs');
-          if (navsContainer) {
-            if (!nextEl) nextEl = navsContainer.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = navsContainer.querySelector('.swiper-button-prev');
-          }
-        }
-
-        // 부모에서 찾지 못한 경우, 형제 요소에서 찾기
-        if ((!nextEl || !prevEl) && el.nextElementSibling) {
-          const nextSibling = el.nextElementSibling;
-          if (nextSibling.classList.contains('vits-swiper-navs')) {
-            if (!nextEl) nextEl = nextSibling.querySelector('.swiper-button-next');
-            if (!prevEl) prevEl = nextSibling.querySelector('.swiper-button-prev');
-          }
-        }
-      }
-      new swiper_bundle/* default */.A(el, {
-        slidesPerView: 5,
-        //기본값
-        spaceBetween: preset.spaceBetween,
-        speed: preset.speed,
-        slidesOffsetBefore: offsetBefore,
-        slidesOffsetAfter: offsetAfter,
-        centeredSlides: false,
-        navigation: {
-          nextEl: nextEl,
-          prevEl: prevEl
-        },
-        pagination: {
-          el: el.querySelector('.swiper-pagination'),
-          clickable: true
-        },
-        breakpoints: preset.breakpoints
-      });
-    });
-  }
-  function waitForDependencies() {
-    if (typeof swiper_bundle/* default */.A === 'undefined') {
-      setTimeout(waitForDependencies, 100);
-      return;
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSwipers);
-    } else {
-      initSwipers();
-    }
-  }
-  waitForDependencies();
-})();
-
-// window.UI.swiper로 등록 (선택적)
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  window.UI.swiper = {
-    init: function () {
-      // 이미 자동 실행되므로 빈 함수로 유지
-      // 필요시 여기에 추가 초기화 로직 작성
-    }
-  };
-})(window);
-;// ./src/assets/scripts/ui/swiper-test.js
-/**
- * @file scripts/ui/swiper-test.js
- * @purpose data-속성 기반 Swiper Boxed 초기화 (정석 마크업 기준)
- * @description
- *  - 컨테이너: [data-swiper-options] 요소 자체가 Swiper 컨테이너
- *  - 구조(정석): [data-swiper-options] > .swiper-wrapper > .swiper-slide
- *  - 초기화: 각 컨테이너마다 별도 Swiper 인스턴스 생성
- *  - 파괴: destroy 메서드로 인스턴스 정리 가능
- * @option (data-swiper-options JSON 내부)
- *  - slidesPerView: 보여질 슬라이드 개수 (number | 'auto')
- *  - spaceBetween: 슬라이드 간격 (px)
- *  - slidesOffsetBefore: 첫 슬라이드 왼쪽 여백 (px)
- *  - slidesOffsetAfter: 마지막 슬라이드 오른쪽 여백 (px)
- *  - slidesPerGroup: 한 번에 이동할 슬라이드 개수
- *  - navigation: 화살표 버튼 사용 여부 (boolean) // false면 비활성
- *  - pagination: 페이지네이션 사용 여부 (boolean) // true면 활성
- *  - centerWhenSingle: 슬라이드 1개일 때 중앙 정렬 (boolean)
- *  - hideNavWhenSingle: 슬라이드 1개일 때 화살표 숨김 (boolean, 기본 true)
- *  - speed: 전환 속도 (ms, 기본 300)
- *  - loop: 무한 루프 (boolean)
- *  - autoplay: 자동 재생 설정 (object | boolean)
- * @a11y
- *  - 키보드 제어 기본 활성화
- * @maintenance
- *  - Swiper 번들 의존 (swiper/bundle)
- *  - 인스턴스는 DOM 요소에 data로 저장 (재초기화 방지)
- */
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) {
-    console.log('[swiper-test] jQuery not found');
-    return;
-  }
-  window.UI = window.UI || {};
-  var SWIPER_INSTANCE_KEY = 'swiperInstance';
-
-  /**
-   * 단일 Swiper 초기화
-   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
-   */
-  function initSwiper($wrapper) {
-    // 이미 초기화된 경우 중복 방지
-    if ($wrapper.data(SWIPER_INSTANCE_KEY)) {
-      return;
-    }
-
-    // [정석] 컨테이너는 래퍼 자체
-    var $container = $wrapper;
-
-    // [정석] 컨테이너 바로 아래 wrapper 필수
-    var $swiperWrapper = $container.children('.swiper-wrapper').first();
-    if (!$swiperWrapper.length) {
-      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
-      return;
-    }
-
-    // data-swiper-options에서 설정 파싱
-    var optionsStr = $wrapper.attr('data-swiper-options');
-    var userOptions = {};
-    try {
-      userOptions = optionsStr ? JSON.parse(optionsStr) : {};
-    } catch (e) {
-      console.error('[swiper-test] Invalid JSON in data-swiper-options', e);
-      return;
-    }
-
-    // [정석] 직계 slide 기준
-    var slideCount = $swiperWrapper.children('.swiper-slide').length;
-
-    // navigation/pagination 플래그는 미리 보존 (병합 시 덮어쓰기 방지용)
-    var navEnabled = userOptions.navigation !== false;
-    var paginationEnabled = userOptions.pagination === true;
-
-    // navigation/pagination은 아래에서 엘리먼트 바인딩 객체로 세팅하므로, boolean 덮어쓰기 방지
-    delete userOptions.navigation;
-    delete userOptions.pagination;
-
-    // 기본 설정
-    var defaultOptions = {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      speed: 300,
-      keyboard: {
-        enabled: true,
-        onlyInViewport: true
-      },
-      a11y: {
-        enabled: true,
-        prevSlideMessage: '이전 슬라이드',
-        nextSlideMessage: '다음 슬라이드',
-        firstSlideMessage: '첫 번째 슬라이드',
-        lastSlideMessage: '마지막 슬라이드'
-      }
-    };
-
-    // Navigation 설정
-    if (navEnabled) {
-      var $prevBtn = $wrapper.children('.swiper-button-prev');
-      var $nextBtn = $wrapper.children('.swiper-button-next');
-      if ($prevBtn.length && $nextBtn.length) {
-        defaultOptions.navigation = {
-          prevEl: $prevBtn[0],
-          nextEl: $nextBtn[0]
-        };
-
-        // 슬라이드 1개일 때 버튼 숨김 옵션(기본 true)
-        if (slideCount === 1 && userOptions.hideNavWhenSingle !== false) {
-          $prevBtn.hide();
-          $nextBtn.hide();
-        }
-      }
-    }
-
-    // Pagination 설정
-    if (paginationEnabled) {
-      var $pagination = $wrapper.children('.swiper-pagination');
-      if ($pagination.length) {
-        defaultOptions.pagination = {
-          el: $pagination[0],
-          clickable: true,
-          type: 'bullets'
-        };
-      }
-    }
-
-    // 슬라이드 1개일 때 중앙 정렬 옵션
-    if (slideCount === 1 && userOptions.centerWhenSingle === true) {
-      defaultOptions.centeredSlides = true;
-    }
-
-    // 사용자 옵션 병합
-    var finalOptions = $.extend(true, {}, defaultOptions, userOptions);
-    delete finalOptions.centerWhenSingle;
-    delete finalOptions.hideNavWhenSingle;
-
-    // Swiper 인스턴스 생성
-    try {
-      var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
-      $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
-      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
-    } catch (e) {
-      console.error('[swiper-test] Initialization failed', e);
-    }
-  }
-
-  /**
-   * 단일 Swiper 파괴
-   * @param {jQuery} $wrapper - Swiper 컨테이너([data-swiper-options]) 요소
-   */
-  function destroySwiper($wrapper) {
-    var instance = $wrapper.data(SWIPER_INSTANCE_KEY);
-    if (instance && typeof instance.destroy === 'function') {
-      instance.destroy(true, true);
-      $wrapper.removeData(SWIPER_INSTANCE_KEY);
-      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
-    }
-  }
-  window.UI.swiperTest = {
-    init: function () {
-      $('[data-swiper-options]').each(function () {
-        initSwiper($(this));
-      });
-      console.log('[swiper-test] init');
-    },
-    destroy: function () {
-      $('[data-swiper-options]').each(function () {
-        destroySwiper($(this));
-      });
-      console.log('[swiper-test] destroy');
-    },
-    reinit: function (selector) {
-      var $target = typeof selector === 'string' ? $(selector) : selector;
-      $target.each(function () {
-        var $wrapper = $(this);
-        destroySwiper($wrapper);
-        initSwiper($wrapper);
-      });
-    }
-  };
-  console.log('[swiper-test] module loaded');
-})(window.jQuery || window.$, window);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
-var chip_button = __webpack_require__(755);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
-var quantity_stepper = __webpack_require__(397);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
-var form_textarea = __webpack_require__(803);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-dropdown.js
-var kendo_dropdown = __webpack_require__(47);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
-var header_rank = __webpack_require__(596);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
-var header_search = __webpack_require__(978);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-gnb.js
-var header_gnb = __webpack_require__(105);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
-var footer = __webpack_require__(795);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/product/tab-scrollbar.js
-var tab_scrollbar = __webpack_require__(986);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/select.js
-var form_select = __webpack_require__(865);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/form/input-search.js
-var input_search = __webpack_require__(882);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-titlebar-research.js
-var plp_titlebar_research = __webpack_require__(809);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/category-tree.js
-var category_tree = __webpack_require__(508);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-chip-sync.js
-var plp_chip_sync = __webpack_require__(504);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/category/plp-view-toggle.js
-var plp_view_toggle = __webpack_require__(342);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/more-expand.js
-var more_expand = __webpack_require__(146);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/filter-expand.js
-var filter_expand = __webpack_require__(19);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/cart-order/cart-order.js
-var cart_order = __webpack_require__(421);
-;// ./src/assets/scripts/core/ui.js
-/**
- * scripts/core/ui.js
- * @purpose UI 기능 모음
- * @assumption
- *  - 기능별 UI는 ui/ 폴더에 분리하고 이 파일에서만 묶어 포함한다
- *  - 각 UI 모듈은 window.UI.{name}.init 형태로 초기화 함수를 제공한다
- * @maintenance
- *  - index.js를 길게 만들지 않기 위해 UI import는 여기서만 관리한다
- *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
- *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-
-  /**
-   * 공통 UI 초기화 진입점
-   * @returns {void}
-   * @example
-   * // scripts/core/common.js에서 DOMReady 시점에 호출
-   * UI.init();
-   */
-  window.UI.init = function () {
-    if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
-    if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
-    if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
-    if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
-    if (window.UI.tooltip && window.UI.tooltip.init) window.UI.tooltip.init();
-    if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
-    if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
-    if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
-    if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
-    if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-    if (window.VitsKendoDropdown) {
-      window.VitsKendoDropdown.initAll(document);
-      window.VitsKendoDropdown.autoBindStart(document.body);
-    }
-    if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
-    if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
-    if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
-    if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
-    if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
-    if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
-    if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
-    if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
-    if (window.UI.categoryTree && window.UI.categoryTree.init) window.UI.categoryTree.init();
-    if (window.UI.chipSync && window.UI.chipSync.init) window.UI.chipSync.init();
-    if (window.UI.plpViewToggle && window.UI.plpViewToggle.init) window.UI.plpViewToggle.init();
-    if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
-    if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
-    if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
-  };
-  console.log('[core/ui] loaded');
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts/core/common.js
-var common = __webpack_require__(538);
-;// ./src/assets/scripts/index.js
-/**
- * scripts/index.js
- * @purpose 번들 엔트리(진입점)
- * @assumption
- *  - 빌드 결과(app.bundle.js)가 페이지에 자동 주입됨
- *  - core 모듈은 utils → ui → common 순서로 포함되어야 함
- * @maintenance
- *  - index.js는 짧게 유지한다(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서만 관리한다
- *  - 페이지 전용 스크립트가 필요하면 별도 모듈로 분리하고, 공통 초기화와 섞지 않는다
- */
-
-
-
-
-console.log('[index] entry 실행');
-;// ./src/app.js
-
-
-
-
-
-
-
-if (document.body?.dataset?.guide === 'true') {
-  // 가이드 페이지 전용 스타일(정렬/린트 영향 최소화하려면 이 파일에만 예외 설정을 몰아넣기 좋음)
-  Promise.all(/* import() */[__webpack_require__.e(237), __webpack_require__.e(395)]).then(__webpack_require__.bind(__webpack_require__, 395));
-}
-
-// console.log(`%c ==== ${APP_ENV_ROOT}.${APP_ENV_TYPE} run ====`, 'color: green');
-// console.log('%c APP_ENV_URL :', 'color: green', APP_ENV_URL);
-// console.log('%c APP_ENV_TYPE :', 'color: green', APP_ENV_TYPE);
-// console.log('%c ====================', 'color: green');
-
-/***/ }),
-
 /***/ 755:
 /***/ (function() {
 
@@ -6127,6 +6152,453 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 952:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/kendo/kendo-datepicker.js
+ * @description
+ * Kendo DatePicker/DateRangePicker 자동 초기화 모듈.
+ */
+
+(function (window) {
+  'use strict';
+
+  function parseJsonSafe(str) {
+    if (!str) return null;
+    var decoded = str.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    try {
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
+  }
+  function ensureKendoAvailable() {
+    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoDatePicker && window.jQuery.fn.kendoDateRangePicker);
+  }
+  function applyVitsClassToWrapper($wrap, inst) {
+    if (!$wrap || !$wrap.length || !inst) return;
+    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
+    if (inst.wrapper) {
+      for (var i = 0; i < classList.length; i++) {
+        if (classList[i].indexOf('vits-') === 0) {
+          inst.wrapper.addClass(classList[i]);
+        }
+      }
+    }
+    if (inst.popup && inst.popup.element) {
+      for (var j = 0; j < classList.length; j++) {
+        if (classList[j].indexOf('vits-') === 0) {
+          inst.popup.element.addClass(classList[j]);
+          var $ac = inst.popup.element.closest('.k-animation-container');
+          if ($ac && $ac.length) $ac.addClass(classList[j]);
+        }
+      }
+    }
+  }
+  function parseDateValue(val) {
+    if (!val) return null;
+    if (val instanceof Date) return val;
+    try {
+      return new Date(val);
+    } catch {
+      return null;
+    }
+  }
+  function initDatePicker(el) {
+    var $el = window.jQuery(el);
+    if ($el.data('kendoDatePicker')) return;
+    var optRaw = $el.attr('data-opt') || '{}';
+    var opts = parseJsonSafe(optRaw);
+    if (!opts) {
+      opts = {};
+    }
+    var $wrap = $el.closest('.vits-datepicker');
+    if ($wrap.length && opts.appendTo === undefined) {
+      opts.appendTo = $wrap[0];
+    }
+    opts.format = opts.format || 'yyyy.MM.dd';
+    opts.culture = opts.culture || 'ko-KR';
+    opts.footer = false;
+    opts.parseFormats = ['yyyy.MM.dd', 'yyyyMMdd', 'yyyy-MM-dd'];
+    if (opts.value) {
+      opts.value = parseDateValue(opts.value);
+    }
+    if (opts.min) {
+      opts.min = parseDateValue(opts.min);
+    }
+    if (opts.max) {
+      opts.max = parseDateValue(opts.max);
+    }
+    $el.kendoDatePicker(opts);
+    var inst = $el.data('kendoDatePicker');
+    if (inst && inst.bind) {
+      inst.bind('open', function () {
+        applyVitsClassToWrapper($wrap, inst);
+      });
+      inst.bind('change', function () {
+        $el.trigger('datepicker:change', [this.value()]);
+      });
+    }
+    applyVitsClassToWrapper($wrap, inst);
+    $el.on('blur', function () {
+      window.setTimeout(function () {
+        var value = $el.val();
+        if (!value) return;
+        var numbers = value.replace(/[^\d]/g, '');
+        if (numbers.length > 0 && numbers.length !== 8) {
+          alert('날짜는 8자리 숫자로 입력해주세요. (예: 20260101)');
+          $el.val('');
+          if (inst && typeof inst.value === 'function') {
+            inst.value(null);
+          }
+          return;
+        }
+        if (numbers.length === 8) {
+          var year = parseInt(numbers.substring(0, 4));
+          var month = parseInt(numbers.substring(4, 6));
+          var day = parseInt(numbers.substring(6, 8));
+          if (month < 1 || month > 12) {
+            alert('월은 01~12 사이여야 합니다.');
+            $el.val('');
+            if (inst && typeof inst.value === 'function') {
+              inst.value(null);
+            }
+            return;
+          }
+          if (day < 1 || day > 31) {
+            alert('일은 01~31 사이여야 합니다.');
+            $el.val('');
+            if (inst && typeof inst.value === 'function') {
+              inst.value(null);
+            }
+            return;
+          }
+          try {
+            var date = new Date(year, month - 1, day);
+            if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+              alert('유효하지 않은 날짜입니다.');
+              $el.val('');
+              if (inst && typeof inst.value === 'function') {
+                inst.value(null);
+              }
+              return;
+            }
+            if (inst && typeof inst.value === 'function') {
+              inst.value(date);
+            }
+          } catch {
+            alert('날짜 형식이 올바르지 않습니다.');
+            $el.val('');
+            if (inst && typeof inst.value === 'function') {
+              inst.value(null);
+            }
+          }
+        }
+      }, 200);
+    });
+  }
+  function initDateRangePicker(el) {
+    var $el = window.jQuery(el);
+    if ($el.data('kendoDateRangePicker')) return;
+    var optRaw = $el.attr('data-opt') || '{}';
+    var opts = parseJsonSafe(optRaw) || {};
+    var $wrap = $el.closest('.vits-daterangepicker');
+    if ($wrap.length && opts.appendTo === undefined) {
+      opts.appendTo = $wrap[0];
+    }
+    opts.format = opts.format || 'yyyy.MM.dd';
+    opts.culture = opts.culture || 'ko-KR';
+    opts.footer = false;
+    if (opts.range) {
+      opts.range = {
+        start: opts.range.start ? parseDateValue(opts.range.start) : null,
+        end: opts.range.end ? parseDateValue(opts.range.end) : null
+      };
+    }
+    if (opts.min) opts.min = parseDateValue(opts.min);
+    if (opts.max) opts.max = parseDateValue(opts.max);
+
+    // 힌트 텍스트 설정
+    var startText = opts.messages && opts.messages.startLabel ? opts.messages.startLabel : '시작일';
+    var endText = opts.messages && opts.messages.endLabel ? opts.messages.endLabel : '종료일';
+    $el.kendoDateRangePicker(opts);
+    var inst = $el.data('kendoDateRangePicker');
+    var isOpen = false;
+    var suppressOpenUntil = 0;
+
+    // ============================================
+    // 스타일 삽입 (최초 1회)
+    // ============================================
+    if (!document.getElementById('vits-daterange-mask-style')) {
+      var style = document.createElement('style');
+      style.id = 'vits-daterange-mask-style';
+      style.textContent = [
+      // 마스크(빈 값) 완전히 숨김
+      '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty {', '  color: transparent !important;', '}',
+      // 포커스 시에도 마스크 숨김 유지
+      '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty:focus {', '  color: transparent !important;', '}',
+      // 실제 값 있을 때 표시
+      '.vits-daterangepicker .k-dateinput .k-input-inner.has-value {', '  color: #333 !important;', '}',
+      // ★ 세그먼트 하이라이트(파란색) 제거
+      '.vits-daterangepicker .k-dateinput .k-input-inner::selection {', '  background: transparent !important;', '  color: inherit !important;', '}', '.vits-daterangepicker .k-dateinput .k-input-inner::-moz-selection {', '  background: transparent !important;', '  color: inherit !important;', '}',
+      // 커서는 보이게 (타이핑용)
+      '.vits-daterangepicker .k-dateinput .k-input-inner {', '  cursor: text !important;', '}',
+      // 힌트 스타일
+      '.vits-daterangepicker .vits-placeholder-hint {', '  position: absolute;', '  top: 50%;', '  transform: translateY(-50%);', '  color: #999;', '  font-size: 14px;', '  pointer-events: none;', '  white-space: nowrap;', '  z-index: 5;', '}',
+      // 전체 영역 클릭 가능하게
+      '.vits-daterangepicker .k-daterangepicker {', '  cursor: pointer;', '}'].join('\n');
+      document.head.appendChild(style);
+    }
+
+    // ============================================
+    // 마스크 빈 값 판단 함수
+    // ============================================
+    function isMaskEmpty(val) {
+      if (!val) return true;
+      var emptyPatterns = ['year.month.day', 'yyyy.MM.dd', 'yyyy.mm.dd', '    .  .  ', '__.__.____', ''];
+      var trimmed = val.trim().toLowerCase();
+      for (var i = 0; i < emptyPatterns.length; i++) {
+        if (trimmed === emptyPatterns[i].toLowerCase()) return true;
+      }
+      return !/\d/.test(val);
+    }
+
+    // ============================================
+    // 두 input 가져오기
+    // ============================================
+    function getTwoInputs() {
+      var $inputs = $wrap.find('input.k-input-inner');
+      return $inputs.length >= 2 ? {
+        $start: $inputs.eq(0),
+        $end: $inputs.eq(1)
+      } : null;
+    }
+
+    // ============================================
+    // 힌트 요소 생성 (input 내부 위치)
+    // ============================================
+    function ensureHints() {
+      var inputs = getTwoInputs();
+      if (!inputs) return null;
+      var $startWrap = inputs.$start.closest('.k-dateinput');
+      var $endWrap = inputs.$end.closest('.k-dateinput');
+
+      // position: relative 보장
+      $startWrap.css('position', 'relative');
+      $endWrap.css('position', 'relative');
+      var $hintStart = $startWrap.find('.vits-placeholder-hint');
+      var $hintEnd = $endWrap.find('.vits-placeholder-hint');
+      if (!$hintStart.length) {
+        $hintStart = window.jQuery('<span class="vits-placeholder-hint"></span>');
+        $hintStart.text(startText);
+        $startWrap.append($hintStart);
+      }
+      if (!$hintEnd.length) {
+        $hintEnd = window.jQuery('<span class="vits-placeholder-hint"></span>');
+        $hintEnd.text(endText);
+        $endWrap.append($hintEnd);
+      }
+
+      // input의 padding-left에 맞춤
+      var padStart = parseInt(inputs.$start.css('paddingLeft'), 10) || 0;
+      var padEnd = parseInt(inputs.$end.css('paddingLeft'), 10) || 0;
+      $hintStart.css('left', padStart + 'px');
+      $hintEnd.css('left', padEnd + 'px');
+      return {
+        $hintStart: $hintStart,
+        $hintEnd: $hintEnd
+      };
+    }
+
+    // ============================================
+    // 상태 동기화
+    // ============================================
+    function syncState() {
+      var inputs = getTwoInputs();
+      if (!inputs) return;
+      var hints = ensureHints();
+      if (!hints) return;
+      var startVal = inputs.$start.val();
+      var endVal = inputs.$end.val();
+      var startEmpty = isMaskEmpty(startVal);
+      var endEmpty = isMaskEmpty(endVal);
+
+      // 마스크 클래스 토글
+      if (startEmpty) {
+        inputs.$start.addClass('is-mask-empty').removeClass('has-value');
+      } else {
+        inputs.$start.removeClass('is-mask-empty').addClass('has-value');
+      }
+      if (endEmpty) {
+        inputs.$end.addClass('is-mask-empty').removeClass('has-value');
+      } else {
+        inputs.$end.removeClass('is-mask-empty').addClass('has-value');
+      }
+
+      // 힌트 표시/숨김 (빈 값일 때만 표시)
+      hints.$hintStart.toggle(startEmpty);
+      hints.$hintEnd.toggle(endEmpty);
+    }
+
+    // ============================================
+    // 키보드 완전 차단 (캘린더로만 선택)
+    // ============================================
+    function blockIncrement() {
+      var inputs = getTwoInputs();
+      if (!inputs) return;
+
+      // readonly로 키보드 입력 완전 차단
+      inputs.$start.add(inputs.$end).attr('readonly', true);
+
+      // 마우스 휠 차단
+      inputs.$start.add(inputs.$end).each(function () {
+        this.addEventListener('wheel', function (e) {
+          e.preventDefault();
+        }, {
+          passive: false
+        });
+      });
+    }
+
+    // ============================================
+    // Kendo 이벤트 바인딩
+    // ============================================
+    if (inst && inst.bind) {
+      inst.bind('open', function (e) {
+        if (Date.now() < suppressOpenUntil) {
+          if (e && typeof e.preventDefault === 'function') e.preventDefault();
+          return;
+        }
+        isOpen = true;
+        applyVitsClassToWrapper($wrap, inst);
+        window.requestAnimationFrame(syncState);
+      });
+      inst.bind('close', function () {
+        isOpen = false;
+        window.requestAnimationFrame(syncState);
+      });
+      inst.bind('change', function () {
+        var range = this.range();
+        $el.trigger('daterangepicker:change', [range]);
+        window.requestAnimationFrame(syncState);
+      });
+    }
+    applyVitsClassToWrapper($wrap, inst);
+
+    // ============================================
+    // 전체 영역 클릭으로 열기
+    // ============================================
+    $wrap.off('click.vitsKendoOpen');
+    $wrap.on('click.vitsKendoOpen', function (e) {
+      // 이미 열려있거나 suppressed 상태면 무시
+      if (isOpen || Date.now() < suppressOpenUntil) return;
+
+      // input 직접 클릭은 Kendo가 처리
+      if (window.jQuery(e.target).is('input.k-input-inner')) return;
+      if (inst && typeof inst.open === 'function') {
+        inst.open();
+      }
+    });
+
+    // ============================================
+    // 아이콘 위 클릭 레이어 버튼
+    // ============================================
+    var $hit = $wrap.find('.vits-daterangepicker__icon-hit');
+    if (!$hit.length) {
+      $hit = window.jQuery('<button type="button" class="vits-daterangepicker__icon-hit" aria-label="달력 열기/닫기"></button>');
+      $wrap.append($hit);
+    }
+    $hit.off('.vitsKendoRangeHit');
+    $hit.on('mousedown.vitsKendoRangeHit', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    });
+    $hit.on('click.vitsKendoRangeHit', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (!inst) return;
+      if (isOpen) {
+        suppressOpenUntil = Date.now() + 500;
+        inst.close();
+        window.setTimeout(function () {
+          var ae = document.activeElement;
+          if (ae && $wrap[0].contains(ae) && typeof ae.blur === 'function') ae.blur();
+          $wrap.find('input').each(function () {
+            if (this && typeof this.blur === 'function') this.blur();
+          });
+          syncState();
+          blockIncrement();
+        }, 0);
+      } else {
+        inst.open();
+      }
+    });
+
+    // ============================================
+    // 이벤트 바인딩
+    // ============================================
+    $wrap.off('.vitsRangeSync');
+    $wrap.on('input.vitsRangeSync change.vitsRangeSync focusin.vitsRangeSync focusout.vitsRangeSync', 'input', function () {
+      window.requestAnimationFrame(syncState);
+    });
+
+    // 초기 동기화 (약간 딜레이 - Kendo 렌더링 완료 후)
+    window.setTimeout(function () {
+      syncState();
+      blockIncrement();
+    }, 50);
+  }
+  function initOne(el) {
+    var $el = window.jQuery(el);
+    var uiType = $el.attr('data-ui');
+    if (uiType === 'kendo-datepicker') {
+      initDatePicker(el);
+    } else if (uiType === 'kendo-daterangepicker') {
+      initDateRangePicker(el);
+    }
+  }
+  function initAll(root) {
+    if (!ensureKendoAvailable()) {
+      return;
+    }
+    var $root = root ? window.jQuery(root) : window.jQuery(document);
+    $root.find('[data-ui="kendo-datepicker"]').each(function () {
+      initOne(this);
+    });
+    $root.find('[data-ui="kendo-daterangepicker"]').each(function () {
+      initOne(this);
+    });
+  }
+  function autoBindStart(container) {
+    if (!window.MutationObserver) return null;
+    var target = container || document.body;
+    initAll(target);
+    var obs = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        for (var j = 0; j < m.addedNodes.length; j++) {
+          var node = m.addedNodes[j];
+          if (!node || node.nodeType !== 1) continue;
+          initAll(node);
+        }
+      }
+    });
+    obs.observe(target, {
+      childList: true,
+      subtree: true
+    });
+    return obs;
+  }
+  window.VitsKendoDatepicker = {
+    initAll: initAll,
+    autoBindStart: autoBindStart
+  };
+  console.log('[kendo-datepicker] loaded');
+})(window);
+
+/***/ }),
+
 /***/ 978:
 /***/ (function() {
 
@@ -6915,7 +7387,7 @@ if (document.body?.dataset?.guide === 'true') {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(713); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,133,237,979], function() { return __webpack_require__(64); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
