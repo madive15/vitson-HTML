@@ -10,7 +10,6 @@
   const _hasPlaceholder = (_placeholderRaw !== null && _placeholderRaw !== undefined && _placeholderRaw !== '');
   const _placeholder = _hasPlaceholder ? _placeholderRaw : '';
 
-  // value: null/undefined면 속성 미출력(빈 문자열은 "명시값"으로 출력)
   const _valueRaw = (typeof value !== 'undefined') ? value : null;
   const _hasValue = (_valueRaw !== null && _valueRaw !== undefined);
   const _value = _hasValue ? _valueRaw : '';
@@ -19,18 +18,42 @@
   const _disabled = (typeof disabled !== 'undefined') ? !!disabled : false;
   const _readonly = (typeof readonly !== 'undefined') ? !!readonly : false;
 
-  const _message = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
-  const _hasMessage = !!_message;
-
+  // ===== Validation 관련 =====
+  const _errorMessage = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
+  const _successMessage = (typeof successMessage !== 'undefined' && successMessage) ? successMessage : '';
+  
   const _isInvalidFlag = (typeof isInvalid !== 'undefined') ? (isInvalid === true) : false;
-  const _isInvalid = _isInvalidFlag || _hasMessage;
+  const _isInvalid = _isInvalidFlag || !!_errorMessage;
+  
+  const _isValid = (typeof isValid !== 'undefined') ? (isValid === true) : false;
+
+  // 표시할 메시지 결정 (에러 우선)
+  const _displayMessage = _isInvalid ? _errorMessage : (_isValid ? _successMessage : '');
+  const _hasMessage = !!_displayMessage;
 
   const _rootClass = (typeof rootClass !== 'undefined' && rootClass) ? rootClass : '';
-
   const _validationId = _id ? `${_id}-validation` : '';
+
+  // ===== 초기 상태 클래스 구성 =====
+  // NOTE: 유효성 검사 구현 시
+  // - 검사 활성화: .vits-validation 클래스 추가
+  // - 성공 상태: .is-valid 클래스 추가 (successMessage와 함께 사용)
+  // - 실패 상태: .is-invalid 클래스 추가 (validationMessage와 함께 사용)
+  // - 메시지 표시: hidden 속성 제거
+  let _stateClasses = [];
+  
+  if (_isInvalid) {
+    _stateClasses.push('vits-validation');
+    _stateClasses.push('is-invalid');
+  } else if (_isValid) {
+    _stateClasses.push('vits-validation');
+    _stateClasses.push('is-valid');
+  }
+  
+  const _stateClass = _stateClasses.join(' ');
 %>
 
-<div class="vits-input <%= _rootClass %>">
+<div class="vits-input <%= _rootClass %> <%= _stateClass %>">
   <div class="input-item">
     <label for="<%= _id %>" class="sr-only"><%= _label %></label>
 
@@ -47,10 +70,13 @@
 
       <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
       <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+      <% if (_isValid) { %>aria-invalid="false"<% } %>
     />
   </div>
 
-  <div class="input-validation" <% if (!_hasMessage) { %>hidden<% } %>>
-    <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _message %></p>
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" <% if (!_hasMessage) { %>hidden<% } %>>
+    <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _displayMessage %></p>
   </div>
 </div>

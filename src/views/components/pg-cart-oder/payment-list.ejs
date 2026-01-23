@@ -1,0 +1,281 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<section class="vits-payment">
+
+  <!-- 결제정보 -->
+  <div class="vits-payment-summary">
+    <h2 class="vits-payment-title">결제정보</h2>
+
+    <div class="vits-payment-price">
+      <ul class="vits-payment-price-list">
+        <li>
+          <span>상품금액</span>
+          <strong>418,000원</strong>
+        </li>
+        <li class="is-discount">
+          <span>할인금액</span>
+          <strong>-83,500원</strong>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="vits-payment-price">
+      <ul class="vits-payment-price-sub">
+        <li><span>최대혜택가</span><span>33,450원</span></li>
+        <li><span>VAT</span><span>418,000원</span></li>
+        <li><span>배송비</span><span>3,000원</span></li>
+      </ul>
+    </div>
+
+    <div class="vits-payment-total">
+      <span>결제예정금액</span>
+      <strong class="is-emphasis">370,950원</strong>
+    </div>
+
+    <p class="vits-payment-notice">
+      도착지에서 착불 운임이 청구됩니다.
+    </p>
+
+    <div class="vits-payment-agree">
+      <label class="checkbox-single-s">
+        <input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" />
+        <span class="sr-only">동의 체크란</span>
+        <span class="vits-payment-agree-text">
+          주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며,
+          구매에 동의하시겠습니까? (전자상거래법 제8조 2항)
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 결제수단 선택 -->
+  <div class="vits-payment-method">
+    <h2 class="vits-payment-title">결제수단 선택하기</h2>
+
+    <!-- 간편결제 -->
+    <div class="vits-payment-item">
+      <label class="vits-radio">
+        <input 
+          type="radio"
+          name="payment"
+          id="pay-simple"
+          checked 
+          aria-controls="panel-simple"
+          aria-expanded="true"
+        />
+        <span>간편결제 <em>비츠온페이로 간편하게 결제</em></span>
+      </label>
+
+      <div id="panel-simple" class="vits-payment-panel is-active" aria-labelledby="pay-simple" >
+        <!-- 간편결제 탭 -->
+        <div class="vits-payment-tabs" role="tablist" aria-label="간편결제 수단">
+          <button
+            type="button"
+            id="tab-simple-card"
+            class="vits-payment-tab is-active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-simple-card"
+          >
+            비츠온페이 카드
+          </button>
+
+          <button
+            type="button"
+            id="tab-simple-account"
+            class="vits-payment-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-simple-account"
+          >
+            비츠온페이 계좌
+          </button>
+        </div>
+
+        <!-- 카드 -->
+        <div
+          id="panel-simple-card"
+          class="vits-payment-tab-panel is-active"
+          role="tabpanel"
+          aria-labelledby="tab-simple-card"
+        >
+          <div class="vits-card-list">
+            <div class="vits-card-item is-selected">
+              <strong>신한카드</strong>
+              <span>3318 **** **** ****</span>
+            </div>
+            <div class="vits-card-item">
+              <strong>신한카드</strong>
+              <span>3318 **** **** ****</span>
+            </div>
+          </div>
+
+          <div class="vits-card-form">
+            <div class="vits-form-item">카드번호: 신한카드(3318)</div>
+            <div class="vits-form-item">카드명칭: 김은희신한</div>
+            <div class="vits-form-item">할부선택: 일시불</div>
+          </div>
+        </div>
+
+        <!-- 계좌 -->
+        <div
+          id="panel-simple-account"
+          class="vits-payment-tab-panel"
+          role="tabpanel"
+          aria-labelledby="tab-simple-account"
+          
+        >
+          <div class="vits-account-empty">
+            <span>계좌 등록하기</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드결제 -->
+    <div class="vits-payment-item">
+      <label class="vits-radio">
+        <input
+          type="radio"
+          name="payment"
+          id="pay-card"
+          aria-controls="panel-card"
+          aria-expanded="false"
+        />
+        <span>카드결제 <em>신용/체크카드</em></span>
+      </label>
+
+      <div
+        id="panel-card"
+        class="vits-payment-panel"
+        
+        aria-labelledby="pay-card"
+        
+      >
+        <p>신용카드 결제가 가능합니다.</p>
+      </div>
+    </div>
+
+    <!-- 실시간 계좌이체 -->
+    <div class="vits-payment-item">
+      <label class="vits-radio">
+        <input
+          type="radio"
+          name="payment"
+          id="pay-transfer"
+          aria-controls="panel-transfer"
+          aria-expanded="false"
+        />
+        <span>실시간계좌이체 <em>계좌에서 바로 이체</em></span>
+      </label>
+
+      <div
+        id="panel-transfer"
+        class="vits-payment-panel"
+        
+        aria-labelledby="pay-transfer"
+        
+      >
+        <ul class="vits-payment-info">
+          <li>이체 수수료 무료</li>
+          <li>23시 이후 은행별 제한 가능</li>
+          <li>1일 이체 한도 200만원</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 무통장입금 -->
+    <div class="vits-payment-item">
+      <label class="vits-radio">
+        <input
+          type="radio"
+          name="payment"
+          id="pay-bank"
+          aria-controls="panel-bank"
+          aria-expanded="false"
+        />
+        <span>무통장입금 <em>비츠온 계좌로 입금</em></span>
+      </label>
+
+      <div
+        id="panel-bank"
+        class="vits-payment-panel"
+        aria-labelledby="pay-bank"
+      >
+        <ul class="vits-payment-info">
+          <li>주문 후 영업일 5일 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.</li>
+          <li>입금 확인 상태에서는 부분 취소 불가능합니다.</li>
+          <li>주문자명과 입금자명이 다르더라도 정확한 금액 입금시 입금 확인 정상 처리됩니다.</li>
+        </ul>
+
+        <div class="vits-payment-bank">
+          <dl class="vits-payment-bank-list">
+            <div class="vits-payment-bank-item">
+              <dt>입금 계좌</dt>
+              <dd>국민 288965-04-531311</dd>
+            </div>
+            <div class="vits-payment-bank-item">
+              <dt>예금주명</dt>
+              <dd>주식회사 일신비츠온</dd>
+            </div>
+          </dl>
+
+          <div class="vits-payment-bank-input">
+            <label class="vits-form-label" for="pay-bank-depositor">입금자명</label>
+            <div class="vits-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                id: 'pay-bank-depositor',
+                name: 'bankDepositor',
+                label: '입금자명',
+                placeholder: '입금자명을 입력하세요',
+                rootClass: 'size-large'
+              }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 여신결제 -->
+    <div class="vits-payment-item">
+      <label class="vits-radio">
+        <input type="radio" name="payment" />
+        <span>여신 결제 <em>외상 거래 후 정산</em></span>
+      </label>
+    </div>
+
+    <div class="vits-payment-panel" hidden>
+      <p class="vits-payment-notice">후불 고객이 정해진 여신 한도 내에서 결제하시는 방법입니다.</p>
+    </div>
+  </div>
+
+  <!-- 세금계산서 발급 -->
+  <div class="vits-tax invoices">
+    <h2 class="vits-payment-title">세금계산서 발급 신청</h2>
+
+    <div class="vits-tax-options">
+      <label class="vits-radio">
+        <input type="radio" name="tax-invoice" id="tax-invoice-single" />
+        <span>개별 발급</span>
+      </label>
+
+      <label class="vits-radio">
+        <input type="radio" name="tax-invoice" id="tax-invoice-batch" checked />
+        <span>일괄 발급</span>
+      </label>
+
+      <label class="vits-radio">
+        <input type="radio" name="tax-invoice" id="tax-invoice-none" />
+        <span>발급 안함</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 결제 버튼 -->
+  <div class="vits-payment-submit">
+    <button type="button" class="vits-btn vits-btn-primary vits-btn-lg">
+      370,950원 결제하기
+    </button>
+  </div>
+
+</section>

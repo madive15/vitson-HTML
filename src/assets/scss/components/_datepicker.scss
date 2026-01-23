@@ -1,0 +1,352 @@
+// ============================================
+// Kendo UI DatePicker 커스텀
+// ============================================
+
+.vits-datepicker,
+.vits-daterangepicker {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    &:focus {
+      border-color: #ff6b6b;
+      outline: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      background-color: #f5f5f5;
+    }
+  }
+
+  .k-select {
+    cursor: pointer;
+    background: white;
+    border: 1px solid #ddd;
+    border-left: none;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+
+    .k-icon {
+      color: #666;
+    }
+  }
+}
+
+// ============================================
+// DateRangePicker - 하나의 인풋처럼 보이게
+// ============================================
+.vits-daterangepicker {
+  cursor: pointer;
+
+  .k-daterangepicker {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 10px 40px 10px 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    &:hover {
+      border-color: #ff6b6b;
+    }
+
+    .k-floating-label-container {
+      flex: 1;
+      margin: 0 !important;
+      border: none !important;
+
+      .k-dateinput {
+        min-height: auto !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      input {
+        width: auto !important;
+        min-width: 80px;
+        padding: 0 !important;
+        font-size: 14px;
+        cursor: pointer;
+        background: transparent !important;
+        border: none !important;
+
+        &:focus {
+          outline: none;
+          box-shadow: none !important;
+        }
+      }
+
+      .k-floating-label {
+        display: none !important;
+      }
+
+      .k-input-validation-icon {
+        display: none !important;
+      }
+    }
+
+    // "시작일 - 종료일" 사이 구분자
+    > span:not(.k-floating-label-container) {
+      margin: 0 4px;
+      color: #999;
+    }
+  }
+
+  // 달력 아이콘
+  &::after {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 10;
+    width: 20px;
+    height: 20px;
+    pointer-events: auto;
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px;
+    transform: translateY(-50%);
+  }
+
+  // 아이콘 위에 올라가는 클릭 레이어
+  .vits-daterangepicker__icon-hit {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 30;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+
+    // 시각적으로는 안 보이게(아이콘은 ::after가 담당)
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+}
+
+// ============================================
+// 캘린더 팝업
+// ============================================
+.k-calendar,
+.k-calendar-container .k-calendar {
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+
+  .k-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    margin-bottom: 16px;
+
+    .k-calendar-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .k-calendar-nav-prev,
+    .k-calendar-nav-next {
+      color: #666;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+
+      &:hover {
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .k-calendar-view {
+    .k-content {
+      thead {
+        tr {
+          th {
+            padding: 8px 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #999;
+            text-align: center;
+
+            &:first-child {
+              color: #ff6b6b !important;
+            }
+
+            &:last-child {
+              color: #4dabf7 !important;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            padding: 4px;
+            text-align: center;
+
+            .k-link {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 36px;
+              height: 36px;
+              font-size: 14px;
+              color: #333;
+              cursor: pointer;
+              border-radius: 50%;
+              transition: all 0.2s;
+
+              &:hover:not(.k-other-month) {
+                background-color: #f5f5f5;
+              }
+
+              &.k-selected {
+                font-weight: 600;
+                color: white !important;
+                background-color: #ff6b6b !important;
+              }
+
+              &.k-range-start,
+              &.k-range-end {
+                font-weight: 600;
+                color: white !important;
+                background-color: #ff6b6b !important;
+              }
+
+              &.k-range-mid {
+                color: #ff6b6b !important;
+                background-color: #ffe5e5 !important;
+                border-radius: 0;
+              }
+
+              &.k-other-month {
+                display: none !important;
+              }
+
+              &.k-today:not(.k-selected, .k-range-start, .k-range-end) {
+                font-weight: 600;
+                box-shadow: inset 0 0 0 1px #ddd;
+              }
+            }
+          }
+
+          td:first-child .k-link:not(.k-selected, .k-range-start, .k-range-end, .k-other-month) {
+            color: #ff6b6b;
+          }
+
+          td:last-child .k-link:not(.k-selected, .k-range-start, .k-range-end, .k-other-month) {
+            color: #4dabf7;
+          }
+        }
+      }
+    }
+  }
+}
+
+.k-daterangepicker-popup {
+  .k-calendar-container {
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.k-calendar .k-disabled {
+  color: #e0e0e0 !important;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.vits-daterangepicker {
+  .k-floating-label-container {
+    position: relative; // 힌트 absolute 기준
+  }
+
+  .vits-range-hint {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 5;
+    color: #999;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  // 값이 비어있을 때만 힌트 보이기
+  input:not(.is-empty) + .vits-range-hint {
+    display: none;
+  }
+
+  // 포커스 시에는 마스크/입력을 보이게 해야 하니 힌트 숨김
+  input:focus + .vits-range-hint {
+    display: none;
+  }
+}
+
+.vits-daterangepicker {
+  position: relative;
+
+  // 아이콘 위 클릭 레이어
+  .vits-daterangepicker__icon-hit {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 30;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+
+  // 힌트(시작일/종료일) 오버레이
+  .k-floating-label-container {
+    position: relative;
+  }
+
+  .vits-range-hint {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 5;
+    color: #999;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  // 빈 값일 때만 힌트 노출 (input에 is-empty 클래스가 붙을 때)
+  .k-dateinput input.is-empty + .vits-range-hint {
+    display: inline;
+  }
+
+  .k-dateinput input:not(.is-empty) + .vits-range-hint {
+    display: none;
+  }
+
+  .k-dateinput input:focus + .vits-range-hint {
+    display: none;
+  }
+}

@@ -69,7 +69,7 @@
  * --------------------------------------------------------------------------- */
 
 // 버튼 기본 스타일
-:is(.vits-btn-xxl, .vits-btn-xl, .vits-btn-lg, .vits-btn-md, .vits-btn-sm, .vits-btn-xs, .vits-btn-xxs) {
+:is(.vits-btn-xxl, .vits-btn-xl, .vits-btn-lg-p, .vits-btn-lg, .vits-btn-md, .vits-btn-sm, .vits-btn-xs, .vits-btn-xxs) {
   position: relative;
   gap: map.get(var.$unit, 8);
   padding: 0 map.get(var.$unit, 12);
@@ -118,28 +118,35 @@ $button-sizes: (
   'xl': (
     'min-height': 52,
     'padding': 12,
-    'typography': 'b2s',
+    'typography': 'b2b',
+    'icon-size': 24,
+    'font-size': 16
+  ),
+  'lg-p': (
+    'min-height': 44,
+    'padding': 12,
+    'typography': 'b2b',
     'icon-size': 24,
     'font-size': 16
   ),
   'lg': (
     'min-height': 40,
     'padding': 12,
-    'typography': 'b2s',
+    'typography': 'b2b',
     'icon-size': 24,
     'font-size': 16
   ),
   'md': (
     'min-height': 36,
     'padding': 12,
-    'typography': 'b3s',
+    'typography': 'b3b',
     'icon-size': 20,
     'font-size': 14
   ),
   'sm': (
     'min-height': 32,
     'padding': 12,
-    'typography': 'b3s',
+    'typography': 'b3b',
     'icon-size': 20,
     'font-size': 14
   ),
@@ -330,6 +337,7 @@ $scoped-button-configs: (
       $active-bg: if(map.has-key($config, 'active-bg'), map.get($config, 'active-bg'), $hover-bg);
 
       @include mx.border(all, 1px, solid, $border);
+      font-weight: 600;
       color: $text;
       background-color: color.$color-white;
       border-radius: map.get(var.$radius, 'sm');

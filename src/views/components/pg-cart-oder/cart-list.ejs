@@ -60,9 +60,9 @@
     <!-- 상품 리스트 -->
     <div class="vits-cart-list">
       
-      <% for (let i = 0; i < 3; i++) { %>
       <!-- 상품 카드 -->
       <!-- [D]일시 품절 일때 is-sold-out 클래스 추가 -->
+      <% for (let i = 0; i < 3; i++) { %>
       <div class="<%= i === 0 ? 'vits-cart-item is-sold-out' : 'vits-cart-item' %>">
         <!-- 상단 영역 -->
         <div class="vits-cart-item-top">
@@ -85,13 +85,14 @@
             </button>
           </div>
         </div>
+
         <!-- 상품 정보 메인 영역 -->
         <div class="vits-cart-item-main">
           <!-- 체크 -->
           <div class="vits-cart-item-check">
-            <label class="checkbox-item">
-              <input type="checkbox" name="vits-cart-checkbox" value=" ">
-              <span class="checkbox-icon" aria-hidden="true"></span>
+            <label class="checkbox-single-s">
+              <input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" />
+              <span class="sr-only">상품 선택</span>
             </label>
           </div>
       
@@ -246,10 +247,9 @@
             <strong class="value">234,900원</strong>
           </div>
         </div>
-        
       </div>
-      <!-- // vits-cart-item -->
       <% } %>
+      <!-- // vits-cart-item -->
     </div>
     <!-- // vits-cart-list -->
 

@@ -1,0 +1,49 @@
+<%
+const config = {
+  id: options.id || 'datepicker-' + Date.now(),
+  type: options.type || 'single',
+  format: options.format || 'yyyy.MM.dd',
+  culture: options.culture || 'ko-KR',
+  placeholder: options.placeholder || '날짜 선택',
+  placeholderStart: options.placeholderStart || '시작일',
+  placeholderEnd: options.placeholderEnd || '종료일',
+  value: options.value || null,
+  range: options.range || null,
+  min: options.min || null,
+  max: options.max || null,
+  customClass: options.customClass || '',
+  disabled: options.disabled || false
+};
+
+const dataOpt = {
+  format: config.format,
+  culture: config.culture
+};
+
+if (config.value) {
+  dataOpt.value = config.value;
+}
+
+if (config.range) {
+  dataOpt.range = config.range;
+}
+
+if (config.min) {
+  dataOpt.min = config.min;
+}
+
+if (config.max) {
+  dataOpt.max = config.max;
+}
+
+if (config.type === 'range') {
+  if (config.placeholderStart || config.placeholderEnd) {
+    dataOpt.messages = {
+      startLabel: config.placeholderStart,
+      endLabel: config.placeholderEnd
+    };
+  }
+}
+
+const dataOptStr = JSON.stringify(dataOpt).replace(/"/g, '&quot;');
+%><% if (config.type === 'single') { %><div class="vits-datepicker <%= config.customClass %>"><input type="text" id="<%= config.id %>" data-ui="kendo-datepicker" data-opt="<%= dataOptStr %>" placeholder="<%= config.placeholder %>" <% if (config.disabled) { %>disabled<% } %> /></div><% } else { %><div class="vits-daterangepicker <%= config.customClass %>"><div id="<%= config.id %>" data-ui="kendo-daterangepicker" data-opt="<%= dataOptStr %>"></div></div><% } %>

@@ -60,9 +60,20 @@
         <div class="vits-form-row">
           <label class="vits-form-label">택배사 선택</label>
           <div class="vits-form-field">
-            <select>
-              <option>선택</option>
-            </select>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'shipping-carrier',
+              name: 'shippingCarrier',
+              placeholder: '선택',
+              options: [
+                { value: '한진 택배', text: '한진 택배' },
+                { value: '로젠 택배', text: '판매량순' },
+                { value: '롯데 택배', text: '롯데 택배' },
+                { value: '경동 택배', text: '경동 택배' },
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '선택',
+              disabled: false
+            }) %>
           </div>
         </div>
       </div>
@@ -90,9 +101,28 @@
           <div class="vits-form-row">
             <label class="vits-form-label">도착 희망 시간</label>
             <div class="vits-form-field">
-              <select>
-                <option>시간 선택</option>
-              </select>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'shipping-time',
+                name: 'shippingTime',
+                placeholder: '시간 선택',
+                options: [
+                  { value: '오전 09:00', text: '오전 09:00' },
+                  { value: '오전 10:00', text: '오전 10:00' },
+                  { value: '오전 11:00', text: '오전 11:00' },
+                  { value: '오전 12:00', text: '오전 12:00' },
+                  { value: '오후 01:00', text: '오후 01:00' },
+                  { value: '오후 02:00', text: '오후 02:00' },
+                  { value: '오후 03:00', text: '오후 03:00' },
+                  { value: '오후 04:00', text: '오후 04:00' },
+                  { value: '오후 05:00', text: '오후 05:00' },
+                  { value: '오후 06:00', text: '오후 06:00' },
+                  { value: '오후 07:00', text: '오후 07:00' },
+                  { value: '오후 08:00', text: '오후 08:00' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '시간 선택',
+                disabled: false
+              }) %>
             </div>
           </div>
         </div>
@@ -117,43 +147,143 @@
 
     <div class="vits-form-box">
       <div class="vits-form-row">
-        <label class="vits-form-label">배송지 선택</label>
-        <div class="vits-form-field is-flex">
-          <select>
-            <option>여의도 본사</option>
-          </select>
-          <button type="button">배송지 변경</button>
+        <div class="vits-form-row-group">
+          <label class="vits-form-label">배송지 선택</label>
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '배송지 변경',
+          }) %>
+        </div>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'shipping-address',
+            name: 'shippingAddress',
+            placeholder: '배송지 선택',
+            options: [
+              { value: '여의도 본사', text: '여의도 본사' },
+              { value: '과천 지점', text: '과천 지점' },
+              { value: '남양주 지점', text: '남양주 지점' },
+              { value: '화성 지점', text: '화성 지점' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '여의도 본사',
+            disabled: false
+          }) %>
         </div>
       </div>
 
       <div class="vits-form-row-group">
         <div class="vits-form-row">
           <label class="vits-form-label">받는 사람</label>
-          <input type="text" />
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-name',
+            name: 'receiverName',
+            label: '받는 사람',
+            placeholder: '받는 사람',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
         </div>
 
         <div class="vits-form-row">
           <label class="vits-form-label">받는 사람 연락처</label>
-          <input type="text" />
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-phone',
+            name: 'receiverPhone',
+            label: '받는 사람 연락처',
+            placeholder: '받는 사람 연락처',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
         </div>
       </div>
 
       <div class="vits-form-row">
-        <label class="vits-form-label">배송지 주소</label>
-        <div class="vits-form-field is-flex">
-          <input type="text" />
-          <button type="button">우편번호 찾기</button>
+        <div class="vits-form-row-group">
+          <label class="vits-form-label">배송지 주소</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '우편번호 찾기',
+          }) %>
+        </div>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address',
+            name: 'receiverAddress',
+            label: '배송지 주소',
+            placeholder: '배송지 주소',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
         </div>
       </div>
 
       <div class="vits-form-row">
         <label class="vits-form-label">상세 주소</label>
-        <input type="text" />
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '(54366) 서울특별시 강남구 테헤란로 123',
+            placeholder: '상세 주소',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+      <!-- [D]cas: 필수 입력 항목 -->
+      <div class="vits-form-row">
+        <label class="vits-form-label">상세 주소 (필수) case</label>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '',
+            placeholder: '상세 주소',
+            required: true,
+            isInvalid: true,
+            validationMessage: '필수 입력 항목입니다.',
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+      <div class="vits-form-row">
+        <label class="vits-form-label">상세 주소 / 비활성화 case</label>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '(54366) 서울특별시 강남구 테헤란로 123',
+            placeholder: '상세 주소',
+            rootClass: 'size-large',
+            disabled: true
+          }) %>
+        </div>
       </div>
 
       <div class="vits-form-row">
         <label class="vits-form-label">배송 메모</label>
-        <textarea></textarea>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'receiver-memo',
+            name: 'receiverMemo',
+            placeholder: '배송 시 요청사항을 입력하세요.',
+            rootClass: 'size-large'
+          }) %>
+        </div>
       </div>
     </div>
   </div>
@@ -163,34 +293,79 @@
     <h3 class="vits-shipping-section-title">보내는 사람</h3>
 
     <div class="vits-form-box">
-      <div class="vits-form-row-group">
-        <div class="vits-form-row">
-          <label class="vits-form-label">발송처 선택</label>
-          <select>
-            <option>메가존</option>
-          </select>
-        </div>
-
-        <div class="vits-form-row">
-          <label class="vits-form-label">운임 선택</label>
-          <select>
-            <option>운임 지불 방법 선택</option>
-          </select>
+      <div class="vits-form-row">
+        <div class="vits-form-row-group">
+          <div class="vits-form-row">
+            <label class="vits-form-label">발송처 선택</label>
+            <div class="vits-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'sender-address',
+                name: 'senderAddress',
+                placeholder: '발송처 선택',
+                options: [
+                  { value: '메가존', text: '메가존' },
+                  { value: '네이버', text: '네이버' },
+                  { value: '비츠온', text: '비츠온' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '메가존',
+                disabled: false,
+              }) %>
+            </div>  
+          </div>
+          
+          <div class="vits-form-row">
+            <label class="vits-form-label">운임 선택</label>
+            <div class="vits-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'sender-fee',
+                name: 'senderFee',
+                placeholder: '운임 지불 방법 선택',
+                options: [
+                  { value: '착불', text: '착불' },
+                  { value: '대납', text: '대납' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '운임 선택',
+                disabled: false,
+              }) %>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="vits-form-row-group">
         <div class="vits-form-row">
           <label class="vits-form-label">보내는 사람</label>
-          <input type="text" />
+          <div class="vits-form-field">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'sender-name',
+              name: 'senderName',
+              label: '보내는 사람',
+              placeholder: '보내는 사람',
+              value: '메가존',
+              required: true,
+              rootClass: 'size-large'
+            }) %>
+          </div>
         </div>
 
         <div class="vits-form-row">
           <label class="vits-form-label">보내는 사람 연락처</label>
-          <input type="text" />
+          <div class="vits-form-field">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'sender-phone',
+              name: 'senderPhone',
+              label: '보내는 사람 연락처',
+              placeholder: '보내는 사람 연락처',
+              required: true,
+              rootClass: 'size-large'
+            }) %>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-

@@ -58,8 +58,22 @@
                 label: '회사명(기관명)',
                 placeholder: '회사명(기관명)을 입력해주세요.',
                 required: true,
-                rootClass: 'size-large'
+                rootClass: 'size-large',
               }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                  id: 'user-email',
+                  name: 'email',
+                  label: '이메일',
+                  placeholder: '이메일을 입력하세요',
+                  required: true,
+                  value: 'test@example.com',
+                  isInvalid: true,
+                  validationMessage: '필수 입력 항목입니다.',
+                  rootClass: 'size-large',
+                }) %>
             </li>
           </ul>
         </div>
@@ -102,7 +116,21 @@
                 placeholder: '내용을 입력해주세요.',
                 count: true,
                 maxLength: 200,
-                rootClass: 'size-large'
+                rootClass: 'size-large',
+              }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                id: 'memoB',
+                name: 'memoB',
+                placeholder: '내용을 입력해주세요.',
+                count: true,
+                maxLength: 200,
+                isInvalid: true,
+                validationMessage: '필수 입력 항목입니다.',
+                value: '입력했어요',
+                rootClass: 'size-large',
               }) %>
             </li>
           </ul>

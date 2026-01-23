@@ -28,22 +28,26 @@
               <!-- E: vits-grid-side-left -->
 
               <!-- S: vits-grid-main -->
-              <div class="vits-grid-main vits-main-cart-order" style="min-height: 1800px; background: darkcyan">
+              <div class="vits-grid-main vits-main-cart-order">
                 <!-- 메인 컨텐츠 -->
                 <section class="main-cart-section">
-                  <div style="padding: 20px; background-color: black; color: white">장바구니 영역</div>
                   <%- include(`${_src}/views/components/pg-cart-oder/cart-list.ejs`) %>
                 </section>
 
                 <section class="main-shipping-section">
-                  <div style="padding: 20px; background-color: black; color: white">배송정보 영역</div>
                   <%- include(`${_src}/views/components/pg-cart-oder/shipping-list.ejs`) %>
                 </section>
               </div>
               <!-- E: vits-grid-main -->
 
               <!-- S: vits-grid-right -->
-              <aside class="vits-grid-side vits-grid-side-right vits-side-payment" style="background: indianred; height: 600px; position: sticky; top: 0; flex: 0 0 20%; width: 20%">
+              <aside class="vits-grid-side vits-grid-side-right vits-side-payment" style="background: indianred; position: sticky; top: 0; width: 40%">
+                <section class="main-payment-section">
+                  <div style="padding: 20px; background-color: #000; color: #fff; ">
+                    결제 영역
+                  </div>
+                  <%- include(`${_src}/views/components/pg-cart-oder/payment-list.ejs`) %>
+                </section>
                 <!-- 오른쪽 메뉴 -->
               </aside>
               <!-- E: vits-grid-right -->
