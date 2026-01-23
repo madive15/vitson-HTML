@@ -19,7 +19,6 @@ import '../ui/swiper-test.js';
 import '../ui/chip-button.js';
 import '../ui/quantity-stepper.js';
 import '../ui/form/textarea.js';
-import '../ui/kendo/kendo-dropdown.js';
 import '../ui/header/header-rank.js';
 import '../ui/header/header-search.js';
 import '../ui/header/header-gnb.js';
@@ -34,6 +33,7 @@ import '../ui/category/plp-view-toggle.js';
 import '../ui/more-expand.js';
 import '../ui/filter-expand.js';
 import '../ui/cart-order/cart-order.js';
+import '../ui/kendo/kendo.js';
 
 (function (window) {
   'use strict';
@@ -48,6 +48,7 @@ import '../ui/cart-order/cart-order.js';
    * UI.init();
    */
   window.UI.init = function () {
+    if (window.UI.kendo && window.UI.kendo.init) window.UI.kendo.init();
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
     if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
@@ -58,19 +59,12 @@ import '../ui/cart-order/cart-order.js';
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-
-    if (window.VitsKendoDropdown) {
-      window.VitsKendoDropdown.initAll(document);
-      window.VitsKendoDropdown.autoBindStart(document.body);
-    }
-
     if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
     if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
     if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
     if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
     if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
-
     if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
     if (window.UI.inputSearch && window.UI.inputSearch.init) window.UI.inputSearch.init();
     if (window.UI.plpTitlebarResearch && window.UI.plpTitlebarResearch.init) window.UI.plpTitlebarResearch.init();
