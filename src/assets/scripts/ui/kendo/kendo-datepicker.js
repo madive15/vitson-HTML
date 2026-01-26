@@ -131,6 +131,7 @@
 
     var navTitleScheduled = false;
     var dayNameScheduled = false;
+    var monthNameScheduled = false;
 
     function scheduleNavTitle() {
       if (navTitleScheduled) return;
@@ -153,9 +154,11 @@
     function forceUpdateUI() {
       scheduleNavTitle();
       scheduleDayNames();
+      scheduleMonthNames();
       window.setTimeout(function () {
         scheduleNavTitle();
         scheduleDayNames();
+        scheduleMonthNames();
       }, 0);
     }
 
@@ -168,6 +171,43 @@
       $calendarWrap.find('.k-button-text').html(title);
     }
 
+    // 월 영문 -> 숫자로 표시
+    function updateMonthNames() {
+      $calendarWrap.find('.k-calendar-view td .k-link').each(function () {
+        var $link = $(this);
+        var text = $link.text().trim();
+
+        var monthMap = {
+          Jan: '1월',
+          Feb: '2월',
+          Mar: '3월',
+          Apr: '4월',
+          May: '5월',
+          Jun: '6월',
+          Jul: '7월',
+          Aug: '8월',
+          Sep: '9월',
+          Oct: '10월',
+          Nov: '11월',
+          Dec: '12월'
+        };
+
+        if (monthMap[text]) {
+          $link.text(monthMap[text]);
+        }
+      });
+    }
+
+    function scheduleMonthNames() {
+      if (monthNameScheduled) return;
+      monthNameScheduled = true;
+      window.requestAnimationFrame(function () {
+        monthNameScheduled = false;
+        updateMonthNames();
+      });
+    }
+
+    // 영문 요일 표시
     function updateDayNames() {
       var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       $calendarWrap.find('th').each(function (index) {
@@ -181,6 +221,7 @@
     var uiObserver = new MutationObserver(function () {
       scheduleNavTitle();
       scheduleDayNames();
+      scheduleMonthNames();
       highlightRange();
     });
     uiObserver.observe($calendarWrap[0], {childList: true, subtree: true, characterData: true});
