@@ -14,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>sample-main</title>
+  <title>주문상세</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -39063,165 +39063,880 @@
         <div class="vits-wrap">
           <!-- S: vits-grid -->
           <div class="vits-grid">
-            <!-- S: vits-grid-side-left -->
-            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-            <!-- E: vits-grid-side-left -->
+            <div class="vits-grid-main vits-main-my-orders">
+              <div class="vits-grid-area vits-inner">
+                <!-- S: vits-grid-side-left -->
+                
+<!-- prettier-ignore -->
 
-            <!-- S: vits-grid-main -->
-            <div class="vits-grid-main vits-main-{1depth 이름}">
-              <!-- 섹션 단위 컴포넌트 삽입 -->
 
-              <div style="height: 800px; background: darkcyan">영역1</div>
-              <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 100">스티키</div>
-              <div style="height: 1500px; background: green">영역3</div>
+ 
 
-              <div style="height: 400px; background: yellow; padding: 100px">
-                <!-- 증감 가변 인풋 (1) -->
-                <div
-                  class="stepper"
-                  data-step="5"
-                  data-min="0"
-                  data-max="9999"
-                  style="display: inline-flex; align-items: center; padding: 10px; background: palegreen; gap: 8px"
-                >
-                  <button
-                    type="button"
-                    class="stepper__btn stepper__btn--minus"
-                    style="
-                      flex: 0 0 40px;
-                      width: 40px;
-                      height: 40px;
-                      border: 1px solid #999;
-                      background: #eee;
-                      cursor: pointer;
-                    "
-                  >
-                    감소
-                  </button>
 
-                  <!-- 숫자 + 단위 묶음(내용에 따라 자연스럽게 늘어나도록 inline-flex) -->
-                  <div
-                    class="stepper__wrap"
-                    style="
-                      flex: 0 0 auto;
-                      display: inline-flex;
-                      align-items: center;
-                      height: 40px;
-                      padding: 0 10px;
-                      background: green;
-                      box-sizing: border-box;
-                    "
-                  >
-                    <input
-                      type="text"
-                      class="stepper__input"
-                      inputmode="numeric"
-                      pattern="[0-9]*"
-                      value="0"
-                      style="
-                        display: block;
-                        width: 40px;
-                        min-width: 40px;
-                        height: 100%;
-                        border: 0;
-                        outline: none;
-                        appearance: none;
-                        background: orange;
-                        box-sizing: border-box;
-                        text-align: center;
-                        font: 16px/1 sans-serif;
-                        padding: 0;
-                        margin: 0;
-                      "
-                    />
+<aside class="vits-grid-side vits-grid-side-left vits-side-mypage">
+  <h2 class="mypage-sidemenu-title">마이페이지</h2>
+  <nav class="mypage-sidemenu" aria-label="마이페이지 메뉴">
+    <ul class="mypage-sidemenu-list">
+      
+      <li class="mypage-sidemenu-item" data-menu-id="order">
+        <a class="mypage-sidemenu-link" href="/mypage/order">주문관리</a>
 
-                    <!-- 단위: 서버(EJS)에서 렌더링되는 텍스트 그대로 -->
-                    <span
-                      class="stepper__unit"
-                      style="
-                        display: inline-block;
-                        margin-left: 6px;
-                        white-space: nowrap;
-                        color: #fff;
-                        font: 16px/1 sans-serif;
-                      "
-                    >
-                      kg
-                    </span>
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-delivery">
+            <a class="mypage-sidemenu-link" href="/mypage/order/delivery">주문/배송조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-cancel">
+            <a class="mypage-sidemenu-link" href="/mypage/order/cancel">취소/반품내역</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-frequent">
+            <a class="mypage-sidemenu-link" href="/mypage/order/frequent">자주구매</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-like">
+            <a class="mypage-sidemenu-link" href="/mypage/order/like">좋아요</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="docs">
+        <a class="mypage-sidemenu-link" href="/mypage/docs">서류관리</a>
 
-                    <!-- 숫자 폭 측정용(숨김) -->
-                    <span
-                      class="stepper__measure"
-                      aria-hidden="true"
-                      style="
-                        position: absolute;
-                        visibility: hidden;
-                        white-space: pre;
-                        font: 16px/1 sans-serif;
-                        padding: 0;
-                        margin: 0;
-                      "
-                    ></span>
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-tax">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/tax">세금계산서 조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-quote">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/quote">견적서 조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-bill">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/bill">청구서 조회</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="benefit">
+        <a class="mypage-sidemenu-link" href="/mypage/benefit">혜택관리</a>
+
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="benefit-coupon">
+            <a class="mypage-sidemenu-link" href="/mypage/benefit/coupon">쿠폰함</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="info">
+        <a class="mypage-sidemenu-link" href="/mypage/info">정보관리</a>
+
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-member">
+            <a class="mypage-sidemenu-link" href="/mypage/info/member">회원정보 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-address">
+            <a class="mypage-sidemenu-link" href="/mypage/info/address">배송지 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-pay">
+            <a class="mypage-sidemenu-link" href="/mypage/info/pay">비츠온페이 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-postpay">
+            <a class="mypage-sidemenu-link" href="/mypage/info/postpay">후불관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-qna">
+            <a class="mypage-sidemenu-link" href="/mypage/info/qna">1:1 문의</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-bulk">
+            <a class="mypage-sidemenu-link" href="/mypage/info/bulk">대량구매문의</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-account">
+            <a class="mypage-sidemenu-link" href="/mypage/info/account">계정등록</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-survey">
+            <a class="mypage-sidemenu-link" href="/mypage/info/survey">설문조사</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+    </ul>
+  </nav>
+</aside>
+
+                <!-- E: vits-grid-side-left -->
+
+                <!-- S: vits-grid-main -->
+                <div class="vits-grid-main-content main-content-my-orders">
+                  <div class="vits-mypage-content-headline">
+                    <a href="" class="vits-mypage-content-back">
+                      <h2 class="vits-mypage-content-title">
+                        <span class="icon">
+                          <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+                        </span>
+                        주문상세
+                      </h2>
+                    </a>
+                    <div class="vits-mypage-content-order">
+                      <p class="order-title">주문번호</p>
+                      <p class="order-number">ORD-2024-001234</p>
+                    </div>
                   </div>
 
-                  <button
-                    type="button"
-                    class="stepper__btn stepper__btn--plus"
-                    style="
-                      flex: 0 0 40px;
-                      width: 40px;
-                      height: 40px;
-                      border: 1px solid #999;
-                      background: #eee;
-                      cursor: pointer;
-                    "
-                  >
-                    증가
-                  </button>
+                  <div class="vits-mypage-panel">
+                    <!-- 주문상세 상품 리스트 -->
+                    
+
+<!-- my-records-box.ejs 상단에 기본값 설정 -->
+<!-- prettier-ignore -->
+
+
+<div class="vits-mypage-records-box type-detail">
+  <ul class="vits-mypage-records-list">
+    <li class="vits-mypage-records-item">
+      <div class="vits-mypage-records">
+        <ul class="mypage-record-list">
+          <li class="mypage-record-item">
+            <div class="mypage-record-box">
+              <div class="mypage-record-head" data-scss="head">
+                <div class="mypage-record-meta">
+                  <p class="mypage-record-date">주문상품</p>
                 </div>
+
+                <ul class="mypage-record-actions">
+                  
+                  <li>
+                    <!-- prettier-ignore -->
+                    
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-print" aria-hidden="true"></i>
+ </span>
+  <span class="text">거래명세서출력</span>
+</button>
+
+                  </li>
+                   
+                  <li>
+                    <!-- prettier-ignore -->
+                    
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
+ </span>
+  <span class="text">주문 문의하기</span>
+</button>
+
+                  </li>
+                  
+                </ul>
               </div>
 
-              <section data-swiper data-swiper-loop="true" data-swiper-autoplay="3000">
-  <div class="swiper" style="width: 100%; height: 400px">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <a href="#" class="hero-item">배너 1</a>
-      </div>
-      <div class="swiper-slide">
-        <a href="#" class="hero-item">배너 2</a>
-      </div>
-      <div class="swiper-slide">
-        <a href="#" class="hero-item">배너 3</a>
-      </div>
-    </div>
+              <div class="mypage-record-body" data-scss="body">
+                <ul class="mypage-record-lines">
+                  <li class="mypage-record-line">
+                    <div class="mypage-record-thumb">
+                      <div class="product-thumb">
+                        <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+                      </div>
+                    </div>
 
-    <div class="swiper-pagination"></div>
+                    <div class="mypage-record-info">
+                      <div class="product-identity">
+                        <p class="product-code"><span class="sr-only">상품코드</span>63531</p>
+                        <p class="product-title">
+                          <span class="product-brand">엠포르지오아르마니</span>
+                          <span class="product-name"
+                            >더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP
+                            접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)</span
+                          >
+                        </p>
+                      </div>
+                      <div class="product-subinfo">
+                        <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
+                        <p class="product-meta">
+                          <span class="product-tax">과세</span> /
+                          <span class="product-qty">1개</span>
+                        </p>
+                      </div>
+                      
+<!-- prettier-ignore -->
 
-    <button type="button" class="swiper-button-prev" aria-label="이전"></button>
-    <button type="button" class="swiper-button-next" aria-label="다음"></button>
-  </div>
-</section>
- <div data-toggle-scope data-toggle-group="true">
-  <button
-    type="button"
-    data-toggle-btn
-    data-toggle-outside="true"
-    data-toggle-group-except="true"
-    data-toggle-target="panel"
-    aria-expanded="false"
-  >
-    토글 버튼
-  </button>
 
-  <div data-toggle-box="panel">토글 패널</div>
+
+<div class="vits-product-flags">
+     
+  <span class="vits-product-flag is-count">5회 구매</span>
+  
 </div>
 
-            </div>
-            <!-- E: vits-grid-main -->
 
-            <!-- S: vits-grid-right -->
-            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
-            <!-- E: vits-grid-right -->
+                    </div>
+
+                    <div class="mypage-record-status">
+                      <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="06">배송중</p>
+
+
+                    </div>
+
+                    <div class="mypage-record-pay">
+                      <p class="product-price">999,999,999원</p>
+                      <div class="mypage-record-tools">
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">장바구니 담기</span>
+
+  
+</button>
+
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">반품신청</span>
+
+  
+</button>
+
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">배송조회</span>
+
+  
+</button>
+
+                      </div>
+                    </div>
+                  </li>
+                  <li class="mypage-record-line">
+                    <div class="mypage-record-thumb">
+                      <div class="product-thumb">
+                        <img src="https://vitsonimg.co.kr/images/productsNew/89/89044.png" alt="" />
+                      </div>
+                    </div>
+
+                    <div class="mypage-record-info">
+                      <div class="product-identity">
+                        <p class="product-code"><span class="sr-only">상품코드</span>89044</p>
+                        <p class="product-title">
+                          <span class="product-brand">밀크</span>
+                          <span class="product-name">A3용지</span>
+                        </p>
+                      </div>
+                      <div class="product-subinfo">
+                        <p class="product-spec"><span class="sr-only">규격</span>75g(1BOX/5권 1250매)</p>
+                        <p class="product-meta">
+                          <span class="product-tax">과세</span> /
+                          <span class="product-qty">1개</span>
+                        </p>
+                      </div>
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+     
+  <span class="vits-product-flag is-count">3회 구매</span>
+  
+</div>
+
+
+                    </div>
+
+                    <div class="mypage-record-status">
+                      <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="06">반품접수</p>
+
+
+                    </div>
+
+                    <div class="mypage-record-pay">
+                      <p class="product-price">999,999,999원</p>
+                      <div class="mypage-record-tools">
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">장바구니 담기</span>
+
+  
+</button>
+
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">반품신청</span>
+
+  
+</button>
+
+                        
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">배송조회</span>
+
+  
+</button>
+
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mypage-record-foot" data-scss="foot">
+                <div class="mypage-record-cart">
+                  <!-- prettier-ignore -->
+                  
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-bag" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">전체 상품 장바구니 담기</span>
+
+  
+</button>
+
+                </div>
+                <p class="mypage-record-total">
+                  <span class="mypage-record-total-label">총 결제금액</span>
+                  <span class="mypage-record-total-value">999,999,999,000원</span>
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+                    <!-- 배송정보 -->
+                    
+
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연락처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연락처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 위탁판매자 X -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>퀵배송</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 위탁판매자일 때 - 퀵 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>퀵배송</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 위탁판매자일 때 - 화물 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>화물사</dt>
+            <dd>경동화물</dd>
+            <dt>화물지점</dt>
+            <dd>삼성동지점</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>화물 (착불)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+                    <!-- 결제정보 -->
+                    
+<!-- 카드 결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">카드 결제</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">신한카드 (1234)</p>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-document-paper" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">영수증보기</span>
+
+  
+</button>
+
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 무통장입금 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">무통장입금</p>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 실시간계좌이체 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">실시간계좌이체</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">우리은행 (345678)</p>
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 여신결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">여신결제</p>
+              <div class="payment-method-detail">
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">여신 사용현황 보기</span>
+
+  
+</button>
+
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+
+                    <div class="vits-mypage-panel-actions">
+                      
+
+
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-outline-secondary icon-left btn-fix-w160"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-arrow-left" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">목록으로</span>
+
+  
+</button>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- E: vits-grid-main -->
+              </div>
+            </div>
           </div>
           <!-- E: vits-grid -->
         </div>
@@ -39471,109 +40186,5 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
-
-    <!-- 증감 가변 인풋 (2) -->
-    <script>
-      (function ($) {
-        if (!$) return;
-
-        function toNumber(v, fallback) {
-          var n = Number(v);
-          return Number.isFinite(n) ? n : fallback;
-        }
-
-        function onlyDigits(str) {
-          return String(str || '').replace(/\D+/g, '');
-        }
-
-        function clamp(n, min, max) {
-          if (n < min) n = min;
-          if (n > max) n = max;
-          return n;
-        }
-
-        function syncMeasureFont($input, $measure) {
-          // input과 동일한 폰트로 측정(span)
-          var font = $input.css('font');
-          $measure.css({
-            font: font,
-            letterSpacing: $input.css('letter-spacing')
-          });
-        }
-
-        function resizeInput($input, $measure, minW) {
-          var v = $input.val();
-          var text = v && String(v).length ? String(v) : '0';
-          $measure.text(text);
-
-          // 커서 여유
-          var extra = 16;
-          var w = $measure[0].offsetWidth + extra;
-
-          if (w < minW) w = minW;
-          $input.css('width', w + 'px');
-        }
-
-        function getValue($input, min, max) {
-          var digits = onlyDigits($input.val());
-          if ($input.val() !== digits) $input.val(digits);
-          var n = digits === '' ? 0 : toNumber(digits, 0);
-          return clamp(n, min, max);
-        }
-
-        function setValue($input, n, min, max) {
-          $input.val(String(clamp(n, min, max)));
-        }
-
-        function syncDisabled($root, v, step, min, max) {
-          $root.find('.stepper__btn--minus').prop('disabled', v - step < min);
-          $root.find('.stepper__btn--plus').prop('disabled', v + step > max);
-        }
-
-        // 여러 개 stepper도 동작하도록 each 처리
-        $('.stepper').each(function () {
-          var $root = $(this);
-          var $input = $root.find('.stepper__input');
-          var $measure = $root.find('.stepper__measure');
-
-          var step = toNumber($root.data('step'), 1);
-          var min = toNumber($root.data('min'), -Infinity);
-          var max = toNumber($root.data('max'), Infinity);
-
-          var minW = 40;
-
-          syncMeasureFont($input, $measure);
-
-          function refresh() {
-            var v = getValue($input, min, max);
-            resizeInput($input, $measure, minW);
-            syncDisabled($root, v, step, min, max);
-          }
-
-          $root.on('click', '.stepper__btn--minus', function () {
-            var v = getValue($input, min, max);
-            setValue($input, v - step, min, max);
-            refresh();
-          });
-
-          $root.on('click', '.stepper__btn--plus', function () {
-            var v = getValue($input, min, max);
-            setValue($input, v + step, min, max);
-            refresh();
-          });
-
-          $root.on('input', '.stepper__input', function () {
-            refresh();
-          });
-
-          $(window).on('resize', function () {
-            syncMeasureFont($input, $measure);
-            resizeInput($input, $measure, minW);
-          });
-
-          refresh();
-        });
-      })(window.jQuery);
-    </script>
   </body>
 </html>

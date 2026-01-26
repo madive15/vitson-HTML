@@ -1,6 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="ko">
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
   
 <head>
   <meta charset="UTF-8" />
@@ -10,30 +14,34 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title></title>
+  <title>주문완료/실패</title>
   <!-- favicon -->
-  <link rel="shortcut icon" href="../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
 
   <!-- new 켄도 -->
-  <link href="../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
-  <link href="../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
-  <link href="../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
 
   <!-- public css 링크-->
-  <link rel="stylesheet" href="../public/resources/css/mro/reset.css" />
-  <link rel="stylesheet" href="../public/resources/css/mro/sub_layout.css" />
-  <link rel="stylesheet" href="../public/resources/css/swiper_2.css" />
-  <link rel="stylesheet" href="../public/resources/css/XEIcon/xeicon.min.css" />
-  <link rel="stylesheet" href="../public/resources/css/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="../public/resources/css/common/catalog.css" />
-<script defer src="../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
-  <body>
-    <!-- // inlint style -->
-    <style></style>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
 
-    
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      
 <!-- prettier-ignore -->
 
 
@@ -88,7 +96,7 @@
   <div class="vits-header-main">
     <div class="vits-inner">
       <a href="/" class="header-main-logo">
-        <img src="../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+        <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
       </a>
       <div class="header-main-search">
         <!-- S: header-main-search-rank (실시간 검색어) -->
@@ -684,7 +692,7 @@
                   <div class="gnb-reco-item-card">
                     <div class="product-thumb">
                       <a href="#!">
-                        <img src="../public/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
                       </a>
                     </div>
                     <div class="product-body">
@@ -745,7 +753,7 @@
                   <div class="gnb-reco-item-card">
                     <div class="product-thumb">
                       <a href="#!">
-                        <img src="../public/resources/img/mro/renewal/temp/temp-product-thumb-03.png" alt="" />
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-03.png" alt="" />
                       </a>
                     </div>
                     <div class="product-body">
@@ -809,7 +817,7 @@
                   <div class="gnb-reco-item-card">
                     <div class="product-thumb">
                       <a href="#!">
-                        <img src="../public/resources/img/mro/renewal/temp/temp-product-thumb-05.png" alt="" />
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-05.png" alt="" />
                       </a>
                     </div>
                     <div class="product-body">
@@ -1067,16 +1075,286 @@
 <!-- E: vits-header -->
 
 
-    <!--// content(start)-->
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-side-left -->
+            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
+            <!-- E: vits-grid-side-left -->
 
-    <!-- content(end) //-->
-
-    <!-- src, public 이미지 가이드
-  <img src="/home/runner/work/vitson-HTML/vitson-HTML/src/assets/images/camera.png" alt="src img"/>
-  <img src="/home/runner/work/vitson-HTML/vitson-HTML/public/resources/images/camera.png" alt="public img" />
-  -->
-
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-order-complete">
+              <!-- 메인 컨텐츠 -->
+              <section class="main-order-complete-section">
+                
+<div class="vits-order-complete">
+  <div class="order-page-title">
+    <h1>주문완료</h1>
+  </div>
+  <!-- 주문 완료 상태 안내 -->
+  <div class="order-complete-status">
     
+
+<!-- prettier-ignore -->
+
+
+<section class="vits-empty-state" data-ui="empty-state">
+  <div class="vits-empty-state-content">
+    <div class="vits-empty-state-text">
+      <h2 class="vits-empty-state-title">주문이 완료/실패 되었습니다.</h2>
+      
+    </div>
+    <div class="vits-empty-state-icon" aria-hidden="true">
+      <i class="ic ic-box" aria-hidden="true"></i>
+
+    </div>
+  </div>
+  
+</section>
+
+    <p class="order-complete-number">
+      주문번호 <strong>ora0008432397</strong>
+    </p>
+    <p class="order-complete-notice">
+      다음의 실패 사유를 확인한 후 다시 시도해 주세요
+    </p>
+  </div>  
+
+  <section class="order-section-wrap">
+    <!-- 상품 정보 -->
+    <div class="order-section order-product">
+      <h2 class="order-section-title">상품정보</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">주문 상품</span>
+            <span class="info-value">
+              더블 OPP 접착테이프 투명 (초강력 접착제) 외 5건
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- 배송 / 결제 정보 영역 -->
+    <div class="order-section-group">
+      <!-- 배송 정보 -->
+      <section class="order-section order-shipping">
+        <h2 class="order-section-title">배송정보</h2>
+  
+        <div class="order-section-content">
+          <ul class="info-list">
+            <li class="info-item">
+              <span class="info-label">받는 사람</span>
+              <span class="info-value">김철수</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">연락처</span>
+              <span class="info-value">010-1234-5678</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송 주소</span>
+              <span class="info-value">
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층
+              </span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송메모</span>
+              <span class="info-value">부재시 경비실에 맡겨주세요</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송방법</span>
+              <span class="info-value">택배 <span class="info-value-status">(대납)</span></span>
+            </li>
+          </ul>
+        </div>
+      </section>
+  
+      <!-- 결제 정보 -->
+      <section class="order-section order-payment">
+        <h2 class="order-section-title">결제정보</h2>
+  
+        <div class="order-section-content">
+          <ul class="price-list">
+            <li class="price-item">
+              <span class="price-label">상품금액</span>
+              <span class="price-value">1,030,000원</span>
+            </li>
+            <li class="price-item is-discount">
+              <span class="price-label">할인</span>
+              <span class="price-value">-30,000원</span>
+            </li>
+            <li class="price-item">
+              <span class="price-label">VAT</span>
+              <span class="price-value">+1,030,000원</span>
+            </li>
+            <li class="price-item">
+              <span class="price-label">배송비</span>
+              <span class="price-value">+1,030,000원</span>
+            </li>
+          </ul>
+  
+          <div class="price-total">
+            <span class="price-total-label">최종결제금액</span>
+            <strong class="price-total-value">1,030,000원</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <!-- 결제 수단 -->
+    <!-- [D] case : 결제 수단 . 카드드-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">카드 결제</span>
+            <span class="info-value">신한카드 (****-****-****-1234)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 수단 . 무통장 입금-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">무통장 입금</span>
+            <span class="info-value">국민 12345-04-531311</span>
+            <span class="info-label">예금주명</span>
+            <span class="info-value">주식회사 일신비츠온</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label"></span>
+            <p class="info-value-notice">
+              주문 후 <strong>영업일 5일 내</strong>에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.
+              
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 수단 . 여러 결제-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">여신결제</span>
+            <span class="info-value">여신결제</span>
+            <!-- prettier-ignore -->
+            
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">여신 사용 현황 보기</span>
+
+  
+</button>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 실피-->
+    <div class="order-section order-slip">
+      <h2 class="order-section-title">
+        <span class="icon">
+          <i class="ic ic-info" aria-hidden="true"></i>
+
+        </span>
+        실패 상세 정보
+      </h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">결제 수단</span>
+            <span class="info-value">카드결제 (신한카드 ****-****-****-1234)</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">최종 결제 금액</span>
+            <span class="info-value"><strong>30,000원</strong></span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">주문 실패 사유</span>
+            <span class="info-value"><strong class="miss">체크 카드 한도 초과</strong></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+                <!--  -->
+                <div class="vits-order-complete-buttons">
+                  
+
+
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-outline-secondary icon-left btn-home"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-arrow-left" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">홈으로</span>
+
+  
+</button>
+
+                    
+
+
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-primary  btn-cart"
+  
+  >
+  
+
+  <span class="text">장바구니로 가기</span>
+
+  
+</button>
+
+                </div>
+              </section>
+            </div>
+            <!-- E: vits-grid-main -->
+
+            <!-- S: vits-grid-right -->
+            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
+            <!-- E: vits-grid-right -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      
 
 <!-- prettier-ignore -->
 
@@ -1085,7 +1363,7 @@
   <div class="vits-inner">
     <div class="vits-footer-brand">
       <h2 class="vits-footer-logo">
-        <img src="../public/resources/img/mro/renewal/logo/logo-footer.svg" alt="비츠온엠알오" />
+        <img src="../../public/resources/img/mro/renewal/logo/logo-footer.svg" alt="비츠온엠알오" />
       </h2>
     </div>
     <div class="vits-footer-company">
@@ -1134,13 +1412,13 @@
       <div class="vits-footer-utility-group">
         <div class="vits-footer-sns">
           <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
-            <img src="../public/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+            <img src="../../public/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
           </a>
           <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
-            <img src="../public/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+            <img src="../../public/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
           </a>
           <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
-            <img src="../public/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+            <img src="../../public/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
           </a>
         </div>
         <div class="footer-familysite">
@@ -1222,10 +1500,10 @@
       <div class="vits-footer-cert">
         <div class="footer-cert-logos">
           <a href="" class="footer-cert-logo cert-kftc">
-            <img src="../public/resources/img/mro/renewal/logo/logo-kftc.png" alt="공정거래위원회" />
+            <img src="../../public/resources/img/mro/renewal/logo/logo-kftc.png" alt="공정거래위원회" />
           </a>
           <a href="" class="footer-cert-logo cert-inipay">
-            <img src="../public/resources/img/mro/renewal/logo/logo-inipay.png" alt="INIPAY" />
+            <img src="../../public/resources/img/mro/renewal/logo/logo-inipay.png" alt="INIPAY" />
           </a>
         </div>
         <div class="footer-cert-desc">
@@ -1299,12 +1577,16 @@
   </section>
   <!-- E: vits-footer-modal -->
 </footer>
- 
+
+    </section>
+    <!-- E: vits-wrapper -->
+
+    
 <!-- jquery -->
 <!-- Kendo UI Core JavaScript -->
-<script src="../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
-<script src="../public/resources/kendo_new/js/kendo.all.min.js"></script>
-<script src="../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
 
 <!-- kr 설정 n$, 원 -->
 <script type="text/javaScript" language="javascript">
@@ -1316,7 +1598,17 @@
 
 
     <script>
-      // inlint scripts
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'fail'일 때 주문 실패 화면 표시
+      if (type === 'slip') {
+        const section = document.querySelector('.vits-order-complete');
+        if (section) {
+          section.classList.add('order-slip');
+        }
+      }
     </script>
   </body>
 </html>

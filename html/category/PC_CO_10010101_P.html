@@ -1,9 +1,5 @@
 
 <!DOCTYPE html>
-<!-- 
-  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
-    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
-  -->
 <html lang="ko" class="vits-scope">
   
 <head>
@@ -33,13 +29,9 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
-  <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
-    <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
-    <!-- E: Skip Navigation -->
 
-    <!-- S: vits-wrapper -->
     <section class="vits-wrapper">
       
 <!-- prettier-ignore -->
@@ -39057,84 +39049,55 @@
 <!-- E: vits-header -->
 
 
-      <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
-        <!-- S: vits-wrap -->
         <div class="vits-wrap">
-          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <!-- S: vits-grid-side-left -->
-            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-            <!-- E: vits-grid-side-left -->
-
-            <!-- S: vits-grid-main -->
             <div class="vits-grid-main vits-main-plp">
               <div class="vits-inner" style="padding: 100px 0">
-                <!-- 트리거 버튼 -->
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  data-modal-btn
-                  data-modal-target="likeModal"
-                  data-modal-type="modal"
-                  data-modal-outside="true"
-                  data-modal-esc="true"
-                  data-modal-lock="true"
-                  aria-expanded="false"
+                  onclick="VitsKendoWindow.open('likeModal')"
                 >
-                  <span class="text">비교함팝업</span>
+                  <span class="text">보관함담기팝업</span>
                 </button>
               </div>
 
-              <!-- 모달 -->
               <!-- prettier-ignore -->
+              
               
 
 
 
-<!-- 모달 -->
 <div 
-  class="vits-modal width-480 theme-like"
-  data-modal-box="likeModal"
-  data-modal-type="modal"
+  id="likeModal"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:480}'
   role="dialog"
   aria-modal="true"
   aria-labelledby="likeModal-title"
   aria-describedby="likeModal-subtitle"
+  style="display:none;"
 >
-  <!-- 딤 레이어 -->
-  <div class="vits-modal-dim" data-modal-dim="likeModal"></div>
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="likeModal-title">좋아요</h2>
 
-  <!-- 모달 Inner -->
-  <div class="vits-modal-inner">
-    <!-- 헤더 -->
-    <div class="vits-modal-header">
-      <div class="vits-modal-header-content">
-        <h2 class="vits-modal-title" id="likeModal-title">
-          좋아요
-        </h2>
-        
-          <p class="vits-modal-subtitle" id="likeModal-subtitle">
-            상품을 담을 폴더를 선택하세요
-          </p>
-        
-      </div>
-      <button 
-        type="button" 
-        class="vits-modal-close"
-        data-modal-close 
-        aria-label="닫기"
-      >
-        <i class="ic ic-x" aria-hidden="true"></i>
+      <p class="vits-modal-subtitle" id="likeModal-subtitle">상품을 담을 폴더를 선택하세요</p>
 
-      </button>
     </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('likeModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
 
-    <!-- 컨텐츠 -->
-    <div class="vits-modal-content">
-      <div class="vits-modal-content-inner">
-        
-          
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content">
+  
+    
 
 <!-- prettier-ignore -->
 
@@ -39217,57 +39180,32 @@
 </div>
 
 
-        
-      </div>
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vits-modal-footer">
+
+    <div class="vits-modal-buttons is-double">
+
+      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('likeModal')">
+        <span class="text">취소</span>
+      </button>
+
+      <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('likeModal')">
+        <span class="text">확인</span>
+      </button>
+
     </div>
 
-    <!-- 푸터 -->
-    
-      <div class="vits-modal-footer">
-        
-          <div class="vits-modal-buttons is-double">
-            
-              <button
-                type="button"
-                class="vits-modal-btn vits-modal-btn-secondary"
-                
-                  data-modal-close
-                
-                
-              >
-                <span class="text">취소</span>
-              </button>
-            
-              <button
-                type="button"
-                class="vits-modal-btn vits-modal-btn-primary"
-                
-                  data-modal-close
-                
-                
-              >
-                <span class="text">확인</span>
-              </button>
-            
-          </div>
-        
-      </div>
-    
   </div>
+
 </div>
-
             </div>
-            <!-- E: vits-grid-main -->
-
-            <!-- S: vits-grid-right -->
-            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
-            <!-- E: vits-grid-right -->
           </div>
-          <!-- E: vits-grid -->
         </div>
-        <!-- E: vits-wrap -->
       </main>
-      <!-- E: vits-main -->
 
       
 
@@ -39347,6 +39285,8 @@
   class="vits-select type-dark vits-select-dropup"
   data-vits-select
    data-select-id="plp-sort" 
+  
+  
   
 >
   <button
@@ -39492,7 +39432,6 @@
 </footer>
 
     </section>
-    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->

@@ -364,63 +364,105 @@
           </ul>
         </div>
 
-        <h3 class="vits-guide-subtitle">type basic (3)</h3>
-        <div class="vits-guide-code"> <code>
-          <pre>
-class="checkbox-single-{s, m, l}" 로 구분합니다. <br>           
-&lt;label class="checkbox-single-s"&gt;
-  &lt;input type="checkbox" name="ckbox1" value="checkbox-single-s" /&gt;
-  &lt;span class="sr-only"&gt;단독 체크박스 (S)&lt;/span&gt;
-&lt;/label&gt;
-
-&lt;label class="checkbox-single-m"&gt;
-  &lt;input type="checkbox" name="ckbox2" value="checkbox-single-m" /&gt;
-  &lt;span class="sr-only"&gt;단독 체크박스 (M)&lt;/span&gt;
-&lt;/label&gt;
-
-&lt;label class="checkbox-single-l"&gt;
-  &lt;input type="checkbox" name="ckbox3" value="checkbox-single-l" /&gt;
-  &lt;span class="sr-only"&gt;단독 체크박스 (L)&lt;/span&gt;
-&lt;/label&gt;
----------------------------텍스트와 같이 사용 할 경우 -----------------------------------
-&lt;label class="checkbox-single-s"&gt;
-  &lt;input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" /&gt;
-  &lt;span class="sr-only"&gt;동의 체크란&lt;/span&gt;
-  &lt;p class="agree-text"&gt;
-    동의하기 버튼 같은 UI가 필요할 때 사용합니다.
-  &lt;/p&gt;
-&lt;/label&gt;
-          </pre>
-        </code>
+        <h3 class="vits-guide-subtitle">type single</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+  datas: [
+    {
+      className: 's',
+      name: 'ckbox1',
+      value: 'checkbox-single-s',
+      srText: '단독 체크박스 (S)',
+    },
+    {
+      className: 'm',
+      name: 'ckbox2',
+      value: 'checkbox-single-m',
+      checked: true,
+      srText: '단독 체크박스 (M)',
+    },
+    {
+      className: 'l',
+      name: 'ckbox3',
+      value: 'checkbox-single-l',
+      srText: '단독 체크박스 (L)',
+    },
+    {
+      className: 's',
+      name: 'vits-cart-checkbox',
+      value: 'vits-cart-checkbox',
+      srText: '동의 체크란',
+      agreeText: '동의하기 같은 UI가 필요할 때 사용합니다.',
+    },
+  ],
+}) %&gt;
+            </pre>
+          </code>
         </div>
         <div class="vits-guide-wrap">
           <ul class="vits-guide-list full flex-start">
             <li>
-              <label class="checkbox-single-s">
-                <input type="checkbox" name="ckbox1" value="checkbox-single-s" />
-                <span class="sr-only">단독 체크박스 (S)</span>
-              </label>
-            </li>
-            <li>
-              <label class="checkbox-single-m">
-                <input type="checkbox" name="ckbox2" value="checkbox-single-m" checked/>
-                <span class="sr-only">단독 체크박스 (M)</span>
-              </label>
-            </li>
-            <li>
-              <label class="checkbox-single-l">
-                <input type="checkbox" name="ckbox3" value="checkbox-single-l" />
-                <span class="sr-only">단독 체크박스 (L)</span>
-              </label>
-            </li>
-            <li>
-              <label class="checkbox-single-s">
-                <input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" />
-                <span class="sr-only">동의 체크란</span>
-                <p class="agree-text">
-                  동의하기 버튼 같은 UI가 필요할 때 사용합니다.
-                </p>
-              </label>
+              <!-- prettier-ignore -->
+              
+
+
+  <label class="checkbox-single-s">
+    <input
+      type="checkbox"
+      name="ckbox1"
+      value="checkbox-single-s"
+      
+      
+      
+    />
+    <span class="sr-only">단독 체크박스 (S)</span> 
+    
+  </label>
+
+  <label class="checkbox-single-m">
+    <input
+      type="checkbox"
+      name="ckbox2"
+      value="checkbox-single-m"
+      
+      checked
+      
+    />
+    <span class="sr-only">단독 체크박스 (M)</span> 
+    
+  </label>
+
+  <label class="checkbox-single-l">
+    <input
+      type="checkbox"
+      name="ckbox3"
+      value="checkbox-single-l"
+      
+      
+      
+    />
+    <span class="sr-only">단독 체크박스 (L)</span> 
+    
+  </label>
+
+  <label class="checkbox-single-s">
+    <input
+      type="checkbox"
+      name="vits-cart-checkbox"
+      value="vits-cart-checkbox"
+      
+      
+      
+    />
+    <span class="sr-only">동의 체크란</span> 
+    
+      <p class="agree-text">동의하기 같은 UI가 필요할 때 사용합니다.</p>
+    
+  </label>
+
+
             </li>
           </ul>
         </div>

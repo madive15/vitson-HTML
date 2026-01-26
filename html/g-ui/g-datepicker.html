@@ -46,7 +46,14 @@
 
         <div class="vits-guide-code">
           <code>
-            <pre></pre>
+            <pre>
+&lt;%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+  id: 'testPicker1',
+  startName: 'startDate',
+  endName: 'endDate',
+  size: 'sm' // sm ? md(기본 - 사이즈 지정 X) ? lg
+}) %&gt;              
+            </pre>
           </code>
         </div>
 
@@ -55,26 +62,235 @@
             <li>
               <!-- 단일 날짜 -->
               <!-- prettier-ignore -->
-              <div class="vits-datepicker "><input type="text" id="search-date" data-ui="kendo-datepicker" data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;culture&amp;quot;:&amp;quot;ko-KR&amp;quot;}" placeholder="날짜 선택"  /></div>
+              
+
+
+<div class="vits-kendo-range-picker size-sm" 
+     id="testPicker1"
+     data-ui="kendo-range-picker"
+     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+    
+    <input type="hidden" 
+           class="js-start-date" 
+           name="startDate" 
+           value="">
+    
+    <input type="hidden" 
+           class="js-end-date" 
+           name="endDate" 
+           value="">
+    
+    <span class="picker-input k-picker k-datepicker">
+        <input type="text" 
+               class="picker-display k-input-inner js-range-display" 
+               placeholder="시작일 ~ 종료일" 
+               readonly 
+               >
+        
+        <button type="button" 
+                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+                >
+            <span class="icon">
+              <i class="ic ic-calendar" aria-hidden="true"></i>
+ 
+            </span>
+        </button>
+    </span>
+    
+    <div class="picker-popup js-calendar-popup">
+        <div class="js-kendo-calendar"></div>
+    </div>
+</div>
+              <p>height 28px / size-sm</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 -->
+              <!-- prettier-ignore -->
+              
+
+
+<div class="vits-kendo-range-picker size-md" 
+     id="testPicker2"
+     data-ui="kendo-range-picker"
+     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+    
+    <input type="hidden" 
+           class="js-start-date" 
+           name="startDate" 
+           value="">
+    
+    <input type="hidden" 
+           class="js-end-date" 
+           name="endDate" 
+           value="">
+    
+    <span class="picker-input k-picker k-datepicker">
+        <input type="text" 
+               class="picker-display k-input-inner js-range-display" 
+               placeholder="시작일 ~ 종료일" 
+               readonly 
+               >
+        
+        <button type="button" 
+                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+                >
+            <span class="icon">
+              <i class="ic ic-calendar" aria-hidden="true"></i>
+ 
+            </span>
+        </button>
+    </span>
+    
+    <div class="picker-popup js-calendar-popup">
+        <div class="js-kendo-calendar"></div>
+    </div>
+</div>
+              <p>height 32px / 기본 (사이즈 지정 X)</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 -->
+              <!-- prettier-ignore -->
+              
+
+
+<div class="vits-kendo-range-picker size-lg" 
+     id="testPicker3"
+     data-ui="kendo-range-picker"
+     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+    
+    <input type="hidden" 
+           class="js-start-date" 
+           name="startDate" 
+           value="">
+    
+    <input type="hidden" 
+           class="js-end-date" 
+           name="endDate" 
+           value="">
+    
+    <span class="picker-input k-picker k-datepicker">
+        <input type="text" 
+               class="picker-display k-input-inner js-range-display" 
+               placeholder="시작일 ~ 종료일" 
+               readonly 
+               >
+        
+        <button type="button" 
+                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+                >
+            <span class="icon">
+              <i class="ic ic-calendar" aria-hidden="true"></i>
+ 
+            </span>
+        </button>
+    </span>
+    
+    <div class="picker-popup js-calendar-popup">
+        <div class="js-kendo-calendar"></div>
+    </div>
+</div>
+              <p>height 36px / size-lg</p>
             </li>
           </ul>
         </div>
 
-        <h3 class="vits-guide-subtitle">범위 날짜</h3>
+        <h3 class="vits-guide-subtitle">단일 날짜 선택 (kendo-datepicker-single)</h3>
 
         <div class="vits-guide-code">
           <code>
-            <pre></pre>
+            <pre>
+&lt;%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+  id: 'testPickerSingle1',
+  name: 'singleDate',
+  size: 's', // 's' | 'm' | 'l' | 'size-s' | 'size-m' | 'size-l' (기본: 'm')
+  placeholder: '날짜를 선택하세요',
+  dataName: 'singleDate',
+  options: {}, // kendo DatePicker 옵션 객체
+  disabled: false,
+  wrapClass: '' // 추가 클래스
+}) %&gt;              
+            </pre>
           </code>
         </div>
 
         <div class="vits-guide-wrap">
           <ul class="vits-guide-list full flex-start">
-            <li>
+            <li class="vits-datepicker-single">
+              <!-- 단일 날짜 선택 - size-s -->
               <!-- prettier-ignore -->
-              <div class="vits-daterangepicker "><div id="search-period" data-ui="kendo-daterangepicker" data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;culture&amp;quot;:&amp;quot;ko-KR&amp;quot;,&amp;quot;messages&amp;quot;:{&amp;quot;startLabel&amp;quot;:&amp;quot;조회 시작일&amp;quot;,&amp;quot;endLabel&amp;quot;:&amp;quot;조회 종료일&amp;quot;}}"></div></div>
+              
+
+<div class="vits-datepicker-single size-s">
+  <input
+    class="datepicker-single"
+    type="text"
+    id="testPickerSingle1"
+    name="singleDate1"
+    data-ui="kendo-datepicker"
+    data-opt="{}"
+    
+    placeholder="날짜를 선택하세요"
+    
+  />
+</div>
+              <p>size-s</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 선택 - size-m (기본) -->
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-datepicker-single size-m">
+  <input
+    class="datepicker-single"
+    type="text"
+    id="testPickerSingle2"
+    name="singleDate2"
+    data-ui="kendo-datepicker"
+    data-opt="{}"
+    
+    placeholder="날짜를 선택하세요"
+    
+  />
+</div>
+              <p>size-m (기본)</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 선택 - size-l -->
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-datepicker-single size-l">
+  <input
+    class="datepicker-single"
+    type="text"
+    id="testPickerSingle3"
+    name="singleDate3"
+    data-ui="kendo-datepicker"
+    data-opt="{}"
+    
+    placeholder="날짜를 선택하세요"
+    
+  />
+</div>
+              <p>size-l</p>
             </li>
           </ul>
+        </div>
+
+        <div class="vits-guide-code">
+          <h4 class="vits-guide-code-title">파라미터 설명</h4>
+          <code>
+            <pre>
+- id: 선택 (string) - input 요소의 id 속성
+- name: 선택 (string) - input 요소의 name 속성
+- size: 선택 (string) - 's' | 'm' | 'l' | 'size-s' | 'size-m' | 'size-l' (기본: 'm')
+- wrapClass: 선택 (string) - 추가 클래스명
+- placeholder: 선택 (string) - placeholder 텍스트
+- dataName: 선택 (string) - data-name 속성 값
+- options: 선택 (object) - kendo DatePicker 옵션 객체 (함수는 넣지 말 것)
+            </pre>
+          </code>
         </div>
       </section>
       <!-- E: vits-guide-wrapper -->

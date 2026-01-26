@@ -234,6 +234,111 @@
             </li>
           </ul>
         </div>
+
+        <h3 class="vits-guide-subtitle">single (단일 라디오)</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+  name: 'tax-invoice',        // 라디오 그룹 이름
+  id: 'tax-invoice-single',    // 라디오 버튼 ID
+  value: 'single',             // 라디오 버튼 값
+  text: '개별 발급',            // 라디오 버튼 레이블 텍스트
+  checked: false,              // 기본값 false (true일 때만 기입해도 됨)
+  disabled: false,             // 기본값 false (true일 때만 기입해도 됨)
+  required: false,             // 기본값 false (true일 때만 기입해도 됨)
+  ariaControls: 'panel-transfer' // aria-controls 속성 (선택사항)
+}) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-single"
+    value="single"
+    
+    
+    
+    aria-controls="panel-transfer"
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급 <em>(추가 정보)</em></span>
+  
+</label>
+            </li>
+          </ul>
+        </div>
+
+        <h4 class="vits-guide-subtitle-small">checked 예제</h4>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-checked"
+    value="checked"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급 (선택됨)</span>
+  
+</label>
+            </li>
+          </ul>
+        </div>
+
+        <h4 class="vits-guide-subtitle-small">disabled 예제</h4>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-disabled"
+    value="disabled"
+    
+    disabled
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급 (비활성화)</span>
+  
+</label>
+            </li>
+          </ul>
+        </div>
       </section>
       <!-- E: vits-guide-wrapper -->
     </main>

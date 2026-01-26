@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>가이드 - 상태별 폰트</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">아이콘</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;--
+    status-text
+      - type + status 코드만으로 텍스트 자동 출력
+    
+    params:
+      - type: 'order' | 'claim' (필수)
+      - status: '01'~ (필수)  // 숫자(1)로 와도 내부에서 '01'로 보정
+      - tag: string (선택, default 'p')
+      - addClassName: string (선택)
+      - text: string (선택) // 있으면 매핑보다 우선(예외 처리용)
+
+    주문상태 type: order
+      - status="01" [ 주문접수 ]
+      - status="02" [ 결제완료 ]
+      - status="03" [ 주문완료 ]
+      - status="04" [ 주문확정 ]
+      - status="05" [ 배송준비중 ]
+      - status="06" [ 배송중 ]
+      - status="07" [ 배송완료 ]
+    
+    클라임 상태 type: claim
+      - status="01" [ 취소 ]
+      - status="02" [ 취소신청 ]
+      - status="03" [ 주문취소 ]
+      - status="04" [ 반품 ]
+      - status="05" [ 반품신청 ]
+      - status="06" [ 반품접수 ]
+      - status="07" [ 회수진행중 ]
+      - status="08" [ 회수완료 ]
+      - status="09" [ 반품완료 ]
+      - status="10" [ 반품취소 ]
+      - status="11" [ 반품승인불가 ]
+      - status="12" [ 반품불가 ]
+--&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list">
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="01">주문접수</p>
+
+
+              <p>type: 'order', status: 01</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="02">결제완료</p>
+
+
+              <p>type: 'order', status: 02</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="03">주문완료</p>
+
+
+              <p>type: 'order', status: 03</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="04">주문확정</p>
+
+
+              <p>type: 'order', status: 04</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="05">배송준비중</p>
+
+
+              <p>type: 'order', status: 05</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="06">배송중</p>
+
+
+              <p>type: 'order', status: 06</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-order-status" data-status="07">배송완료</p>
+
+
+              <p>type: 'order', status: 07</p>
+            </li>
+            
+          </ul>
+          <ul class="vits-guide-list">
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="01">취소</p>
+
+
+              <p>type: 'claim', status: 01</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="02">취소신청</p>
+
+
+              <p>type: 'claim', status: 02</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="03">주문취소</p>
+
+
+              <p>type: 'claim', status: 03</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="04">반품</p>
+
+
+              <p>type: 'claim', status: 04</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="05">반품신청</p>
+
+
+              <p>type: 'claim', status: 05</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="06">반품접수</p>
+
+
+              <p>type: 'claim', status: 06</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="07">회수진행중</p>
+
+
+              <p>type: 'claim', status: 07</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="08">회수완료</p>
+
+
+              <p>type: 'claim', status: 08</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="09">반품완료</p>
+
+
+              <p>type: 'claim', status: 09</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="10">반품취소</p>
+
+
+              <p>type: 'claim', status: 10</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="11">반품승인불가</p>
+
+
+              <p>type: 'claim', status: 11</p>
+            </li>
+            
+            <li>
+              <!-- prettier-ignore -->
+
+
+
+  <p class="text-claim-status" data-status="12">반품불가</p>
+
+
+              <p>type: 'claim', status: 12</p>
+            </li>
+            
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

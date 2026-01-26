@@ -39059,78 +39059,52 @@
 
       <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
-        <!-- S: vits-wrap -->
         <div class="vits-wrap">
-          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <!-- S: vits-grid-side-left -->
-            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-            <!-- E: vits-grid-side-left -->
-
-            <!-- S: vits-grid-main -->
             <div class="vits-grid-main vits-main-plp">
               <div class="vits-inner" style="padding: 100px 0">
-                <!-- 트리거 버튼 -->
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  data-modal-btn
-                  data-modal-target="compareModal"
-                  data-modal-type="modal"
-                  data-modal-outside="true"
-                  data-modal-esc="true"
-                  data-modal-lock="true"
-                  aria-expanded="false"
+                  onclick="VitsKendoWindow.open('cfModal')"
                 >
                   <span class="text">비교함팝업</span>
                 </button>
               </div>
 
-              <!-- 모달 -->
               <!-- prettier-ignore -->
+              
               
 
 
 
-<!-- 모달 -->
 <div 
-  class="vits-modal theme-compare"
-  data-modal-box="compareModal"
-  data-modal-type="modal"
+  id="cfModal"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='{&#34;draggable&#34;:true}'
   role="dialog"
   aria-modal="true"
-  aria-labelledby="compareModal-title"
+  aria-labelledby="cfModal-title"
   
+  style="display:none;"
 >
-  <!-- 딤 레이어 -->
-  <div class="vits-modal-dim" data-modal-dim="compareModal"></div>
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="cfModal-title">제품 비교하기</h2>
 
-  <!-- 모달 Inner -->
-  <div class="vits-modal-inner">
-    <!-- 헤더 -->
-    <div class="vits-modal-header">
-      <div class="vits-modal-header-content">
-        <h2 class="vits-modal-title" id="compareModal-title">
-          제품 비교하기
-        </h2>
-        
-      </div>
-      <button 
-        type="button" 
-        class="vits-modal-close"
-        data-modal-close 
-        aria-label="닫기"
-      >
-        <i class="ic ic-x" aria-hidden="true"></i>
-
-      </button>
     </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('cfModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
 
-    <!-- 컨텐츠 -->
-    <div class="vits-modal-content">
-      <div class="vits-modal-content-inner">
-        
-          
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content no-footer">
+  
+    
 
 <!-- prettier-ignore -->
 <section class="vits-plp-compare" aria-label="상품 비교" data-compare>
@@ -39330,27 +39304,16 @@
   })();
 </script>
 
-        
-      </div>
-    </div>
-
-    <!-- 푸터 -->
-    
+  
   </div>
+
+  <!-- 푸터 -->
+
 </div>
-
             </div>
-            <!-- E: vits-grid-main -->
-
-            <!-- S: vits-grid-right -->
-            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
-            <!-- E: vits-grid-right -->
           </div>
-          <!-- E: vits-grid -->
         </div>
-        <!-- E: vits-wrap -->
       </main>
-      <!-- E: vits-main -->
 
       
 
@@ -39430,6 +39393,8 @@
   class="vits-select type-dark vits-select-dropup"
   data-vits-select
    data-select-id="plp-sort" 
+  
+  
   
 >
   <button
@@ -39575,7 +39540,6 @@
 </footer>
 
     </section>
-    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->

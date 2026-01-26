@@ -368,6 +368,8 @@
 var utils = __webpack_require__(918);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
 var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/period-btn.js
+var period_btn = __webpack_require__(864);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
 var scroll_boundary = __webpack_require__(160);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/layer.js
@@ -668,6 +670,22 @@ var swiper_bundle = __webpack_require__(111);
           slidesPerView: 4
         }
       }
+    },
+    payment: {
+      slidesPerView: 2.5,
+      spaceBetween: 12,
+      speed: 400,
+      slidesOffsetAfter: 300,
+      breakpoints: {
+        0: {
+          slidesPerView: 2.5,
+          slidesOffsetAfter: 250
+        },
+        1024: {
+          slidesPerView: 2.5,
+          slidesOffsetAfter: 250
+        }
+      }
     }
   };
   function initSwipers() {
@@ -682,11 +700,11 @@ var swiper_bundle = __webpack_require__(111);
       // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
       const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
 
-      // offset 개별 제어
+      // offset 개별 제어 (data 속성 > preset.slidesOffset* > 기본값)
       const offsetBeforeAttr = el.getAttribute('data-offset-before');
       const offsetAfterAttr = el.getAttribute('data-offset-after');
-      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
-      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : preset.slidesOffsetBefore ?? DEFAULT_OFFSET.before;
+      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : preset.slidesOffsetAfter ?? DEFAULT_OFFSET.after;
 
       // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
       const desktopView = el.dataset.desktop;
@@ -732,9 +750,8 @@ var swiper_bundle = __webpack_require__(111);
           }
         }
       }
-      new swiper_bundle/* default */.A(el, {
+      const config = {
         slidesPerView: 5,
-        //기본값
         spaceBetween: preset.spaceBetween,
         speed: preset.speed,
         slidesOffsetBefore: offsetBefore,
@@ -749,7 +766,22 @@ var swiper_bundle = __webpack_require__(111);
           clickable: true
         },
         breakpoints: preset.breakpoints
+      };
+      ['centeredSlides', 'centeredSlidesBounds', 'centerInsufficientSlides', 'watchSlidesProgress'].forEach(function (key) {
+        if (preset[key] !== undefined) config[key] = preset[key];
       });
+      const swiperInstance = new swiper_bundle/* default */.A(el, config);
+
+      // payment 타입인 경우 슬라이드 클릭 시 선택 처리
+      if (type === 'payment') {
+        const slides = el.querySelectorAll('.swiper-slide');
+        slides.forEach(function (slide, index) {
+          slide.addEventListener('click', function () {
+            // 클릭된 슬라이드의 인덱스로 이동하여 swiper-slide-active 클래스가 자동으로 적용되도록 함
+            swiperInstance.slideTo(index);
+          });
+        });
+      }
     });
   }
   function waitForDependencies() {
@@ -1001,11 +1033,17 @@ var cart_order = __webpack_require__(421);
 var kendo_dropdown = __webpack_require__(47);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-datepicker.js
 var kendo_datepicker = __webpack_require__(952);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-datepicker-single.js
+var kendo_datepicker_single = __webpack_require__(405);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/kendo/kendo-window.js
+var kendo_window = __webpack_require__(238);
 ;// ./src/assets/scripts/ui/kendo/kendo.js
 /**
  * scripts/ui/kendo/kendo.js
  * @purpose Kendo UI 관련 모듈 통합 관리
  */
+
+
 
 
 (function (window) {
@@ -1018,9 +1056,13 @@ var kendo_datepicker = __webpack_require__(952);
         window.VitsKendoDropdown.initAll(document);
         window.VitsKendoDropdown.autoBindStart(document.body);
       }
-      if (window.VitsKendoDatepicker) {
-        window.VitsKendoDatepicker.initAll(document);
-        window.VitsKendoDatepicker.autoBindStart(document.body);
+      if (window.VitsSingleRangePicker) {
+        window.VitsSingleRangePicker.initAll(document);
+        window.VitsSingleRangePicker.autoBindStart(document.body);
+      }
+      if (window.VitsKendoWindow) {
+        window.VitsKendoWindow.initAll(document);
+        window.VitsKendoWindow.autoBindStart(document.body);
       }
       console.log('[kendo] all modules initialized');
     }
@@ -1064,6 +1106,7 @@ var kendo_datepicker = __webpack_require__(952);
 
 
 
+
 (function (window) {
   'use strict';
 
@@ -1079,6 +1122,7 @@ var kendo_datepicker = __webpack_require__(952);
   window.UI.init = function () {
     if (window.UI.kendo && window.UI.kendo.init) window.UI.kendo.init();
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.PeriodBtn && window.UI.PeriodBtn.init) window.UI.PeriodBtn.init();
     if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
     if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
@@ -2397,6 +2441,205 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 238:
+/***/ (function() {
+
+/**
+ * @file kendo-window.js
+ * @description Kendo Window 자동 초기화 모듈
+ *
+ * VitsKendoWindow.open('myWindow');
+ * VitsKendoWindow.close('myWindow');
+ * VitsKendoWindow.initAll();
+ */
+
+(function (window) {
+  'use strict';
+
+  var BODY_LOCK_CLASS = 'is-kendo-window-open';
+  var scrollY = 0;
+  var openedWindows = [];
+  function parseJsonSafe(str) {
+    try {
+      return JSON.parse(str);
+    } catch {
+      return null;
+    }
+  }
+  function lockBody() {
+    var $ = window.jQuery;
+    if ($('body').hasClass(BODY_LOCK_CLASS)) return;
+    var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    scrollY = window.pageYOffset || 0;
+    $('body').addClass(BODY_LOCK_CLASS).css({
+      position: 'fixed',
+      top: -scrollY + 'px',
+      left: 0,
+      right: 0,
+      overflow: 'hidden',
+      paddingRight: scrollbarWidth + 'px'
+    });
+  }
+  function unlockBody() {
+    var $ = window.jQuery;
+    if (!$('body').hasClass(BODY_LOCK_CLASS)) return;
+    $('body').removeClass(BODY_LOCK_CLASS).css({
+      position: '',
+      top: '',
+      left: '',
+      right: '',
+      overflow: '',
+      paddingRight: ''
+    });
+    window.scrollTo(0, scrollY);
+  }
+  function checkScroll(id) {
+    var $ = window.jQuery;
+    var $el = $('#' + id);
+    var $content = $el.find('.vits-modal-content');
+    if ($content.length) {
+      if ($content[0].scrollHeight > $content[0].clientHeight) {
+        $content.addClass('has-scroll');
+      } else {
+        $content.removeClass('has-scroll');
+      }
+    }
+  }
+  function initOne(el) {
+    var $ = window.jQuery;
+    var $el = $(el);
+    if ($el.data('kendoWindow')) return;
+    var optRaw = $el.attr('data-opt') || '{}';
+    var opts = parseJsonSafe(optRaw) || {};
+    var id = $el.attr('id');
+    var defaultOpts = {
+      title: false,
+      visible: false,
+      modal: true,
+      pinned: true,
+      draggable: false,
+      resizable: false,
+      actions: [],
+      open: function () {
+        lockBody();
+        if (openedWindows.indexOf(id) === -1) {
+          openedWindows.push(id);
+        }
+      },
+      close: function () {
+        var idx = openedWindows.indexOf(id);
+        if (idx > -1) openedWindows.splice(idx, 1);
+        if (openedWindows.length === 0) {
+          unlockBody();
+        }
+      }
+    };
+    var finalOpts = $.extend({}, defaultOpts, opts);
+
+    // draggable: true면 헤더를 드래그 핸들로 자동 지정
+    if (finalOpts.draggable === true) {
+      finalOpts.draggable = {
+        dragHandle: '.vits-modal-header'
+      };
+    }
+    $el.kendoWindow(finalOpts);
+
+    // draggable일 때 클래스 추가
+    if (finalOpts.draggable) {
+      $el.closest('.k-window').addClass('is-draggable');
+    }
+  }
+  function initAll(root) {
+    var $ = window.jQuery;
+    var $root = root ? $(root) : $(document);
+    $root.find('[data-ui="kendo-window"]').each(function () {
+      initOne(this);
+    });
+  }
+  function autoBindStart(container) {
+    if (!window.MutationObserver) return null;
+    var target = container || document.body;
+    initAll(target);
+    var obs = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        for (var j = 0; j < m.addedNodes.length; j++) {
+          var node = m.addedNodes[j];
+          if (!node || node.nodeType !== 1) continue;
+          initAll(node);
+        }
+      }
+    });
+    obs.observe(target, {
+      childList: true,
+      subtree: true
+    });
+    return obs;
+  }
+  function open(id, options) {
+    var $ = window.jQuery;
+    var $el = $('#' + id);
+    if (!$el.length) return;
+    var inst = $el.data('kendoWindow');
+    if (!inst) {
+      initOne($el[0]);
+      inst = $el.data('kendoWindow');
+    }
+    if (options && typeof options.onOpen === 'function') {
+      inst.unbind('open').bind('open', function () {
+        lockBody();
+        options.onOpen.call(inst);
+      });
+    }
+    if (inst) {
+      inst.center().open();
+
+      // 스크롤 여부 체크
+      setTimeout(function () {
+        checkScroll(id);
+      }, 0);
+    }
+  }
+  function close(id) {
+    var $ = window.jQuery;
+    var $el = $('#' + id);
+    var inst = $el.data('kendoWindow');
+    if (inst) {
+      $el.find('.vits-modal-content').removeClass('has-scroll');
+      inst.close();
+    }
+  }
+
+  // 리사이즈 시 열린 윈도우 중앙 재정렬 + 스크롤 체크
+  window.jQuery(window).on('resize', function () {
+    var $ = window.jQuery;
+    openedWindows.forEach(function (id) {
+      var inst = $('#' + id).data('kendoWindow');
+      if (inst) {
+        inst.center();
+        checkScroll(id);
+      }
+    });
+  });
+
+  // 딤 클릭 시 닫기
+  window.jQuery(document).on('click', '.k-overlay', function () {
+    var $ = window.jQuery;
+    openedWindows.forEach(function (id) {
+      var inst = $('#' + id).data('kendoWindow');
+      if (inst) inst.close();
+    });
+  });
+  window.VitsKendoWindow = {
+    initAll: initAll,
+    autoBindStart: autoBindStart,
+    open: open,
+    close: close
+  };
+})(window);
+
+/***/ }),
+
 /***/ 265:
 /***/ (function() {
 
@@ -2943,6 +3186,261 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 405:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/kendo/kendo-datepicker-single.js
+ * @description
+ * 단일 DatePicker 초기화 모듈
+ * - 월 이동 애니메이션 제거
+ * - 요일명(Sun~Sat) 완전 고정 (왕복 이동 포함)
+ * - ESLint no-unused-vars 완전 대응
+ */
+
+(function (window) {
+  'use strict';
+
+  var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  function parseJsonSafe(str) {
+    if (!str) return null;
+    try {
+      return JSON.parse(str.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+    } catch {
+      return null;
+    }
+  }
+  function parseBool(val) {
+    if (val === undefined || val === null) return null;
+    if (typeof val === 'boolean') return val;
+    var v = String(val).toLowerCase().trim();
+    if (v === 'true' || v === '1') return true;
+    if (v === 'false' || v === '0') return false;
+    return null;
+  }
+  function ensureKendoAvailable() {
+    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoDatePicker);
+  }
+  function initDatePicker(el) {
+    var $el = window.jQuery(el);
+    if ($el.data('kendoDatePicker')) return;
+    var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
+    var $calendarWrap = null;
+    function getCalendar() {
+      var inst = $el.data('kendoDatePicker');
+      return inst && inst.dateView && inst.dateView.calendar;
+    }
+    function resolveCalendarWrap() {
+      if ($calendarWrap && $calendarWrap.length) return $calendarWrap;
+      var cal = getCalendar();
+      if (cal) $calendarWrap = cal.element;
+      return $calendarWrap;
+    }
+    function applyCalendarClasses() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      var $outer = $el.closest('.vits-datepicker-single');
+      if (!$outer.length) return;
+      var classes = ($outer.attr('class') || '').split(/\s+/);
+      classes.forEach(function (cls) {
+        if (cls.indexOf('vits-') === 0) $wrap.addClass(cls);
+      });
+    }
+    var dayNameObserver = null;
+    var dayNameObserverTarget = null;
+    var dayNameApplyScheduled = false;
+    var headerMonthApplyScheduled = false;
+    function pad2(num) {
+      return num < 10 ? '0' + num : String(num);
+    }
+    function formatHeaderMonth(date) {
+      if (!date) return '';
+      return date.getFullYear() + '.' + pad2(date.getMonth() + 1);
+    }
+    function applyDayNamesImmediate() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      $wrap.find('th').each(function (i) {
+        var $th = window.jQuery(this);
+        var $link = $th.find('.k-link');
+        var nextText = DAY_NAMES[i];
+        if ($link.length) {
+          if ($link.text() !== nextText) $link.text(nextText);
+        } else if ($th.text() !== nextText) {
+          $th.text(nextText);
+        }
+      });
+      applyCalendarClasses();
+    }
+    function scheduleDayNameApply() {
+      if (dayNameApplyScheduled) return;
+      dayNameApplyScheduled = true;
+      window.requestAnimationFrame(function () {
+        dayNameApplyScheduled = false;
+        applyDayNamesImmediate();
+      });
+    }
+    function applyHeaderMonthImmediate() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      var cal = getCalendar();
+      var current = cal && typeof cal.current === 'function' ? cal.current() : null;
+      var nextText = formatHeaderMonth(current);
+      if (!nextText) return;
+      var $header = $wrap.find('.k-header, .k-calendar-header').first();
+      var $headerLink = $wrap.find('.k-nav-fast, .k-calendar-header .k-link, .k-header .k-link, .k-calendar-header .k-title, .k-header .k-title').first();
+      if (!$headerLink.length && $header.length) $headerLink = $header;
+      if (!$headerLink.length) return;
+      var $buttonText = $headerLink.find('.k-button-text').first();
+      if ($buttonText.length) {
+        if ($buttonText.text() !== nextText) $buttonText.text(nextText);
+      } else if ($headerLink.text() !== nextText) {
+        $headerLink.text(nextText);
+      }
+    }
+    function scheduleHeaderMonthApply() {
+      if (headerMonthApplyScheduled) return;
+      headerMonthApplyScheduled = true;
+      window.requestAnimationFrame(function () {
+        headerMonthApplyScheduled = false;
+        applyHeaderMonthImmediate();
+      });
+    }
+
+    /**
+     * 🔥 핵심 함수
+     * Calendar DOM 재렌더링이 끝난 "뒤"에
+     * 요일명을 무조건 다시 적용
+     */
+    function forceApplyDayNames() {
+      scheduleDayNameApply();
+      window.setTimeout(scheduleDayNameApply, 0);
+    }
+    function forceApplyHeaderMonth() {
+      scheduleHeaderMonthApply();
+      window.setTimeout(scheduleHeaderMonthApply, 0);
+    }
+    function ensureDayNameObserver() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap || !window.MutationObserver) return;
+      var target = $wrap[0];
+      if (dayNameObserver && dayNameObserverTarget === target) return;
+      if (dayNameObserver) {
+        dayNameObserver.disconnect();
+      }
+      dayNameObserverTarget = target;
+      dayNameObserver = new window.MutationObserver(function () {
+        scheduleDayNameApply();
+        scheduleHeaderMonthApply();
+      });
+      dayNameObserver.observe(target, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    }
+    function disableCalendarAnimation() {
+      var cal = getCalendar();
+      if (!cal) return;
+      try {
+        cal.setOptions({
+          animation: false
+        });
+      } catch {
+        cal.options.animation = false;
+      }
+    }
+    function updatePrevNavState() {
+      var cal = getCalendar();
+      var $wrap = resolveCalendarWrap();
+      if (!cal || !$wrap) return;
+      var minDate = opts.min instanceof Date ? opts.min : null;
+      if (!minDate) return;
+      var current = typeof cal.current === 'function' ? cal.current() : null;
+      if (!current) return;
+      var currentMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+      var minMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+      var isPrevBlocked = currentMonth <= minMonth;
+      var $prev = $wrap.find('.k-nav-prev').first();
+      if (!$prev.length) return;
+      if (isPrevBlocked) {
+        $prev.addClass('k-state-disabled').attr('aria-disabled', 'true');
+      } else {
+        $prev.removeClass('k-state-disabled').removeAttr('aria-disabled');
+      }
+    }
+
+    /* 옵션 */
+    opts.format = opts.format || 'yyyy.MM.dd';
+    opts.culture = opts.culture || 'ko-KR';
+    opts.footer = false;
+    opts.parseFormats = ['yyyy.MM.dd', 'yyyyMMdd', 'yyyy-MM-dd'];
+    opts.animation = false;
+    opts.calendar = opts.calendar || {};
+    opts.calendar.culture = opts.calendar.culture || 'en-US';
+    opts.calendar.animation = false;
+    opts.calendar.navigate = function () {
+      disableCalendarAnimation();
+      forceApplyDayNames();
+      forceApplyHeaderMonth();
+      updatePrevNavState();
+    };
+    opts.calendar.change = function () {
+      forceApplyDayNames();
+      forceApplyHeaderMonth();
+      updatePrevNavState();
+    };
+    if (!opts.min) {
+      var today = new Date();
+      opts.min = new Date(today.getFullYear(), today.getMonth(), 1);
+    }
+    $el.kendoDatePicker(opts);
+    var inst = $el.data('kendoDatePicker');
+    if (inst) {
+      disableCalendarAnimation();
+      ensureDayNameObserver();
+      forceApplyHeaderMonth();
+      updatePrevNavState();
+      if (inst.popup && inst.popup.setOptions) {
+        try {
+          inst.popup.setOptions({
+            animation: false
+          });
+        } catch {
+          // eslint-disable-next-line no-unused-vars
+          // no-op
+        }
+      }
+      inst.bind('open', function () {
+        disableCalendarAnimation();
+        ensureDayNameObserver();
+        forceApplyDayNames();
+        forceApplyHeaderMonth();
+        updatePrevNavState();
+      });
+    }
+    if (parseBool($el.attr('data-open')) && inst) {
+      window.setTimeout(function () {
+        inst.open();
+      }, 0);
+    }
+  }
+  function initAll() {
+    if (!ensureKendoAvailable()) return;
+    var targets = document.querySelectorAll('.vits-datepicker-single [data-ui="kendo-datepicker"]');
+    for (var i = 0; i < targets.length; i++) {
+      initDatePicker(targets[i]);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+})(window);
+
+/***/ }),
+
 /***/ 421:
 /***/ (function() {
 
@@ -2952,6 +3450,8 @@ if (document.body?.dataset?.guide === 'true') {
  * @description
  *  - 할인금액 토글 처리 (클릭 시 할인금액 상세 표시/숨김)
  *  - 배송방법 탭과 패널 매칭 처리 (data-method/data-panel 기반)
+ *  - 결제수단 탭과 패널 매칭 처리 (vits-payment-tab)
+ *  - 결제수단 라디오 버튼과 패널 매칭 처리 (vits-payment-item)
  * @maintenance
  */
 
@@ -3030,6 +3530,199 @@ if (document.body?.dataset?.guide === 'true') {
         var $wrap = $btn.closest(shippingWrapSelector);
         var method = $btn.attr('data-method');
         setShippingState($wrap, method);
+      });
+
+      // 결제수단 탭 처리
+      var paymentTabSelector = '.vits-payment-tab[role="tab"]';
+      var paymentTabPanelSelector = '.vits-payment-tab-panel[role="tabpanel"]';
+      function setPaymentTabState($tab) {
+        if (!$tab.length) return;
+        var tabId = $tab.attr('id');
+        var controlsId = $tab.attr('aria-controls');
+        var $tablist = $tab.closest('[role="tablist"]');
+        var $tabs = $tablist.find(paymentTabSelector);
+        var $parentPanel = $tablist.closest('.vits-payment-panel');
+        var $panels = $parentPanel.find(paymentTabPanelSelector);
+
+        // 모든 탭 비활성화
+        $tabs.each(function () {
+          var $t = $(this);
+          $t.removeClass('is-active');
+          $t.attr('aria-selected', 'false');
+          $t.attr('aria-expanded', 'false');
+        });
+
+        // 선택된 탭 활성화
+        $tab.addClass('is-active');
+        $tab.attr('aria-selected', 'true');
+
+        // 모든 패널 비활성화
+        $panels.each(function () {
+          var $p = $(this);
+          $p.removeClass('is-active');
+        });
+
+        // 해당하는 패널 활성화
+        if (controlsId) {
+          var $targetPanel = $('#' + controlsId);
+          if ($targetPanel.length) {
+            $targetPanel.addClass('is-active');
+            // aria-expanded 업데이트 (탭 버튼)
+            $tab.attr('aria-expanded', 'true');
+            // aria-labelledby 매칭 확인
+            var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+            if (!currentLabelledBy || currentLabelledBy !== tabId) {
+              $targetPanel.attr('aria-labelledby', tabId);
+            }
+          }
+        }
+
+        // 세금계산서 발급 섹션 표시/숨김 처리
+        updateTaxSectionVisibility();
+      }
+
+      // 결제수단 라디오 버튼과 패널 처리
+      var paymentItemSelector = '.vits-payment-item';
+      var paymentRadioSelector = '.vits-payment-item .radio-item input[type="radio"]';
+      var paymentPanelSelector = '.vits-payment-panel';
+      function setPaymentPanelState($radio) {
+        if (!$radio.length) return;
+        var radioId = $radio.attr('id');
+        var controlsId = $radio.attr('aria-controls');
+        var $item = $radio.closest(paymentItemSelector);
+        var $methodWrap = $item.closest('.vits-payment-method');
+        var $allItems = $methodWrap.find(paymentItemSelector);
+        var $allPanels = $methodWrap.find(paymentPanelSelector);
+
+        // 모든 패널 비활성화
+        $allPanels.each(function () {
+          var $p = $(this);
+          $p.removeClass('is-active');
+        });
+
+        // 모든 라디오 버튼의 aria-expanded를 false로 초기화
+        $allItems.find(paymentRadioSelector).each(function () {
+          var $r = $(this);
+          $r.attr('aria-expanded', 'false');
+        });
+
+        // 선택된 라디오 버튼의 패널 활성화
+        if (controlsId) {
+          var $targetPanel = $('#' + controlsId);
+          if ($targetPanel.length) {
+            $targetPanel.addClass('is-active');
+            // aria-expanded 업데이트 (선택된 라디오 버튼만 true)
+            $radio.attr('aria-expanded', 'true');
+            // aria-labelledby 매칭 확인
+            var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+            if (!currentLabelledBy || currentLabelledBy !== radioId) {
+              $targetPanel.attr('aria-labelledby', radioId);
+            }
+          } else {
+            // 패널을 찾을 수 없으면 false로 설정
+            $radio.attr('aria-expanded', 'false');
+          }
+        } else {
+          // aria-controls가 없으면 false로 설정
+          $radio.attr('aria-expanded', 'false');
+        }
+
+        // 세금계산서 발급 섹션 표시/숨김 처리
+        updateTaxSectionVisibility();
+
+        // pay-credit 선택 시 tax-invoice-batch 자동 체크
+        if (radioId === 'pay-credit') {
+          var $taxInvoiceBatch = $('#tax-invoice-batch');
+          if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
+            $taxInvoiceBatch.prop('checked', true).trigger('change');
+          }
+        }
+      }
+
+      // 세금계산서 발급 섹션 표시/숨김 처리 함수
+      function updateTaxSectionVisibility() {
+        var $taxSection = $('.vits-tax');
+        var showTax = false;
+
+        // 활성화된 탭 확인 (tab-simple-account)
+        var $activeTab = $(paymentTabSelector + '.is-active');
+        if ($activeTab.length && $activeTab.attr('id') === 'tab-simple-account') {
+          showTax = true;
+        }
+
+        // 체크된 라디오 버튼 확인 (pay-transfer, pay-bank, pay-credit)
+        if (!showTax) {
+          var checkedRadioId = $(paymentRadioSelector + ':checked').attr('id');
+          var showTaxIds = ['pay-transfer', 'pay-bank', 'pay-credit'];
+          if (showTaxIds.indexOf(checkedRadioId) !== -1) {
+            showTax = true;
+          }
+        }
+        if (showTax) {
+          $taxSection.addClass('is-active');
+        } else {
+          $taxSection.removeClass('is-active');
+        }
+      }
+
+      // 초기 상태 설정
+      // 모든 탭의 aria-expanded 초기화
+      $(paymentTabSelector).each(function () {
+        var $tab = $(this);
+        var isActive = $tab.hasClass('is-active');
+        var controlsId = $tab.attr('aria-controls');
+        if (controlsId) {
+          var $panel = $('#' + controlsId);
+          var isPanelActive = $panel.length && $panel.hasClass('is-active');
+          // 탭이 활성화되어 있고 패널도 활성화되어 있으면 true
+          $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
+        } else {
+          $tab.attr('aria-expanded', 'false');
+        }
+      });
+      $(paymentTabSelector + '.is-active').each(function () {
+        setPaymentTabState($(this));
+      });
+
+      // 초기 상태에서 모든 라디오 버튼의 aria-expanded 설정
+      $(paymentRadioSelector).each(function () {
+        var $radio = $(this);
+        var controlsId = $radio.attr('aria-controls');
+        var isChecked = $radio.is(':checked');
+        if (controlsId) {
+          var $panel = $('#' + controlsId);
+          var isPanelActive = $panel.length && $panel.hasClass('is-active');
+          // 체크되어 있고 패널이 활성화되어 있으면 true, 아니면 false
+          $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
+        } else {
+          $radio.attr('aria-expanded', 'false');
+        }
+      });
+      $(paymentRadioSelector + ':checked').each(function () {
+        setPaymentPanelState($(this));
+      });
+
+      // 초기 상태에서 pay-credit이 체크되어 있으면 tax-invoice-batch도 체크
+      var $payCredit = $('#pay-credit');
+      if ($payCredit.length && $payCredit.is(':checked')) {
+        var $taxInvoiceBatch = $('#tax-invoice-batch');
+        if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
+          $taxInvoiceBatch.prop('checked', true);
+        }
+      }
+
+      // 초기 상태에서 세금계산서 섹션 표시 여부 확인
+      updateTaxSectionVisibility();
+
+      // 결제수단 탭 클릭 이벤트
+      $(document).off('click.cartOrderPaymentTab', paymentTabSelector).on('click.cartOrderPaymentTab', paymentTabSelector, function (e) {
+        e.preventDefault();
+        setPaymentTabState($(this));
+      });
+
+      // 결제수단 라디오 버튼 변경 이벤트
+      $(document).off('change.cartOrderPaymentRadio', paymentRadioSelector).on('change.cartOrderPaymentRadio', paymentRadioSelector, function () {
+        setPaymentPanelState($(this));
       });
     }
   };
@@ -5390,6 +6083,114 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 864:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/period-btn.js
+ * @purpose 기간 선택 버튼 UI (그룹 기반 라디오 버튼 동작)
+ * @description
+ *  - 그룹: [data-ui="period-btn-group"][data-group="groupName"]
+ *  - 버튼: [data-ui="period-btn"][data-value="..."]
+ *  - 상태: aria-pressed(true/false)로만 제어
+ *  - 동작: 같은 그룹 내에서 1개 버튼만 활성화(상호배타적)
+ * @a11y
+ *  - aria-pressed 속성으로 활성/비활성 상태 전달
+ * @maintenance
+ *  - 페이지별 분기 금지(동작 동일)
+ *  - 비즈니스 로직은 콜백/이벤트로 외부에서 처리
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[period-btn] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var BTN_SELECTOR = '[data-ui="period-btn"]';
+
+  /**
+   * @purpose 그룹 내 버튼 이벤트 바인딩
+   * @param {jQuery} $group - period-btn-group 요소
+   * @returns {void}
+   */
+  function bindGroup($group) {
+    var groupName = $group.data('group');
+    $group.on('click', BTN_SELECTOR, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var value = $btn.data('value');
+      if (!value) {
+        console.warn('[period-btn] data-value is required');
+        return;
+      }
+
+      // 같은 그룹 내 다른 버튼 모두 비활성화
+      $group.find(BTN_SELECTOR).attr('aria-pressed', 'false');
+
+      // 클릭한 버튼만 활성화
+      $btn.attr('aria-pressed', 'true');
+      console.log('[period-btn] selected:', groupName, value);
+
+      // 외부 콜백 (옵션)
+      if (window.UI.PeriodBtn.onSelect) {
+        window.UI.PeriodBtn.onSelect(value, groupName);
+      }
+    });
+  }
+  window.UI.PeriodBtn = {
+    /**
+     * @purpose 초기화
+     * @returns {void}
+     */
+    init: function () {
+      $('[data-ui="period-btn-group"]').each(function () {
+        bindGroup($(this));
+      });
+      console.log('[period-btn] init');
+    },
+    /**
+     * @purpose 특정 그룹에서 특정 값으로 선택
+     * @param {string} groupName - data-group 값
+     * @param {string} value - data-value 값
+     * @returns {void}
+     */
+    setValue: function (groupName, value) {
+      var $group = $('[data-ui="period-btn-group"][data-group="' + groupName + '"]');
+      if (!$group.length) {
+        console.warn('[period-btn] group not found:', groupName);
+        return;
+      }
+      $group.find(BTN_SELECTOR).attr('aria-pressed', 'false');
+      var $btn = $group.find(BTN_SELECTOR + '[data-value="' + value + '"]');
+      if ($btn.length) {
+        $btn.attr('aria-pressed', 'true');
+        console.log('[period-btn] setValue:', groupName, value);
+      }
+    },
+    /**
+     * @purpose 특정 그룹의 현재 선택된 값 반환
+     * @param {string} groupName - data-group 값
+     * @returns {string|null}
+     */
+    getValue: function (groupName) {
+      var $group = $('[data-ui="period-btn-group"][data-group="' + groupName + '"]');
+      var $selected = $group.find(BTN_SELECTOR + '[aria-pressed="true"]');
+      return $selected.length ? $selected.data('value') : null;
+    },
+    /**
+     * @purpose 외부 콜백 (선택 시 실행)
+     * @type {Function|null}
+     */
+    onSelect: null
+  };
+  console.log('[period-btn] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 865:
 /***/ (function() {
 
@@ -5424,6 +6225,7 @@ if (document.body?.dataset?.guide === 'true') {
   var HIDDEN = '[data-vits-select-hidden]';
   var OPT = '.vits-select-option';
   var TITLE = '[data-plp-category-title]';
+  var PORTAL = '[data-vits-select-portal]';
 
   // 클래스
   var CLS_OPEN = 'vits-select-open';
@@ -5432,6 +6234,7 @@ if (document.body?.dataset?.guide === 'true') {
   var CLS_NO_OPTION = 'is-no-option';
   var CLS_SELECTED = 'vits-select-selected';
   var CLS_OPT_DISABLED = 'vits-select-option-disabled';
+  var CLS_PORTAL_LIST = 'vits-select-list-portal';
 
   // 이벤트 네임스페이스
   var NS = '.uiSelect';
@@ -5439,10 +6242,12 @@ if (document.body?.dataset?.guide === 'true') {
   // dropup 계산 상수
   var GUTTER = 8;
   var MIN_H = 120;
+  var PORTAL_GAP = 4;
 
   // 컨테이너/루트 키 분리(부분 렌더링 destroy 안정화)
   var DATA_CONTAINER_KEY = 'uiSelectContainerKey';
   var DATA_ROOT_KEY = 'uiSelectRootKey';
+  var DATA_PORTAL_ORIGIN = 'uiSelectPortalOrigin';
 
   // 스코프 저장소(scopeKey -> { $container, groups, openRoot })
   var scopes = {};
@@ -5467,6 +6272,11 @@ if (document.body?.dataset?.guide === 'true') {
   // 루트의 depth 반환
   function getDepth($root) {
     return parseInt($root.attr('data-depth'), 10) || 0;
+  }
+
+  // portal 여부 체크
+  function isPortal($root) {
+    return $root.is(PORTAL);
   }
 
   // 루트의 scopeKey 반환(없으면 0)
@@ -5505,14 +6315,48 @@ if (document.body?.dataset?.guide === 'true') {
     return $found;
   }
 
+  // root에 연결된 list 찾기 (portal 모드 대응)
+  function findList($root) {
+    // 일반 모드: 자식에서 찾기
+    var $list = $root.find(LIST);
+    if ($list.length) return $list;
+
+    // portal 모드: body에서 origin 기준으로 찾기
+    return $('body').children(LIST).filter(function () {
+      var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+      return $origin && $origin.is($root);
+    });
+  }
+
+  // portal list 닫기 (원위치 복귀)
+  function closePortal($root) {
+    var $list = $('body').children(LIST).filter(function () {
+      var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+      return $origin && $origin.is($root);
+    });
+    if (!$list.length) return;
+    $list.removeData(DATA_PORTAL_ORIGIN).removeClass(CLS_PORTAL_LIST).css({
+      position: '',
+      top: '',
+      left: '',
+      minWidth: '',
+      maxHeight: '',
+      zIndex: ''
+    }).appendTo($root);
+  }
+
   // 특정 루트 닫기
   function closeOne($root) {
     if (!$root || !$root.length) return;
-    $root.removeClass(CLS_OPEN);
+    $root.removeClass(CLS_OPEN + ' ' + CLS_DROPUP);
     $root.find(TRIGGER).attr('aria-expanded', 'false');
-    $root.find(LIST).each(function () {
-      this.style.maxHeight = '0px';
-    });
+    if (isPortal($root)) {
+      closePortal($root);
+    } else {
+      $root.find(LIST).each(function () {
+        this.style.maxHeight = '0px';
+      });
+    }
   }
 
   // 스코프 단위로 열린 셀렉트 닫기
@@ -5542,7 +6386,7 @@ if (document.body?.dataset?.guide === 'true') {
     return window;
   }
 
-  // 오픈 직전 dropup/최대높이 계산
+  // 오픈 직전 dropup/최대높이 계산 (일반 모드)
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
     var $trigger = $root.find(TRIGGER);
@@ -5572,11 +6416,66 @@ if (document.body?.dataset?.guide === 'true') {
     listEl.style.overflowY = 'auto';
   }
 
+  // portal 모드 열기
+  function openPortal($root) {
+    var $trigger = $root.find(TRIGGER);
+    var $list = $root.find(LIST);
+    if (!$trigger.length || !$list.length) return;
+    var rect = $trigger[0].getBoundingClientRect();
+    var customMaxH = $root.attr('data-max-height'); // 커스텀 max-height 읽기
+
+    // 숫자만 있으면 px 붙이기
+    if (customMaxH && /^\d+$/.test(customMaxH)) {
+      customMaxH = customMaxH + 'px';
+    }
+    $list.data(DATA_PORTAL_ORIGIN, $root).addClass(CLS_PORTAL_LIST).css({
+      position: 'fixed',
+      left: rect.left + 'px',
+      minWidth: rect.width + 'px',
+      zIndex: 9999
+    }).appendTo('body');
+    var listH = $list.outerHeight();
+    var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
+    var spaceAbove = rect.top - GUTTER;
+    var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
+    var maxH;
+    var calcMaxH;
+    var topPos;
+    var bottomPos;
+
+    // openPortal 함수 수정
+    if (shouldDropUp) {
+      calcMaxH = Math.max(spaceAbove, MIN_H) + 'px';
+      bottomPos = window.innerHeight - rect.top + PORTAL_GAP;
+      maxH = customMaxH || calcMaxH;
+      $list.css({
+        top: '',
+        bottom: bottomPos + 'px',
+        maxHeight: maxH
+      });
+      $root.addClass(CLS_DROPUP);
+    } else {
+      calcMaxH = Math.max(spaceBelow, MIN_H) + 'px';
+      topPos = rect.bottom + PORTAL_GAP;
+      maxH = customMaxH || calcMaxH;
+      $list.css({
+        top: topPos + 'px',
+        bottom: '',
+        maxHeight: maxH
+      });
+      $root.removeClass(CLS_DROPUP);
+    }
+  }
+
   // 특정 루트 오픈(스코프 단위 1개만 열림 유지)
   function openOne($root) {
     var scopeKey = getRootScopeKey($root);
     closeOpenedInScope(scopeKey);
-    applyDropDirection($root);
+    if (isPortal($root)) {
+      openPortal($root);
+    } else {
+      applyDropDirection($root);
+    }
     $root.addClass(CLS_OPEN);
     $root.find(TRIGGER).attr('aria-expanded', 'true');
     var scope = getScope(scopeKey);
@@ -5619,8 +6518,9 @@ if (document.body?.dataset?.guide === 'true') {
     var $value = $root.find(VALUE);
     if ($value.length) $value.text($value.attr('data-placeholder') || '');
     setHiddenVal($root, '');
-    $root.find(OPT).removeClass(CLS_SELECTED).attr('aria-selected', 'false');
-    if (clearOptions) $root.find(LIST).empty();
+    var $list = findList($root);
+    $list.find(OPT).removeClass(CLS_SELECTED).attr('aria-selected', 'false');
+    if (clearOptions) $list.empty();
   }
 
   // placeholder/옵션 제거 후 비활성
@@ -5639,7 +6539,7 @@ if (document.body?.dataset?.guide === 'true') {
 
   // 옵션 렌더링
   function renderOptions($root, items) {
-    var $list = $root.find(LIST);
+    var $list = findList($root);
     if (!$list.length) return;
     var html = '';
     for (var i = 0; i < items.length; i++) {
@@ -5659,7 +6559,8 @@ if (document.body?.dataset?.guide === 'true') {
 
   // 옵션 선택 처리(표시/hidden/a11y 동기화)
   function setSelected($root, $opt) {
-    $root.find(OPT).each(function () {
+    var $list = findList($root);
+    $list.find(OPT).each(function () {
       var $el = $(this);
       var sel = $el.is($opt);
       $el.toggleClass(CLS_SELECTED, sel);
@@ -5673,7 +6574,8 @@ if (document.body?.dataset?.guide === 'true') {
   function setSelectedByValue($root, value) {
     var v = toStr(value);
     if (!v) return false;
-    var $match = $root.find(OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]');
+    var $list = findList($root);
+    var $match = $list.find(OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]');
     if (!$match.length) return false;
     setSelected($root, $match.eq(0));
     return true;
@@ -5766,9 +6668,9 @@ if (document.body?.dataset?.guide === 'true') {
     var $d1 = byDepth[1] || $();
     var $d2 = byDepth[2] || $();
     var $d3 = byDepth[3] || $();
-    var $d3Opt = $d3.length ? $d3.find(OPT + '.' + CLS_SELECTED).last() : $();
-    var $d2Opt = $d2.length ? $d2.find(OPT + '.' + CLS_SELECTED).last() : $();
-    var $d1Opt = $d1.length ? $d1.find(OPT + '.' + CLS_SELECTED).last() : $();
+    var $d3Opt = $d3.length ? findList($d3).find(OPT + '.' + CLS_SELECTED).last() : $();
+    var $d2Opt = $d2.length ? findList($d2).find(OPT + '.' + CLS_SELECTED).last() : $();
+    var $d1Opt = $d1.length ? findList($d1).find(OPT + '.' + CLS_SELECTED).last() : $();
     var $pick = $d3Opt.length ? $d3Opt : $d2Opt.length ? $d2Opt : $d1Opt;
     if ($pick.length) $title.text($pick.text());
   }
@@ -5849,9 +6751,16 @@ if (document.body?.dataset?.guide === 'true') {
 
   // 이벤트 바인딩(1회)
   function bind() {
+    // 외부 클릭 시 닫기
     $(document).on('mousedown' + NS, function (e) {
-      if (!$(e.target).closest(ROOT).length) closeAllOpened();
+      var $target = $(e.target);
+      // portal list 클릭도 예외 처리
+      if (!$target.closest(ROOT).length && !$target.closest('.' + CLS_PORTAL_LIST).length) {
+        closeAllOpened();
+      }
     });
+
+    // 트리거 클릭
     $(document).on('click' + NS, ROOT + ' ' + TRIGGER, function (e) {
       e.preventDefault();
       var $root = $(this).closest(ROOT);
@@ -5863,25 +6772,88 @@ if (document.body?.dataset?.guide === 'true') {
       }
       openOne($root);
     });
+
+    // 옵션 클릭 (일반 모드)
     $(document).on('click' + NS, ROOT + ' ' + OPT, function (e) {
       e.preventDefault();
-      var $opt = $(this);
-      if ($opt.hasClass(CLS_OPT_DISABLED)) return;
-      var $root = $opt.closest(ROOT);
-      var depth = getDepth($root);
-      var scopeKey = getRootScopeKey($root);
-      setSelected($root, $opt);
-      closeOpenedInScope(scopeKey);
-      var url = toStr($opt.attr('data-url')).trim();
-      if (url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
-        return;
-      }
-      var group = getGroup($root);
-      if (!group) return;
-      applyBreadcrumb($root, depth);
-      updateCategoryTitle($root);
+      handleOptionClick($(this));
     });
+
+    // 옵션 클릭 (portal 모드 - body에 붙은 list)
+    $(document).on('click' + NS, '.' + CLS_PORTAL_LIST + ' ' + OPT, function (e) {
+      e.preventDefault();
+      handleOptionClick($(this));
+    });
+
+    // 모든 스크롤 감지 (capture phase)
+    document.addEventListener('scroll', function () {
+      Object.keys(scopes).forEach(function (k) {
+        var scope = scopes[k];
+        if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+          updatePortalPosition(scope.openRoot);
+        }
+      });
+    }, true);
+
+    // 리사이즈
+    $(window).on('resize' + NS, function () {
+      Object.keys(scopes).forEach(function (k) {
+        var scope = scopes[k];
+        if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+          updatePortalPosition(scope.openRoot);
+        }
+      });
+    });
+  }
+
+  // 옵션 클릭 공통 핸들러
+  function handleOptionClick($opt) {
+    if ($opt.hasClass(CLS_OPT_DISABLED)) return;
+
+    // portal 모드면 origin에서 root 찾기
+    var $list = $opt.closest(LIST);
+    var $root = $list.data(DATA_PORTAL_ORIGIN) || $opt.closest(ROOT);
+    var depth = getDepth($root);
+    var scopeKey = getRootScopeKey($root);
+    setSelected($root, $opt);
+    closeOpenedInScope(scopeKey);
+    var url = toStr($opt.attr('data-url')).trim();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    var group = getGroup($root);
+    if (!group) return;
+    applyBreadcrumb($root, depth);
+    updateCategoryTitle($root);
+  }
+
+  // portal 위치 갱신 (스크롤/리사이즈 대응)
+  function updatePortalPosition($root) {
+    if (!$root || !$root.length) return;
+    var $trigger = $root.find(TRIGGER);
+    var $list = $('body').children(LIST).filter(function () {
+      var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+      return $origin && $origin.is($root);
+    });
+    if (!$trigger.length || !$list.length) return;
+    var rect = $trigger[0].getBoundingClientRect();
+    var isDropUp = $root.hasClass(CLS_DROPUP);
+    if (isDropUp) {
+      $list.css({
+        left: rect.left + 'px',
+        minWidth: rect.width + 'px',
+        top: '',
+        bottom: window.innerHeight - rect.top + PORTAL_GAP + 'px'
+      });
+    } else {
+      $list.css({
+        left: rect.left + 'px',
+        minWidth: rect.width + 'px',
+        top: rect.bottom + PORTAL_GAP + 'px',
+        bottom: ''
+      });
+    }
   }
 
   // 스코프 초기화(컨테이너 단위)
@@ -6156,14 +7128,17 @@ if (document.body?.dataset?.guide === 'true') {
 /***/ (function() {
 
 /**
- * @file scripts/ui/kendo/kendo-datepicker.js
+ * @file scripts/ui/kendo/kendo-range-picker.js
  * @description
- * Kendo DatePicker/DateRangePicker 자동 초기화 모듈.
+ * Kendo Calendar 기반 단일 달력 Range Picker 자동 초기화 모듈.
  */
 
 (function (window) {
   'use strict';
 
+  // ============================================
+  // 유틸리티 함수
+  // ============================================
   function parseJsonSafe(str) {
     if (!str) return null;
     var decoded = str.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
@@ -6174,27 +7149,7 @@ if (document.body?.dataset?.guide === 'true') {
     }
   }
   function ensureKendoAvailable() {
-    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoDatePicker && window.jQuery.fn.kendoDateRangePicker);
-  }
-  function applyVitsClassToWrapper($wrap, inst) {
-    if (!$wrap || !$wrap.length || !inst) return;
-    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
-    if (inst.wrapper) {
-      for (var i = 0; i < classList.length; i++) {
-        if (classList[i].indexOf('vits-') === 0) {
-          inst.wrapper.addClass(classList[i]);
-        }
-      }
-    }
-    if (inst.popup && inst.popup.element) {
-      for (var j = 0; j < classList.length; j++) {
-        if (classList[j].indexOf('vits-') === 0) {
-          inst.popup.element.addClass(classList[j]);
-          var $ac = inst.popup.element.closest('.k-animation-container');
-          if ($ac && $ac.length) $ac.addClass(classList[j]);
-        }
-      }
-    }
+    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoCalendar);
   }
   function parseDateValue(val) {
     if (!val) return null;
@@ -6205,368 +7160,339 @@ if (document.body?.dataset?.guide === 'true') {
       return null;
     }
   }
-  function initDatePicker(el) {
-    var $el = window.jQuery(el);
-    if ($el.data('kendoDatePicker')) return;
-    var optRaw = $el.attr('data-opt') || '{}';
-    var opts = parseJsonSafe(optRaw);
-    if (!opts) {
-      opts = {};
+  function formatDate(date, format) {
+    if (!date) return '';
+    if (window.kendo && window.kendo.toString) {
+      return window.kendo.toString(date, format);
     }
-    var $wrap = $el.closest('.vits-datepicker');
-    if ($wrap.length && opts.appendTo === undefined) {
-      opts.appendTo = $wrap[0];
-    }
-    opts.format = opts.format || 'yyyy.MM.dd';
-    opts.culture = opts.culture || 'ko-KR';
-    opts.footer = false;
-    opts.parseFormats = ['yyyy.MM.dd', 'yyyyMMdd', 'yyyy-MM-dd'];
-    if (opts.value) {
-      opts.value = parseDateValue(opts.value);
-    }
-    if (opts.min) {
-      opts.min = parseDateValue(opts.min);
-    }
-    if (opts.max) {
-      opts.max = parseDateValue(opts.max);
-    }
-    $el.kendoDatePicker(opts);
-    var inst = $el.data('kendoDatePicker');
-    if (inst && inst.bind) {
-      inst.bind('open', function () {
-        applyVitsClassToWrapper($wrap, inst);
-      });
-      inst.bind('change', function () {
-        $el.trigger('datepicker:change', [this.value()]);
-      });
-    }
-    applyVitsClassToWrapper($wrap, inst);
-    $el.on('blur', function () {
-      window.setTimeout(function () {
-        var value = $el.val();
-        if (!value) return;
-        var numbers = value.replace(/[^\d]/g, '');
-        if (numbers.length > 0 && numbers.length !== 8) {
-          alert('날짜는 8자리 숫자로 입력해주세요. (예: 20260101)');
-          $el.val('');
-          if (inst && typeof inst.value === 'function') {
-            inst.value(null);
-          }
-          return;
-        }
-        if (numbers.length === 8) {
-          var year = parseInt(numbers.substring(0, 4));
-          var month = parseInt(numbers.substring(4, 6));
-          var day = parseInt(numbers.substring(6, 8));
-          if (month < 1 || month > 12) {
-            alert('월은 01~12 사이여야 합니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-            return;
-          }
-          if (day < 1 || day > 31) {
-            alert('일은 01~31 사이여야 합니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-            return;
-          }
-          try {
-            var date = new Date(year, month - 1, day);
-            if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-              alert('유효하지 않은 날짜입니다.');
-              $el.val('');
-              if (inst && typeof inst.value === 'function') {
-                inst.value(null);
-              }
-              return;
-            }
-            if (inst && typeof inst.value === 'function') {
-              inst.value(date);
-            }
-          } catch {
-            alert('날짜 형식이 올바르지 않습니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-          }
-        }
-      }, 200);
-    });
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1).padStart(2, '0');
+    var d = String(date.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
   }
-  function initDateRangePicker(el) {
-    var $el = window.jQuery(el);
-    if ($el.data('kendoDateRangePicker')) return;
+  function isSameDate(d1, d2) {
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+  }
+  function applyVitsClassToWrapper($wrap, $popup) {
+    if (!$wrap || !$wrap.length) return;
+    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
+    if ($popup && $popup.length) {
+      for (var i = 0; i < classList.length; i++) {
+        if (classList[i].indexOf('vits-') === 0) {
+          $popup.addClass(classList[i]);
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // Range Picker 초기화
+  // ============================================
+  function initRangePicker(el) {
+    var $ = window.jQuery;
+    var $el = $(el);
+    if ($el.data('vitsKendoRangePicker')) return;
     var optRaw = $el.attr('data-opt') || '{}';
     var opts = parseJsonSafe(optRaw) || {};
-    var $wrap = $el.closest('.vits-daterangepicker');
-    if ($wrap.length && opts.appendTo === undefined) {
-      opts.appendTo = $wrap[0];
-    }
     opts.format = opts.format || 'yyyy.MM.dd';
-    opts.culture = opts.culture || 'ko-KR';
-    opts.footer = false;
-    if (opts.range) {
-      opts.range = {
-        start: opts.range.start ? parseDateValue(opts.range.start) : null,
-        end: opts.range.end ? parseDateValue(opts.range.end) : null
-      };
-    }
+    opts.separator = opts.separator || ' ~ ';
+    opts.placeholder = opts.placeholder || '시작일 ~ 종료일';
     if (opts.min) opts.min = parseDateValue(opts.min);
     if (opts.max) opts.max = parseDateValue(opts.max);
-
-    // 힌트 텍스트 설정
-    var startText = opts.messages && opts.messages.startLabel ? opts.messages.startLabel : '시작일';
-    var endText = opts.messages && opts.messages.endLabel ? opts.messages.endLabel : '종료일';
-    $el.kendoDateRangePicker(opts);
-    var inst = $el.data('kendoDateRangePicker');
-    var isOpen = false;
-    var suppressOpenUntil = 0;
-
-    // ============================================
-    // 스타일 삽입 (최초 1회)
-    // ============================================
-    if (!document.getElementById('vits-daterange-mask-style')) {
-      var style = document.createElement('style');
-      style.id = 'vits-daterange-mask-style';
-      style.textContent = [
-      // 마스크(빈 값) 완전히 숨김
-      '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty {', '  color: transparent !important;', '}',
-      // 포커스 시에도 마스크 숨김 유지
-      '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty:focus {', '  color: transparent !important;', '}',
-      // 실제 값 있을 때 표시
-      '.vits-daterangepicker .k-dateinput .k-input-inner.has-value {', '  color: #333 !important;', '}',
-      // ★ 세그먼트 하이라이트(파란색) 제거
-      '.vits-daterangepicker .k-dateinput .k-input-inner::selection {', '  background: transparent !important;', '  color: inherit !important;', '}', '.vits-daterangepicker .k-dateinput .k-input-inner::-moz-selection {', '  background: transparent !important;', '  color: inherit !important;', '}',
-      // 커서는 보이게 (타이핑용)
-      '.vits-daterangepicker .k-dateinput .k-input-inner {', '  cursor: text !important;', '}',
-      // 힌트 스타일
-      '.vits-daterangepicker .vits-placeholder-hint {', '  position: absolute;', '  top: 50%;', '  transform: translateY(-50%);', '  color: #999;', '  font-size: 14px;', '  pointer-events: none;', '  white-space: nowrap;', '  z-index: 5;', '}',
-      // 전체 영역 클릭 가능하게
-      '.vits-daterangepicker .k-daterangepicker {', '  cursor: pointer;', '}'].join('\n');
-      document.head.appendChild(style);
+    var $wrap = $el;
+    var $display = $wrap.find('.js-range-display');
+    var $popup = $wrap.find('.js-calendar-popup');
+    var $toggle = $wrap.find('.js-calendar-toggle');
+    var $calendarWrap = $wrap.find('.js-kendo-calendar');
+    var $startInput = $wrap.find('.js-start-date');
+    var $endInput = $wrap.find('.js-end-date');
+    var state = {
+      startDate: null,
+      endDate: null,
+      isSelectingEnd: false,
+      isOpen: false
+    };
+    var startVal = $startInput.val();
+    var endVal = $endInput.val();
+    if (startVal) state.startDate = parseDateValue(startVal);
+    if (endVal) state.endDate = parseDateValue(endVal);
+    var calendarOpts = {
+      change: onCalendarChange,
+      navigate: onCalendarNavigate,
+      culture: 'en-US',
+      animation: false,
+      footer: false,
+      month: {
+        header: '#= kendo.toString(data.date, "yyyy.MM") #'
+      },
+      start: 'month',
+      depth: 'month'
+    };
+    if (opts.min) calendarOpts.min = opts.min;
+    if (opts.max) calendarOpts.max = opts.max;
+    $calendarWrap.kendoCalendar(calendarOpts);
+    var calendar = $calendarWrap.data('kendoCalendar');
+    var navTitleScheduled = false;
+    var dayNameScheduled = false;
+    function scheduleNavTitle() {
+      if (navTitleScheduled) return;
+      navTitleScheduled = true;
+      window.requestAnimationFrame(function () {
+        navTitleScheduled = false;
+        updateNavTitle();
+      });
     }
-
-    // ============================================
-    // 마스크 빈 값 판단 함수
-    // ============================================
-    function isMaskEmpty(val) {
-      if (!val) return true;
-      var emptyPatterns = ['year.month.day', 'yyyy.MM.dd', 'yyyy.mm.dd', '    .  .  ', '__.__.____', ''];
-      var trimmed = val.trim().toLowerCase();
-      for (var i = 0; i < emptyPatterns.length; i++) {
-        if (trimmed === emptyPatterns[i].toLowerCase()) return true;
-      }
-      return !/\d/.test(val);
+    function scheduleDayNames() {
+      if (dayNameScheduled) return;
+      dayNameScheduled = true;
+      window.requestAnimationFrame(function () {
+        dayNameScheduled = false;
+        updateDayNames();
+      });
     }
-
-    // ============================================
-    // 두 input 가져오기
-    // ============================================
-    function getTwoInputs() {
-      var $inputs = $wrap.find('input.k-input-inner');
-      return $inputs.length >= 2 ? {
-        $start: $inputs.eq(0),
-        $end: $inputs.eq(1)
-      } : null;
+    function forceUpdateUI() {
+      scheduleNavTitle();
+      scheduleDayNames();
+      window.setTimeout(function () {
+        scheduleNavTitle();
+        scheduleDayNames();
+      }, 0);
     }
+    function updateNavTitle() {
+      var currentDate = calendar.current();
+      var year = currentDate.getFullYear();
+      var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      var title = year + '<span class="nav-dot">.</span>' + month;
+      $calendarWrap.find('.k-button-text').html(title);
+    }
+    function updateDayNames() {
+      var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      $calendarWrap.find('th').each(function (index) {
+        var $th = $(this);
+        if ($th.text().trim().length <= 3) {
+          $th.text(dayNames[index]);
+        }
+      });
+    }
+    var uiObserver = new MutationObserver(function () {
+      scheduleNavTitle();
+      scheduleDayNames();
+      highlightRange();
+    });
+    uiObserver.observe($calendarWrap[0], {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
 
     // ============================================
-    // 힌트 요소 생성 (input 내부 위치)
+    // 이벤트 핸들러
     // ============================================
-    function ensureHints() {
-      var inputs = getTwoInputs();
-      if (!inputs) return null;
-      var $startWrap = inputs.$start.closest('.k-dateinput');
-      var $endWrap = inputs.$end.closest('.k-dateinput');
 
-      // position: relative 보장
-      $startWrap.css('position', 'relative');
-      $endWrap.css('position', 'relative');
-      var $hintStart = $startWrap.find('.vits-placeholder-hint');
-      var $hintEnd = $endWrap.find('.vits-placeholder-hint');
-      if (!$hintStart.length) {
-        $hintStart = window.jQuery('<span class="vits-placeholder-hint"></span>');
-        $hintStart.text(startText);
-        $startWrap.append($hintStart);
+    function onCalendarChange() {
+      var selectedDate = calendar.value();
+      if (!state.isSelectingEnd) {
+        state.startDate = selectedDate;
+        state.endDate = null;
+        state.isSelectingEnd = true;
+      } else {
+        if (selectedDate < state.startDate) {
+          state.endDate = state.startDate;
+          state.startDate = selectedDate;
+        } else {
+          state.endDate = selectedDate;
+        }
+        state.isSelectingEnd = false;
+        closePopup();
+        $el.trigger('rangepicker:change', [getPublicValue()]);
       }
-      if (!$hintEnd.length) {
-        $hintEnd = window.jQuery('<span class="vits-placeholder-hint"></span>');
-        $hintEnd.text(endText);
-        $endWrap.append($hintEnd);
+      updateDisplay();
+      updateHiddenInputs();
+      highlightRange();
+    }
+    function onCalendarNavigate() {
+      forceUpdateUI();
+      window.setTimeout(function () {
+        highlightRange();
+        updateNavTitle();
+        updateDayNames();
+      }, 10);
+    }
+    function highlightRange() {
+      // var $cells = $calendarWrap.find('td:not(.k-other-month)');
+      // 변경: 전체 td 포함
+      var $cells = $calendarWrap.find('td');
+      $cells.removeClass('k-range-start k-range-end k-range-mid');
+      if (state.startDate && state.endDate) {
+        $calendarWrap.addClass('has-range');
+      } else {
+        $calendarWrap.removeClass('has-range');
       }
-
-      // input의 padding-left에 맞춤
-      var padStart = parseInt(inputs.$start.css('paddingLeft'), 10) || 0;
-      var padEnd = parseInt(inputs.$end.css('paddingLeft'), 10) || 0;
-      $hintStart.css('left', padStart + 'px');
-      $hintEnd.css('left', padEnd + 'px');
+      if (!state.startDate) return;
+      $cells.each(function () {
+        var $cell = $(this);
+        var $link = $cell.find('.k-link');
+        var dateValue = $link.attr('data-value');
+        if (!dateValue) return;
+        var parts = dateValue.split('/');
+        var cellDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10));
+        var isStart = isSameDate(cellDate, state.startDate);
+        var isEnd = state.endDate && isSameDate(cellDate, state.endDate);
+        var isInRange = state.startDate && state.endDate && cellDate > state.startDate && cellDate < state.endDate;
+        if (isStart) $cell.addClass('k-range-start');
+        if (isEnd) $cell.addClass('k-range-end');
+        if (isInRange) $cell.addClass('k-range-mid');
+      });
+    }
+    function updateDisplay() {
+      var value = '';
+      if (state.startDate && state.endDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator + formatDate(state.endDate, opts.format);
+      } else if (state.startDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator;
+      }
+      $display.val(value);
+    }
+    function updateHiddenInputs() {
+      $startInput.val(state.startDate ? formatDate(state.startDate, opts.format) : '');
+      $endInput.val(state.endDate ? formatDate(state.endDate, opts.format) : '');
+    }
+    function openPopup() {
+      if ($wrap.hasClass('is-disabled')) return;
+      $popup.addClass('is-open');
+      state.isOpen = true;
+      highlightRange();
+      applyVitsClassToWrapper($wrap, $popup);
+      $el.trigger('rangepicker:open');
+    }
+    function closePopup() {
+      $popup.removeClass('is-open');
+      state.isOpen = false;
+      $el.trigger('rangepicker:close');
+    }
+    function togglePopup() {
+      if (state.isOpen) {
+        closePopup();
+      } else {
+        openPopup();
+      }
+    }
+    function getPublicValue() {
       return {
-        $hintStart: $hintStart,
-        $hintEnd: $hintEnd
+        start: state.startDate,
+        end: state.endDate,
+        startStr: $startInput.val(),
+        endStr: $endInput.val()
       };
     }
-
-    // ============================================
-    // 상태 동기화
-    // ============================================
-    function syncState() {
-      var inputs = getTwoInputs();
-      if (!inputs) return;
-      var hints = ensureHints();
-      if (!hints) return;
-      var startVal = inputs.$start.val();
-      var endVal = inputs.$end.val();
-      var startEmpty = isMaskEmpty(startVal);
-      var endEmpty = isMaskEmpty(endVal);
-
-      // 마스크 클래스 토글
-      if (startEmpty) {
-        inputs.$start.addClass('is-mask-empty').removeClass('has-value');
-      } else {
-        inputs.$start.removeClass('is-mask-empty').addClass('has-value');
-      }
-      if (endEmpty) {
-        inputs.$end.addClass('is-mask-empty').removeClass('has-value');
-      } else {
-        inputs.$end.removeClass('is-mask-empty').addClass('has-value');
-      }
-
-      // 힌트 표시/숨김 (빈 값일 때만 표시)
-      hints.$hintStart.toggle(startEmpty);
-      hints.$hintEnd.toggle(endEmpty);
-    }
-
-    // ============================================
-    // 키보드 완전 차단 (캘린더로만 선택)
-    // ============================================
-    function blockIncrement() {
-      var inputs = getTwoInputs();
-      if (!inputs) return;
-
-      // readonly로 키보드 입력 완전 차단
-      inputs.$start.add(inputs.$end).attr('readonly', true);
-
-      // 마우스 휠 차단
-      inputs.$start.add(inputs.$end).each(function () {
-        this.addEventListener('wheel', function (e) {
-          e.preventDefault();
-        }, {
-          passive: false
-        });
-      });
-    }
-
-    // ============================================
-    // Kendo 이벤트 바인딩
-    // ============================================
-    if (inst && inst.bind) {
-      inst.bind('open', function (e) {
-        if (Date.now() < suppressOpenUntil) {
-          if (e && typeof e.preventDefault === 'function') e.preventDefault();
-          return;
-        }
-        isOpen = true;
-        applyVitsClassToWrapper($wrap, inst);
-        window.requestAnimationFrame(syncState);
-      });
-      inst.bind('close', function () {
-        isOpen = false;
-        window.requestAnimationFrame(syncState);
-      });
-      inst.bind('change', function () {
-        var range = this.range();
-        $el.trigger('daterangepicker:change', [range]);
-        window.requestAnimationFrame(syncState);
-      });
-    }
-    applyVitsClassToWrapper($wrap, inst);
-
-    // ============================================
-    // 전체 영역 클릭으로 열기
-    // ============================================
-    $wrap.off('click.vitsKendoOpen');
-    $wrap.on('click.vitsKendoOpen', function (e) {
-      // 이미 열려있거나 suppressed 상태면 무시
-      if (isOpen || Date.now() < suppressOpenUntil) return;
-
-      // input 직접 클릭은 Kendo가 처리
-      if (window.jQuery(e.target).is('input.k-input-inner')) return;
-      if (inst && typeof inst.open === 'function') {
-        inst.open();
-      }
-    });
-
-    // ============================================
-    // 아이콘 위 클릭 레이어 버튼
-    // ============================================
-    var $hit = $wrap.find('.vits-daterangepicker__icon-hit');
-    if (!$hit.length) {
-      $hit = window.jQuery('<button type="button" class="vits-daterangepicker__icon-hit" aria-label="달력 열기/닫기"></button>');
-      $wrap.append($hit);
-    }
-    $hit.off('.vitsKendoRangeHit');
-    $hit.on('mousedown.vitsKendoRangeHit', function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-    });
-    $hit.on('click.vitsKendoRangeHit', function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if (!inst) return;
-      if (isOpen) {
-        suppressOpenUntil = Date.now() + 500;
-        inst.close();
-        window.setTimeout(function () {
-          var ae = document.activeElement;
-          if (ae && $wrap[0].contains(ae) && typeof ae.blur === 'function') ae.blur();
-          $wrap.find('input').each(function () {
-            if (this && typeof this.blur === 'function') this.blur();
-          });
-          syncState();
-          blockIncrement();
-        }, 0);
-      } else {
-        inst.open();
-      }
-    });
 
     // ============================================
     // 이벤트 바인딩
     // ============================================
-    $wrap.off('.vitsRangeSync');
-    $wrap.on('input.vitsRangeSync change.vitsRangeSync focusin.vitsRangeSync focusout.vitsRangeSync', 'input', function () {
-      window.requestAnimationFrame(syncState);
+
+    $display.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+      togglePopup();
+    });
+    $toggle.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+      togglePopup();
+    });
+    $popup.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+    });
+    $(document).on('click.vitsRangePicker_' + $el.attr('id'), function () {
+      if (!state.isSelectingEnd) {
+        closePopup();
+      }
+    });
+    $(document).on('keydown.vitsRangePicker_' + $el.attr('id'), function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closePopup();
+      }
     });
 
-    // 초기 동기화 (약간 딜레이 - Kendo 렌더링 완료 후)
-    window.setTimeout(function () {
-      syncState();
-      blockIncrement();
-    }, 50);
+    // ============================================
+    // Public API
+    // ============================================
+    var instance = {
+      getValue: getPublicValue,
+      setValue: function (start, end) {
+        state.startDate = start ? parseDateValue(start) : null;
+        state.endDate = end ? parseDateValue(end) : null;
+        state.isSelectingEnd = false;
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+        if (calendar && state.startDate) {
+          calendar.navigate(state.startDate);
+        }
+        $el.trigger('rangepicker:change', [getPublicValue()]);
+      },
+      reset: function () {
+        state.startDate = null;
+        state.endDate = null;
+        state.isSelectingEnd = false;
+        $display.val('');
+        $startInput.val('');
+        $endInput.val('');
+        if (calendar) {
+          calendar.value(null);
+        }
+        highlightRange();
+        $el.trigger('rangepicker:reset');
+      },
+      open: openPopup,
+      close: closePopup,
+      toggle: togglePopup,
+      disable: function () {
+        $wrap.addClass('is-disabled');
+        $display.prop('disabled', true);
+        $toggle.prop('disabled', true);
+        closePopup();
+      },
+      enable: function () {
+        $wrap.removeClass('is-disabled');
+        $display.prop('disabled', false);
+        $toggle.prop('disabled', false);
+      },
+      destroy: function () {
+        var id = $el.attr('id') || '';
+        $(document).off('.vitsRangePicker_' + id);
+        $display.off('.vitsRangePicker');
+        $toggle.off('.vitsRangePicker');
+        $popup.off('.vitsRangePicker');
+        if (calendar) {
+          calendar.destroy();
+        }
+        $el.removeData('vitsKendoRangePicker');
+      }
+    };
+    $el.data('vitsKendoRangePicker', instance);
+    updateDisplay();
+    highlightRange();
+    console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }
+
+  // ============================================
+  // 초기화 함수들
+  // ============================================
+
   function initOne(el) {
     var $el = window.jQuery(el);
     var uiType = $el.attr('data-ui');
-    if (uiType === 'kendo-datepicker') {
-      initDatePicker(el);
-    } else if (uiType === 'kendo-daterangepicker') {
-      initDateRangePicker(el);
+    if (uiType === 'kendo-range-picker') {
+      initRangePicker(el);
     }
   }
   function initAll(root) {
     if (!ensureKendoAvailable()) {
+      console.warn('[kendo-range-picker] Kendo UI not available');
       return;
     }
     var $root = root ? window.jQuery(root) : window.jQuery(document);
-    $root.find('[data-ui="kendo-datepicker"]').each(function () {
-      initOne(this);
-    });
-    $root.find('[data-ui="kendo-daterangepicker"]').each(function () {
+    $root.find('[data-ui="kendo-range-picker"]').each(function () {
       initOne(this);
     });
   }
@@ -6590,11 +7516,36 @@ if (document.body?.dataset?.guide === 'true') {
     });
     return obs;
   }
-  window.VitsKendoDatepicker = {
+  function getInstance(selector) {
+    var $el = window.jQuery(selector);
+    return $el.data('vitsKendoRangePicker') || null;
+  }
+
+  // ============================================
+  // 전역 API 노출
+  // ============================================
+  window.VitsKendoRangePicker = {
     initAll: initAll,
-    autoBindStart: autoBindStart
+    initOne: initOne,
+    autoBindStart: autoBindStart,
+    getInstance: getInstance
   };
-  console.log('[kendo-datepicker] loaded');
+
+  // ============================================
+  // DOM Ready 시 자동 초기화
+  // ============================================
+  if (window.jQuery) {
+    window.jQuery(function () {
+      autoBindStart();
+    });
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery) {
+        autoBindStart();
+      }
+    });
+  }
+  console.log('[kendo-range-picker] loaded');
 })(window);
 
 /***/ }),
