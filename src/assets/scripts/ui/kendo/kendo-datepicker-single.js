@@ -11,6 +11,7 @@
   'use strict';
 
   var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var YEARVIEW_MONTH_NAMES = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
 
   function parseJsonSafe(str) {
     if (!str) return null;
@@ -78,14 +79,18 @@
     var dayNameObserverTarget = null;
     var dayNameApplyScheduled = false;
     var headerMonthApplyScheduled = false;
+    var yearViewMonthApplyScheduled = false;
 
     function pad2(num) {
       return num < 10 ? '0' + num : String(num);
     }
 
-    function formatHeaderMonth(date) {
-      if (!date) return '';
-      return date.getFullYear() + '.' + pad2(date.getMonth() + 1);
+    function formatHeaderMonthParts(date) {
+      if (!date) return null;
+      return {
+        year: String(date.getFullYear()),
+        month: pad2(date.getMonth() + 1)
+      };
     }
 
     function applyDayNamesImmediate() {
@@ -122,8 +127,9 @@
 
       var cal = getCalendar();
       var current = cal && typeof cal.current === 'function' ? cal.current() : null;
-      var nextText = formatHeaderMonth(current);
-      if (!nextText) return;
+      var parts = formatHeaderMonthParts(current);
+      if (!parts) return;
+      var nextText = parts.year + '.' + parts.month;
 
       var $header = $wrap.find('.k-header, .k-calendar-header').first();
       var $headerLink = $wrap
@@ -136,8 +142,17 @@
       if (!$headerLink.length) return;
 
       var $buttonText = $headerLink.find('.k-button-text').first();
+      var useDot = $header.hasClass('k-hstack');
+      var nextHtml = parts.year + '<span class="nav-dot">.</span>' + parts.month;
+
       if ($buttonText.length) {
-        if ($buttonText.text() !== nextText) $buttonText.text(nextText);
+        if (useDot) {
+          if ($buttonText.html() !== nextHtml) $buttonText.html(nextHtml);
+        } else if ($buttonText.text() !== nextText) {
+          $buttonText.text(nextText);
+        }
+      } else if (useDot) {
+        if ($headerLink.html() !== nextHtml) $headerLink.html(nextHtml);
       } else if ($headerLink.text() !== nextText) {
         $headerLink.text(nextText);
       }
@@ -149,6 +164,34 @@
       window.requestAnimationFrame(function () {
         headerMonthApplyScheduled = false;
         applyHeaderMonthImmediate();
+      });
+    }
+
+    function applyYearViewMonthNamesImmediate() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+
+      var $yearView = $wrap.find('.k-calendar-yearview').first();
+      if (!$yearView.length) return;
+
+      var $monthLinks = $yearView.find('td .k-link');
+      if (!$monthLinks.length) return;
+
+      $monthLinks.each(function (i) {
+        var nextText = YEARVIEW_MONTH_NAMES[i];
+        if (!nextText) return;
+
+        var $link = window.jQuery(this);
+        if ($link.text() !== nextText) $link.text(nextText);
+      });
+    }
+
+    function scheduleYearViewMonthApply() {
+      if (yearViewMonthApplyScheduled) return;
+      yearViewMonthApplyScheduled = true;
+      window.requestAnimationFrame(function () {
+        yearViewMonthApplyScheduled = false;
+        applyYearViewMonthNamesImmediate();
       });
     }
 
@@ -167,6 +210,11 @@
       window.setTimeout(scheduleHeaderMonthApply, 0);
     }
 
+    function forceApplyYearViewMonthNames() {
+      scheduleYearViewMonthApply();
+      window.setTimeout(scheduleYearViewMonthApply, 0);
+    }
+
     function ensureDayNameObserver() {
       var $wrap = resolveCalendarWrap();
       if (!$wrap || !window.MutationObserver) return;
@@ -182,6 +230,7 @@
       dayNameObserver = new window.MutationObserver(function () {
         scheduleDayNameApply();
         scheduleHeaderMonthApply();
+        scheduleYearViewMonthApply();
       });
       dayNameObserver.observe(target, {childList: true, subtree: true, characterData: true});
     }
@@ -236,11 +285,13 @@
       disableCalendarAnimation();
       forceApplyDayNames();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
     };
     opts.calendar.change = function () {
       forceApplyDayNames();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
     };
 
@@ -257,6 +308,7 @@
       disableCalendarAnimation();
       ensureDayNameObserver();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
 
       if (inst.popup && inst.popup.setOptions) {
@@ -273,6 +325,7 @@
         ensureDayNameObserver();
         forceApplyDayNames();
         forceApplyHeaderMonth();
+        forceApplyYearViewMonthNames();
         updatePrevNavState();
       });
     }
