@@ -14,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>주문/배송조회</title>
+  <title>주문상세</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -39183,408 +39183,30 @@
                 <!-- S: vits-grid-main -->
                 <div class="vits-grid-main-content main-content-my-orders">
                   <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">주문/배송조회</h2>
-                    <p class="vits-mypage-content-desc">주문 및 배송 현황을 확인하실 수 있습니다.</p>
+                    <a href="" class="vits-mypage-content-back">
+                      <h2 class="vits-mypage-content-title">
+                        <span class="icon">
+                          <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+                        </span>
+                        주문상세
+                      </h2>
+                    </a>
+                    <div class="vits-mypage-content-order">
+                      <p class="order-title">주문번호</p>
+                      <p class="order-number">ORD-2024-001234</p>
+                    </div>
                   </div>
 
                   <div class="vits-mypage-panel">
-                    <!-- 주문/배송조회 필터 -->
-                    
-<!-- prettier-ignore -->
-
-
-
-<!-- 주문/배송조회 목록 -->
-<div class="vits-mypage-query" data-toggle-scope>
-  <div class="mypage-query-fields">
-    <dl class="mypage-query-period">
-      <dt class="mypage-query-label">조회 기간</dt>
-      <dd class="mypage-query-control">
-        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
-          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
-            <span class="text">1개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">3개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">6개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">1년</span>
-          </button>
-        </div>
-      </dd>
-      <dd class="mypage-query-control mypage-query-period-range">
-        <!-- prettier-ignore -->
-        
-
-
-<div class="vits-kendo-range-picker size-md" 
-     id="kendoRangePicker_1769394276143"
-     data-ui="kendo-range-picker"
-     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
-    
-    <input type="hidden" 
-           class="js-start-date" 
-           name="startDate" 
-           value="">
-    
-    <input type="hidden" 
-           class="js-end-date" 
-           name="endDate" 
-           value="">
-    
-    <span class="picker-input k-picker k-datepicker">
-        <input type="text" 
-               class="picker-display k-input-inner js-range-display" 
-               placeholder="시작일 ~ 종료일" 
-               readonly 
-               >
-        
-        <button type="button" 
-                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
-                >
-            <span class="icon">
-              <i class="ic ic-calendar" aria-hidden="true"></i>
- 
-            </span>
-        </button>
-    </span>
-    
-    <div class="picker-popup js-calendar-popup">
-        <div class="js-kendo-calendar"></div>
-    </div>
-</div>
-      </dd>
-    </dl>
-
-    <div class="mypage-query-advanced" data-toggle-box="mypageQueryAdvanced">
-      <ul class="mypage-query-detail">
-        <li>
-          <p class="mypage-query-label">주문상태</p>
-          <div class="mypage-query-control type-select">
-            <!-- prettier-ignore -->
-            
-
-
-
-
-<div
-  class="vits-select"
-  data-vits-select
-   data-select-id="my-order-status" 
-  
-   data-vits-select-portal 
-  
->
-  <button
-    type="button"
-    class="vits-select-trigger"
-    aria-haspopup="listbox"
-    aria-expanded="false"
-    data-vits-select-trigger
-    
-  >
-    <span
-      class="vits-select-value"
-      data-vits-select-value
-      data-placeholder="주문상태"
-    >전체</span>
-
-    <span class="vits-select-icon" aria-hidden="true">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
-    
-      <li
-        class="vits-select-option vits-select-selected"
-        role="option"
-        tabindex="-1"
-        data-value="전체"
-           
-        aria-selected="true"
-        
-      >전체</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="주문접수"
-           
-        aria-selected="false"
-        
-      >주문접수</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="결제완료"
-           
-        aria-selected="false"
-        
-      >결제완료</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="주문완료"
-           
-        aria-selected="false"
-        
-      >주문완료</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="주문확정"
-           
-        aria-selected="false"
-        
-      >주문확정</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="배송준비중"
-           
-        aria-selected="false"
-        
-      >배송준비중</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="배송중"
-           
-        aria-selected="false"
-        
-      >배송중</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="배송완료"
-           
-        aria-selected="false"
-        
-      >배송완료</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="취소"
-           
-        aria-selected="false"
-        
-      >취소</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="반품"
-           
-        aria-selected="false"
-        
-      >반품</li>
-    
-  </ul>
-
-  
-    <input type="hidden" name="sort" value="전체" data-vits-select-hidden />
-  
-</div>
-
-          </div>
-        </li>
-        <li>
-          <p class="mypage-query-label">배송지</p>
-          <div class="mypage-query-control type-select">
-            <!-- prettier-ignore -->
-            
-
-
-
-
-<div
-  class="vits-select"
-  data-vits-select
-   data-select-id="my-order-status" 
-  
-   data-vits-select-portal 
-  
->
-  <button
-    type="button"
-    class="vits-select-trigger"
-    aria-haspopup="listbox"
-    aria-expanded="false"
-    data-vits-select-trigger
-    
-  >
-    <span
-      class="vits-select-value"
-      data-vits-select-value
-      data-placeholder="주문상태"
-    >전체</span>
-
-    <span class="vits-select-icon" aria-hidden="true">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
-    
-      <li
-        class="vits-select-option vits-select-selected"
-        role="option"
-        tabindex="-1"
-        data-value="전체"
-           
-        aria-selected="true"
-        
-      >전체</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="우리집"
-           
-        aria-selected="false"
-        
-      >우리집</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="엄마네"
-           
-        aria-selected="false"
-        
-      >엄마네</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="회사"
-           
-        aria-selected="false"
-        
-      >회사</li>
-    
-  </ul>
-
-  
-    <input type="hidden" name="sort" value="전체" data-vits-select-hidden />
-  
-</div>
-
-          </div>
-        </li>
-        <li>
-          <p class="mypage-query-label">검색어</p>
-          <div class="mypage-query-control type-search">
-            <!-- prettier-ignore -->
-            
-
-<!-- prettier-ignore -->
-
-
-<div class="vits-input-search vits-validation size-sm">
-  <form class="vits-input-search-form" role="search" action="/orders-search" method="get" data-search-form>
-    <label for="my-orders-search-searchKeyword" class="sr-only">검색어</label>
-
-    <input
-      type="search"
-      id="my-orders-search-searchKeyword"
-      class="input-search"
-      name="my-orders-search"
-      autocomplete="off"
-      enterkeyhint="search"
-      placeholder="상품명, 주문번호 검색"
-      data-search-input
-      
-      
-    />
-
-    <button type="submit" class="input-search-btn" aria-label="검색">
-      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
-
-    </button>
-  </form>
-
-  <!-- validation 영역(교체) -->
-  <div class="input-validation" hidden>
-    <p id="my-orders-search-searchKeyword-validation" aria-live="polite"></p>
-  </div>
-</div>
-
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="mypage-query-actions">
-    <button
-      type="button"
-      type="button"
-      class="mypage-query-toggle"
-      data-toggle-btn
-      data-toggle-target="mypageQueryAdvanced"
-      aria-expanded="false"
-      data-aria-label-base="상세조회"
-    >
-      <span class="icon"> <i class="ic ic-filter-2" aria-hidden="true"></i>
- </span>
-      <span class="text">상세조회</span>
-    </button>
-    
-
-
-<button
-  type="toggle"
-  class="vits-btn-sm vits-btn-secondary  disabled btn-fix-w120"
-  disabled
-  >
-  
-
-  <span class="text">조회하기</span>
-
-  
-</button>
-
-  </div>
-</div>
-
-<!-- prettier-ignore -->
-
-
-
-                    <!-- 주문/배송조회 리스트 -->
+                    <!-- 주문상세 상품 리스트 -->
                     
 
 <!-- my-records-box.ejs 상단에 기본값 설정 -->
 <!-- prettier-ignore -->
 
 
-<div class="vits-mypage-records-box">
+<div class="vits-mypage-records-box type-detail">
   <ul class="vits-mypage-records-list">
     <li class="vits-mypage-records-item">
       <div class="vits-mypage-records">
@@ -39593,29 +39215,11 @@
             <div class="mypage-record-box">
               <div class="mypage-record-head" data-scss="head">
                 <div class="mypage-record-meta">
-                  <p class="mypage-record-date">2024.12.15</p>
-                  <p class="mypage-record-number">
-                    <span class="sr-only">주문번호</span>
-                    ORD-2024-001234
-                  </p>
+                  <p class="mypage-record-date">주문상품</p>
                 </div>
 
                 <ul class="mypage-record-actions">
                   
-                  <li>
-                    <!-- prettier-ignore -->
-                    
-<!-- prettier-ignore -->
-
-
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
-  <span class="icon"> <i class="ic ic-document-paper" aria-hidden="true"></i>
- </span>
-  <span class="text">주문상세보기</span>
-</button>
-
-                  </li>
-                   
                   <li>
                     <!-- prettier-ignore -->
                     
@@ -39791,184 +39395,6 @@
 
 
 
-  <p class="text-claim-status" data-status="03">주문취소</p>
-
-
-                    </div>
-
-                    <div class="mypage-record-pay">
-                      <p class="product-price">999,999,999원</p>
-                      <div class="mypage-record-tools">
-                        <!-- prettier-ignore -->
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">장바구니 담기</span>
-
-  
-</button>
-
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">반품신청</span>
-
-  
-</button>
-
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">배송조회</span>
-
-  
-</button>
-
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="mypage-record-foot" data-scss="foot">
-                <p class="mypage-record-total">
-                  <span class="mypage-record-total-label">총 결제금액</span>
-                  <span class="mypage-record-total-value">999,999,999,000원</span>
-                </p>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li class="vits-mypage-records-item">
-      <div class="vits-mypage-records">
-        <ul class="mypage-record-list">
-          <li class="mypage-record-item">
-            <div class="mypage-record-box">
-              <div class="mypage-record-head" data-scss="head">
-                <div class="mypage-record-meta">
-                  <p class="mypage-record-date">2024.12.15</p>
-                  <p class="mypage-record-number">
-                    <span class="sr-only">주문번호</span>
-                    ORD-2024-001234
-                  </p>
-                </div>
-
-                <ul class="mypage-record-actions">
-                  
-                  <li>
-                    <!-- prettier-ignore -->
-                    
-<!-- prettier-ignore -->
-
-
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
-  <span class="icon"> <i class="ic ic-document-paper" aria-hidden="true"></i>
- </span>
-  <span class="text">주문상세보기</span>
-</button>
-
-                  </li>
-                   
-                  <li>
-                    <!-- prettier-ignore -->
-                    
-<!-- prettier-ignore -->
-
-
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
-  <span class="icon"> <i class="ic ic-print" aria-hidden="true"></i>
- </span>
-  <span class="text">거래명세서출력</span>
-</button>
-
-                  </li>
-                   
-                  <li>
-                    <!-- prettier-ignore -->
-                    
-<!-- prettier-ignore -->
-
-
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
-  <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
- </span>
-  <span class="text">주문 문의하기</span>
-</button>
-
-                  </li>
-                  
-                </ul>
-              </div>
-
-              <div class="mypage-record-body" data-scss="body">
-                <ul class="mypage-record-lines">
-                  <li class="mypage-record-line">
-                    <div class="mypage-record-thumb">
-                      <div class="product-thumb">
-                        <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
-                      </div>
-                    </div>
-
-                    <div class="mypage-record-info">
-                      <div class="product-identity">
-                        <p class="product-code"><span class="sr-only">상품코드</span>63531</p>
-                        <p class="product-title">
-                          <span class="product-brand">엠포르지오아르마니</span>
-                          <span class="product-name"
-                            >더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP
-                            접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)</span
-                          >
-                        </p>
-                      </div>
-                      <div class="product-subinfo">
-                        <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
-                        <p class="product-meta">
-                          <span class="product-tax">과세</span> /
-                          <span class="product-qty">1개</span>
-                        </p>
-                      </div>
-                      
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-     
-  <span class="vits-product-flag is-count">5회 구매</span>
-  
-</div>
-
-
-                    </div>
-
-                    <div class="mypage-record-status">
-                      <!-- prettier-ignore -->
-
-
-
   <p class="text-claim-status" data-status="06">반품접수</p>
 
 
@@ -40026,108 +39452,32 @@
                       </div>
                     </div>
                   </li>
-                  <li class="mypage-record-line">
-                    <div class="mypage-record-thumb">
-                      <div class="product-thumb">
-                        <img src="https://vitsonimg.co.kr/images/productsNew/89/89044.png" alt="" />
-                      </div>
-                    </div>
-
-                    <div class="mypage-record-info">
-                      <div class="product-identity">
-                        <p class="product-code"><span class="sr-only">상품코드</span>89044</p>
-                        <p class="product-title">
-                          <span class="product-brand">밀크</span>
-                          <span class="product-name">A3용지</span>
-                        </p>
-                      </div>
-                      <div class="product-subinfo">
-                        <p class="product-spec"><span class="sr-only">규격</span>75g(1BOX/5권 1250매)</p>
-                        <p class="product-meta">
-                          <span class="product-tax">과세</span> /
-                          <span class="product-qty">1개</span>
-                        </p>
-                      </div>
-                      
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-     
-  <span class="vits-product-flag is-count">3회 구매</span>
-  
-</div>
-
-
-                    </div>
-
-                    <div class="mypage-record-status">
-                      <!-- prettier-ignore -->
-
-
-
-  <p class="text-order-status" data-status="07">배송완료</p>
-
-
-                    </div>
-
-                    <div class="mypage-record-pay">
-                      <p class="product-price">999,999,999원</p>
-                      <div class="mypage-record-tools">
-                        <!-- prettier-ignore -->
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">장바구니 담기</span>
-
-  
-</button>
-
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">반품신청</span>
-
-  
-</button>
-
-                        
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">배송조회</span>
-
-  
-</button>
-
-                      </div>
-                    </div>
-                  </li>
                 </ul>
               </div>
 
               <div class="mypage-record-foot" data-scss="foot">
+                <div class="mypage-record-cart">
+                  <!-- prettier-ignore -->
+                  
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-bag" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">전체 상품 장바구니 담기</span>
+
+  
+</button>
+
+                </div>
                 <p class="mypage-record-total">
                   <span class="mypage-record-total-label">총 결제금액</span>
                   <span class="mypage-record-total-value">999,999,999,000원</span>
@@ -40139,69 +39489,448 @@
       </div>
     </li>
   </ul>
+</div>
 
-  <div class="vits-mypage-pagination">
-    
+
+                    <!-- 배송정보 -->
+                    
+
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
 <!-- prettier-ignore -->
 
 
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
 
-<nav
-  class="vits-pagination"
-  aria-label="페이지네이션"
-  data-pagination
-  data-pagination-type="default"
-  data-pagination-current="1"
-  data-pagination-total="12"
->
-  
-  <!-- prettier-ignore -->
-  
-  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
-    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+    </div>
+  </div>
 
-  </span>
-  
-
-  <!-- prettier-ignore -->
-  
-  <ol class="vits-pagination-list">
-    
-    <li class="vits-pagination-item">
-      
-      <span class="vits-pagination-link is-active" data-pagination-page data-page="1" aria-current="page">
-        1
-      </span>
-      
-    </li>
-    
-    <li class="vits-pagination-item">
-      
-      <a href="#" class="vits-pagination-link" data-pagination-page data-page="2">2</a>
-      
-    </li>
-    
-    <li class="vits-pagination-item">
-      
-      <a href="#" class="vits-pagination-link" data-pagination-page data-page="3">3</a>
-      
-    </li>
-    
-  </ol>
-
-  
-  <!-- prettier-ignore -->
-  
-  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
-    <i class="ic ic-arrow-right" aria-hidden="true"></i>
-
-  </a>
-  
-</nav>
-
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연락처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연락처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 
+<!-- 위탁판매자 X -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>퀵배송</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 위탁판매자일 때 - 퀵 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>배송 주소</dt>
+            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>퀵배송</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 위탁판매자일 때 - 화물 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">배송정보</p>
+
+    <div class="mypage-detail-actions">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+  <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+  <span class="text">배송지 수정</span>
+</button>
+
+    </div>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-shipping">
+      <ul class="shipping-list">
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>발송처</dt>
+            <dd>메가존</dd>
+            <dt>보내는 사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+          </dl>
+        </li>
+        <li class="shipping-item">
+          <dl class="shipping-info">
+            <dt>받는사람</dt>
+            <dd>김철수</dd>
+            <dt>연릭처</dt>
+            <dd>010-1234-5678</dd>
+            <dt>화물사</dt>
+            <dd>경동화물</dd>
+            <dt>화물지점</dt>
+            <dd>삼성동지점</dd>
+            <dt>배송메모</dt>
+            <dd>부재시 경비실에 맡겨주세요</dd>
+            <dt>배송방법</dt>
+            <dd>화물 (착불)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+                    <!-- 결제정보 -->
+                    
+<!-- 카드 결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">카드 결제</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">신한카드 (1234)</p>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-document-paper" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">영수증보기</span>
+
+  
+</button>
+
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 무통장입금 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">무통장입금</p>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 실시간계좌이체 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">실시간계좌이체</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">우리은행 (345678)</p>
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 여신결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">여신결제</p>
+              <div class="payment-method-detail">
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">여신 사용현황 보기</span>
+
+  
+</button>
+
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+
+                    <div class="vits-mypage-panel-actions">
+                      
+
+
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-outline-secondary icon-left btn-fix-w160"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-arrow-left" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">목록으로</span>
+
+  
+</button>
+
+                    </div>
                   </div>
                 </div>
 

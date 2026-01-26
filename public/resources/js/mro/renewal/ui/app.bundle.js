@@ -3202,6 +3202,7 @@ if (document.body?.dataset?.guide === 'true') {
   'use strict';
 
   var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var YEARVIEW_MONTH_NAMES = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
   function parseJsonSafe(str) {
     if (!str) return null;
     try {
@@ -3250,12 +3251,16 @@ if (document.body?.dataset?.guide === 'true') {
     var dayNameObserverTarget = null;
     var dayNameApplyScheduled = false;
     var headerMonthApplyScheduled = false;
+    var yearViewMonthApplyScheduled = false;
     function pad2(num) {
       return num < 10 ? '0' + num : String(num);
     }
-    function formatHeaderMonth(date) {
-      if (!date) return '';
-      return date.getFullYear() + '.' + pad2(date.getMonth() + 1);
+    function formatHeaderMonthParts(date) {
+      if (!date) return null;
+      return {
+        year: String(date.getFullYear()),
+        month: pad2(date.getMonth() + 1)
+      };
     }
     function applyDayNamesImmediate() {
       var $wrap = resolveCalendarWrap();
@@ -3285,15 +3290,24 @@ if (document.body?.dataset?.guide === 'true') {
       if (!$wrap) return;
       var cal = getCalendar();
       var current = cal && typeof cal.current === 'function' ? cal.current() : null;
-      var nextText = formatHeaderMonth(current);
-      if (!nextText) return;
+      var parts = formatHeaderMonthParts(current);
+      if (!parts) return;
+      var nextText = parts.year + '.' + parts.month;
       var $header = $wrap.find('.k-header, .k-calendar-header').first();
       var $headerLink = $wrap.find('.k-nav-fast, .k-calendar-header .k-link, .k-header .k-link, .k-calendar-header .k-title, .k-header .k-title').first();
       if (!$headerLink.length && $header.length) $headerLink = $header;
       if (!$headerLink.length) return;
       var $buttonText = $headerLink.find('.k-button-text').first();
+      var useDot = $header.hasClass('k-hstack');
+      var nextHtml = parts.year + '<span class="nav-dot">.</span>' + parts.month;
       if ($buttonText.length) {
-        if ($buttonText.text() !== nextText) $buttonText.text(nextText);
+        if (useDot) {
+          if ($buttonText.html() !== nextHtml) $buttonText.html(nextHtml);
+        } else if ($buttonText.text() !== nextText) {
+          $buttonText.text(nextText);
+        }
+      } else if (useDot) {
+        if ($headerLink.html() !== nextHtml) $headerLink.html(nextHtml);
       } else if ($headerLink.text() !== nextText) {
         $headerLink.text(nextText);
       }
@@ -3304,6 +3318,28 @@ if (document.body?.dataset?.guide === 'true') {
       window.requestAnimationFrame(function () {
         headerMonthApplyScheduled = false;
         applyHeaderMonthImmediate();
+      });
+    }
+    function applyYearViewMonthNamesImmediate() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      var $yearView = $wrap.find('.k-calendar-yearview').first();
+      if (!$yearView.length) return;
+      var $monthLinks = $yearView.find('td .k-link');
+      if (!$monthLinks.length) return;
+      $monthLinks.each(function (i) {
+        var nextText = YEARVIEW_MONTH_NAMES[i];
+        if (!nextText) return;
+        var $link = window.jQuery(this);
+        if ($link.text() !== nextText) $link.text(nextText);
+      });
+    }
+    function scheduleYearViewMonthApply() {
+      if (yearViewMonthApplyScheduled) return;
+      yearViewMonthApplyScheduled = true;
+      window.requestAnimationFrame(function () {
+        yearViewMonthApplyScheduled = false;
+        applyYearViewMonthNamesImmediate();
       });
     }
 
@@ -3320,6 +3356,10 @@ if (document.body?.dataset?.guide === 'true') {
       scheduleHeaderMonthApply();
       window.setTimeout(scheduleHeaderMonthApply, 0);
     }
+    function forceApplyYearViewMonthNames() {
+      scheduleYearViewMonthApply();
+      window.setTimeout(scheduleYearViewMonthApply, 0);
+    }
     function ensureDayNameObserver() {
       var $wrap = resolveCalendarWrap();
       if (!$wrap || !window.MutationObserver) return;
@@ -3332,6 +3372,7 @@ if (document.body?.dataset?.guide === 'true') {
       dayNameObserver = new window.MutationObserver(function () {
         scheduleDayNameApply();
         scheduleHeaderMonthApply();
+        scheduleYearViewMonthApply();
       });
       dayNameObserver.observe(target, {
         childList: true,
@@ -3383,11 +3424,13 @@ if (document.body?.dataset?.guide === 'true') {
       disableCalendarAnimation();
       forceApplyDayNames();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
     };
     opts.calendar.change = function () {
       forceApplyDayNames();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
     };
     if (!opts.min) {
@@ -3400,6 +3443,7 @@ if (document.body?.dataset?.guide === 'true') {
       disableCalendarAnimation();
       ensureDayNameObserver();
       forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
       updatePrevNavState();
       if (inst.popup && inst.popup.setOptions) {
         try {
@@ -3416,6 +3460,7 @@ if (document.body?.dataset?.guide === 'true') {
         ensureDayNameObserver();
         forceApplyDayNames();
         forceApplyHeaderMonth();
+        forceApplyYearViewMonthNames();
         updatePrevNavState();
       });
     }
@@ -7235,6 +7280,7 @@ if (document.body?.dataset?.guide === 'true') {
     var calendar = $calendarWrap.data('kendoCalendar');
     var navTitleScheduled = false;
     var dayNameScheduled = false;
+    var monthNameScheduled = false;
     function scheduleNavTitle() {
       if (navTitleScheduled) return;
       navTitleScheduled = true;
@@ -7254,9 +7300,11 @@ if (document.body?.dataset?.guide === 'true') {
     function forceUpdateUI() {
       scheduleNavTitle();
       scheduleDayNames();
+      scheduleMonthNames();
       window.setTimeout(function () {
         scheduleNavTitle();
         scheduleDayNames();
+        scheduleMonthNames();
       }, 0);
     }
     function updateNavTitle() {
@@ -7266,6 +7314,41 @@ if (document.body?.dataset?.guide === 'true') {
       var title = year + '<span class="nav-dot">.</span>' + month;
       $calendarWrap.find('.k-button-text').html(title);
     }
+
+    // 월 영문 -> 숫자로 표시
+    function updateMonthNames() {
+      $calendarWrap.find('.k-calendar-view td .k-link').each(function () {
+        var $link = $(this);
+        var text = $link.text().trim();
+        var monthMap = {
+          Jan: '1월',
+          Feb: '2월',
+          Mar: '3월',
+          Apr: '4월',
+          May: '5월',
+          Jun: '6월',
+          Jul: '7월',
+          Aug: '8월',
+          Sep: '9월',
+          Oct: '10월',
+          Nov: '11월',
+          Dec: '12월'
+        };
+        if (monthMap[text]) {
+          $link.text(monthMap[text]);
+        }
+      });
+    }
+    function scheduleMonthNames() {
+      if (monthNameScheduled) return;
+      monthNameScheduled = true;
+      window.requestAnimationFrame(function () {
+        monthNameScheduled = false;
+        updateMonthNames();
+      });
+    }
+
+    // 영문 요일 표시
     function updateDayNames() {
       var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       $calendarWrap.find('th').each(function (index) {
@@ -7278,6 +7361,7 @@ if (document.body?.dataset?.guide === 'true') {
     var uiObserver = new MutationObserver(function () {
       scheduleNavTitle();
       scheduleDayNames();
+      scheduleMonthNames();
       highlightRange();
     });
     uiObserver.observe($calendarWrap[0], {
