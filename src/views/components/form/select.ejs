@@ -30,6 +30,9 @@
     return o && String(o.value) === String(_value);
   });
   const _label = _selected ? (_selected.text || '') : _placeholder;
+
+  const _portal = typeof portal !== 'undefined' && !!portal;
+  const _maxHeight = (typeof maxHeight !== 'undefined' && maxHeight !== null) ? String(maxHeight) : '';
 %>
 
 <div
@@ -37,6 +40,8 @@
   data-vits-select
   <% if (_id !== '') { %> data-select-id="<%= _id %>" <% } %>
   <% if (_isLinked) { %> data-depth="<%= _depth %>" data-root="<%= _root %>" <% } %>
+  <% if (_portal) { %> data-vits-select-portal <% } %>
+  <% if (_maxHeight !== '') { %> data-max-height="<%= _maxHeight %>" <% } %>
 >
   <button
     type="button"

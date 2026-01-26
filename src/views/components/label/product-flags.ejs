@@ -12,10 +12,16 @@
     - tomorrow: boolean
     - hot: boolean
   */
-  const showToday = today === true;
-  const showTomorrow = tomorrow === true;
-  const showHot = hot === true;
-  const hasAny = showToday || showTomorrow || showHot;
+  const showToday = (typeof today !== 'undefined') && (today === true);
+const showTomorrow = (typeof tomorrow !== 'undefined') && (tomorrow === true);
+const showHot = (typeof hot !== 'undefined') && (hot === true);
+  const _textCount =
+  (typeof textCount !== 'undefined' && textCount !== null && String(textCount).trim() !== '')
+    ? String(textCount).trim()
+    : '';
+
+  const showCount = !!_textCount;
+  const hasAny = showToday || showTomorrow || showHot || showCount;
 %>
 
 <% if (hasAny) { %>
@@ -29,6 +35,8 @@
   <span class="vits-product-flag is-tomorrow">내일출발</span>
   <% } %> <% if (showHot) { %>
   <span class="vits-product-flag is-hot">특가</span>
+  <% } %> <% if (showCount) { %>
+  <span class="vits-product-flag is-count"><%= _textCount %>회 구매</span>
   <% } %>
 </div>
 <% } %>

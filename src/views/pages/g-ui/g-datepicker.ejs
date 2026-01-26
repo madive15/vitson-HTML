@@ -19,7 +19,14 @@
 
         <div class="vits-guide-code">
           <code>
-            <pre></pre>
+            <pre>
+&lt;%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+  id: 'testPicker1',
+  startName: 'startDate',
+  endName: 'endDate',
+  size: 'sm' // sm ? md(기본 - 사이즈 지정 X) ? lg
+}) %&gt;              
+            </pre>
           </code>
         </div>
 
@@ -29,38 +36,107 @@
               <!-- 단일 날짜 -->
               <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
-                  options: {
-                    id: 'search-date',
-    type: 'single',
-    placeholder: '날짜 선택'
-                  }
+                  id: 'testPicker1',
+                  startName: 'startDate',
+                  endName: 'endDate',
+                  size: 'sm'
                 }) %>
+              <p>height 28px / size-sm</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+                  id: 'testPicker2',
+                  startName: 'startDate',
+                  endName: 'endDate',
+                }) %>
+              <p>height 32px / 기본 (사이즈 지정 X)</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+                  id: 'testPicker3',
+                  startName: 'startDate',
+                  endName: 'endDate',
+                  size: 'lg'
+                }) %>
+              <p>height 36px / size-lg</p>
             </li>
           </ul>
         </div>
 
-        <h3 class="vits-guide-subtitle">범위 날짜</h3>
+        <h3 class="vits-guide-subtitle">단일 날짜 선택 (kendo-datepicker-single)</h3>
 
         <div class="vits-guide-code">
           <code>
-            <pre></pre>
+            <pre>
+&lt;%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+  id: 'testPickerSingle1',
+  name: 'singleDate',
+  size: 's', // 's' | 'm' | 'l' | 'size-s' | 'size-m' | 'size-l' (기본: 'm')
+  placeholder: '날짜를 선택하세요',
+  dataName: 'singleDate',
+  options: {}, // kendo DatePicker 옵션 객체
+  disabled: false,
+  wrapClass: '' // 추가 클래스
+}) %&gt;              
+            </pre>
           </code>
         </div>
 
         <div class="vits-guide-wrap">
           <ul class="vits-guide-list full flex-start">
-            <li>
+            <li class="vits-datepicker-single">
+              <!-- 단일 날짜 선택 - size-s -->
               <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
-                options: {
-                   id: 'search-period',
-    type: 'range',
-    placeholderStart: '조회 시작일',
-    placeholderEnd: '조회 종료일'
-                }
-              }) %>
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                  id: 'testPickerSingle1',
+                  name: 'singleDate1',
+                  size: 's',
+                  placeholder: '날짜를 선택하세요'
+                }) %>
+              <p>size-s</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 선택 - size-m (기본) -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                  id: 'testPickerSingle2',
+                  name: 'singleDate2',
+                  size: 'm',
+                  placeholder: '날짜를 선택하세요'
+                }) %>
+              <p>size-m (기본)</p>
+            </li>
+            <li>
+              <!-- 단일 날짜 선택 - size-l -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                  id: 'testPickerSingle3',
+                  name: 'singleDate3',
+                  size: 'l',
+                  placeholder: '날짜를 선택하세요'
+                }) %>
+              <p>size-l</p>
             </li>
           </ul>
+        </div>
+
+        <div class="vits-guide-code">
+          <h4 class="vits-guide-code-title">파라미터 설명</h4>
+          <code>
+            <pre>
+- id: 선택 (string) - input 요소의 id 속성
+- name: 선택 (string) - input 요소의 name 속성
+- size: 선택 (string) - 's' | 'm' | 'l' | 'size-s' | 'size-m' | 'size-l' (기본: 'm')
+- wrapClass: 선택 (string) - 추가 클래스명
+- placeholder: 선택 (string) - placeholder 텍스트
+- dataName: 선택 (string) - data-name 속성 값
+- options: 선택 (object) - kendo DatePicker 옵션 객체 (함수는 넣지 말 것)
+            </pre>
+          </code>
         </div>
       </section>
       <!-- E: vits-guide-wrapper -->

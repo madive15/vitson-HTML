@@ -1,0 +1,190 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- 카드 결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">카드 결제</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">신한카드 (1234)</p>
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size: 'xs', 
+                  variant: 'outline-secondary', 
+                  text: '영수증보기', 
+                  iconLeft: true, 
+                  iconName: 'ic-document-paper' 
+                }) %>
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 무통장입금 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">무통장입금</p>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 실시간계좌이체 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">실시간계좌이체</p>
+              <div class="payment-method-detail">
+                <p class="payment-method-detail-text">우리은행 (345678)</p>
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송방법</dt>
+            <dd>택배 (대납)</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>
+
+<!-- 여신결제 -->
+<div class="vits-mypage-detail">
+  <div class="mypage-detail-head" data-scss="head">
+    <p class="mypage-detail-title">결제정보</p>
+  </div>
+
+  <div class="mypage-detail-body" data-scss="body">
+    <div class="mypage-detail-payment">
+      <ul class="payment-list">
+        <li class="payment-item type-method">
+          <dl class="payment-info">
+            <dt>결제수단</dt>
+            <dd>
+              <p class="payment-method">여신결제</p>
+              <div class="payment-method-detail">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size: 'xs', 
+                  variant: 'outline-secondary', 
+                  text: '여신 사용현황 보기',
+                }) %>
+              </div>
+            </dd>
+          </dl>
+        </li>
+        <li class="payment-item type-amount">
+          <dl class="payment-info">
+            <dt>상품금액</dt>
+            <dd>1,030,000원</dd>
+            <dt>할인</dt>
+            <dd class="is-minus">-30,000원</dd>
+            <dt>VAT</dt>
+            <dd>+1,030,000원</dd>
+            <dt>배송비</dt>
+            <dd>+1,030,000원</dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-detail-foot" data-scss="foot">
+    <p class="mypage-detail-payment-total">
+      <span class="payment-total-label">최종 결제금액</span>
+      <span class="payment-total-value">999,999,999,000원</span>
+    </p>
+  </div>
+</div>

@@ -314,6 +314,16 @@ import Swiper from 'swiper/bundle';
         1024: {slidesPerView: 3},
         1200: {slidesPerView: 4}
       }
+    },
+    payment: {
+      slidesPerView: 2.5,
+      spaceBetween: 12,
+      speed: 400,
+      slidesOffsetAfter: 300,
+      breakpoints: {
+        0: {slidesPerView: 2.5, slidesOffsetAfter: 250},
+        1024: {slidesPerView: 2.5, slidesOffsetAfter: 250}
+      }
     }
   };
 
@@ -330,12 +340,14 @@ import Swiper from 'swiper/bundle';
       // 프리셋 객체를 깊은 복사하여 각 인스턴스가 독립적으로 동작하도록 함
       const preset = JSON.parse(JSON.stringify(SWIPER_PRESETS[type]));
 
-      // offset 개별 제어
+      // offset 개별 제어 (data 속성 > preset.slidesOffset* > 기본값)
       const offsetBeforeAttr = el.getAttribute('data-offset-before');
       const offsetAfterAttr = el.getAttribute('data-offset-after');
 
-      const offsetBefore = offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : DEFAULT_OFFSET.before;
-      const offsetAfter = offsetAfterAttr !== null ? Number(offsetAfterAttr) : DEFAULT_OFFSET.after;
+      const offsetBefore =
+        offsetBeforeAttr !== null ? Number(offsetBeforeAttr) : (preset.slidesOffsetBefore ?? DEFAULT_OFFSET.before);
+      const offsetAfter =
+        offsetAfterAttr !== null ? Number(offsetAfterAttr) : (preset.slidesOffsetAfter ?? DEFAULT_OFFSET.after);
 
       // desktop slidesPerView 오버라이드 (복사된 객체를 수정하므로 원본에 영향 없음)
       const desktopView = el.dataset.desktop;
@@ -382,8 +394,8 @@ import Swiper from 'swiper/bundle';
         }
       }
 
-      new Swiper(el, {
-        slidesPerView: 5, //기본값
+      const config = {
+        slidesPerView: 5,
         spaceBetween: preset.spaceBetween,
         speed: preset.speed,
         slidesOffsetBefore: offsetBefore,
@@ -398,7 +410,26 @@ import Swiper from 'swiper/bundle';
           clickable: true
         },
         breakpoints: preset.breakpoints
-      });
+      };
+
+      ['centeredSlides', 'centeredSlidesBounds', 'centerInsufficientSlides', 'watchSlidesProgress'].forEach(
+        function (key) {
+          if (preset[key] !== undefined) config[key] = preset[key];
+        }
+      );
+
+      const swiperInstance = new Swiper(el, config);
+
+      // payment 타입인 경우 슬라이드 클릭 시 선택 처리
+      if (type === 'payment') {
+        const slides = el.querySelectorAll('.swiper-slide');
+        slides.forEach(function (slide, index) {
+          slide.addEventListener('click', function () {
+            // 클릭된 슬라이드의 인덱스로 이동하여 swiper-slide-active 클래스가 자동으로 적용되도록 함
+            swiperInstance.slideTo(index);
+          });
+        });
+      }
     });
   }
 

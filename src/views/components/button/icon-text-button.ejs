@@ -1,0 +1,16 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+// Props with defaults
+const type = locals.type || 'button';
+const size = typeof locals.size !== 'undefined' ? locals.size : 'md';
+const iconName = locals.iconName || '';
+const text = locals.text || '';
+const color = locals.color || ''; // default, primary, secondary 등
+const className = locals.className || '';
+%>
+
+<button type="<%= type %>" class="vits-ictext-button vits-ictext-button-<%= size %> vits-text-<%= color %>">
+  <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: iconName}) %> </span>
+  <span class="text"><%= text %></span>
+</button>

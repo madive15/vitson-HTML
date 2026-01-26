@@ -1,0 +1,854 @@
+// -----------------------------------------------------------------------------
+// pages/index.scss
+// - 마이페이지 전용 스타일 모듈 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin records-box-type-detail {
+  @at-root .vits-mypage-records-box.type-detail & {
+    @content;
+  }
+}
+
+@mixin roundbox-white($variant: 'single', $custom: 'base') {
+  background: color.$color-white;
+  border-radius: map.get(var.$radius, 'lg');
+
+  @if $variant == 'single' {
+    padding: map.get(var.$unit, 32);
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $variant == 'section' {
+    [data-scss='head'],
+    [data-scss='foot'] {
+      padding: 0 map.get(var.$unit, 32);
+    }
+
+    [data-scss='body'] {
+      @if $custom == 'base' {
+        padding: map.get(var.$unit, 32);
+      }
+      // stylelint-disable-next-line at-rule-empty-line-before
+      @else if $custom == 'detail' {
+        padding: map.get(var.$unit, 36) map.get(var.$unit, 32);
+      }
+
+      @include records-box-type-detail {
+        padding-top: map.get(var.$unit, 36);
+        padding-bottom: map.get(var.$unit, 36);
+      }
+    }
+  }
+}
+
+@mixin mypage-product-common {
+  .product {
+    &-thumb {
+      @include mx.common-list-thumb;
+    }
+
+    &-identity {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-code {
+      @include mx.flex(flex, row, center, center);
+      @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+      flex-shrink: 0;
+      height: map.get(var.$unit, 16);
+      padding: 0 map.get(var.$unit, 4);
+      margin-top: 1px;
+      background: color.$color-white;
+    }
+
+    &-title {
+      @include mx.ellipsis-multi((14px * 1.3), 2);
+    }
+
+    &-brand {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-name {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-spec,
+    &-tax,
+    &-qty {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-stock {
+      @at-root {
+        dl.product-stock {
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.main-content-my-orders {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: map.get(var.$unit, 24);
+}
+
+.vits-mypage {
+  &-content {
+    &-headline {
+      @include mx.flex(flex, row, flex-start, flex-end);
+      gap: map.get(var.$unit, 12);
+      width: 100%;
+
+      &:has(.vits-mypage-content-order) {
+        min-height: map.get(var.$unit, 32);
+      }
+    }
+
+    &-back {
+      @include mx.flex;
+
+      .vits-mypage-content-title {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+      }
+    }
+
+    &-title {
+      @include typo.typography('h2b', $color: #101828);
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 24));
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+
+    &-desc {
+      @include typo.typography('b3r', $color: #4a5565);
+    }
+
+    &-order {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 8);
+      align-self: center;
+      margin-left: auto;
+
+      .order-title {
+        @include typo.typography('h3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .order-number {
+        @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
+
+  &-panel {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 32);
+
+    &-actions {
+      @include mx.flex(flex, row, flex-end, center);
+      width: 100%;
+    }
+  }
+
+  &-pagination {
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
+  }
+
+  &-query {
+    @include roundbox-white;
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 8);
+    width: 100%;
+
+    .mypage-query {
+      &-period {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        gap: map.get(var.$unit, 8);
+        padding: 0;
+        margin: 0;
+
+        &-range {
+          width: fn.rem(200);
+        }
+
+        &-buttons {
+          @include mx.flex(flex, row, flex-start, center);
+          @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+          height: map.get(var.$unit, 32);
+          overflow: hidden;
+          border-radius: map.get(var.$radius, 'sm');
+        }
+      }
+
+      &-label {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        padding-right: map.get(var.$unit, 4);
+      }
+
+      &-btn {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, center, center);
+        position: relative;
+        height: 100%;
+        padding: 0 map.get(var.$unit, 16);
+        background: color.$color-white;
+
+        .text {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          position: relative;
+          z-index: var.$zindex-base;
+        }
+
+        &::after {
+          @include mx.position(absolute, 0, 0, 0, 0);
+          pointer-events: none;
+          content: '';
+          background: transparent;
+        }
+
+        &:not(:first-of-type)::before {
+          @include mx.position(absolute, $top: 50%, $left: 0);
+          width: 1px;
+          height: 12px;
+          content: '';
+          background-color: map.get(color.$layout-surf, 'secondary');
+          transform: translateY(-50%);
+        }
+
+        &[aria-pressed='true'] {
+          .text {
+            color: color.$color-white;
+          }
+
+          &::after {
+            background: map.get(color.$layout-surf, 'primary');
+          }
+        }
+      }
+
+      &-toggle {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, flex-start, flex-start);
+        position: relative;
+        flex-shrink: 0;
+        gap: map.get(var.$unit, 8);
+        height: fn.rem(21);
+
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 16));
+          margin-top: 1px;
+          color: map.get(color.$icon-neutral, 'tertiary');
+          transition: color 0.25s;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .text {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          transition: color 0.25s;
+        }
+
+        &::before,
+        &::after {
+          @include mx.position(absolute, $bottom: 0, $left: 0);
+          height: 1px;
+          content: '';
+          transition: width 0.5s;
+        }
+
+        &::before {
+          z-index: var.$zindex-base;
+          width: 100%;
+          background: map.get(color.$layout-surf, 'secondary');
+        }
+
+        &::after {
+          z-index: var.$zindex-base + 1;
+          width: 0;
+          background: map.get(color.$layout-surf, 'dark');
+        }
+
+        &[aria-expanded='true'] {
+          .icon {
+            color: map.get(color.$icon-neutral, 'primary');
+          }
+
+          .text {
+            color: map.get(color.$text-colors, 'primary');
+          }
+
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, space-between, center);
+        gap: map.get(var.$unit, 16);
+        margin-left: auto;
+      }
+
+      &-detail {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        gap: map.get(var.$unit, 8) map.get(var.$unit, 32);
+        margin: map.get(var.$unit, 8) 0 0;
+
+        > li {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 12);
+        }
+      }
+
+      &-control {
+        &.type-select {
+          width: fn.rem(120);
+        }
+
+        &.type-search {
+          width: fn.rem(200);
+          padding-right: map.get(var.$unit, 12);
+        }
+
+        &.type-select,
+        &.type-search {
+          .vits-select,
+          .vits-select-trigger {
+            width: 100%;
+          }
+
+          .vits-select-trigger {
+            justify-content: space-between;
+          }
+        }
+      }
+    }
+
+    &.type-ver2 {
+      .mypage-query-control.type-search {
+        width: fn.rem(286);
+        padding-right: 0;
+      }
+    }
+  }
+
+  &-records {
+    @include roundbox-white('section');
+    width: 100%;
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    &-box {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 40);
+      width: 100%;
+
+      &.type-empty {
+        @include roundbox-white;
+        @include mx.flex(flex, row, center, center);
+        width: 100%;
+        min-height: fn.rem(358);
+      }
+    }
+
+    &-list {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 32);
+      width: 100%;
+    }
+
+    .mypage-record {
+      &-head {
+        @include mx.flex(flex, row, space-between, center, wrap);
+        @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+        height: fn.rem(60);
+
+        @include records-box-type-detail {
+          height: fn.rem(68);
+        }
+      }
+
+      &-meta {
+        @include mx.flex(flex, row, space-between, flex-end);
+        gap: map.get(var.$unit, 16);
+      }
+
+      &-date {
+        @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-number {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        @include mx.divider('li', 1, 12, 20, map.get(color.$layout-status, 'info-bg-default'));
+      }
+
+      &-lines {
+        @include mx.flex(flex, column, flex-start, stretch);
+        gap: map.get(var.$unit, 32);
+      }
+
+      &-line {
+        @include mypage-product-common;
+        @include mx.flex(flex, row, flex-start, stretch);
+        gap: map.get(var.$unit, 20);
+        width: 100%;
+
+        .product {
+          &-subinfo {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 2);
+          }
+
+          &-price {
+            @include typo.typography('b2s', $color: map.get(color.$neutral-colors, '1'));
+          }
+        }
+      }
+
+      &-thumb {
+        @include mx.flex(flex, row, center, center);
+        flex: 0 0 fn.rem(80);
+      }
+
+      &-info {
+        @include mx.flex(flex, column, center, flex-start);
+        flex: 1 1 auto;
+        gap: map.get(var.$unit, 8);
+        min-width: 0;
+      }
+
+      &-status {
+        @include mx.flex(flex, row, center, center);
+        position: relative;
+        box-sizing: content-box;
+        flex: 0 0 fn.rem(120);
+        padding: 0 map.get(var.$unit, 20);
+
+        &::before,
+        &::after {
+          @include mx.position(absolute, 0);
+          width: 1px;
+          height: 100%;
+          content: '';
+          background: map.get(color.$layout-surf, 'sunken');
+        }
+
+        &::before {
+          left: 0;
+        }
+
+        &::after {
+          right: 0;
+        }
+      }
+
+      &-pay {
+        @include mx.flex(flex, column, center, flex-end);
+        flex: 0 0 fn.rem(248);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-tools {
+        @include mx.flex(flex, row, flex-start, flex-end);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-foot {
+        @include mx.flex(flex, row, flex-end, center);
+        @include mx.border('top', $color: map.get(color.$layout-border, 'quinary'));
+        height: fn.rem(60);
+      }
+
+      &-cart {
+        margin-right: auto;
+      }
+
+      &-total {
+        @include mx.flex(flex, row, flex-start, flex-end);
+        gap: map.get(var.$unit, 12);
+
+        &-label {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        &-value {
+          @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+    }
+  }
+
+  &-detail {
+    @include roundbox-white('section', 'detail');
+    width: 100%;
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .mypage-detail {
+      &-head {
+        @include mx.flex(flex, row, flex-start, center);
+        @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+        height: fn.rem(60);
+      }
+
+      &-title {
+        @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-actions {
+        margin-left: auto;
+      }
+
+      &-foot {
+        @include mx.flex(flex, row, flex-end, center);
+        @include mx.border('top', $color: map.get(color.$layout-border, 'quinary'));
+        height: fn.rem(60);
+      }
+
+      // 배송정보
+      &-shipping {
+        .shipping {
+          &-list {
+            @include mx.flex(flex, row, flex-start, flex-start);
+            gap: map.get(var.$unit, 16);
+          }
+
+          &-item {
+            &:only-of-type {
+              width: 100%;
+              background: color.$color-white;
+            }
+
+            &:not(:only-of-type) {
+              @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+              flex: 0 0 calc((100% - map.get(var.$unit, 16)) / 2);
+              padding: map.get(var.$unit, 16);
+              background: map.get(color.$layout-surf, 'raised');
+              border-radius: map.get(var.$radius, 'md');
+            }
+          }
+
+          &-info {
+            @include mx.flex(flex, row, flex-start, flex-start, wrap);
+            gap: map.get(var.$unit, 16) fn.rem(10);
+
+            dt {
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+              width: fn.rem(80);
+            }
+
+            dd {
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+              width: calc(100% - fn.rem(90));
+            }
+          }
+        }
+      }
+
+      // 결제정보
+      &-payment {
+        .payment {
+          &-list {
+            @include mx.flex(flex, row, flex-start, flex-start);
+            gap: map.get(var.$unit, 40);
+          }
+
+          &-info {
+            @include mx.flex(flex, row, flex-start, flex-start, wrap);
+            gap: map.get(var.$unit, 16) fn.rem(12);
+
+            dt {
+              @include typo.typography('b3r');
+              width: fn.rem(120);
+              padding-top: fn.rem(2.5);
+            }
+
+            dd {
+              width: calc(100% - fn.rem(132));
+            }
+          }
+
+          &-item {
+            flex: 0 0 calc((100% - map.get(var.$unit, 40)) / 2);
+
+            &.type-method {
+              dd {
+                @include mx.flex(flex, column, flex-start, flex-start);
+                gap: map.get(var.$unit, 12);
+              }
+            }
+
+            &.type-amount {
+              dd {
+                text-align: right;
+
+                &:not(.is-minus) {
+                  @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+                }
+
+                &.is-minus {
+                  @include typo.typography('h4s', $color: map.get(color.$text-status, 'brand-sub'));
+                }
+              }
+            }
+          }
+
+          &-method {
+            @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+
+            &-detail {
+              @include mx.flex(flex, row, flex-start, center, wrap);
+              gap: map.get(var.$unit, 16);
+
+              &-text {
+                @include typo.typography('b2m', $color: map.get(color.$text-status, 'info'));
+              }
+            }
+          }
+        }
+
+        &-total {
+          @include mx.flex(flex, row, flex-start, flex-end);
+          gap: map.get(var.$unit, 12);
+
+          .payment-total {
+            &-label {
+              @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            &-value {
+              @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* empty state - nodata */
+.vits-empty-state {
+  @include mx.flex(flex, column, center, center);
+  gap: map.get(var.$unit, 32);
+
+  &-content {
+    @include mx.flex(flex, column-reverse, center, center);
+    gap: map.get(var.$unit, 32);
+  }
+
+  &-text {
+    @include mx.flex(flex, column, center, center);
+    gap: map.get(var.$unit, 8);
+  }
+
+  &-title {
+    @include typo.typography('h4s', $color: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-desc {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  &-icon {
+    @include icon.ic-size(fn.rem(82));
+    overflow: hidden;
+    background: #d9d9d9;
+    border-radius: 50%;
+  }
+}
+
+/* 팝업 */
+// 미발송 내역
+.vits-unshipped {
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 12);
+
+  &-product {
+    @include mypage-product-common;
+    @include mx.flex(flex, row, flex-start, center);
+    @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+    gap: map.get(var.$unit, 20);
+    order: 1;
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 8);
+    margin-bottom: map.get(var.$unit, 20);
+    border-radius: map.get(var.$radius, 'md');
+
+    .product {
+      &-stock {
+        @include mx.flex;
+        gap: fn.rem(10);
+        margin-top: map.get(var.$unit, 16);
+
+        dt {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        dd:not(:last-of-type) {
+          margin-right: fn.rem(14);
+        }
+
+        &-status {
+          @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+        }
+
+        &-date {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'default'));
+        }
+      }
+    }
+  }
+
+  &-info {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 8);
+  }
+
+  &-thumb {
+    flex: 0 0 fn.rem(80);
+  }
+
+  &-title {
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+    order: 2;
+  }
+
+  &-text {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+    order: 3;
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+  }
+}
+
+// 배송지 목록
+.vits-address-select {
+  @include mx.flex(flex, column);
+  position: relative;
+  gap: map.get(var.$unit, 20);
+
+  &-header {
+    flex-shrink: 0;
+
+    [class*='vits-btn-'] {
+      width: 100%;
+    }
+  }
+
+  &-body {
+    flex: 1;
+    min-height: 0;
+
+    .address {
+      &-list {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 20);
+      }
+
+      &-card {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+        gap: map.get(var.$unit, 16);
+        padding: map.get(var.$unit, 16);
+        border-radius: map.get(var.$radius, 'md');
+
+        > div[class*='address-card-'] {
+          width: 100%;
+        }
+
+        &-header {
+          @include mx.flex(flex, row, space-between, center);
+          gap: map.get(var.$unit, 16);
+        }
+
+        &-title {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 16);
+        }
+
+        &-name {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-buttons {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 8);
+        }
+
+        &-info {
+          @include mx.flex(flex, row, flex-start, flex-start, wrap);
+          gap: map.get(var.$unit, 16) fn.rem(10);
+          padding: 0;
+          margin: 0;
+
+          .info-dt {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            flex: 0 0 fn.rem(80);
+            width: fn.rem(80);
+          }
+
+          .info-dd {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            flex: 0 0 calc(100% - fn.rem(80) - fn.rem(10));
+            width: calc(100% - fn.rem(80) - fn.rem(10));
+          }
+        }
+
+        &-footer {
+          .address-card-radio {
+            @include mx.flex(flex, row, center, center);
+            position: relative;
+            gap: map.get(var.$unit, 8);
+            width: 100%;
+            height: map.get(var.$unit, 36);
+            cursor: pointer;
+            background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-disable');
+            border-radius: map.get(var.$radius, 'md');
+
+            input {
+              @include mx.sr-only;
+            }
+
+            .icon {
+              @include icon.ic-size(map.get(var.$unit, 20));
+              color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable');
+            }
+
+            .text {
+              @include typo.typography(
+                'b2s',
+                $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable')
+              );
+            }
+
+            &:has(input:checked) {
+              background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+
+              .icon,
+              .text {
+                color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

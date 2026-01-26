@@ -1,0 +1,41 @@
+<%
+  /**
+   * components/kendo/kendo-datepicker-single.ejs
+   *
+   * locals
+   * - id: 선택
+   * - name: 선택
+   * - size: 선택('s' | 'm' | 'l' | 'size-s' | 'size-m' | 'size-l')
+   * - wrapClass: 선택(추가 클래스)
+   * - placeholder: 선택
+   * - dataName: 선택(data-name 속성)
+   * - options: 선택(kendo DatePicker 옵션 객체 / 함수는 넣지 말 것)
+   * - disabled: 선택(boolean)
+   */
+
+  const _id = (typeof id === 'string' && id.trim()) ? id.trim() : '';
+  const _name = (typeof name === 'string' && name.trim()) ? name.trim() : '';
+  const _sizeRaw = (typeof size === 'string' && size.trim()) ? size.trim() : '';
+  const _size = _sizeRaw ? (_sizeRaw.indexOf('size-') === 0 ? _sizeRaw : 'size-' + _sizeRaw) : 'size-m';
+  const _wrapClass = (typeof wrapClass === 'string' && wrapClass.trim()) ? wrapClass.trim() : '';
+  const _placeholder = (typeof placeholder === 'string' && placeholder.trim()) ? placeholder.trim() : '';
+  const _dataName = (typeof dataName === 'string' && dataName.trim()) ? dataName.trim() : '';
+  const _options = (typeof options !== 'undefined' && options) ? options : {};
+  const _disabled = (typeof disabled !== 'undefined' && disabled === true);
+
+  const _wrapperClassAttr = ['vits-datepicker-single', _size, _wrapClass].filter(Boolean).join(' ');
+%>
+
+<div class="<%- _wrapperClassAttr %>">
+  <input
+    class="datepicker-single"
+    type="text"
+    <% if (_id) { %>id="<%- _id %>"<% } %>
+    <% if (_name) { %>name="<%- _name %>"<% } %>
+    data-ui="kendo-datepicker"
+    data-opt="<%- JSON.stringify(_options).replace(/"/g, '&quot;') %>"
+    <% if (_dataName) { %>data-name="<%- _dataName %>"<% } %>
+    <% if (_placeholder) { %>placeholder="<%- _placeholder %>"<% } %>
+    <% if (_disabled) { %>disabled<% } %>
+  />
+</div>

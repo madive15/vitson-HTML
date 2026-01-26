@@ -1,0 +1,84 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '주문완료/실패'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-side-left -->
+            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
+            <!-- E: vits-grid-side-left -->
+
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-order-complete">
+              <!-- 메인 컨텐츠 -->
+              <section class="main-order-complete-section">
+                <%- include(`${_src}/views/components/pg-cart-oder/order-complete.ejs`) %>
+
+                <!--  -->
+                <div class="vits-order-complete-buttons">
+                  <%- include(`${_src}/views/components/button/button.ejs`, {
+                    size:'xl', 
+                    variant:'outline-secondary', 
+                    text: '홈으로', 
+                    iconLeft: true, 
+                    iconName: 'ic-arrow-left', 
+                    className:'btn-home'}) %>
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size:'xl', 
+                      variant:'primary', 
+                      text: '장바구니로 가기', 
+                      className:'btn-cart'}) %>
+                </div>
+              </section>
+            </div>
+            <!-- E: vits-grid-main -->
+
+            <!-- S: vits-grid-right -->
+            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
+            <!-- E: vits-grid-right -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'fail'일 때 주문 실패 화면 표시
+      if (type === 'slip') {
+        const section = document.querySelector('.vits-order-complete');
+        if (section) {
+          section.classList.add('order-slip');
+        }
+      }
+    </script>
+  </body>
+</html>

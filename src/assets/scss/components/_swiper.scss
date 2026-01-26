@@ -47,94 +47,94 @@
         box-shadow 0.2s ease,
         padding 0.5s ease;
     }
+  }
+}
 
-    /* -------------------------------------------------------------------------
-     * Swiper 네비게이션 버튼
-     * ----------------------------------------------------------------------- */
-    & + .vits-swiper-navs {
-      div {
-        background-image: none;
+/* -------------------------------------------------------------------------
+ * Swiper 네비게이션 버튼
+ * ----------------------------------------------------------------------- */
+.vits-swiper-navs {
+  div {
+    background-image: none;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include button.btn-reset;
+    @include mx.flex($justify: center, $align: center);
+    @include mx.position(absolute, $top: 50%);
+    width: fn.rem(36);
+    height: fn.rem(36);
+    background-color: color.$color-white;
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+    border-radius: fn.rem(46);
+    box-shadow: 0 fn.rem(4) fn.rem(7) 0 rgb(0 0 0 / 4%);
+    transition: border-color 0.2s ease;
+    transform: translateY(-50%);
+
+    // Arrow_interaction
+    @include mx.hoverable-only {
+      &:hover {
+        border-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
+    &:active {
+      background-color: map.get(color.$brand-colors, 'primary');
+      border-color: map.get(color.$brand-colors, 'primary');
+    }
+
+    &::after {
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+      content: '';
+      background-size: contain;
+    }
+  }
+
+  .swiper-button {
+    &-prev {
+      &::after {
+        @include mx.background('ic/ic-arrow-left.svg');
       }
 
-      .swiper-button-prev,
-      .swiper-button-next {
-        @include button.btn-reset;
-        @include mx.flex($justify: center, $align: center);
-        @include mx.position(absolute, $top: 50%);
-        width: fn.rem(36);
-        height: fn.rem(36);
-        background-color: color.$color-white;
-        border: 1px solid map.get(color.$layout-border, 'tertiary');
-        border-radius: fn.rem(46);
-        box-shadow: 0 fn.rem(4) fn.rem(7) 0 rgb(0 0 0 / 4%);
-        transition: border-color 0.2s ease;
-        transform: translateY(-50%);
-
-        // Arrow_interaction
-        @include mx.hoverable-only {
-          &:hover {
-            border-color: map.get(color.$brand-colors, 'primary');
-          }
-        }
-
-        &:active {
+      @include mx.hoverable-only {
+        &:hover::after {
           background-color: map.get(color.$brand-colors, 'primary');
-          border-color: map.get(color.$brand-colors, 'primary');
-        }
-
-        &::after {
-          width: map.get(var.$unit, 20);
-          height: map.get(var.$unit, 20);
-          content: '';
-          background-size: contain;
+          background-image: none;
+          mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') no-repeat center / contain;
         }
       }
 
-      .swiper-button {
-        &-prev {
-          &::after {
-            @include mx.background('ic/ic-arrow-left.svg');
-          }
+      &:active::after {
+        @include mx.background('ic/ic-arrow-left.svg');
+        filter: brightness(0) invert(1);
+      }
+    }
 
-          @include mx.hoverable-only {
-            &:hover::after {
-              background-color: map.get(color.$brand-colors, 'primary');
-              background-image: none;
-              mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') no-repeat center / contain;
-            }
-          }
+    &-next {
+      &::after {
+        @include mx.background('ic/ic-arrow-right.svg');
+      }
 
-          &:active::after {
-            @include mx.background('ic/ic-arrow-left.svg');
-            filter: brightness(0) invert(1);
-          }
-        }
-
-        &-next {
-          &::after {
-            @include mx.background('ic/ic-arrow-right.svg');
-          }
-
-          @include mx.hoverable-only {
-            &:hover::after {
-              background-color: map.get(color.$brand-colors, 'primary');
-              background-image: none;
-              mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') no-repeat center / contain;
-            }
-          }
-
-          &:active::after {
-            @include mx.background('ic/ic-arrow-right.svg');
-            filter: brightness(0) invert(1);
-          }
-        }
-
-        &.swiper-button-disabled {
-          pointer-events: none;
-          cursor: not-allowed;
-          opacity: 0.35;
+      @include mx.hoverable-only {
+        &:hover::after {
+          background-color: map.get(color.$brand-colors, 'primary');
+          background-image: none;
+          mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') no-repeat center / contain;
         }
       }
+
+      &:active::after {
+        @include mx.background('ic/ic-arrow-right.svg');
+        filter: brightness(0) invert(1);
+      }
+    }
+
+    &.swiper-button-disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+      opacity: 0.35;
     }
   }
 }

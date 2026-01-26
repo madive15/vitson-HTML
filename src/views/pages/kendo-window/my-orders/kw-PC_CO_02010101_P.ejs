@@ -1,0 +1,112 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-address-select">
+  <h2 class="sr-only">배송지 목록</h2>
+  <div class="vits-address-select-header">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, { size: 'lg', variant: 'outline-primary', text: '신규 배송지 입력', iconLeft: true, iconName: 'ic-plus' }) %>
+  </div>
+  <div class="vits-address-select-body">
+    <ul class="address-list">
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">회사</p>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '기본 배송지', variant: 'free-ship' }) %>
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-primary', text: '수정' }) %>
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', text: '삭제' }) %>
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-1" checked />
+              <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">집</p>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '기본 배송지', variant: 'free-ship' }) %>
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-primary', text: '수정' }) %>
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', text: '삭제' }) %>
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-2" />
+              <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">창고</p>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '기본 배송지', variant: 'free-ship' }) %>
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-primary', text: '수정' }) %>
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', text: '삭제' }) %>
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-3" />
+              <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

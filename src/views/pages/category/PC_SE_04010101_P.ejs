@@ -29,44 +29,20 @@
             <!-- S: vits-grid-main -->
             <div class="vits-grid-main vits-main-plp">
               <div class="vits-inner" style="padding: 100px 0">
-                <!-- 트리거 버튼 -->
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  data-modal-btn
-                  data-modal-target="mroadModal"
-                  data-modal-type="modal"
-                  data-modal-outside="true"
-                  data-modal-esc="true"
-                  data-modal-lock="true"
-                  aria-expanded="false"
+                  onclick="VitsKendoWindow.open('win710')"
                 >
-                  <span class="text">MROad 신청하기</span>
+                  <span class="k-button-text">AD 신청하기 팝업</span>
                 </button>
               </div>
 
-              <!-- 모달 -->
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/modal/modal.ejs`, {
-                  id: 'mroadModal',
-                  type: 'modal',
-                  size: '710',
-                  theme: 'theme-ad-submit',
-                  title: 'AD 신청하기',
-                  contentPath: `${_src}/views/pages/modal/modal-content-PC_SE_04010101_P.ejs`,
-                  buttons: [
-                    {
-                      text: '취소하기',
-                      variant: 'secondary',
-                      action: 'close'
-                    },
-                    {
-                      text: '문의하기',
-                      variant: 'primary',
-                      action: 'close'
-                    }
-                  ]
-                }) %>
+              <!-- 710 윈도우 (헤더 2줄 + 버튼 1개) -->
+              <% const win710 = { id: 'win710', opt: { width: 710 }, title: 'AD 신청하기', contentPath:
+              `${_src}/views/pages/kendo-window/category/kw-PC_SE_04010101_P.ejs`, buttons: [ { text: '취소하기',
+              variant: 'secondary', action: 'close' }, { text: '문의하기', variant: 'primary', action: 'close' } ] }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, win710) %>
             </div>
             <!-- E: vits-grid-main -->
 

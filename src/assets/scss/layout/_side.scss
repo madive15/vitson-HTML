@@ -11,6 +11,7 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/pages/mypage' as mypage;
 
 /* 커테고리 목록 - 왼쪽 side */
 .vits-side-plp {
@@ -76,6 +77,29 @@
         padding-top: 0;
         border-top: 0;
       }
+    }
+  }
+}
+
+/* 마이페이지 왼쪽 메뉴 */
+.vits-side-mypage {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  flex: 0 0 fn.rem(304);
+  gap: map.get(var.$unit, 20);
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .mypage-sidemenu {
+    @include mypage.roundbox-white;
+    width: 100%;
+
+    &-title {
+      @include typo.typography('h1b', $color: #101828);
+    }
+
+    &-link {
+      @include typo.typography('b2r');
+      display: inline-block;
+      margin-bottom: map.get(var.$unit, 16);
     }
   }
 }

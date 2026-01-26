@@ -12,3 +12,21 @@
 // - 스크롤 컨테이너를 별도로 만들거나 overflow를 추가하는 경우, sticky가 작동하지 않을 수 있다
 //   (클리핑/기준 변경/스크롤 컨텍스트 분산 이슈).
 // -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/wrapper' as wrapper;
+
+/* 서브 페이지 */
+.vits-grid-main {
+  &.vits-main-my-orders,
+  &.vits-main-cart-order {
+    @include wrapper.layout-sub-grid(map.get(color.$layout-surf, 'mypage'));
+  }
+}

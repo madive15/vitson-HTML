@@ -1,0 +1,29 @@
+<%
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _id = typeof id !== 'undefined' ? id : '';
+  const _value = typeof value !== 'undefined' ? value : '';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _checked = typeof checked !== 'undefined' ? checked : false;
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+  const _required = typeof required !== 'undefined' ? required : false;
+  const _ariaControls = typeof ariaControls !== 'undefined' ? ariaControls : '';
+  const _ariaExpanded = typeof ariaExpanded !== 'undefined' ? ariaExpanded : '';
+%>
+
+<label class="radio-item">
+  <input
+    type="radio"
+    <% if (_name) { %>name="<%= _name %>"<% } %>
+    <% if (_id) { %>id="<%= _id %>"<% } %>
+    <% if (_value) { %>value="<%= _value %>"<% } %>
+    <% if (_checked === true) { %>checked<% } %>
+    <% if (_disabled === true) { %>disabled<% } %>
+    <% if (_required === true) { %>required<% } %>
+    <% if (_ariaControls) { %>aria-controls="<%= _ariaControls %>"<% } %>
+    <% if (_ariaExpanded) { %>aria-expanded="<%= _ariaExpanded %>"<% } %>
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  <% if (_text) { %>
+    <span class="label-name"><%- _text %></span>
+  <% } %>
+</label>

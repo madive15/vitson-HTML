@@ -142,24 +142,43 @@
     padding: 0 map.get(var.$unit, 4);
     border-radius: map.get(var.$radius, 'sm');
 
-    &.is-today {
-      color: map.get(color.$text-status, 'brand-sub');
-      background: map.get(color.$layout-status, 'brand-bg-sub');
+    // modifier별 토큰 맵
+    $mods: (
+      today: (
+        text: map.get(color.$text-status, 'brand-sub'),
+        bg: map.get(color.$layout-status, 'brand-bg-sub'),
+        hasicon: true
+      ),
+      tomorrow: (
+        text: map.get(color.$text-status, 'info'),
+        bg: map.get(color.$layout-status, 'info-bg-sub'),
+        hasicon: false
+      ),
+      hot: (
+        text: map.get(color.$text-status, 'success'),
+        bg: map.get(color.$layout-status, 'success-bg-sub'),
+        hasicon: false
+      ),
+      count: (
+        text: map.get(color.$text-colors, 'default'),
+        bg: map.get(color.$layout-surf, 'mypage'),
+        hasicon: false
+      )
+    );
 
-      .icon {
-        @include icon.ic-size(map.get(var.$unit, 12));
-        color: map.get(color.$text-status, 'brand-sub');
+    @each $name, $opt in $mods {
+      &.is-#{$name} {
+        color: map.get($opt, text);
+        background: map.get($opt, bg);
+
+        // today만 아이콘 스타일 추가
+        @if map.get($opt, hasIcon) == true {
+          .icon {
+            @include icon.ic-size(map.get(var.$unit, 12));
+            color: map.get($opt, text);
+          }
+        }
       }
-    }
-
-    &.is-tomorrow {
-      color: map.get(color.$text-status, 'info');
-      background: map.get(color.$layout-status, 'info-bg-sub');
-    }
-
-    &.is-hot {
-      color: map.get(color.$text-status, 'success');
-      background: map.get(color.$layout-status, 'success-bg-sub');
     }
   }
 

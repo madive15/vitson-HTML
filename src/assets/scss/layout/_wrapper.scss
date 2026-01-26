@@ -9,6 +9,18 @@
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
 
+@mixin layout-sub-grid($main-bg: null) {
+  @if $main-bg {
+    padding-top: map.get(var.$unit, 40);
+    background-color: $main-bg;
+
+    .vits-grid-area {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 20);
+    }
+  }
+}
+
 /* 
   html, body { height: 100%; } 는 
   - height: 100% 체인(= .vits-wrap/.vits-grid 높이 계산) 전제 조건.
@@ -36,7 +48,6 @@ body.vits-scope {
 .vits-main {
   flex: 1 1 auto;
   min-height: 0;
-  padding-bottom: var.$vits-main-padding-bottom;
 }
 
 /* .vits-wrap [금지]
@@ -52,6 +63,13 @@ body.vits-scope {
   flex: 1 1 auto;
   min-width: 0; // 긴 컨텐츠로 인한 가로 넘침 방지
   min-height: 0;
+  padding-bottom: var.$vits-main-padding-bottom;
+
+  &-content {
+    flex: 1 1 auto;
+    min-width: 0; // 긴 컨텐츠로 인한 가로 넘침 방지
+    min-height: 0;
+  }
 }
 
 /* 좌/우 사이드 */

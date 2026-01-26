@@ -1,0 +1,229 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _type = typeof type !== 'undefined' ? type : 'order';
+%>
+
+<% if (_type === 'toggle') { %>
+<!-- 주문/배송조회 목록 -->
+<div class="vits-mypage-query" data-toggle-scope>
+  <div class="mypage-query-fields">
+    <dl class="mypage-query-period">
+      <dt class="mypage-query-label">조회 기간</dt>
+      <dd class="mypage-query-control">
+        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
+          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
+            <span class="text">1개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">3개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">6개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">1년</span>
+          </button>
+        </div>
+      </dd>
+      <dd class="mypage-query-control mypage-query-period-range">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+          options: {
+            id: 'testPicker',
+            startName: 'startDate',
+            endName: 'endDate',
+          }
+        }) %>
+      </dd>
+    </dl>
+
+    <div class="mypage-query-advanced" data-toggle-box="mypageQueryAdvanced">
+      <ul class="mypage-query-detail">
+        <li>
+          <p class="mypage-query-label">주문상태</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'my-order-status',
+              name: 'sort',
+              placeholder: '주문상태',
+              options: [
+                { value: '전체', text: '전체' },
+                { value: '주문접수', text: '주문접수' },
+                { value: '결제완료', text: '결제완료' },
+                { value: '주문완료', text: '주문완료' },
+                { value: '주문확정', text: '주문확정' },
+                { value: '배송준비중', text: '배송준비중' },
+                { value: '배송중', text: '배송중' },
+                { value: '배송완료', text: '배송완료' },
+                { value: '취소', text: '취소' },
+                { value: '반품', text: '반품' },
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+              disabled: false,
+              portal: true,
+            }) %>
+          </div>
+        </li>
+        <li>
+          <p class="mypage-query-label">배송지</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'my-order-status',
+              name: 'sort',
+              placeholder: '주문상태',
+              options: [
+                { value: '전체', text: '전체' },
+                { value: '우리집', text: '우리집' },
+                { value: '엄마네', text: '엄마네' },
+                { value: '회사', text: '회사' },
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+              disabled: false,
+              portal: true,
+            }) %>
+          </div>
+        </li>
+        <li>
+          <p class="mypage-query-label">검색어</p>
+          <div class="mypage-query-control type-search">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-search.ejs`, {
+              idPrefix: 'my-orders-search',
+              action: '/orders-search',
+              name: 'my-orders-search',
+              placeholder: '상품명, 주문번호 검색',
+              addClassName: 'size-sm'
+            }) %>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-query-actions">
+    <button
+      type="button"
+      type="button"
+      class="mypage-query-toggle"
+      data-toggle-btn
+      data-toggle-target="mypageQueryAdvanced"
+      aria-expanded="false"
+      data-aria-label-base="상세조회"
+    >
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'filter-2' }) %> </span>
+      <span class="text">상세조회</span>
+    </button>
+    <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'secondary', text: '조회하기',
+    disabled: true, className: 'btn-fix-w120'}) %>
+  </div>
+</div>
+
+<!-- prettier-ignore -->
+<% } else if (_type === 'default') { %>
+<!-- 취소/반품조회 목록 -->
+<div class="vits-mypage-query type-ver2">
+  <div class="mypage-query-fields">
+    <dl class="mypage-query-period">
+      <dt class="mypage-query-label">조회 기간</dt>
+      <dd class="mypage-query-control">
+        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
+          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
+            <span class="text">1개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">3개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">6개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">1년</span>
+          </button>
+        </div>
+      </dd>
+      <dd class="mypage-query-control mypage-query-period-range">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+          options: {
+            id: 'testPicker',
+            startName: 'startDate',
+            endName: 'endDate',
+          }
+        }) %>
+      </dd>
+    </dl>
+
+    <div class="mypage-query-advanced">
+      <ul class="mypage-query-detail">
+        <li>
+          <p class="mypage-query-label">주문상태</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'my-order-status',
+            name: 'sort',
+            placeholder: '주문상태',
+            options: [
+              { value: '전체', text: '전체' },
+              { value: '주문접수', text: '주문접수' },
+              { value: '결제완료', text: '결제완료' },
+              { value: '주문완료', text: '주문완료' },
+              { value: '주문확정', text: '주문확정' },
+              { value: '배송준비중', text: '배송준비중' },
+              { value: '배송중', text: '배송중' },
+              { value: '배송완료', text: '배송완료' },
+              { value: '취소', text: '취소' },
+              { value: '반품', text: '반품' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+            disabled: false,
+            portal: true,
+          }) %>
+          </div>
+        </li>
+        <li>
+          <p class="mypage-query-label">배송지</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'my-order-status',
+            name: 'sort',
+            placeholder: '주문상태',
+            options: [
+              { value: '전체', text: '전체' },
+              { value: '우리집', text: '우리집' },
+              { value: '엄마네', text: '엄마네' },
+              { value: '회사', text: '회사' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+            disabled: false,
+            portal: true,
+          }) %>
+          </div>
+        </li>
+        <li>
+          <p class="mypage-query-label">검색어</p>
+          <div class="mypage-query-control type-search">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-search.ejs`, {
+              idPrefix: 'my-orders-search',
+              action: '/orders-search',
+              name: 'my-orders-search',
+              placeholder: '상품명, 주문번호 검색',
+              addClassName: 'size-sm'
+            }) %>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-query-actions">
+    <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant: 'secondary', text: '조회하기',
+    disabled: true, className: 'btn-fix-w120'}) %>
+  </div>
+</div>
+<% } %>

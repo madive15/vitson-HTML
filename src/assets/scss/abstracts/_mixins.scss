@@ -83,6 +83,13 @@
   }
 }
 
+@mixin focus-active {
+  &:focus-visible,
+  &:active {
+    @content;
+  }
+}
+
 @mixin common-mouse-event {
   @include hoverable-only {
     &:hover {
@@ -90,8 +97,7 @@
     }
   }
 
-  &:focus-visible,
-  &:active {
+  @include focus-active {
     @content;
   }
 }

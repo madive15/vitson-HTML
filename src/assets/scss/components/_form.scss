@@ -192,6 +192,7 @@
   &.size-s {
     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .checkbox-icon {
       margin-top: 0;
     }
@@ -200,6 +201,7 @@
   &.size-m {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .checkbox-icon {
       margin-top: 1px;
     }
@@ -237,6 +239,7 @@
         }
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       .checkbox-icon {
         @include icon.ic-size(map.get(var.$unit, 32));
         display: none;
@@ -263,8 +266,9 @@
 }
 
 /* check box - single */
-[class^='checkbox-single-'] {
+[class*='checkbox-single-'] {
   @include mx.flex(inline-flex, row, flex-start, center);
+  position: relative; // input 숨김 위치 기준
   cursor: pointer;
 
   input {
@@ -277,7 +281,9 @@
     background: color.$color-white;
     border-radius: 4px;
     box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
-    transition: box-shadow 0.2s, background 0.2s;
+    transition:
+      box-shadow 0.2s,
+      background 0.2s;
   }
 
   &:has(input:checked)::before {
@@ -298,7 +304,7 @@
     }
   }
 
-  .agree-text{
+  .agree-text {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
     width: fit-content;
     margin-left: map.get(var.$unit, 8);
@@ -326,6 +332,7 @@
 /* input text */
 $input-size: (
   'default': fn.rem(32),
+  'medium': fn.rem(36),
   'large': fn.rem(44)
 );
 
@@ -359,6 +366,13 @@ $input-size: (
       height: $minh;
 
       @if $key == 'default' {
+        input {
+          @include typo.typography('b3r');
+          padding: 0 map.get(var.$unit, 12);
+        }
+      }
+
+      @if $key == 'medium' {
         input {
           @include typo.typography('b3r');
           padding: 0 map.get(var.$unit, 12);
@@ -424,6 +438,22 @@ $input-size: (
         @include icon.ic-size(map.get(var.$unit, 24));
         color: map.get(color.$icon-neutral, 'primary');
         transform: translateY(-50%);
+      }
+    }
+  }
+
+  &.size-sm {
+    .vits-input-search-form {
+      height: map.get(var.$unit, 32);
+
+      .input-search {
+        padding: 0 map.get(var.$unit, 24) 0 map.get(var.$unit, 8);
+        font-size: fn.rem(14);
+
+        &-btn {
+          @include icon.ic-size(map.get(var.$unit, 16));
+          right: map.get(var.$unit, 8);
+        }
       }
     }
   }
@@ -527,7 +557,7 @@ $textarea-size: (
 }
 
 /* form list */
-.vits-form {
+.vits-pform {
   &-item {
     @include mx.flex(flex, row, flex-start, flex-start);
     gap: map.get(var.$unit, 24);
@@ -539,7 +569,7 @@ $textarea-size: (
       line-height: map.get(var.$unit, 44);
     }
 
-    & + .vits-form-item {
+    & + .vits-pform-item {
       margin-top: map.get(var.$unit, 12);
     }
   }
@@ -567,13 +597,14 @@ $textarea-size: (
   }
 
   &-actions {
+    @include mx.flex(flex, row, center, center);
     padding-top: map.get(var.$unit, 24);
 
     .checkbox-wrapper {
       width: 100%;
 
       .checkbox-item {
-        @include mx.flex(flex, row, center, center);
+        @include mx.flex(inline-flex, row, center, center);
 
         .label-name {
           max-width: 100%;
@@ -615,6 +646,257 @@ $textarea-size: (
 
     .validation-message p {
       @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand'));
+    }
+  }
+}
+
+/* single datepicker 임시 위치 */
+$vits-datepicker-single-sizes: (
+  size-s: (
+    typo: 'b4r',
+    min-h: 28
+  ),
+  size-m: (
+    typo: 'b3r',
+    min-h: 32
+  ),
+  size-l: (
+    typo: 'b3r',
+    min-h: 36
+  )
+);
+
+@mixin vits-datepicker-single-base {
+  @include mx.flex(inline-flex, $align: center, $justify: space-between);
+  padding: 0 map.get(var.$unit, 8);
+  font-size: inherit;
+  background: map.get(color.$layout-surf, 'base');
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'sm');
+}
+
+@mixin vits-datepicker-single-input {
+  @include mx.flex(inline-flex, $align: center);
+  height: 100%;
+  min-height: 100%;
+  padding: 0;
+  color: map.get(color.$text-colors, 'secondary');
+  border: 0;
+
+  &::placeholder {
+    color: map.get(color.$text-colors, 'muted');
+  }
+}
+
+@mixin vits-datepicker-single-size($typo, $min-h) {
+  @include typo.typography($typo);
+  min-height: fn.rem($min-h);
+}
+
+.vits-datepicker-single {
+  &:is(.size-s, .size-m, .size-l) {
+    @include vits-datepicker-single-base;
+
+    .datepicker-single {
+      @include vits-datepicker-single-input;
+    }
+  }
+
+  @each $size, $opt in $vits-datepicker-single-sizes {
+    &.#{$size} {
+      .datepicker-single {
+        @include vits-datepicker-single-size(map.get($opt, typo), map.get($opt, min-h));
+      }
+    }
+  }
+
+  // 달력모양 이미지 제어
+  [aria-label='select'] {
+    width: auto;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .k-svg-i-calendar {
+    @include mx.background('ic/ic-calendar.svg');
+    width: fn.rem(22);
+    height: fn.rem(22);
+
+    svg {
+      display: none;
+    }
+  }
+
+  /* 달력 컨테이너 */
+  $calendar-cell-size: fn.rem(32);
+  $calendar-cell-hover-bg: map.get(color.$layout-surf, 'sunken');
+  $calendar-other-month-color: map.get(color.$text-colors, 'muted');
+  
+  /* ===== Calendar Shell ===== */
+  &.k-calendar,
+  &.k-calendar-container .k-calendar {
+    padding: map.get(var.$unit, 20);
+    overflow: hidden;
+    border: 1px solid map.get(color.$layout-border, 'primary');
+    border-radius: map.get(var.$radius, 'md');
+  }
+  
+  /* ===== Header ===== */
+  .k-header.k-hstack {
+    width: fn.rem(214);
+    padding: 0;
+    margin: 0 auto;
+    background: none;
+    border: 0;
+    box-shadow: revert-layer;
+  
+    .k-button.k-rounded-md {
+      padding: 0;
+  
+      .k-button-text {
+        @include typo.typography('h2b', $color: map.get(color.$text-status, 'primary'));
+      }
+    }
+  
+    /* ===== Header Buttons ===== */
+    .k-calendar-nav-prev,
+    .k-calendar-nav-next {
+      @include icon.ic-size(map.get(var.$unit, 32));
+  
+      .k-button-icon {
+        @include icon.ic-size(map.get(var.$unit, 32));
+  
+        svg {
+          display: none;
+        }
+      }
+    }
+  
+    .k-calendar-nav-prev {
+      .k-button-icon {
+        @include mx.background('ic/ic-arrow-left.svg');
+      }
+    }
+  
+    .k-calendar-nav-next {
+      .k-button-icon {
+        @include mx.background('ic/ic-arrow-right.svg');
+      }
+    }
+  }
+  
+  /* ===== View / Table ===== */
+  .k-calendar-view.k-calendar-monthview {
+    width: 100%;
+    padding: 0;
+  }
+  
+  .k-calendar-table {
+    width: fn.rem(320);
+    margin: 0;
+    transform: none !important;
+  }
+  
+  /* ===== Table Head ===== */
+  .k-calendar-th {
+    height: 18px;
+    min-height: 18px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: fn.rem(58);
+    color: map.get(color.$text-colors, 'primary');
+  }
+  
+  /* ===== Table Body ===== */
+  .k-calendar-tbody {
+    .k-calendar-td {
+      width: auto;
+      padding: 0;
+  
+      .k-link {
+        width: $calendar-cell-size;
+        height: $calendar-cell-size;
+        padding: 0;
+        margin: 0 auto;
+        font-weight: 400;
+        background-color: transparent;
+        border-radius: 50%;
+        box-shadow: none;
+      }
+  
+      // 지난 날짜
+      &.date-past {
+        pointer-events: none;
+        cursor: none;
+  
+        .k-link {
+          color: map.get(color.$text-colors, 'muted');
+        }
+      }
+  
+      // 날짜 셀 제어
+      &:hover {
+        width: auto;
+        padding: 0;
+        color: map.get(color.$text-colors, 'primary');
+        background-color: transparent;
+        border-radius: 50%;
+  
+        .k-link {
+          background-color: $calendar-cell-hover-bg;
+        }
+      }
+  
+      &.k-selected {
+        .k-link {
+          color: #fff;
+          background-color: map.get(color.$text-status, 'brand');
+          box-shadow: none;
+        }
+      }
+
+      /* ===== Today / Focus ===== */
+      &.k-today {
+        width: $calendar-cell-size;
+        height: $calendar-cell-size;
+        color: map.get(color.$text-colors, 'primary');
+        border: 0;
+      
+        .k-link {
+          font-weight: 700 !important;
+          color: map.get(color.$text-colors, 'primary');
+        }
+      
+        &.k-focus {
+          .k-link {
+            border: 0;
+            box-shadow: none;
+          }
+        }
+      
+        &.k-selected {
+          color: #fff;
+      
+          .k-link {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+    
+  /* ===== Other Month ===== */
+  .k-other-month {
+    .k-link {
+      color: $calendar-other-month-color;
+    }
+  
+    &.k-weekend {
+      pointer-events: none;
+      cursor: none;
     }
   }
 }
