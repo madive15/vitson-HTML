@@ -4,6 +4,8 @@
  * @description
  *  - 할인금액 토글 처리 (클릭 시 할인금액 상세 표시/숨김)
  *  - 배송방법 탭과 패널 매칭 처리 (data-method/data-panel 기반)
+ *  - 결제수단 탭과 패널 매칭 처리 (vits-payment-tab)
+ *  - 결제수단 라디오 버튼과 패널 매칭 처리 (vits-payment-item)
  * @maintenance
  */
 
@@ -103,6 +105,212 @@
           var $wrap = $btn.closest(shippingWrapSelector);
           var method = $btn.attr('data-method');
           setShippingState($wrap, method);
+        });
+
+      // 결제수단 탭 처리
+      var paymentTabSelector = '.vits-payment-tab[role="tab"]';
+      var paymentTabPanelSelector = '.vits-payment-tab-panel[role="tabpanel"]';
+
+      function setPaymentTabState($tab) {
+        if (!$tab.length) return;
+
+        var tabId = $tab.attr('id');
+        var controlsId = $tab.attr('aria-controls');
+        var $tablist = $tab.closest('[role="tablist"]');
+        var $tabs = $tablist.find(paymentTabSelector);
+        var $parentPanel = $tablist.closest('.vits-payment-panel');
+        var $panels = $parentPanel.find(paymentTabPanelSelector);
+
+        // 모든 탭 비활성화
+        $tabs.each(function () {
+          var $t = $(this);
+          $t.removeClass('is-active');
+          $t.attr('aria-selected', 'false');
+          $t.attr('aria-expanded', 'false');
+        });
+
+        // 선택된 탭 활성화
+        $tab.addClass('is-active');
+        $tab.attr('aria-selected', 'true');
+
+        // 모든 패널 비활성화
+        $panels.each(function () {
+          var $p = $(this);
+          $p.removeClass('is-active');
+        });
+
+        // 해당하는 패널 활성화
+        if (controlsId) {
+          var $targetPanel = $('#' + controlsId);
+          if ($targetPanel.length) {
+            $targetPanel.addClass('is-active');
+            // aria-expanded 업데이트 (탭 버튼)
+            $tab.attr('aria-expanded', 'true');
+            // aria-labelledby 매칭 확인
+            var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+            if (!currentLabelledBy || currentLabelledBy !== tabId) {
+              $targetPanel.attr('aria-labelledby', tabId);
+            }
+          }
+        }
+
+        // 세금계산서 발급 섹션 표시/숨김 처리
+        updateTaxSectionVisibility();
+      }
+
+      // 결제수단 라디오 버튼과 패널 처리
+      var paymentItemSelector = '.vits-payment-item';
+      var paymentRadioSelector = '.vits-payment-item .radio-item input[type="radio"]';
+      var paymentPanelSelector = '.vits-payment-panel';
+
+      function setPaymentPanelState($radio) {
+        if (!$radio.length) return;
+
+        var radioId = $radio.attr('id');
+        var controlsId = $radio.attr('aria-controls');
+        var $item = $radio.closest(paymentItemSelector);
+        var $methodWrap = $item.closest('.vits-payment-method');
+        var $allItems = $methodWrap.find(paymentItemSelector);
+        var $allPanels = $methodWrap.find(paymentPanelSelector);
+
+        // 모든 패널 비활성화
+        $allPanels.each(function () {
+          var $p = $(this);
+          $p.removeClass('is-active');
+        });
+
+        // 모든 라디오 버튼의 aria-expanded를 false로 초기화
+        $allItems.find(paymentRadioSelector).each(function () {
+          var $r = $(this);
+          $r.attr('aria-expanded', 'false');
+        });
+
+        // 선택된 라디오 버튼의 패널 활성화
+        if (controlsId) {
+          var $targetPanel = $('#' + controlsId);
+          if ($targetPanel.length) {
+            $targetPanel.addClass('is-active');
+            // aria-expanded 업데이트 (선택된 라디오 버튼만 true)
+            $radio.attr('aria-expanded', 'true');
+            // aria-labelledby 매칭 확인
+            var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+            if (!currentLabelledBy || currentLabelledBy !== radioId) {
+              $targetPanel.attr('aria-labelledby', radioId);
+            }
+          } else {
+            // 패널을 찾을 수 없으면 false로 설정
+            $radio.attr('aria-expanded', 'false');
+          }
+        } else {
+          // aria-controls가 없으면 false로 설정
+          $radio.attr('aria-expanded', 'false');
+        }
+
+        // 세금계산서 발급 섹션 표시/숨김 처리
+        updateTaxSectionVisibility();
+
+        // pay-credit 선택 시 tax-invoice-batch 자동 체크
+        if (radioId === 'pay-credit') {
+          var $taxInvoiceBatch = $('#tax-invoice-batch');
+          if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
+            $taxInvoiceBatch.prop('checked', true).trigger('change');
+          }
+        }
+      }
+
+      // 세금계산서 발급 섹션 표시/숨김 처리 함수
+      function updateTaxSectionVisibility() {
+        var $taxSection = $('.vits-tax');
+        var showTax = false;
+
+        // 활성화된 탭 확인 (tab-simple-account)
+        var $activeTab = $(paymentTabSelector + '.is-active');
+        if ($activeTab.length && $activeTab.attr('id') === 'tab-simple-account') {
+          showTax = true;
+        }
+
+        // 체크된 라디오 버튼 확인 (pay-transfer, pay-bank, pay-credit)
+        if (!showTax) {
+          var checkedRadioId = $(paymentRadioSelector + ':checked').attr('id');
+          var showTaxIds = ['pay-transfer', 'pay-bank', 'pay-credit'];
+          if (showTaxIds.indexOf(checkedRadioId) !== -1) {
+            showTax = true;
+          }
+        }
+
+        if (showTax) {
+          $taxSection.addClass('is-active');
+        } else {
+          $taxSection.removeClass('is-active');
+        }
+      }
+
+      // 초기 상태 설정
+      // 모든 탭의 aria-expanded 초기화
+      $(paymentTabSelector).each(function () {
+        var $tab = $(this);
+        var isActive = $tab.hasClass('is-active');
+        var controlsId = $tab.attr('aria-controls');
+
+        if (controlsId) {
+          var $panel = $('#' + controlsId);
+          var isPanelActive = $panel.length && $panel.hasClass('is-active');
+          // 탭이 활성화되어 있고 패널도 활성화되어 있으면 true
+          $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
+        } else {
+          $tab.attr('aria-expanded', 'false');
+        }
+      });
+
+      $(paymentTabSelector + '.is-active').each(function () {
+        setPaymentTabState($(this));
+      });
+
+      // 초기 상태에서 모든 라디오 버튼의 aria-expanded 설정
+      $(paymentRadioSelector).each(function () {
+        var $radio = $(this);
+        var controlsId = $radio.attr('aria-controls');
+        var isChecked = $radio.is(':checked');
+
+        if (controlsId) {
+          var $panel = $('#' + controlsId);
+          var isPanelActive = $panel.length && $panel.hasClass('is-active');
+          // 체크되어 있고 패널이 활성화되어 있으면 true, 아니면 false
+          $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
+        } else {
+          $radio.attr('aria-expanded', 'false');
+        }
+      });
+
+      $(paymentRadioSelector + ':checked').each(function () {
+        setPaymentPanelState($(this));
+      });
+
+      // 초기 상태에서 pay-credit이 체크되어 있으면 tax-invoice-batch도 체크
+      var $payCredit = $('#pay-credit');
+      if ($payCredit.length && $payCredit.is(':checked')) {
+        var $taxInvoiceBatch = $('#tax-invoice-batch');
+        if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
+          $taxInvoiceBatch.prop('checked', true);
+        }
+      }
+
+      // 초기 상태에서 세금계산서 섹션 표시 여부 확인
+      updateTaxSectionVisibility();
+
+      // 결제수단 탭 클릭 이벤트
+      $(document)
+        .off('click.cartOrderPaymentTab', paymentTabSelector)
+        .on('click.cartOrderPaymentTab', paymentTabSelector, function (e) {
+          e.preventDefault();
+          setPaymentTabState($(this));
+        });
+
+      // 결제수단 라디오 버튼 변경 이벤트
+      $(document)
+        .off('change.cartOrderPaymentRadio', paymentRadioSelector)
+        .on('change.cartOrderPaymentRadio', paymentRadioSelector, function () {
+          setPaymentPanelState($(this));
         });
     }
   };

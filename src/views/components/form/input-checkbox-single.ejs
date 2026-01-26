@@ -1,0 +1,47 @@
+<%
+  const _datas = typeof datas !== 'undefined' ? datas : [
+    {
+      className: 's',
+      name: 'ckbox1',
+      value: 'checkbox-single-s',
+      srText: '단독 체크박스 (S)',
+    },
+    {
+      className: 'm',
+      name: 'ckbox2',
+      value: 'checkbox-single-m',
+      checked: true,
+      srText: '단독 체크박스 (M)',
+    },
+    {
+      className: 'l',
+      name: 'ckbox3',
+      value: 'checkbox-single-l',
+      srText: '단독 체크박스 (L)',
+    },
+    {
+      className: 's',
+      name: 'vits-cart-checkbox',
+      value: 'vits-cart-checkbox',
+      srText: '동의 체크란',
+      agreeText: '동의하기 버튼 같은 UI가 필요할 때 사용합니다.',
+    },
+  ];
+%>
+
+<% _datas.forEach((data) => { %>
+  <label class="checkbox-single-<%= data.className %>">
+    <input
+      type="checkbox"
+      name="<%= data.name %>"
+      value="<%= data.value %>"
+      <% if (data.disabled === true) { %>disabled<% } %>
+      <% if (data.checked === true) { %>checked<% } %>
+      <% if (data.required === true) { %>required<% } %>
+    />
+    <% if (data.srText) { %><span class="sr-only"><%= data.srText %></span> <% } %>
+    <% if (data.agreeText) { %>
+      <p class="agree-text"><%= data.agreeText %></p>
+    <% } %>
+  </label>
+<% }); %>

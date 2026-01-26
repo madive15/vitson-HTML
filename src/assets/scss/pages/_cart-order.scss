@@ -32,11 +32,6 @@
   border-radius: map.get(var.$radius, 'sm');
 }
 
-/* 안내 텍스트 (blue) */
-@mixin cart-order-blue-notice {
-  @include typo.typography('b4r', $color: map.get(color.$text-status, 'info'));
-}
-
 /* 안내 텍스트 아이콘 (info) */
 @mixin cart-order-info-icon(
   $text-color: map.get(color.$text-status, 'info-sub'),
@@ -45,9 +40,8 @@
 ){
   $icon-size: fn.rem(12);
 
-  @include mx.flex($align: center);
-  @include typo.typography('b3r', $color: $text-color);
-  gap: map.get(var.$unit, 4);
+  @include mx.flex($align: flex-start);
+  @include typo.typography('b4r', $color: $text-color);
 
   @if $bold-selector {
     #{$bold-selector} {
@@ -58,26 +52,19 @@
   &::before{
     display: inline-block;
     width: $icon-size;
+    min-width: $icon-size;
     height: $icon-size;
+    margin-top: fn.rem(2);
+    margin-right: map.get(var.$unit, 4);
     content: '';
     background-color: $icon-color;
     mask: url('/public/resources/img/mro/renewal/ic/ic-tip-info.svg') no-repeat center / contain;
   }
 }
 
-/* 장바구니/주문서 페이지 일 경우에 mypage배경색 적용 */
-.vits-main {
-  &:has(.vits-main-cart-order) {
-    padding-top: map.get(var.$unit, 40);
-    background: map.get(color.$layout-surf, 'mypage');
-  }
-}
-
 /* 최상위 class: vits-main-cart-order */
 .vits-main-cart-order{
-  @include mx.flex($direction: column);
-  gap: map.get(var.$unit, 20);
-  padding-right: map.get(var.$unit, 20);
+  min-width: 1024px;
 }
 
 /* ===장바구니=== */
@@ -85,6 +72,7 @@
   width: 100%;
   background: map.get(color.$layout-surf, 'base');
   border-radius: map.get(var.$radius, 'lg');
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
 
   &-header {
     padding: fn.rem(17) fn.rem(32);
@@ -209,7 +197,7 @@
     
     &-check {
       .checkbox-single-s {
-        margin-top: fn.rem(28);
+        margin-top: fn.rem(32);
       }
     }
 
@@ -273,6 +261,7 @@
 
     &-badge {
       @include mx.flex($align: center);
+      flex-wrap: wrap;
       gap: map.get(var.$unit, 2);
       padding-top: map.get(var.$unit, 4);
     }
@@ -470,10 +459,12 @@
 
       .label {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        white-space: nowrap;
       }
 
       .value {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+        white-space: nowrap;
 
         &.is-discount{
           color: map.get(color.$text-status, 'brand');
@@ -515,6 +506,7 @@
   padding-bottom: map.get(var.$unit, 32);
   background: map.get(color.$layout-surf, 'base');
   border-radius: map.get(var.$radius, 'lg');
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
 
   /* header */
   &-header {
@@ -694,6 +686,10 @@
   &-field {
     @include mx.flex($align: center);
     gap: map.get(var.$unit, 8);
+
+    .vits-datepicker-single{
+      width: 100%;
+    }
   
     /* 셀렉트 영역 */
     .vits-select{
@@ -701,13 +697,13 @@
     }
 
     .vits-select-value{
-      font-size: fn.rem(16);
+      font-size: fn.rem(14);
     }
 
     .vits-select-trigger{
       justify-content: space-between;
       width: 100%;
-      min-height: map.get(var.$unit, 44);
+      min-height: map.get(var.$unit, 36);
       padding: 0 map.get(var.$unit, 16);
     }
 
@@ -743,9 +739,22 @@
 }
 
 /* ===결제 정보=== */
+/* aside 영역 초상위 */
+.vits-side-payment{
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  width: 522px;
+  min-width: 400px;
+  max-width: 522px;
+}
+
 /* 결제 전체 */
 .vits-payment {
   @include mx.flex($direction: column);
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
 
   /* ===결제정보 요약=== */
   &-summary {
@@ -817,11 +826,6 @@
     strong{
       @include typo.typography('b2sb', $color: map.get(color.$text-status, 'brand'));
     }
-  
-    .is-emphasis {
-      font-size: fn.rem(18);
-      font-weight: 700;
-    }
   }
 
   &-notice {
@@ -837,174 +841,390 @@
     @include cart-order-surf-box;
     width: calc(100% - fn.rem(64));
     margin: map.get(var.$unit, 16) auto 0;
-    
-    &-text{
-      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
-      width: calc(100% - fn.rem(24));
-      margin-left: map.get(var.$unit, 8);
-
-    }
 
     .checkbox-single-s{
       align-items: flex-start;
     }
-
   }
 
   /* ===결제수단 영역=== */
-  // &-method { }
+
   /* 결제수단 단위 */
   &-item {
-    @include mx.flex($direction: column);
-    gap: map.get(var.$unit, 12);
-    padding: map.get(var.$unit, 16) 0;
-  
     @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
-  
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+
     &:last-child {
       border-bottom: 0;
     }
-  }
-}
 
-/* 라디오 공통 */
-.vits-radio {
-  @include mx.flex($align: center);
-  gap: map.get(var.$unit, 8);
-  cursor: pointer;
-
-  &.radio-item {
-    input {
-      @include form.input-common('radio');
+    /* 라디오 공통 */
+    .radio-item {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+      cursor: pointer;
+    
+      .label-name {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+        align-items: center;
+        white-space: nowrap;
+    
+        em {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          margin-left: map.get(var.$unit, 2);
+          font-style: normal;
+          line-height: normal;
+        }
+      }
     }
   }
 
-  span {
-    @include mx.flex($direction: column);
-    gap: map.get(var.$unit, 2);
+  /* ===간편결제 탭=== */
+  &-tabs {
+    @include mx.flex;
+    padding: map.get(var.$unit, 2) ;
+    background-color: map.get(color.$layout-surf, 'sunken');
+    border-radius: map.get(var.$radius, 'sm');
+  }
 
-    em {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+  &-tab {
+    @include button.btn-reset;
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    flex: 1;
+    color: map.get(color.$text-colors, 'tertiary');
+    border-radius: map.get(var.$radius, 'sm');
+
+    
+    &.is-active {
+      padding: map.get(var.$unit, 8) 0;
+      font-weight: 600;
+      color: map.get(color.$text-status, 'brand');
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'brand');
+      border-radius: map.get(var.$radius, 'sm');
     }
   }
 }
 
-/* =========================
- * 하위 패널 (radio 연결)
- * ========================= */
-.vits-payment-panel {
-  padding: map.get(var.$unit, 16);
-  background-color: map.get(color.$layout-surf, 'sunken');
+/* 간편결제 > 탭 패널 */
+.vits-payment-tab-panel {  
+  display: none;
+  margin-top: map.get(var.$unit, 12);
+  border: 1px solid map.get(color.$layout-border, 'quinary');
   border-radius: map.get(var.$radius, 'md');
+
+  .vits-payment-notice{
+    min-height: fn.rem(34);
+    padding: 0 map.get(var.$unit, 16);
+
+    .notice-text{
+      flex: 1;
+    }
+
+    .pay-manage{
+      @include mx.flex($align: center, $justify: end);
+      text-align: right;
+
+      .vits-text-link{
+        @include mx.flex($align: center);
+        @include typo.typography('b4b', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  &#panel-simple-card{
+    padding: map.get(var.$unit, 16) 0 ;
+  }
+
+  &#panel-simple-account{
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 36) map.get(var.$unit, 24) ;
+
+    .vits-payment-notice{
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0;
+      margin-bottom: map.get(var.$unit, 24);
+
+      &::before{
+        content: none;
+      }
+    }
+  }
 
   &.is-active {
     display: block;
   }
 
-  &[hidden] {
-    display: none;
+  /* ===비츠온페이 카드=== */
+  .vits-card{
+    &-list{
+      padding: map.get(var.$unit, 20)  0;
+      padding-left: map.get(var.$unit, 16);
+
+      .vits-swiper-navs{
+        &::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 1;
+          width: 40px;
+          height: 100%;
+          content: '';
+          background: #fff;
+          background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 78%) 50%, rgb(255 255 255 / 100%) 100%);
+        }
+
+        &::before {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          width: 20px;
+          height: 100%;
+          content: '';
+          background: #fff;
+          background: linear-gradient(-90deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 78%) 50%, rgb(255 255 255 / 100%) 100%);
+        }
+      }
+
+      .swiper-button-next{
+        right: 5px;
+      }
+
+      .swiper-button-prev{
+        left: 5px;
+      }
+
+      .swiper-button-disabled{
+        opacity: 0;
+      }
+    }
+
+    /* 비츠온페이 카드 리스트 (swiper) */
+    &-item{
+      @include mx.flex($direction: column, $justify: center);
+      min-height: fn.rem(106);
+      padding: 0 map.get(var.$unit, 24);
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$icon-neutral, 'tertiary');
+      border-radius: map.get(var.$radius, 'md');
+      
+      .card-brand{
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+        margin-bottom: map.get(var.$unit, 10);
+      }
+
+      .card-name,
+      .card-number{
+        @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+        margin-bottom: map.get(var.$unit, 4);
+      }
+
+      &.swiper-slide-active {
+        @include mx.border(all, 2px, solid, map.get(color.$icon-status, 'info'));
+        background-color: map.get(color.$layout-status, 'info-bg-sub');
+      }
+    }
+
+    /* 비츠온페이 카드할부 폼 */
+    &-form{
+      @include cart-order-surf-box(map.get(color.$layout-surf, 'raised'));
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 32) ;
+      margin: 0 map.get(var.$unit, 16);
+
+      .vits-form-row{
+        @include mx.flex($align: center, $justify: flex-start);
+        padding-bottom: map.get(var.$unit, 16);
+      }
+
+      .vits-form-item{
+        @include mx.flex($direction: column);
+        flex: 1;
+        gap: map.get(var.$unit, 4);
+      }
+
+      .vits-form-label{
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .vits-form-value{
+        @include typo.typography('b4b', $color: map.get(color.$text-colors, 'primary'));
+        padding-top: map.get(var.$unit, 4);
+      }
+
+      .vits-form-select,
+      .vits-select{
+        width: 100%;
+        
+        .vits-select-trigger{
+          @include mx.flex($align: center, $justify: space-between);
+          width: 100%;
+        }
+
+        .vits-select-list{
+          width: 100% ;
+        }
+      }
+    }
+  }
+
+  /* ===비츠온페이 계좌=== */
+  .type-account-empty {
+    gap: map.get(var.$unit, 12);
+    justify-content: center;
+    height: fn.rem(180);
+    background-color: map.get(color.$layout-surf, 'base');
+    border: 1px solid map.get(color.$layout-border, 'quaternary');
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: 0 4px 7px 0 rgb(0 0 0 / 3.9%);
+  
+    &:hover .icon {
+      color: map.get(color.$text-colors, 'inverse');
+    }
+  
+    .icon{
+      width: fn.rem(24);
+      height: fn.rem(24);
+      color: map.get(color.$text-colors, 'inverse');
+      background-color: map.get(color.$layout-surf, 'secondary');
+      border-radius: 50%;
+    }
+
+    .text{
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
   }
 }
 
-/* =========================
- * 간편결제 탭
- * ========================= */
-.vits-payment-tabs {
-  @include mx.flex;
-  gap: map.get(var.$unit, 8);
-  margin-bottom: map.get(var.$unit, 16);
-}
-
-.vits-payment-tab {
-  flex: 1;
-  padding: map.get(var.$unit, 12) map.get(var.$unit, 8);
-  text-align: center;
-  border-radius: map.get(var.$radius, 'sm');
-
-  &.is-active {
-    font-weight: 600;
-  }
-}
-
-/* 탭 패널 */
-.vits-payment-tab-panel {
+/* ===하위 패널 (radio 연결)=== */
+.vits-payment-panel {
   display: none;
 
   &.is-active {
     display: block;
   }
 
-  &[hidden] {
-    display: none;
+  // 무통장입금 패널
+  &#panel-bank{
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 32) ;
+    border: 1px solid map.get(color.$layout-border, 'quinary');
+    border-radius: map.get(var.$radius, 'md');
+
+    .vits-payment-bank{
+      &-list{
+        padding: 0;
+        padding-top: map.get(var.$unit, 24);
+        margin: 0;
+      }
+      
+      &-item{
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 20);
+        padding-bottom: map.get(var.$unit, 16);
+
+        dt{
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          min-width: fn.rem(74);
+        }
+
+        dd{
+          @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      // 입금자명 입력 필드
+      &-input{
+        @include mx.flex($direction: column);
+        gap: fn.rem(10);
+
+        .vits-form-label{
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        .vits-form-field{
+          ::placeholder{
+            color: map.get(color.$text-colors, 'muted');
+          }
+          
+        }
+      }
+    }
+  }
+
+  // 여신결제 패널
+  &#panel-credit{
+    .info-text{
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      padding-top: map.get(var.$unit, 20);
+    }
   }
 }
 
-/* =========================
- * 비츠온페이 카드
- * ========================= */
-.vits-card-list {
-  @include mx.flex;
-  gap: map.get(var.$unit, 12);
-  padding-bottom: map.get(var.$unit, 8);
-  overflow-x: auto;
-}
-
-.vits-card-item {
-  min-width: fn.rem(160);
-  padding: map.get(var.$unit, 12);
-  background-color: map.get(color.$layout-surf, 'base');
+/* 안내 리스트 */
+.general-info{
+  padding: map.get(var.$unit, 20) map.get(var.$unit, 32) ;
+  background-color: map.get(color.$layout-surf, 'raised');
+  border: 1px solid map.get(color.$layout-border, 'quaternary');
   border-radius: map.get(var.$radius, 'md');
 
-  &.is-selected {
-    @include mx.border(all, 1px, solid, currentcolor);
-  }
-}
-
-.vits-card-form {
-  @include mx.flex($direction: column);
-  gap: map.get(var.$unit, 12);
-  margin-top: map.get(var.$unit, 16);
-
-  .vits-form-item {
-    padding: map.get(var.$unit, 12);
-    background-color: map.get(color.$layout-surf, 'base');
-    border-radius: map.get(var.$radius, 'sm');
-  }
-}
-
-/* =========================
- * 비츠온페이 계좌
- * ========================= */
-.vits-account-empty {
-  @include mx.flex($align: center, $justify: center);
-  height: fn.rem(120);
-  background-color: map.get(color.$layout-surf, 'base');
-  border-radius: map.get(var.$radius, 'md');
-}
-
-/* =========================
- * 안내 리스트
- * ========================= */
-.vits-payment-info {
-  @include mx.flex($direction: column);
-  gap: map.get(var.$unit, 8);
-
-  li {
+  .info-text{
     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    padding-bottom: fn.rem(12);
+  }
+
+  .info-text-important{
+    @include cart-order-info-icon;
+    padding-bottom: fn.rem(12);
+
+    &:last-child{
+      padding-bottom: 0;
+    }
   }
 }
 
-/* =========================
- * 결제 버튼
- * ========================= */
-.vits-payment-submit {
-  position: sticky;
-  bottom: 0;
-  padding: map.get(var.$unit, 16);
-  background-color: map.get(color.$layout-surf, 'base');
+/* ===세금계산서 발급 신청=== */
+.vits-tax{
+  @include cart-order-surf-box;
+  display: none;
+  margin: 0 map.get(var.$unit, 32) map.get(var.$unit, 20);
+
+  &.is-active{
+    display: block;
+  }
+
+  &-title{
+    @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+    padding-bottom: map.get(var.$unit, 16);
+  }
+
+  &-options{
+    @include mx.flex($align: flex-start, $direction: column);
+    gap: map.get(var.$unit, 12);
+
+    .radio-item{
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 4);
+
+      .label-name{
+        @include typo.typography('b4b', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
 }
 
-/* ===반응형 (선택)=== */
-// @media (width <= 768px) {
+/* ===결제 버튼 === */
+.vits-payment-submit {
+  margin-top: map.get(var.$unit, 20);
+  background-color: map.get(color.$layout-surf, 'base');
 
-// }
+  .vits-btn-xxl{
+    width: 100%;  
+
+    .text{
+      font-size: fn.rem(20);
+    }
+  }
+}
+

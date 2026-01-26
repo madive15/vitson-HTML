@@ -5,7 +5,7 @@
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
   -->
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '장바구니/주문하기'}) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '장바구니/주문서'}) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -22,36 +22,43 @@
         <div class="vits-wrap">
           <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-inner">
-              <!-- S: vits-grid-side-left -->
-              <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-              <!-- E: vits-grid-side-left -->
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-cart-order">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
 
-              <!-- S: vits-grid-main -->
-              <div class="vits-grid-main vits-main-cart-order">
-                <!-- 메인 컨텐츠 -->
-                <section class="main-cart-section">
-                  <%- include(`${_src}/views/components/pg-cart-oder/cart-list.ejs`) %>
-                </section>
+                <div class="vits-grid-area">
+                  <div class="vits-grid-main-content">
+                    <section class="main-cart-section">
+                      <%- include(`${_src}/views/components/pg-cart-oder/cart-list.ejs`) %>
+                    </section>
 
-                <section class="main-shipping-section">
-                  <%- include(`${_src}/views/components/pg-cart-oder/shipping-list.ejs`) %>
-                </section>
-              </div>
-              <!-- E: vits-grid-main -->
-
-              <!-- S: vits-grid-right -->
-              <aside class="vits-grid-side vits-grid-side-right vits-side-payment" style="background: indianred; position: sticky; top: 0; width: 40%">
-                <section class="main-payment-section">
-                  <div style="padding: 20px; background-color: #000; color: #fff; ">
-                    결제 영역
+                    <section class="main-shipping-section">
+                      <%- include(`${_src}/views/components/pg-cart-oder/shipping-list.ejs`) %>
+                    </section>
                   </div>
-                  <%- include(`${_src}/views/components/pg-cart-oder/payment-list.ejs`) %>
-                </section>
-                <!-- 오른쪽 메뉴 -->
-              </aside>
-              <!-- E: vits-grid-right -->
+
+                  <!-- S: vits-grid-right -->
+                  <aside class="vits-grid-side vits-grid-side-right vits-side-payment">
+                    <section class="main-payment-section">
+                      <%- include(`${_src}/views/components/pg-cart-oder/payment-list.ejs`) %>
+                      <!-- 최종 결제 버튼 -->
+                      <div class="vits-payment-submit">
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xxl',
+                          variant: 'primary',
+                          text: '370,950원 결제하기',
+                        }) %>
+                      </div>
+                    </section>
+                  </aside>
+                  <!-- E: vits-grid-right -->
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
             </div>
+            <!-- E: vits-grid-main -->
           </div>
           <!-- E: vits-grid -->
         </div>

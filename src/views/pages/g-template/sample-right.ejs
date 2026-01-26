@@ -22,30 +22,34 @@
         <div class="vits-wrap">
           <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-inner">
-              <!-- S: vits-grid-side-left -->
-              <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-              <!-- E: vits-grid-side-left -->
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-{1depth 이름}">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
 
-              <!-- S: vits-grid-main -->
-              <div class="vits-grid-main vits-main-{1depth 이름}">
-                <!-- 섹션 단위 컴포넌트 삽입 -->
+                <div class="vits-grid-area">
+                  <div class="vits-grid-main-content">
+                    <div style="height: 800px; background: darkcyan">영역1</div>
+                    <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">
+                      스티키
+                    </div>
+                    <div style="height: 1500px; background: green">영역3</div>
+                  </div>
 
-                <div style="height: 800px; background: darkcyan">영역1</div>
-                <div style="height: 100px; background: fuchsia; position: sticky; top: 0; z-index: 9999">스티키</div>
-                <div style="height: 1500px; background: green">영역3</div>
+                  <!-- S: vits-grid-right -->
+                  <aside
+                    class="vits-grid-side vits-grid-side-right vits-side-{1depth 이름}"
+                    style="background: indianred; height: 600px; position: sticky; top: 0; flex: 0 0 20%; width: 20%"
+                  >
+                    오른쪽 전체 스티키
+                  </aside>
+                  <!-- E: vits-grid-right -->
+                </div>
               </div>
-              <!-- E: vits-grid-main -->
 
-              <!-- S: vits-grid-right -->
-              <aside
-                class="vits-grid-side vits-grid-side-right vits-side-{1depth 이름}"
-                style="background: indianred; height: 600px; position: sticky; top: 0; flex: 0 0 20%; width: 20%"
-              >
-                오른쪽 전체 스티키
-              </aside>
-              <!-- E: vits-grid-right -->
+              <!-- full wide 컨텐츠 -->
             </div>
+            <!-- E: vits-grid-main -->
           </div>
           <!-- E: vits-grid -->
         </div>

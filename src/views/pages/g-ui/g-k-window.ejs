@@ -1,0 +1,147 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - Kendo Window'}) %>
+
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <section class="vits-guide-wrapper">
+        <h2 class="vits-guide-title">Kendo Window</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;--
+  Kendo Window Component
+  
+  열기/닫기:
+    - VitsKendoWindow.open('id')
+    - VitsKendoWindow.close('id')
+    - VitsKendoWindow.open('id', { onOpen: function() { fn_loadData(); } })
+
+  params:
+    - id: string (필수) // 윈도우 고유 ID
+    - size: '480' | '710' (선택) // 미입력시 auto
+    - title: string (필수) // 헤더 타이틀
+    - subtitle: string (선택) // 헤더 서브타이틀
+    - contentPath: string (필수) // 컨텐츠 EJS 경로
+    - opt: object (선택)
+      - draggable: true // 헤더 드래그 이동 (기본: false)
+      - resizable: true // 크기 조절 (기본: false)
+    - buttons: array (선택) // 미입력시 푸터 없음
+      - text: string // 버튼 텍스트
+      - variant: 'primary' | 'secondary' // 기본: primary
+      - action: 'close' // 닫기 동작
+      - attrs: object // 추가 속성
+
+  버튼 비율:
+    - secondary (취소): flex 2
+    - primary (확인): flex 3
+
+  사용 예시:
+
+  // 기본 (타이틀만)
+  &lt;&#37; const win1 = { 
+    id: 'myWindow', 
+    size: '480', 
+    title: '제목', 
+    contentPath: `${_src}/views/.../content.ejs` 
+  }; &#37;&gt;
+
+  // 서브타이틀 + 드래그
+  &lt;&#37; const win2 = { 
+    id: 'myWindow', 
+    size: '480', 
+    title: '제목',
+    subtitle: '서브타이틀',
+    opt: { draggable: true },
+    contentPath: `${_src}/views/.../content.ejs` 
+  }; &#37;&gt;
+
+  // 버튼 1개
+  &lt;&#37; const win3 = { 
+    id: 'myWindow', 
+    size: '480', 
+    title: '제목',
+    contentPath: `${_src}/views/.../content.ejs`,
+    buttons: [
+      { text: '확인', variant: 'primary', action: 'close' }
+    ]
+  }; &#37;&gt;
+
+  // 버튼 2개 (취소 2 : 확인 3 비율)
+  &lt;&#37; const win4 = { 
+    id: 'myWindow', 
+    size: '480', 
+    title: '제목',
+    contentPath: `${_src}/views/.../content.ejs`,
+    buttons: [
+      { text: '취소', variant: 'secondary', action: 'close' },
+      { text: '확인', variant: 'primary', action: 'close' }
+    ]
+  }; &#37;&gt;
+
+  // 인클루드
+  &lt;&#37;- include(`${_src}/views/components/kendo/kendo-window.ejs`, win1) &#37;&gt;
+--&gt;
+</pre
+            >
+          </code>
+        </div>
+        <h3 class="vits-guide-subtitle">기본 (480)</h3>
+        <div class="vits-guide-wrap">
+          <button
+            type="button"
+            class="k-button k-button-md k-button-solid k-button-solid-primary"
+            onclick="VitsKendoWindow.open('win480')"
+          >
+            <span class="k-button-text">480 윈도우 열기</span>
+          </button>
+        </div>
+
+        <h3 class="vits-guide-subtitle">큰 사이즈 (710)</h3>
+        <div class="vits-guide-wrap">
+          <button
+            type="button"
+            class="k-button k-button-md k-button-solid k-button-solid-primary"
+            onclick="VitsKendoWindow.open('win710')"
+          >
+            <span class="k-button-text">710 윈도우 열기</span>
+          </button>
+        </div>
+
+        <h3 class="vits-guide-subtitle">자동 너비</h3>
+        <div class="vits-guide-wrap">
+          <button
+            type="button"
+            class="k-button k-button-md k-button-solid k-button-solid-primary"
+            onclick="VitsKendoWindow.open('winAuto')"
+          >
+            <span class="k-button-text">자동 윈도우 열기</span>
+          </button>
+        </div>
+
+        <!-- 480 윈도우 (헤더 1줄 + 버튼 2개) -->
+        <!-- prettier-ignore -->
+        <% const win480 = { id: 'win480', size: '480', title: '제목만 있는 헤더', subtitle: '서브타이틀이 있는 헤더입니다', opt: { draggable: true }, contentPath:
+        `${_src}/views/pages/kendo-window/category/kw-PC_CO_10010101_P.ejs`, buttons: [{ text: '취소', variant: 'secondary',
+        action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] }; %> <%-
+        include(`${_src}/views/components/kendo/kendo-window.ejs`, win480) %>
+
+        <!-- 710 윈도우 (헤더 2줄 + 버튼 2개) -->
+        <% const win710 = { id: 'win710', size: '710', title: '제목', subtitle: '서브타이틀이 있는 헤더입니다',
+        contentPath: `${_src}/views/pages/kendo-window/category/kw-PC_SE_04010101_P.ejs`, buttons: [{ text: '취소하기',
+        variant: 'secondary', action: 'close' }, { text: '문의하기', variant: 'primary' }] }; %> <%-
+        include(`${_src}/views/components/kendo/kendo-window.ejs`, win710) %>
+
+        <!-- 자동 윈도우 -->
+        <% const winAuto = { id: 'winAuto', title: '자동 너비', contentPath:
+        `${_src}/views/pages/kendo-window/category/kw-PC_OR_01010301_P.ejs` }; %> <%-
+        include(`${_src}/views/components/kendo/kendo-window.ejs`, winAuto) %>
+      </section>
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

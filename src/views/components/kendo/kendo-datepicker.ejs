@@ -1,49 +1,66 @@
+<% const _src = srcPath; const _public = publicPath; %>
 <%
-const config = {
-  id: options.id || 'datepicker-' + Date.now(),
-  type: options.type || 'single',
-  format: options.format || 'yyyy.MM.dd',
-  culture: options.culture || 'ko-KR',
-  placeholder: options.placeholder || '날짜 선택',
-  placeholderStart: options.placeholderStart || '시작일',
-  placeholderEnd: options.placeholderEnd || '종료일',
-  value: options.value || null,
-  range: options.range || null,
-  min: options.min || null,
-  max: options.max || null,
-  customClass: options.customClass || '',
-  disabled: options.disabled || false
-};
+/**
+ * ============================================
+ * 컴포넌트: Kendo Range Picker (단일 달력 기간 선택)
+ * 파일: components/kendo-range-picker/kendo-range-picker.ejs
+ * ============================================
+ *
+ * @param {string} size - 'sm' | 'md' | 'lg' (기본: 'md')
+ */
 
-const dataOpt = {
-  format: config.format,
-  culture: config.culture
-};
+var _id = typeof id !== 'undefined' ? id : 'kendoRangePicker_' + Date.now();
+var _startName = typeof startName !== 'undefined' ? startName : 'startDate';
+var _endName = typeof endName !== 'undefined' ? endName : 'endDate';
+var _startValue = typeof startValue !== 'undefined' ? startValue : '';
+var _endValue = typeof endValue !== 'undefined' ? endValue : '';
+var _disabled = typeof disabled !== 'undefined' ? disabled : false;
+var _addClass = typeof addClass !== 'undefined' ? addClass : '';
+var _size = typeof size !== 'undefined' ? size : 'md';
 
-if (config.value) {
-  dataOpt.value = config.value;
-}
+var _opt = typeof opt !== 'undefined' ? opt : {};
+_opt.format = _opt.format || 'yyyy.MM.dd';
+_opt.separator = _opt.separator || ' ~ ';
+_opt.placeholder = _opt.placeholder || '시작일 ~ 종료일';
 
-if (config.range) {
-  dataOpt.range = config.range;
-}
+var wrapClass = 'vits-kendo-range-picker';
+wrapClass += ' size-' + _size;
+if (_disabled) wrapClass += ' is-disabled';
+if (_addClass) wrapClass += ' ' + _addClass;
+%>
 
-if (config.min) {
-  dataOpt.min = config.min;
-}
-
-if (config.max) {
-  dataOpt.max = config.max;
-}
-
-if (config.type === 'range') {
-  if (config.placeholderStart || config.placeholderEnd) {
-    dataOpt.messages = {
-      startLabel: config.placeholderStart,
-      endLabel: config.placeholderEnd
-    };
-  }
-}
-
-const dataOptStr = JSON.stringify(dataOpt).replace(/"/g, '&quot;');
-%><% if (config.type === 'single') { %><div class="vits-datepicker <%= config.customClass %>"><input type="text" id="<%= config.id %>" data-ui="kendo-datepicker" data-opt="<%= dataOptStr %>" placeholder="<%= config.placeholder %>" <% if (config.disabled) { %>disabled<% } %> /></div><% } else { %><div class="vits-daterangepicker <%= config.customClass %>"><div id="<%= config.id %>" data-ui="kendo-daterangepicker" data-opt="<%= dataOptStr %>"></div></div><% } %>
+<div class="<%= wrapClass %>" 
+     id="<%= _id %>"
+     data-ui="kendo-range-picker"
+     data-opt="<%= JSON.stringify(_opt).replace(/"/g, '&quot;') %>">
+    
+    <input type="hidden" 
+           class="js-start-date" 
+           name="<%= _startName %>" 
+           value="<%= _startValue %>">
+    
+    <input type="hidden" 
+           class="js-end-date" 
+           name="<%= _endName %>" 
+           value="<%= _endValue %>">
+    
+    <span class="picker-input k-picker k-datepicker">
+        <input type="text" 
+               class="picker-display k-input-inner js-range-display" 
+               placeholder="<%= _opt.placeholder %>" 
+               readonly 
+               <% if (_disabled) { %>disabled<% } %>>
+        
+        <button type="button" 
+                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+                <% if (_disabled) { %>disabled<% } %>>
+            <span class="icon">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'calendar' }) %> 
+            </span>
+        </button>
+    </span>
+    
+    <div class="picker-popup js-calendar-popup">
+        <div class="js-kendo-calendar"></div>
+    </div>
+</div>

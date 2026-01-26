@@ -29,6 +29,7 @@
   var HIDDEN = '[data-vits-select-hidden]';
   var OPT = '.vits-select-option';
   var TITLE = '[data-plp-category-title]';
+  var PORTAL = '[data-vits-select-portal]';
 
   // 클래스
   var CLS_OPEN = 'vits-select-open';
@@ -37,6 +38,7 @@
   var CLS_NO_OPTION = 'is-no-option';
   var CLS_SELECTED = 'vits-select-selected';
   var CLS_OPT_DISABLED = 'vits-select-option-disabled';
+  var CLS_PORTAL_LIST = 'vits-select-list-portal';
 
   // 이벤트 네임스페이스
   var NS = '.uiSelect';
@@ -44,10 +46,12 @@
   // dropup 계산 상수
   var GUTTER = 8;
   var MIN_H = 120;
+  var PORTAL_GAP = 4;
 
   // 컨테이너/루트 키 분리(부분 렌더링 destroy 안정화)
   var DATA_CONTAINER_KEY = 'uiSelectContainerKey';
   var DATA_ROOT_KEY = 'uiSelectRootKey';
+  var DATA_PORTAL_ORIGIN = 'uiSelectPortalOrigin';
 
   // 스코프 저장소(scopeKey -> { $container, groups, openRoot })
   var scopes = {};
@@ -72,6 +76,11 @@
   // 루트의 depth 반환
   function getDepth($root) {
     return parseInt($root.attr('data-depth'), 10) || 0;
+  }
+
+  // portal 여부 체크
+  function isPortal($root) {
+    return $root.is(PORTAL);
   }
 
   // 루트의 scopeKey 반환(없으면 0)
@@ -112,16 +121,60 @@
     return $found;
   }
 
+  // root에 연결된 list 찾기 (portal 모드 대응)
+  function findList($root) {
+    // 일반 모드: 자식에서 찾기
+    var $list = $root.find(LIST);
+    if ($list.length) return $list;
+
+    // portal 모드: body에서 origin 기준으로 찾기
+    return $('body')
+      .children(LIST)
+      .filter(function () {
+        var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+        return $origin && $origin.is($root);
+      });
+  }
+
+  // portal list 닫기 (원위치 복귀)
+  function closePortal($root) {
+    var $list = $('body')
+      .children(LIST)
+      .filter(function () {
+        var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+        return $origin && $origin.is($root);
+      });
+
+    if (!$list.length) return;
+
+    $list
+      .removeData(DATA_PORTAL_ORIGIN)
+      .removeClass(CLS_PORTAL_LIST)
+      .css({
+        position: '',
+        top: '',
+        left: '',
+        minWidth: '',
+        maxHeight: '',
+        zIndex: ''
+      })
+      .appendTo($root);
+  }
+
   // 특정 루트 닫기
   function closeOne($root) {
     if (!$root || !$root.length) return;
 
-    $root.removeClass(CLS_OPEN);
+    $root.removeClass(CLS_OPEN + ' ' + CLS_DROPUP);
     $root.find(TRIGGER).attr('aria-expanded', 'false');
 
-    $root.find(LIST).each(function () {
-      this.style.maxHeight = '0px';
-    });
+    if (isPortal($root)) {
+      closePortal($root);
+    } else {
+      $root.find(LIST).each(function () {
+        this.style.maxHeight = '0px';
+      });
+    }
   }
 
   // 스코프 단위로 열린 셀렉트 닫기
@@ -155,7 +208,7 @@
     return window;
   }
 
-  // 오픈 직전 dropup/최대높이 계산
+  // 오픈 직전 dropup/최대높이 계산 (일반 모드)
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
 
@@ -191,12 +244,75 @@
     listEl.style.overflowY = 'auto';
   }
 
+  // portal 모드 열기
+  function openPortal($root) {
+    var $trigger = $root.find(TRIGGER);
+    var $list = $root.find(LIST);
+    if (!$trigger.length || !$list.length) return;
+
+    var rect = $trigger[0].getBoundingClientRect();
+    var customMaxH = $root.attr('data-max-height'); // 커스텀 max-height 읽기
+
+    // 숫자만 있으면 px 붙이기
+    if (customMaxH && /^\d+$/.test(customMaxH)) {
+      customMaxH = customMaxH + 'px';
+    }
+
+    $list
+      .data(DATA_PORTAL_ORIGIN, $root)
+      .addClass(CLS_PORTAL_LIST)
+      .css({
+        position: 'fixed',
+        left: rect.left + 'px',
+        minWidth: rect.width + 'px',
+        zIndex: 9999
+      })
+      .appendTo('body');
+
+    var listH = $list.outerHeight();
+    var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
+    var spaceAbove = rect.top - GUTTER;
+    var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
+    var maxH;
+    var calcMaxH;
+    var topPos;
+    var bottomPos;
+
+    // openPortal 함수 수정
+    if (shouldDropUp) {
+      calcMaxH = Math.max(spaceAbove, MIN_H) + 'px';
+      bottomPos = window.innerHeight - rect.top + PORTAL_GAP;
+      maxH = customMaxH || calcMaxH;
+      $list.css({
+        top: '',
+        bottom: bottomPos + 'px',
+        maxHeight: maxH
+      });
+      $root.addClass(CLS_DROPUP);
+    } else {
+      calcMaxH = Math.max(spaceBelow, MIN_H) + 'px';
+      topPos = rect.bottom + PORTAL_GAP;
+      maxH = customMaxH || calcMaxH;
+      $list.css({
+        top: topPos + 'px',
+        bottom: '',
+        maxHeight: maxH
+      });
+      $root.removeClass(CLS_DROPUP);
+    }
+  }
+
   // 특정 루트 오픈(스코프 단위 1개만 열림 유지)
   function openOne($root) {
     var scopeKey = getRootScopeKey($root);
 
     closeOpenedInScope(scopeKey);
-    applyDropDirection($root);
+
+    if (isPortal($root)) {
+      openPortal($root);
+    } else {
+      applyDropDirection($root);
+    }
 
     $root.addClass(CLS_OPEN);
     $root.find(TRIGGER).attr('aria-expanded', 'true');
@@ -246,9 +362,10 @@
 
     setHiddenVal($root, '');
 
-    $root.find(OPT).removeClass(CLS_SELECTED).attr('aria-selected', 'false');
+    var $list = findList($root);
+    $list.find(OPT).removeClass(CLS_SELECTED).attr('aria-selected', 'false');
 
-    if (clearOptions) $root.find(LIST).empty();
+    if (clearOptions) $list.empty();
   }
 
   // placeholder/옵션 제거 후 비활성
@@ -267,7 +384,7 @@
 
   // 옵션 렌더링
   function renderOptions($root, items) {
-    var $list = $root.find(LIST);
+    var $list = findList($root);
     if (!$list.length) return;
 
     var html = '';
@@ -295,7 +412,9 @@
 
   // 옵션 선택 처리(표시/hidden/a11y 동기화)
   function setSelected($root, $opt) {
-    $root.find(OPT).each(function () {
+    var $list = findList($root);
+
+    $list.find(OPT).each(function () {
       var $el = $(this);
       var sel = $el.is($opt);
       $el.toggleClass(CLS_SELECTED, sel);
@@ -311,7 +430,8 @@
     var v = toStr(value);
     if (!v) return false;
 
-    var $match = $root.find(OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]');
+    var $list = findList($root);
+    var $match = $list.find(OPT + '[data-value="' + v.replace(/"/g, '\\"') + '"]');
     if (!$match.length) return false;
 
     setSelected($root, $match.eq(0));
@@ -424,9 +544,21 @@
     var $d2 = byDepth[2] || $();
     var $d3 = byDepth[3] || $();
 
-    var $d3Opt = $d3.length ? $d3.find(OPT + '.' + CLS_SELECTED).last() : $();
-    var $d2Opt = $d2.length ? $d2.find(OPT + '.' + CLS_SELECTED).last() : $();
-    var $d1Opt = $d1.length ? $d1.find(OPT + '.' + CLS_SELECTED).last() : $();
+    var $d3Opt = $d3.length
+      ? findList($d3)
+          .find(OPT + '.' + CLS_SELECTED)
+          .last()
+      : $();
+    var $d2Opt = $d2.length
+      ? findList($d2)
+          .find(OPT + '.' + CLS_SELECTED)
+          .last()
+      : $();
+    var $d1Opt = $d1.length
+      ? findList($d1)
+          .find(OPT + '.' + CLS_SELECTED)
+          .last()
+      : $();
 
     var $pick = $d3Opt.length ? $d3Opt : $d2Opt.length ? $d2Opt : $d1Opt;
     if ($pick.length) $title.text($pick.text());
@@ -515,10 +647,16 @@
 
   // 이벤트 바인딩(1회)
   function bind() {
+    // 외부 클릭 시 닫기
     $(document).on('mousedown' + NS, function (e) {
-      if (!$(e.target).closest(ROOT).length) closeAllOpened();
+      var $target = $(e.target);
+      // portal list 클릭도 예외 처리
+      if (!$target.closest(ROOT).length && !$target.closest('.' + CLS_PORTAL_LIST).length) {
+        closeAllOpened();
+      }
     });
 
+    // 트리거 클릭
     $(document).on('click' + NS, ROOT + ' ' + TRIGGER, function (e) {
       e.preventDefault();
 
@@ -535,31 +673,102 @@
       openOne($root);
     });
 
+    // 옵션 클릭 (일반 모드)
     $(document).on('click' + NS, ROOT + ' ' + OPT, function (e) {
       e.preventDefault();
-
-      var $opt = $(this);
-      if ($opt.hasClass(CLS_OPT_DISABLED)) return;
-
-      var $root = $opt.closest(ROOT);
-      var depth = getDepth($root);
-      var scopeKey = getRootScopeKey($root);
-
-      setSelected($root, $opt);
-      closeOpenedInScope(scopeKey);
-
-      var url = toStr($opt.attr('data-url')).trim();
-      if (url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
-        return;
-      }
-
-      var group = getGroup($root);
-      if (!group) return;
-
-      applyBreadcrumb($root, depth);
-      updateCategoryTitle($root);
+      handleOptionClick($(this));
     });
+
+    // 옵션 클릭 (portal 모드 - body에 붙은 list)
+    $(document).on('click' + NS, '.' + CLS_PORTAL_LIST + ' ' + OPT, function (e) {
+      e.preventDefault();
+      handleOptionClick($(this));
+    });
+
+    // 모든 스크롤 감지 (capture phase)
+    document.addEventListener(
+      'scroll',
+      function () {
+        Object.keys(scopes).forEach(function (k) {
+          var scope = scopes[k];
+          if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+            updatePortalPosition(scope.openRoot);
+          }
+        });
+      },
+      true
+    );
+
+    // 리사이즈
+    $(window).on('resize' + NS, function () {
+      Object.keys(scopes).forEach(function (k) {
+        var scope = scopes[k];
+        if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+          updatePortalPosition(scope.openRoot);
+        }
+      });
+    });
+  }
+
+  // 옵션 클릭 공통 핸들러
+  function handleOptionClick($opt) {
+    if ($opt.hasClass(CLS_OPT_DISABLED)) return;
+
+    // portal 모드면 origin에서 root 찾기
+    var $list = $opt.closest(LIST);
+    var $root = $list.data(DATA_PORTAL_ORIGIN) || $opt.closest(ROOT);
+
+    var depth = getDepth($root);
+    var scopeKey = getRootScopeKey($root);
+
+    setSelected($root, $opt);
+    closeOpenedInScope(scopeKey);
+
+    var url = toStr($opt.attr('data-url')).trim();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    var group = getGroup($root);
+    if (!group) return;
+
+    applyBreadcrumb($root, depth);
+    updateCategoryTitle($root);
+  }
+
+  // portal 위치 갱신 (스크롤/리사이즈 대응)
+  function updatePortalPosition($root) {
+    if (!$root || !$root.length) return;
+
+    var $trigger = $root.find(TRIGGER);
+    var $list = $('body')
+      .children(LIST)
+      .filter(function () {
+        var $origin = $(this).data(DATA_PORTAL_ORIGIN);
+        return $origin && $origin.is($root);
+      });
+
+    if (!$trigger.length || !$list.length) return;
+
+    var rect = $trigger[0].getBoundingClientRect();
+    var isDropUp = $root.hasClass(CLS_DROPUP);
+
+    if (isDropUp) {
+      $list.css({
+        left: rect.left + 'px',
+        minWidth: rect.width + 'px',
+        top: '',
+        bottom: window.innerHeight - rect.top + PORTAL_GAP + 'px'
+      });
+    } else {
+      $list.css({
+        left: rect.left + 'px',
+        minWidth: rect.width + 'px',
+        top: rect.bottom + PORTAL_GAP + 'px',
+        bottom: ''
+      });
+    }
   }
 
   // 스코프 초기화(컨테이너 단위)

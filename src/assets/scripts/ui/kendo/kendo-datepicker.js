@@ -1,11 +1,15 @@
 /**
- * @file scripts/ui/kendo/kendo-datepicker.js
+ * @file scripts/ui/kendo/kendo-range-picker.js
  * @description
- * Kendo DatePicker/DateRangePicker 자동 초기화 모듈.
+ * Kendo Calendar 기반 단일 달력 Range Picker 자동 초기화 모듈.
  */
 
 (function (window) {
   'use strict';
+
+  // ============================================
+  // 유틸리티 함수
+  // ============================================
 
   function parseJsonSafe(str) {
     if (!str) return null;
@@ -24,38 +28,7 @@
   }
 
   function ensureKendoAvailable() {
-    return !!(
-      window.jQuery &&
-      window.kendo &&
-      window.jQuery.fn &&
-      window.jQuery.fn.kendoDatePicker &&
-      window.jQuery.fn.kendoDateRangePicker
-    );
-  }
-
-  function applyVitsClassToWrapper($wrap, inst) {
-    if (!$wrap || !$wrap.length || !inst) return;
-
-    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
-
-    if (inst.wrapper) {
-      for (var i = 0; i < classList.length; i++) {
-        if (classList[i].indexOf('vits-') === 0) {
-          inst.wrapper.addClass(classList[i]);
-        }
-      }
-    }
-
-    if (inst.popup && inst.popup.element) {
-      for (var j = 0; j < classList.length; j++) {
-        if (classList[j].indexOf('vits-') === 0) {
-          inst.popup.element.addClass(classList[j]);
-
-          var $ac = inst.popup.element.closest('.k-animation-container');
-          if ($ac && $ac.length) $ac.addClass(classList[j]);
-        }
-      }
-    }
+    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoCalendar);
   }
 
   function parseDateValue(val) {
@@ -68,451 +41,406 @@
     }
   }
 
-  function initDatePicker(el) {
-    var $el = window.jQuery(el);
-    if ($el.data('kendoDatePicker')) return;
-
-    var optRaw = $el.attr('data-opt') || '{}';
-    var opts = parseJsonSafe(optRaw);
-
-    if (!opts) {
-      opts = {};
+  function formatDate(date, format) {
+    if (!date) return '';
+    if (window.kendo && window.kendo.toString) {
+      return window.kendo.toString(date, format);
     }
-
-    var $wrap = $el.closest('.vits-datepicker');
-
-    if ($wrap.length && opts.appendTo === undefined) {
-      opts.appendTo = $wrap[0];
-    }
-
-    opts.format = opts.format || 'yyyy.MM.dd';
-    opts.culture = opts.culture || 'ko-KR';
-    opts.footer = false;
-    opts.parseFormats = ['yyyy.MM.dd', 'yyyyMMdd', 'yyyy-MM-dd'];
-
-    if (opts.value) {
-      opts.value = parseDateValue(opts.value);
-    }
-    if (opts.min) {
-      opts.min = parseDateValue(opts.min);
-    }
-    if (opts.max) {
-      opts.max = parseDateValue(opts.max);
-    }
-
-    $el.kendoDatePicker(opts);
-
-    var inst = $el.data('kendoDatePicker');
-
-    if (inst && inst.bind) {
-      inst.bind('open', function () {
-        applyVitsClassToWrapper($wrap, inst);
-      });
-
-      inst.bind('change', function () {
-        $el.trigger('datepicker:change', [this.value()]);
-      });
-    }
-
-    applyVitsClassToWrapper($wrap, inst);
-
-    $el.on('blur', function () {
-      window.setTimeout(function () {
-        var value = $el.val();
-        if (!value) return;
-
-        var numbers = value.replace(/[^\d]/g, '');
-
-        if (numbers.length > 0 && numbers.length !== 8) {
-          alert('날짜는 8자리 숫자로 입력해주세요. (예: 20260101)');
-          $el.val('');
-          if (inst && typeof inst.value === 'function') {
-            inst.value(null);
-          }
-          return;
-        }
-
-        if (numbers.length === 8) {
-          var year = parseInt(numbers.substring(0, 4));
-          var month = parseInt(numbers.substring(4, 6));
-          var day = parseInt(numbers.substring(6, 8));
-
-          if (month < 1 || month > 12) {
-            alert('월은 01~12 사이여야 합니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-            return;
-          }
-
-          if (day < 1 || day > 31) {
-            alert('일은 01~31 사이여야 합니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-            return;
-          }
-
-          try {
-            var date = new Date(year, month - 1, day);
-
-            if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
-              alert('유효하지 않은 날짜입니다.');
-              $el.val('');
-              if (inst && typeof inst.value === 'function') {
-                inst.value(null);
-              }
-              return;
-            }
-
-            if (inst && typeof inst.value === 'function') {
-              inst.value(date);
-            }
-          } catch {
-            alert('날짜 형식이 올바르지 않습니다.');
-            $el.val('');
-            if (inst && typeof inst.value === 'function') {
-              inst.value(null);
-            }
-          }
-        }
-      }, 200);
-    });
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1).padStart(2, '0');
+    var d = String(date.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
   }
 
-  function initDateRangePicker(el) {
-    var $el = window.jQuery(el);
-    if ($el.data('kendoDateRangePicker')) return;
+  function isSameDate(d1, d2) {
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+  }
+
+  function applyVitsClassToWrapper($wrap, $popup) {
+    if (!$wrap || !$wrap.length) return;
+
+    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
+
+    if ($popup && $popup.length) {
+      for (var i = 0; i < classList.length; i++) {
+        if (classList[i].indexOf('vits-') === 0) {
+          $popup.addClass(classList[i]);
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // Range Picker 초기화
+  // ============================================
+  function initRangePicker(el) {
+    var $ = window.jQuery;
+    var $el = $(el);
+
+    if ($el.data('vitsKendoRangePicker')) return;
 
     var optRaw = $el.attr('data-opt') || '{}';
     var opts = parseJsonSafe(optRaw) || {};
 
-    var $wrap = $el.closest('.vits-daterangepicker');
-
-    if ($wrap.length && opts.appendTo === undefined) {
-      opts.appendTo = $wrap[0];
-    }
-
     opts.format = opts.format || 'yyyy.MM.dd';
-    opts.culture = opts.culture || 'ko-KR';
-    opts.footer = false;
+    opts.separator = opts.separator || ' ~ ';
+    opts.placeholder = opts.placeholder || '시작일 ~ 종료일';
 
-    if (opts.range) {
-      opts.range = {
-        start: opts.range.start ? parseDateValue(opts.range.start) : null,
-        end: opts.range.end ? parseDateValue(opts.range.end) : null
-      };
-    }
     if (opts.min) opts.min = parseDateValue(opts.min);
     if (opts.max) opts.max = parseDateValue(opts.max);
 
-    // 힌트 텍스트 설정
-    var startText = opts.messages && opts.messages.startLabel ? opts.messages.startLabel : '시작일';
-    var endText = opts.messages && opts.messages.endLabel ? opts.messages.endLabel : '종료일';
+    var $wrap = $el;
+    var $display = $wrap.find('.js-range-display');
+    var $popup = $wrap.find('.js-calendar-popup');
+    var $toggle = $wrap.find('.js-calendar-toggle');
+    var $calendarWrap = $wrap.find('.js-kendo-calendar');
+    var $startInput = $wrap.find('.js-start-date');
+    var $endInput = $wrap.find('.js-end-date');
 
-    $el.kendoDateRangePicker(opts);
+    var state = {
+      startDate: null,
+      endDate: null,
+      isSelectingEnd: false,
+      isOpen: false
+    };
 
-    var inst = $el.data('kendoDateRangePicker');
+    var startVal = $startInput.val();
+    var endVal = $endInput.val();
+    if (startVal) state.startDate = parseDateValue(startVal);
+    if (endVal) state.endDate = parseDateValue(endVal);
 
-    var isOpen = false;
-    var suppressOpenUntil = 0;
+    var calendarOpts = {
+      change: onCalendarChange,
+      navigate: onCalendarNavigate,
+      culture: 'en-US',
+      animation: false,
+      footer: false,
+      month: {
+        header: '#= kendo.toString(data.date, "yyyy.MM") #'
+      },
+      start: 'month',
+      depth: 'month'
+    };
 
-    // ============================================
-    // 스타일 삽입 (최초 1회)
-    // ============================================
-    if (!document.getElementById('vits-daterange-mask-style')) {
-      var style = document.createElement('style');
-      style.id = 'vits-daterange-mask-style';
-      style.textContent = [
-        // 마스크(빈 값) 완전히 숨김
-        '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty {',
-        '  color: transparent !important;',
-        '}',
-        // 포커스 시에도 마스크 숨김 유지
-        '.vits-daterangepicker .k-dateinput .k-input-inner.is-mask-empty:focus {',
-        '  color: transparent !important;',
-        '}',
-        // 실제 값 있을 때 표시
-        '.vits-daterangepicker .k-dateinput .k-input-inner.has-value {',
-        '  color: #333 !important;',
-        '}',
-        // ★ 세그먼트 하이라이트(파란색) 제거
-        '.vits-daterangepicker .k-dateinput .k-input-inner::selection {',
-        '  background: transparent !important;',
-        '  color: inherit !important;',
-        '}',
-        '.vits-daterangepicker .k-dateinput .k-input-inner::-moz-selection {',
-        '  background: transparent !important;',
-        '  color: inherit !important;',
-        '}',
-        // 커서는 보이게 (타이핑용)
-        '.vits-daterangepicker .k-dateinput .k-input-inner {',
-        '  cursor: text !important;',
-        '}',
-        // 힌트 스타일
-        '.vits-daterangepicker .vits-placeholder-hint {',
-        '  position: absolute;',
-        '  top: 50%;',
-        '  transform: translateY(-50%);',
-        '  color: #999;',
-        '  font-size: 14px;',
-        '  pointer-events: none;',
-        '  white-space: nowrap;',
-        '  z-index: 5;',
-        '}',
-        // 전체 영역 클릭 가능하게
-        '.vits-daterangepicker .k-daterangepicker {',
-        '  cursor: pointer;',
-        '}'
-      ].join('\n');
-      document.head.appendChild(style);
-    }
+    if (opts.min) calendarOpts.min = opts.min;
+    if (opts.max) calendarOpts.max = opts.max;
 
-    // ============================================
-    // 마스크 빈 값 판단 함수
-    // ============================================
-    function isMaskEmpty(val) {
-      if (!val) return true;
-      var emptyPatterns = ['year.month.day', 'yyyy.MM.dd', 'yyyy.mm.dd', '    .  .  ', '__.__.____', ''];
-      var trimmed = val.trim().toLowerCase();
-      for (var i = 0; i < emptyPatterns.length; i++) {
-        if (trimmed === emptyPatterns[i].toLowerCase()) return true;
-      }
-      return !/\d/.test(val);
-    }
+    $calendarWrap.kendoCalendar(calendarOpts);
+    var calendar = $calendarWrap.data('kendoCalendar');
 
-    // ============================================
-    // 두 input 가져오기
-    // ============================================
-    function getTwoInputs() {
-      var $inputs = $wrap.find('input.k-input-inner');
-      return $inputs.length >= 2 ? {$start: $inputs.eq(0), $end: $inputs.eq(1)} : null;
-    }
+    var navTitleScheduled = false;
+    var dayNameScheduled = false;
 
-    // ============================================
-    // 힌트 요소 생성 (input 내부 위치)
-    // ============================================
-    function ensureHints() {
-      var inputs = getTwoInputs();
-      if (!inputs) return null;
-
-      var $startWrap = inputs.$start.closest('.k-dateinput');
-      var $endWrap = inputs.$end.closest('.k-dateinput');
-
-      // position: relative 보장
-      $startWrap.css('position', 'relative');
-      $endWrap.css('position', 'relative');
-
-      var $hintStart = $startWrap.find('.vits-placeholder-hint');
-      var $hintEnd = $endWrap.find('.vits-placeholder-hint');
-
-      if (!$hintStart.length) {
-        $hintStart = window.jQuery('<span class="vits-placeholder-hint"></span>');
-        $hintStart.text(startText);
-        $startWrap.append($hintStart);
-      }
-
-      if (!$hintEnd.length) {
-        $hintEnd = window.jQuery('<span class="vits-placeholder-hint"></span>');
-        $hintEnd.text(endText);
-        $endWrap.append($hintEnd);
-      }
-
-      // input의 padding-left에 맞춤
-      var padStart = parseInt(inputs.$start.css('paddingLeft'), 10) || 0;
-      var padEnd = parseInt(inputs.$end.css('paddingLeft'), 10) || 0;
-      $hintStart.css('left', padStart + 'px');
-      $hintEnd.css('left', padEnd + 'px');
-
-      return {$hintStart: $hintStart, $hintEnd: $hintEnd};
-    }
-
-    // ============================================
-    // 상태 동기화
-    // ============================================
-    function syncState() {
-      var inputs = getTwoInputs();
-      if (!inputs) return;
-
-      var hints = ensureHints();
-      if (!hints) return;
-
-      var startVal = inputs.$start.val();
-      var endVal = inputs.$end.val();
-      var startEmpty = isMaskEmpty(startVal);
-      var endEmpty = isMaskEmpty(endVal);
-
-      // 마스크 클래스 토글
-      if (startEmpty) {
-        inputs.$start.addClass('is-mask-empty').removeClass('has-value');
-      } else {
-        inputs.$start.removeClass('is-mask-empty').addClass('has-value');
-      }
-
-      if (endEmpty) {
-        inputs.$end.addClass('is-mask-empty').removeClass('has-value');
-      } else {
-        inputs.$end.removeClass('is-mask-empty').addClass('has-value');
-      }
-
-      // 힌트 표시/숨김 (빈 값일 때만 표시)
-      hints.$hintStart.toggle(startEmpty);
-      hints.$hintEnd.toggle(endEmpty);
-    }
-
-    // ============================================
-    // 키보드 완전 차단 (캘린더로만 선택)
-    // ============================================
-    function blockIncrement() {
-      var inputs = getTwoInputs();
-      if (!inputs) return;
-
-      // readonly로 키보드 입력 완전 차단
-      inputs.$start.add(inputs.$end).attr('readonly', true);
-
-      // 마우스 휠 차단
-      inputs.$start.add(inputs.$end).each(function () {
-        this.addEventListener(
-          'wheel',
-          function (e) {
-            e.preventDefault();
-          },
-          {passive: false}
-        );
+    function scheduleNavTitle() {
+      if (navTitleScheduled) return;
+      navTitleScheduled = true;
+      window.requestAnimationFrame(function () {
+        navTitleScheduled = false;
+        updateNavTitle();
       });
     }
 
-    // ============================================
-    // Kendo 이벤트 바인딩
-    // ============================================
-    if (inst && inst.bind) {
-      inst.bind('open', function (e) {
-        if (Date.now() < suppressOpenUntil) {
-          if (e && typeof e.preventDefault === 'function') e.preventDefault();
-          return;
+    function scheduleDayNames() {
+      if (dayNameScheduled) return;
+      dayNameScheduled = true;
+      window.requestAnimationFrame(function () {
+        dayNameScheduled = false;
+        updateDayNames();
+      });
+    }
+
+    function forceUpdateUI() {
+      scheduleNavTitle();
+      scheduleDayNames();
+      window.setTimeout(function () {
+        scheduleNavTitle();
+        scheduleDayNames();
+      }, 0);
+    }
+
+    function updateNavTitle() {
+      var currentDate = calendar.current();
+      var year = currentDate.getFullYear();
+      var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      var title = year + '<span class="nav-dot">.</span>' + month;
+
+      $calendarWrap.find('.k-button-text').html(title);
+    }
+
+    function updateDayNames() {
+      var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      $calendarWrap.find('th').each(function (index) {
+        var $th = $(this);
+        if ($th.text().trim().length <= 3) {
+          $th.text(dayNames[index]);
         }
-        isOpen = true;
-        applyVitsClassToWrapper($wrap, inst);
-        window.requestAnimationFrame(syncState);
-      });
-
-      inst.bind('close', function () {
-        isOpen = false;
-        window.requestAnimationFrame(syncState);
-      });
-
-      inst.bind('change', function () {
-        var range = this.range();
-        $el.trigger('daterangepicker:change', [range]);
-        window.requestAnimationFrame(syncState);
       });
     }
 
-    applyVitsClassToWrapper($wrap, inst);
-
-    // ============================================
-    // 전체 영역 클릭으로 열기
-    // ============================================
-    $wrap.off('click.vitsKendoOpen');
-    $wrap.on('click.vitsKendoOpen', function (e) {
-      // 이미 열려있거나 suppressed 상태면 무시
-      if (isOpen || Date.now() < suppressOpenUntil) return;
-
-      // input 직접 클릭은 Kendo가 처리
-      if (window.jQuery(e.target).is('input.k-input-inner')) return;
-
-      if (inst && typeof inst.open === 'function') {
-        inst.open();
-      }
+    var uiObserver = new MutationObserver(function () {
+      scheduleNavTitle();
+      scheduleDayNames();
+      highlightRange();
     });
+    uiObserver.observe($calendarWrap[0], {childList: true, subtree: true, characterData: true});
 
     // ============================================
-    // 아이콘 위 클릭 레이어 버튼
+    // 이벤트 핸들러
     // ============================================
-    var $hit = $wrap.find('.vits-daterangepicker__icon-hit');
-    if (!$hit.length) {
-      $hit = window.jQuery(
-        '<button type="button" class="vits-daterangepicker__icon-hit" aria-label="달력 열기/닫기"></button>'
-      );
-      $wrap.append($hit);
-    }
 
-    $hit.off('.vitsKendoRangeHit');
+    function onCalendarChange() {
+      var selectedDate = calendar.value();
 
-    $hit.on('mousedown.vitsKendoRangeHit', function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-    });
-
-    $hit.on('click.vitsKendoRangeHit', function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      if (!inst) return;
-
-      if (isOpen) {
-        suppressOpenUntil = Date.now() + 500;
-        inst.close();
-
-        window.setTimeout(function () {
-          var ae = document.activeElement;
-          if (ae && $wrap[0].contains(ae) && typeof ae.blur === 'function') ae.blur();
-
-          $wrap.find('input').each(function () {
-            if (this && typeof this.blur === 'function') this.blur();
-          });
-          syncState();
-          blockIncrement();
-        }, 0);
+      if (!state.isSelectingEnd) {
+        state.startDate = selectedDate;
+        state.endDate = null;
+        state.isSelectingEnd = true;
       } else {
-        inst.open();
+        if (selectedDate < state.startDate) {
+          state.endDate = state.startDate;
+          state.startDate = selectedDate;
+        } else {
+          state.endDate = selectedDate;
+        }
+
+        state.isSelectingEnd = false;
+        closePopup();
+
+        $el.trigger('rangepicker:change', [getPublicValue()]);
       }
-    });
+
+      updateDisplay();
+      updateHiddenInputs();
+      highlightRange();
+    }
+
+    function onCalendarNavigate() {
+      forceUpdateUI();
+      window.setTimeout(function () {
+        highlightRange();
+        updateNavTitle();
+        updateDayNames();
+      }, 10);
+    }
+
+    function highlightRange() {
+      // var $cells = $calendarWrap.find('td:not(.k-other-month)');
+      // 변경: 전체 td 포함
+      var $cells = $calendarWrap.find('td');
+      $cells.removeClass('k-range-start k-range-end k-range-mid');
+
+      if (state.startDate && state.endDate) {
+        $calendarWrap.addClass('has-range');
+      } else {
+        $calendarWrap.removeClass('has-range');
+      }
+
+      if (!state.startDate) return;
+
+      $cells.each(function () {
+        var $cell = $(this);
+        var $link = $cell.find('.k-link');
+        var dateValue = $link.attr('data-value');
+
+        if (!dateValue) return;
+
+        var parts = dateValue.split('/');
+        var cellDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10));
+
+        var isStart = isSameDate(cellDate, state.startDate);
+        var isEnd = state.endDate && isSameDate(cellDate, state.endDate);
+        var isInRange = state.startDate && state.endDate && cellDate > state.startDate && cellDate < state.endDate;
+
+        if (isStart) $cell.addClass('k-range-start');
+        if (isEnd) $cell.addClass('k-range-end');
+        if (isInRange) $cell.addClass('k-range-mid');
+      });
+    }
+
+    function updateDisplay() {
+      var value = '';
+
+      if (state.startDate && state.endDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator + formatDate(state.endDate, opts.format);
+      } else if (state.startDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator;
+      }
+
+      $display.val(value);
+    }
+
+    function updateHiddenInputs() {
+      $startInput.val(state.startDate ? formatDate(state.startDate, opts.format) : '');
+      $endInput.val(state.endDate ? formatDate(state.endDate, opts.format) : '');
+    }
+
+    function openPopup() {
+      if ($wrap.hasClass('is-disabled')) return;
+
+      $popup.addClass('is-open');
+      state.isOpen = true;
+      highlightRange();
+      applyVitsClassToWrapper($wrap, $popup);
+
+      $el.trigger('rangepicker:open');
+    }
+
+    function closePopup() {
+      $popup.removeClass('is-open');
+      state.isOpen = false;
+
+      $el.trigger('rangepicker:close');
+    }
+
+    function togglePopup() {
+      if (state.isOpen) {
+        closePopup();
+      } else {
+        openPopup();
+      }
+    }
+
+    function getPublicValue() {
+      return {
+        start: state.startDate,
+        end: state.endDate,
+        startStr: $startInput.val(),
+        endStr: $endInput.val()
+      };
+    }
 
     // ============================================
     // 이벤트 바인딩
     // ============================================
-    $wrap.off('.vitsRangeSync');
-    $wrap.on(
-      'input.vitsRangeSync change.vitsRangeSync focusin.vitsRangeSync focusout.vitsRangeSync',
-      'input',
-      function () {
-        window.requestAnimationFrame(syncState);
-      }
-    );
 
-    // 초기 동기화 (약간 딜레이 - Kendo 렌더링 완료 후)
-    window.setTimeout(function () {
-      syncState();
-      blockIncrement();
-    }, 50);
+    $display.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+      togglePopup();
+    });
+
+    $toggle.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+      togglePopup();
+    });
+
+    $popup.on('click.vitsRangePicker', function (e) {
+      e.stopPropagation();
+    });
+
+    $(document).on('click.vitsRangePicker_' + $el.attr('id'), function () {
+      if (!state.isSelectingEnd) {
+        closePopup();
+      }
+    });
+
+    $(document).on('keydown.vitsRangePicker_' + $el.attr('id'), function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closePopup();
+      }
+    });
+
+    // ============================================
+    // Public API
+    // ============================================
+    var instance = {
+      getValue: getPublicValue,
+
+      setValue: function (start, end) {
+        state.startDate = start ? parseDateValue(start) : null;
+        state.endDate = end ? parseDateValue(end) : null;
+        state.isSelectingEnd = false;
+
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+
+        if (calendar && state.startDate) {
+          calendar.navigate(state.startDate);
+        }
+
+        $el.trigger('rangepicker:change', [getPublicValue()]);
+      },
+
+      reset: function () {
+        state.startDate = null;
+        state.endDate = null;
+        state.isSelectingEnd = false;
+
+        $display.val('');
+        $startInput.val('');
+        $endInput.val('');
+
+        if (calendar) {
+          calendar.value(null);
+        }
+
+        highlightRange();
+        $el.trigger('rangepicker:reset');
+      },
+
+      open: openPopup,
+      close: closePopup,
+      toggle: togglePopup,
+
+      disable: function () {
+        $wrap.addClass('is-disabled');
+        $display.prop('disabled', true);
+        $toggle.prop('disabled', true);
+        closePopup();
+      },
+
+      enable: function () {
+        $wrap.removeClass('is-disabled');
+        $display.prop('disabled', false);
+        $toggle.prop('disabled', false);
+      },
+
+      destroy: function () {
+        var id = $el.attr('id') || '';
+        $(document).off('.vitsRangePicker_' + id);
+        $display.off('.vitsRangePicker');
+        $toggle.off('.vitsRangePicker');
+        $popup.off('.vitsRangePicker');
+
+        if (calendar) {
+          calendar.destroy();
+        }
+
+        $el.removeData('vitsKendoRangePicker');
+      }
+    };
+
+    $el.data('vitsKendoRangePicker', instance);
+
+    updateDisplay();
+    highlightRange();
+
+    console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }
+
+  // ============================================
+  // 초기화 함수들
+  // ============================================
 
   function initOne(el) {
     var $el = window.jQuery(el);
     var uiType = $el.attr('data-ui');
 
-    if (uiType === 'kendo-datepicker') {
-      initDatePicker(el);
-    } else if (uiType === 'kendo-daterangepicker') {
-      initDateRangePicker(el);
+    if (uiType === 'kendo-range-picker') {
+      initRangePicker(el);
     }
   }
 
   function initAll(root) {
     if (!ensureKendoAvailable()) {
+      console.warn('[kendo-range-picker] Kendo UI not available');
       return;
     }
 
     var $root = root ? window.jQuery(root) : window.jQuery(document);
 
-    $root.find('[data-ui="kendo-datepicker"]').each(function () {
-      initOne(this);
-    });
-
-    $root.find('[data-ui="kendo-daterangepicker"]').each(function () {
+    $root.find('[data-ui="kendo-range-picker"]').each(function () {
       initOne(this);
     });
   }
@@ -538,10 +466,35 @@
     return obs;
   }
 
-  window.VitsKendoDatepicker = {
+  function getInstance(selector) {
+    var $el = window.jQuery(selector);
+    return $el.data('vitsKendoRangePicker') || null;
+  }
+
+  // ============================================
+  // 전역 API 노출
+  // ============================================
+  window.VitsKendoRangePicker = {
     initAll: initAll,
-    autoBindStart: autoBindStart
+    initOne: initOne,
+    autoBindStart: autoBindStart,
+    getInstance: getInstance
   };
 
-  console.log('[kendo-datepicker] loaded');
+  // ============================================
+  // DOM Ready 시 자동 초기화
+  // ============================================
+  if (window.jQuery) {
+    window.jQuery(function () {
+      autoBindStart();
+    });
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery) {
+        autoBindStart();
+      }
+    });
+  }
+
+  console.log('[kendo-range-picker] loaded');
 })(window);

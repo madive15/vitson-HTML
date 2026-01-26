@@ -69,7 +69,16 @@
  * --------------------------------------------------------------------------- */
 
 // 버튼 기본 스타일
-:is(.vits-btn-xxl, .vits-btn-xl, .vits-btn-lg-p, .vits-btn-lg, .vits-btn-md, .vits-btn-sm, .vits-btn-xs, .vits-btn-xxs) {
+:is(
+  .vits-btn-xxl,
+  .vits-btn-xl,
+  .vits-btn-lg-p,
+  .vits-btn-lg,
+  .vits-btn-md,
+  .vits-btn-sm,
+  .vits-btn-xs,
+  .vits-btn-xxs
+) {
   position: relative;
   gap: map.get(var.$unit, 8);
   padding: 0 map.get(var.$unit, 12);
@@ -321,7 +330,7 @@ $scoped-button-configs: (
     'hover-bg': map.get(color.$layout-status, 'brand-bg-sub'),
     'active-border': map.get(color.$layout-border, 'brand'),
     'active-text': color.$color-white,
-    'active-bg': map.get(color.$layout-surf, 'brand') ,
+    'active-bg': map.get(color.$layout-surf, 'brand'),
     'padding-x': 25
   )
 );
@@ -633,4 +642,65 @@ $scoped-button-configs: (
       }
     }
   }
+}
+
+/* icon text button */
+//  $color: map.get(color.$text-status, 'info')
+.vits-ictext-button {
+  @include btn-reset;
+  @include mx.flex(flex, row, flex-start, center);
+
+  // 사이즈별 토큰 맵
+  $sizes: (
+    sm: (
+      gap: map.get(var.$unit, 2),
+      icon: map.get(var.$unit, 16),
+      typo: 'b4r'
+    ),
+    md: (
+      gap: map.get(var.$unit, 4),
+      icon: map.get(var.$unit, 20),
+      typo: 'b3r'
+    )
+  );
+
+  @each $key, $opt in $sizes {
+    &-#{$key} {
+      gap: map.get($opt, gap);
+
+      .icon {
+        @include icon.ic-size(map.get($opt, icon));
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      .text {
+        @include typo.typography(map.get($opt, typo));
+      }
+    }
+  }
+
+  // 텍스트 컬러 맵(이름: 색상값)
+  $text-colors: (
+    info: map.get(color.$text-status, 'info')
+  );
+
+  // .vits-text-info / .vits-text-success ... 생성
+  @each $name, $value in $text-colors {
+    &.vits-text-#{$name} .text {
+      color: $value;
+    }
+  }
+}
+
+/* button - 고정값 */
+.btn-fix-w120 {
+  width: fn.rem(120);
+}
+
+.btn-fix-w150 {
+  width: fn.rem(150);
+}
+
+.btn-fix-w160 {
+  width: fn.rem(160);
 }

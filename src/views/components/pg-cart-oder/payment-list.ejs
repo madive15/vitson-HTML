@@ -36,14 +36,17 @@
     </p>
 
     <div class="vits-payment-agree">
-      <label class="checkbox-single-s">
-        <input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" />
-        <span class="sr-only">동의 체크란</span>
-        <span class="vits-payment-agree-text">
-          주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며,
-          구매에 동의하시겠습니까? (전자상거래법 제8조 2항)
-        </span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+        datas: [
+          {
+            className: 's',
+            name: 'payment-agree',
+            value: 'payment-agree',
+            srText: '동의 체크란',
+            agreeText: '주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며, 구매에 동의하시겠습니까? (전자상거래법 제8조 2항)',
+          }
+        ],
+      }) %>
     </div>
   </div>
 
@@ -53,29 +56,27 @@
 
     <!-- 간편결제 -->
     <div class="vits-payment-item">
-      <label class="vits-radio">
-        <input 
-          type="radio"
-          name="payment"
-          id="pay-simple"
-          checked 
-          aria-controls="panel-simple"
-          aria-expanded="true"
-        />
-        <span>간편결제 <em>비츠온페이로 간편하게 결제</em></span>
-      </label>
+
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-simple',
+        value: 'simple',
+        text: '간편결제 <em>비츠온페이로 간편하게 결제</em>',
+        checked: true,
+        ariaControls: 'panel-simple',
+        ariaExpanded: 'true',
+      }) %>
 
       <div id="panel-simple" class="vits-payment-panel is-active" aria-labelledby="pay-simple" >
         <!-- 간편결제 탭 -->
         <div class="vits-payment-tabs" role="tablist" aria-label="간편결제 수단">
-          <button
-            type="button"
+
+          <button type="button" 
             id="tab-simple-card"
             class="vits-payment-tab is-active"
             role="tab"
             aria-selected="true"
-            aria-controls="panel-simple-card"
-          >
+            aria-controls="panel-simple-card">
             비츠온페이 카드
           </button>
 
@@ -91,121 +92,157 @@
           </button>
         </div>
 
-        <!-- 카드 -->
-        <div
-          id="panel-simple-card"
-          class="vits-payment-tab-panel is-active"
-          role="tabpanel"
-          aria-labelledby="tab-simple-card"
-        >
-          <div class="vits-card-list">
-            <div class="vits-card-item is-selected">
-              <strong>신한카드</strong>
-              <span>3318 **** **** ****</span>
+        <!--간편결제 탭 > 카드 -->
+        <div id="panel-simple-card" class="vits-payment-tab-panel is-active" role="tabpanel" aria-labelledby="tab-simple-card">
+
+          <!-- 안내 메시지 -->
+          <div class="vits-payment-notice">
+            <p class="notice-text">신용카드 결제시 <strong>세금계산서 발급 불가</strong> 합니다.</p>
+            <div class="pay-manage">
+              <a class="vits-text-link" href="!#">비츠온페이 관리하기 
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </a>
             </div>
-            <div class="vits-card-item">
-              <strong>신한카드</strong>
-              <span>3318 **** **** ****</span>
+          </div>
+          <!-- 카드 스와이퍼 -->
+          <div class="vits-card-list swiper-container js-swiper" data-swiper-type="payment" data-desktop="2.5">
+            <div class="swiper-wrapper">
+              <% const cards = [
+                { brand: '신한카드', name: '홍길동', number: '3318 **** **** ****' },
+                { brand: '국민카드', name: '홍길동', number: '3318 **** **** ****' },
+                { brand: '삼성카드', name: '홍길동', number: '3318 **** **** ****' },
+                { brand: '현대카드', name: '홍길동', number: '3318 **** **** ****' },
+                { brand: '롯데카드', name: '홍길동', number: '3318 **** **** ****' },
+              ]; %>
+              <% cards.forEach((card, index) => { %>
+                <div class="swiper-slide vits-card-item<%= index === 0 ? ' is-selected' : '' %>">
+                  <strong class="card-brand"><%= card.brand %></strong>
+                  <span class="card-name"><%= card.name %></span>
+                  <span class="card-number"><%= card.number %></span>
+                </div>
+              <% }); %>
+            </div>
+            <div class="vits-swiper-navs">
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
             </div>
           </div>
 
           <div class="vits-card-form">
-            <div class="vits-form-item">카드번호: 신한카드(3318)</div>
-            <div class="vits-form-item">카드명칭: 김은희신한</div>
-            <div class="vits-form-item">할부선택: 일시불</div>
+            <div class="vits-form-row">
+              <div class="vits-form-item">
+                <span class="vits-form-label">카드번호:</span>
+                <span class="vits-form-value">신한카드(3318)</span>
+              </div>
+              
+              <div class="vits-form-item">
+                <span class="vits-form-label">카드명칭:</span>
+                <span class="vits-form-value">김비츠 신한</span>
+              </div>
+            </div>
+
+            <div class="vits-form-item">
+              <span class="vits-form-label">할부선택:</span>
+              <div class="vits-form-select">
+                <%- include(`${_src}/views/components/form/select.ejs`, {
+                  id: 'pay-installment',
+                  name: 'payInstallment',
+                  placeholder: '할부선택',
+                  options: [
+                    { value: '일시불', text: '일시불' },
+                    { value: '할부', text: '할부' },
+                    { value: '할부', text: '할부' },
+                  ],
+                  value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '일시불', disabled: false
+                }) %>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 계좌 -->
-        <div
-          id="panel-simple-account"
-          class="vits-payment-tab-panel"
-          role="tabpanel"
-          aria-labelledby="tab-simple-account"
-          
-        >
-          <div class="vits-account-empty">
-            <span>계좌 등록하기</span>
+        <!--간편결제 탭 > 계좌 -->
+        <div id="panel-simple-account" class="vits-payment-tab-panel" role="tabpanel" aria-labelledby="tab-simple-account">
+
+          <!-- 안내 메시지 -->
+          <div class="vits-payment-notice">
+            <div class="pay-manage">
+              <a class="vits-text-link" href="!#">비츠온페이 관리하기 
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </a>
+            </div>
           </div>
+          
+          <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, {
+            icon: 'plus',
+            label: '계좌 등록하기',
+            variant: 'account-empty',
+            href: '#'
+          }) %>
         </div>
       </div>
     </div>
 
     <!-- 카드결제 -->
     <div class="vits-payment-item">
-      <label class="vits-radio">
-        <input
-          type="radio"
-          name="payment"
-          id="pay-card"
-          aria-controls="panel-card"
-          aria-expanded="false"
-        />
-        <span>카드결제 <em>신용/체크카드</em></span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-card',
+        value: 'card',
+        text: '카드결제 <em>신용/체크카드</em>',
+        checked: false,
+        ariaControls: 'panel-card',
+        ariaExpanded: 'false',
+      }) %>
 
-      <div
-        id="panel-card"
-        class="vits-payment-panel"
-        
-        aria-labelledby="pay-card"
-        
-      >
-        <p>신용카드 결제가 가능합니다.</p>
+      <div id="panel-card" class="vits-payment-panel" aria-labelledby="pay-card">
+        <div class="general-info">
+          <p class="info-text">신용카드 결제가 가능합니다.</p>
+          <p class="info-text-important">신용카드 결제시 <strong>세금계산서 발급 불가</strong> 합니다.</p>
+        </div>
       </div>
     </div>
 
     <!-- 실시간 계좌이체 -->
     <div class="vits-payment-item">
-      <label class="vits-radio">
-        <input
-          type="radio"
-          name="payment"
-          id="pay-transfer"
-          aria-controls="panel-transfer"
-          aria-expanded="false"
-        />
-        <span>실시간계좌이체 <em>계좌에서 바로 이체</em></span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-transfer',
+        value: 'transfer',
+        text: '실시간계좌이체 <em>계좌에서 바로 이체</em>',
+        checked: false,
+        ariaControls: 'panel-transfer',
+        ariaExpanded: 'true',
+      }) %>
 
       <div
-        id="panel-transfer"
-        class="vits-payment-panel"
-        
-        aria-labelledby="pay-transfer"
-        
-      >
-        <ul class="vits-payment-info">
-          <li>이체 수수료 무료</li>
-          <li>23시 이후 은행별 제한 가능</li>
-          <li>1일 이체 한도 200만원</li>
-        </ul>
+        id="panel-transfer" class="vits-payment-panel" aria-labelledby="pay-transfer">
+        <div class="general-info">
+          <p class="info-text-important">이체 수수료 무료</p>
+          <p class="info-text-important">23시 이후 은행별 제한 가능</p>
+          <p class="info-text-important">1일 이체 한도 200만원</p>
+        </div>
       </div>
     </div>
 
     <!-- 무통장입금 -->
     <div class="vits-payment-item">
-      <label class="vits-radio">
-        <input
-          type="radio"
-          name="payment"
-          id="pay-bank"
-          aria-controls="panel-bank"
-          aria-expanded="false"
-        />
-        <span>무통장입금 <em>비츠온 계좌로 입금</em></span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-bank',
+        value: 'bank',
+        text: '무통장입금 <em>비츠온 계좌로 입금</em>',
+        checked: false,
+        ariaControls: 'panel-bank',
+        ariaExpanded: 'false',
+      }) %>
 
-      <div
-        id="panel-bank"
-        class="vits-payment-panel"
-        aria-labelledby="pay-bank"
-      >
-        <ul class="vits-payment-info">
-          <li>주문 후 영업일 5일 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.</li>
-          <li>입금 확인 상태에서는 부분 취소 불가능합니다.</li>
-          <li>주문자명과 입금자명이 다르더라도 정확한 금액 입금시 입금 확인 정상 처리됩니다.</li>
-        </ul>
+      <div id="panel-bank" class="vits-payment-panel" aria-labelledby="pay-bank">
+        <!-- 안내 메시지 -->
+        <div class="general-info">
+          <p class="info-text-important">주문 후 영업일 5일 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.</p>
+          <p class="info-text-important">입금 확인 상태에서는 부분 취소 불가능합니다.</p>
+          <p class="info-text-important">주문자명과 입금자명이 다르더라도 정확한 금액 입금시 입금 확인 정상 처리됩니다.</p>
+        </div>
 
         <div class="vits-payment-bank">
           <dl class="vits-payment-bank-list">
@@ -228,7 +265,7 @@
                 name: 'bankDepositor',
                 label: '입금자명',
                 placeholder: '입금자명을 입력하세요',
-                rootClass: 'size-large'
+                rootClass: 'size-medium'
               }) %>
             </div>
           </div>
@@ -238,44 +275,49 @@
 
     <!-- 여신결제 -->
     <div class="vits-payment-item">
-      <label class="vits-radio">
-        <input type="radio" name="payment" />
-        <span>여신 결제 <em>외상 거래 후 정산</em></span>
-      </label>
-    </div>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-credit',
+        value: 'credit',
+        text: '여신결제 <em>외상 거래 후 정산</em>',
+        checked: false,
+        ariaControls: 'panel-credit',
+        ariaExpanded: 'false',
+      }) %>
 
-    <div class="vits-payment-panel" hidden>
-      <p class="vits-payment-notice">후불 고객이 정해진 여신 한도 내에서 결제하시는 방법입니다.</p>
+      <div id="panel-credit" class="vits-payment-panel" aria-labelledby="pay-credit">
+        <div class="info-text">후불 고객이 정해진 여신 한도 내에서 결제하시는 방법입니다.</div>
+      </div>
     </div>
+    <!-- e.  -->
   </div>
 
   <!-- 세금계산서 발급 -->
-  <div class="vits-tax invoices">
-    <h2 class="vits-payment-title">세금계산서 발급 신청</h2>
+  <div class="vits-tax"> 
+    <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
     <div class="vits-tax-options">
-      <label class="vits-radio">
-        <input type="radio" name="tax-invoice" id="tax-invoice-single" />
-        <span>개별 발급</span>
-      </label>
-
-      <label class="vits-radio">
-        <input type="radio" name="tax-invoice" id="tax-invoice-batch" checked />
-        <span>일괄 발급</span>
-      </label>
-
-      <label class="vits-radio">
-        <input type="radio" name="tax-invoice" id="tax-invoice-none" />
-        <span>발급 안함</span>
-      </label>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'tax-invoice',
+        id: 'tax-invoice-single',
+        value: 'single',
+        text: '개별 발급',
+        checked: true,
+      }) %>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'tax-invoice',
+        id: 'tax-invoice-batch',
+        value: 'batch',
+        text: '일괄 발급',
+        checked: false,
+      }) %>
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'tax-invoice',
+        id: 'tax-invoice-none',
+        value: 'none',
+        text: '발급 안함',
+        checked: false,
+      }) %> 
     </div>
   </div>
-
-  <!-- 결제 버튼 -->
-  <div class="vits-payment-submit">
-    <button type="button" class="vits-btn vits-btn-primary vits-btn-lg">
-      370,950원 결제하기
-    </button>
-  </div>
-
 </section>

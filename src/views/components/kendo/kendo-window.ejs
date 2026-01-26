@@ -1,0 +1,92 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<%
+/**
+ * Kendo Window Component
+ * - Kendo UI Window 기반, 기존 vits-modal 스타일 그대로 사용
+ * - 열기: VitsKendoWindow.open('id')
+ * - 닫기: VitsKendoWindow.close('id')
+ * 
+ * @param {string} id - 윈도우 고유 ID (필수)
+ * @param {string} size - 윈도우 너비: '480' | '710' (선택, 미입력시 auto)
+ * @param {string} title - 헤더 타이틀 (필수)
+ * @param {string} subtitle - 헤더 서브타이틀 (선택)
+ * @param {string} contentPath - 컨텐츠 EJS 파일 경로 (필수)
+ * @param {object} opt - Kendo Window 옵션 (선택)
+ *   - {boolean} draggable: 드래그 이동 (기본값: false)
+ *   - {boolean} resizable: 크기 조절 (기본값: false)
+ * @param {array} buttons - 푸터 버튼 배열 (선택, 미입력시 푸터 없음)
+ *   - {string} text: 버튼 텍스트
+ *   - {string} variant: 'primary' | 'secondary' (기본값: 'primary')
+ *   - {string} action: 'close' 입력 시 닫기 동작
+ *   - {object} attrs: 추가 속성들
+ * 
+ * @example
+ * < % const winOpts = { id: 'myWindow', size: '480', title: '제목', opt: { draggable: true }, contentPath: `${_src}/views/.../content.ejs`, buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] }; % >
+ * < %- include(`${_src}/views/components/kendo/kendo-window.ejs`, winOpts) % >
+ */
+
+const winId = id;
+const winSize = (typeof size !== 'undefined' && size) ? size : '';
+const winTitle = (typeof title !== 'undefined' && title) ? title : '';
+const winSubtitle = (typeof subtitle !== 'undefined' && subtitle) ? subtitle : '';
+const winContentPath = (typeof contentPath !== 'undefined' && contentPath) ? contentPath : '';
+const winButtons = (typeof buttons !== 'undefined' && buttons) ? buttons : [];
+const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0);
+
+const winOpt = (typeof opt !== 'undefined' && opt) ? opt : {};
+if (winSize) winOpt.width = Number(winSize);
+const winOptStr = JSON.stringify(winOpt);
+%>
+
+<div 
+  id="<%= winId %>"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='<%= winOptStr %>'
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="<%= winId %>-title"
+  <% if (winSubtitle) { %>aria-describedby="<%= winId %>-subtitle"<% } %>
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="<%= winId %>-title"><%= winTitle %></h2>
+<% if (winSubtitle) { %>
+      <p class="vits-modal-subtitle" id="<%= winId %>-subtitle"><%= winSubtitle %></p>
+<% } %>
+    </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('<%= winId %>')" aria-label="닫기">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content<% if (!winHasFooter) { %> no-footer<% } %>">
+  <% if (winContentPath) { %>
+    <%- include(winContentPath, { size: undefined }) %>
+  <% } %>
+  </div>
+
+  <!-- 푸터 -->
+<% if (winHasFooter) { %>
+  <div class="vits-modal-footer">
+<% if (winButtons.length > 0) { %>
+    <div class="vits-modal-buttons <%= winButtons.length === 1 ? 'is-single' : 'is-double' %>">
+<% winButtons.forEach(function(btn) { 
+  const btnType = btn.type || 'button';
+  const btnVariant = btn.variant || 'primary';
+  const btnAction = btn.action || '';
+  const btnAttrs = btn.attrs || {};
+%>
+      <button type="<%= btnType %>" class="vits-modal-btn vits-modal-btn-<%= btnVariant %>"<% if (btnAction === 'close') { %> onclick="VitsKendoWindow.close('<%= winId %>')"<% } %><% Object.keys(btnAttrs).forEach(function(attrKey) { %> <%= attrKey %>="<%= btnAttrs[attrKey] %>"<% }); %>>
+        <span class="text"><%= btn.text %></span>
+      </button>
+<% }); %>
+    </div>
+<% } %>
+  </div>
+<% } %>
+</div>

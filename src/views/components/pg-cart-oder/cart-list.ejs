@@ -74,7 +74,7 @@
           <% } %>
           <!-- 비교 / 삭제 -->
           <div class="vits-cart-item-util">
-            <button class="vits-btn-compare">
+            <button type="button" class="vits-btn-compare">
               <span class="icon">
                 <i class="ic ic-compare" aria-hidden="true"></i>
               </span>
@@ -90,10 +90,15 @@
         <div class="vits-cart-item-main">
           <!-- 체크 -->
           <div class="vits-cart-item-check">
-            <label class="checkbox-single-s">
-              <input type="checkbox" name="vits-cart-checkbox" value="vits-cart-checkbox" />
-              <span class="sr-only">상품 선택</span>
-            </label>
+            <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+              datas: [
+                {
+                  className: 's',
+                  name: 'vits-cart-checkbox',
+                  value: 'vits-cart-checkbox',
+                },
+              ],
+            }) %>
           </div>
       
           <!-- 썸네일 -->

@@ -186,15 +186,15 @@ $modal-widths: (
 );
 
 .vits-modal {
-  --modal-footer-secondary-width: #{fn.rem(120)}; // 기본값
-
   &-inner {
-    @include mx.position(absolute, 50%, $left: 50%);
     @include mx.flex(flex, column, flex-start, flex-start);
-    z-index: var.$zindex-base;
     min-width: fn.rem(320);
     max-height: calc(var(--vh, 1vh) * 95);
-    transform: translate(-50%, -50%);
+
+    /* [legacy] k-window 전환 전 코드 - 추후 제거
+    @include mx.position(absolute, 50%, $left: 50%);
+    z-index: var.$zindex-base;
+    transform: translate(-50%, -50%); */
 
     > div[class*='vits-modal-'] {
       width: 100%;
@@ -221,7 +221,9 @@ $modal-widths: (
     @include mx.flex(flex, row, space-between, center);
     padding: map.get(var.$unit, 32) map.get(var.$unit, 32) map.get(var.$unit, 40);
     background: color.$color-white;
-    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+
+    /* [legacy] k-window 전환 전 코드 - 추후 제거
+    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0; */
 
     &-content {
       flex-grow: 1;
@@ -256,21 +258,36 @@ $modal-widths: (
   &-content {
     flex: 1 1 auto;
     min-width: 0;
+    padding: 0 map.get(var.$unit, 32);
     overflow: hidden auto;
     background: color.$color-white;
 
+    /* [legacy] k-window 전환 전 코드 - 추후 제거
     &-inner {
       max-width: 710px;
       padding: 0 map.get(var.$unit, 32);
       margin-right: fn.rem(-20); // 스크롤바 너비만큼 밀어내기
+    } */
+
+    // S: k-window 스크롤/푸터 여부 대응
+    &.has-scroll {
+      padding-right: map.get(var.$unit, 20);
     }
+
+    &.no-footer {
+      padding-bottom: map.get(var.$unit, 32);
+    }
+
+    // E: k-window 스크롤/푸터 여부 대응
   }
 
   // footer
   &-footer {
     padding: fn.rem(44) map.get(var.$unit, 32) map.get(var.$unit, 32);
     background: color.$color-white;
-    border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+
+    /* [legacy] k-window 전환 전 코드 - 추후 제거
+    border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg'); */
   }
 
   &-btn {
@@ -328,6 +345,54 @@ $modal-widths: (
     .vits-modal-content-inner {
       max-width: none !important;
       margin-right: 0 !important;
+    }
+  }
+}
+
+/* =============================================================
+  Kendo UI Window
+  - 기존 vits-modal 스타일을 그대로 활용합니다.
+  - Kendo Window는 모달 기능(열기/닫기/딤/중앙정렬)만 담당합니다.
+  - 헤더/컨텐츠/푸터는 기존 vits-modal-* 클래스를 사용합니다.
+  - 개별 윈도우 스타일은 이 영역 아래에서 작성하세요.
+============================================================= */
+
+.k-window {
+  max-width: 95vw;
+  overflow: hidden;
+  border-radius: map.get(var.$radius, 'lg');
+
+  &-titlebar {
+    display: none;
+  }
+
+  &-content {
+    max-height: calc(var(--vh, 1vh) * 95);
+    padding: 0 !important;
+    overflow: visible;
+  }
+
+  &.is-draggable .vits-modal-header {
+    cursor: move;
+  }
+
+  // 스크롤 생성 기준 예외처리
+  .vits-modal-content {
+    &:has(.vits-address-select) {
+      @include mx.flex(flex, column);
+      overflow-y: hidden;
+
+      .vits-address-select {
+        flex: 1 1 auto;
+        min-height: 0;
+
+        &-body {
+          // margin collapse로 인한 불필요한 스크롤 방지
+          padding-bottom: 4px;
+          margin-bottom: -4px;
+          overflow-y: auto;
+        }
+      }
     }
   }
 }

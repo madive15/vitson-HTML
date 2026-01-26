@@ -1,3 +1,5 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
 <!-- prettier-ignore -->
 <%
   const _id = (typeof idPrefix !== 'undefined' && idPrefix) ? idPrefix : 'plp';
@@ -14,9 +16,13 @@
   const _isInvalid = _isInvalidFlag || _hasMessage;
 
   const _validationId = _inputId ? `${_inputId}-validation` : '';
+
+  const _addClassNameRaw = (typeof addClassName !== 'undefined' && addClassName) ? addClassName : '';  
+  const _addClassName = Array.isArray(_addClassNameRaw) ? _addClassNameRaw.filter(Boolean).join(' ') : String(_addClassNameRaw).trim();
+  
 %>
 
-<div class="vits-input-search vits-validation">
+<div class="vits-input-search vits-validation<% if (_addClassName) { %> <%= _addClassName %><% } %>">
   <form class="vits-input-search-form" role="search" action="<%= _action %>" method="get" data-search-form>
     <label for="<%= _inputId %>" class="sr-only">검색어</label>
 

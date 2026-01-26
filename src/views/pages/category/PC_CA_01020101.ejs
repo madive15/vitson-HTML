@@ -41,34 +41,34 @@
       <main id="skipNav" class="vits-main">
         <div class="vits-wrap">
           <div class="vits-grid">
-            <div class="vits-inner inner-column">
-              <%# plp-titlebar.ejs: expects {_src, lv1List, depth1Id, depth2Id, depth3Id} %>
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/pg-category/plp-titlebar.ejs`, {
-                _src: _src,
-                lv1List: lv1List,
-                depth1Id: depth1Id,
-                depth2Id: depth2Id,
-                depth3Id: depth3Id
-              }) %>
-
-              <div class="vits-grid-area">
-                <%# <aside class="vits-grid-side vits-grid-side-left vits-side-plp"> %>
-                <%- include(`${_src}/views/components/pg-category/plp-left-category.ejs`, {
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner inner-column">
+                <%- include(`${_src}/views/components/pg-category/plp-titlebar.ejs`, {
                   _src: _src,
-                  mockData: mockData,
+                  lv1List: lv1List,
                   depth1Id: depth1Id,
                   depth2Id: depth2Id,
                   depth3Id: depth3Id
                 }) %>
                 
-                <%# <div class="vits-grid-main vits-main-plp"> %>
-                <%- include(`${_src}/views/components/pg-category/plp-main.ejs`, {
-                  _src: _src,
-                  totalCount: 60,
-                  productList: [],
-                  pagination: {}  
-                }) %>
+                <div class="vits-grid-area">
+                  <%# <aside class="vits-grid-side vits-grid-side-left vits-side-plp"> %>
+                  <%- include(`${_src}/views/layout/lnb/lnb-plp-category.ejs`, {
+                    _src: _src,
+                    mockData: mockData,
+                    depth1Id: depth1Id,
+                    depth2Id: depth2Id,
+                    depth3Id: depth3Id
+                  }) %>
+                  
+                  <%# <div class="vits-grid-main vits-main-plp"> %>
+                  <%- include(`${_src}/views/components/pg-category/plp-main.ejs`, {
+                    _src: _src,
+                    totalCount: 60,
+                    productList: [],
+                    pagination: {}  
+                  }) %>
+                </div>
               </div>
             </div>
           </div>

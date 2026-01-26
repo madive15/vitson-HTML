@@ -1,0 +1,171 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- my-records-box.ejs 상단에 기본값 설정 -->
+<!-- prettier-ignore -->
+<%
+  const _showPrintBtn = typeof showPrintBtn !== 'undefined' ? showPrintBtn : true;
+  const _showInquiryBtn = typeof showInquiryBtn !== 'undefined' ? showInquiryBtn : true;
+%>
+
+<div class="vits-mypage-records-box type-detail">
+  <ul class="vits-mypage-records-list">
+    <li class="vits-mypage-records-item">
+      <div class="vits-mypage-records">
+        <ul class="mypage-record-list">
+          <li class="mypage-record-item">
+            <div class="mypage-record-box">
+              <div class="mypage-record-head" data-scss="head">
+                <div class="mypage-record-meta">
+                  <p class="mypage-record-date">주문상품</p>
+                </div>
+
+                <ul class="mypage-record-actions">
+                  <% if (_showPrintBtn) { %>
+                  <li>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/icon-text-button.ejs`, {
+                      size:'md', color: 'info', iconName: 'print',  text: '거래명세서출력'}) %>
+                  </li>
+                  <% } %> <% if (_showInquiryBtn) { %>
+                  <li>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { size:'md', color:
+                      'info', iconName: 'textbox2', text: '주문 문의하기'}) %>
+                  </li>
+                  <% } %>
+                </ul>
+              </div>
+
+              <div class="mypage-record-body" data-scss="body">
+                <ul class="mypage-record-lines">
+                  <li class="mypage-record-line">
+                    <div class="mypage-record-thumb">
+                      <div class="product-thumb">
+                        <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+                      </div>
+                    </div>
+
+                    <div class="mypage-record-info">
+                      <div class="product-identity">
+                        <p class="product-code"><span class="sr-only">상품코드</span>63531</p>
+                        <p class="product-title">
+                          <span class="product-brand">엠포르지오아르마니</span>
+                          <span class="product-name"
+                            >더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP
+                            접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)</span
+                          >
+                        </p>
+                      </div>
+                      <div class="product-subinfo">
+                        <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
+                        <p class="product-meta">
+                          <span class="product-tax">과세</span> /
+                          <span class="product-qty">1개</span>
+                        </p>
+                      </div>
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, { textCount: 5 }) %>
+                    </div>
+
+                    <div class="mypage-record-status">
+                      <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '06' }) %>
+                    </div>
+
+                    <div class="mypage-record-pay">
+                      <p class="product-price">999,999,999원</p>
+                      <div class="mypage-record-tools">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '장바구니 담기', 
+                        }) %>
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '반품신청', 
+                        }) %>
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '배송조회', 
+                        }) %>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="mypage-record-line">
+                    <div class="mypage-record-thumb">
+                      <div class="product-thumb">
+                        <img src="https://vitsonimg.co.kr/images/productsNew/89/89044.png" alt="" />
+                      </div>
+                    </div>
+
+                    <div class="mypage-record-info">
+                      <div class="product-identity">
+                        <p class="product-code"><span class="sr-only">상품코드</span>89044</p>
+                        <p class="product-title">
+                          <span class="product-brand">밀크</span>
+                          <span class="product-name">A3용지</span>
+                        </p>
+                      </div>
+                      <div class="product-subinfo">
+                        <p class="product-spec"><span class="sr-only">규격</span>75g(1BOX/5권 1250매)</p>
+                        <p class="product-meta">
+                          <span class="product-tax">과세</span> /
+                          <span class="product-qty">1개</span>
+                        </p>
+                      </div>
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, { textCount: 3 }) %>
+                    </div>
+
+                    <div class="mypage-record-status">
+                      <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'claim', status: '06' }) %>
+                    </div>
+
+                    <div class="mypage-record-pay">
+                      <p class="product-price">999,999,999원</p>
+                      <div class="mypage-record-tools">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '장바구니 담기', 
+                        }) %>
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '반품신청', 
+                        }) %>
+                        <%- include(`${_src}/views/components/button/button.ejs`, { 
+                          size: 'xs', 
+                          variant: 'outline-secondary', 
+                          text: '배송조회', 
+                        }) %>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mypage-record-foot" data-scss="foot">
+                <div class="mypage-record-cart">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/button.ejs`, { 
+                    size: 'xs', 
+                    variant: 'outline-secondary', 
+                    text: '전체 상품 장바구니 담기', 
+                    iconLeft: true, 
+                    iconName: 'ic-bag' 
+                  }) %>
+                </div>
+                <p class="mypage-record-total">
+                  <span class="mypage-record-total-label">총 결제금액</span>
+                  <span class="mypage-record-total-value">999,999,999,000원</span>
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>

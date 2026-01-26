@@ -1,0 +1,248 @@
+// -----------------------------------------------------------------------------
+// pages/order-complete.scss
+// - 주문완료 페이지에서 사용.
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+/* 주문완료 페이지 최상위 class */
+.vits-main-order-complete{
+  padding: map.get(var.$unit, 40) 0 fn.rem(50);
+  background-color: map.get(color.$layout-surf, 'mypage');
+}
+
+/* 주문완료 페이지 컨테이너 */
+.vits-order-complete {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 32);
+  max-width: fn.rem(1280);
+  margin: 0 auto;
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
+}
+
+/* 페이지 타이틀 */
+.order-page-title {
+  padding: fn.rem(17) fn.rem(32);
+  border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+  h1 {
+    @include typo.typography('h3', $color: map.get(color.$text-colors, 'secondary'));
+  }
+}
+
+/* 주문 완료 상태 */
+.order-complete-status {
+  @include mx.flex($direction: column, $align: center);
+  gap: map.get(var.$unit, 8);
+  margin: map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
+  text-align: center;
+
+  .order-complete-number {
+    @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand-sub'));
+
+    strong{
+      font-weight: map.get(typo.$typo-weight, 's');
+    }
+  }
+
+  .order-complete-notice{
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: none;
+  }
+}
+
+/* 공통 섹션 */
+.order-section-wrap{
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 32);
+  padding: 0 map.get(var.$unit, 32) fn.rem(64);
+}
+
+.order-section {
+  @include mx.flex($direction: column);
+  @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+  border-radius: map.get(var.$radius, 'lg');
+
+  &-title {
+    @include typo.typography('h3', $color: map.get(color.$text-colors, 'secondary'));
+    @include mx.flex($align: center);
+    padding: fn.rem(17) fn.rem(32);
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+    .icon,.ic{
+      width: fn.rem(28);
+      height: fn.rem(28);
+    }
+  }
+
+  &-content{
+    padding: map.get(var.$unit, 32);
+  }
+
+  &.order-payment{
+    .order-section-content{
+      padding: 0 ;
+    }
+  }
+}
+
+/* 정보 리스트 (배송 / 결제수단 등) */
+.info-list {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 16);
+}
+
+.info-item {
+  @include mx.flex($align: center);
+  gap: map.get(var.$unit, 16);
+
+  .info-label {
+    @include typo.typography('b3', $color: map.get(color.$text-colors, 'tertiary'));
+    flex: 0 0 fn.rem(120);
+    white-space: wrap;
+  }
+
+  .info-value {
+    @include typo.typography('b3', $color: map.get(color.$text-colors, 'primary'));
+
+    &-status{
+      @include typo.typography('b3r', $color: map.get(color.$text-status, 'info'));
+    }
+
+    &-notice{
+      @include mx.flex($align: center);
+      @include mx.border(all, 1px, solid, map.get(color.$brand-colors, '40'));
+      padding: map.get(var.$unit, 8) map.get(var.$unit, 24);
+      color: map.get(color.$text-status, 'brand');
+      background-color: map.get(color.$layout-status, 'brand-bg-sub');
+      border-radius: map.get(var.$radius, 'sm');
+
+      &::before{
+        display: inline-block;
+        width: fn.rem(12);
+        min-width: fn.rem(12);
+        height: fn.rem(12);
+        margin-right: map.get(var.$unit, 4);
+        content: '';
+        background-color: map.get(color.$icon-colors, 'hover');
+        mask: no-repeat center / contain;
+        mask-image: url('/public/resources/img/mro/renewal/ic/ic-tip-info.svg');
+      }
+    }
+
+    .miss{
+      @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+    }
+  }
+
+  span:nth-of-type(3){
+    position: relative;
+    flex: none;
+    padding-left: 16px;
+
+    &::before{
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 1px;
+      height: 80%;
+      content: '';
+      background-color: map.get(color.$layout-border, 'quinary');
+    }
+  }
+}
+
+/* 배송 + 결제 묶음 */
+.order-section-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: map.get(var.$unit, 24);
+}
+
+/* 가격 영역 */
+.price-list {
+  @include mx.flex($direction: column);
+  gap: fn.rem(16);
+  padding: map.get(var.$unit, 32);
+}
+
+.price-item {
+  @include mx.flex($align: center, $justify: space-between);
+  gap: map.get(var.$unit, 16);
+
+  .price-label{
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+  }
+
+  .price-value{
+    @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &.is-discount {
+    .price-value{
+      @include typo.typography('h4b', $color: map.get(color.$text-status, 'brand-sub'));
+    }
+  }
+}
+
+.price-total {
+  @include mx.flex($align: center, $justify: space-between);
+  gap: map.get(var.$unit, 16);
+  padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+  border-top: 1px solid map.get(color.$layout-border, 'quinary');
+
+  &-label{
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  &-value{
+    @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
+  }
+}
+
+.vits-order-complete-buttons {
+  @include mx.flex($justify: center);
+  gap: map.get(var.$unit, 12);
+  padding-top: map.get(var.$unit, 24);
+
+  .btn-home{
+    width: fn.rem(156);
+  }
+
+  .btn-cart{
+    width: fn.rem(334);
+  }
+}
+
+/* ui 주문 실패 화면 스타일 */
+.vits-order-complete {
+  // *주문 실패 화면 숨김
+  .order-section.order-slip{
+    display: none;
+  }
+
+  // *type: slip 주문 실패 화면 표시
+  &.order-slip{
+    .order-complete-number,
+    .order-section{
+      display: none;
+
+      &.order-slip{
+        display: block;
+      }
+    }
+
+    .order-complete-notice{
+      display: block;
+    }
+  }
+}

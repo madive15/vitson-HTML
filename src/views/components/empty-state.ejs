@@ -1,0 +1,28 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  const {
+    iconName = '',
+    title = '',
+    desc = '',
+    buttonHtml = ''
+  } = locals;
+%>
+
+<section class="vits-empty-state" data-ui="empty-state">
+  <div class="vits-empty-state-content">
+    <div class="vits-empty-state-text">
+      <h2 class="vits-empty-state-title"><%= title %></h2>
+      <% if (desc) { %>
+      <p class="vits-empty-state-desc"><%= desc %></p>
+      <% } %>
+    </div>
+    <div class="vits-empty-state-icon" aria-hidden="true">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName }) %>
+    </div>
+  </div>
+  <% if (buttonHtml) { %>
+  <div class="vits-empty-state-action"><%- buttonHtml %></div>
+  <% } %>
+</section>

@@ -94,7 +94,14 @@
           <div class="vits-form-row">
             <label class="vits-form-label">도착 희망일</label>
             <div class="vits-form-field">
-              <input type="text" placeholder="날짜 선택" />
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                id: 'transArrival',
+                name: 'transArrival',
+                size: 'l',
+                placeholder: '도착 희망일',
+                dataName: '도착 희망일',
+                options: { format: 'yyyy.MM.dd', culture: 'ko-KR' }
+              }) %>
             </div>
           </div>
 
@@ -183,7 +190,7 @@
             label: '받는 사람',
             placeholder: '받는 사람',
             required: true,
-            rootClass: 'size-large'
+            rootClass: 'size-medium'
           }) %>
         </div>
 
@@ -196,7 +203,7 @@
             label: '받는 사람 연락처',
             placeholder: '받는 사람 연락처',
             required: true,
-            rootClass: 'size-large'
+            rootClass: 'size-medium'
           }) %>
         </div>
       </div>
@@ -219,7 +226,7 @@
             label: '배송지 주소',
             placeholder: '배송지 주소',
             required: true,
-            rootClass: 'size-large'
+            rootClass: 'size-medium'
           }) %>
         </div>
       </div>
@@ -235,7 +242,7 @@
             value: '(54366) 서울특별시 강남구 테헤란로 123',
             placeholder: '상세 주소',
             required: true,
-            rootClass: 'size-large'
+            rootClass: 'size-medium'
           }) %>
         </div>
       </div>
@@ -253,7 +260,7 @@
             required: true,
             isInvalid: true,
             validationMessage: '필수 입력 항목입니다.',
-            rootClass: 'size-large'
+            rootClass: 'size-medium'
           }) %>
         </div>
       </div>
@@ -267,7 +274,7 @@
             label: '상세 주소',
             value: '(54366) 서울특별시 강남구 테헤란로 123',
             placeholder: '상세 주소',
-            rootClass: 'size-large',
+            rootClass: 'size-medium',
             disabled: true
           }) %>
         </div>
@@ -346,7 +353,7 @@
               placeholder: '보내는 사람',
               value: '메가존',
               required: true,
-              rootClass: 'size-large'
+              rootClass: 'size-medium'
             }) %>
           </div>
         </div>
@@ -361,7 +368,7 @@
               label: '보내는 사람 연락처',
               placeholder: '보내는 사람 연락처',
               required: true,
-              rootClass: 'size-large'
+              rootClass: 'size-medium'
             }) %>
           </div>
         </div>

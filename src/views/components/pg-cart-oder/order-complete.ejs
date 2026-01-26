@@ -1,0 +1,186 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<div class="vits-order-complete">
+  <div class="order-page-title">
+    <h1>주문완료</h1>
+  </div>
+  <!-- 주문 완료 상태 안내 -->
+  <div class="order-complete-status">
+    <%- include(`${_src}/views/components/empty-state.ejs`, {
+      iconName: 'box',
+      title: '주문이 완료/실패 되었습니다.',
+    }) %>
+    <p class="order-complete-number">
+      주문번호 <strong>ora0008432397</strong>
+    </p>
+    <p class="order-complete-notice">
+      다음의 실패 사유를 확인한 후 다시 시도해 주세요
+    </p>
+  </div>  
+
+  <section class="order-section-wrap">
+    <!-- 상품 정보 -->
+    <div class="order-section order-product">
+      <h2 class="order-section-title">상품정보</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">주문 상품</span>
+            <span class="info-value">
+              더블 OPP 접착테이프 투명 (초강력 접착제) 외 5건
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- 배송 / 결제 정보 영역 -->
+    <div class="order-section-group">
+      <!-- 배송 정보 -->
+      <section class="order-section order-shipping">
+        <h2 class="order-section-title">배송정보</h2>
+  
+        <div class="order-section-content">
+          <ul class="info-list">
+            <li class="info-item">
+              <span class="info-label">받는 사람</span>
+              <span class="info-value">김철수</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">연락처</span>
+              <span class="info-value">010-1234-5678</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송 주소</span>
+              <span class="info-value">
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층
+              </span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송메모</span>
+              <span class="info-value">부재시 경비실에 맡겨주세요</span>
+            </li>
+            <li class="info-item">
+              <span class="info-label">배송방법</span>
+              <span class="info-value">택배 <span class="info-value-status">(대납)</span></span>
+            </li>
+          </ul>
+        </div>
+      </section>
+  
+      <!-- 결제 정보 -->
+      <section class="order-section order-payment">
+        <h2 class="order-section-title">결제정보</h2>
+  
+        <div class="order-section-content">
+          <ul class="price-list">
+            <li class="price-item">
+              <span class="price-label">상품금액</span>
+              <span class="price-value">1,030,000원</span>
+            </li>
+            <li class="price-item is-discount">
+              <span class="price-label">할인</span>
+              <span class="price-value">-30,000원</span>
+            </li>
+            <li class="price-item">
+              <span class="price-label">VAT</span>
+              <span class="price-value">+1,030,000원</span>
+            </li>
+            <li class="price-item">
+              <span class="price-label">배송비</span>
+              <span class="price-value">+1,030,000원</span>
+            </li>
+          </ul>
+  
+          <div class="price-total">
+            <span class="price-total-label">최종결제금액</span>
+            <strong class="price-total-value">1,030,000원</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <!-- 결제 수단 -->
+    <!-- [D] case : 결제 수단 . 카드드-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">카드 결제</span>
+            <span class="info-value">신한카드 (****-****-****-1234)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 수단 . 무통장 입금-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">무통장 입금</span>
+            <span class="info-value">국민 12345-04-531311</span>
+            <span class="info-label">예금주명</span>
+            <span class="info-value">주식회사 일신비츠온</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label"></span>
+            <p class="info-value-notice">
+              주문 후 <strong>영업일 5일 내</strong>에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.
+              
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 수단 . 여러 결제-->
+    <div class="order-section order-method">
+      <h2 class="order-section-title">결제 수단</h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">여신결제</span>
+            <span class="info-value">여신결제</span>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size: 'sm',
+              variant: 'outline-secondary',
+              text: '여신 사용 현황 보기'
+            }) %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- [D] case : 결제 실피-->
+    <div class="order-section order-slip">
+      <h2 class="order-section-title">
+        <span class="icon">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %>
+        </span>
+        실패 상세 정보
+      </h2>
+  
+      <div class="order-section-content">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">결제 수단</span>
+            <span class="info-value">카드결제 (신한카드 ****-****-****-1234)</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">최종 결제 금액</span>
+            <span class="info-value"><strong>30,000원</strong></span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">주문 실패 사유</span>
+            <span class="info-value"><strong class="miss">체크 카드 한도 초과</strong></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+

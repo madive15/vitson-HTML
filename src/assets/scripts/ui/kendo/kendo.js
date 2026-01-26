@@ -4,6 +4,8 @@
  */
 import './kendo-dropdown.js';
 import './kendo-datepicker.js';
+import './kendo-datepicker-single.js';
+import './kendo-window.js';
 
 (function (window) {
   'use strict';
@@ -17,9 +19,13 @@ import './kendo-datepicker.js';
         window.VitsKendoDropdown.autoBindStart(document.body);
       }
 
-      if (window.VitsKendoDatepicker) {
-        window.VitsKendoDatepicker.initAll(document);
-        window.VitsKendoDatepicker.autoBindStart(document.body);
+      if (window.VitsSingleRangePicker) {
+        window.VitsSingleRangePicker.initAll(document);
+        window.VitsSingleRangePicker.autoBindStart(document.body);
+      }
+      if (window.VitsKendoWindow) {
+        window.VitsKendoWindow.initAll(document);
+        window.VitsKendoWindow.autoBindStart(document.body);
       }
 
       console.log('[kendo] all modules initialized');

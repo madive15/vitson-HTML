@@ -215,3 +215,22 @@
     }
   }
 }
+
+/* portal 모드 list 스타일 */
+.vits-select-list-portal {
+  @include mx.border('all', $color: color.$color-black);
+
+  // 추가 portal 전용
+  position: fixed;
+  z-index: 9999;
+  padding: map.get(var.$unit, 8) 1px;
+  overflow-y: auto;
+  pointer-events: auto;
+  visibility: visible;
+  background: #fff; // 또는 기존 배경색 변수
+  opacity: 1;
+
+  // transition/animation 효과 제거 (중요!)
+  transition: none !important;
+  transform: translateY(0);
+}
