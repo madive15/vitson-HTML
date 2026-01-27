@@ -303,42 +303,52 @@
   }
 }
 
+/* object-fit 타입을 파라미터로 받기 */
+@mixin img-fit($fit: contain) {
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: $fit;
+    object-position: center;
+  }
+}
+
 /* 상품 아이템 이미지 공통 속성 */
 @mixin common-list-thumb(
   $thumb-bg-color: map.get(color.$gray-shades, '30'),
   $img-bg-color: map.get(color.$gray-shades, '0')
 ) {
+  @include img-fit;
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: $thumb-bg-color;
 
   img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
     background-color: $img-bg-color;
   }
 }
 
-@mixin bullet-style() {
+@mixin bullet-style($pl: 12, $top: 7, $w: 4, $h: $w, $bg: map.get(color.$layout-surf, 'secondary'), $gap: 8) {
   > li {
     position: relative;
-    padding-left: map.get(var.$unit, 12);
+    padding-left: fn.rem($pl);
 
     &::before {
-      @include position(absolute, 7px, $left: 0);
-      width: map.get(var.$unit, 4);
-      height: map.get(var.$unit, 4);
-      content: '';
-      background: map.get(color.$layout-surf, 'secondary');
-      border-radius: 50%;
+      @include position(absolute, #{$top}px, $left: 0);
+
+      @if $w != 0 {
+        width: fn.rem($w);
+        height: fn.rem($h);
+        content: '';
+        background: $bg;
+        border-radius: 50%;
+      }
     }
 
     & + li {
-      margin-top: map.get(var.$unit, 8);
+      margin-top: fn.rem($gap);
     }
   }
 }

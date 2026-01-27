@@ -649,3 +649,63 @@ $textarea-size: (
     }
   }
 }
+
+/* input file */
+@mixin input-attach-size {
+  width: fn.rem(52);
+  height: fn.rem(52);
+  border-radius: map.get(var.$radius, 'sm');
+}
+
+.vits-input-attach {
+  @include mx.flex(flex, row, flex-start, flex-start, wrap);
+  gap: map.get(var.$unit, 8);
+
+  .attach-preview {
+    &-list {
+      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-item {
+      @include input-attach-size;
+      @include mx.img-fit;
+      @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+      position: relative;
+      padding: fn.rem(6);
+
+      img {
+        border-radius: map.get(var.$radius, 'sm');
+      }
+    }
+  }
+
+  .btn-attach {
+    &-remove {
+      @include button.btn-reset;
+      @include mx.position(absolute, -6px, $right: -6px);
+      @include icon.ic-size(fn.rem(20));
+      color: map.get(color.$icon-neutral, 'inverse');
+      cursor: pointer;
+      background: map.get(color.$layout-surf, 'primary');
+      border-radius: 50%;
+    }
+
+    &-add {
+      @include mx.flex(flex, row, center, center);
+      @include input-attach-size;
+      position: relative;
+      cursor: pointer;
+      background: map.get(color.$layout-surf, 'sunken');
+
+      input {
+        @include mx.sr-only;
+      }
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 32));
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+    }
+  }
+}

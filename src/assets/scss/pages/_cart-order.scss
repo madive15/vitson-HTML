@@ -23,15 +23,6 @@
   border-radius: map.get(var.$radius, 'md');
 }
 
-/* 안내 텍스트 박스 (red) */
-@mixin cart-order-alert-text {
-  @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand'));
-  @include mx.border(all, 1px, solid, map.get(color.$brand-colors, '40'));
-  padding: map.get(var.$unit, 8) map.get(var.$unit, 24);
-  background-color: map.get(color.$layout-status, 'brand-bg-sub');
-  border-radius: map.get(var.$radius, 'sm');
-}
-
 /* 안내 텍스트 아이콘 (info) */
 @mixin cart-order-info-icon(
   $text-color: map.get(color.$text-status, 'info-sub'),
@@ -65,6 +56,7 @@
 /* 최상위 class: vits-main-cart-order */
 .vits-main-cart-order{
   min-width: 1024px;
+
 }
 
 /* ===장바구니=== */
@@ -471,6 +463,13 @@
         }
       }
 
+      &:last-child{
+        .label,
+        .value{
+          flex: 1;
+          text-align: right;
+        }
+      }
     }
   }
 
@@ -504,6 +503,7 @@
 .vits-shipping {
   @include mx.flex($direction: column);
   padding-bottom: map.get(var.$unit, 32);
+  margin-top: map.get(var.$unit, 20);
   background: map.get(color.$layout-surf, 'base');
   border-radius: map.get(var.$radius, 'lg');
   box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
@@ -520,11 +520,7 @@
 
   /* 안내 메시지 */
   &-alert {
-    padding: fn.rem(32) fn.rem(32) 0;
-
-    .vits-shipping-alert-text {
-      @include cart-order-alert-text;
-    }
+    margin: map.get(var.$unit, 32) map.get(var.$unit, 32) 0;
   }
 
   /* ===배송 방법별 패널 === */
@@ -866,6 +862,7 @@
       gap: map.get(var.$unit, 8);
       cursor: pointer;
     
+      /* stylelint-disable-next-line no-descending-specificity */
       .label-name {
         @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
         align-items: center;
@@ -1084,6 +1081,7 @@
       color: map.get(color.$text-colors, 'inverse');
     }
   
+    /* stylelint-disable-next-line no-descending-specificity */
     .icon{
       width: fn.rem(24);
       height: fn.rem(24);
@@ -1162,28 +1160,6 @@
   }
 }
 
-/* 안내 리스트 */
-.general-info{
-  padding: map.get(var.$unit, 20) map.get(var.$unit, 32) ;
-  background-color: map.get(color.$layout-surf, 'raised');
-  border: 1px solid map.get(color.$layout-border, 'quaternary');
-  border-radius: map.get(var.$radius, 'md');
-
-  .info-text{
-    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-    padding-bottom: fn.rem(12);
-  }
-
-  .info-text-important{
-    @include cart-order-info-icon;
-    padding-bottom: fn.rem(12);
-
-    &:last-child{
-      padding-bottom: 0;
-    }
-  }
-}
-
 /* ===세금계산서 발급 신청=== */
 .vits-tax{
   @include cart-order-surf-box;
@@ -1222,9 +1198,252 @@
   .vits-btn-xxl{
     width: 100%;  
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .text{
       font-size: fn.rem(20);
     }
   }
 }
 
+/* ===modal kendo window -배송지 등록/수정=== */
+.vits-address-modify{
+  padding: map.get(var.$unit, 32) ;
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'md');
+
+  &-form{
+    position: relative;
+
+    .vits-address{
+
+      /* 배송 방식 선택 */
+      &-type{
+        @include mx.flex($align: center, $justify: space-between);
+        gap: map.get(var.$unit, 20);
+        padding-bottom: map.get(var.$unit, 32);
+  
+        .radio-item{
+          flex: 1;
+          text-align: center;
+  
+          .label-name{
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          }
+  
+          &:has(input:checked){
+            .label-name{
+              color: map.get(color.$text-status, 'brand');
+            }
+          }
+        }
+      }
+
+      /* 배송지 입력 */
+      &-fields{
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 12);
+
+        .vits-field{
+          @include mx.flex($align: center);
+          gap: map.get(var.$unit, 12);
+
+          &-label{
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            min-width: fn.rem(60);
+            white-space: nowrap;
+
+            .vits-required{
+              @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+              margin-right: 2px;
+            }
+          }
+
+          .input-item{
+            ::placeholder{
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+
+            }
+          }
+
+          // 주소 입력 필드
+          &.vits-address{
+            gap: map.get(var.$unit, 12);
+            align-items: flex-start;
+            justify-content: space-between;  
+
+            .vits-field-label{
+              padding-top: map.get(var.$unit, 8);
+            }
+
+            .vits-address-input{
+              @include mx.flex($direction: column);
+              flex: 1;
+              gap: map.get(var.$unit, 12);
+
+              .vits-address-zipcode{
+                @include mx.flex($align: center);
+                gap: map.get(var.$unit, 8);
+  
+                .vits-input{
+                  width: 100%;
+                }
+              }
+            }
+
+          }
+        }
+
+      }
+    }
+
+    .vits-default-address{
+      padding-top: map.get(var.$unit, 32);
+
+      .agree-text{
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+}
+
+/* ===modal kendo window -쿠폰 적용=== */
+.vits-apply-coupon-content{
+  &.vits-scrollbar{
+    max-height: fn.rem(630);
+    padding-bottom: map.get(var.$unit, 4);
+    overflow: auto;
+  }
+
+  .vits-apply-coupon-list {
+    ul {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    .coupon-item {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 20);
+      padding: fn.rem(14) fn.rem(20);
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+      border-radius: map.get(var.$radius, 'md');
+
+      &-left {
+        .coupon-item-badge {
+          position: relative;
+          display: block;
+          width: fn.rem(96);
+          height: fn.rem(68);
+
+          @include mx.background('ic/ic-coupon-badge.svg');
+        }
+
+        .coupon-item-badge-value {
+          @include typo.typography('h1b', $color: map.get(color.$text-status, 'info'));
+          display: block;
+          padding-top: fn.rem(24);
+          text-align: center;
+        }
+      }
+
+      &-body {
+        @include mx.ellipsis-single;
+        flex: 1;
+        min-width: 0;
+
+        .coupon-item-title {
+          @include mx.ellipsis-single;
+          @include typo.typography('b2sb', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        .coupon-item-period {
+          @include mx.ellipsis-single;
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          margin: map.get(var.$unit, 8) 0 map.get(var.$unit, 4);
+        }
+
+        .coupon-item-desc {
+          @include mx.ellipsis-single;
+          @include mx.flex($direction: column);
+          gap: map.get(var.$unit, 4);
+
+          .desc-list-discount{
+            @include mx.flex($align: center, $justify: flex-start);
+            gap: map.get(var.$unit, 4);
+
+            dt, dd{
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+      }
+
+      @include mx.common-mouse-event{
+        border-color: map.get(color.$layout-border, 'secondary');
+        box-shadow: 0 4px 7px 0 rgb(0 0 0 / 10%);
+      }
+    }
+  }
+
+  // 최대 혜택가
+  .vits-benefit-coupon-price {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 24);
+    margin-top: map.get(var.$unit, 32);
+    background: map.get(color.$layout-surf, 'mypage');
+    border: 2px solid map.get(color.$text-status, 'info');
+    border-radius: map.get(var.$radius, 'md');
+
+    .vits-benefit{
+      &-title {
+        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+        margin-bottom: map.get(var.$unit, 12);
+      }
+
+      &-calc {
+        @include mx.flex($align: stretch);
+      }
+
+      &-item{
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 2);
+        min-width: fit-content;
+        padding: map.get(var.$unit, 16);
+        text-align: center;
+        background: map.get(color.$layout-surf, 'base');
+        border: 1px solid map.get(color.$layout-border, 'quaternary');
+        border-radius: map.get(var.$radius, 'md');
+      }
+
+      &-result {
+        @include mx.flex($direction: column, $justify: center, $align: center);
+        flex: 1;
+        gap: map.get(var.$unit, 4);
+        padding: map.get(var.$unit, 12);
+        background: map.get(color.$layout-surf, 'base');
+        border: 1px solid map.get(color.$text-status, 'info');
+        border-radius: map.get(var.$radius, 'md');
+
+        .benefit-label {
+          @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        .benefit-price-value {
+          @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
+        }
+      }
+    }
+
+    .benefit-label {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    .benefit-value {
+      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    .benefit-operator {
+      @include mx.flex($align: center, $justify: center);
+      @include typo.typography('h2b', $color: map.get(color.$text-status, 'info'));
+      padding: 0 4px;
+    }
+  }
+}

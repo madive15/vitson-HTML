@@ -18,6 +18,12 @@
   }
 }
 
+@mixin records-box-type-detail02 {
+  @at-root .vits-mypage-records-box.type-detail02 & {
+    @content;
+  }
+}
+
 @mixin roundbox-white($variant: 'single', $custom: 'base') {
   background: color.$color-white;
   border-radius: map.get(var.$radius, 'lg');
@@ -42,6 +48,11 @@
       }
 
       @include records-box-type-detail {
+        padding-top: map.get(var.$unit, 36);
+        padding-bottom: map.get(var.$unit, 36);
+      }
+
+      @include records-box-type-detail02 {
         padding-top: map.get(var.$unit, 36);
         padding-bottom: map.get(var.$unit, 36);
       }
@@ -641,6 +652,197 @@
       }
     }
   }
+
+  /* 반품/취소 */
+  &-claim {
+    &-section {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      position: relative;
+      gap: map.get(var.$unit, 32);
+    }
+
+    &-box {
+      @include roundbox-white('section');
+      width: 100%;
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      .mypage-claim {
+        &-head {
+          @include mx.flex(flex, row, space-between, center, wrap);
+          @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+          height: fn.rem(60);
+        }
+
+        &-body {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 16);
+        }
+
+        &-title {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          gap: map.get(var.$unit, 12);
+
+          .title-label {
+            @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+          }
+
+          .title-value {
+            @include typo.typography('h3b', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+
+        &-info {
+          @include mx.flex(flex, row, flex-start, flex-start, wrap);
+          gap: map.get(var.$unit, 16) fn.rem(12);
+          width: 100%;
+          padding: 0;
+          margin: 0;
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          dt {
+            @include typo.typography('b3r');
+            width: fn.rem(120);
+
+            &.text-accent {
+              padding-top: fn.rem(2.5);
+            }
+          }
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          dd {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            width: calc(100% - fn.rem(132));
+
+            &.divider {
+              @include mx.divider('span', $color: map.get(color.$layout-border, 'tertiary'));
+              flex-wrap: wrap;
+            }
+
+            &.text-accent {
+              font-size: fn.rem(18);
+              font-weight: 600;
+              color: map.get(color.$text-status, 'brand-sub');
+            }
+          }
+        }
+
+        &-lines {
+          @include mx.flex(flex, column, flex-start, stretch);
+          gap: map.get(var.$unit, 32);
+        }
+
+        &-line {
+          @include mypage-product-common;
+          @include mx.flex(flex, row, flex-start, stretch);
+          gap: map.get(var.$unit, 20);
+          width: 100%;
+
+          .product {
+            &-subinfo {
+              @include mx.flex(flex, column, flex-start, flex-start);
+              gap: map.get(var.$unit, 8);
+            }
+
+            &-price {
+              @include typo.typography('b2s', $color: map.get(color.$neutral-colors, '1'));
+            }
+          }
+        }
+
+        &-thumb {
+          @include mx.flex(flex, row, center, center);
+          flex: 0 0 fn.rem(80);
+        }
+
+        &-product-info {
+          @include mx.flex(flex, column, center, flex-start);
+          flex: 1 1 auto;
+          gap: map.get(var.$unit, 8);
+          min-width: 0;
+
+          .product-meta {
+            @include mx.flex(flex, row, flex-start, flex-start);
+            gap: map.get(var.$unit, 24);
+
+            &-row {
+              @include mx.flex(flex, row, flex-start, flex-start);
+              gap: fn.rem(10);
+            }
+
+            &-label {
+              @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            &-value {
+              @include typo.typography('b4s');
+
+              &.text-accent {
+                color: map.get(color.$text-status, 'brand-sub');
+              }
+            }
+          }
+        }
+
+        &-status {
+          @include mx.flex(flex, row, center, center);
+          position: relative;
+          box-sizing: content-box;
+          flex: 0 0 fn.rem(120);
+          padding: 0 map.get(var.$unit, 20);
+
+          &::before,
+          &::after {
+            @include mx.position(absolute, 0);
+            width: 1px;
+            height: 100%;
+            content: '';
+            background: map.get(color.$layout-surf, 'sunken');
+          }
+
+          &::before {
+            left: 0;
+          }
+
+          &::after {
+            right: 0;
+          }
+        }
+
+        &-pay {
+          @include mx.flex(flex, column, center, flex-end);
+          flex: 0 0 fn.rem(248);
+          gap: map.get(var.$unit, 12);
+        }
+
+        &-tools {
+          @include mx.flex(flex, row, flex-start, flex-end);
+          gap: map.get(var.$unit, 12);
+        }
+
+        &-attachment {
+          &-list {
+            @include mx.flex(flex, row, flex-start, flex-start, wrap);
+            gap: map.get(var.$unit, 8);
+
+            > li {
+              width: fn.rem(52);
+              aspect-ratio: 1 / 1;
+            }
+          }
+
+          &-button {
+            @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+            @include mx.common-list-thumb(map.get(color.$layout-surf, 'base'));
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: fn.rem(6);
+            border-radius: map.get(var.$radius, 'sm');
+          }
+        }
+      }
+    }
+  }
 }
 
 /* empty state - nodata */
@@ -700,6 +902,7 @@
           @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
         }
 
+        /* stylelint-disable-next-line no-descending-specificity */
         dd:not(:last-of-type) {
           margin-right: fn.rem(14);
         }
@@ -849,6 +1052,345 @@
           }
         }
       }
+    }
+  }
+}
+
+// 첨부파일
+.vits-attachment-popup {
+  @include mx.flex(flex, row, center, center);
+  width: 100%;
+  max-width: fn.rem(710);
+  max-height: 65vh;
+  overflow: hidden;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+// 반품/취소 신청
+.vits-claim-request {
+  @include mx.flex(flex, column);
+  position: relative;
+  gap: map.get(var.$unit, 16);
+
+  /* stylelint-disable no-descending-specificity */
+  .vits-select,
+  .vits-select-trigger {
+    width: 100%;
+  }
+
+  .vits-select-list {
+    width: 100%;
+    transition: none;
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  &-header,
+  &-footer {
+    flex-shrink: 0;
+  }
+
+  &-body {
+    flex-grow: 1;
+    width: 100%;
+    min-height: fn.rem(190);
+
+    &:has(.vits-claim-request-chekbox) {
+      @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+      padding: map.get(var.$unit, 16) map.get(var.$unit, 4) map.get(var.$unit, 16) map.get(var.$unit, 16) !important;
+      margin-bottom: 0 !important;
+      background: map.get(color.$layout-surf, 'mypage');
+      border-radius: map.get(var.$radius, 'lg');
+    }
+  }
+
+  &-header {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+  }
+
+  &-notice {
+    @include mx.bullet-style(10, 7, 2, 2, map.get(color.$layout-surf, 'secondary'));
+
+    > li {
+      @include typo.typography('b4r');
+    }
+  }
+
+  &-toolbar,
+  &-footer {
+    padding-top: map.get(var.$unit, 20);
+  }
+
+  &-title {
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-section {
+    @include mx.flex(flex, column, flex-start, flex-start);
+
+    &:not(:has(.vits-claim-request-pickup)) {
+      gap: map.get(var.$unit, 16);
+    }
+
+    &:has(.vits-claim-request-pickup) {
+      gap: map.get(var.$unit, 12);
+    }
+  }
+
+  &-box {
+    @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+    padding: map.get(var.$unit, 16);
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  &-product {
+    @include mypage-product-common;
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: map.get(var.$unit, 20);
+  }
+
+  &-check {
+    padding: 0 map.get(var.$unit, 32);
+  }
+
+  &-chekbox {
+    .claim-request-product {
+      &-list {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 16);
+      }
+
+      &-item {
+        position: relative;
+
+        [class*='checkbox-single-'] {
+          @include mx.position(absolute, map.get(var.$unit, 16), $left: map.get(var.$unit, 16));
+          z-index: var.$zindex-base;
+        }
+
+        &:has([class*='checkbox-single-'] input:checked) {
+          .vits-claim-request-box {
+            border-color: map.get(color.$layout-border, 'brand');
+          }
+        }
+      }
+    }
+  }
+
+  &-overview {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 20);
+  }
+
+  &-thumb {
+    flex-shrink: 0;
+    width: fn.rem(80);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'sm');
+  }
+
+  &-info {
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: map.get(var.$unit, 8);
+
+    .product {
+      &-header {
+        @include mx.flex(flex, column, flex-start, stretch);
+        gap: map.get(var.$unit, 4);
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-meta {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+      }
+    }
+  }
+
+  &-quantity {
+    @include mx.flex(flex, row, space-between, center);
+
+    .product-quantity {
+      @include mx.flex;
+      gap: fn.rem(10);
+
+      &-label {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-value {
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-sub'));
+      }
+
+      &-price {
+        @include typo.typography('b3s', $color: map.get(color.$neutral-colors, '1'));
+      }
+
+      &-info {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 2);
+      }
+
+      &-select {
+        @include mx.flex(flex, row, flex-start, center);
+        flex-shrink: 0;
+        gap: fn.rem(10);
+        min-width: fn.rem(68);
+      }
+    }
+  }
+
+  &-reason {
+    @include mx.flex(flex, column, center, center);
+
+    .claim-request-reason {
+      &-toggle {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, flex-start, center);
+        @include mx.border('bottom', $color: map.get(color.$layout-border, 'tertiary'));
+        gap: map.get(var.$unit, 12);
+        padding-bottom: map.get(var.$unit, 4);
+
+        .text {
+          @include typo.typography('b4r');
+        }
+
+        /* stylelint-disable no-descending-specificity */
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 16));
+          color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
+          transition: transform 0.3s;
+        }
+
+        &[aria-expanded='true'] {
+          .icon {
+            transform: rotate(180deg);
+          }
+        }
+        /* stylelint-enable no-descending-specificity */
+      }
+
+      &-content {
+        width: 100%;
+      }
+
+      /* stylelint-disable no-descending-specificity */
+      &-list {
+        @include mx.flex(flex, row, center, flex-start, wrap);
+        gap: map.get(var.$unit, 12) map.get(var.$unit, 24);
+        width: 100%;
+        padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
+        margin: 0;
+        background: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'lg');
+
+        dt {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          width: fn.rem(140);
+          margin-top: fn.rem(7);
+        }
+
+        dd {
+          width: calc(100% - fn.rem(164));
+        }
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+  }
+
+  &-memo {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: fn.rem(10);
+
+    .claim-request-memo {
+      &-textarea {
+        width: 100%;
+      }
+
+      &-guide {
+        @include mx.bullet-style(9, 2, 0, 0, map.get(color.$text-status, 'brand'), 6);
+
+        > li {
+          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+
+          &::before {
+            color: map.get(color.$text-status, 'brand');
+            content: '*';
+          }
+        }
+      }
+    }
+  }
+
+  &-pickup {
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: map.get(var.$unit, 16);
+    width: 100%;
+
+    .claim-request-pickup {
+      &-header {
+        @include mx.flex(flex, row, space-between, center);
+      }
+
+      &-name {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-info {
+        @include mx.flex(flex, row, flex-start, flex-start, wrap);
+        gap: map.get(var.$unit, 16) fn.rem(10);
+        padding: 0;
+        margin: 0;
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        dt {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          flex: 0 0 fn.rem(80);
+
+          &.has-gap {
+            margin-top: fn.rem(3);
+          }
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        dd {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          flex-grow: 1;
+          width: calc(100% - fn.rem(90));
+        }
+      }
+    }
+  }
+
+  &-footer {
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: map.get(var.$unit, 40);
+  }
+
+  &-total {
+    @include mx.flex(flex, row, space-between, flex-start);
+
+    &-label {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-price {
+      @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
     }
   }
 }

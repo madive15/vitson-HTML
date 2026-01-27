@@ -6,9 +6,11 @@
   const _showDetailBtn = typeof showDetailBtn !== 'undefined' ? showDetailBtn : true;
   const _showPrintBtn = typeof showPrintBtn !== 'undefined' ? showPrintBtn : true;
   const _showInquiryBtn = typeof showInquiryBtn !== 'undefined' ? showInquiryBtn : true;
+  const _showFooter = typeof showFooter !== 'undefined' ? showFooter : true;
+  const _isDetail = typeof isDetail !== 'undefined' ? isDetail : false;
 %>
 
-<div class="vits-mypage-records-box">
+<div class="vits-mypage-records-box<%= _isDetail ? ' type-detail02' : '' %>">
   <ul class="vits-mypage-records-list">
     <li class="vits-mypage-records-item">
       <div class="vits-mypage-records">
@@ -157,12 +159,14 @@
                 </ul>
               </div>
 
+              <% if (_showFooter) { %>
               <div class="mypage-record-foot" data-scss="foot">
                 <p class="mypage-record-total">
                   <span class="mypage-record-total-label">총 결제금액</span>
                   <span class="mypage-record-total-value">999,999,999,000원</span>
                 </p>
               </div>
+              <% } %>
             </div>
           </li>
         </ul>
@@ -315,12 +319,14 @@
                 </ul>
               </div>
 
+              <% if (_showFooter) { %>
               <div class="mypage-record-foot" data-scss="foot">
                 <p class="mypage-record-total">
                   <span class="mypage-record-total-label">총 결제금액</span>
                   <span class="mypage-record-total-value">999,999,999,000원</span>
                 </p>
               </div>
+              <% } %>
             </div>
           </li>
         </ul>

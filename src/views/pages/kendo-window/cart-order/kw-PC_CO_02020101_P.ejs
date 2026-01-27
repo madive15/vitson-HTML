@@ -1,0 +1,148 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-address-modify">
+  <!-- 배송지 등록/수정 헤더 -->
+  <h2 class="sr-only">배송지 등록/수정</h2>
+  
+  <div class="vits-address-modify-form">
+    <!-- 배송 방식 선택 -->
+    <div class="vits-address-type">
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'shippingType',   
+        id: 'shippingType',   
+        value: 'normal-shipping',            
+        text: '일반 배송 (택배/퀵)',           
+        checked: true,             
+      }) %>
+
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'shippingType',   
+        id: 'shippingType',   
+        value: 'freight-shipping',            
+        text: '화물 배송 (지점 수령)',           
+        checked: false,             
+      }) %>
+    </div>
+  
+    <!-- 배송지 입력 -->
+    <div class="vits-address-fields">
+      <div class="vits-field">
+        <label class="vits-field-label">
+          배송지명 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'address-name',
+          name: 'addressName',
+          label: '배송지명',
+          placeholder: '예: 집, 회사',
+          required: true,
+          rootClass: 'size-medium'
+        }) %>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          받는 사람 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'receiver-name',
+          name: 'receiverName',
+          label: '받는 사람',
+          placeholder: '이름을 입력해주세요',
+          required: true,
+          rootClass: 'size-medium'
+        }) %>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          휴대전화 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'receiver-phone',
+          name: 'receiverPhone',
+          label: '휴대전화',
+          placeholder: '010-0000-0000',
+          required: true,
+          rootClass: 'size-medium'
+        }) %>
+      </div>
+  
+      <!-- 주소 -->
+      <div class="vits-field vits-address">
+        <label class="vits-field-label">
+          주소 <span class="vits-required">*</span>
+        </label>
+
+        <div class="vits-address-input">
+          <div class="vits-address-zipcode">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'receiver-phone',
+              name: 'zipcode',
+              label: '우편번호',
+              placeholder: '우편번호',
+              readonly: true,
+              required: true,
+              rootClass: 'size-medium'
+            }) %>
+  
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size: 'md',
+              variant: 'scoped-info',
+              text: '주소 검색',
+              iconLeft: true,
+              iconName: 'ic-magnifying-glass',
+            }) %>
+          </div>
+  
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address',
+            name: 'receiverAddress',
+            label: '주소',
+            placeholder: '기본 주소',
+            readonly: true,
+            required: true,
+            rootClass: 'size-medium'
+          }) %> 
+    
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address',
+            name: 'receiverAddress',
+            label: '주소',
+            placeholder: '상세 주소를 입력해주세요',
+            required: true,
+            rootClass: 'size-medium'
+          }) %>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 기본 배송지 설정 -->
+    <div class="vits-default-address">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+        datas: [
+          {
+            className: 's',
+            name: 'defaultShipping',
+            value: 'defaultShipping',
+            srText: '대표 배송지로 설정',
+            agreeText: '대표 배송지로 설정',
+            checked: false
+          },
+        ],
+      }) %>
+    </div>
+  </div>  
+  
+</section>

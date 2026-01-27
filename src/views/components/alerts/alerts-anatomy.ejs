@@ -1,0 +1,23 @@
+<!-- prettier-ignore -->
+<%
+  const _src = srcPath;
+  const _theme = typeof theme !== 'undefined' ? theme : 'red';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _list = typeof list !== 'undefined' ? list : [];
+%>
+
+<div class="vits-alerts-anatomy<%= _theme === 'blue' ? ' type-blue' : ' type-red' %>">
+  <div class="vits-alerts-anatomy-inner">
+    <div class="alerts-anatomy-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %></div>
+    <div class="alerts-anatomy-content">
+      <p class="alerts-anatomy-text"><%= _text %></p>
+      <% if (_list.length > 0) { %>
+      <ul class="alerts-anatomy-list">
+        <% _list.forEach(function(item) { %>
+        <li><%= item %></li>
+        <% }); %>
+      </ul>
+      <% } %>
+    </div>
+  </div>
+</div>

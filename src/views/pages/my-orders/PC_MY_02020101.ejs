@@ -5,7 +5,7 @@
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
   -->
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '주문없음'}) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '취소/반품내역'}) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -39,21 +39,11 @@
 
                   <div class="vits-mypage-panel">
                     <!-- 취소/반품내역 필터 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'default' }) %>
+                    <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'cancle' }) %>
 
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
-                        size:'xl', variant: 'primary', text: '초특가 상품 보기', className: 'btn-fix-w150'
-                      }) %>
-
-                      <%- include(`${_src}/views/components/empty-state.ejs`, {
-                        iconName: 'box',
-                        title: '현재 주문 내역이 없습니다.',
-                        buttonHtml
-                      }) %>
-                    </div>
+                    <!-- 취소/반품내역 리스트 -->
+                    <%- include(`${_src}/views/components/pg-my-orders/my-records-box.ejs`, {showDetailBtn: false,
+                    showPrintBtn: false, showInquiryBtn: false, showFooter: false, isDetail: true}) %>
                   </div>
                 </div>
 

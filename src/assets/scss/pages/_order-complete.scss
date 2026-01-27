@@ -118,27 +118,6 @@
       @include typo.typography('b3r', $color: map.get(color.$text-status, 'info'));
     }
 
-    &-notice{
-      @include mx.flex($align: center);
-      @include mx.border(all, 1px, solid, map.get(color.$brand-colors, '40'));
-      padding: map.get(var.$unit, 8) map.get(var.$unit, 24);
-      color: map.get(color.$text-status, 'brand');
-      background-color: map.get(color.$layout-status, 'brand-bg-sub');
-      border-radius: map.get(var.$radius, 'sm');
-
-      &::before{
-        display: inline-block;
-        width: fn.rem(12);
-        min-width: fn.rem(12);
-        height: fn.rem(12);
-        margin-right: map.get(var.$unit, 4);
-        content: '';
-        background-color: map.get(color.$icon-colors, 'hover');
-        mask: no-repeat center / contain;
-        mask-image: url('/public/resources/img/mro/renewal/ic/ic-tip-info.svg');
-      }
-    }
-
     .miss{
       @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
     }

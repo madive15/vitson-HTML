@@ -265,7 +265,7 @@
         position: 'fixed',
         left: rect.left + 'px',
         minWidth: rect.width + 'px',
-        zIndex: 9999
+        zIndex: 99999
       })
       .appendTo('body');
 
@@ -692,7 +692,13 @@
         Object.keys(scopes).forEach(function (k) {
           var scope = scopes[k];
           if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-            updatePortalPosition(scope.openRoot);
+            // 열린 셀렉트가 특정 영역 안에 있을 때만 닫기
+            if (scope.openRoot.closest('.vits-claim-request-body').length) {
+              closeOpenedInScope(k);
+            } else {
+              // 다른 곳은 기존처럼 위치 따라감
+              updatePortalPosition(scope.openRoot);
+            }
           }
         });
       },

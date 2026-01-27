@@ -5,7 +5,7 @@
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
   -->
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '검색 결과 없음'}) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '반품상세'}) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -31,24 +31,23 @@
                 <!-- S: vits-grid-main -->
                 <div class="vits-grid-main-content main-content-my-orders">
                   <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">취소/반품내역</h2>
-                    <p class="vits-mypage-content-desc">
-                      취소 및 반품 신청 내역을 확인하고, 처리 현황을 조회할 수 있습니다.
-                    </p>
+                    <a href="" class="vits-mypage-content-back">
+                      <h2 class="vits-mypage-content-title">
+                        <span class="icon">
+                          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+                        </span>
+                        반품 내역
+                      </h2>
+                    </a>
                   </div>
 
                   <div class="vits-mypage-panel">
-                    <!-- 취소/반품내역 필터 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'default' }) %>
+                    <%- include(`${_src}/views/components/pg-my-orders/my-claim-detail.ejs`) %>
 
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/empty-state.ejs`, {
-                        iconName: 'box',
-                        title: '조회된 주문이 없습니다.',
-                        desc: '조회 조건을 다시 확인해 주세요.'
-                      }) %>
+                    <div class="vits-mypage-panel-actions">
+                      <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant:
+                      'outline-secondary', text: '목록으로', iconLeft: true, iconName: 'ic-arrow-left', className:
+                      'btn-fix-w160'}) %>
                     </div>
                   </div>
                 </div>
