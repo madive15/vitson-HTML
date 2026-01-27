@@ -1,0 +1,317 @@
+<head><script defer src="../../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+<section class="vits-address-modify">
+  <!-- 배송지 등록/수정 헤더 -->
+  <h2 class="sr-only">배송지 등록/수정</h2>
+  
+  <div class="vits-address-modify-form">
+    <!-- 배송 방식 선택 -->
+    <div class="vits-address-type">
+      
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="shippingType"
+    id="shippingType"
+    value="normal-shipping"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">일반 배송 (택배/퀵)</span>
+  
+</label>
+
+      
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="shippingType"
+    id="shippingType"
+    value="freight-shipping"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">화물 배송 (지점 수령)</span>
+  
+</label>
+    </div>
+  
+    <!-- 배송지 입력 -->
+    <div class="vits-address-fields">
+      <div class="vits-field">
+        <label class="vits-field-label">
+          배송지명 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="address-name" class="sr-only">배송지명</label>
+
+    <input
+      type="text"
+      name="addressName"
+      id="address-name"
+      placeholder="예: 집, 회사"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="address-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          받는 사람 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-name" class="sr-only">받는 사람</label>
+
+    <input
+      type="text"
+      name="receiverName"
+      id="receiver-name"
+      placeholder="이름을 입력해주세요"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          휴대전화 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-phone" class="sr-only">휴대전화</label>
+
+    <input
+      type="text"
+      name="receiverPhone"
+      id="receiver-phone"
+      placeholder="010-0000-0000"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <!-- 주소 -->
+      <div class="vits-field vits-address">
+        <label class="vits-field-label">
+          주소 <span class="vits-required">*</span>
+        </label>
+
+        <div class="vits-address-input">
+          <div class="vits-address-zipcode">
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-phone" class="sr-only">우편번호</label>
+
+    <input
+      type="text"
+      name="zipcode"
+      id="receiver-phone"
+      placeholder="우편번호"
+      
+
+      required
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+  
+            <!-- prettier-ignore -->
+            
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-scoped-info icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">주소 검색</span>
+
+  
+</button>
+
+          </div>
+  
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-address" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="receiverAddress"
+      id="receiver-address"
+      placeholder="기본 주소"
+      
+
+      required
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-address-validation" aria-live="polite"></p>
+  </div>
+</div> 
+    
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-address" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="receiverAddress"
+      id="receiver-address"
+      placeholder="상세 주소를 입력해주세요"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-address-validation" aria-live="polite"></p>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 기본 배송지 설정 -->
+    <div class="vits-default-address">
+      <!-- prettier-ignore -->
+      
+
+
+  <label class="checkbox-single-s">
+    <input
+      type="checkbox"
+      name="defaultShipping"
+      value="defaultShipping"
+      
+      
+      
+      
+      
+    />
+    <span class="sr-only">대표 배송지로 설정</span> 
+    
+      <p class="agree-text">대표 배송지로 설정</p>
+    
+  </label>
+
+
+    </div>
+  </div>  
+  
+</section>

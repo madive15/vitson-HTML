@@ -1,9 +1,5 @@
 
 <!DOCTYPE html>
-<!-- 
-  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
-    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
-  -->
 <html lang="ko" class="vits-scope">
   
 <head>
@@ -14,7 +10,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>검색 결과 없음</title>
+  <title>쿠폰 변경</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -33,13 +29,9 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
-  <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
-    <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
-    <!-- E: Skip Navigation -->
 
-    <!-- S: vits-wrapper -->
     <section class="vits-wrapper">
       
 <!-- prettier-ignore -->
@@ -39057,391 +39049,306 @@
 <!-- E: vits-header -->
 
 
-      <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
-        <!-- S: vits-wrap -->
         <div class="vits-wrap">
-          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-grid-main vits-main-my-orders">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                
-<!-- prettier-ignore -->
-
-
- 
-
-
-<aside class="vits-grid-side vits-grid-side-left vits-side-mypage">
-  <h2 class="mypage-sidemenu-title">마이페이지</h2>
-  <nav class="mypage-sidemenu" aria-label="마이페이지 메뉴">
-    <ul class="mypage-sidemenu-list">
-      
-      <li class="mypage-sidemenu-item" data-menu-id="order">
-        <a class="mypage-sidemenu-link" href="/mypage/order">주문관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-delivery">
-            <a class="mypage-sidemenu-link" href="/mypage/order/delivery">주문/배송조회</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-cancel">
-            <a class="mypage-sidemenu-link" href="/mypage/order/cancel">취소/반품내역</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-frequent">
-            <a class="mypage-sidemenu-link" href="/mypage/order/frequent">자주구매</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-like">
-            <a class="mypage-sidemenu-link" href="/mypage/order/like">좋아요</a>
-          </li>
-          
-        </ul>
-      </li>
-      
-      <li class="mypage-sidemenu-item" data-menu-id="docs">
-        <a class="mypage-sidemenu-link" href="/mypage/docs">서류관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-tax">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/tax">세금계산서 조회</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-quote">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/quote">견적서 조회</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-bill">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/bill">청구서 조회</a>
-          </li>
-          
-        </ul>
-      </li>
-      
-      <li class="mypage-sidemenu-item" data-menu-id="benefit">
-        <a class="mypage-sidemenu-link" href="/mypage/benefit">혜택관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="benefit-coupon">
-            <a class="mypage-sidemenu-link" href="/mypage/benefit/coupon">쿠폰함</a>
-          </li>
-          
-        </ul>
-      </li>
-      
-      <li class="mypage-sidemenu-item" data-menu-id="info">
-        <a class="mypage-sidemenu-link" href="/mypage/info">정보관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-member">
-            <a class="mypage-sidemenu-link" href="/mypage/info/member">회원정보 관리</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-address">
-            <a class="mypage-sidemenu-link" href="/mypage/info/address">배송지 관리</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-pay">
-            <a class="mypage-sidemenu-link" href="/mypage/info/pay">비츠온페이 관리</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-postpay">
-            <a class="mypage-sidemenu-link" href="/mypage/info/postpay">후불관리</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-qna">
-            <a class="mypage-sidemenu-link" href="/mypage/info/qna">1:1 문의</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-bulk">
-            <a class="mypage-sidemenu-link" href="/mypage/info/bulk">대량구매문의</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-account">
-            <a class="mypage-sidemenu-link" href="/mypage/info/account">계정등록</a>
-          </li>
-          
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-survey">
-            <a class="mypage-sidemenu-link" href="/mypage/info/survey">설문조사</a>
-          </li>
-          
-        </ul>
-      </li>
-      
-    </ul>
-  </nav>
-</aside>
-
-                <!-- E: vits-grid-side-left -->
-
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-orders">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">취소/반품내역</h2>
-                    <p class="vits-mypage-content-desc">
-                      취소 및 반품 신청 내역을 확인하고, 처리 현황을 조회할 수 있습니다.
-                    </p>
-                  </div>
-
-                  <div class="vits-mypage-panel">
-                    <!-- 취소/반품내역 필터 -->
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-mypage-query type-ver2">
-  <div class="mypage-query-fields">
-    <dl class="mypage-query-period">
-      <dt class="mypage-query-label">조회 기간</dt>
-      <dd class="mypage-query-control">
-        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
-          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
-            <span class="text">1개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">3개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">6개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">1년</span>
-          </button>
-        </div>
-      </dd>
-      <dd class="mypage-query-control mypage-query-period-range">
-        <!-- prettier-ignore -->
-        
-
-
-<div class="vits-kendo-range-picker size-md" 
-     id="kendoRangePicker_1769472435519"
-     data-ui="kendo-range-picker"
-     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
-    
-    <input type="hidden" 
-           class="js-start-date" 
-           name="startDate" 
-           value="">
-    
-    <input type="hidden" 
-           class="js-end-date" 
-           name="endDate" 
-           value="">
-    
-    <span class="picker-input k-picker k-datepicker">
-        <input type="text" 
-               class="picker-display k-input-inner js-range-display" 
-               placeholder="시작일 ~ 종료일" 
-               readonly 
-               >
-        
-        <button type="button" 
-                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('unShippedModal')"
                 >
-            <span class="icon">
-              <i class="ic ic-calendar" aria-hidden="true"></i>
- 
-            </span>
-        </button>
-    </span>
-    
-    <div class="picker-popup js-calendar-popup">
-        <div class="js-kendo-calendar"></div>
-    </div>
-</div>
-      </dd>
-    </dl>
+                  <span class="text">쿠폰변경</span>
+                </button>
+              </div>
 
-    <div class="mypage-query-advanced">
-      <ul class="mypage-query-detail">
-        <li>
-          <p class="mypage-query-label">취소/반품 선택</p>
-          <div class="mypage-query-control type-select">
-            <!-- prettier-ignore -->
-            
+              <!-- prettier-ignore -->
+              
+              
 
 
 
-
-<div
-  class="vits-select"
-  data-vits-select
-   data-select-id="my-order-status" 
+<div 
+  id="unShippedModal"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="unShippedModal-title"
   
-   data-vits-select-portal 
   
+  style="display:none;"
 >
-  <button
-    type="button"
-    class="vits-select-trigger"
-    aria-haspopup="listbox"
-    aria-expanded="false"
-    data-vits-select-trigger
-    
-  >
-    <span
-      class="vits-select-value"
-      data-vits-select-value
-      data-placeholder="전체"
-    >전체</span>
-
-    <span class="vits-select-icon" aria-hidden="true">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
-    
-      <li
-        class="vits-select-option vits-select-selected"
-        role="option"
-        tabindex="-1"
-        data-value="전체"
-           
-        aria-selected="true"
-        
-      >전체</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="취소"
-           
-        aria-selected="false"
-        
-      >취소</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="반품"
-           
-        aria-selected="false"
-        
-      >반품</li>
-    
-  </ul>
-
-  
-    <input type="hidden" name="sort" value="전체" data-vits-select-hidden />
-  
-</div>
-
-          </div>
-        </li>
-        <li>
-          <p class="mypage-query-label">검색어</p>
-          <div class="mypage-query-control type-search">
-            <!-- prettier-ignore -->
-            
-
-<!-- prettier-ignore -->
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="unShippedModal-title">쿠폰 변경</h2>
 
 
-<div class="vits-input-search vits-validation size-sm">
-  <form class="vits-input-search-form" role="search" action="/orders-search" method="get" data-search-form>
-    <label for="my-orders-search-searchKeyword" class="sr-only">검색어</label>
-
-    <input
-      type="search"
-      id="my-orders-search-searchKeyword"
-      class="input-search"
-      name="my-orders-search"
-      autocomplete="off"
-      enterkeyhint="search"
-      placeholder="상품명, 주문번호 검색"
-      data-search-input
-      
-      
-    />
-
-    <button type="submit" class="input-search-btn" aria-label="검색">
-      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+    </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('unShippedModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
 
     </button>
-  </form>
-
-  <!-- validation 영역(교체) -->
-  <div class="input-validation" hidden>
-    <p id="my-orders-search-searchKeyword-validation" aria-live="polite"></p>
-  </div>
-</div>
-
-          </div>
-        </li>
-      </ul>
-    </div>
   </div>
 
-  <div class="mypage-query-actions">
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content no-footer">
+  
+    
+
+<section class="vits-address-select">
+  <h2 class="sr-only">배송지 목록</h2>
+  <div class="vits-address-select-header">
+    <!-- prettier-ignore -->
     
 
 
 <button
-  type="cancle"
-  class="vits-btn-xl vits-btn-secondary  disabled btn-fix-w120"
-  disabled
+  type="button"
+  class="vits-btn-lg vits-btn-outline-primary icon-left"
+  
   >
   
+    <span class="icon">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+    </span>
+  
 
-  <span class="text">조회하기</span>
+  <span class="text">신규 배송지 입력</span>
 
   
 </button>
 
   </div>
+  <div class="vits-address-select-body">
+    <ul class="address-list">
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">회사</p>
+              <!-- prettier-ignore -->
+              <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">기본 배송지</span>
 </div>
 
 
-
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      
-
-<!-- prettier-ignore -->
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
 
 
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">조회된 주문이 없습니다.</h2>
-      
-      <p class="vits-empty-state-desc">조회 조건을 다시 확인해 주세요.</p>
-      
-    </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-box" aria-hidden="true"></i>
-
-    </div>
-  </div>
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
   
-</section>
+  >
+  
 
-                    </div>
-                  </div>
-                </div>
+  <span class="text">수정</span>
 
-                <!-- E: vits-grid-main -->
-              </div>
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
             </div>
           </div>
-          <!-- E: vits-grid -->
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-1" checked />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
         </div>
-        <!-- E: vits-wrap -->
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">집</p>
+              <!-- prettier-ignore -->
+              <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">기본 배송지</span>
+</div>
+
+
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-2" />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">창고</p>
+              <!-- prettier-ignore -->
+              <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">기본 배송지</span>
+</div>
+
+
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">발송처</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-3" />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+</div>
+            </div>
+          </div>
+        </div>
       </main>
-      <!-- E: vits-main -->
 
       
 
@@ -39668,7 +39575,6 @@
 </footer>
 
     </section>
-    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->

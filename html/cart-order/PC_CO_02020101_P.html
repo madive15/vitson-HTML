@@ -1,9 +1,5 @@
 
 <!DOCTYPE html>
-<!-- 
-  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
-    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
-  -->
 <html lang="ko" class="vits-scope">
   
 <head>
@@ -14,7 +10,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>주문완료/실패</title>
+  <title>배송지 등록/수정</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -33,13 +29,9 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
-  <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
-    <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
-    <!-- E: Skip Navigation -->
 
-    <!-- S: vits-wrapper -->
     <section class="vits-wrapper">
       
 <!-- prettier-ignore -->
@@ -1075,302 +1067,398 @@
 <!-- E: vits-header -->
 
 
-      <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
-        <!-- S: vits-wrap -->
         <div class="vits-wrap">
-          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <!-- S: vits-grid-side-left -->
-            <!-- <aside class="vits-grid-side vits-grid-side-left"></aside> -->
-            <!-- E: vits-grid-side-left -->
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('unShippingAddressModal')"
+                >
+                  <span class="text">배송지 등록/수정</span>
+                </button>
+              </div>
 
-            <!-- S: vits-grid-main -->
-            <div class="vits-grid-main vits-main-order-complete">
-              <!-- 메인 컨텐츠 -->
-              <section class="main-order-complete-section">
-                
-<div class="vits-order-complete">
-  <div class="order-page-title">
-    <h1>주문완료</h1>
+              <!-- prettier-ignore -->
+              
+              
+
+
+
+<div 
+  id="unShippingAddressModal"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="unShippingAddressModal-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="unShippingAddressModal-title">배송지 등록/수정</h2>
+
+
+    </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('unShippingAddressModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
   </div>
-  <!-- 주문 완료 상태 안내 -->
-  <div class="order-complete-status">
+
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content">
+  
     
 
-<!-- prettier-ignore -->
-
-
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">주문이 완료/실패 되었습니다.</h2>
+<section class="vits-address-modify">
+  <!-- 배송지 등록/수정 헤더 -->
+  <h2 class="sr-only">배송지 등록/수정</h2>
+  
+  <div class="vits-address-modify-form">
+    <!-- 배송 방식 선택 -->
+    <div class="vits-address-type">
       
-    </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-box" aria-hidden="true"></i>
 
+<label class="radio-item">
+  <input
+    type="radio"
+    name="shippingType"
+    id="shippingType"
+    value="normal-shipping"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">일반 배송 (택배/퀵)</span>
+  
+</label>
+
+      
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="shippingType"
+    id="shippingType"
+    value="freight-shipping"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">화물 배송 (지점 수령)</span>
+  
+</label>
     </div>
+  
+    <!-- 배송지 입력 -->
+    <div class="vits-address-fields">
+      <div class="vits-field">
+        <label class="vits-field-label">
+          배송지명 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="address-name" class="sr-only">배송지명</label>
+
+    <input
+      type="text"
+      name="addressName"
+      id="address-name"
+      placeholder="예: 집, 회사"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
   </div>
-  
-</section>
 
-    <p class="order-complete-number">
-      주문번호 <strong>ora0008432397</strong>
-    </p>
-    <p class="order-complete-notice">
-      다음의 실패 사유를 확인한 후 다시 시도해 주세요
-    </p>
-  </div>  
-
-  <section class="order-section-wrap">
-    <!-- 상품 정보 -->
-    <div class="order-section order-product">
-      <h2 class="order-section-title">상품정보</h2>
-  
-      <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">주문 상품</span>
-            <span class="info-value">
-              더블 OPP 접착테이프 투명 (초강력 접착제) 외 5건
-            </span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  
-    <!-- 배송 / 결제 정보 영역 -->
-    <div class="order-section-group">
-      <!-- 배송 정보 -->
-      <section class="order-section order-shipping">
-        <h2 class="order-section-title">배송정보</h2>
-  
-        <div class="order-section-content">
-          <ul class="info-list">
-            <li class="info-item">
-              <span class="info-label">받는 사람</span>
-              <span class="info-value">김철수</span>
-            </li>
-            <li class="info-item">
-              <span class="info-label">연락처</span>
-              <span class="info-value">010-1234-5678</span>
-            </li>
-            <li class="info-item">
-              <span class="info-label">배송 주소</span>
-              <span class="info-value">
-                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층
-              </span>
-            </li>
-            <li class="info-item">
-              <span class="info-label">배송메모</span>
-              <span class="info-value">부재시 경비실에 맡겨주세요</span>
-            </li>
-            <li class="info-item">
-              <span class="info-label">배송방법</span>
-              <span class="info-value">택배 <span class="info-value-status">(대납)</span></span>
-            </li>
-          </ul>
-        </div>
-      </section>
-  
-      <!-- 결제 정보 -->
-      <section class="order-section order-payment">
-        <h2 class="order-section-title">결제정보</h2>
-  
-        <div class="order-section-content">
-          <ul class="price-list">
-            <li class="price-item">
-              <span class="price-label">상품금액</span>
-              <span class="price-value">1,030,000원</span>
-            </li>
-            <li class="price-item is-discount">
-              <span class="price-label">할인</span>
-              <span class="price-value">-30,000원</span>
-            </li>
-            <li class="price-item">
-              <span class="price-label">VAT</span>
-              <span class="price-value">+1,030,000원</span>
-            </li>
-            <li class="price-item">
-              <span class="price-label">배송비</span>
-              <span class="price-value">+1,030,000원</span>
-            </li>
-          </ul>
-  
-          <div class="price-total">
-            <span class="price-total-label">최종결제금액</span>
-            <strong class="price-total-value">1,030,000원</strong>
-          </div>
-        </div>
-      </section>
-    </div>
-  
-    <!-- 결제 수단 -->
-    <!-- [D] case : 결제 수단 . 카드드-->
-    <div class="order-section order-method">
-      <h2 class="order-section-title">결제 수단</h2>
-  
-      <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">카드 결제</span>
-            <span class="info-value">신한카드 (****-****-****-1234)</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- [D] case : 결제 수단 . 무통장 입금-->
-    <div class="order-section order-method">
-      <h2 class="order-section-title">결제 수단</h2>
-  
-      <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">무통장 입금</span>
-            <span class="info-value">국민 12345-04-531311</span>
-            <span class="info-label">예금주명</span>
-            <span class="info-value">주식회사 일신비츠온</span>
-          </li>
-          <li class="info-item">
-            <span class="info-label"></span>
-            <!-- prettier-ignore -->
-            <!-- prettier-ignore -->
-
-
-<div class="vits-order-alerts type-r-warning">
-  
-  
-  
-    
-      <p class="alerts-text-important">
-        
-        
-          <span class="alerts-icon" aria-hidden="true"></span>
-        
-        
-          주문 후 <strong>영업일 5일</strong> 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.
-        
-      </p>
-    
-  
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="address-name-validation" aria-live="polite"></p>
+  </div>
 </div>
-
-          </li>
-        </ul>
       </div>
-    </div>
-    <!-- [D] case : 결제 수단 . 여러 결제-->
-    <div class="order-section order-method">
-      <h2 class="order-section-title">결제 수단</h2>
   
-      <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">여신결제</span>
-            <span class="info-value">여신결제</span>
+      <div class="vits-field">
+        <label class="vits-field-label">
+          받는 사람 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-name" class="sr-only">받는 사람</label>
+
+    <input
+      type="text"
+      name="receiverName"
+      id="receiver-name"
+      placeholder="이름을 입력해주세요"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          휴대전화 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-phone" class="sr-only">휴대전화</label>
+
+    <input
+      type="text"
+      name="receiverPhone"
+      id="receiver-phone"
+      placeholder="010-0000-0000"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <!-- 주소 -->
+      <div class="vits-field vits-address">
+        <label class="vits-field-label">
+          주소 <span class="vits-required">*</span>
+        </label>
+
+        <div class="vits-address-input">
+          <div class="vits-address-zipcode">
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-phone" class="sr-only">우편번호</label>
+
+    <input
+      type="text"
+      name="zipcode"
+      id="receiver-phone"
+      placeholder="우편번호"
+      
+
+      required
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+  
             <!-- prettier-ignore -->
             
 
 
 <button
   type="button"
-  class="vits-btn-sm vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">여신 사용 현황 보기</span>
-
-  
-</button>
-
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- [D] case : 결제 실피-->
-    <div class="order-section order-slip">
-      <h2 class="order-section-title">
-        <span class="icon">
-          <i class="ic ic-info" aria-hidden="true"></i>
-
-        </span>
-        실패 상세 정보
-      </h2>
-  
-      <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">결제 수단</span>
-            <span class="info-value">카드결제 (신한카드 ****-****-****-1234)</span>
-          </li>
-          <li class="info-item">
-            <span class="info-label">최종 결제 금액</span>
-            <span class="info-value"><strong>30,000원</strong></span>
-          </li>
-          <li class="info-item">
-            <span class="info-label">주문 실패 사유</span>
-            <span class="info-value"><strong class="miss">체크 카드 한도 초과</strong></span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-</div>
-
-
-
-                <!--  -->
-                <div class="vits-order-complete-buttons">
-                  
-
-
-<button
-  type="button"
-  class="vits-btn-xl vits-btn-outline-secondary icon-left btn-home"
+  class="vits-btn-md vits-btn-scoped-info icon-left"
   
   >
   
     <span class="icon">
-      <i class="ic ic-arrow-left" aria-hidden="true"></i>
+      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
     </span>
   
 
-  <span class="text">홈으로</span>
+  <span class="text">주소 검색</span>
 
   
 </button>
 
-                    
-
-
-<button
-  type="button"
-  class="vits-btn-xl vits-btn-primary  btn-cart"
-  
-  >
-  
-
-  <span class="text">장바구니로 가기</span>
-
-  
-</button>
-
-                </div>
-              </section>
-            </div>
-            <!-- E: vits-grid-main -->
-
-            <!-- S: vits-grid-right -->
-            <!-- <aside class="vits-grid-side vits-grid-side-right"></aside> -->
-            <!-- E: vits-grid-right -->
           </div>
-          <!-- E: vits-grid -->
+  
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-address" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="receiverAddress"
+      id="receiver-address"
+      placeholder="기본 주소"
+      
+
+      required
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-address-validation" aria-live="polite"></p>
+  </div>
+</div> 
+    
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-address" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="receiverAddress"
+      id="receiver-address"
+      placeholder="상세 주소를 입력해주세요"
+      
+
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-address-validation" aria-live="polite"></p>
+  </div>
+</div>
         </div>
-        <!-- E: vits-wrap -->
+      </div>
+    </div>
+  
+    <!-- 기본 배송지 설정 -->
+    <div class="vits-default-address">
+      <!-- prettier-ignore -->
+      
+
+
+  <label class="checkbox-single-s">
+    <input
+      type="checkbox"
+      name="defaultShipping"
+      value="defaultShipping"
+      
+      
+      
+      
+      
+    />
+    <span class="sr-only">대표 배송지로 설정</span> 
+    
+      <p class="agree-text">대표 배송지로 설정</p>
+    
+  </label>
+
+
+    </div>
+  </div>  
+  
+</section>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vits-modal-footer">
+
+    <div class="vits-modal-buttons is-double">
+
+      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('unShippingAddressModal')">
+        <span class="text">취소</span>
+      </button>
+
+      <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('unShippingAddressModal')">
+        <span class="text">배송지 저장</span>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+            </div>
+          </div>
+        </div>
       </main>
-      <!-- E: vits-main -->
 
       
 
@@ -1597,7 +1685,6 @@
 </footer>
 
     </section>
-    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->
@@ -1614,19 +1701,5 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
-
-    <script>
-      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
-      const urlParams = new URLSearchParams(window.location.search);
-      const type = urlParams.get('type');
-
-      // type 파라미터가 'fail'일 때 주문 실패 화면 표시
-      if (type === 'slip') {
-        const section = document.querySelector('.vits-order-complete');
-        if (section) {
-          section.classList.add('order-slip');
-        }
-      }
-    </script>
   </body>
 </html>

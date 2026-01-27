@@ -1001,6 +1001,8 @@ var chip_button = __webpack_require__(755);
 var quantity_stepper = __webpack_require__(397);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
 var form_textarea = __webpack_require__(803);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/form/checkbox-total.js
+var checkbox_total = __webpack_require__(379);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-rank.js
 var header_rank = __webpack_require__(596);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
@@ -1107,6 +1109,7 @@ var kendo_window = __webpack_require__(238);
 
 
 
+
 (function (window) {
   'use strict';
 
@@ -1131,6 +1134,7 @@ var kendo_window = __webpack_require__(238);
     if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
+    if (window.UI.checkboxTotal && window.UI.checkboxTotal.init) window.UI.checkboxTotal.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
     if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
     if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
@@ -3037,6 +3041,61 @@ if (document.body?.dataset?.guide === 'true') {
     }
   };
   console.log('[toggle] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 379:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/checkbox-total.js
+ * @purpose data-속성 기반 체크박스 전체선택/해제
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[checkbox-total] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var CHECKED = 'is-checked';
+  function updateCheckAllState($scope) {
+    var $allCheckbox = $scope.find('[data-checkbox-all]');
+    if (!$allCheckbox.length) return;
+    var $items = $scope.find('[data-checkbox-item]');
+    var totalCount = $items.length;
+    var checkedCount = $items.filter(':checked').length;
+    var isAllChecked = totalCount === checkedCount && totalCount > 0;
+    $allCheckbox.prop('checked', isAllChecked);
+    $allCheckbox.toggleClass(CHECKED, isAllChecked);
+  }
+  function bindScope($scope) {
+    $scope.on('change', '[data-checkbox-all]', function () {
+      var $allCheckbox = $(this);
+      var isChecked = $allCheckbox.is(':checked');
+      var $items = $scope.find('[data-checkbox-item]');
+      $items.prop('checked', isChecked);
+      $items.toggleClass(CHECKED, isChecked);
+      $allCheckbox.toggleClass(CHECKED, isChecked);
+    });
+    $scope.on('change', '[data-checkbox-item]', function () {
+      var $checkbox = $(this);
+      $checkbox.toggleClass(CHECKED, $checkbox.is(':checked'));
+      updateCheckAllState($scope);
+    });
+  }
+  window.UI.checkboxTotal = {
+    init: function () {
+      $('[data-checkbox-scope]').each(function () {
+        bindScope($(this));
+      });
+      console.log('[checkbox-total] init');
+    }
+  };
+  console.log('[checkbox-total] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -6477,7 +6536,7 @@ if (document.body?.dataset?.guide === 'true') {
       position: 'fixed',
       left: rect.left + 'px',
       minWidth: rect.width + 'px',
-      zIndex: 9999
+      zIndex: 99999
     }).appendTo('body');
     var listH = $list.outerHeight();
     var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
@@ -6835,7 +6894,13 @@ if (document.body?.dataset?.guide === 'true') {
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-          updatePortalPosition(scope.openRoot);
+          // 열린 셀렉트가 특정 영역 안에 있을 때만 닫기
+          if (scope.openRoot.closest('.vits-claim-request-body').length) {
+            closeOpenedInScope(k);
+          } else {
+            // 다른 곳은 기존처럼 위치 따라감
+            updatePortalPosition(scope.openRoot);
+          }
         }
       });
     }, true);
