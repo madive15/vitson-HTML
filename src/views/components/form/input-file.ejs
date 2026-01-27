@@ -1,0 +1,16 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="vits-input-attach">
+  <div class="attach-preview-list">
+    <div class="attach-preview-item">
+      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="첨부 이미지" />
+      <button type="button" class="btn-attach-remove">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </div>
+    <label class="btn-attach-add">
+      <input type="file" name="file" id="file" />
+      <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+    </label>
+  </div>
+</div>

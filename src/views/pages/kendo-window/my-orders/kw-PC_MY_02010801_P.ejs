@@ -1,0 +1,88 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-claim-request">
+  <h2 class="sr-only">반품신청</h2>
+
+  <div class="vits-claim-request-header">
+    <!-- 안내 문구 -->
+    <ul class="vits-claim-request-notice">
+      <li>반품 사유, 수거 정보 등을 입력하여 반품을 신청할 수 있습니다.</li>
+      <li>단, 고객 귀책으로 인한 반품일 경우 반품배송비는 고객에게 부과되며 환불 금액에서 차감됩니다.</li>
+      <li>반품 검수 후 반품이 반려될 수 있습니다.</li>
+    </ul>
+  </div>
+
+  <div class="vits-claim-request-toolbar">
+    <h3 class="vits-claim-request-title">반품 신청 상품</h3>
+  </div>
+
+  <div class="vits-claim-request-body">
+    <!-- 반품 신청 상품 1개 일 때 -->
+    <div class="vits-claim-request-section">
+      <%- include(`${_src}/views/components/pg-my-orders/my-return-product.ejs`) %>
+    </div>
+  </div>
+
+  <div class="vits-claim-request-footer">
+    <!-- 수거 정보 -->
+    <div class="vits-claim-request-section">
+      <h3 class="vits-claim-request-title">반품 수거 정보</h3>
+      <div class="vits-claim-request-box">
+        <div class="vits-claim-request-pickup">
+          <div class="claim-request-pickup-header">
+            <p class="claim-request-pickup-name">김비츠</p>
+            <div class="claim-request-pickup-actions">
+              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary',
+              text: '수거지 변경' }) %> <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant:
+              'outline-primary', text: '삭제' }) %>
+            </div>
+          </div>
+          <dl class="claim-request-pickup-info">
+            <dt class="is-required">수거지</dt>
+            <dd>
+              <p class="vits-claim-request-pickup-address">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</p>
+              <p class="vits-claim-request-pickup-tel">010-8888-6655</p>
+            </dd>
+            <dt class="is-required has-gap">수거 의뢰일</dt>
+            <dd>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                id: 'testPickerSingle1',
+                name: 'singleDate1',
+                size: 's',
+                placeholder: '날짜를 입력해 주세요'
+              }) %>
+            </dd>
+            <dt>메모</dt>
+            <dd>
+              <div class="vits-claim-request-memo">
+                <div class="claim-request-memo-textarea">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                    id: 'memoB',
+                    name: 'memoB',
+                    placeholder: '내용을 입력해주세요.',
+                    count: true,
+                    maxLength: 200,
+                    rootClass: 'size-default',
+                  }) %>
+                </div>
+
+                <ul class="claim-request-memo-guide">
+                  <li>한글 100자, 영문 300자</li>
+                  <li>불량 및 수리 사유를 상세히 적어주시면 신속한 처리가 가능합니다.</li>
+                </ul>
+              </div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- 환불 예정 금액 -->
+    <div class="vits-claim-request-total">
+      <p class="vits-claim-request-total-label">환불예정금액</p>
+      <p class="vits-claim-request-total-price">370,950원</p>
+    </div>
+  </div>
+</section>

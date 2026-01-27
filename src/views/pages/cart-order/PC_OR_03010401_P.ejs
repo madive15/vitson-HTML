@@ -1,0 +1,71 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '쿠폰 적용'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('applyCouponModal')"
+                >
+                  <span class="text">쿠폰 적용</span>
+                </button>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = { 
+                id: 'applyCouponModal', 
+                size: '560', 
+                title: '쿠폰 적용', 
+                subtitle: '해당 상품에 제공되는 전체 쿠폰 목록입니다.',
+                infotitle: '원하는 쿠폰을 선택하여 <strong>‘쿠폰 적용’</strong> 버튼을 클릭하면 쿠폰할인금액을 확인할 수 있습니다.',
+                opt: { draggable: true }, 
+                contentPath: `${_src}/views/pages/kendo-window/cart-order/kw-PC_OR_03010401_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' }, 
+                  { text: '적용', variant: 'primary', action: 'close' }
+                ]}; 
+                %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- ui 확인용 -->
+    <script>
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('.vits-apply-coupon-list .coupon-item button');
+        if (!button) return;
+
+        const textEl = button.querySelector('.text');
+        const isApplied = button.classList.contains('vits-btn-outline-secondary');
+
+        if (isApplied) {
+          button.classList.remove('vits-btn-outline-secondary');
+          button.classList.add('vits-btn-primary');
+          if (textEl) textEl.textContent = '쿠폰 적용';
+        } else {
+          button.classList.remove('vits-btn-primary');
+          button.classList.add('vits-btn-outline-secondary');
+          if (textEl) textEl.textContent = '적용 취소';
+        }
+      });
+    </script>
+  </body>
+</html>

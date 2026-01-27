@@ -218,7 +218,8 @@ $modal-widths: (
 
   // header
   &-header {
-    @include mx.flex(flex, row, space-between, center);
+    @include mx.flex(flex, row, space-between, flex-start);
+    position: relative;
     padding: map.get(var.$unit, 32) map.get(var.$unit, 32) map.get(var.$unit, 40);
     background: color.$color-white;
 
@@ -228,7 +229,7 @@ $modal-widths: (
     &-content {
       flex-grow: 1;
       min-width: 0;
-      max-width: calc(100% - map.get(var.$unit, 32));
+      max-width: fit-content;
       overflow: hidden;
     }
   }
@@ -241,17 +242,24 @@ $modal-widths: (
 
   &-title {
     @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+    padding-right: map.get(var.$unit, 32);
   }
 
   &-subtitle {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
     margin-top: map.get(var.$unit, 4);
+    word-break: keep-all;
+  }
+
+  &-infotitle {
+    @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+    margin-top: map.get(var.$unit, 4);
   }
 
   &-close {
     @include button.btn-reset;
-    @include mx.flex(flex, row, center, center);
     @include icon.ic-size(map.get(var.$unit, 32));
+    @include mx.position(absolute, map.get(var.$unit, 32), map.get(var.$unit, 32), auto, auto);
   }
 
   // 컨텐츠
@@ -378,11 +386,12 @@ $modal-widths: (
 
   // 스크롤 생성 기준 예외처리
   .vits-modal-content {
-    &:has(.vits-address-select) {
+    &:has(.vits-address-select),
+    &:has(.vits-claim-request) {
       @include mx.flex(flex, column);
-      overflow-y: hidden;
 
-      .vits-address-select {
+      .vits-address-select,
+      .vits-claim-request {
         flex: 1 1 auto;
         min-height: 0;
 
@@ -393,6 +402,10 @@ $modal-widths: (
           overflow-y: auto;
         }
       }
+    }
+
+    &:has(.vits-address-select) {
+      overflow-y: hidden;
     }
   }
 }

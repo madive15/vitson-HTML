@@ -29,11 +29,15 @@ $vits-datepicker-single-sizes: (
 
 @mixin vits-datepicker-single-base {
   @include mx.flex(inline-flex, $align: center, $justify: space-between);
-  padding: 0 map.get(var.$unit, 8);
+  padding: 0 map.get(var.$unit, 8) 0 map.get(var.$unit, 12);
   font-size: inherit;
   background: map.get(color.$layout-surf, 'base');
   border: 1px solid map.get(color.$layout-border, 'tertiary');
   border-radius: map.get(var.$radius, 'sm');
+
+  .k-input-inner {
+    text-indent: 0;
+  }
 }
 
 @mixin vits-datepicker-single-input {

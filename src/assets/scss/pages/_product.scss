@@ -12,6 +12,8 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/swiper' as swiper;
 
+/* stylelint-disable no-descending-specificity */
+
 // 최상위 class
 .vits-wrapper-product {
   // PC_SM 반응형
@@ -19,50 +21,51 @@
     min-width: 1024px;
     padding: fn.rem(10) map.get(var.$unit, 20) 0;
 
-    .vits-deal-gallery{
+    .vits-deal-gallery {
       max-width: 400px;
 
-      .pd-gallery{
+      .pd-gallery {
         max-width: 400px;
 
-        .pd-main-swiper{
+        .pd-main-swiper {
           height: 400px;
         }
 
-        .pd-thumbs-area{
+        .pd-thumbs-area {
           height: 40px !important;
 
-          .pd-thumb,.pd-thumbs-swiper ,.swiper-wrapper{
+          .pd-thumb,
+          .pd-thumbs-swiper,
+          .swiper-wrapper {
             height: 40px !important;
           }
 
-          .pd-thumb{
+          .pd-thumb {
             width: 40px !important;
           }
         }
       }
 
-      .vits-description-btn{
+      .vits-description-btn {
         width: auto;
         padding: fn.rem(14) fn.rem(34);
       }
-
     }
 
-    .vits-product-recommend{
-      .vits-banner-swiper{
+    .vits-product-recommend {
+      .vits-banner-swiper {
         min-width: 1024px;
       }
     }
 
-    .tab-show-price{
-      .info-inner{
-        li{
-          &:first-child{
+    .tab-show-price {
+      .info-inner {
+        li {
+          &:first-child {
             width: 40%;
           }
 
-          &:last-child{
+          &:last-child {
             width: 60%;
           }
         }
@@ -126,52 +129,6 @@
     &-main {
       position: relative;
       display: block;
-    }
-  }
-
-  // Main Swiper
-  .pd-main-swiper {
-    position: relative;
-    width: 100%;
-    height: 596px;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background: color.$color-white;
-    border: 1px solid #f3f3f3;
-    border-radius: map.get(var.$radius, lg);
-
-    /* 메인 썸네일 화살표 미사용 시 */
-    .pd-nav {
-      display: none !important;
-    }
-
-    .swiper-slide {
-      img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      .pd-iframe {
-        width: 100%;
-        height: 100%;
-
-        iframe {
-          display: block;
-          width: 100%;
-          height: 100%;
-          border: 0;
-        }
-      }
-    }
-
-    &:hover,
-    &:focus-within {
-      .pd-nav {
-        pointer-events: auto;
-        opacity: 1;
-      }
     }
   }
 
@@ -239,6 +196,51 @@
     display: block;
     width: 100%;
     padding-top: fn.rem(20);
+  }
+
+  // Thumb Navigation
+  .pd-thumb-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    cursor: pointer;
+    background: map.get(color.$layout-status, 'brand-bg-sub');
+    border: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    transform: translateY(-50%);
+
+    @include mx.common-mouse-event {
+      opacity: 1;
+    }
+
+    // &.is-hidden {
+    //   display: none;
+    // }
+
+    &.is-disabled {
+      pointer-events: none;
+      filter: invert(1);
+    }
+
+    &.pd-thumb-prev {
+      left: 0;
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+      margin-top: 0;
+      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') 50% 50% no-repeat;
+    }
+
+    &.pd-thumb-next {
+      right: 0;
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+      margin-top: 0;
+      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') 50% 50% no-repeat;
+    }
   }
 
   .pd-thumbs-area {
@@ -326,48 +328,49 @@
     }
   }
 
-  // Thumb Navigation
-  .pd-thumb-nav {
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    width: 32px;
-    height: 32px;
-    pointer-events: none;
-    cursor: pointer;
-    background: map.get(color.$layout-status, 'brand-bg-sub');
-    border: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    transform: translateY(-50%);
+  // Main Swiper
+  .pd-main-swiper {
+    position: relative;
+    width: 100%;
+    height: 596px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: color.$color-white;
+    border: 1px solid #f3f3f3;
+    border-radius: map.get(var.$radius, lg);
 
-    @include mx.common-mouse-event {
-      opacity: 1;
+    /* 메인 썸네일 화살표 미사용 시 */
+    .pd-nav {
+      display: none !important;
     }
 
-    // &.is-hidden {
-    //   display: none;
-    // }
+    .swiper-slide {
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
 
-    &.is-disabled {
-      pointer-events: none;
-      filter: invert(1);
+      .pd-iframe {
+        width: 100%;
+        height: 100%;
+
+        iframe {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+      }
     }
 
-    &.pd-thumb-prev {
-      left: 0;
-      width: map.get(var.$unit, 24);
-      height: map.get(var.$unit, 24);
-      margin-top: 0;
-      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-left.svg') 50% 50% no-repeat;
-    }
-
-    &.pd-thumb-next {
-      right: 0;
-      width: map.get(var.$unit, 24);
-      height: map.get(var.$unit, 24);
-      margin-top: 0;
-      background: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') 50% 50% no-repeat;
+    &:hover,
+    &:focus-within {
+      .pd-nav {
+        pointer-events: auto;
+        opacity: 1;
+      }
     }
   }
 
@@ -440,205 +443,107 @@
   }
 
   .product {
-    &-name-info {
+    &-select-buttons {
+      gap: map.get(var.$unit, 8);
       padding-bottom: map.get(var.$unit, 20);
 
-      .info-inner li {
-        @include mx.flex($direction: column);
-        gap: map.get(var.$unit, 8);
-      }
+      .vits-btn-login {
+        padding: 0;
+        padding-top: map.get(var.$unit, 20);
 
-      .product-name {
-        @include typo.typography('h3b');
-        @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
-      }
+        .vits-btn-xxl {
+          width: 100%;
+        }
 
-      .product-shipping-tags {
-        @include mx.flex($wrap: wrap);
-        gap: map.get(var.$unit, 4);
-        padding-top: map.get(var.$unit, 5);
-
-        .vits-product-flags {
-          gap: map.get(var.$unit, 4);
+        .text {
+          font-weight: 700;
+          text-align: center;
         }
       }
 
-      // 좋아요 버튼 checkbox
-      .like-btn.icon {
-        position: relative;
-        display: block;
-        width: map.get(var.$unit, 52);
-        height: map.get(var.$unit, 52);
-        cursor: pointer;
-        border: 1px solid map.get(color.$gray-shades, 'primary');
-        border-radius: map.get(var.$radius, xl);
-        transition: color 0.2s ease;
+      .vits-btn-option {
+        padding: 0;
 
-        .ic {
-          @include mx.position(absolute, $top: 50%, $left: 50%);
-          @include icon.ic-size(map.get(var.$unit, 32));
-          transform: translate(-50%, -50%);
-        }
+        .vits-btn-xl {
+          justify-content: space-between;
+          width: 100%;
+          padding-left: map.get(var.$unit, 20);
+          border-radius: map.get(var.$radius, 'sm');
 
-        &:has(input[type='checkbox']:checked) {
-          background-color: map.get(color.$brand-colors, 'primary');
-          border-color: map.get(color.$brand-colors, 'primary');
+          @include typo.typography('b2m', $color: map.get(color.$layout-border, 'primary'));
 
-          .ic {
-            background-color: color.$color-white;
-          }
-        }
-
-        @include mx.common-mouse-event {
-          border-color: map.get(color.$brand-colors, 'primary');
-
-          .ic {
-            background-color: map.get(color.$brand-colors, 'primary');
-          }
-        }
-
-        input {
-          width: fn.rem(1);
-          height: fn.rem(1);
-          visibility: hidden;
-          border: 0;
-        }
-      }
-    }
-
-    &-price-info {
-      padding: map.get(var.$unit, 20) 0;
-      border-top: 1px solid map.get(color.$gray-shades, '30');
-
-      &.is-guest {
-        // 비회원 상태 오른쪽 정렬
-        .info-inner {
-          justify-content: flex-end;
-          text-align: right;
-
-          .original {
-            @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
-            text-decoration: none;
-          }
-        }
-      }
-
-      // 비회원 상태일 때 경계선 제거
-      &.is-guest + .product-minidetail {
-        border-bottom: 0;
-      }
-
-      .original {
-        text-decoration: line-through;
-
-        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
-      }
-
-      .discount {
-        @include mx.flex($align: center);
-        gap: map.get(var.$unit, 8);
-
-        .discount-rate {
-          @include typo.typography('h2b', $color: map.get(color.$text-status, 'brand'));
-        }
-
-        .discount-price {
-          @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
-        }
-      }
-
-      .delivery-benefit {
-        padding-top: fn.rem(10);
-
-        @include mx.flex($align: center);
-        @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
-
-        .icon {
-          width: map.get(var.$unit, 20);
-          height: map.get(var.$unit, 20);
-
-          .ic {
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
-
-      .discount-coupon {
-        button {
-          gap: map.get(var.$unit, 4);
-          height: fn.rem(44);
-          padding: 0 fn.rem(28);
-          color: map.get(color.$text-status, 'brand');
-          border-color: map.get(color.$layout-border, 'brand');
-
-          &.disabled {
-            color: map.get(color.$gray-shades, '40');
-            pointer-events: none;
-            cursor: not-allowed;
-            background-color: map.get(color.$layout-surf, 'sunken');
-            border-color: map.get(color.$layout-surf, 'sunken');
+          @include mx.common-mouse-event {
+            color: map.get(color.$brand-colors, 'primary');
+            border-color: map.get(color.$brand-colors, 'primary');
 
             .icon {
-              color: map.get(color.$gray-shades, '40');
-            }
-          }
-        }
-
-        @include mx.common-mouse-event {
-          button:not(.disabled) {
-            background-color: map.get(color.$layout-status, 'brand-bg-sub');
-          }
-
-          &:active {
-            button:not(.disabled) {
-              .icon {
-                color: map.get(color.$text-colors, 'inverse');
-              }
-              color: map.get(color.$text-colors, 'inverse');
-              background-color: map.get(color.$brand-colors, 'primary');
+              color: map.get(color.$brand-colors, 'primary');
             }
           }
         }
       }
     }
 
-    &-minidetail {
+    &-select-unit {
       padding: map.get(var.$unit, 20);
       border-top: 1px solid map.get(color.$gray-shades, '30');
 
       .info-inner {
-        flex-wrap: wrap;
-
         li {
-          gap: map.get(var.$unit, 12);
-          width: 50%;
-
-          @include mx.flex($align: start);
-
-          &:nth-of-type(even) {
-            padding-bottom: map.get(var.$unit, 16);
-            padding-left: map.get(var.$unit, 32);
-          }
-
-          &:last-child {
-            padding-bottom: 0;
-          }
-
-          span {
-            flex: 1;
-          }
+          width: 100%;
         }
       }
 
-      .label {
-        max-width: 74px;
+      .vits-input-unit {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 12);
+        padding: fn.rem(6) 0;
 
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-      }
+        .input-label {
+          width: 100%;
 
-      .value {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          @include mx.flex($align: center);
+
+          .text {
+            flex: 1;
+
+            @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          .input-unit {
+            @include mx.flex($align: baseline, $justify: space-between);
+            @include mx.border(all, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
+            min-width: 186px;
+            padding: fn.rem(10) fn.rem(12);
+            border-radius: map.get(var.$radius, sm);
+
+            em {
+              font-style: normal;
+
+              @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
+            }
+
+            input[type='text'] {
+              padding-right: fn.rem(4);
+              font-size: fn.rem(16);
+              text-align: right;
+              border: 0;
+            }
+          }
+        }
+
+        .vits-btn-lg {
+          min-width: auto;
+          padding: fn.rem(12) fn.rem(36);
+          background-color: map.get(color.$gray-shades, '60');
+          border-color: map.get(color.$gray-shades, '60');
+          border-radius: map.get(var.$radius, sm);
+
+          @include mx.common-mouse-event {
+            background-color: map.get(color.$gray-shades, '70');
+            border-color: map.get(color.$gray-shades, '70');
+          }
+        }
       }
     }
 
@@ -746,69 +651,6 @@
           visibility: visible;
           opacity: 1;
           transform: translateY(0);
-        }
-      }
-    }
-
-    &-select-unit {
-      padding: map.get(var.$unit, 20);
-      border-top: 1px solid map.get(color.$gray-shades, '30');
-
-      .info-inner {
-        li {
-          width: 100%;
-        }
-      }
-
-      .vits-input-unit {
-        @include mx.flex($align: center);
-        gap: map.get(var.$unit, 12);
-        padding: fn.rem(6) 0;
-
-        .input-label {
-          width: 100%;
-
-          @include mx.flex($align: center);
-
-          .text {
-            flex: 1;
-
-            @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
-          }
-
-          .input-unit {
-            @include mx.flex($align: baseline, $justify: space-between);
-            @include mx.border(all, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
-            min-width: 186px;
-            padding: fn.rem(10) fn.rem(12);
-            border-radius: map.get(var.$radius, sm);
-
-            em {
-              font-style: normal;
-
-              @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
-            }
-
-            input[type='text'] {
-              padding-right: fn.rem(4);
-              font-size: fn.rem(16);
-              text-align: right;
-              border: 0;
-            }
-          }
-        }
-
-        .vits-btn-lg {
-          min-width: auto;
-          padding: fn.rem(12) fn.rem(36);
-          background-color: map.get(color.$gray-shades, '60');
-          border-color: map.get(color.$gray-shades, '60');
-          border-radius: map.get(var.$radius, sm);
-
-          @include mx.common-mouse-event {
-            background-color: map.get(color.$gray-shades, '70');
-            border-color: map.get(color.$gray-shades, '70');
-          }
         }
       }
     }
@@ -979,46 +821,208 @@
       }
     }
 
-    // 옵션 팝업 버튼
-    &-select-buttons {
-      gap: map.get(var.$unit, 8);
-      padding-bottom: map.get(var.$unit, 20);
+    &-price-info {
+      padding: map.get(var.$unit, 20) 0;
+      border-top: 1px solid map.get(color.$gray-shades, '30');
 
-      .vits-btn-login {
-        padding: 0;
-        padding-top: map.get(var.$unit, 20);
+      .original {
+        text-decoration: line-through;
 
-        .vits-btn-xxl {
-          width: 100%;
+        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .discount {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 8);
+
+        .discount-rate {
+          @include typo.typography('h2b', $color: map.get(color.$text-status, 'brand'));
         }
 
-        .text {
-          font-weight: 700;
-          text-align: center;
+        .discount-price {
+          @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
         }
       }
 
-      .vits-btn-option {
-        padding: 0;
+      .delivery-benefit {
+        padding-top: fn.rem(10);
 
-        .vits-btn-xl {
-          justify-content: space-between;
-          width: 100%;
-          padding-left: map.get(var.$unit, 20);
-          border-radius: map.get(var.$radius, 'sm');
+        @include mx.flex($align: center);
+        @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
 
-          @include typo.typography('b2m', $color: map.get(color.$layout-border, 'primary'));
+        .icon {
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
 
-          @include mx.common-mouse-event {
-            color: map.get(color.$brand-colors, 'primary');
-            border-color: map.get(color.$brand-colors, 'primary');
+          .ic {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      .discount-coupon {
+        button {
+          gap: map.get(var.$unit, 4);
+          height: fn.rem(44);
+          padding: 0 fn.rem(28);
+          color: map.get(color.$text-status, 'brand');
+          border-color: map.get(color.$layout-border, 'brand');
+
+          &.disabled {
+            color: map.get(color.$gray-shades, '40');
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border-color: map.get(color.$layout-surf, 'sunken');
 
             .icon {
-              color: map.get(color.$brand-colors, 'primary');
+              color: map.get(color.$gray-shades, '40');
+            }
+          }
+        }
+
+        @include mx.common-mouse-event {
+          button:not(.disabled) {
+            background-color: map.get(color.$layout-status, 'brand-bg-sub');
+          }
+
+          &:active {
+            button:not(.disabled) {
+              .icon {
+                color: map.get(color.$text-colors, 'inverse');
+              }
+              color: map.get(color.$text-colors, 'inverse');
+              background-color: map.get(color.$brand-colors, 'primary');
             }
           }
         }
       }
+
+      &.is-guest {
+        // 비회원 상태 오른쪽 정렬
+        .info-inner {
+          justify-content: flex-end;
+          text-align: right;
+
+          .original {
+            @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    &-name-info {
+      padding-bottom: map.get(var.$unit, 20);
+
+      .info-inner li {
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 8);
+      }
+
+      .product-name {
+        @include typo.typography('h3b');
+        @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
+      }
+
+      .product-shipping-tags {
+        @include mx.flex($wrap: wrap);
+        gap: map.get(var.$unit, 4);
+        padding-top: map.get(var.$unit, 5);
+
+        .vits-product-flags {
+          gap: map.get(var.$unit, 4);
+        }
+      }
+
+      // 좋아요 버튼 checkbox
+      .like-btn.icon {
+        position: relative;
+        display: block;
+        width: map.get(var.$unit, 52);
+        height: map.get(var.$unit, 52);
+        cursor: pointer;
+        border: 1px solid map.get(color.$gray-shades, 'primary');
+        border-radius: map.get(var.$radius, xl);
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease, border-color 0.3s ease;
+
+        .ic {
+          @include mx.position(absolute, $top: 50%, $left: 50%);
+          @include icon.ic-size(map.get(var.$unit, 32));
+          transform: translate(-50%, -50%);
+        }
+
+        &:has(input[type='checkbox']:checked) {
+          background-color: map.get(color.$brand-colors, 'primary');
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            background-color: color.$color-white;
+          }
+        }
+
+        @include mx.common-mouse-event {
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            background-color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+
+        input {
+          width: fn.rem(1);
+          height: fn.rem(1);
+          visibility: hidden;
+          border: 0;
+        }
+      }
+    }
+
+    &-minidetail {
+      padding: map.get(var.$unit, 20);
+      border-top: 1px solid map.get(color.$gray-shades, '30');
+
+      .info-inner {
+        flex-wrap: wrap;
+
+        li {
+          gap: map.get(var.$unit, 12);
+          width: 50%;
+
+          @include mx.flex($align: start);
+
+          &:nth-of-type(even) {
+            padding-bottom: map.get(var.$unit, 16);
+            padding-left: map.get(var.$unit, 32);
+          }
+
+          &:last-child {
+            padding-bottom: 0;
+          }
+
+          span {
+            flex: 1;
+          }
+        }
+      }
+
+      .label {
+        max-width: 74px;
+
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .value {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    // 비회원 상태일 때 경계선 제거
+    &-price-info.is-guest + .product-minidetail {
+      border-bottom: 0;
     }
   }
 }
@@ -1026,6 +1030,146 @@
 // 상품상세 탭 영역
 .vits-deal-detail {
   padding: fn.rem(76) 0 0;
+
+  .tab-section {
+    padding-top: fn.rem(52);
+
+    .section-title {
+      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+      max-width: 1280px;
+      padding: fn.rem(10) 0 fn.rem(21);
+      margin: 0 auto;
+    }
+
+    & ~ .tab-section {
+      padding-top: fn.rem(30);
+    }
+
+    .vits-more-view {
+      position: relative;
+      padding: fn.rem(31) 0 fn.rem(137);
+      margin: fn.rem(0) auto 0;
+      background-color: color.$color-white;
+
+      &::before {
+        @include mx.position(absolute, $bottom: 100%);
+        display: block;
+        width: 100%;
+        height: 400px;
+        content: '';
+        background: linear-gradient(180deg, rgb(255 255 255 / 0%) 25.07%, rgb(255 255 255 / 74%) 65.58%, #fff 91.42%);
+      }
+
+      button {
+        padding: 0 fn.rem(60.5);
+        margin: 0 auto;
+        font-weight: 500;
+        color: map.get(color.$text-colors, 'primary');
+        border-radius: fn.rem(200);
+      }
+    }
+
+    .section-content {
+      max-width: 1280px;
+      margin: 0 auto;
+
+      img {
+        display: block;
+        max-width: 700px;
+        height: auto;
+        margin: 0 auto;
+        object-fit: cover;
+      }
+
+      .vits-img-detail {
+        // 임의값
+        max-height: 1125px;
+        overflow: hidden;
+
+        &.is-open {
+          max-height: 100%;
+        }
+      }
+
+      // spec 테이블 style
+      .vits-product-spec {
+        @include mx.flex($align: center);
+        padding-bottom: fn.rem(12);
+        border-top: 1px solid map.get(color.$gray-shades, 'primary');
+
+        .vits-spec-table {
+          width: 100%;
+
+          th,
+          td {
+            height: fn.rem(44);
+            padding-left: fn.rem(20);
+            text-align: left;
+          }
+        }
+
+        .vits-spec-label {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          width: fn.rem(197);
+          background-color: map.get(color.$layout-surf, 'raised');
+        }
+
+        .vits-spec-value {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &.spec-col3 {
+          width: fn.rem(990);
+          margin: 0 auto;
+          border-top: 0;
+
+          table th,
+          table td {
+            height: fn.rem(26);
+            border: 1px solid map.get(color.$layout-border, 'quinary');
+            border-width: 1px 0;
+          }
+
+          .vits-spec-label {
+            width: fn.rem(110);
+            font-size: fn.rem(12);
+          }
+
+          .vits-spec-value {
+            font-size: fn.rem(12);
+          }
+        }
+      }
+
+      &:has(.vits-img-detail.is-open) {
+        .vits-more-view {
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+
+    .section-content-download {
+      gap: map.get(var.$unit, 12);
+      max-width: 1280px;
+      margin: 0 auto;
+
+      @include mx.flex($align: center);
+
+      .vits-btn-sm {
+        gap: map.get(var.$unit, 4);
+        border-color: map.get(color.$layout-border, 'quaternary');
+        border-radius: map.get(var.$radius, sm);
+
+        .icon,
+        .text {
+          font-size: fn.rem(12);
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+    }
+  }
 
   .tab-wrap {
     position: sticky;
@@ -1056,7 +1200,7 @@
         transform: translateY(0);
       }
 
-      &.is-guest{
+      &.is-guest {
         display: none;
       }
     }
@@ -1187,146 +1331,6 @@
       }
     }
   }
-
-  .tab-section {
-    padding-top: fn.rem(52);
-
-    .section-title {
-      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
-      max-width: 1280px;
-      padding: fn.rem(10) 0 fn.rem(21);
-      margin: 0 auto;
-    }
-
-    & ~ .tab-section {
-      padding-top: fn.rem(30);
-    }
-
-    .section-content {
-      max-width: 1280px;
-      margin: 0 auto;
-
-      img {
-        display: block;
-        max-width: 700px;
-        height: auto;
-        margin: 0 auto;
-        object-fit: cover;
-      }
-
-      .vits-img-detail {
-        // 임의값
-        max-height: 1125px;
-        overflow: hidden;
-
-        &.is-open {
-          max-height: 100%;
-        }
-      }
-
-      &:has(.vits-img-detail.is-open) {
-        .vits-more-view {
-          &::before {
-            content: none;
-          }
-        }
-      }
-
-      // spec 테이블 style
-      .vits-product-spec {
-        @include mx.flex($align: center);
-        padding-bottom: fn.rem(12);
-        border-top: 1px solid map.get(color.$gray-shades, 'primary');
-
-        &.spec-col3 {
-          width: fn.rem(990);
-          margin: 0 auto;
-          border-top: 0;
-
-          table th,
-          table td {
-            height: fn.rem(26);
-            border: 1px solid map.get(color.$layout-border, 'quinary');
-            border-width: 1px 0;
-          }
-
-          .vits-spec-label {
-            width: fn.rem(110);
-            font-size: fn.rem(12);
-          }
-
-          .vits-spec-value {
-            font-size: fn.rem(12);
-          }
-        }
-
-        .vits-spec-table {
-          width: 100%;
-
-          th,
-          td {
-            height: fn.rem(44);
-            padding-left: fn.rem(20);
-            text-align: left;
-          }
-        }
-
-        .vits-spec-label {
-          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
-          width: fn.rem(197);
-          background-color: map.get(color.$layout-surf, 'raised');
-        }
-
-        .vits-spec-value {
-          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-        }
-      }
-    }
-
-    .vits-more-view {
-      position: relative;
-      padding: fn.rem(31) 0 fn.rem(137);
-      margin: fn.rem(0) auto 0;
-      background-color: color.$color-white;
-
-      &::before {
-        @include mx.position(absolute, $bottom: 100%);
-        display: block;
-        width: 100%;
-        height: 400px;
-        content: '';
-        background: linear-gradient(180deg, rgb(255 255 255 / 0%) 25.07%, rgb(255 255 255 / 74%) 65.58%, #fff 91.42%);
-      }
-
-      button {
-        padding: 0 fn.rem(60.5);
-        margin: 0 auto;
-        font-weight: 500;
-        color: map.get(color.$text-colors, 'primary');
-        border-radius: fn.rem(200);
-      }
-    }
-
-    .section-content-download {
-      gap: map.get(var.$unit, 12);
-      max-width: 1280px;
-      margin: 0 auto;
-
-      @include mx.flex($align: center);
-
-      .vits-btn-sm {
-        gap: map.get(var.$unit, 4);
-        border-color: map.get(color.$layout-border, 'quaternary');
-        border-radius: map.get(var.$radius, sm);
-
-        .icon,
-        .text {
-          font-size: fn.rem(12);
-          color: map.get(color.$text-colors, 'tertiary');
-        }
-      }
-    }
-  }
 }
 
 // swiper 컨테이너 영역 (추천 상품영역)
@@ -1337,7 +1341,6 @@
     padding-top: fn.rem(50);
     padding-bottom: fn.rem(30);
     margin: 0 auto;
-
   }
 
   .vits-banner-swiper {
@@ -1347,10 +1350,10 @@
   /* [상품상세 페이지 상품유닛 (회원, 비회원 구분)] */
   .vits-product-slide {
     .vits-base-swiper-card {
-      padding:0;
+      padding: 0;
     }
 
-    .product-price{
+    .product-price {
       width: 100%;
     }
   }
@@ -1575,6 +1578,68 @@
 
 // 상품상세 페이지 모달 팝업 영역
 .vits-modal-product {
+  // 기본값
+  &-dim {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 55%);
+  }
+
+  &-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 32px);
+    max-width: 570px;
+    max-height: calc(100% - 32px);
+    overflow: hidden;
+    background: #fff;
+    border-radius: map.get(var.$radius, 'lg');
+    transform: translate(-50%, -50%);
+  }
+
+  &-head {
+    @include mx.flex($justify: space-between);
+    padding: map.get(var.$unit, 32);
+    padding-bottom: map.get(var.$unit, 44);
+
+    h2 {
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+
+      .description {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        display: block;
+        padding-top: map.get(var.$unit, 4);
+      }
+    }
+  }
+
+  &-close {
+    .icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+
+      .ic {
+        @include icon.ic-size(map.get(var.$unit, 32));
+      }
+    }
+  }
+
+  &-body {
+    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
+  }
+
+  &-buttons {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    padding-top: map.get(var.$unit, 44);
+  }
+
   &-modal {
     position: fixed;
     inset: 0;
@@ -1729,7 +1794,7 @@
           }
 
           .vits-btn-xs {
-            gap: 0; 
+            gap: 0;
             border-radius: map.get(var.$radius, 'sm');
 
             .icon {
@@ -1778,76 +1843,14 @@
       }
     }
   }
-
-  // 기본값
-  &-dim {
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / 55%);
-  }
-
-  &-panel {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 32px);
-    max-width: 570px;
-    max-height: calc(100% - 32px);
-    overflow: hidden;
-    background: #fff;
-    border-radius: map.get(var.$radius, 'lg');
-    transform: translate(-50%, -50%);
-  }
-
-  &-head {
-    @include mx.flex($justify: space-between);
-    padding: map.get(var.$unit, 32);
-    padding-bottom: map.get(var.$unit, 44);
-
-    h2 {
-      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
-
-      .description {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-        display: block;
-        padding-top: map.get(var.$unit, 4);
-  
-      }
-    }
-
-  }
-
-  &-close {
-    .icon {
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      background: transparent;
-      border: 0;
-
-      .ic {
-        @include icon.ic-size(map.get(var.$unit, 32));
-      }
-    }
-  }
-
-  &-body {
-    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
-  }
-
-  &-buttons {
-    @include mx.flex($align: center);
-    gap: map.get(var.$unit, 12);
-    padding-top: map.get(var.$unit, 44);
-  }
-
-  
 }
 
-// as-is iframe
-.video_box_inner.youtube-video-frame, 
+/* stylelint-disable selector-class-pattern */
+// as-is iframe 운영소스 추가
+.video_box_inner.youtube-video-frame,
 .video_box_inner.youtube-video-frame iframe {
   min-height: fn.rem(650);
 }
+/* stylelint-enable selector-class-pattern */
+
+/* stylelint-enable no-descending-specificity */

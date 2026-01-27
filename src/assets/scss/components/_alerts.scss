@@ -1,0 +1,170 @@
+// -----------------------------------------------------------------------------
+// components/_alerts.scss
+// - alerts 전용 스타일 모듈 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin alerts-anatomy($theme: 'red') {
+  $bg-color: null;
+  $icon-color: null;
+  $text-color: null;
+
+  @if $theme == 'red' {
+    $bg-color: map.get(color.$layout-status, 'brand-bg-sub');
+    $icon-color: map.get(color.$icon-colors, 'primary');
+    $text-color: map.get(color.$text-status, 'brand-sub');
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $theme == 'blue' {
+    $bg-color: map.get(color.$layout-status, 'info-bg-sub'); /* 예시 */
+    $icon-color: map.get(color.$icon-status, 'info'); /* 예시 */
+    $text-color: map.get(color.$text-status, 'info-sub'); /* 예시 */
+  }
+  text-align: left;
+  background: $bg-color;
+  border-radius: map.get(var.$radius, 'md');
+
+  &:not(:has(.alerts-anatomy-list)) {
+    padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
+
+    .vits-alerts-anatomy-inner {
+      gap: map.get(var.$unit, 4);
+    }
+  }
+
+  &:has(.alerts-anatomy-list) {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
+
+    .vits-alerts-anatomy-inner {
+      gap: map.get(var.$unit, 12);
+    }
+  }
+
+  .vits-alerts-anatomy {
+    &-inner {
+      @include mx.flex(flex, row, flex-start, flex-start);
+
+      .alerts-anatomy {
+        &-icon {
+          @include icon.ic-size(map.get(var.$unit, 20));
+          flex-shrink: 0;
+          color: $icon-color;
+        }
+
+        &-text {
+          @include typo.typography('b3r', $color: $text-color);
+          padding-top: fn.rem(1);
+        }
+
+        &-content {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 8);
+        }
+
+        &-list {
+          @include mx.bullet-style(10, 7, 2, 2, $icon-color, 4);
+
+          > li {
+            @include typo.typography('b4r', $color: $text-color);
+          }
+        }
+      }
+    }
+  }
+}
+
+.vits-alerts-anatomy.type-red {
+  @include alerts-anatomy('red');
+}
+
+.vits-alerts-anatomy {
+  &.type-blue {
+    @include alerts-anatomy('blue');
+  }
+}
+
+// 주문 알림 스타일
+@mixin order-alerts($type: 'r-warning') {
+  $text-color: null;
+  $bg-color: null;
+  $border-color: null;
+  $border-radius: null;
+  $padding: null;
+  $icon-color: null;
+  $strong-color: null;
+  $text-typography: null;
+
+  @if $type == 'r-warning' {
+    $text-color: map.get(color.$text-status, 'brand');
+    $bg-color: map.get(color.$layout-status, 'brand-bg-sub');
+    $border-color: map.get(color.$brand-colors, '40');
+    $border-radius: map.get(var.$radius, 'sm');
+    $padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
+    $icon-color: map.get(color.$brand-colors, '90');
+    $strong-color: map.get(color.$text-status, 'brand');
+    $text-typography: 'b4r';
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $type == 'b-warning' {
+    $text-color: map.get(color.$text-status, 'info');
+    $bg-color: map.get(color.$layout-surf, 'raised');
+    $border-color: map.get(color.$layout-border, 'quinary');
+    $border-radius: map.get(var.$radius, 'md');
+    $padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+    $icon-color: map.get(color.$text-status, 'info');
+    $strong-color: map.get(color.$text-status, 'info');
+    $text-typography: 'b4r';
+  }
+
+  @include typo.typography($text-typography, $color: $text-color);
+  padding: $padding;
+  background-color: $bg-color;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+
+  @if $type == 'b-warning' {
+    .alerts-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
+
+  .alerts-text-important {
+    @include typo.typography($text-typography, $color: $text-color);
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 4);
+
+    .alerts-icon {
+      @include icon.ic-size(map.get(var.$unit, 12));
+      background-color: $icon-color;
+      mask: url('/public/resources/img/mro/renewal/ic/ic-tip-info.svg') no-repeat center / contain;
+    }
+
+    strong {
+      @include typo.typography('b4b', $color: $strong-color);
+    }
+  }
+}
+
+.vits-order-alerts {
+  @include mx.flex(flex, column, center, flex-start);
+  @include typo.typography('b3r', $color: map.get(color.$text-status, 'secondary'));
+  position: relative;
+  gap: map.get(var.$unit, 12);
+  text-align: left;
+
+  &.type-r-warning {
+    @include order-alerts('r-warning');
+  }
+
+  &.type-b-warning {
+    @include order-alerts('b-warning');
+  }
+}

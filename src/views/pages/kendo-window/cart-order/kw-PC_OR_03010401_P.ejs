@@ -1,0 +1,79 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-apply-coupon">
+  <!-- 쿠폰 적용 헤더 -->
+  <h2 class="sr-only">쿠폰 적용</h2>
+
+  <div class="vits-apply-coupon-content vits-scrollbar">
+    <div class="vits-apply-coupon-list">
+      <ul>
+        <% for (let i = 0; i < 3; i++) { %>
+          <% const isApplied = i === 2; %>
+          <li>
+            <div class="coupon-item">
+              <div class="coupon-item-left">
+                <span class="coupon-item-badge">
+                  <strong class="coupon-item-badge-value">1만원</strong>
+                </span>
+              </div>
+
+              <div class="coupon-item-body">
+                <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인</strong>
+
+                <div class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</div>
+
+                <div class="coupon-item-desc">
+                  <dl class="desc-list-discount">
+                    <dt class="desc-title">최대할인금액:</dt>
+                    <dd class="desc-value">100,000원</dd>
+                  </dl>
+                  <dl class="desc-list-discount">
+                    <dt class="desc-title">최소주문금액:</dt>
+                    <dd class="desc-value">1,000,000원</dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="coupon-item-right">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size:'lg', 
+                  variant: isApplied ? 'outline-secondary' : 'primary', 
+                  text: isApplied ? '적용 취소' : '쿠폰 적용', 
+                  }) 
+                %>
+              </div>
+            </div>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+
+    <div class="vits-benefit-coupon-price">
+      <p class="vits-benefit-title">일회용 니트릴 장갑</p>
+    
+      <div class="vits-benefit-calc">
+        <div class="vits-benefit-item">
+          <span class="benefit-label">상품금액 (VAT별도)</span>
+          <strong class="benefit-value">1,260,000원</strong>
+        </div>
+    
+        <span class="benefit-operator" aria-hidden="true">-</span>
+    
+        <div class="vits-benefit-item">
+          <span class="benefit-label">쿠폰 할인 금액</span>
+          <strong class="benefit-value">6,000원</strong>
+        </div>
+    
+        <span class="benefit-operator" aria-hidden="true">=</span>
+    
+        <div class="vits-benefit-result">
+          <span class="benefit-label">최대 혜택가</span>
+          <strong class="benefit-price-value">1,256,000원</strong>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+</section>

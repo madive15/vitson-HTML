@@ -1,0 +1,245 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  const _showOrder = typeof showOrder !== 'undefined' ? showOrder : true;
+  const _showProduct = typeof showProduct !== 'undefined' ? showProduct : true;
+  const _showReason = typeof showReason !== 'undefined' ? showReason : true;
+  const _showPickup = typeof showPickup !== 'undefined' ? showPickup : true;
+  const _showRefund = typeof showRefund !== 'undefined' ? showRefund : true;
+  const _claimType = typeof claimType !== 'undefined' ? claimType : 'return'; // 'return' | 'cancel'
+%>
+
+<section class="vits-mypage-claim-section">
+  <h2 class="sr-only">반품 내역 상세</h2>
+
+  <!-- 주문정보 -->
+  <% if (_showOrder) { %>
+  <div class="vits-mypage-claim-box">
+    <div class="mypage-claim-head" data-scss="head">
+      <div class="mypage-claim-title">
+        <p class="title-label">주문번호</p>
+        <p class="title-value">ORD-2024-001235</p>
+      </div>
+    </div>
+
+    <div class="mypage-claim-body" data-scss="body">
+      <dl class="mypage-claim-info">
+        <dt><%= _claimType === 'return' ? '반품' : '취소' %> 신청일</dt>
+        <dd>2024.12.15</dd>
+        <dt><%= _claimType === 'return' ? '반품' : '취소' %> 완료일</dt>
+        <dd>2024.12.26</dd>
+      </dl>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- 상품정보 -->
+  <% if (_showProduct) { %>
+  <div class="vits-mypage-claim-box">
+    <div class="mypage-claim-head" data-scss="head">
+      <div class="mypage-claim-title">
+        <p class="title-label"><%= _claimType === 'return' ? '반품' : '취소' %> 상품 정보</p>
+      </div>
+    </div>
+
+    <div class="mypage-claim-body" data-scss="body">
+      <ul class="mypage-claim-lines">
+        <li class="mypage-claim-line">
+          <div class="mypage-claim-thumb">
+            <div class="product-thumb">
+              <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+            </div>
+          </div>
+
+          <div class="mypage-claim-product-info">
+            <div class="product-identity">
+              <p class="product-code"><span class="sr-only">상품코드</span>63531</p>
+              <p class="product-title">
+                <span class="product-brand">엠포르지오아르마니</span>
+                <span class="product-name"
+                  >더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP 접착테이프
+                  투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)</span
+                >
+              </p>
+            </div>
+            <div class="product-subinfo">
+              <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
+              <div class="product-meta">
+                <p class="product-meta-row">
+                  <span class="product-meta-label"><%= _claimType === 'return' ? '반품' : '취소' %> 수량</span
+                  ><span class="product-meta-value text-accent">1개</span>
+                </p>
+                <p class="product-meta-row">
+                  <span class="product-meta-label">과세 구분</span><span class="product-meta-value">비과세</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mypage-claim-status">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/label/text-status.ejs`, { 
+              type: 'claim', 
+              status: _claimType === 'return' ? '05' : '03' 
+            }) %>
+          </div>
+
+          <div class="mypage-claim-pay">
+            <p class="product-price">999,999,999원</p>
+            <div class="mypage-claim-tools">
+              <!-- prettier-ignore -->
+              <% if (_claimType === 'return') { %>
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size: 'xs', 
+                  variant: 'outline-secondary', 
+                  text: '반품취소', 
+                }) %>
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size: 'xs', 
+                  variant: 'outline-secondary', 
+                  text: '반품 문의하기', 
+                }) %>
+              <% } else { %>
+                <%- include(`${_src}/views/components/button/button.ejs`, { 
+                  size: 'xs', 
+                  variant: 'outline-secondary', 
+                  text: '취소 문의하기', 
+                }) %>
+              <% } %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- 사유 -->
+  <% if (_showReason) { %>
+  <div class="vits-mypage-claim-box">
+    <div class="mypage-claim-head" data-scss="head">
+      <div class="mypage-claim-title">
+        <p class="title-label">반품 사유 정보</p>
+      </div>
+    </div>
+
+    <div class="mypage-claim-body" data-scss="body">
+      <dl class="mypage-claim-info">
+        <dt>반품 구분</dt>
+        <dd>주문자착오</dd>
+        <dt>반품사유</dt>
+        <dd>단순변심</dd>
+        <dt>반품 상세 사유</dt>
+        <dd>상세 이미지랑 달라요</dd>
+        <dt>첨부 이미지</dt>
+        <dd>
+          <div class="mypage-claim-attachment">
+            <ul class="mypage-claim-attachment-list">
+              <li>
+                <button
+                  type="button"
+                  class="mypage-claim-attachment-button"
+                  onclick="VitsKendoWindow.open('tempModal01')"
+                >
+                  <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-ex01.jpg" alt="" />
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="mypage-claim-attachment-button"
+                  onclick="VitsKendoWindow.open('tempModal02')"
+                >
+                  <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-ex02.jpg" alt="" />
+                </button>
+              </li>
+            </ul>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- 수거 정보 -->
+  <% if (_showPickup) { %>
+  <div class="vits-mypage-claim-box">
+    <div class="mypage-claim-head" data-scss="head">
+      <div class="mypage-claim-title">
+        <p class="title-label">반품 수거 정보</p>
+      </div>
+    </div>
+
+    <div class="mypage-claim-body" data-scss="body">
+      <dl class="mypage-claim-info">
+        <dt>수거지</dt>
+        <dd class="divider">
+          <span>김비츠</span>
+          <span>010-8888-8888</span>
+          <span>[06543] 서울시 서초구 서초대로 456, ABC타워 12층</span>
+        </dd>
+        <dt>도착지</dt>
+        <dd>비츠온 본사</dd>
+        <dt>반품 상세 메모</dt>
+        <dd>200w가 100w 같아서 못 쓰겠어요.</dd>
+      </dl>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- 환불 -->
+  <% if (_showRefund) { %>
+  <div class="vits-mypage-claim-box">
+    <div class="mypage-claim-head" data-scss="head">
+      <div class="mypage-claim-title">
+        <p class="title-label">환불 정보</p>
+      </div>
+    </div>
+
+    <div class="mypage-claim-body" data-scss="body">
+      <dl class="mypage-claim-info">
+        <dt>환불 수단</dt>
+        <dd>후불결제 취소</dd>
+        <dt>환불 상태</dt>
+        <dd>환불진행중</dd>
+        <dt class="text-accent">환불 예정 금액</dt>
+        <dd class="text-accent">30,000원</dd>
+      </dl>
+
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, { 
+        theme: 'blue', text: '상품 회수 완료 후 영업일 기준 최대 7일 이내 환불 처리됩니다.' 
+      }) %>
+    </div>
+  </div>
+  <% } %>
+</section>
+
+<!-- 첨부파일 1 -->
+<!-- prettier-ignore -->
+<% const winAuto01 = { 
+  id: 'tempModal01', 
+  title: '첨부 이미지', 
+  contentPath: `${_src}/views/pages/kendo-window/my-orders/kw-PC_MY_02020601-attachment.ejs`,
+  imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-ex01.jpg`,
+  buttons: [
+    { text: '닫기', variant: 'secondary', action: 'close' }, 
+    { text: '확인', variant: 'primary', action: 'close' }] 
+  }; 
+%> 
+<%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winAuto01) %>
+
+<!-- 첨부파일 1 -->
+<!-- prettier-ignore -->
+<% const winAuto02 = { 
+  id: 'tempModal02', 
+  title: '첨부 이미지', 
+  contentPath: `${_src}/views/pages/kendo-window/my-orders/kw-PC_MY_02020601-attachment.ejs`,
+  imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-ex02.jpg`,
+  buttons: [
+    { text: '닫기', variant: 'secondary', action: 'close' }, 
+    { text: '확인', variant: 'primary', action: 'close' }] 
+  };
+%>
+<%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winAuto02) %>

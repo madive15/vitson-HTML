@@ -1,0 +1,33 @@
+<!-- prettier-ignore -->
+<%
+  const _src = srcPath;
+  const _type = typeof type !== 'undefined' ? type : 'r-warning';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _importantItems = typeof importantItems !== 'undefined' ? importantItems : [];
+%>
+
+<div class="vits-order-alerts type-<%= _type %>">
+  <% if (_text && _type === 'b-warning') { %>
+    <p class="alerts-text"><%= _text %></p>
+  <% } %>
+  
+  <% if (_importantItems.length > 0) { %>
+    <% _importantItems.forEach(function(item) { %>
+      <p class="alerts-text-important">
+        <% 
+          const hasIcon = typeof item === 'string' 
+            ? false 
+            : (typeof item.hasIcon !== 'undefined' ? item.hasIcon : true);
+        %>
+        <% if (hasIcon) { %>
+          <span class="alerts-icon" aria-hidden="true"></span>
+        <% } %>
+        <% if (typeof item === 'string') { %>
+          <%= item %>
+        <% } else { %>
+          <%= item.text || '' %><% if (item.strong) { %><strong><%= item.strong %></strong><% } %><%= item.after || '' %>
+        <% } %>
+      </p>
+    <% }); %>
+  <% } %>
+</div>

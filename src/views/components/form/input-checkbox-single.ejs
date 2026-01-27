@@ -35,6 +35,8 @@
       type="checkbox"
       name="<%= data.name %>"
       value="<%= data.value %>"
+      <% if (data.checkboxType === 'all') { %>data-checkbox-all<% } %>
+      <% if (data.checkboxType === 'item') { %>data-checkbox-item<% } %>
       <% if (data.disabled === true) { %>disabled<% } %>
       <% if (data.checked === true) { %>checked<% } %>
       <% if (data.required === true) { %>required<% } %>

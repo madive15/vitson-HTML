@@ -7,9 +7,16 @@
 
   <!-- 안내 메시지 -->
   <div class="vits-shipping-alert">
-    <p class="vits-shipping-alert-text">총 2건으로 나뉘어 발송될 예정입니다.</p>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+      type: 'r-warning',
+      importantItems: [{
+          text: '총 2건으로 나뉘어 발송될 예정입니다.',
+          hasIcon: false
+        }]
+      }) %>
   </div>
-  
+
   <!-- 배송 방법 선택 -->
   <div class="vits-shipping-method">
     

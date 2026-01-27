@@ -5,7 +5,6 @@
 %>
 
 <% if (_type === 'toggle') { %>
-<!-- 주문/배송조회 목록 -->
 <div class="vits-mypage-query" data-toggle-scope>
   <div class="mypage-query-fields">
     <dl class="mypage-query-period">
@@ -123,7 +122,6 @@
 
 <!-- prettier-ignore -->
 <% } else if (_type === 'default') { %>
-<!-- 취소/반품조회 목록 -->
 <div class="vits-mypage-query type-ver2">
   <div class="mypage-query-fields">
     <dl class="mypage-query-period">
@@ -197,6 +195,84 @@
               { value: '우리집', text: '우리집' },
               { value: '엄마네', text: '엄마네' },
               { value: '회사', text: '회사' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+            disabled: false,
+            portal: true,
+          }) %>
+          </div>
+        </li>
+        <li>
+          <p class="mypage-query-label">검색어</p>
+          <div class="mypage-query-control type-search">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-search.ejs`, {
+              idPrefix: 'my-orders-search',
+              action: '/orders-search',
+              name: 'my-orders-search',
+              placeholder: '상품명, 주문번호 검색',
+              addClassName: 'size-sm'
+            }) %>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mypage-query-actions">
+    <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant: 'secondary', text: '조회하기',
+    disabled: true, className: 'btn-fix-w120'}) %>
+  </div>
+</div>
+
+<!-- prettier-ignore -->
+<% } else if (_type === 'cancle') { %>
+<div class="vits-mypage-query type-ver2">
+  <div class="mypage-query-fields">
+    <dl class="mypage-query-period">
+      <dt class="mypage-query-label">조회 기간</dt>
+      <dd class="mypage-query-control">
+        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
+          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
+            <span class="text">1개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">3개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">6개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">1년</span>
+          </button>
+        </div>
+      </dd>
+      <dd class="mypage-query-control mypage-query-period-range">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+          options: {
+            id: 'testPicker',
+            startName: 'startDate',
+            endName: 'endDate',
+          }
+        }) %>
+      </dd>
+    </dl>
+
+    <div class="mypage-query-advanced">
+      <ul class="mypage-query-detail">
+        <li>
+          <p class="mypage-query-label">취소/반품 선택</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'my-order-status',
+            name: 'sort',
+            placeholder: '전체',
+            options: [
+              { value: '전체', text: '전체' },
+              { value: '취소', text: '취소' },
+              { value: '반품', text: '반품' },
             ],
             value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
             disabled: false,

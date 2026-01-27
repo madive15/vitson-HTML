@@ -128,10 +128,15 @@
           </li>
           <li class="info-item">
             <span class="info-label"></span>
-            <p class="info-value-notice">
-              주문 후 <strong>영업일 5일 내</strong>에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.
-              
-            </p>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+              type: 'r-warning',
+              importantItems: [{
+                text: '주문 후 ',
+                strong: '영업일 5일',
+                after: ' 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.'
+              }]
+            }) %>
           </li>
         </ul>
       </div>

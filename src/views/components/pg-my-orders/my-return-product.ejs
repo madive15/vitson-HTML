@@ -1,0 +1,125 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="vits-claim-request-box">
+  <div class="vits-claim-request-product">
+    <div class="vits-claim-request-overview">
+      <div class="vits-claim-request-thumb">
+        <div class="product-thumb">
+          <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+        </div>
+      </div>
+      <div class="vits-claim-request-info">
+        <div class="product-header">
+          <div class="product-meta">
+            <p class="product-code"><span class="sr-only">상품코드</span>63531</p>
+            <p class="product-brand">엠포르지오아르마니</p>
+          </div>
+          <div class="product-title">
+            <p class="product-name">
+              더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP 접착테이프 투명
+              (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)
+            </p>
+          </div>
+        </div>
+        <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
+        <div class="vits-claim-request-quantity">
+          <div class="product-quantity-info">
+            <p class="product-quantity">
+              <span class="product-quantity-label">수량</span>
+              <span class="product-quantity-value">2개</span>
+            </p>
+            <p class="product-quantity-price">999,999,999원</p>
+          </div>
+          <div class="product-quantity-select">
+            <div class="product-quantity-label">반품 신청 수량</div>
+            <div class="product-quantity-select">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'return-sort',
+                name: 'sort',
+                placeholder: '수량 선택',
+                options: [
+                  { value: '0', text: '0' },
+                  { value: '1', text: '1' },
+                  { value: '2', text: '2' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '0',
+                disabled: false,
+                portal: true,
+              }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vits-claim-request-reason" data-toggle-scope>
+      <button
+        type="button"
+        class="claim-request-reason-toggle"
+        data-toggle-btn
+        data-toggle-target="reason-panel"
+        aria-expanded="false"
+      >
+        <span class="text">반품 사유 입력하기</span>
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+      </button>
+      <div class="claim-request-reason-content" data-toggle-box="reason-panel">
+        <dl class="claim-request-reason-list">
+          <dt class="is-required">반품구분</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'return01',
+              name: 'return01',
+              placeholder: '선택',
+              options: [
+                { value: '고객 사유', text: '고객 사유' },
+                { value: '사유 항목2', text: '사유 항목2' },
+                { value: '사유 항목3', text: '사유 항목3' },
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '고객 사유',
+              disabled: false,
+              portal: true,
+            }) %>
+          </dd>
+          <dt class="is-required">반품사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'return02',
+              name: 'return02',
+              placeholder: '선택',
+              options: [
+                { value: '단순 변심', text: '단순 변심' },
+                { value: '반품 사유 항목 1', text: '반품 사유 항목 1' },
+                { value: '반품 사유 항목 2', text: '반품 사유 항목 2' },
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '단순 변심',
+              disabled: false,
+              portal: true,
+            }) %>
+          </dd>
+          <dt>반품상세사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/textarea.ejs`, {
+              id: 'returnMemo',
+              name: 'returnMemo',
+              placeholder: '내용을 입력해주세요.',
+              count: false,
+              rootClass: 'size-default',
+              portal: true,
+            }) %>
+          </dd>
+          <dt>이미지 첨부</dt>
+          <dd>
+            <div class="claim-request-attach">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-file.ejs`) %>
+            </div>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
