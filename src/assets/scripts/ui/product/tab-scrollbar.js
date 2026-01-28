@@ -29,10 +29,10 @@
     var $tabBar = $('#tab-Bar');
     var $tabBtns = $tabNav.find('.tab-btn[data-target]');
     var $sections = $('.tab-section[id]');
-
-    if (!$tabWrap.length || !$tabNav.length || !$tabBtns.length || !$sections.length) {
-      return;
-    }
+    // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
+    var $body = $('body');
+    var $optionModal = $('#findOtherOptionModal');
+    var OPTION_MODAL_BODY_CLASS = 'is-option-modal-open';
 
     function getScrollTop() {
       return $(window).scrollTop();
@@ -55,6 +55,9 @@
     }
 
     function isTabWrapAtTop() {
+      if (!$tabWrap.length) {
+        return false;
+      }
       var wrapRect = $tabWrap[0].getBoundingClientRect();
       return wrapRect.top <= 0.5;
     }
@@ -105,6 +108,9 @@
     }
 
     function updateActiveOnScroll() {
+      if (!$sections.length) {
+        return;
+      }
       var targetId = isAtBottom() ? $sections.last().attr('id') : getCurrentSectionId();
       setActiveById(targetId);
     }
@@ -116,6 +122,39 @@
       }
       var scrollDuration = 0; // 애니메이션 필요 시 250 등으로 조정
       $('html, body').stop().animate({scrollTop: targetTop}, scrollDuration);
+    }
+
+    // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
+    function updateOptionModalBodyClass(isOpen) {
+      if (!$optionModal.length) {
+        return;
+      }
+      $body.toggleClass(OPTION_MODAL_BODY_CLASS, !!isOpen);
+    }
+
+    function initOptionModalBodyClass() {
+      if (!$optionModal.length) {
+        return;
+      }
+
+      if (window.VitsKendoWindow && !$optionModal.data('kendoWindow')) {
+        window.VitsKendoWindow.initAll(document);
+      }
+
+      var inst = $optionModal.data('kendoWindow');
+      if (inst) {
+        inst.unbind('open.optionModalToggle');
+        inst.unbind('close.optionModalToggle');
+        inst.bind('open.optionModalToggle', function () {
+          updateOptionModalBodyClass(true);
+        });
+        inst.bind('close.optionModalToggle', function () {
+          updateOptionModalBodyClass(false);
+        });
+        updateOptionModalBodyClass(inst.wrapper && inst.wrapper.is(':visible'));
+      } else {
+        updateOptionModalBodyClass($optionModal.is(':visible'));
+      }
     }
 
     var ticking = false;
@@ -166,6 +205,12 @@
       updateActiveOnScroll();
       updateTabBar($tabBtns.filter('.is-active'));
     });
+
+    initOptionModalBodyClass(); // 다른 규격찾기 모달 열릴때 함수 초기화
+
+    if (!$tabWrap.length || !$tabNav.length || !$tabBtns.length || !$sections.length) {
+      return;
+    }
 
     updateShowPrice();
     updateActiveOnScroll();
