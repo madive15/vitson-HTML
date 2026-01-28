@@ -1488,9 +1488,10 @@
   }
 }
 
-/* ===modal kendo window -다른 규격찾기 팝업 === */
+/* ===modal kendo window -다른 규격찾기 팝업 (특수 케이스 적용)=== */
 // s: 해당 모달만 적용되는 스타일
-.k-window.k-window-titleless:has(#findOtherOptionModal){
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
+.k-window.k-window-titleless:has(#findOtherOptionModal) {
   position: fixed !important;
   top: 0 !important;
   right: -100% !important;
@@ -1510,21 +1511,23 @@
   }
 }
 
-// 윈도우 열림 시 애니메이션 적용
-body.is-kendo-window-open {
-  .k-window.k-window-titleless:has(#findOtherOptionModal){
+// 윈도우 열림 시 애니메이션 적용 (bodt 부분에 위치)
+.is-kendo-window-open.is-option-modal-open {
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
+  .k-window.k-window-titleless:has(#findOtherOptionModal) {
     right: 0 !important;
     transform: translateX(0);
-  } 
+  }
 }
 
-#findOtherOptionModal{
+/* stylelint-disable-next-line selector-id-pattern */
+#findOtherOptionModal {
   .vits-modal-header{
     padding-bottom: fn.rem(32);
     border-bottom: 1px solid map.get(color.$layout-surf, 'secondary');
   }
 
-  .vits-modal-content{
+  .vits-modal-content {
     padding: 0;
   }
 }
