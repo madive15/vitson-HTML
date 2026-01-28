@@ -14,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>검색 결과 없음</title>
+  <title>좋아요 폴더목록</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -39063,7 +39063,7 @@
         <div class="vits-wrap">
           <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-grid-main vits-main-my-orders">
+            <div class="vits-grid-main vits-main-my-favorites">
               <div class="vits-grid-area vits-inner">
                 <!-- S: vits-grid-side-left -->
                 
@@ -39181,102 +39181,115 @@
                 <!-- E: vits-grid-side-left -->
 
                 <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-orders">
+                <div class="vits-grid-main-content main-content-my-favorites">
                   <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">취소/반품내역</h2>
-                    <p class="vits-mypage-content-desc">
-                      취소 및 반품 신청 내역을 확인하고, 처리 현황을 조회할 수 있습니다.
-                    </p>
+                    <h2 class="vits-mypage-content-title">좋아요</h2>
+                    <p class="vits-mypage-content-desc">좋아요 상품을 폴더별로 관리하세요</p>
                   </div>
 
                   <div class="vits-mypage-panel">
-                    <!-- 취소/반품내역 필터 -->
-                    
+                    <section class="vits-mypage-favorites type-folder-list">
+                      <h3 class="sr-only">좋아요 폴더 리스트</h3>
+
+                      <!-- 상단 툴바 -->
+                      <!-- prettier-ignore -->
+                      
 <!-- prettier-ignore -->
 
 
-
-<div class="vits-mypage-query type-ver2">
-  <div class="mypage-query-fields">
-    <dl class="mypage-query-period">
-      <dt class="mypage-query-label">조회 기간</dt>
-      <dd class="mypage-query-control">
-        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
-          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
-            <span class="text">1개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">3개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">6개월</span>
-          </button>
-          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
-            <span class="text">1년</span>
-          </button>
-        </div>
-      </dd>
-      <dd class="mypage-query-control mypage-query-period-range">
-        <!-- prettier-ignore -->
-        
+<div class="vits-mypage-favorites-toolbar">
+  <div class="toolbar-select">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
 
 
-<div class="vits-kendo-range-picker size-md" 
-     id="kendoRangePicker_1769559100304"
-     data-ui="kendo-range-picker"
-     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+<label class="vits-checkbox-item size-xl">
+  <input
+    type="checkbox"
+    name="ckbox-total"
+    value="선택"
+    data-checkbox-all
     
-    <input type="hidden" 
-           class="js-start-date" 
-           name="startDate" 
-           value="">
     
-    <input type="hidden" 
-           class="js-end-date" 
-           name="endDate" 
-           value="">
     
-    <span class="picker-input k-picker k-datepicker">
-        <input type="text" 
-               class="picker-display k-input-inner js-range-display" 
-               placeholder="시작일 ~ 종료일" 
-               readonly 
-               >
-        
-        <button type="button" 
-                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
-                >
-            <span class="icon">
-              <i class="ic ic-calendar" aria-hidden="true"></i>
- 
-            </span>
-        </button>
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">전체 선택</span>
+  
+</label>
+
+  </div>
+  <div class="toolbar-actions">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+    
+    
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-outline-tertiary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-plus" aria-hidden="true"></i>
     </span>
-    
-    <div class="picker-popup js-calendar-popup">
-        <div class="js-kendo-calendar"></div>
-    </div>
-</div>
-      </dd>
-    </dl>
+  
 
-    <div class="mypage-query-advanced">
-      <ul class="mypage-query-detail">
-        <li>
-          <p class="mypage-query-label">취소/반품 선택</p>
-          <div class="mypage-query-control type-select">
-            <!-- prettier-ignore -->
-            
+  <span class="text">폴더 추가하기</span>
+
+  
+</button>
+
+    
+    
+    
+  </div>
+</div>
+
+
+                      <!-- 정렬/카운트 -->
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<div class="vits-mypage-favorites-meta type-like">
+  <p class="meta-count">총<b>3</b>개</p>
+
+  <div class="meta-page-size">
+    <!-- prettier-ignore -->
+    
 
 
 
 
 <div
-  class="vits-select"
+  class="vits-select type-ghost color-secondary"
   data-vits-select
-   data-select-id="my-order-status" 
+   data-select-id="page-size" 
   
-   data-vits-select-portal 
+  
   
 >
   <button
@@ -39290,8 +39303,8 @@
     <span
       class="vits-select-value"
       data-vits-select-value
-      data-placeholder="전체"
-    >전체</span>
+      data-placeholder="20개씩 보기"
+    >20개씩 보기</span>
 
     <span class="vits-select-icon" aria-hidden="true">
       <i class="ic ic-arrow-down" aria-hidden="true"></i>
@@ -39302,134 +39315,197 @@
   <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
     
       <li
-        class="vits-select-option vits-select-selected"
+        class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="전체"
+        data-value="20"
            
-        aria-selected="true"
+        aria-selected="false"
         
-      >전체</li>
+      >20개씩 보기</li>
     
       <li
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="취소"
+        data-value="40"
            
         aria-selected="false"
         
-      >취소</li>
+      >40개씩 보기</li>
     
       <li
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="반품"
+        data-value="60"
            
         aria-selected="false"
         
-      >반품</li>
+      >60개씩 보기</li>
     
   </ul>
 
   
-    <input type="hidden" name="sort" value="전체" data-vits-select-hidden />
+    <input type="hidden" name="pageSize" value="30" data-vits-select-hidden />
   
 </div>
 
-          </div>
-        </li>
-        <li>
-          <p class="mypage-query-label">검색어</p>
-          <div class="mypage-query-control type-search">
-            <!-- prettier-ignore -->
-            
+  </div>
 
+  
+</div>
+
+
+                      <!-- 리스트 -->
+                      <div class="favorites-folder-list-box">
+                        <ul class="favorites-folder-list">
+                          <li class="favorites-folder-list-item">
+                            <!-- prettier-ignore -->
+                            
 <!-- prettier-ignore -->
 
-
-<div class="vits-input-search vits-validation size-sm">
-  <form class="vits-input-search-form" role="search" action="/orders-search" method="get" data-search-form>
-    <label for="my-orders-search-searchKeyword" class="sr-only">검색어</label>
-
-    <input
-      type="search"
-      id="my-orders-search-searchKeyword"
-      class="input-search"
-      name="my-orders-search"
-      autocomplete="off"
-      enterkeyhint="search"
-      placeholder="상품명, 주문번호 검색"
-      data-search-input
+<div class="vits-favorites-folder-item">
+  <label class="folder-label">
+    <input 
+      type="checkbox" 
+      name="folder" 
+      value="1"
       
       
     />
-
-    <button type="submit" class="input-search-btn" aria-label="검색">
-      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
-
-    </button>
-  </form>
-
-  <!-- validation 영역(교체) -->
-  <div class="input-validation" hidden>
-    <p id="my-orders-search-searchKeyword-validation" aria-live="polite"></p>
-  </div>
+    <span class="folder-icon"></span>
+    <span class="folder-content">
+      <b class="content-title">
+        <span class="title-name">자주 구매 목록</span>
+        <span class="title-count">12개</span>
+      </b>
+      
+      <span class="content-desc">사무용품 관련 폴더</span>
+      
+    </span>
+    <span class="folder-date">2025-12-24</span>
+  </label>
 </div>
+                          </li>
+                          <li class="favorites-folder-list-item">
+                            <!-- prettier-ignore -->
+                            
+<!-- prettier-ignore -->
 
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="mypage-query-actions">
-    
-
-
-<button
-  type="cancle"
-  class="vits-btn-xl vits-btn-secondary  disabled btn-fix-w120"
-  disabled
-  >
-  
-
-  <span class="text">조회하기</span>
-
-  
-</button>
-
-  </div>
+<div class="vits-favorites-folder-item">
+  <label class="folder-label">
+    <input 
+      type="checkbox" 
+      name="folder2" 
+      value="2"
+      
+      
+    />
+    <span class="folder-icon"></span>
+    <span class="folder-content">
+      <b class="content-title">
+        <span class="title-name">상세 내용 없어요 타이틀만 있어요</span>
+        <span class="title-count">2개</span>
+      </b>
+      
+    </span>
+    <span class="folder-date">2025-12-24</span>
+  </label>
 </div>
+                          </li>
+                          <li class="favorites-folder-list-item">
+                            <!-- prettier-ignore -->
+                            
+<!-- prettier-ignore -->
 
+<div class="vits-favorites-folder-item">
+  <label class="folder-label">
+    <input 
+      type="checkbox" 
+      name="folder3" 
+      value="3"
+      
+      
+    />
+    <span class="folder-icon"></span>
+    <span class="folder-content">
+      <b class="content-title">
+        <span class="title-name">말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요</span>
+        <span class="title-count">2개</span>
+      </b>
+      
+      <span class="content-desc">상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다</span>
+      
+    </span>
+    <span class="folder-date">2025-12-24</span>
+  </label>
+</div>
+                          </li>
+                        </ul>
 
-
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      
-
+                        <div class="vits-mypage-favorites-pagination">
+                          
 <!-- prettier-ignore -->
 
 
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">조회된 주문이 없습니다.</h2>
-      
-      <p class="vits-empty-state-desc">조회 조건을 다시 확인해 주세요.</p>
-      
-    </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-box" aria-hidden="true"></i>
 
-    </div>
-  </div>
+<nav
+  class="vits-pagination"
+  aria-label="페이지네이션"
+  data-pagination
+  data-pagination-type="default"
+  data-pagination-current="1"
+  data-pagination-total="12"
+>
   
-</section>
+  <!-- prettier-ignore -->
+  
+  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
 
-                    </div>
+  </span>
+  
+
+  <!-- prettier-ignore -->
+  
+  <ol class="vits-pagination-list">
+    
+    <li class="vits-pagination-item">
+      
+      <span class="vits-pagination-link is-active" data-pagination-page data-page="1" aria-current="page">
+        1
+      </span>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="2">2</a>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="3">3</a>
+      
+    </li>
+    
+  </ol>
+
+  
+  <!-- prettier-ignore -->
+  
+  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
+    <i class="ic ic-arrow-right" aria-hidden="true"></i>
+
+  </a>
+  
+</nav>
+
+                        </div>
+                      </div>
+                    </section>
                   </div>
                 </div>
 

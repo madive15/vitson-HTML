@@ -6,20 +6,20 @@
   
   <div class="vits-address-modify-form">
     <!-- 배송 방식 선택 -->
-    <div class="vits-address-type">
+    <div class="vits-address-type" role="radiogroup" aria-label="배송 방식 선택">
       
 
 <label class="radio-item">
   <input
     type="radio"
     name="shippingType"
-    id="shippingType"
+    id="shippingType-normal"
     value="normal-shipping"
     checked
     
     
-    
-    
+    aria-controls="shipping-panel-normal"
+    aria-expanded="true"
   />
   <span class="radio-icon" aria-hidden="true"></span>
   
@@ -33,13 +33,13 @@
   <input
     type="radio"
     name="shippingType"
-    id="shippingType"
+    id="shippingType-freight"
     value="freight-shipping"
     
     
     
-    
-    
+    aria-controls="shipping-panel-freight"
+    aria-expanded="false"
   />
   <span class="radio-icon" aria-hidden="true"></span>
   
@@ -48,8 +48,8 @@
 </label>
     </div>
   
-    <!-- 배송지 입력 -->
-    <div class="vits-address-fields">
+    <!-- 일반 배송지 입력 -->
+    <div class="vits-address-fields is-active" id="shipping-panel-normal" data-address-panel="normal-shipping" role="region" aria-hidden="false">
       <div class="vits-field">
         <label class="vits-field-label">
           배송지명 <span class="vits-required">*</span>
@@ -68,7 +68,8 @@
       id="address-name"
       placeholder="예: 집, 회사"
       
-
+      
+      
       required
       
       
@@ -105,7 +106,8 @@
       id="receiver-name"
       placeholder="이름을 입력해주세요"
       
-
+      
+      
       required
       
       
@@ -142,7 +144,8 @@
       id="receiver-phone"
       placeholder="010-0000-0000"
       
-
+      
+      
       required
       
       
@@ -182,7 +185,8 @@
       id="receiver-phone"
       placeholder="우편번호"
       
-
+      
+      
       required
       
       readonly
@@ -235,7 +239,8 @@
       id="receiver-address"
       placeholder="기본 주소"
       
-
+      
+      
       required
       
       readonly
@@ -266,7 +271,8 @@
       id="receiver-address"
       placeholder="상세 주소를 입력해주세요"
       
-
+      
+      
       required
       
       
@@ -286,6 +292,235 @@
         </div>
       </div>
     </div>
+    <!-- 화물 배송지 입력 -->
+    <div class="vits-address-fields panel-freight" id="shipping-panel-freight" data-address-panel="freight-shipping" role="region" aria-hidden="true">
+
+      <!-- 화물 배송 정보 입력 -->
+      <div class="vits-address-freight">
+
+        <p class="vits-address-freight-notice">
+          <span class="required">*</span>
+          화물 배송은 영업소 정보가 필요합니다.
+        </p>
+
+        <div class="vits-address-freight-fields">
+          <!-- 화물업체 -->
+          <div class="vits-address-freight-row">
+            <label class="vits-address-freight-label">
+              화물업체
+            </label>
+
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="freight-company" class="sr-only"></label>
+
+    <input
+      type="text"
+      name="freightCompany"
+      id="freight-company"
+      placeholder="화물 영업소 조회 시 자동입력"
+      
+      
+      
+      
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="freight-company-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </div>
+
+          <!-- 영업소명 + 조회 -->
+          <div class="vits-address-freight-row">
+            <label class="vits-address-freight-label">
+              영업소명
+            </label>
+
+            <div class="vits-address-freight-search">
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="freight-office" class="sr-only"></label>
+
+    <input
+      type="text"
+      name="freightOffice"
+      id="freight-office"
+      placeholder="화물 영업소 조회 시 자동입력"
+      
+      
+      
+      
+      
+      readonly
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="freight-office-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-scoped-info icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">영업소 조회</span>
+
+  
+</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vits-field">
+        <label class="vits-field-label">
+          배송지명 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="address-name" class="sr-only">배송지명</label>
+
+    <input
+      type="text"
+      name="addressName"
+      id="address-name"
+      placeholder="예: 집, 회사"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="address-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          받는 사람 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-name" class="sr-only">받는 사람</label>
+
+    <input
+      type="text"
+      name="receiverName"
+      id="receiver-name"
+      placeholder="이름을 입력해주세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+  
+      <div class="vits-field">
+        <label class="vits-field-label">
+          휴대전화 <span class="vits-required">*</span>
+        </label>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="receiver-phone" class="sr-only">휴대전화</label>
+
+    <input
+      type="text"
+      name="receiverPhone"
+      id="receiver-phone"
+      placeholder="010-0000-0000"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>  
+    </div>
   
     <!-- 기본 배송지 설정 -->
     <div class="vits-default-address">
@@ -298,8 +533,6 @@
       type="checkbox"
       name="defaultShipping"
       value="defaultShipping"
-      
-      
       
       
       

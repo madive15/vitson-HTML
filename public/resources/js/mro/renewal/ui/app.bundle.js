@@ -635,6 +635,9 @@ var swiper_bundle = __webpack_require__(111);
       spaceBetween: 27.5,
       speed: 400,
       breakpoints: {
+        0: {
+          slidesPerView: 4
+        },
         1024: {
           slidesPerView: 4
         },
@@ -647,6 +650,9 @@ var swiper_bundle = __webpack_require__(111);
       spaceBetween: 20,
       speed: 400,
       breakpoints: {
+        0: {
+          slidesPerView: 4
+        },
         1024: {
           slidesPerView: 5
         },
@@ -3574,6 +3580,9 @@ if (document.body?.dataset?.guide === 'true') {
       var shippingWrapSelector = '.vits-shipping';
       var shippingBtnSelector = '.vits-shipping-method-btn[data-method]';
       var shippingPanelSelector = '.vits-shipping-panel[data-panel]';
+      var addressWrapSelector = '.vits-address-modify-form';
+      var addressTypeSelector = '.vits-address-type input[type="radio"][name="shippingType"]';
+      var addressPanelSelector = '.vits-address-fields[data-address-panel]';
       function setDiscountState($item, isActive) {
         var $toggle = $item.find('.discount-toggle').first();
         var $info = $item.find('.discount-info').first();
@@ -3607,6 +3616,28 @@ if (document.body?.dataset?.guide === 'true') {
           $panel.toggleClass('is-active', isActive);
         });
       }
+      function setAddressTypeState($wrap, typeValue, radioId) {
+        if (!$wrap.length || !typeValue) return;
+        var $radios = $wrap.find(addressTypeSelector);
+        var $panels = $wrap.find(addressPanelSelector);
+        var value = String(typeValue);
+        var $targetPanel = $panels.filter('[data-address-panel="' + value + '"]').first();
+        if (!$targetPanel.length) return;
+        $radios.each(function () {
+          var $radio = $(this);
+          var isExpanded = $radio.val() === value;
+          $radio.attr('aria-expanded', isExpanded ? 'true' : 'false');
+        });
+        $panels.each(function () {
+          var $panel = $(this);
+          var isActive = $panel.attr('data-address-panel') === value;
+          $panel.toggleClass('is-active', isActive);
+          $panel.attr('aria-hidden', isActive ? 'false' : 'true');
+          if (isActive && radioId) {
+            $panel.attr('aria-labelledby', radioId);
+          }
+        });
+      }
       $(discountItemSelector).each(function () {
         var $item = $(this);
         var isActive = $item.find('.discount-info').first().hasClass('is-active');
@@ -3623,6 +3654,16 @@ if (document.body?.dataset?.guide === 'true') {
           setShippingState($wrap, activeMethod);
         }
       });
+      $(addressWrapSelector).each(function () {
+        var $wrap = $(this);
+        var $checked = $wrap.find(addressTypeSelector + ':checked').first();
+        var $fallback = $wrap.find(addressTypeSelector).first();
+        var $current = $checked.length ? $checked : $fallback;
+        var typeValue = $current.val();
+        if (typeValue) {
+          setAddressTypeState($wrap, typeValue, $current.attr('id'));
+        }
+      });
       $(document).off('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle').on('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle', function () {
         var $toggle = $(this);
         var $item = $toggle.closest(discountItemSelector);
@@ -3634,6 +3675,12 @@ if (document.body?.dataset?.guide === 'true') {
         var $wrap = $btn.closest(shippingWrapSelector);
         var method = $btn.attr('data-method');
         setShippingState($wrap, method);
+      });
+      $(document).off('change.cartOrderAddressType', addressTypeSelector).on('change.cartOrderAddressType', addressTypeSelector, function () {
+        var $radio = $(this);
+        var $wrap = $radio.closest(addressWrapSelector);
+        var typeValue = $radio.val();
+        setAddressTypeState($wrap, typeValue, $radio.attr('id'));
       });
 
       // 결제수단 탭 처리
@@ -3697,6 +3744,18 @@ if (document.body?.dataset?.guide === 'true') {
         var $methodWrap = $item.closest('.vits-payment-method');
         var $allItems = $methodWrap.find(paymentItemSelector);
         var $allPanels = $methodWrap.find(paymentPanelSelector);
+
+        // tab-simple-account가 활성화되어 있고, 다른 라디오 버튼이 선택되면 tab-simple-card로 변경
+        var $tabSimpleAccount = $('#tab-simple-account');
+        if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
+          // pay-simple이 아닌 다른 라디오 버튼이 선택된 경우
+          if (radioId !== 'pay-simple') {
+            var $tabSimpleCard = $('#tab-simple-card');
+            if ($tabSimpleCard.length) {
+              setPaymentTabState($tabSimpleCard);
+            }
+          }
+        }
 
         // 모든 패널 비활성화
         $allPanels.each(function () {
@@ -3770,6 +3829,15 @@ if (document.body?.dataset?.guide === 'true') {
       }
 
       // 초기 상태 설정
+      // tab-simple-card를 초기값으로 설정
+      var $tabSimpleCard = $('#tab-simple-card');
+      if ($tabSimpleCard.length) {
+        // tab-simple-card가 활성화되어 있지 않으면 활성화
+        if (!$tabSimpleCard.hasClass('is-active')) {
+          setPaymentTabState($tabSimpleCard);
+        }
+      }
+
       // 모든 탭의 aria-expanded 초기화
       $(paymentTabSelector).each(function () {
         var $tab = $(this);

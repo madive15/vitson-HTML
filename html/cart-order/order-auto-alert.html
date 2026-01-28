@@ -10,7 +10,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>조장 상품 추가</title>
+  <title>쿠폰 자동 적용</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -1075,9 +1075,9 @@
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('addProductOrderModal')"
+                  onclick="VitsKendoWindow.open('autoAlertModal')"
                 >
-                  <span class="text">조장 상품 추가</span>
+                  <span class="text">장바구니/주문서 > 쿠폰 자동 적용 팝업</span>
                 </button>
               </div>
 
@@ -1088,13 +1088,13 @@
 
 
 <div 
-  id="addProductOrderModal"
+  id="autoAlertModal"
   class="vits-modal-inner"
   data-ui="kendo-window"
   data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
   role="dialog"
   aria-modal="true"
-  aria-labelledby="addProductOrderModal-title"
+  aria-labelledby="autoAlertModal-title"
   
   
   style="display:none;"
@@ -1102,11 +1102,11 @@
   <!-- 헤더 -->
   <div class="vits-modal-header">
     <div class="vits-modal-header-content">
-      <h2 class="vits-modal-title" id="addProductOrderModal-title">상품 추가</h2>
+      <h2 class="vits-modal-title" id="autoAlertModal-title">쿠폰 자동 적용</h2>
 
 
     </div>
-    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('addProductOrderModal')" aria-label="닫기">
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('autoAlertModal')" aria-label="닫기">
       <i class="ic ic-x" aria-hidden="true"></i>
 
     </button>
@@ -1116,202 +1116,15 @@
   <div class="vits-modal-content">
   
     
-<section class="vits-add-product-order">
 
-  <!-- 상품 추가 헤더 -->
-  <h2 class="sr-only">상품 추가</h2>
-
-  <!-- 상품 정보 -->
-  <div class="vits-product-summary">
-    <div class="vits-product-thumb">
-      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="">
-    </div>
-
-    <div class="vits-product-info">
-      <div class="vits-product-meta">
-        <span class="vits-product-brand">한국전선</span>
-        <span class="vits-product-code">WIRE-002</span>
-      </div>
-
-      <p class="vits-product-name">
-        VCT 600V 3C 2.5sq 전선
-      </p>
-
-      <p class="vits-product-desc">
-        흑색 / 35SQ · 3C(고압) 절단조장(24년 04월)
-      </p>
-    </div>
-  </div>
-
-  <!-- 입력 영역 -->
-  <div class="vits-order-input-row">
-    <div class="order-cell">
-      <p class="guide-text">원하는 길이를 입력해 주세요.</p>
-      <div class="order-cell">
-        <div class="unit-control">
-          <button type="button" class="unit-control-input" aria-label="길이">
-            <input type="text" id="" class="unit-input" value="12">
-            <span class="unit-text">M</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="order-cell">
-      <p class="guide-text">수량을 입력해 주세요.</p>
-      <div class="order-cell">
-        
-
-
-
-  <div class="quantity-control type-horiz">
-    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
-      <i class="ic ic-minus" aria-hidden="true"></i>
-
-    </button>
-
-    <input
-      type="text"
-      inputmode="numeric"
-      pattern="[0-9]*"
-      class="quantity-input"
-      name="quantity"
-      value="999"
-      data-min="1"
-      data-max="999"
-      data-step="1"
-      aria-label="개수"
-      
-      
-    />
-    <span class="quantity-input-measure" aria-hidden="true"></span>
-
+<section class="vits-auto-alert">
+  <h2 class="sr-only">자동 알림 팝업</h2>
     
-      <span class="unit">BOX</span>
-    
-
-    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
-      <i class="ic ic-plus" aria-hidden="true"></i>
-
-    </button>
+  <div class="vits-auto-alert-content">
+    .장바구니 진입시 쿠폰 최대 혜택이 자동 적용됩니다. 
+    .자동 적용 이후에도 쿠폰을 직접 변경할 수 있습니다. 
+    .자동 적용을 원하지 않을 경우 ‘취소’를 클릭해 주세요.
   </div>
-
-
-      </div>
-    </div>
-    <div class="order-cell">
-      
-
-
-<button
-  type="button"
-  class="vits-btn-md vits-btn-tertiary icon-left vits-add-btn"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-plus" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">추가</span>
-
-  
-</button>
-
-    </div>
-  </div>
-  <!-- case : type-vertical -->
-  <div class="vits-order-input-row">
-    <div class="order-cell">
-      <p class="guide-text">수량을 입력해 주세요.</p>
-      
-
-
-
-  <div class="quantity-control type-vertical">
-    <input
-      type="text"
-      inputmode="numeric"
-      pattern="[0-9]*"
-      class="quantity-input"
-      name="quantity"
-      value="999"
-      data-min="1"
-      data-max="999"
-      data-step="1"
-      aria-label="단위"
-      
-      
-    />
-    <span class="quantity-input-measure" aria-hidden="true"></span>
-    
-      <span class="unit">BOX</span>
-    
-    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
-      <i class="ic ic-arrow-up" aria-hidden="true"></i>
-
-    </button>
-    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </button>
-  </div>
-
-
-    </div>
-    <div class="order-cell">
-      
-
-
-<button
-  type="button"
-  class="vits-btn-md vits-btn-tertiary icon-left vits-add-btn"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-plus" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">추가</span>
-
-  
-</button>
-
-    </div>
-  </div>
-
-  <!-- 추가된 항목 리스트 -->
-  <ul class="vits-order-list">
-    <li class="vits-order-item">
-      <span class="vits-order-spec">3 m x 15개</span>
-      <span class="vits-order-price">224,112원</span>
-      <button type="button" class="vits-order-remove" aria-label="삭제">
-        <i class="ic ic-x" aria-hidden="true"></i>
-
-      </button>
-    </li>
-
-    <li class="vits-order-item">
-      <span class="vits-order-spec">12 m x 1개</span>
-      <span class="vits-order-price">224,112원</span>
-      <button type="button" class="vits-order-remove" aria-label="삭제">
-        <i class="ic ic-x" aria-hidden="true"></i>
-
-      </button>
-    </li>
-
-    <li class="vits-order-item">
-      <span class="vits-order-spec">15 m x 2개</span>
-      <span class="vits-order-price">224,112원</span>
-      <button type="button" class="vits-order-remove" aria-label="삭제">
-        <i class="ic ic-x" aria-hidden="true"></i>
-
-      </button>
-    </li>
-  </ul>
-  
 </section>
 
   
@@ -1323,12 +1136,12 @@
 
     <div class="vits-modal-buttons is-double">
 
-      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('addProductOrderModal')">
+      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('autoAlertModal')">
         <span class="text">취소</span>
       </button>
 
-      <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('addProductOrderModal')">
-        <span class="text">장바구니 담기</span>
+      <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('autoAlertModal')">
+        <span class="text">쿠폰 자동 적용</span>
       </button>
 
     </div>

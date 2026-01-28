@@ -39113,7 +39113,7 @@
                 </nav>
 
                 <div class="vits-product-code">
-                  <span class="text">상품코드: 1234567890</span>
+                  <span class="text">상품코드 1234567890</span>
                   <span class="icon"><i class="ic ic-copy" aria-hidden="true"></i>
 </span>
                 </div>
@@ -39356,7 +39356,7 @@
 </button>
 
     </a>
-    <a href="javascript:void(0)" class="btn-inquiry" aria-label="문의 링크">
+    <a href="javascript:void(0)" class="btn-inquiry" aria-label="대량구매 문의">
       <!-- prettier-ignore -->
       
 
@@ -39372,7 +39372,7 @@
     </span>
   
 
-  <span class="text">문의 링크</span>
+  <span class="text">대량구매 문의</span>
 
   
 </button>
@@ -39430,14 +39430,12 @@
                             </div>
                           </li>
                           <li>
-                            <label for="like" class="vits-btn like-btn icon">
-                              <!-- 임시 -->
-                              <input type="checkbox" name="like" id="like" aria-label="좋아요버튼" />
-                              <span class="icon"
-                                ><i class="ic ic-heart" aria-hidden="true"></i>
-</span
-                              >
-                            </label>
+                            <button type="button" class="vits-btn like-btn active" aria-label="좋아요버튼" >
+                              <span class="icon">
+                                <i class="ic ic-heart" aria-hidden="true"></i>
+
+                              </span>
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -39460,7 +39458,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="discount-coupon">
+                            <div class="discount-coupon" onclick="alert('할인쿠폰받기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_CO_03010101_P.html');">
                               <!-- [D] 쿠폰받기 비활성화시 disabled 추가 -->
                               <!-- prettier-ignore -->
                               
@@ -39470,17 +39468,7 @@
   type="button"
   class="vits-btn-lg vits-btn-outline-primary icon-left"
   
-  
-  data-layer-btn
-    
-  aria-controls="get-coupon-modal"
-    
-  data-layer-target="get-coupon-modal"
-    
-  data-aria-label-base="쿠폰받기 모달"
-    
-  aria-expanded="false"
-    >
+  >
   
     <span class="icon">
       <i class="ic ic-line-download" aria-hidden="true"></i>
@@ -39502,19 +39490,19 @@
                         <ul class="info-inner">
                           
                           <li>
-                            <span class="label">과세구분:</span><span class="value">과세</span>
+                            <span class="label">과세구분</span><span class="value">과세</span>
                           </li>
                           
                           <li>
-                            <span class="label">출고단위:</span><span class="value">개</span>
+                            <span class="label">출고단위</span><span class="value">개</span>
                           </li>
                           
                           <li>
-                            <span class="label">모델명:</span><span class="value">DL30040 36W 화이트 주백 KS DL30040 모델명이 2줄일 경우 예시</span>
+                            <span class="label">모델명</span><span class="value">DL30040 36W 화이트 주백 KS DL30040 모델명이 2줄일 경우 예시</span>
                           </li>
                           
                           <li>
-                            <span class="label">중량(kg):</span><span class="value">1kg</span>
+                            <span class="label">중량(kg)</span><span class="value">1kg</span>
                           </li>
                           
                         </ul>
@@ -39656,13 +39644,7 @@
                         <!-- case:01 옵션 버튼 (옵션 우측 슬라이드 팝업) -->
                         <div class="vits-btn-option">
                           <!-- prettier-ignore -->
-                          <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" 
-                            data-layer-btn
-                            aria-controls="vits-options-modal"
-                            data-layer-target="vits-options-modal"
-                            aria-expanded="false"
-                            data-aria-label-base="다른규격 선택 모달"
-                            >
+                          <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" onclick="alert('다른 규격 찾기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_PR_01020101_P.html');">
                             <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span>
                             <span class="icon">
                               <i class="ic ic-arrow-right" aria-hidden="true"></i>
@@ -40643,8 +40625,7 @@
                 
 <div id="vits-deal-detail" class="vits-deal-detail">
   <div class="tab-wrap">
-    <!-- [D] s: 가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
-    <!-- [D] case :비회원 상태일 때 비노출 (tab-show-price 영역삭제 , class: is-guest css로도 적용) -->
+    <!-- [D] s: (회원상태)가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
     <div class="tab-show-price">
       <ul class="info-inner">
         <li>
@@ -40700,9 +40681,91 @@
 </button>
 
             </div>
-            <!-- [D]조장상품 일때  -->
-            <!-- < %- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'secondary',
-            text: '주문 수량 입력하기' }) % > -->
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- [D] 01.27 수정추가 case : (회원 상태) 조장상품 -->
+    <div class="tab-show-price">
+      <ul class="info-inner">
+        <li>
+          <div class="product-name">
+            팬던트 LED 팬던트 LED 팬던트 LED 제품명이 2줄일 경우 시안처럼 노출됩니다 제품명이 2줄일 경우 시안처럼
+            노출됩니다
+          </div>
+        </li>
+        <li>
+          <div class="product-price">
+            <!-- [D]조장상품 일때 미노출-->
+            <!-- <div class="original"><p><span>32,000</span><span class="won">원</span></p></div> -->
+            <div class="calculated-price">
+              <!-- [D]조장상품 일때 미노출-->
+              <!-- <p class="rate"><span>48</span><span class="per">%</span></p> -->
+              <p class="price"><span>39,400</span><span class="won">원</span></p>
+            </div>
+          </div>
+          <div class="product-order-buttons">
+            <!-- [D]조장상품 일때 버튼 노출 -->
+            <div class="btn-promo">
+              
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-secondary "
+  
+  >
+  
+
+  <span class="text">주문 수량 입력하기</span>
+
+  
+</button>
+
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- [D] 01.27 수정추가 case : (비회원 상태) 가격정보 미노출 , 로그인 버튼 노출 -->
+    <div class="tab-show-price">
+      <ul class="info-inner">
+        <li>
+          <div class="product-name">
+            팬던트 LED 팬던트 LED 팬던트 LED 제품명이 2줄일 경우 시안처럼 노출됩니다 제품명이 2줄일 경우 시안처럼
+            노출됩니다
+          </div>
+        </li>
+        <li>
+          <div class="product-price">
+            <div class="price-guest-mode">
+              <p class="text-title">회원 전용 혜택가</p>
+              <p class="text-desc">(1개만 사도 무료배송)</p>
+            </div>
+          </div>
+          <div class="product-order-buttons">
+            <div class="btn-guest-login">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-lg-p vits-btn-outline-tertiary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-lock-close" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">로그인하고 가격 확인</span>
+
+  
+</button>
+
+            </div>
           </div>
         </li>
       </ul>
@@ -42371,1200 +42434,6 @@
 </div>
 
 
-                <!-- s: Modal -->
-                
-<!-- 쿠폰받기 modal -->
-<!-- prettier-ignore -->
-<div class="vits-modal-product-modal get-coupon-modal" 
-  id="get-coupon-modal"
-  data-layer-box="get-coupon-modal"
-  data-layer-type="modal"
-  data-layer-lock="true"
-  data-layer-outside="true"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="coupon-title"
->
-  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
-  <div class="vits-modal-product-panel">
-    <div class="vits-modal-product-head">
-      <h2 id="coupon-title">쿠폰 다운로드 및 적용<span class="description">해당 상품에 제공되는 전체 쿠폰 목록입니다.</span></h2>
-      <div class="vits-modal-product-close">
-        <button type="button" class="icon" data-layer-close>
-          <i class="ic ic-x"></i>
-        </button>
-      </div>
-    </div>
-    <div class="vits-modal-product-body">
-      <div class="vits-modal-product-content">
-        <div class="coupon-list-box vits-scrollbar">
-          <ul>
-            
-            <li>
-              <div class="coupon-item">
-                <div class="coupon-item-left">
-                  <span class="coupon-item-badge">
-                    <strong class="coupon-item-badge-value">15%</strong>
-                  </span>
-                </div>
-
-                <div class="coupon-item-body">
-                  <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인</strong>
-                  <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</p>
-                  <p class="coupon-item-desc">적용상품: LED 전구, 인테리어 전구, 니트램프</p>
-                </div>
-
-                <div class="coupon-item-right">
-                  <!-- prettier-ignore -->
-                  
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-outline-primary icon-left"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-line-download" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">쿠폰받기</span>
-
-  
-</button>
-
-                </div>
-              </div>
-            </li>
-            
-            <li>
-              <div class="coupon-item">
-                <div class="coupon-item-left">
-                  <span class="coupon-item-badge">
-                    <strong class="coupon-item-badge-value">15%</strong>
-                  </span>
-                </div>
-
-                <div class="coupon-item-body">
-                  <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인</strong>
-                  <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</p>
-                  <p class="coupon-item-desc">적용상품: LED 전구, 인테리어 전구, 니트램프</p>
-                </div>
-
-                <div class="coupon-item-right">
-                  <!-- prettier-ignore -->
-                  
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-outline-primary icon-left"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-line-download" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">쿠폰받기</span>
-
-  
-</button>
-
-                </div>
-              </div>
-            </li>
-            
-            <li>
-              <div class="coupon-item">
-                <div class="coupon-item-left">
-                  <span class="coupon-item-badge">
-                    <strong class="coupon-item-badge-value">15%</strong>
-                  </span>
-                </div>
-
-                <div class="coupon-item-body">
-                  <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인</strong>
-                  <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</p>
-                  <p class="coupon-item-desc">적용상품: LED 전구, 인테리어 전구, 니트램프</p>
-                </div>
-
-                <div class="coupon-item-right">
-                  <!-- prettier-ignore -->
-                  
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-outline-primary icon-left"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-line-download" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">쿠폰받기</span>
-
-  
-</button>
-
-                </div>
-              </div>
-            </li>
-            
-            <!-- disabled  -->
-            <li>
-              <div class="coupon-item disabled">
-                <div class="coupon-item-left">
-                  <span class="coupon-item-badge">
-                    <strong class="coupon-item-badge-value">15%</strong>
-                  </span>
-                </div>
-
-                <div class="coupon-item-body">
-                  <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인크리스마스 특별 쿠폰 15% 할인</strong>
-                  <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26사용기간: 2024.12.20 ~ 2024.12.26</p>
-                  <p class="coupon-item-desc">
-                    적용상품: LED 전구, 인테리어 전구, 니트램프적용상품: LED 전구, 인테리어 전구, 니트램프
-                  </p>
-                </div>
-
-                <div class="coupon-item-right">
-                  <!-- prettier-ignore -->
-                  
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-outline-primary icon-left"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-line-download" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">쿠폰받기</span>
-
-  
-</button>
-
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="vits-modal-product-buttons">
-        <!-- prettier-ignore -->
-        
-
-
-<button
-  type="button"
-  class="vits-btn-xxl vits-btn-secondary  btn-cancel"
-  
-  >
-  
-
-  <span class="text">취소</span>
-
-  
-</button>
-
-        
-
-
-<button
-  type="button"
-  class="vits-btn-xxl vits-btn-primary  btn-all-receive"
-  
-  >
-  
-
-  <span class="text">전체 받기</span>
-
-  
-</button>
-
-      </div>
-    </div>
-  </div>
-</div>
- 
-                
-<!-- 옵션선택 modal -->
-<!-- prettier-ignore -->
-<div class="vits-modal-product-modal vits-options-modal" 
-  data-toggle-scope
-  
-  id="vits-options-modal"
-  data-layer-box="vits-options-modal"
-  data-layer-type="slide-right"
-  data-layer-lock="true"
-  data-layer-outside="true"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="options-title"
->
-  <div class="vits-modal-product-dim" aria-hidden="true" data-layer-close></div>
-
-  <div class="vits-modal-product-panel">
-    <div class="vits-modal-product-head">
-      <h2 id="options-title">다른규격 선택</h2>
-      <!-- prettier-ignore -->
-      
-
-
-<button
-  type="button"
-  class="vits-btn-xs vits-btn-outline-secondary icon-left"
-  
-  
-  data-toggle-btn
-    
-  aria-expanded="false"
-    
-  data-toggle-group-except="true"
-    
-  data-toggle-target="filter-box"
-    >
-  
-    <span class="icon">
-      <i class="ic ic-filter" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">필터</span>
-
-  
-</button>
-
-      <div class="vits-modal-product-close">
-        <button type="button" class="icon" aria-label="닫기" data-layer-close>
-          <i class="ic ic-x"></i>
-        </button>
-      </div>
-    </div>
-    <div class="vits-modal-product-body vits-scrollbar">
-      <!-- s: 필터 영역 -->
-      <div class="vits-modal-product-content filter-box" data-toggle-box="filter-box">
-        <div class="vits-scrollbar">
-          <div class="filter-box-list">
-            <!-- 반복문 시작 -->
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-            <div class="filter-box-item">
-              <div class="filter-item-title">
-                <span class="title-text">규격(SQ)</span>
-                <button type="button" class="vits-filter-more" aria-expanded="false">
-                  <span class="text">더보기</span>
-                  <span class="icon"><i class="ic ic-arrow-down-fill"></i></span>
-                </button>
-              </div>
-              <div class="filter-item-content">
-                <div class="filter-chip-group" aria-label="금지 규칙">
-                  
-                  
-                  <button
-                    type="button"
-                    class="filter-chip is-active"
-                    
-                    aria-pressed="true"
-                  >
-                    사진촬영금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    disabled
-                    aria-pressed="false"
-                  >
-                    화장실 남녀공용
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    포엑스사인/통제구역관계자외출입금지
-                  </button>
-                  
-                  <button
-                    type="button"
-                    class="filter-chip"
-                    
-                    aria-pressed="false"
-                  >
-                    당기세요(FULL)
-                  </button>
-                  
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>  
-        <div class="filter-box-buttons">
-          
-
-
-<button
-  type="reset"
-  class="vits-btn-md vits-btn-outline-secondary "
-  
-  >
-  
-
-  <span class="text">초기화</span>
-
-  
-</button>
-
-          
-
-
-<button
-  type="button"
-  class="vits-btn-md vits-btn-primary "
-  
-  >
-  
-
-  <span class="text">필터적용</span>
-
-  
-</button>
-
-        </div>     
-      </div>
-      <!-- e: 필터 영역 -->
-
-      <!-- s: 옵션 목록 -->
-      <div class="vits-modal-product-content">
-        <div class="vits-scrollbar">
-          <ul class="product-option-list">
-            <!-- 일시품절은 is-sold-out 클래스 추가 -->
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item is-sold-out">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-            <li>
-              <button type="button" class="product-option-item">
-                <span class="product-option-thumb">
-                  <img
-                    src="https://vitsonimg.co.kr/images/products/53823%20(2).jpg"
-                    alt="서경 더블 OPP 접착테이프 투명"
-                  />
-                </span>
-
-                <div class="product-option-info">
-                  <span class="product-option-title">
-                    서경
-                    <span class="product-option-code">63531</span>
-                  </span>
-
-                  <span class="product-option-name"> 더블 OPP 접착테이프 투명 (초강력 접착제) </span>
-
-                  <span class="product-option-spec"> 2.6mm (약~5kg) </span>
-
-                  <div class="product-option-tags">
-                    
-<!-- prettier-ignore -->
-
-
-
-<div class="vits-product-flags">
-  
-  <span class="vits-product-flag is-today">
-    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
- </span>
-    오늘출발
-  </span>
-   
-  <span class="vits-product-flag is-tomorrow">내일출발</span>
-   
-  <span class="vits-product-flag is-hot">특가</span>
-   
-</div>
-
-
-                    <!-- prettier-ignore -->
-
-
-
-<div class="vits-product-promo">
-  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-</div>
-
-
-                  </div>
-                </div>
-
-                <span class="product-option-price">
-                  <span class="product-option-original">320,000원</span>
-                  <span class="product-option-discount">
-                    <span class="discount">30%</span>
-                    <span class="amount">224,900원</span>
-                  </span>
-                </span>
-              </button>
-            </li>
-            
-          </ul>
-        </div>
-      </div>
-      <!-- e: 옵션 목록 -->
-    </div>
-  </div>
-</div>
-
-                <!-- e: Modal -->
               </div>
               <!-- e: PC_PR_01010101 -->
             </div>

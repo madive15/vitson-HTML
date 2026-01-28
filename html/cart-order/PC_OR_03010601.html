@@ -1104,7 +1104,7 @@
 <section class="vits-empty-state" data-ui="empty-state">
   <div class="vits-empty-state-content">
     <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">주문이 완료/실패 되었습니다.</h2>
+      <h2 class="vits-empty-state-title">주문이 완료 되었습니다.</h2>
       
     </div>
     <div class="vits-empty-state-icon" aria-hidden="true">
@@ -1620,11 +1620,23 @@
       const urlParams = new URLSearchParams(window.location.search);
       const type = urlParams.get('type');
 
-      // type 파라미터가 'fail'일 때 주문 실패 화면 표시
+      // type 파라미터가 'slip'일 때 주문 실패 화면 표시
       if (type === 'slip') {
         const section = document.querySelector('.vits-order-complete');
         if (section) {
           section.classList.add('order-slip');
+        }
+        
+        // order-page-title > h1 텍스트 변경
+        const orderTitle = document.querySelector('.order-page-title > h1');
+        if (orderTitle) {
+          orderTitle.textContent = '주문실패';
+        }
+        
+        // vits-empty-state-title 텍스트 변경
+        const emptyStateTitle = document.querySelector('.vits-empty-state-title');
+        if (emptyStateTitle) {
+          emptyStateTitle.textContent = '주문이 실패 되었습니다.';
         }
       }
     </script>

@@ -1272,8 +1272,6 @@
       
       
       
-      
-      
     />
     
     
@@ -1530,8 +1528,6 @@
       
       
       
-      
-      
     />
     
     
@@ -1785,8 +1781,6 @@
       type="checkbox"
       name="vits-cart-checkbox"
       value="vits-cart-checkbox"
-      
-      
       
       
       
@@ -2561,7 +2555,8 @@
       id="receiver-name"
       placeholder="받는 사람"
       
-
+      
+      
       required
       
       
@@ -2595,7 +2590,8 @@
       id="receiver-phone"
       placeholder="받는 사람 연락처"
       
-
+      
+      
       required
       
       
@@ -2649,7 +2645,8 @@
       id="receiver-address"
       placeholder="배송지 주소"
       
-
+      
+      
       required
       
       
@@ -2685,7 +2682,8 @@
       id="receiver-address-detail"
       placeholder="상세 주소"
       value="(54366) 서울특별시 강남구 테헤란로 123"
-
+      
+      
       required
       
       
@@ -2721,7 +2719,8 @@
       id="receiver-address-detail"
       placeholder="상세 주소"
       value=""
-
+      
+      
       required
       
       
@@ -2756,7 +2755,8 @@
       id="receiver-address-detail"
       placeholder="상세 주소"
       value="(54366) 서울특별시 강남구 테헤란로 123"
-
+      
+      
       
       disabled
       
@@ -2782,8 +2782,8 @@
           <!-- prettier-ignore -->
           
 
-<div class="vits-textarea-box size-large " data-textarea-count="false">
-  <div class="vits-textarea">
+<div class="vits-textarea-box size-large ">
+  <div class="vits-textarea" data-textarea-count="false">
     <div class="textarea-box">
       <label for="receiver-memo" class="sr-only"></label>
       <textarea
@@ -2987,7 +2987,8 @@
       id="sender-name"
       placeholder="보내는 사람"
       value="메가존"
-
+      
+      
       required
       
       
@@ -3023,7 +3024,8 @@
       id="sender-phone"
       placeholder="보내는 사람 연락처"
       
-
+      
+      
       required
       
       
@@ -3099,8 +3101,6 @@
       type="checkbox"
       name="payment-agree"
       value="payment-agree"
-      
-      
       
       
       
@@ -3588,7 +3588,8 @@
       id="pay-bank-depositor"
       placeholder="입금자명을 입력하세요"
       
-
+      
+      
       
       
       
@@ -3982,5 +3983,77 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      
+      (function() {
+        // 전체선택 체크박스 선택자
+        const selectAllCheckbox = document.querySelector('input[type="checkbox"][value="전체선택"]');
+        const cartItems = document.querySelectorAll('.vits-cart-item');
+        
+        if (!selectAllCheckbox) return;
+        
+        // 전체선택 체크박스 변경 이벤트
+        selectAllCheckbox.addEventListener('change', function() {
+          const isChecked = this.checked;
+          
+          // is-sold-out이 없는 모든 vits-cart-item의 체크박스 선택/해제
+          cartItems.forEach(function(item) {
+            // is-sold-out이 있으면 제외
+            if (item.classList.contains('is-sold-out')) {
+              return;
+            }
+            
+            const itemCheckbox = item.querySelector('input[type="checkbox"][name="vits-cart-checkbox"]');
+            if (itemCheckbox) {
+              itemCheckbox.checked = isChecked;
+            }
+          });
+        });
+        
+        // 개별 체크박스 변경 이벤트
+        cartItems.forEach(function(item) {
+          // is-sold-out이 있으면 이벤트 리스너 추가하지 않음
+          if (item.classList.contains('is-sold-out')) {
+            return;
+          }
+          
+          const itemCheckbox = item.querySelector('input[type="checkbox"][name="vits-cart-checkbox"]');
+          if (itemCheckbox) {
+            itemCheckbox.addEventListener('change', function() {
+              updateSelectAllState();
+            });
+          }
+        });
+        
+        // 전체선택 상태 업데이트 함수
+        function updateSelectAllState() {
+          let allChecked = true;
+          let hasValidItems = false;
+          
+          cartItems.forEach(function(item) {
+            // is-sold-out이 있으면 제외
+            if (item.classList.contains('is-sold-out')) {
+              return;
+            }
+            
+            hasValidItems = true;
+            const itemCheckbox = item.querySelector('input[type="checkbox"][name="vits-cart-checkbox"]');
+            if (itemCheckbox && !itemCheckbox.checked) {
+              allChecked = false;
+            }
+          });
+          
+          // 유효한 항목이 있고 모두 체크되어 있으면 전체선택도 체크
+          if (hasValidItems) {
+            selectAllCheckbox.checked = allChecked;
+          }
+        }
+        
+        // 초기 상태 설정
+        updateSelectAllState();
+      })();
+    </script>
   </body>
 </html>
