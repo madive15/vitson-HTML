@@ -63,6 +63,21 @@ $list-directions: (
       }
     }
 
+    &-frequent {
+      &-count {
+        @include mx.flex(inline-flex, row, center, center);
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+        height: fn.rem(28);
+        padding: 0 map.get(var.$unit, 8);
+        background: map.get(color.$layout-status, 'info-bg-sub');
+        border-radius: map.get(var.$radius, 'sm');
+      }
+
+      &-date {
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-soft'));
+      }
+    }
+
     &-code {
       @include mx.flex(inline-flex, row, center, center);
       @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
@@ -95,8 +110,14 @@ $list-directions: (
           }
         }
 
+        &[class*='-like'].active .ic {
+          color: map.get(color.$icon-colors, 'primary');
+          mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart-fill.svg');
+        }
+
         // 장바구니
         &[class*='-cart'] {
+          /* stylelint-disable-next-line no-descending-specificity */
           .ic {
             mask-image: url('/public/resources/img/mro/renewal/ic/ic-bag.svg');
           }
@@ -110,6 +131,7 @@ $list-directions: (
 
         // 비교함 담기
         &[class*='-compare'] {
+          /* stylelint-disable-next-line no-descending-specificity */
           .ic {
             mask-image: url('/public/resources/img/mro/renewal/ic/ic-compare.svg');
           }
@@ -222,9 +244,26 @@ $list-directions: (
   }
 }
 
+/* form list */
+@mixin form-dl-cst($dt, $mh, $pt, $gx, $gy, $typo, $color) {
+  @include mx.flex(flex, row, flex-start, flex-start, wrap);
+  gap: fn.rem($gy) fn.rem($gx);
+
+  > dt {
+    @include typo.typography($typo, $color: $color);
+    width: fn.rem($dt);
+    min-height: fn.rem($mh);
+    padding-top: fn.rem($pt);
+
+    & + dd {
+      width: calc(100% - fn.rem($dt) - fn.rem($gx));
+    }
+  }
+}
+
 /* 상품 목록 리스트 */
 /* 상품 카드 아이템 */
-.vits-product-card {
+[class*='vits-product-card'] {
   @include common-product-card-info;
 
   .product {
@@ -276,7 +315,13 @@ $list-directions: (
     }
 
     &-item {
+      position: relative;
       align-self: stretch;
+
+      .vits-checkbox-item {
+        @include mx.position(absolute, 4px, $left: 4px);
+        z-index: var.$zindex-base;
+      }
 
       &.type-wide {
         grid-column: 1 / -1;
@@ -284,7 +329,7 @@ $list-directions: (
     }
   }
 
-  .vits-product-card {
+  [class*='vits-product-card'] {
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 12);
 
@@ -353,6 +398,44 @@ $list-directions: (
       }
     }
   }
+
+  // 좋아요/자주구매 상품 리스트
+  &[data-context='like'],
+  &[data-context='frequent'] {
+    .vits-product {
+      &-list-items {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+  }
+
+  // 썸네일 - 자주구매 상품 리스트
+  &[data-context='frequent'] [class*='vits-product-card'] {
+    .product {
+      &-body {
+        grid-template-areas:
+          'frequent frequent'
+          'code actions'
+          'meta meta'
+          'summary summary'
+          'price price'
+          'extra extra';
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: map.get(var.$unit, 8) 0;
+        width: 100%;
+      }
+
+      &-aside {
+        display: contents;
+      }
+
+      &-frequent {
+        @include mx.flex(flex, row, space-between, center);
+        grid-area: frequent;
+        margin-bottom: map.get(var.$unit, 4);
+      }
+    }
+  }
 }
 
 // 리스트형
@@ -373,7 +456,7 @@ $list-directions: (
     }
   }
 
-  .vits-product-card {
+  [class*='vits-product-card'] {
     @include mx.flex(flex, row, flex-start, stretch);
     gap: map.get(var.$unit, 20);
 
@@ -382,6 +465,7 @@ $list-directions: (
         flex: 0 0 fn.rem(160);
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &-body {
         flex-grow: 1;
         min-width: 0;
@@ -515,6 +599,120 @@ $list-directions: (
           .product-price-alt.is-guest,
           .price-guest-text {
             align-items: center;
+          }
+        }
+      }
+    }
+  }
+
+  // 썸네일 - 자주구매 상품 리스트
+  &[data-context='frequent'] {
+    .vits-product {
+      &-list-items {
+        gap: map.get(var.$unit, 32);
+      }
+
+      &-item {
+        padding: 0;
+        border-bottom: 0;
+
+        &:first-of-type {
+          border-top: 0;
+        }
+      }
+    }
+
+    [class*='vits-product-card'] {
+      .product {
+        &-body {
+          grid-template:
+            'meta    frequent aside' auto
+            'summary frequent aside' auto
+            'code    frequent aside' auto
+            'extra   frequent aside' 1fr
+            / 39.48% 21.86% 27.32%;
+          column-gap: 41px;
+        }
+
+        &-thumb {
+          flex-basis: fn.rem(140);
+        }
+
+        &-aside {
+          @include mx.flex(flex, column, center, center);
+          grid-area: aside;
+          gap: map.get(var.$unit, 20);
+          align-self: center;
+        }
+
+        &-actions,
+        &-price {
+          align-self: center;
+
+          &::before {
+            display: none;
+          }
+        }
+
+        &-actions {
+          justify-content: flex-end;
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          .ic {
+            width: map.get(var.$unit, 24) !important;
+            height: map.get(var.$unit, 24) !important;
+          }
+
+          .text {
+            @include mx.sr-only;
+          }
+        }
+
+        &-price {
+          align-items: flex-end;
+
+          .vits-price-box {
+            @include mx.flex(flex, column, flex-end, flex-end);
+          }
+        }
+
+        &-meta {
+          grid-area: meta;
+        }
+
+        &-summary {
+          grid-area: summary;
+        }
+
+        &-code {
+          grid-area: code;
+        }
+
+        &-frequent {
+          @include mx.flex(flex, column-reverse, center, center);
+          position: relative;
+          grid-area: frequent;
+          gap: map.get(var.$unit, 8);
+
+          &-count {
+            width: 100%;
+            font-size: fn.rem(14);
+          }
+
+          &::before,
+          &::after {
+            @include mx.position(absolute, 0, $bottom: 0);
+            width: 1px;
+            content: '';
+            background: map.get(color.$layout-surf, 'secondary');
+          }
+
+          &::before {
+            left: calc(41px / 2 * -1);
+          }
+
+          &::after {
+            right: calc(41px / 2 * -1);
           }
         }
       }

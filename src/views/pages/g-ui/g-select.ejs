@@ -1,0 +1,196 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 셀렉트박스'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">셀렉트박스</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/form/select.ejs`, {
+  id: 'return-sort',
+  name: 'sort',
+  placeholder: '수량 선택',
+  options: [
+    { value: '0', text: '0' },
+    { value: '1', text: '1' },
+    { value: '2', text: '2' },
+  ],
+  value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '0',
+  disabled: false,
+  portal: true,   // 옵션 목록을 body에 렌더링 (부모 overflow:hidden 영향 안 받음)
+  className: 'type-dark vits-select-dropup size-s' // 다크 테마, 옵션 목록 상단 노출 (footer, 패밀리사이트), //사이즈: size-s | size-l
+}) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start ">
+            <li>
+              <div class="guide-text">disabled</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                  id: 'page-size',
+                  name: 'pageSize',
+                  placeholder: '10개씩 보기',
+                  options: [
+                    { value: '10', text: '10개씩 보기' },
+                    { value: '60', text: '60개씩 보기' },
+                    { value: '90', text: '90개씩 보기' },
+                  ],
+                  value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '30',
+                  disabled: true
+                }) %>
+            </li>
+            <li>
+              <div class="guide-text">type-ghost</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                  id: 'page-size',
+                  name: 'pageSize',
+                  placeholder: '10개씩 보기',
+                  options: [
+                    { value: '10', text: '10개씩 보기' },
+                    { value: '60', text: '60개씩 보기' },
+                    { value: '90', text: '90개씩 보기' },
+                  ],
+                  value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '30',
+                  disabled: false,
+                  className: 'type-ghost'
+                }) %>
+            </li>
+            <li>
+              <div class="guide-text">type-ghost color-secondary</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                  id: 'page-size',
+                  name: 'pageSize',
+                  placeholder: '10개씩 보기',
+                  options: [
+                    { value: '10', text: '10개씩 보기' },
+                    { value: '60', text: '60개씩 보기' },
+                    { value: '90', text: '90개씩 보기' },
+                  ],
+                  value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '30',
+                  disabled: false,
+                  className: 'type-ghost color-secondary'
+                }) %>
+            </li>
+            <li>
+              <div class="guide-text">기본 사이즈 (32)</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'return-sort',
+                name: 'sort',
+                placeholder: '기본 32',
+                options: [
+                  { value: '0', text: '0' },
+                  { value: '1', text: '1' },
+                  { value: '2', text: '2' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '0',
+                disabled: false,
+              }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'return-sort',
+                name: 'sort',
+                placeholder: '기본 - portal',
+                options: [
+                  { value: '0', text: '0' },
+                  { value: '1', text: '1' },
+                  { value: '2', text: '2' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '0',
+                disabled: false,
+                portal: true,
+              }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'plp-sort',
+                name: 'sort',
+                placeholder: 'FAMILY SITE',
+                options: [
+                  { value: '일신 비츠온', text: '일신 비츠온', url: 'https://www.vitson.co.kr/site/new_main/' },
+                  { value: 'ISVM주문통합시스템', text: 'ISVM주문통합시스템', url: 'https://isvm.co.kr/' },
+                  { value: 'SCM주문통합시스템', text: 'SCM주문통합시스템', url: 'https://isvm.co.kr/scm' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : 'FAMILY SITE',
+                disabled: false,
+                className: 'type-dark vits-select-dropup'
+              }) %>
+            </li>
+          </ul>
+          <ul class="vits-guide-list flex-start ">
+            <li>
+              <div class="guide-text">사이즈 S (28)</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'size-s',
+                name: 'size',
+                placeholder: '사이즈 S',
+                options: [
+                  { value: 's-1', text: '옵션 1' },
+                  { value: 's-2', text: '옵션 2' },
+                ],
+                value: (typeof size !== 'undefined' && size !== null) ? String(size) : 's-1',
+                disabled: false,
+                className: 'size-s'
+              }) %>
+            </li>
+            <li>
+              <div class="guide-text">사이즈 L (44)</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'size-l',
+                name: 'size',
+                placeholder: '사이즈 L',
+                options: [
+                  { value: 'l-1', text: '옵션 1' },
+                  { value: 'l-2', text: '옵션 2' },
+                ],
+                value: (typeof size !== 'undefined' && size !== null) ? String(size) : 'l-1',
+                disabled: false,
+                className: 'size-l'
+              }) %>
+            </li>
+            <li>
+              <div class="guide-text">사이즈 L (44) - disabled</div>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'size-l',
+                name: 'size',
+                placeholder: '사이즈 L',
+                options: [
+                  { value: 'l-1', text: '옵션 1' },
+                  { value: 'l-2', text: '옵션 2' },
+                ],
+                value: (typeof size !== 'undefined' && size !== null) ? String(size) : 'l-1',
+                disabled: true,
+                className: 'size-l'
+              }) %>
+            </li>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

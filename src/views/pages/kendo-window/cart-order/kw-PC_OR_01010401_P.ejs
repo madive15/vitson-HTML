@@ -1,62 +1,120 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<section class="vits-add-product-order">
 
-<section class="vits-coupon-">
-  <!-- 쿠폰 변경 헤더 -->
+  <!-- 상품 추가 헤더 -->
   <h2 class="sr-only">상품 추가</h2>
-  <div class="vits-product-order">
-    <!-- 상품 정보 -->
-    <div class="vits-product-summary">
-      <div class="vits-product-thumb">
-      </div>
-  
-      <div class="vits-product-info">
-        <div class="vits-product-meta">
-          <span class="vits-product-brand">한국전선</span>
-          <span class="vits-product-code">WIRE-002</span>
-        </div>
-  
-        <p class="vits-product-name">
-          VCT 600V 3C 2.5sq 전선
-        </p>
-  
-        <p class="vits-product-desc">
-          흑색 / 35SQ · 3C(고압) 절단조장(24년 04월)
-        </p>
-      </div>
+
+  <!-- 상품 정보 -->
+  <div class="vits-product-summary">
+    <div class="vits-product-thumb">
+      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="">
     </div>
-  
-    <!-- 입력 영역 -->
-    <div class="vits-order-input">
-      <p class="vits-order-guide">
-        원하는 길이를 입력해 주세요. 수량을 입력해 주세요.
+
+    <div class="vits-product-info">
+      <div class="vits-product-meta">
+        <span class="vits-product-brand">한국전선</span>
+        <span class="vits-product-code">WIRE-002</span>
+      </div>
+
+      <p class="vits-product-name">
+        VCT 600V 3C 2.5sq 전선
       </p>
-  
-      <div class="vits-order-controls">
-        
+
+      <p class="vits-product-desc">
+        흑색 / 35SQ · 3C(고압) 절단조장(24년 04월)
+      </p>
+    </div>
+  </div>
+
+  <!-- 입력 영역 -->
+  <div class="vits-order-input-row">
+    <div class="order-cell">
+      <p class="guide-text">원하는 길이를 입력해 주세요.</p>
+      <div class="order-cell">
+        <div class="unit-control">
+          <button type="button" class="unit-control-input" aria-label="길이">
+            <input type="text" id="" class="unit-input" value="12">
+            <span class="unit-text">M</span>
+          </button>
+        </div>
       </div>
     </div>
-  
-    <!-- 추가된 항목 리스트 -->
-    <ul class="vits-order-list">
-      <li class="vits-order-item">
-        <span class="vits-order-spec">3 m x 15개</span>
-        <span class="vits-order-price">224,112원</span>
-        <button type="button" class="vits-order-remove" aria-label="삭제"></button>
-      </li>
-  
-      <li class="vits-order-item">
-        <span class="vits-order-spec">12 m x 1개</span>
-        <span class="vits-order-price">224,112원</span>
-        <button type="button" class="vits-order-remove" aria-label="삭제"></button>
-      </li>
-  
-      <li class="vits-order-item">
-        <span class="vits-order-spec">15 m x 2개</span>
-        <span class="vits-order-price">224,112원</span>
-        <button type="button" class="vits-order-remove" aria-label="삭제"></button>
-      </li>
-    </ul>
+    <div class="order-cell">
+      <p class="guide-text">수량을 입력해 주세요.</p>
+      <div class="order-cell">
+        <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+          type: 'horiz',
+          name: 'quantity',
+          value: 999,
+          min: 1,
+          max: 999,
+          step: 1,
+          unit: 'BOX'
+        }) %>
+      </div>
+    </div>
+    <div class="order-cell">
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size: 'md',
+        variant: 'tertiary',
+        iconLeft: true,
+        iconName: 'ic-plus',
+        text: '추가',
+        className: 'vits-add-btn',
+      }) %>
+    </div>
   </div>
-  
+  <!-- case : type-vertical -->
+  <div class="vits-order-input-row">
+    <div class="order-cell">
+      <p class="guide-text">수량을 입력해 주세요.</p>
+      <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+        type: 'vertical',
+        name: 'quantity',
+        value: 999,
+        min: 1,
+        max: 999,
+        step: 1,
+        unit: 'BOX'
+      }) %>
+    </div>
+    <div class="order-cell">
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size: 'md',
+        variant: 'tertiary',
+        iconLeft: true,
+        iconName: 'ic-plus',
+        text: '추가',
+        className: 'vits-add-btn',
+      }) %>
+    </div>
+  </div>
+
+  <!-- 추가된 항목 리스트 -->
+  <ul class="vits-order-list">
+    <li class="vits-order-item">
+      <span class="vits-order-spec">3 m x 15개</span>
+      <span class="vits-order-price">224,112원</span>
+      <button type="button" class="vits-order-remove" aria-label="삭제">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </li>
+
+    <li class="vits-order-item">
+      <span class="vits-order-spec">12 m x 1개</span>
+      <span class="vits-order-price">224,112원</span>
+      <button type="button" class="vits-order-remove" aria-label="삭제">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </li>
+
+    <li class="vits-order-item">
+      <span class="vits-order-spec">15 m x 2개</span>
+      <span class="vits-order-price">224,112원</span>
+      <button type="button" class="vits-order-remove" aria-label="삭제">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
+    </li>
+  </ul>
   
 </section>

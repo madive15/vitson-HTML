@@ -1,0 +1,49 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '할인쿠폰 받기'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('getCouponModal')"
+                >
+                  <span class="text">할인쿠폰 받기</span>                            
+                </button>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = { 
+                id: 'getCouponModal', 
+                size: '572', 
+                title: '쿠폰 다운로드 및 적용', 
+                subtitle: '해당 상품에 제공되는 전체 쿠폰 목록입니다.',
+                opt: { draggable: true }, 
+                contentPath: `${_src}/views/pages/kendo-window/product/kw-PC_CO_03010101_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' }, 
+                  { text: '전체받기', variant: 'primary', action: 'close' }
+                ]
+                }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

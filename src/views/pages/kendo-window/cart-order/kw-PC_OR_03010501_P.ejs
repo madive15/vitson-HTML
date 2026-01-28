@@ -1,9 +1,79 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
-<section class="vits-coupon-">
-  <!-- 쿠폰 변경 헤더 -->
+<section class="vits-coupon-change">
   <h2 class="sr-only">쿠폰 변경</h2>
-
-  배송목록 참고
   
+  <div class="vits-coupon-change-header">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, { size: 'lg', variant: 'outline-primary', text: '쿠폰 초기화', iconName: 'ic-plus' }) %>
+  </div>
+  <div class="vits-coupon-change-body">
+    <ul class="coupon-change-list">
+      <!-- prettier-ignore -->
+      <%
+        const couponItems = [
+          { disabled: false, discountPrice: '-2,175원', maxBenefitPrice: '12,325원' },
+          { disabled: true, discountPrice: '-0원', maxBenefitPrice: '14,500원' }
+        ];
+      %>
+      <% for (let i = 0; i < couponItems.length; i++) { %>
+      <% const item = couponItems[i]; %>
+      <li class="coupon-change-item">
+        <div class="coupon-change-card">
+          <!-- 상품 정보 -->
+          <div class="vits-product-summary">
+            <div class="vits-product-thumb">
+              <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="">
+            </div>
+            <div class="vits-product-info">
+              <div class="vits-product-meta">
+                <span class="vits-product-code">WIRE-002</span>
+              </div>
+              <p class="vits-product-name">더블 OPP 접착테이프 투명 (초강력 접착제)</p>
+              <p class="vits-product-desc">3,235개</p>
+            </div>
+          </div>
+          <!-- 쿠폰 선택 -->
+          <div class="vits-coupon-select">
+            <div class="coupon-label">쿠폰 선택</div>
+            <div class="coupon-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'coupon-select-' + i,
+                name: 'couponSelect',
+                placeholder: '쿠폰 선택',
+                className: 'size-l',
+                options: [
+                  { value: '메리 크리스마스 특별 쿠폰 전상품 15% 할인', text: '메리 크리스마스 특별 쿠폰 전상품 15% 할인' },
+                  { value: '새해 특별 쿠폰 전상품 만원 할인', text: '새해 특별 쿠폰 전상품 만원 할인' },
+                  { value: '연말 특별 쿠폰 전상품 50% 할인', text: '연말 특별 쿠폰 전상품 50% 할인' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '메리 크리스마스 특별 쿠폰 전상품 15% 할인',
+                disabled: item.disabled
+              }) %>
+            </div>
+          </div>
+          <!-- 쿠폰 가격 -->
+          <div class="vits-coupon-price">
+            <ul>
+              <li>
+                <span class="price-label">상품금액</span>
+                <span class="price-value">14,500원</span>
+              </li>
+              <li>
+                <span class="price-label">쿠폰할인금액</span>
+                <span class="price-value is-discount"><%= item.discountPrice %></span>
+              </li>
+              <li>
+                <span class="price-label">최대혜택가</span>
+                <span class="price-value is-max-benefit"><%= item.maxBenefitPrice %></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+
 </section>

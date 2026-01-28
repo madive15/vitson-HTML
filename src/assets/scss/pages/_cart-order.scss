@@ -120,10 +120,12 @@
     background: map.get(color.$layout-surf, 'base'); // ??
     border-radius: map.get(var.$radius, 'md');
 
-    &.is-sold-out * {
-      pointer-events: none;
-      filter: grayscale(0.5);
-      opacity: 0.9;
+    &.is-sold-out {
+      *:not(.vits-cart-item-top, .vits-cart-item-top *) {
+        pointer-events: none;
+        filter: grayscale(0.5);
+        opacity: 0.9;
+      }
     }
 
     /* 상단 util (비교 / 삭제) */
@@ -157,6 +159,10 @@
         .text{
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
           line-height: normal;
+
+          @include mx.common-mouse-event {
+            font-weight: 600;
+          }
         }
 
         .icon{
@@ -739,8 +745,6 @@
 .vits-side-payment{
   position: sticky;
   top: 0;
-  flex-shrink: 0;
-  width: 522px;
   min-width: 400px;
   max-width: 522px;
 }
@@ -783,7 +787,7 @@
       }
 
       strong{
-        @include typo.typography('h4sb', $color: map.get(color.$text-colors, 'primary'));
+        @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
       }
 
       &.is-discount {
@@ -806,7 +810,7 @@
       }
 
       strong{
-        @include typo.typography('b2sb', $color: map.get(color.$text-colors, 'primary'));
+        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
       }
     }
   }
@@ -816,11 +820,11 @@
     padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
   
     span{
-      @include typo.typography('b2sb', $color: map.get(color.$text-colors, 'secondary'));
+      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
     }
   
     strong{
-      @include typo.typography('b2sb', $color: map.get(color.$text-status, 'brand'));
+      @include typo.typography('h4b', $color: map.get(color.$text-status, 'brand'));
     }
   }
 
@@ -1225,6 +1229,10 @@
         .radio-item{
           flex: 1;
           text-align: center;
+
+          .radio-icon{
+            margin-top:1px ;
+          }
   
           .label-name{
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
@@ -1240,12 +1248,20 @@
 
       /* 배송지 입력 */
       &-fields{
-        @include mx.flex($direction: column);
-        gap: map.get(var.$unit, 12);
+        display: none;
+
+        &.is-active{
+          display: block;
+        }
 
         .vits-field{
           @include mx.flex($align: center);
           gap: map.get(var.$unit, 12);
+          margin-top: map.get(var.$unit, 12);
+
+          &:first-child{
+            margin-top: 0;
+          }
 
           &-label{
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
@@ -1289,10 +1305,52 @@
                 }
               }
             }
-
           }
         }
 
+        // 화물 배송지 입력 필드
+        &.panel-freight{
+          .vits-address-freight{
+            @include cart-order-surf-box;
+            margin-bottom: map.get(var.$unit, 32);
+            
+            &-notice{
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+              padding-bottom: fn.rem(10);
+
+              .required{
+                color: map.get(color.$text-status, 'brand-sub');
+              }
+            }
+
+            &-fields{
+              @include mx.flex($align: center , $direction: column);
+              gap: fn.rem(10);
+            }
+
+            &-row{
+              @include mx.flex($align: center);
+              gap: map.get(var.$unit, 8);
+              width: 100%;
+            }
+
+            &-label{
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+              min-width: fn.rem(60);
+              white-space: nowrap;
+            }
+
+            &-search{
+              @include mx.flex($align: center);
+              gap: map.get(var.$unit, 8);
+
+              // 영업소 조회 간격조정
+              .vits-btn-scoped-info{
+                padding: 0 fn.rem(20);
+              }
+            }
+          }
+        }
       }
     }
 
@@ -1444,6 +1502,272 @@
       @include mx.flex($align: center, $justify: center);
       @include typo.typography('h2b', $color: map.get(color.$text-status, 'info'));
       padding: 0 4px;
+    }
+  }
+}
+
+/* ===modal kendo window -상품 추가 (조장상품)=== */
+/* 상품 요약 */
+.vits-add-product-order{
+
+  /* 입력 영역 */
+  .vits-order-input-row {
+    @include mx.flex($align: flex-end, $justify: space-between);
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 32) 0;
+    border-radius: map.get(var.$radius, 'md');
+  
+    // 수량 입력 영역 : .order-cell이 2개이고 3개는 없을 때
+    &:has(.order-cell:nth-of-type(2)):not(:has(.order-cell:nth-of-type(3))) {
+      justify-content: flex-start;
+    }
+  
+    .guide-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      padding-bottom: map.get(var.$unit, 8);
+    }
+  
+    .order-cell {
+      @include mx.flex($direction: column, $align: flex-start, $justify: flex-end);
+  
+      .unit-control {
+        &-btn{
+          @include mx.flex($align: center);
+          min-height: fn.rem(38);
+          padding: 0 fn.rem(13);
+          border: 1px solid map.get(color.$layout-border, 'quaternary');
+          border-radius: map.get(var.$radius, 'sm');
+  
+          @include mx.common-mouse-event {
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border-color: map.get(color.$layout-border, 'tertiary');
+          }
+        }
+  
+        &-input{
+          position: relative;
+          min-height: fn.rem(36);
+          padding: 0 fn.rem(8);
+          background: map.get(color.$layout-surf, 'base');
+          border: 1px solid map.get(color.$layout-border, 'quaternary');
+          border-radius: map.get(var.$radius, 'sm'); 
+          
+          .unit-input {
+            min-height: fn.rem(36);
+            padding-right: fn.rem(4);
+            font-size: fn.rem(12);
+            text-align: right;
+            background-color: transparent;
+            border: 0;
+          }
+          
+          .unit-text {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+  
+          @include mx.common-mouse-event {
+            background-color: map.get(color.$layout-surf, 'sunken');
+            border-color: map.get(color.$layout-border, 'tertiary');
+          }
+        }
+      }
+  
+      .quantity-control {
+        .unit {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          line-height: normal;
+        }
+      }
+  
+      .vits-add-btn{
+        min-width: fn.rem(130);
+      }
+    }
+  }
+  
+  /* 추가된 항목 리스트 */
+  .vits-order-list {
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    max-height: fn.rem(201);
+    padding: fn.rem(10) map.get(var.$unit, 40);
+    overflow: auto;
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+  
+    .vits-order-item {
+      @include mx.flex($align: center);
+      @include mx.border(top, 1px, solid, map.get(color.$layout-border, 'quinary'));
+      gap: map.get(var.$unit, 8);
+      padding: fn.rem(10) 0;
+  
+      &:first-child {
+        @include mx.border(top, 0, none, transparent);
+      }
+  
+      .vits-order-spec {
+        @include mx.ellipsis-single;
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        flex: 1 1 auto;
+      }
+  
+      .vits-order-price {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand-sub'));
+        white-space: nowrap;
+      }
+  
+      .vits-order-remove {
+        flex: 0 0 fn.rem(20);
+        height: fn.rem(20);
+        cursor: pointer;
+        background: transparent;
+        border: none;
+  
+        .ic{
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+// 쿠폰 변경 팝업 & 조장 상품 공통 스타일
+.vits-product-summary {
+  @include mx.flex($align: flex-start);
+  @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+  gap: map.get(var.$unit, 12);
+  padding: map.get(var.$unit, 12);
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+
+  .vits-product-thumb {
+    flex: 0 0 fn.rem(60);
+    height: fn.rem(60);
+    background-color: map.get(color.$gray-shades, '10');
+    border-radius: map.get(var.$radius, 'md');
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .vits-product-meta {
+    @include mx.flex($align: center);
+    gap: fn.rem(4);
+    
+    .vits-product-brand {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+    
+    .vits-product-code {
+      @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'tertiary'));
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+      padding: fn.rem(1) fn.rem(4);
+    }
+  }
+  
+  .vits-product-name {
+    @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+    margin-top: fn.rem(8);
+  }
+  
+  .vits-product-desc {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    margin-top: fn.rem(2);
+  }
+}
+
+/* ===modal kendo window -쿠폰 변경 (상품별 쿠폰 변경)=== */
+.vits-coupon-change{
+  .vits-coupon-change-header{
+    [class*='vits-btn'] {
+      width: 100%;
+    }
+  }
+
+  .vits-coupon-change-body{
+    max-height: fn.rem(632);
+    padding-top: map.get(var.$unit, 16);
+    overflow: auto;
+
+    .coupon-change-list{
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 16);
+
+      .coupon-change-item{
+        @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+        border-radius: map.get(var.$radius, 'md');
+      }
+
+      .coupon-change-card{
+        .vits-product-summary{ 
+          padding: map.get(var.$unit, 16);
+          background-color: transparent;
+          border:0;
+          border-radius: 0;
+        }
+
+        .vits-coupon-select{
+          padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 16);
+
+          .coupon-label{
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            padding-bottom: map.get(var.$unit, 4);
+          }
+
+          .coupon-field{
+            .vits-select,
+            .vits-select-list{
+              width: 100%;
+            }
+
+            .vits-select-trigger{
+              width: 100%;  
+              padding: 0 map.get(var.$unit, 20);
+            }
+
+            .vits-select-disabled{
+              .vits-select-trigger{
+                background: map.get(color.$layout-surf, 'sunken');
+              }
+            }
+          }
+        }
+
+        .vits-coupon-price{
+          padding: map.get(var.$unit, 16) map.get(var.$unit, 24);
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: map.get(var.$radius, 'md');
+
+          ul{
+            @include mx.flex($justify: space-between);
+            gap: fn.rem(33);
+
+            li{
+              @include mx.flex($align: center);
+              gap: fn.rem(20);
+
+              .price-label{
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+              }
+
+              .price-value{
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+                &.is-discount{
+                  @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand'));
+                }
+
+                &.is-max-benefit{
+                  @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

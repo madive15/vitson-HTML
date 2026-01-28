@@ -1,0 +1,38 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _showFolder = typeof showFolder !== 'undefined' ? showFolder : false;
+  const _showLike = typeof showLike !== 'undefined' ? showLike : false;
+%>
+
+<div class="vits-mypage-favorites-toolbar">
+  <div class="toolbar-select">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: 'ckbox-total',
+      value: '선택',
+      checkboxType: 'all',
+      text:'전체 선택',
+      size: 'xl'
+    }) %>
+  </div>
+  <div class="toolbar-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg', variant: 'outline-primary', text: '삭제'}) %>
+    
+    <% if (_showFolder) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg', variant: 'outline-tertiary', text: '폴더 추가하기',
+      iconLeft: true, iconName: 'ic-plus'}) %>
+    <% } %>
+    
+    <% if (_showLike) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg', variant: 'outline-tertiary', text: '좋아요 담기',
+      iconLeft: true, iconName: 'ic-plus'}) %>
+    <% } %>
+  </div>
+</div>

@@ -3,6 +3,7 @@
 // - 폼 요소(input, select, textarea 등) 공통 UI 스타일 정의.
 // -----------------------------------------------------------------------------
 
+@use 'sass:list';
 @use 'sass:map';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
@@ -328,6 +329,97 @@
 }
 
 /* --- */
+
+/* 단일 체크박스 */
+$checkbox-item: (
+  's': (
+    icon: 16,
+    font: 'b4r',
+    icon-mt: 0,
+    label-mt: 0.4
+  ),
+  'm': (
+    icon: 16,
+    font: 'b3r',
+    icon-mt: 1,
+    label-mt: 0
+  ),
+  'l': (
+    icon: 16,
+    font: 'b2s',
+    icon-mt: 2.5,
+    label-mt: 0
+  ),
+  'xl': (
+    icon: 20,
+    font: 'b2s',
+    icon-mt: 0.5,
+    label-mt: 0
+  ),
+  'xxl': (
+    icon: 32,
+    font: 'b2s',
+    icon-mt: 0,
+    label-mt: 5.5
+  )
+);
+
+.vits-checkbox-item {
+  @include mx.flex(flex, row, flex-start, flex-start);
+  position: relative;
+  gap: map.get(var.$unit, 8);
+
+  > input {
+    @include mx.sr-only;
+  }
+
+  .icon {
+    position: relative;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'sm');
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+    transition: box-shadow 0.2s;
+
+    @include input-focus;
+  }
+
+  &:has(input:checked) {
+    .icon {
+      @include mx.background('ic/ic-check-on.svg');
+      box-shadow: inset 0 0 0 1px map.get(color.$brand-colors, 'primary');
+    }
+  }
+
+  // 사이즈별 스타일
+  @each $key, $values in $checkbox-item {
+    $icon-size: map.get($values, icon);
+    $font-type: map.get($values, font);
+    $icon-mt: map.get($values, icon-mt);
+    $label-mt: map.get($values, label-mt);
+
+    &.size-#{$key} {
+      .icon {
+        width: fn.rem($icon-size);
+        height: fn.rem($icon-size);
+
+        // label 있을 때만 icon margin-top 적용
+        @if $icon-mt != 0 {
+          &:has(.label) .icon {
+            margin-top: fn.rem($icon-mt);
+          }
+        }
+      }
+
+      .label {
+        @include typo.typography($font-type, $color: map.get(color.$text-colors, 'primary'));
+
+        @if $label-mt != 0 {
+          margin-top: fn.rem($label-mt);
+        }
+      }
+    }
+  }
+}
 
 /* input text */
 $input-size: (

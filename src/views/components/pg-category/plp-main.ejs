@@ -27,7 +27,7 @@
   <div class="vits-product-section">
     <div class="vits-list-controls">
       <div class="list-count">
-        <span class="total">총 <b>30</b>개</span> <span class="id">계정</span>
+        <span class="total">총 <b>30</b>개</span> <span class="id">상품</span>
       </div>
       <div class="list-size">
         <!-- prettier-ignore -->
@@ -36,10 +36,11 @@
           name: 'viewCount',
           placeholder: '개수 선택',
           options: [
-            { value: '60', text: '60개 보기' },
-            { value: '120', text: '120개 보기' },
+            { value: '20', text: '20개씩 보기' },
+            { value: '40', text: '40개씩 보기' },
+            { value: '60', text: '60개씩 보기' },
           ],
-          value: (typeof viewCount !== 'undefined' && viewCount !== null) ? String(viewCount) : '60',
+          value: (typeof viewCount !== 'undefined' && viewCount !== null) ? String(viewCount) : '20',
           disabled: false,
           className: 'type-ghost'
         }) %>
@@ -74,7 +75,7 @@
       1. 리스트 사용처 구분 (상위 컨테이너 .vits-product-list)
       data-context="plp"       : 상품목록(PLP)
       data-context="main"      : 메인 상품 리스트
-      data-context="wish"      : 좋아요 리스트
+      data-context="like"      : 좋아요 리스트
       data-context="frequent"  : 자주구매 리스트
       data-context="compare"   : 비교함 리스트
 
@@ -86,7 +87,7 @@
         - 링크 적용: 썸네일, 상품명+규격(product-summary)
         - 링크 제외: 가격 영역, 좋아요/장바구니/비교 버튼 등 액션 영역
     -->
-    <div class="vits-product-list view-thumb" data-plp-view-list data-context="plp">
+    <div class="vits-product-list view-thumb" data-plp-view-list data-context="like">
       <ul class="vits-product-list-items">
         <!-- S: 회원-판매중 -->
         <li class="vits-product-item">

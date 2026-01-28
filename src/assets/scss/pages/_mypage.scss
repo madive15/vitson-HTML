@@ -11,6 +11,8 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+@use '@/assets/scss/pages/category' as category;
 
 @mixin records-box-type-detail {
   @at-root .vits-mypage-records-box.type-detail & {
@@ -111,9 +113,37 @@
   }
 }
 
-.main-content-my-orders {
-  @include mx.flex(flex, column, flex-start, flex-start);
-  gap: map.get(var.$unit, 24);
+.vits-grid-main-content {
+  &[class*='main-content-my-'] {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 24);
+  }
+
+  .vits-mypage-content-notice {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 32);
+    background: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+
+    .notice-list {
+      @include mx.bullet-style(10, 7, 2, 2, map.get(color.$layout-surf, 'secondary'));
+
+      > li {
+        @include typo.typography('b4r');
+      }
+    }
+  }
+
+  &.main-content-my-favorites {
+    align-items: stretch;
+
+    .vits-mypage-panel {
+      flex-grow: 1;
+
+      .vits-mypage-records-box.type-empty {
+        min-height: 100%;
+      }
+    }
+  }
 }
 
 .vits-mypage {
@@ -169,6 +199,7 @@
   &-panel {
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 32);
+    width: 100%;
 
     &-actions {
       @include mx.flex(flex, row, flex-end, center);
@@ -845,6 +876,174 @@
   }
 }
 
+/* 좋아요 */
+.vits-mypage-favorites {
+  position: relative;
+  width: 100%;
+
+  &-toolbar {
+    @include mx.flex(flex, row, space-between, center);
+    width: 100%;
+
+    .toolbar {
+      &-select {
+        padding: 0 map.get(var.$unit, 32);
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+      }
+    }
+  }
+
+  &-meta {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 12);
+
+    .meta {
+      &-count {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+
+        b {
+          padding: 0 map.get(var.$unit, 2) 0 map.get(var.$unit, 4);
+          font-weight: 700;
+        }
+      }
+
+      &-sort {
+        margin-left: auto;
+      }
+
+      &-view {
+        .view-button {
+          @include category.view-button-style;
+        }
+      }
+    }
+
+    // 좋아요
+    &.type-like {
+      padding: 0 map.get(var.$unit, 32);
+    }
+  }
+
+  &-pagination {
+    @include mx.flex(flex, row, center, center);
+  }
+
+  &.type-product-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 24);
+
+    .favorites-product-list {
+      &-box {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 40);
+        padding: map.get(var.$unit, 32);
+        background: map.get(color.$layout-surf, 'base');
+        border-radius: map.get(var.$radius, 'lg');
+      }
+    }
+  }
+
+  &.type-folder-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 20);
+
+    .favorites-folder-list {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+
+      &-box {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 40);
+      }
+    }
+  }
+}
+
+// 좋아요 폴더 리스트
+.vits-favorites-folder-item {
+  .folder {
+    &-label {
+      @include mx.flex(flex, row, flex-start, center);
+      position: relative;
+      gap: map.get(var.$unit, 20);
+      height: fn.rem(92);
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+      cursor: pointer;
+      user-select: none;
+      background: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'lg');
+      transition: box-shadow 0.25s;
+
+      > input {
+        @include mx.sr-only;
+      }
+    }
+
+    &-icon {
+      @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+      flex-shrink: 0;
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+      background: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'sm');
+    }
+
+    &-content {
+      @include mx.flex(flex, column);
+      flex: 1 1 auto;
+      gap: map.get(var.$unit, 4);
+      min-width: 0;
+
+      .content {
+        &-title {
+          @include mx.flex;
+          gap: map.get(var.$unit, 12);
+
+          .title-name {
+            @include typo.typography('b1s');
+            @include mx.ellipsis-single;
+            min-width: 0;
+          }
+
+          .title-count {
+            @include typo.typography('b1s', $color: map.get(color.$text-status, 'info-soft'));
+            flex-shrink: 0;
+          }
+        }
+
+        &-desc {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+          @include mx.ellipsis-single;
+          min-width: 0;
+        }
+      }
+    }
+
+    &-date {
+      @include typo.typography('b3s');
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+  }
+
+  &:has(input:checked) {
+    .folder-icon {
+      @include mx.background('ic/ic-check-on.svg', map.get(color.$layout-surf, 'brand'));
+      border-color: map.get(color.$layout-surf, 'brand');
+    }
+  }
+
+  @include mx.common-mouse-event {
+    .folder-label {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+    }
+  }
+}
+
 /* empty state - nodata */
 .vits-empty-state {
   @include mx.flex(flex, column, center, center);
@@ -1100,6 +1299,7 @@
     flex-grow: 1;
     width: 100%;
     min-height: fn.rem(190);
+    max-height: fn.rem(240);
 
     &:has(.vits-claim-request-chekbox) {
       @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
@@ -1172,12 +1372,12 @@
       &-item {
         position: relative;
 
-        [class*='checkbox-single-'] {
+        [class*='vits-checkbox-item'] {
           @include mx.position(absolute, map.get(var.$unit, 16), $left: map.get(var.$unit, 16));
           z-index: var.$zindex-base;
         }
 
-        &:has([class*='checkbox-single-'] input:checked) {
+        &:has([class*='vits-checkbox-item'] input:checked) {
           .vits-claim-request-box {
             border-color: map.get(color.$layout-border, 'brand');
           }
@@ -1392,5 +1592,12 @@
     &-price {
       @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
     }
+  }
+}
+
+// 좋아요 폴더 만들기
+.vits-like-folder {
+  .vits-form-dl {
+    @include list.form-dl-cst(140, 44, 11.5, 12, 24, 'b2s', map.get(color.$text-colors, 'primary'));
   }
 }

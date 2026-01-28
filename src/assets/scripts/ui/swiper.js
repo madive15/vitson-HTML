@@ -293,6 +293,7 @@ import Swiper from 'swiper/bundle';
       spaceBetween: 27.5,
       speed: 400,
       breakpoints: {
+        0: {slidesPerView: 4},
         1024: {slidesPerView: 4},
         1280: {slidesPerView: 5}
       }
@@ -301,6 +302,7 @@ import Swiper from 'swiper/bundle';
       spaceBetween: 20,
       speed: 400,
       breakpoints: {
+        0: {slidesPerView: 4},
         1024: {slidesPerView: 5},
         1280: {slidesPerView: 6}
       }

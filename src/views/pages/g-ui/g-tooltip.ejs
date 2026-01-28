@@ -1,0 +1,145 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - tooltip'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-icons-title">
+        <h2 class="vits-guide-title" id="guide-icons-title">Tooltip</h2>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+  [사용 가능한 파라미터]
+  
+  - triggerText: string (기본: '툴팁제목') - 트리거 버튼 텍스트
+  - heading: string (기본: '툴팁 타이틀') - 툴팁 헤딩 텍스트
+  - items: array (기본: ['툴팁 내용 입력']) - 툴팁 리스트 항목 (HTML 가능)
+  - position: 'left' | 'right' (기본: 'left') - 툴팁 정렬 방향
+  - anchor: boolean (기본: false) - 부모 요소를 기준점으로 사용할지 여부
+  - footerContent: string|null (기본: null) - 푸터 영역 HTML 콘텐츠
+  
+  [사용 예시]
+  
+  // 기본 사용
+  < %- include('tooltip.ejs', {
+    triggerText: '안내',
+    heading: '제목',
+    items: ['내용1', '내용2']
+  }) % >
+  
+  // 푸터에 버튼 추가
+  < % const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+    size: 'sm', 
+    variant: 'primary', 
+    text: '신청하기'
+  }); % >
+  
+  < %- include('tooltip.ejs', {
+    triggerText: '광고',
+    heading: '광고 안내',
+    items: ['내용'],
+    footerContent: buttonHtml
+  }) % >
+  
+  [anchor 사용 시]
+  
+  부모에 vits-tooltip-anchor 클래스가 있어야 함.
+  부모가 position: relative 기준점이 됨.
+  
+  < div class="vits-tooltip-anchor" >
+    < %- include('tooltip.ejs', {
+      triggerText: '안내',
+      heading: '제목',
+      items: ['내용'],
+      anchor: true
+    }) % >
+  < /div >
+  
+  ※ 주의: anchor 사용 시 부모 패딩이 있으면 
+     툴팁 위치가 패딩 영역 기준으로 잡힘.
+     반응형에서는 anchor 대신 기본 모드 권장.
+            </pre>
+          </code>
+        </div>
+
+        <h3 class="vits-guide-subtitle"></h3>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list">
+            <li>
+              <!-- prettier-ignore -->
+              <% const buttonHtml1 = include(`${_src}/views/components/button/button.ejs`, {
+                size: 'sm', 
+                variant: 'primary', 
+                text: '신청하기'
+              }); %>
+
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/tooltip.ejs`, {
+                  _src: _src,
+                  triggerText: '광고',
+                  heading: 'AD 상품 등록 안내',
+                  items: [
+                    '툴팁 문구 내용 입니다','툴팁 문구 내용 입니다'
+                  ],
+                  position: 'left',
+                  footerContent: buttonHtml1
+                }) %>
+            </li>
+            <li>
+              <div class="vits-inner">
+                <div class="vits-related-header vits-tooltip-anchor">
+                  <h2 class="vits-related-title">함께보면 <span class="point-color">좋아요</span></h2>
+                  <!-- prettier-ignore -->
+                  <% const buttonHtml2 = include(`${_src}/views/components/button/button.ejs`, {
+                    size: 'sm', 
+                    variant: 'primary', 
+                    text: '신청하기'
+                  }); %>
+                  <%- include(`${_src}/views/components/tooltip.ejs`, {
+                      _src: _src,
+                      triggerText: '광고',
+                      heading: 'AD 상품 등록 안내',
+                      items: ['anchor true 값을 줬을 때','툴팁 문구 내용 입니다'], 
+                      position: 'left', anchor: true, 
+                      footerContent: buttonHtml2 }) %>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="vits-inner">
+                <div class="vits-related-header vits-tooltip-anchor">
+                  <h2 class="vits-related-title">함께보면 <span class="point-color">좋아요</span></h2>
+                  <!-- prettier-ignore -->
+                  <% const buttonHtml3 = include(`${_src}/views/components/button/button.ejs`, {
+                    size: 'sm', 
+                    variant: 'primary', 
+                    text: '신청하기'
+                  }); %>
+                  <%- include(`${_src}/views/components/tooltip.ejs`, {
+                      _src: _src,
+                      triggerText: '광고',
+                      heading: 'AD 상품 등록 안내',
+                      items: ['anchor true 값을 주지 않았을 떄','툴팁 문구 내용 입니다'], 
+                      position: 'left',
+                      footerContent: buttonHtml3 }) %>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

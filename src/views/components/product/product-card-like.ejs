@@ -1,0 +1,171 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%# 
+  ====================================
+  상품 카드 컴포넌트 (회원 전용)
+  ====================================
+  
+  [사용 가능한 파라미터]
+  
+  # 상태 정보
+  - inStock: boolean (기본: true) - 재고 상태
+  
+  # 상품 정보
+  - code: string (기본: '00000') - 상품 코드
+  - brand: string (기본: '') - 브랜드명
+  - model: string (기본: '') - 모델명
+  - name: string (필수) - 상품명
+  - spec: string (기본: '') - 규격
+  
+  # 가격 정보
+  - originPrice: number (기본: 0) - 정상가
+  - salePrice: number (기본: 0) - 판매가
+  - discountRate: number (기본: 0) - 할인율 (0~1 사이 값, 예: 0.45 = 45%)
+  
+  # 이미지
+  - imageUrl: string (필수) - 상품 이미지 URL
+  
+  # 배지/플래그
+  - flags: object (기본: { today: false, tomorrow: false, hot: false })
+  - promoBadge: object|null (기본: null)
+  
+  # 링크
+  - productUrl: string (기본: '#!') - 상품 상세 페이지 URL
+  
+  [사용 예시]
+  
+  < %- include('product-card.ejs', { 
+    name: '상품명',
+    imageUrl: '/images/product.jpg',
+    salePrice: 10000
+  }) % >
+  
+  [출력되는 클래스]
+  - vits-product-card-like (기본 클래스)
+  - is-in-stock / is-sold-out (재고 상태)
+  
+  [기능]
+  - 좋아요, 장바구니 버튼 표시
+  
+  ====================================
+%>
+
+<!-- prettier-ignore -->
+<%
+  // 기본값 설정
+  const productData = {
+    inStock: typeof inStock !== 'undefined' ? inStock : true,
+    
+    // 상품 정보
+    code: code || '00000',
+    brand: brand || '',
+    model: model || '',
+    name: name || '',
+    spec: spec || '',
+    
+    // 가격 정보
+    originPrice: originPrice || 0,
+    salePrice: salePrice || 0,
+    discountRate: discountRate || 0,
+    
+    // 이미지
+    imageUrl: imageUrl || '',
+    
+    // 배지/플래그
+    flags: flags || { today: false, tomorrow: false, hot: false },
+    promoBadge: promoBadge || null,
+    
+    // 링크
+    productUrl: productUrl || '#!'
+  };
+  
+  // 할인율 표시 조건
+  const showDiscountRate = productData.discountRate > 0.4;
+  const showOriginPrice = productData.discountRate > 0;
+
+  // 상태별 클래스 생성
+  const stockClass = productData.inStock ? 'is-in-stock' : 'is-sold-out';
+%>
+
+<div class="vits-product-card-like <%= stockClass %>">
+  <div class="product-thumb">
+    <a href="<%= productData.productUrl %>">
+      <img src="<%= productData.imageUrl %>" alt="" />
+    </a>
+  </div>
+
+  <div class="product-body">
+    <div class="product-code"><span class="sr-only">상품코드</span><%= productData.code %></div>
+
+    <div class="product-actions">
+      <button type="button" class="product-action-like active" aria-label="좋아요">
+        <i class="ic"></i>
+        <span class="text">좋아요</span>
+      </button>
+
+      <button type="button" class="product-action-cart" aria-label="장바구니">
+        <i class="ic"></i>
+        <span class="text">장바구니</span>
+      </button>
+    </div>
+
+    <div class="product-meta">
+      <% if (productData.brand) { %>
+      <div class="product-brand"><span class="sr-only">브랜드</span><%= productData.brand %></div>
+      <% } %>
+      <!-- prettier-ignore -->
+      <% if (productData.model) { %>
+      <div class="product-model"><span class="sr-only">모델명</span><%= productData.model %></div>
+      <% } %>
+    </div>
+
+    <div class="product-summary">
+      <a href="<%= productData.productUrl %>">
+        <div class="product-name"><span class="sr-only">상품명</span><%= productData.name %></div>
+        <% if (productData.spec) { %>
+        <div class="product-spec"><span class="sr-only">규격</span><%= productData.spec %></div>
+        <% } %>
+      </a>
+    </div>
+
+    <div class="product-price">
+      <% if (productData.inStock) { %>
+      <!-- 가격 노출 -->
+      <div class="vits-price-box is-normal">
+        <% if (showOriginPrice) { %>
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span><%= productData.originPrice.toLocaleString() %>원
+        </div>
+        <% } %>
+
+        <div class="price-sale-row">
+          <% if (showDiscountRate) { %>
+          <div class="price-rate"><span class="sr-only">할인율</span><%= Math.floor(productData.discountRate) %>%</div>
+          <% } %>
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span><%= productData.salePrice.toLocaleString() %>원
+          </div>
+        </div>
+      </div>
+      <% } else { %>
+      <!-- 일시품절 -->
+      <div class="product-price-alt is-soldout">일시품절</div>
+      <% } %>
+    </div>
+
+    <!-- prettier-ignore -->
+    <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot || productData.promoBadge) { %>
+    <!-- 배지 영역 -->
+    <div class="product-extra">
+      <!-- prettier-ignore -->
+      <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot) { %>
+      <%- include(`${_src}/views/components/label/product-flags.ejs`, productData.flags) %>
+      <% } %>
+      <% if (productData.promoBadge) { %>
+      <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, productData.promoBadge) %>
+      <% } %>
+    </div>
+    <% } %>
+  </div>
+</div>

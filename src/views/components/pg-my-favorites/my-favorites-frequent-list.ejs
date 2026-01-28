@@ -1,0 +1,316 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  // PLP 메인 클래스 교체용 (기본: 'vits-main-plp')
+  var plpMainClass = (locals.plpMainClass || 'main-content-plp').trim();
+  
+  // 함께 본 상품 표시 여부 (기본: false)
+  var showAlsoViewedSection = locals.showAlsoViewedSection === true;
+
+  // swiperBaseCard를 locals에서 받아옴
+  var swiperBaseCard = locals.swiperBaseCard || [];
+%>
+
+<!-- prettier-ignore -->
+<%# 
+  [D] [상품 카드 상태/뷰 제어용 data & class 규칙]
+
+  1. 리스트 사용처 구분 (상위 컨테이너 .vits-product-list)
+  data-context="plp"       : 상품목록(PLP)
+  data-context="main"      : 메인 상품 리스트
+  data-context="like"      : 좋아요 리스트
+  data-context="frequent"  : 자주구매 리스트
+  data-context="compare"   : 비교함 리스트
+
+  2. 리스트 뷰 타입 (상위 컨테이너 .vits-product-list)
+  vits-product-list view-thumb : 썸네일(카드형) 목록
+  vits-product-list view-list  : 리스트형 목록
+
+  3. 상품 상세 링크 영역
+    - 링크 적용: 썸네일, 상품명+규격(product-summary)
+    - 링크 제외: 가격 영역, 좋아요/장바구니/비교 버튼 등 액션 영역
+%>
+<div class="vits-product-list view-thumb" data-plp-view-list data-context="frequent">
+  <ul class="vits-product-list-items">
+    <!-- S: 회원-판매중 -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63531',
+        brand: '농심',
+        model: 'CR-13',
+        name: '튀김우동 컵라면 6개입',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 -->
+
+    <!-- S: 회원-판매중 (상품명 길 때 - 말줄임) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63532',
+        brand: '농심',
+        model: 'CR-13',
+        name: '튀김우동 컵라면 6개입 상품명이 길어질 땐 말줄임으로 표시가 됩니다 상품명이 길어요 길어요',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (상품명 길 때 - 말줄임) -->
+
+    <!-- S: 회원-판매중 (할인율이 0.4% 이하일 때) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63533',
+        brand: '농심',
+        model: 'CR-13',
+        name: '할인율이 0.4 이하일 때 - 할인율 비노출',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 0.4,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (할인율이 0.4% 이하일 때) -->
+
+    <!-- S: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63534',
+        brand: '농심',
+        model: 'CR-13',
+        name: '할인율이 0과 같거나 작을 때, 정상가/할인율 비노출',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 0,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+
+    <!-- S: 회원-일시품절 -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: false,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63535',
+        brand: '농심',
+        model: 'CR-13',
+        name: '회원 판매중 일시품절 상품입니다. 상품명은 길게 길게 회원 판매중 일시품절 상품입니다.',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-03.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-일시품절 -->
+
+    <!-- S: 회원-판매중 -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63536',
+        brand: '농심',
+        model: 'CR-13',
+        name: '튀김우동 컵라면 6개입',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 -->
+
+    <!-- S: 회원-판매중 (상품명 길 때 - 말줄임) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63537',
+        brand: '농심',
+        model: 'CR-13',
+        name: '튀김우동 컵라면 6개입 상품명이 길어질 땐 말줄임으로 표시가 됩니다 상품명이 길어요 길어요',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (상품명 길 때 - 말줄임) -->
+
+    <!-- S: 회원-판매중 (할인율이 0.4% 이하일 때) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63538',
+        brand: '농심',
+        model: 'CR-13',
+        name: '할인율이 0.4 이하일 때 - 할인율 비노출',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 0.4,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (할인율이 0.4% 이하일 때) -->
+
+    <!-- S: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63539',
+        brand: '농심',
+        model: 'CR-13',
+        name: '할인율이 0과 같거나 작을 때, 정상가/할인율 비노출',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 0,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+
+    <!-- S: 회원-일시품절 -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: false,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63540',
+        brand: '농심',
+        model: 'CR-13',
+        name: '회원 판매중 일시품절 상품입니다. 상품명은 길게 길게 회원 판매중 일시품절 상품입니다.',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-03.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-일시품절 -->
+
+    <!-- S: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: true,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63541',
+        brand: '농심',
+        model: 'CR-13',
+        name: '할인율이 0과 같거나 작을 때, 정상가/할인율 비노출',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 0,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-01.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-판매중 (할인율이 0과 같거나 작을 때) -->
+
+    <!-- S: 회원-일시품절 -->
+    <li class="vits-product-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/product/product-card-frequent.ejs`, {
+        inStock: false,
+        frequentCount: 2,
+        frequentDate: '2025-12-23',
+        code: '63542',
+        brand: '농심',
+        model: 'CR-13',
+        name: '회원 판매중 일시품절 상품입니다. 상품명은 길게 길게 회원 판매중 일시품절 상품입니다.',
+        spec: '2.6mm(광~5kg)',
+        originPrice: 999999999,
+        salePrice: 999999999,
+        discountRate: 99,
+        imageUrl: `${_public}/resources/img/mro/renewal/temp/temp-product-thumb-03.png`,
+        productUrl: '#!',
+        flags: { today: true, tomorrow: true, hot: true },
+        promoBadge: { text: '무료배송', variant: 'free-ship' }
+      }) %>
+    </li>
+    <!-- E: 회원-일시품절 -->
+  </ul>
+
+  <div class="vits-product-pagination">
+    <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1, isPrevDisabled: true }) %>
+  </div>
+</div>

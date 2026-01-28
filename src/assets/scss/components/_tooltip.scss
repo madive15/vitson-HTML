@@ -14,9 +14,16 @@
 @use '@/assets/scss/layout/list' as list;
 
 /* 툴팁 스타일 */
-.vits-tooltip {
+.vits-tooltip-anchor {
   position: relative;
+}
+
+.vits-tooltip {
   display: inline-block;
+
+  &:not([data-anchor='true']) {
+    position: relative;
+  }
 
   &-trigger {
     @include button.btn-reset;
@@ -83,6 +90,17 @@
 
   &-item {
     @include typo.typography('b3r');
+  }
+
+  &-footer {
+    width: 100%;
+    padding-top: map.get(var.$unit, 4);
+
+    [class*='vits-btn'] {
+      &:only-of-type {
+        width: 100%;
+      }
+    }
   }
 
   &[data-tooltip='left'] {
