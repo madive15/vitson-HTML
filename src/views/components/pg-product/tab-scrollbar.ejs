@@ -1,8 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <div id="vits-deal-detail" class="vits-deal-detail">
   <div class="tab-wrap">
-    <!-- [D] s: 가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
-    <!-- [D] case :비회원 상태일 때 비노출 (tab-show-price 영역삭제 , class: is-guest css로도 적용) -->
+    <!-- [D] s: (회원상태)가격정보 - 초기값은 height 0 으로 비노출 / 스크롤 tpop:0일때 노출 is-open (tab-scrollbar.js 에서 관리)-->
     <div class="tab-show-price">
       <ul class="info-inner">
         <li>
@@ -32,9 +31,65 @@
               <%- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'primary',
               text: '장바구니' }) %>
             </div>
-            <!-- [D]조장상품 일때  -->
-            <!-- < %- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'secondary',
-            text: '주문 수량 입력하기' }) % > -->
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- [D] 01.27 수정추가 case : (회원 상태) 조장상품 -->
+    <div class="tab-show-price">
+      <ul class="info-inner">
+        <li>
+          <div class="product-name">
+            팬던트 LED 팬던트 LED 팬던트 LED 제품명이 2줄일 경우 시안처럼 노출됩니다 제품명이 2줄일 경우 시안처럼
+            노출됩니다
+          </div>
+        </li>
+        <li>
+          <div class="product-price">
+            <!-- [D]조장상품 일때 미노출-->
+            <!-- <div class="original"><p><span>32,000</span><span class="won">원</span></p></div> -->
+            <div class="calculated-price">
+              <!-- [D]조장상품 일때 미노출-->
+              <!-- <p class="rate"><span>48</span><span class="per">%</span></p> -->
+              <p class="price"><span>39,400</span><span class="won">원</span></p>
+            </div>
+          </div>
+          <div class="product-order-buttons">
+            <!-- [D]조장상품 일때 버튼 노출 -->
+            <div class="btn-promo">
+              <%- include(`${_src}/views/components/button/button.ejs`,{size:'lg', variant: 'secondary', text: '주문 수량 입력하기' }) %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- [D] 01.27 수정추가 case : (비회원 상태) 가격정보 미노출 , 로그인 버튼 노출 -->
+    <div class="tab-show-price">
+      <ul class="info-inner">
+        <li>
+          <div class="product-name">
+            팬던트 LED 팬던트 LED 팬던트 LED 제품명이 2줄일 경우 시안처럼 노출됩니다 제품명이 2줄일 경우 시안처럼
+            노출됩니다
+          </div>
+        </li>
+        <li>
+          <div class="product-price">
+            <div class="price-guest-mode">
+              <p class="text-title">회원 전용 혜택가</p>
+              <p class="text-desc">(1개만 사도 무료배송)</p>
+            </div>
+          </div>
+          <div class="product-order-buttons">
+            <div class="btn-guest-login">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`,{
+                size:'lg-p', 
+                variant: 'outline-tertiary',
+                text: '로그인하고 가격 확인',
+                iconLeft: true,
+                iconName: 'ic-lock-close',
+              }) %>
+            </div>
           </div>
         </li>
       </ul>

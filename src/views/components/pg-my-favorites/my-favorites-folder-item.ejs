@@ -1,0 +1,34 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _value = typeof value !== 'undefined' ? value : '';
+  const _title = typeof title !== 'undefined' ? title : '';
+  const _count = typeof count !== 'undefined' ? count : '';
+  const _desc = typeof desc !== 'undefined' ? desc : '';
+  const _date = typeof date !== 'undefined' ? date : '';
+  const _checked = typeof checked !== 'undefined' ? checked : false;
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+%>
+<div class="vits-favorites-folder-item">
+  <label class="folder-label">
+    <input 
+      type="checkbox" 
+      name="<%= _name %>" 
+      value="<%= _value %>"
+      <% if (_checked) { %>checked<% } %>
+      <% if (_disabled) { %>disabled<% } %>
+    />
+    <span class="folder-icon"></span>
+    <span class="folder-content">
+      <b class="content-title">
+        <span class="title-name"><%= _title %></span>
+        <span class="title-count"><%= _count %></span>
+      </b>
+      <% if (_desc) { %>
+      <span class="content-desc"><%= _desc %></span>
+      <% } %>
+    </span>
+    <span class="folder-date"><%= _date %></span>
+  </label>
+</div>

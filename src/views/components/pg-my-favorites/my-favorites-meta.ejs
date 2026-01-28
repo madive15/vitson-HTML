@@ -1,0 +1,53 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 'frequent' (자주구매) | 'like' (좋아요)
+  const _pageType = typeof pageType !== 'undefined' ? pageType : 'frequent';
+%>
+
+<div class="vits-mypage-favorites-meta type-<%= _pageType %>">
+  <p class="meta-count">총<b>3</b>개</p>
+
+  <div class="meta-page-size">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+        id: 'page-size',
+        name: 'pageSize',
+        placeholder: '20개씩 보기',
+        options: [
+          { value: '20', text: '20개씩 보기' },
+          { value: '40', text: '40개씩 보기' },
+          { value: '60', text: '60개씩 보기' },
+        ],
+        value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '30',
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+  </div>
+
+  <% if (_pageType === 'frequent') { %>
+  <div class="meta-sort">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+      id: 'list-sort',
+      name: 'sort',
+      placeholder: '정렬 선택',
+      options: [
+        { value: '추천순', text: '추천순' },
+        { value: '판매량순', text: '판매량순' },
+        { value: '신상품순', text: '신상품순' },
+        { value: '높은 가격순', text: '높은 가격순' },
+        { value: '낮은 가격순', text: '낮은 가격순' },
+      ],
+      value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '추천순',
+      disabled: false
+    }) %>
+  </div>
+
+  <div class="meta-view">
+    <button type="button" class="view-button view-thumb" aria-label="리스트형 전환" data-plp-view-toggle>
+      <i class="ic"></i>
+    </button>
+  </div>
+  <% } %>
+</div>

@@ -25,8 +25,13 @@
 
 /* 서브 페이지 */
 .vits-grid-main {
-  &.vits-main-my-orders,
+  &[class*='vits-main-my-'],
   &.vits-main-cart-order {
     @include wrapper.layout-sub-grid(map.get(color.$layout-surf, 'mypage'));
+  }
+
+  // 마이페이지 - 자주구매, 좋아요
+  &.vits-main-my-favorites .vits-inner {
+    align-items: stretch;
   }
 }

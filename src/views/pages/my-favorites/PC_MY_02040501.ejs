@@ -1,0 +1,72 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '좋아요 폴더 없음'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-my-favorites">
+              <div class="vits-grid-area vits-inner">
+                <!-- S: vits-grid-side-left -->
+                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                <!-- E: vits-grid-side-left -->
+
+                <!-- S: vits-grid-main -->
+                <div class="vits-grid-main-content main-content-my-favorites">
+                  <div class="vits-mypage-content-headline">
+                    <h2 class="vits-mypage-content-title">좋아요</h2>
+                    <p class="vits-mypage-content-desc">좋아요한 상품을 폴더별로 관리하세요</p>
+                  </div>
+
+                  <div class="vits-mypage-panel">
+                    <div class="vits-mypage-records-box type-empty">
+                      <!-- 주문 없음 -->
+                      <!-- prettier-ignore -->
+                      <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+                        size:'xl', variant: 'secondary', text: '폴더 추가하기', iconLeft: true, iconName: 'ic-plus', className: 'btn-fix-w160'
+                      }) %>
+
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'box',
+                        title: '아직 폴더가 없습니다',
+                        desc: '폴더를 추가하여 좋아요한 상품을 관리해보세요',
+                        buttonHtml
+                      }) %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- E: vits-grid-main -->
+              </div>
+            </div>
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

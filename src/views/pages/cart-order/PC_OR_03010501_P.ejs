@@ -16,19 +16,24 @@
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('unShippedModal')"
+                  onclick="VitsKendoWindow.open('changeCouponModal')"
                 >
-                  <span class="text">쿠폰변경</span>
+                  <span class="text">쿠폰변경</span>                            
                 </button>
               </div>
 
               <!-- prettier-ignore -->
               <% const winModal = { 
-                id: 'unShippedModal', 
+                id: 'changeCouponModal', 
                 size: '560', 
                 title: '쿠폰 변경', 
+                subtitle: '상품별로 원하는 쿠폰을 선택하실 수 있습니다.',
                 opt: { draggable: true }, 
-                contentPath: `${_src}/views/pages/kendo-window/my-orders/kw-PC_CO_02010101_P.ejs` 
+                contentPath: `${_src}/views/pages/kendo-window/cart-order/kw-PC_OR_03010501_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' }, 
+                  { text: '변경', variant: 'primary', action: 'close' }
+                ]
                 }; %>
               <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
             </div>

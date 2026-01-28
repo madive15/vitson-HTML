@@ -6,11 +6,15 @@
     triggerText: triggerText || '툴팁제목',
     heading: heading || '툴팁 타이틀',
     items: items || ['툴팁 내용 입력'],
-    position: position || 'left'
+    position: position || 'left',
+    anchor: typeof anchor !== 'undefined' ? anchor : false,
+    footerContent: typeof footerContent !== 'undefined' ? footerContent : null
   };
 %>
 
-<div class="vits-tooltip" data-tooltip="<%= tooltipData.position %>">
+<div class="vits-tooltip" 
+  data-tooltip="<%= tooltipData.position %>" 
+  <% if (tooltipData.anchor) { %> data-anchor="true"<% } %>>
   <button type="button" class="vits-tooltip-trigger" aria-label="광고 안내">
     <span class="text"><%= tooltipData.triggerText %></span>
     <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'tip-info' }) %> </span>
@@ -27,5 +31,9 @@
       <li class="vits-tooltip-item"><%- item %></li>
       <% }); %>
     </ul>
+
+    <% if (tooltipData.footerContent) { %>
+    <div class="vits-tooltip-footer"><%- tooltipData.footerContent %></div>
+    <% } %>
   </div>
 </div>

@@ -140,7 +140,56 @@
 
   &-disabled {
     pointer-events: none;
-    opacity: 0.4;
+
+    .vits-select {
+      &-trigger {
+        background: map.get(color.$layout-surf, 'raised');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+      }
+
+      &-value {
+        color: map.get(color.$text-colors, 'muted');
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-icon {
+        color: map.get(color.$icon-neutral, 'disabled');
+      }
+    }
+  }
+
+  &.size-s {
+    .vits-select {
+      &-trigger {
+        height: map.get(var.$unit, 28);
+      }
+
+      &-option {
+        min-height: map.get(var.$unit, 28);
+        font-size: fn.rem(12);
+      }
+
+      &-value {
+        font-size: fn.rem(12);
+      }
+    }
+  }
+
+  &.size-l {
+    .vits-select {
+      &-trigger {
+        height: fn.rem(44);
+      }
+
+      &-option {
+        min-height: fn.rem(44);
+        font-size: fn.rem(16);
+      }
+
+      &-value {
+        font-size: fn.rem(16);
+      }
+    }
   }
 }
 
@@ -214,6 +263,27 @@
       border-bottom-left-radius: 0;
     }
   }
+}
+
+/* 예시, 목록 ??개씩 보기 */
+.vits-select.type-ghost {
+  min-width: fn.rem(114);
+  height: map.get(var.$unit, 20);
+
+  /* stylelint-disable no-descending-specificity */
+  .vits-select-trigger {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  &.color-secondary {
+    .vits-select-value {
+      color: map.get(color.$text-colors, 'tertiary');
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
 }
 
 /* portal 모드 list 스타일 */

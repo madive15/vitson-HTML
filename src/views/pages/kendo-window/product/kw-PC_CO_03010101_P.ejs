@@ -1,0 +1,58 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-coupon-download">
+  <h2 class="sr-only">쿠폰 다운로드 및 적용</h2>
+
+  <div class="vits-coupon-download-content">
+    <div class="coupon-list-box vits-scrollbar">
+      <ul>
+        <% for (let i = 0; i < 3; i++) { %>
+        <li>
+          <div class="coupon-item">
+            <div class="coupon-item-left">
+              <span class="coupon-item-badge">
+                <strong class="coupon-item-badge-value">15%</strong>
+              </span>
+            </div>
+  
+            <div class="coupon-item-body">
+              <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인</strong>
+              <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</p>
+              <p class="coupon-item-desc">적용상품: LED 전구, 인테리어 전구, 니트램프</p>
+            </div>
+  
+            <div class="coupon-item-right">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, { size:'lg', variant: 'outline-primary', text: '쿠폰받기', iconLeft: true, iconName: 'ic-line-download' }) %>
+            </div>
+          </div>
+        </li>
+        <% } %>
+        <!-- disabled  -->
+        <li>
+          <div class="coupon-item disabled">
+            <div class="coupon-item-left">
+              <span class="coupon-item-badge">
+                <strong class="coupon-item-badge-value">15%</strong>
+              </span>
+            </div>
+  
+            <div class="coupon-item-body">
+              <strong class="coupon-item-title">크리스마스 특별 쿠폰 15% 할인크리스마스 특별 쿠폰 15% 할인</strong>
+              <p class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26사용기간: 2024.12.20 ~ 2024.12.26</p>
+              <p class="coupon-item-desc">
+                적용상품: LED 전구, 인테리어 전구, 니트램프적용상품: LED 전구, 인테리어 전구, 니트램프
+              </p>
+            </div>
+  
+            <div class="coupon-item-right">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, { size:'lg', variant: 'outline-primary', text: '쿠폰받기', iconLeft: true, iconName: 'ic-line-download' }) %>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>     
+  </div>
+
+</section>

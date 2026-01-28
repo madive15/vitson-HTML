@@ -12,6 +12,37 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
+@mixin view-button-style {
+  @include button.btn-reset;
+  width: map.get(var.$unit, 32);
+  height: map.get(var.$unit, 32);
+  color: map.get(color.$icon-neutral, 'primary');
+  border-radius: map.get(var.$radius, 'sm');
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+  transition: box-shadow 0.3s;
+
+  &.view-list .ic,
+  &.view-thumb .ic {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: currentcolor;
+    mask: no-repeat center / contain;
+  }
+
+  &.view-list .ic {
+    mask-image: url('/public/resources/img/mro/renewal/ic/ic-list.svg');
+  }
+
+  &.view-thumb .ic {
+    mask-image: url('/public/resources/img/mro/renewal/ic/ic-circles-four.svg');
+  }
+
+  @include mx.common-mouse-event {
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+  }
+}
+
 /* 대/중/소 카테고리 상품 목록 */
 
 // 왼쪽메뉴
@@ -202,53 +233,13 @@
       }
     }
 
-    &-size {
-      .vits-select {
-        min-width: fn.rem(114);
-        height: map.get(var.$unit, 20);
-
-        &-trigger {
-          width: 100%;
-          height: 100%;
-          box-shadow: none;
-        }
-      }
-    }
-
     &-sort {
       margin-left: auto;
     }
 
     &-view {
       .view-button {
-        @include button.btn-reset;
-        width: map.get(var.$unit, 32);
-        height: map.get(var.$unit, 32);
-        color: map.get(color.$icon-neutral, 'primary');
-        border-radius: map.get(var.$radius, 'sm');
-        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
-        transition: box-shadow 0.3s;
-
-        &.view-list .ic,
-        &.view-thumb .ic {
-          display: block;
-          width: 100%;
-          height: 100%;
-          background-color: currentcolor;
-          mask: no-repeat center / contain;
-        }
-
-        &.view-list .ic {
-          mask-image: url('/public/resources/img/mro/renewal/ic/ic-list.svg');
-        }
-
-        &.view-thumb .ic {
-          mask-image: url('/public/resources/img/mro/renewal/ic/ic-circles-four.svg');
-        }
-
-        @include mx.common-mouse-event {
-          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
-        }
+        @include view-button-style;
       }
     }
   }

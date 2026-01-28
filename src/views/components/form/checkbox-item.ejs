@@ -1,0 +1,34 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  // size: 's-b4r' | 's-b3r' | 's-b2s' | 'm' | 'l'
+  const _size = (typeof size !== 'undefined' && size) ? String(size) : '';
+  const sizeClass = _size ? `size-${_size}` : '';
+
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _value = typeof value !== 'undefined' ? value : '';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _checkboxType = typeof checkboxType !== 'undefined' ? checkboxType : '';
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+  const _checked = typeof checked !== 'undefined' ? checked : false;
+  const _required = typeof required !== 'undefined' ? required : false;
+
+  const isIconOnly = !_size && !_text;
+%>
+<label class="vits-checkbox-item<% if (sizeClass) { %> <%= sizeClass %><% } %><% if (isIconOnly) { %> icon-only<% } %>">
+  <input
+    type="checkbox"
+    name="<%= _name %>"
+    value="<%= _value %>"
+    <% if (_checkboxType === 'all') { %>data-checkbox-all<% } %>
+    <% if (_checkboxType === 'item') { %>data-checkbox-item<% } %>
+    <% if (_disabled) { %>disabled<% } %>
+    <% if (_checked) { %>checked<% } %>
+    <% if (_required) { %>required<% } %>
+  />
+  <span class="icon" aria-hidden="true"></span>
+  <% if (_text) { %>
+  <span class="label"><%= _text %></span>
+  <% } %>
+</label>

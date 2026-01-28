@@ -15,17 +15,12 @@
   <div class="vits-claim-request-toolbar">
     <div class="vits-claim-request-check">
       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
-        datas: [
-          {
-            className: 'm',
-            name: 'ckbox-total',
-            value: '선택',
-            srText: '반품 신청 상품 선택',
-            agreeText: '반품 신청 상품',
-            checkboxType: 'all',
-          },
-        ],
+      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+        name: 'ckbox-total',
+        value: '선택',
+        checkboxType: 'all',
+        text: '반품 신청 상품',
+        size: 'l',
       }) %>
     </div>
   </div>
@@ -37,33 +32,21 @@
         <ul class="claim-request-product-list">
           <li class="claim-request-product-item">
             <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
-              datas: [
-                {
-                  className: 'm',
-                  name: 'ckbox-item-01',
-                  value: '반품 상품',
-                  checked: false,
-                  srText: '반품 상품',
-                  checkboxType: 'item',
-                },
-              ],
+            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+              name: 'ckbox-item1',
+              value: 'item1',
+              checkboxType: 'item',
+              size: 'xl',
             }) %>
             <%- include(`${_src}/views/components/pg-my-orders/my-return-product.ejs`) %>
           </li>
           <li class="claim-request-product-item">
             <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
-              datas: [
-                {
-                  className: 'm',
-                  name: 'ckbox-item-02',
-                  value: '반품 상품',
-                  checked: false,
-                  srText: '반품 상품',
-                  checkboxType: 'item',
-                },
-              ],
+            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+              name: 'ckbox-item2',
+              value: 'item2',
+              checkboxType: 'item',
+              size: 'xl',
             }) %>
             <%- include(`${_src}/views/components/pg-my-orders/my-return-product.ejs`) %>
           </li>

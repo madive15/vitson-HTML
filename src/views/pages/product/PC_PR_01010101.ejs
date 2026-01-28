@@ -51,7 +51,7 @@
                 </nav>
 
                 <div class="vits-product-code">
-                  <span class="text">상품코드: 1234567890</span>
+                  <span class="text">상품코드 1234567890</span>
                   <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %></span>
                 </div>
               </div>
@@ -79,13 +79,11 @@
                             </div>
                           </li>
                           <li>
-                            <label for="like" class="vits-btn like-btn icon">
-                              <!-- 임시 -->
-                              <input type="checkbox" name="like" id="like" aria-label="좋아요버튼" />
-                              <span class="icon"
-                                ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'heart' }) %></span
-                              >
-                            </label>
+                            <button type="button" class="vits-btn like-btn active" aria-label="좋아요버튼" >
+                              <span class="icon">
+                                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'heart' }) %>
+                              </span>
+                            </button>
                           </li>
                         </ul>
                       </div>
@@ -107,7 +105,7 @@
                             </div>
                           </li>
                           <li>
-                            <div class="discount-coupon">
+                            <div class="discount-coupon" onclick="alert('할인쿠폰받기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_CO_03010101_P.html');">
                               <!-- [D] 쿠폰받기 비활성화시 disabled 추가 -->
                               <!-- prettier-ignore -->
                               <%- include(`${_src}/views/components/button/button.ejs`, {
@@ -115,8 +113,7 @@
                                 variant: 'outline-primary', 
                                 text:'할인쿠폰받기', 
                                 iconLeft: true, 
-                                iconName: 'ic-line-download',
-                                attrs: 'data-layer-btn aria-controls="get-coupon-modal" data-layer-target="get-coupon-modal" data-aria-label-base="쿠폰받기 모달" aria-expanded="false"'
+                                iconName: 'ic-line-download'
                               }) %>
                             </div>
                           </li>
@@ -126,10 +123,10 @@
                         <!-- prettier-ignore -->
                         <%
                           const productMiniDetailInfo = [
-                            { label: '과세구분:', value: '과세' },
-                            { label: '출고단위:', value: '개' },
-                            { label: '모델명:', value: 'DL30040 36W 화이트 주백 KS DL30040 모델명이 2줄일 경우 예시' },
-                            { label: '중량(kg):', value: '1kg' }
+                            { label: '과세구분', value: '과세' },
+                            { label: '출고단위', value: '개' },
+                            { label: '모델명', value: 'DL30040 36W 화이트 주백 KS DL30040 모델명이 2줄일 경우 예시' },
+                            { label: '중량(kg)', value: '1kg' }
                           ];
                         %>
                         <ul class="info-inner">
@@ -219,13 +216,7 @@
                         <!-- case:01 옵션 버튼 (옵션 우측 슬라이드 팝업) -->
                         <div class="vits-btn-option">
                           <!-- prettier-ignore -->
-                          <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" 
-                            data-layer-btn
-                            aria-controls="vits-options-modal"
-                            data-layer-target="vits-options-modal"
-                            aria-expanded="false"
-                            data-aria-label-base="다른규격 선택 모달"
-                            >
+                          <button type="button" class="vits-btn-xl vits-btn-outline-secondary right-icon" onclick="alert('다른 규격 찾기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_PR_01020101_P.html');">
                             <span class="text">다른 규격 찾기 (전체 <em>84</em>개 옵션)</span>
                             <span class="icon">
                               <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
@@ -377,10 +368,6 @@
                 <!-- s: 상세상품보기 TAB bar 영역 -->
                 <%- include(`${_src}/views/components/pg-product/tab-scrollbar.ejs`) %>
 
-                <!-- s: Modal -->
-                <%- include(`${_src}/views/components/pg-product/_PC_CO_06010101_P.ejs`) %> 
-                <%- include(`${_src}/views/components/pg-product/_PC_PR_01020101_P.ejs`) %>
-                <!-- e: Modal -->
               </div>
               <!-- e: PC_PR_01010101 -->
             </div>
