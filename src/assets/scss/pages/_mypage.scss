@@ -196,6 +196,7 @@
     }
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   &-panel {
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 32);
@@ -226,7 +227,7 @@
         margin: 0;
 
         &-range {
-          width: fn.rem(200);
+          width: fn.rem(210);
         }
 
         &-buttons {
@@ -434,7 +435,11 @@
       }
 
       &-number {
-        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+        &,
+        a {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+          display: block;
+        }
       }
 
       &-actions {

@@ -67,7 +67,7 @@ $order-status-color: (
 .text-order-status {
   @each $code, $color in $order-status-color {
     &[data-status='#{$code}'] {
-      color: $color;
+      @include typo.typography('b3s', $color: $color);
     }
   }
 }
@@ -117,7 +117,7 @@ $claim-status-color: (
 .text-claim-status {
   @each $code, $color in $claim-status-color {
     &[data-status='#{$code}'] {
-      color: $color;
+      @include typo.typography('b3s', $color: $color);
     }
   }
 }

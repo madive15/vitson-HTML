@@ -1506,6 +1506,24 @@
   }
 }
 
+/* ===modal kendo window -쿠폰 자동 적용=== */
+.vits-auto-alert{
+  .vits-auto-alert-content{
+    @include cart-order-surf-box;
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+
+    .vits-auto-alert-list{
+      @include mx.bullet-style($bg: map.get(color.$text-colors, 'secondary')); ;
+
+      .vits-auto-alert-item{
+        .vits-auto-alert-text{
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+    }
+  }
+}
+
 /* ===modal kendo window -상품 추가 (조장상품)=== */
 /* 상품 요약 */
 .vits-add-product-order{
