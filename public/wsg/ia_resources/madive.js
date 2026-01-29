@@ -98,6 +98,15 @@ var ia = {
         }
       });
 
+    $(obj)
+      .find('td.col-date')
+      .each(function () {
+        var text = $(this).text().trim();
+        if (text.indexOf('/') !== -1) {
+          var lastDate = text.split('/').pop().trim();
+          $(this).text(lastDate);
+        }
+      });
     //console.log(lastUpdateDate, today);
 
     //계산

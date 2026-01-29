@@ -1,0 +1,109 @@
+// -----------------------------------------------------------------------------
+// pages/_auth.scss
+// - 인증 페이지 전용 스타일 (로그인, 회원가입, 비밀번호 찾기, 아이디 찾기)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+/* === kendo window 로그인 팝업 === */
+// 로그인 헤더 숨김
+#loginModal {
+  .vits-modal-header {
+    padding: fn.rem(28) fn.rem(32);
+
+    .vits-modal-close {
+      top: fn.rem(12);
+      right: fn.rem(12);
+      width: fn.rem(52);
+      height: fn.rem(52);
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
+  }
+
+  #loginModal-title {
+    font-size: 1px;
+    color: transparent;
+  }
+}
+
+.vits-login-modal {
+  &-logo {
+    width: fn.rem(200);
+    min-height: fn.rem(32.6);
+    padding-bottom: fn.rem(109);
+    margin: 0 auto;
+
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  &-content {
+    padding: map.get(var.$unit, 52) map.get(var.$unit, 24) map.get(var.$unit, 24);
+  }
+
+  /* =========================
+   * Login Form
+   * ========================= */
+  .vits-login {
+    &-form {
+      @include mx.flex($direction: column);
+    }
+
+    /* 입력 영역 */
+    &-form-fields {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    /* 옵션 영역 (아이디 저장) */
+    &-options {
+      margin-top: map.get(var.$unit, 12);
+
+      .login-checkbox {
+        @include mx.flex($align: center);
+      }
+    }
+  }
+
+  /* 로그인 버튼 */
+  .login-submit {
+    width: 100%;
+    margin-top: fn.rem(52);
+  }
+
+  /* 일회성 로그인 */
+  .login-once {
+    margin-top: map.get(var.$unit, 16);
+    text-align: center;
+
+    .vits-text-link {
+      @include typo.typography('H4s', $color: map.get(color.$text-colors, 'tertiary'));
+      padding-bottom: fn.rem(4);
+      border-bottom: 2px solid map.get(color.$layout-border, 'tertiary');
+    }
+  }
+
+  /* 하단 링크 */
+  .login-links {
+    margin-top: fn.rem(44);
+
+    ul {
+      @include mx.divider('li', $h: 12, $gap: 16, $color: map.get(color.$layout-border, 'tertiary'));
+      justify-content: center;
+
+      li a {
+        @include typo.typography('b2', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+}

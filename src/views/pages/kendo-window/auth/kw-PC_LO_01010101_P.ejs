@@ -1,0 +1,85 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-login-modal">
+  <h2 class="sr-only"></h2>
+  <!-- 로그인 팝업 -->
+  <div class="vits-login-modal-content">
+    <!-- 로고 / 타이틀 -->
+    <h2 class="vits-login-modal-logo">
+      <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+    </h2>
+
+    <form class="vits-login-form" action="" method="post">
+      <div class="vits-login-form-fields">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-id',
+          name: 'loginId',
+          label: '아이디',
+          placeholder: '아이디',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-password',
+          name: 'loginPassword',
+          label: '비밀번호',
+          placeholder: '비밀번호',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </div>
+
+      <!-- 아이디 저장 -->
+      <div class="vits-login-options">
+        <div class="login-checkbox">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+            name: 'saveId',
+            value: 'saveId',
+            size: 'xxl',
+            text: '아이디 저장',
+          }) %>
+        </div>
+      </div>
+
+      <!-- 로그인 버튼 -->
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        text: '로그인',
+        size: 'xxl',
+        variant: 'primary',
+        type: 'submit',
+        className: 'login-submit',
+      }) %>
+
+      <!-- 일회성 로그인 -->
+      <div class="login-once">
+        <!-- login-once-link -->
+        <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '일회성 로그인', target:
+        '_blank' }) %>
+      </div>
+
+      <!-- 하단 링크 -->
+      <div class="login-links">
+        <ul>
+          <!-- login-link -->
+          <li>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '아이디 찾기', target: '_blank' }) %>
+          </li>
+          <li>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '비밀번호 찾기', target: '_blank' }) %>
+          </li>
+          <li>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '회원가입', target: '_blank' }) %>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</section>
