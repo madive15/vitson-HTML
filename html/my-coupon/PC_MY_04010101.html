@@ -14,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>좋아요 폴더 없음</title>
+  <title>보유 쿠폰 있음</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -39063,10 +39063,13 @@
         <div class="vits-wrap">
           <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-grid-main vits-main-my-favorites">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-coupon">
               <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
                 <div class="vits-grid-area">
                   <!-- S: vits-grid-side-left -->
+                  <!-- 왼쪽메뉴 -->
                   
 <!-- prettier-ignore -->
 
@@ -39181,68 +39184,343 @@
 
                   <!-- E: vits-grid-side-left -->
 
-                  <!-- S: vits-grid-main -->
-                  <div class="vits-grid-main-content main-content-my-favorites">
+                  <div class="vits-grid-main-content main-content-my-coupon">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
                     <div class="vits-mypage-content-headline">
-                      <h2 class="vits-mypage-content-title">좋아요</h2>
-                      <p class="vits-mypage-content-desc">좋아요한 상품을 폴더별로 관리하세요</p>
+                      <h2 class="vits-mypage-content-title">쿠폰함</h2>
+                      <p class="vits-mypage-content-desc">다양한 할인 혜택을 확인하고 관리해보세요.</p>
                     </div>
 
                     <div class="vits-mypage-panel">
-                      <div class="vits-mypage-records-box type-empty">
-                        <!-- 주문 없음 -->
-                        <!-- prettier-ignore -->
-                        
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+<!-- 상단 탭 -->
+<div class="vits-mypage-top-tabs" role="tablist">
   
-                        
+  <button
+    type="button"
+    class="vits-btn-md vits-my-coupon-tab-btn is-active"
+    aria-selected="true"
+    id="tab-0"
+  >
+    <span class="text">보유 쿠폰</span>
+    
+    <span class="coupon-badge" aria-label="22개">22</span>
+    
+  </button>
+  
+  <button
+    type="button"
+    class="vits-btn-md vits-my-coupon-tab-btn"
+    aria-selected="false"
+    id="tab-1"
+  >
+    <span class="text">쿠폰 받기</span>
+    
+    <span class="coupon-badge" aria-label="신규">N</span>
+    
+  </button>
+  
+</div>
+
+
+                      
+<!-- 쿠폰 조회 필터 -->
+<div class="vits-mypage-query">
+  <div class="mypage-query-fields">
+    <dl class="mypage-query-period">
+      <dt class="mypage-query-label">조회 기간</dt>
+      <dd class="mypage-query-control">
+        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
+          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
+            <span class="text">1개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="3m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">3개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">6개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">1년</span>
+          </button>
+        </div>
+      </dd>
+      <dd class="mypage-query-control mypage-query-period-range">
+        <!-- prettier-ignore -->
+        
+
+
+<div class="vits-kendo-range-picker size-md" 
+     id="kendoRangePicker_1769645274032"
+     data-ui="kendo-range-picker"
+     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+    
+    <input type="hidden" 
+           class="js-start-date" 
+           name="startDate" 
+           value="">
+    
+    <input type="hidden" 
+           class="js-end-date" 
+           name="endDate" 
+           value="">
+    
+    <span class="picker-input k-picker k-datepicker">
+        <input type="text" 
+               class="picker-display k-input-inner js-range-display" 
+               placeholder="시작일 ~ 종료일" 
+               readonly 
+               >
+        
+        <button type="button" 
+                class="picker-button k-input-button k-button k-button-solid k-button-md k-icon-button js-calendar-toggle"
+                >
+            <span class="icon">
+              <i class="ic ic-calendar" aria-hidden="true"></i>
+ 
+            </span>
+        </button>
+    </span>
+    
+    <div class="picker-popup js-calendar-popup">
+        <div class="js-kendo-calendar"></div>
+    </div>
+</div>
+      </dd>
+    </dl>
+    
+  </div>
+</div>
+
+                      <!-- 보유 쿠폰 있음 -->
+                      <div class="vits-mypage-records-box type-exist">
+                        <div class="vits-my-coupon-exist-list">
+                          <!-- prettier-ignore -->
+                          
 
 <!-- prettier-ignore -->
 
+<div class="coupon-item">
+  <div class="coupon-item-left">
+    <span class="coupon-item-badge">
+      <strong class="coupon-item-badge-value">5만원</strong>
+      <span class="coupon-item-badge-value-max">최대 10만원 할인</span>
+    </span>
+  </div>
 
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">아직 폴더가 없습니다</h2>
-      
-      <p class="vits-empty-state-desc">폴더를 추가하여 좋아요한 상품을 관리해보세요</p>
+  <div class="coupon-item-body" data-toggle-scope>
+    <strong class="coupon-item-title">첫 구매 감사 쿠폰</strong>
+
+    <div class="coupon-item-info">
+      <div class="coupon-item-info-text">
+        <span class="title">적용대상 :</span>
+        <span class="content"> 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기 </span>
+
+        
+      </div>
       
     </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-box" aria-hidden="true"></i>
 
+    <div class="coupon-item-desc">
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최소주문금액:</dt>
+        <dd class="desc-value">1,000,000원</dd>
+      </dl>
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최대할인금액:</dt>
+        <dd class="desc-value">100,000원</dd>
+      </dl>
+    </div>
+
+    <div class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</div>
+  </div>
+
+  
+</div>
+
+                          <!-- prettier-ignore -->
+                          
+
+<!-- prettier-ignore -->
+
+<div class="coupon-item">
+  <div class="coupon-item-left">
+    <span class="coupon-item-badge">
+      <strong class="coupon-item-badge-value">3만원</strong>
+      <span class="coupon-item-badge-value-max">최대 2만원 할인</span>
+    </span>
+  </div>
+
+  <div class="coupon-item-body" data-toggle-scope>
+    <strong class="coupon-item-title">두 번째 쿠폰</strong>
+
+    <div class="coupon-item-info">
+      <div class="coupon-item-info-text">
+        <span class="title">적용대상 :</span>
+        <span class="content"> 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기 </span>
+
+        
+        <button
+          type="button"
+          class="icon-more"
+          aria-label="적용대상 : 더보기"
+          data-toggle-btn
+          data-toggle-outside="true"
+          data-toggle-target="coupon-info-view"
+          aria-expanded="false"
+        >
+          <!-- prettier-ignore -->
+          <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+        </button>
+        
+      </div>
+      
+      <div class="coupon-item-info-view" data-toggle-box="coupon-info-view">
+        <p class="info-view-text">적용대상 : 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기</p>
+        <button
+          type="button"
+          class="icon"
+          aria-label="적용대상 : 접기"
+          data-toggle-btn
+          data-toggle-target="coupon-info-view"
+        >
+          <!-- prettier-ignore -->
+          <i class="ic ic-arrow-up" aria-hidden="true"></i>
+
+        </button>
+      </div>
+      
+    </div>
+
+    <div class="coupon-item-desc">
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최소주문금액:</dt>
+        <dd class="desc-value">1,000,000원</dd>
+      </dl>
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최대할인금액:</dt>
+        <dd class="desc-value">100,000원</dd>
+      </dl>
+    </div>
+
+    <div class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</div>
+  </div>
+
+  
+</div>
+
+                          <!-- prettier-ignore -->
+                          
+
+<!-- prettier-ignore -->
+
+<div class="coupon-item">
+  <div class="coupon-item-left">
+    <span class="coupon-item-badge">
+      <strong class="coupon-item-badge-value">3만원</strong>
+      <span class="coupon-item-badge-value-max">최대 2만원 할인</span>
+    </span>
+  </div>
+
+  <div class="coupon-item-body" data-toggle-scope>
+    <strong class="coupon-item-title">두 번째 쿠폰</strong>
+
+    <div class="coupon-item-info">
+      <div class="coupon-item-info-text">
+        <span class="title">적용대상 :</span>
+        <span class="content"> 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기 </span>
+
+        
+        <button
+          type="button"
+          class="icon-more"
+          aria-label="적용대상 : 더보기"
+          data-toggle-btn
+          data-toggle-outside="true"
+          data-toggle-target="coupon-info-view"
+          aria-expanded="false"
+        >
+          <!-- prettier-ignore -->
+          <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+        </button>
+        
+      </div>
+      
+      <div class="coupon-item-info-view" data-toggle-box="coupon-info-view">
+        <p class="info-view-text">적용대상 : 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기</p>
+        <button
+          type="button"
+          class="icon"
+          aria-label="적용대상 : 접기"
+          data-toggle-btn
+          data-toggle-target="coupon-info-view"
+        >
+          <!-- prettier-ignore -->
+          <i class="ic ic-arrow-up" aria-hidden="true"></i>
+
+        </button>
+      </div>
+      
+    </div>
+
+    <div class="coupon-item-desc">
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최소주문금액:</dt>
+        <dd class="desc-value">1,000,000원</dd>
+      </dl>
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최대할인금액:</dt>
+        <dd class="desc-value">100,000원</dd>
+      </dl>
+    </div>
+
+    <div class="coupon-item-period">사용기간: 2024.12.20 ~ 2024.12.26</div>
+  </div>
+
+  
+</div>
+
+                        </div>
+
+                        <!-- prettier-ignore -->
+                        <!-- prettier-ignore -->
+
+
+<div class="vits-alerts-anatomy type-blue">
+  <div class="vits-alerts-anatomy-inner">
+    <div class="alerts-anatomy-icon"><i class="ic ic-info" aria-hidden="true"></i>
+</div>
+    <div class="alerts-anatomy-content">
+      <p class="alerts-anatomy-text">유의 사항</p>
+      
+      <ul class="alerts-anatomy-list">
+        
+        <li>쿠폰은 주문 결제 시 사용할 수 있으며, 유효기간 내에만 사용 가능합니다.</li>
+        
+        <li>일부 특가 상품이나 기획전 상품에는 쿠폰 적용이 제한될 수 있습니다.</li>
+        
+      </ul>
+      
     </div>
   </div>
-  
-  <div class="vits-empty-state-action">
-
-
-<button
-  type="button"
-  class="vits-btn-xl vits-btn-secondary icon-left btn-fix-w160"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-plus" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">폴더 추가하기</span>
-
-  
-</button>
 </div>
-  
-</section>
 
                       </div>
                     </div>
                   </div>
-
-                  <!-- E: vits-grid-main -->
                 </div>
               </div>
+
+              <!-- full wide 컨텐츠 -->
             </div>
+            <!-- E: vits-grid-main -->
           </div>
           <!-- E: vits-grid -->
         </div>

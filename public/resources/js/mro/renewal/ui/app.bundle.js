@@ -368,6 +368,8 @@
 var utils = __webpack_require__(918);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/toggle.js
 var toggle = __webpack_require__(344);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/step-tab.js
+var step_tab = __webpack_require__(572);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/period-btn.js
 var period_btn = __webpack_require__(864);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/scroll-boundary.js
@@ -1116,6 +1118,7 @@ var kendo_window = __webpack_require__(238);
 
 
 
+
 (function (window) {
   'use strict';
 
@@ -1131,6 +1134,7 @@ var kendo_window = __webpack_require__(238);
   window.UI.init = function () {
     if (window.UI.kendo && window.UI.kendo.init) window.UI.kendo.init();
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.stepTab && window.UI.stepTab.init) window.UI.stepTab.init();
     if (window.UI.PeriodBtn && window.UI.PeriodBtn.init) window.UI.PeriodBtn.init();
     if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
@@ -3995,8 +3999,11 @@ if (document.body?.dataset?.guide === 'true') {
     return cfg.showCategory ? cfg.title : '';
   }
   function buildChipEl(groupName, value, name, category) {
-    var $chip = $('<div/>', {
-      class: 'vits-chip-button type-filled'
+    var $chip = $('<button/>', {
+      type: 'button',
+      class: 'vits-chip-button type-filled',
+      'data-chip-action': 'remove',
+      'aria-label': name + ' 삭제'
     });
     $chip.attr(CHIP_VALUE, value);
     $chip.attr('data-chip-group', groupName);
@@ -4008,15 +4015,10 @@ if (document.body?.dataset?.guide === 'true') {
       class: 'text',
       text: name
     }).appendTo($chip);
-    var $btn = $('<button/>', {
-      type: 'button',
-      class: 'remove',
-      'data-chip-action': 'remove',
-      'aria-label': name + ' 삭제',
-      text: '×'
-    });
-    $btn.attr(CHIP_VALUE, value);
-    $chip.append($btn);
+    $('<span/>', {
+      class: 'icon ic ic-x',
+      'aria-hidden': 'true'
+    }).appendTo($chip);
     return $chip;
   }
   function sortChipsByGroup($area) {
@@ -4643,6 +4645,124 @@ if (document.body?.dataset?.guide === 'true') {
     console.log('[common] DOM ready');
     if (window.UI && window.UI.init) window.UI.init();
   });
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 572:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/stepTab.js
+ * @purpose data-속성 기반 스텝 탭(단계별 진행) 공통
+ * @description
+ *  - 스코프: [data-step-scope="id"] 내부에서만 동작
+ *  - 매핑: [data-step-tab="n"] ↔ [data-step-panel="n"]
+ *  - 상태: is-active(현재), is-done(완료), is-disabled(비활성)
+ *  - 진행: [data-step-complete] 버튼 클릭 시 다음 스텝 이동
+ * @flow
+ *  - 탭 헤더는 클릭 불가 (시각적 표시만)
+ *  - 패널 내 완료 버튼으로만 다음 스텝 이동
+ *  - 이전 스텝으로 돌아가기 불가 (단방향)
+ * @maintenance
+ *  - 페이지별 분기 금지(동작 동일, 표현/스타일은 CSS에서만 처리)
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[stepTab] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var ACTIVE = 'is-active';
+  var DONE = 'is-done';
+  var DISABLED = 'is-disabled';
+  function getScope(scopeId) {
+    return $('[data-step-scope="' + scopeId + '"]');
+  }
+  function getCurrentStep($scope) {
+    var $activePanel = $scope.find('[data-step-panel].' + ACTIVE);
+    return $activePanel.length ? parseInt($activePanel.data('stepPanel'), 10) : 1;
+  }
+  function getTotalSteps($scope) {
+    return $scope.find('[data-step-panel]').length;
+  }
+  function activateStep($scope, stepNum) {
+    var $tabs = $scope.find('[data-step-tab]');
+    var $panels = $scope.find('[data-step-panel]');
+    $panels.removeClass(ACTIVE);
+    $panels.filter('[data-step-panel="' + stepNum + '"]').addClass(ACTIVE);
+    $tabs.each(function () {
+      var $tab = $(this);
+      var tabNum = parseInt($tab.data('stepTab'), 10);
+      $tab.removeClass(ACTIVE + ' ' + DONE + ' ' + DISABLED);
+      if (tabNum === stepNum) {
+        $tab.addClass(ACTIVE);
+      } else if (tabNum < stepNum) {
+        $tab.addClass(DONE);
+      } else {
+        $tab.addClass(DISABLED);
+      }
+    });
+  }
+  function completeStep($scope) {
+    var scopeId = $scope.data('stepScope');
+    var currentStep = getCurrentStep($scope);
+    var totalSteps = getTotalSteps($scope);
+    var nextStep = currentStep + 1;
+    var isLast = currentStep >= totalSteps;
+    var event = new CustomEvent('stepTab:complete', {
+      bubbles: true,
+      detail: {
+        scopeId: scopeId,
+        currentStep: currentStep,
+        nextStep: isLast ? null : nextStep,
+        isLast: isLast
+      }
+    });
+    $scope[0].dispatchEvent(event);
+    if (isLast) {
+      $scope.find('[data-step-tab="' + currentStep + '"]').removeClass(ACTIVE).addClass(DONE);
+      console.log('[stepTab] 모든 스텝 완료');
+      return;
+    }
+    activateStep($scope, nextStep);
+    console.log('[stepTab] step ' + currentStep + ' → ' + nextStep);
+  }
+  function bindScope($scope) {
+    $scope.on('click', '[data-step-complete]', function (e) {
+      e.preventDefault();
+      completeStep($scope);
+    });
+  }
+  window.UI.stepTab = {
+    init: function () {
+      $('[data-step-scope]').each(function () {
+        bindScope($(this));
+      });
+      console.log('[stepTab] init');
+    },
+    complete: function (scopeId) {
+      var $scope = getScope(scopeId);
+      if ($scope.length) {
+        completeStep($scope);
+      }
+    },
+    reset: function (scopeId) {
+      var $scope = getScope(scopeId);
+      if (!$scope.length) return;
+      $scope.find('[data-step-tab]').removeClass(DONE);
+      activateStep($scope, 1);
+      console.log('[stepTab] reset');
+    },
+    getCurrentStep: function (scopeId) {
+      var $scope = getScope(scopeId);
+      return $scope.length ? getCurrentStep($scope) : null;
+    }
+  };
+  console.log('[stepTab] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -5719,25 +5839,21 @@ if (document.body?.dataset?.guide === 'true') {
     var v = normalizeQuery(text);
     if (!v) return false;
     if (hasChipValue(els, v)) return false;
-    var $chip = $('<div/>', {
+    var $chip = $('<button/>', {
+      type: 'button',
       class: 'vits-chip-button type-outline',
-      'data-chip-value': v
+      'data-chip-action': 'remove',
+      'data-chip-value': v,
+      'aria-label': v + ' 삭제'
     });
     $('<span/>', {
       class: 'text',
       text: v
     }).appendTo($chip);
-    var $btn = $('<button/>', {
-      type: 'button',
-      class: 'remove',
-      'data-chip-action': 'remove',
-      'aria-label': v + ' 삭제'
-    });
     $('<span/>', {
-      class: 'ic ic-x',
+      class: 'icon ic ic-x',
       'aria-hidden': 'true'
-    }).appendTo($btn);
-    $btn.appendTo($chip);
+    }).appendTo($chip);
     els.$chipGroup.append($chip);
     return true;
   }
@@ -8122,7 +8238,10 @@ if (document.body?.dataset?.guide === 'true') {
     // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
     var $body = $('body');
     var $optionModal = $('#findOtherOptionModal');
-    var OPTION_MODAL_BODY_CLASS = 'is-option-modal-open';
+    var OPTION_MODAL_BODY_OPEN_CLASS = 'is-option-modal-open';
+    var OPTION_MODAL_BODY_HIDE_CLASS = 'is-option-modal-hide';
+    var optionModalInitTimer = null;
+    var optionModalOpenWrapped = false;
     function getScrollTop() {
       return $(window).scrollTop();
     }
@@ -8208,7 +8327,51 @@ if (document.body?.dataset?.guide === 'true') {
       if (!$optionModal.length) {
         return;
       }
-      $body.toggleClass(OPTION_MODAL_BODY_CLASS, !!isOpen);
+      $body.toggleClass(OPTION_MODAL_BODY_OPEN_CLASS, !!isOpen);
+      $body.toggleClass(OPTION_MODAL_BODY_HIDE_CLASS, false);
+    }
+    function bindOptionModalEvents() {
+      var inst = $optionModal.data('kendoWindow');
+      if (!inst) {
+        return false;
+      }
+      inst.unbind('open.optionModalToggle');
+      inst.unbind('close.optionModalToggle');
+      inst.bind('open.optionModalToggle', function () {
+        updateOptionModalBodyClass(true);
+      });
+      inst.bind('close.optionModalToggle', function () {
+        updateOptionModalBodyClass(false);
+      });
+      if (!inst._optionModalCloseWrapped) {
+        inst._optionModalCloseWrapped = true;
+        var originalClose = inst.close;
+        inst.close = function () {
+          updateOptionModalBodyClass(false);
+          return originalClose.call(inst);
+        };
+      }
+      return true;
+    }
+    function ensureOptionModalOpenHook() {
+      if (!window.VitsKendoWindow || optionModalOpenWrapped) {
+        return;
+      }
+      optionModalOpenWrapped = true;
+      var originalOpen = window.VitsKendoWindow.open;
+      var originalClose = window.VitsKendoWindow.close;
+      window.VitsKendoWindow.open = function (id, options) {
+        if (id === 'findOtherOptionModal') {
+          updateOptionModalBodyClass(true);
+        }
+        return originalOpen.call(window.VitsKendoWindow, id, options);
+      };
+      window.VitsKendoWindow.close = function (id) {
+        if (id === 'findOtherOptionModal') {
+          updateOptionModalBodyClass(false);
+        }
+        return originalClose.call(window.VitsKendoWindow, id);
+      };
     }
     function initOptionModalBodyClass() {
       if (!$optionModal.length) {
@@ -8217,19 +8380,18 @@ if (document.body?.dataset?.guide === 'true') {
       if (window.VitsKendoWindow && !$optionModal.data('kendoWindow')) {
         window.VitsKendoWindow.initAll(document);
       }
-      var inst = $optionModal.data('kendoWindow');
-      if (inst) {
-        inst.unbind('open.optionModalToggle');
-        inst.unbind('close.optionModalToggle');
-        inst.bind('open.optionModalToggle', function () {
-          updateOptionModalBodyClass(true);
-        });
-        inst.bind('close.optionModalToggle', function () {
-          updateOptionModalBodyClass(false);
-        });
-        updateOptionModalBodyClass(inst.wrapper && inst.wrapper.is(':visible'));
-      } else {
-        updateOptionModalBodyClass($optionModal.is(':visible'));
+      ensureOptionModalOpenHook();
+      if (bindOptionModalEvents()) {
+        return;
+      }
+      if (!optionModalInitTimer) {
+        optionModalInitTimer = window.setInterval(function () {
+          ensureOptionModalOpenHook();
+          if (bindOptionModalEvents()) {
+            window.clearInterval(optionModalInitTimer);
+            optionModalInitTimer = null;
+          }
+        }, 200);
       }
     }
     var ticking = false;

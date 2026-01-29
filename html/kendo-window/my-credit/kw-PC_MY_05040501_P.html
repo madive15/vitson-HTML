@@ -1,0 +1,406 @@
+<head><script defer src="../../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+<section class="vits-credit-application">
+  <h2 class="sr-only">후불 신청서</h2>
+
+  <!-- S: 회사 정보 -->
+  <dl class="credit-company-info">
+    <dt>회사명</dt>
+    <dd>메가존</dd>
+    <dt>사업자번호</dt>
+    <dd>123-45-67890</dd>
+
+    <!-- S: 사업자등록증 첨부 전 -->
+    <dt>사업자등록증 첨부하기</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-upload" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">파일 첨부하기</span>
+
+  
+</button>
+
+    </dd>
+    <!-- E: 사업자등록증 첨부 전 -->
+
+    <!-- S: 사업자등록증 첨부 후 -->
+    <dt>사업자등록증 첨부하기</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-chip-file">
+  <span class="text name">회사 사업자 등록증</span>
+  <span class="text ext">.PDF</span>
+  <span class="icon"> <i class="ic ic-x" aria-hidden="true"></i>
+ </span>
+</button>
+
+    </dd>
+    <!-- E: 사업자등록증 첨부 후 -->
+  </dl>
+  <!-- E: 회사 정보 -->
+
+  <!-- S: 담당자 정보 -->
+  <div class="credit-manager-section">
+    <div class="manager-header">
+      <h3 class="manager-title">담당자 정보 입력하기</h3>
+      <p class="manager-desc">기존 담당자 외 후불 관련 추가 담당자가 있을 경우 입력해 주세요.</p>
+    </div>
+
+    <div class="manager-content">
+      <!-- S: 담당자 없을 때 -->
+      <div class="manager-empty">
+        <p class="empty-text">추가 담당자 정보가 없습니다.</p>
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-tertiary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">담당자 추가</span>
+
+  
+</button>
+
+      </div>
+      <!-- E: 담당자 없을 때 -->
+    </div>
+
+    <div class="manager-content">
+      <!-- S: 추가 담당자 입력 폼 -->
+      <div class="manager-form">
+        <p class="form-title">추가 담당자</p>
+        <dl class="form-fields">
+          <dt>이름</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-name" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="credit-name"
+      id="credit-name"
+      placeholder="이름"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </dd>
+          <dt>부서/지위</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-team" class="sr-only">부서/직위</label>
+
+    <input
+      type="text"
+      name="credit-team"
+      id="credit-team"
+      placeholder="부서/직위"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-team-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </dd>
+          <dt>휴대폰번호</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-phone" class="sr-only">휴대폰 번호</label>
+
+    <input
+      type="text"
+      name="credit-phone"
+      id="credit-phone"
+      placeholder="010-0000-0000"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            <!-- prettier-ignore -->
+            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="ckb-phone"
+    value="ckb-phone"
+    
+    
+    
+    checked
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">문자 수신 동의</span>
+  
+</label>
+
+          </dd>
+          <dt>이메일</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-email" class="sr-only">이메일</label>
+
+    <input
+      type="text"
+      name="credit-email"
+      id="credit-email"
+      placeholder="email@example.com"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            <!-- prettier-ignore -->
+            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="ckb-email"
+    value="ckb-email"
+    
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">이메일 수신 동의</span>
+  
+</label>
+
+          </dd>
+        </dl>
+        <div class="form-actions">
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-secondary "
+  
+  >
+  
+
+  <span class="text">추가</span>
+
+  
+</button>
+
+        </div>
+      </div>
+      <!-- E: 추가 담당자 입력 폼 -->
+    </div>
+
+    <div class="manager-content">
+      <!-- S: 추가 담당자 목록 -->
+      <div class="manager-list">
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-chip-button-group">
+    
+  <div class="vits-chip-button type-filled" data-chip-value="user1">
+    
+    <span class="text name">김직원</span>
+    <span class="text team">영업팀 부장</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="김직원 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="user2">
+    
+    <span class="text name">김배달</span>
+    <span class="text team">물류팀 사원</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="김배달 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="user3">
+    
+    <span class="text name">제갈유진</span>
+    <span class="text team">글로벌 디지털 트랜스포메이션 전략기획팀 부장</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="제갈유진 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="user4">
+    
+    <span class="text name">황보지훈</span>
+    <span class="text team">인사팀 선임매니저</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="황보지훈 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+     
+  <div class="vits-chip-button type-filled" data-chip-value="user5">
+    
+    <span class="text name">박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리</span>
+    <span class="text team">디지털혁신센터 플랫폼개발팀 책임연구원</span>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리 삭제">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+   
+</div>
+
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-outline-tertiary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">담당자 추가</span>
+
+  
+</button>
+
+      </div>
+      <!-- E: 추가 담당자 목록 -->
+    </div>
+  </div>
+  <!-- E: 담당자 정보 -->
+</section>

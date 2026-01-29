@@ -1,0 +1,515 @@
+<head><script defer src="../../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+<section class="vits-freight-company">
+  <h2 class="sr-only">화물 영업소 조회</h2>
+  
+  <div class="vits-carrier-search">
+    <!-- 검색 영역 -->
+    <div class="vits-carrier-search-form">
+      <div class="vits-form-row">
+        <div class="vits-form-field">
+          <label class="vits-form-label">화물사 구분</label>
+          <div class="vits-form-control">
+            <!-- prettier-ignore -->  
+            
+
+
+
+
+<div
+  class="vits-select size-default"
+  data-vits-select
+   data-select-id="freight-company" 
+  
+  
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="전체"
+    >전체</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value=""
+           
+        aria-selected="false"
+        
+      >전체</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="kyungdong"
+           
+        aria-selected="false"
+        
+      >경동택배</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="hanjin"
+           
+        aria-selected="false"
+        
+      >한진택배</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="daesin"
+           
+        aria-selected="false"
+        
+      >대신택배</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="freightCompanyType" value="전체" data-vits-select-hidden />
+  
+</div>
+
+          </div>
+        </div>
+  
+        <div class="vits-form-field is-grow">
+
+          <label class="vits-form-label">화물지점</label>
+          <div class="vits-form-control">
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="freight-office" class="sr-only">화물지점</label>
+
+    <input
+      type="text"
+      name="freightOffice"
+      id="freight-office"
+      placeholder="지점명을 입력해주세요."
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="freight-office-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </div>
+        </div>
+  
+        <div class="vits-form-actions">
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">검색</span>
+
+  
+</button>
+
+        </div>
+      </div>
+    </div>
+  
+    <!-- 결과 테이블 -->
+    <div class="vits-carrier-search-result">
+      <table class="vits-table vits-table-carrier">
+        <caption class="sr-only">화물 지점 검색 결과</caption>
+        <colgroup>
+          <col width="50">
+          <col width="100">
+          <col>
+          <col>
+          <col width="130">
+          <col width="90">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">화물구분</th>
+            <th scope="col">영업소명</th>
+            <th scope="col">주소</th>
+            <th scope="col">전화번호</th>
+            <th scope="col">선택</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          
+            <tr>
+              <td>1</td>
+              <td>경동택배</td>
+              <td>과천지점</td>
+              <td>경기 과천시 갈현동 123-45</td>
+              <td>02-1234-5678</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>2</td>
+              <td>한진택배</td>
+              <td>성수지점</td>
+              <td>서울 성동구 성수이로 222</td>
+              <td>02-2345-6789</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>3</td>
+              <td>대신택배</td>
+              <td>부천지점</td>
+              <td>경기 부천시 원미구 길주로 88</td>
+              <td>032-345-6789</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>4</td>
+              <td>경동택배</td>
+              <td>수원지점</td>
+              <td>경기 수원시 영통구 광교로 12</td>
+              <td>031-456-7890</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>5</td>
+              <td>한진택배</td>
+              <td>강서지점</td>
+              <td>서울 강서구 공항대로 55</td>
+              <td>02-5678-9012</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>6</td>
+              <td>대신택배</td>
+              <td>인천지점</td>
+              <td>인천 남동구 구월로 101</td>
+              <td>032-678-9012</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>7</td>
+              <td>경동택배</td>
+              <td>안양지점</td>
+              <td>경기 안양시 동안구 시민대로 200</td>
+              <td>031-789-0123</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>8</td>
+              <td>대신택배</td>
+              <td>의정부지점</td>
+              <td>경기 의정부시 시민로 77</td>
+              <td>031-901-2345</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>9</td>
+              <td>경동택배</td>
+              <td>일산지점</td>
+              <td>경기 고양시 일산동구 중앙로 400</td>
+              <td>031-012-3456</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+            <tr>
+              <td>10</td>
+              <td>한진택배</td>
+              <td>광명지점</td>
+              <td>경기 광명시 철산로 66</td>
+              <td>02-7890-1234</td>
+              <td>
+                <!-- prettier-ignore -->
+                
+
+
+<button
+  type="button"
+  class="vits-btn-xxs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+              </td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="vits-carrier-search-pagination">
+      
+<!-- prettier-ignore -->
+
+
+
+<nav
+  class="vits-pagination"
+  aria-label="페이지네이션"
+  data-pagination
+  data-pagination-type="default"
+  data-pagination-current="1"
+  data-pagination-total="12"
+>
+  
+  <!-- prettier-ignore -->
+  
+  
+  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </span>
+  
+
+  <!-- prettier-ignore -->
+  
+  <ol class="vits-pagination-list">
+    
+    <li class="vits-pagination-item">
+      
+      <span class="vits-pagination-link is-active" data-pagination-page data-page="1" aria-current="page">
+        1
+      </span>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="2">2</a>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="3">3</a>
+      
+    </li>
+    
+  </ol>
+
+  
+  <!-- prettier-ignore -->
+  
+  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
+    <i class="ic ic-arrow-right" aria-hidden="true"></i>
+
+  </a>
+   
+</nav>
+
+    </div>
+  </div>  
+  
+</section>
