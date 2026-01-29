@@ -23,37 +23,39 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-favorites">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-favorites">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">좋아요</h2>
-                    <p class="vits-mypage-content-desc">좋아요한 상품을 폴더별로 관리하세요</p>
-                  </div>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-favorites">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">좋아요</h2>
+                      <p class="vits-mypage-content-desc">좋아요한 상품을 폴더별로 관리하세요</p>
+                    </div>
 
-                  <div class="vits-mypage-panel">
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
-                        size:'xl', variant: 'secondary', text: '폴더 추가하기', iconLeft: true, iconName: 'ic-plus', className: 'btn-fix-w160'
-                      }) %>
-
-                      <%- include(`${_src}/views/components/empty-state.ejs`, {
-                        iconName: 'box',
-                        title: '아직 폴더가 없습니다',
-                        desc: '폴더를 추가하여 좋아요한 상품을 관리해보세요',
-                        buttonHtml
-                      }) %>
+                    <div class="vits-mypage-panel">
+                      <div class="vits-mypage-records-box type-empty">
+                        <!-- 주문 없음 -->
+                        <!-- prettier-ignore -->
+                        <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+                          size:'xl', variant: 'secondary', text: '폴더 추가하기', iconLeft: true, iconName: 'ic-plus', className: 'btn-fix-w160'
+                        }) %>
+  
+                        <%- include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'box',
+                          title: '아직 폴더가 없습니다',
+                          desc: '폴더를 추가하여 좋아요한 상품을 관리해보세요',
+                          buttonHtml
+                        }) %>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- E: vits-grid-main -->
+                  <!-- E: vits-grid-main -->
+                </div>
               </div>
             </div>
           </div>

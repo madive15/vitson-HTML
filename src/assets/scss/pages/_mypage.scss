@@ -113,6 +113,20 @@
   }
 }
 
+@mixin mypage-credit-common {
+  width: 100%;
+
+  [class*='credit-'][class*='-head'] {
+    @include mx.flex(flex, row, flex-start, center);
+    @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+    height: fn.rem(60);
+
+    .credit-title {
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
+}
+
 .vits-grid-main-content {
   &[class*='main-content-my-'] {
     @include mx.flex(flex, column, flex-start, flex-start);
@@ -400,6 +414,7 @@
       gap: map.get(var.$unit, 40);
       width: 100%;
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &.type-empty {
         @include roundbox-white;
         @include mx.flex(flex, row, center, center);
@@ -877,6 +892,199 @@
           }
         }
       }
+    }
+  }
+
+  // 후불 관리
+  &-credit-manage {
+    @include mx.flex(flex, column);
+    @include mypage-credit-common;
+    gap: map.get(var.$unit, 32);
+
+    [class*='credit-'][class*='-body'] {
+      .credit-title {
+        @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+        padding-bottom: map.get(var.$unit, 20);
+
+        small {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+          padding-left: fn.rem(10);
+        }
+
+        &:not(:first-of-type) {
+          margin-top: map.get(var.$unit, 32);
+        }
+      }
+    }
+
+    .credit-manage {
+      &-usage {
+        @include roundbox-white('section', 'detail');
+      }
+
+      &-sign {
+        @include roundbox-white('section', 'detail');
+      }
+    }
+
+    .credit-usage {
+      &-items {
+        @include mx.flex(flex, row, flex-start, stretch, wrap);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-item {
+        flex: 0 0 calc((100% - map.get(var.$unit, 12)) / 2);
+
+        &-inner {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 8);
+          height: 100%;
+          padding: map.get(var.$unit, 36) map.get(var.$unit, 40);
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: map.get(var.$radius, 'md');
+        }
+      }
+
+      &-detail {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        gap: map.get(var.$unit, 36);
+      }
+
+      &-label {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-desc {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+        padding: map.get(var.$unit, 4) map.get(var.$unit, 12);
+        background: map.get(color.$layout-surf, 'sunken');
+        border-radius: map.get(var.$radius, 'md');
+
+        &-label {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        &-value {
+          @include typo.typography('h4s', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+
+      &-value {
+        @include typo.typography('h2b', $color: map.get(color.$text-colors, 'secondary'));
+
+        &.value-blue {
+          color: map.get(color.$text-status, 'info-sub');
+        }
+
+        &.value-red {
+          color: map.get(color.$text-status, 'brand-sub');
+        }
+      }
+
+      &-account {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-bank {
+        @include typo.typography('h4s');
+      }
+
+      &-number {
+        @include typo.typography('h4s', $color: map.get(color.$text-status, 'info-sub'));
+      }
+
+      &-info {
+        @include list.form-dl-cst(120, 0, 0, 12, 16, 'b3r', map.get(color.$text-colors, 'default'));
+
+        dt {
+          &:has(+ dd .credit-usage-account) {
+            padding-top: fn.rem(2.5);
+          }
+        }
+
+        dd {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-box {
+          @include mx.flex(flex, row, space-between, center);
+        }
+      }
+    }
+
+    .credit-sign-body {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 16);
+    }
+
+    .credit-sign {
+      &-items {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 16);
+        width: 100%;
+        padding: map.get(var.$unit, 32);
+        background: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'lg');
+      }
+
+      &-item {
+        width: 100%;
+
+        &-inner {
+          @include mx.flex(flex, row, space-between, center);
+          @include mx.border('all', $color: map.get(color.$layout-border, 'quinary'));
+          padding: map.get(var.$unit, 16);
+          background: map.get(color.$layout-surf, 'base');
+          border-radius: map.get(var.$radius, 'md');
+        }
+      }
+
+      &-label {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 20));
+          color: map.get(color.$label-step, 'done');
+        }
+
+        .text {
+          @include typo.typography('b2m', $color: map.get(color.$text-colors, 'secondary'));
+        }
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+
+        .vits-btn-sm {
+          width: fn.rem(140);
+        }
+      }
+
+      &-btn-help {
+        @include button.btn-reset;
+        @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        height: fn.rem(19);
+        background: transparent;
+      }
+
+      &-notice {
+        width: 100%;
+      }
+    }
+  }
+
+  &-credit-process {
+    @include mypage-credit-common;
+
+    .credit-apply-process {
+      @include roundbox-white('section', 'detail');
     }
   }
 }
@@ -1605,4 +1813,204 @@
   .vits-form-dl {
     @include list.form-dl-cst(140, 44, 11.5, 12, 24, 'b2s', map.get(color.$text-colors, 'primary'));
   }
+}
+
+// 후불 신청서
+.vits-credit-application {
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 36);
+
+  .credit-company-info {
+    @include list.form-dl-cst(144, 0, 0, 0, 16, 'b3r', map.get(color.$text-colors, 'default'));
+
+    dd {
+      @include typo.typography('b3r');
+    }
+  }
+
+  .credit-manager-section {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 20);
+
+    .manager {
+      &-header {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 2);
+      }
+
+      &-title {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-desc {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-content {
+        @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+        width: 100%;
+        padding: map.get(var.$unit, 16);
+        background: map.get(color.$layout-surf, 'base');
+        border-radius: map.get(var.$radius, 'md');
+
+        & + .manager-content {
+          margin-top: map.get(var.$unit, 16);
+        }
+      }
+
+      &-empty {
+        @include mx.flex(flex, row, space-between, center);
+      }
+
+      &-text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-form {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 32);
+
+        .form {
+          &-title {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          &-fields {
+            @include list.form-dl-cst(80, 32, 7, 10, 16, 'b3r', map.get(color.$text-colors, 'tertiary'));
+
+            dd {
+              @include mx.flex(flex, row, flex-start, flex-start);
+              gap: fn.rem(10);
+
+              &:not(:has(.vits-checkbox-item)) {
+                .vits-input {
+                  width: fn.rem(320);
+                }
+              }
+
+              &:has(.vits-checkbox-item) {
+                .vits-input {
+                  width: fn.rem(200);
+                }
+
+                .vits-checkbox-item {
+                  flex-shrink: 0;
+                  align-self: center;
+                }
+              }
+            }
+          }
+
+          &-actions {
+            @include mx.flex(flex, row, center, center);
+            gap: map.get(var.$unit, 20);
+
+            button {
+              width: fn.rem(130);
+            }
+          }
+        }
+      }
+
+      &-list {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+      }
+    }
+  }
+}
+
+// =======================
+.vits-step-tab {
+  &-header {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  &-item {
+    flex: 1;
+    padding: 16px 20px;
+    text-align: center;
+    pointer-events: none;
+    cursor: default;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+
+    &:not(:last-child) {
+      border-right: none;
+    }
+
+    &.is-active {
+      margin-bottom: -1px;
+      background-color: #fff;
+      border-bottom: 2px solid #fff;
+
+      .vits-step-tab-label {
+        font-weight: 600;
+        color: #1a73e8;
+      }
+    }
+
+    &.is-done {
+      background-color: #e8f5e9;
+
+      .vits-step-tab-label {
+        color: #2e7d32;
+
+        &::before {
+          content: '✓ ';
+        }
+      }
+    }
+
+    &.is-disabled {
+      background-color: #fafafa;
+
+      .vits-step-tab-label {
+        color: #bdbdbd;
+      }
+    }
+  }
+
+  &-label {
+    font-size: 14px;
+    color: #666;
+  }
+
+  &-panels {
+    border: 1px solid #e0e0e0;
+    border-top: none;
+  }
+
+  &-panel {
+    display: none;
+    padding: 24px;
+
+    &.is-active {
+      display: block;
+    }
+  }
+
+  &-content {
+    min-height: 100px;
+  }
+}
+
+// 테스트 버튼 (나중에 삭제)
+.vits-test-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  background: #1a73e8;
+  border: none;
+  border-radius: 4px;
 }

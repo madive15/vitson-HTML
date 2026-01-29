@@ -1,0 +1,59 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _hasAutoTransfer = typeof hasAutoTransfer !== 'undefined' ? hasAutoTransfer : false;
+%>
+<section class="credit-manage-sign">
+  <div class="credit-sign-head" data-scss="head">
+    <h3 class="credit-title">전자서명 관리</h3>
+  </div>
+
+  <div class="credit-sign-body" data-scss="body">
+    <ul class="credit-sign-items">
+      <li class="credit-sign-item">
+        <div class="credit-sign-item-inner">
+          <p class="credit-sign-label">
+            <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+            <span class="text">거래약정서</span>
+          </p>
+          <div class="credit-sign-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'tertiary', text: '문서확인'}) %>
+          </div>
+        </div>
+      </li>
+      <li class="credit-sign-item">
+        <div class="credit-sign-item-inner">
+          <p class="credit-sign-label">
+            <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+            <span class="text">개인신용정보 제공동의서</span>
+          </p>
+          <div class="credit-sign-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'tertiary', text: '문서확인'}) %>
+          </div>
+        </div>
+      </li>
+      <li class="credit-sign-item">
+        <div class="credit-sign-item-inner">
+          <p class="credit-sign-label">
+            <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+            <span class="text">계좌이체 CMS 동의</span>
+          </p>
+          <div class="credit-sign-actions">
+            <button class="credit-sign-btn-help" type="button">도움말</button>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'primary', text: '서명하기'}) %>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="credit-sign-notice">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+        theme: 'blue', text: '후불 이용 안내', list:['자동이체는 자동 이체일에 등록된 계좌에서 자동으로 결제됩니다.','연체 시 후불 이용이 제한될 수 있으니 결제일을 꼭 준수해 주세요.','한도 증액은 고객센터로 신청해 주세요. 신청 후 심사를 거쳐 승인되며, 영업일 기준 2-3일 소요됩니다.','전자서명 문서는 언제든지 확인 및 다운로드가 가능합니다.']
+      }) %>
+    </div>
+  </div>
+</section>

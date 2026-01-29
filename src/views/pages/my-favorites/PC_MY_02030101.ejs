@@ -23,46 +23,48 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-favorites">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-favorites">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">자주 구매</h2>
-                    <p class="vits-mypage-content-desc">자주 구매한 상품을 확인하고 빠르게 주문하세요</p>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-favorites">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">자주 구매</h2>
+                      <p class="vits-mypage-content-desc">자주 구매한 상품을 확인하고 빠르게 주문하세요</p>
+                    </div>
+
+                    <div class="vits-mypage-content-notice">
+                      <ul class="notice-list">
+                        <li>최근 12개월간 2회 이상 주문하신 상품에 대한 목록입니다.</li>
+                        <li>각 상품은 현재 판매되고 있는 가격입니다.</li>
+                      </ul>
+                    </div>
+
+                    <div class="vits-mypage-panel">
+                      <section class="vits-mypage-favorites type-product-list">
+                        <h3 class="sr-only">자주구매 상품 리스트</h3>
+
+                        <div class="favorites-product-list-box">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
+                            pageType: 'frequent' }) %>
+  
+                          <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-frequent-list.ejs`, {
+                            _src: _src,
+                            totalCount: 60,
+                            productList: [],
+                            pagination: {}  
+                          }) %>
+                        </div>
+                      </section>
+                    </div>
                   </div>
 
-                  <div class="vits-mypage-content-notice">
-                    <ul class="notice-list">
-                      <li>최근 12개월간 2회 이상 주문하신 상품에 대한 목록입니다.</li>
-                      <li>각 상품은 현재 판매되고 있는 가격입니다.</li>
-                    </ul>
-                  </div>
-
-                  <div class="vits-mypage-panel">
-                    <section class="vits-mypage-favorites type-product-list">
-                      <h3 class="sr-only">자주구매 상품 리스트</h3>
-
-                      <div class="favorites-product-list-box">
-                        <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
-                          pageType: 'frequent' }) %>
-
-                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-frequent-list.ejs`, {
-                          _src: _src,
-                          totalCount: 60,
-                          productList: [],
-                          pagination: {}  
-                        }) %>
-                      </div>
-                    </section>
-                  </div>
+                  <!-- E: vits-grid-main -->
                 </div>
-
-                <!-- E: vits-grid-main -->
               </div>
             </div>
           </div>

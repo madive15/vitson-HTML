@@ -1,8 +1,8 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
 <div class="vits-chip-button-group">
-  <% (datas || []).forEach((chip) => { %> <% const { action, variant = 'outline', value, name, category } = chip; %> <%
-  if (action === 'full') { %>
+  <% (datas || []).forEach((chip) => { %> <% const { action, variant = 'outline', value, name, category, team } = chip;
+  %> <% if (action === 'full') { %>
   <button
     type="button"
     class="vits-chip-button type-<%= variant %>"
@@ -18,7 +18,8 @@
   <% } else if (action === 'x') { %>
   <div class="vits-chip-button type-<%= variant %>" data-chip-value="<%= value %>">
     <% if (category) { %><span class="text category"><%= category %></span><% } %>
-    <span class="text"><%= name %></span>
+    <span class="text name"><%= name %></span>
+    <% if (team) { %><span class="text team"><%= team %></span><% } %>
     <button type="button" class="remove" data-chip-action="remove" aria-label="<%= name %> 삭제">
       <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
     </button>

@@ -10,6 +10,7 @@
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
 import '../ui/toggle.js';
+import '../ui/step-tab.js';
 import '../ui/period-btn.js';
 import '../ui/scroll-boundary.js';
 import '../ui/layer.js';
@@ -52,6 +53,7 @@ import '../ui/kendo/kendo.js';
   window.UI.init = function () {
     if (window.UI.kendo && window.UI.kendo.init) window.UI.kendo.init();
     if (window.UI.toggle && window.UI.toggle.init) window.UI.toggle.init();
+    if (window.UI.stepTab && window.UI.stepTab.init) window.UI.stepTab.init();
     if (window.UI.PeriodBtn && window.UI.PeriodBtn.init) window.UI.PeriodBtn.init();
     if (window.UI.scrollBoundary && window.UI.scrollBoundary.init) window.UI.scrollBoundary.init();
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();

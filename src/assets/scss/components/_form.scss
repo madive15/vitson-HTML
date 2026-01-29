@@ -341,7 +341,7 @@ $checkbox-item: (
   'm': (
     icon: 16,
     font: 'b3r',
-    icon-mt: 1,
+    icon-mt: 0,
     label-mt: 0
   ),
   'l': (
@@ -401,6 +401,10 @@ $checkbox-item: (
       .icon {
         width: fn.rem($icon-size);
         height: fn.rem($icon-size);
+
+        @if $key == 'm' {
+          align-self: center;
+        }
 
         // label 있을 때만 icon margin-top 적용
         @if $icon-mt != 0 {

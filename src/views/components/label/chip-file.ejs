@@ -1,0 +1,14 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _filename = typeof filename !== 'undefined' ? filename : '';
+  const lastDot = _filename.lastIndexOf('.');
+  const _name = lastDot > 0 ? _filename.substring(0, lastDot) : _filename;
+  const _ext = lastDot > 0 ? _filename.substring(lastDot) : '';
+%>
+
+<button type="button" class="vits-chip-file">
+  <span class="text name"><%= _name %></span>
+  <span class="text ext"><%= _ext %></span>
+  <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %> </span>
+</button>

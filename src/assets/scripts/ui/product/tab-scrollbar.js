@@ -32,7 +32,10 @@
     // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
     var $body = $('body');
     var $optionModal = $('#findOtherOptionModal');
-    var OPTION_MODAL_BODY_CLASS = 'is-option-modal-open';
+    var OPTION_MODAL_BODY_OPEN_CLASS = 'is-option-modal-open';
+    var OPTION_MODAL_BODY_HIDE_CLASS = 'is-option-modal-hide';
+    var optionModalInitTimer = null;
+    var optionModalOpenWrapped = false;
 
     function getScrollTop() {
       return $(window).scrollTop();
@@ -129,7 +132,55 @@
       if (!$optionModal.length) {
         return;
       }
-      $body.toggleClass(OPTION_MODAL_BODY_CLASS, !!isOpen);
+      $body.toggleClass(OPTION_MODAL_BODY_OPEN_CLASS, !!isOpen);
+      $body.toggleClass(OPTION_MODAL_BODY_HIDE_CLASS, false);
+    }
+
+    function bindOptionModalEvents() {
+      var inst = $optionModal.data('kendoWindow');
+      if (!inst) {
+        return false;
+      }
+      inst.unbind('open.optionModalToggle');
+      inst.unbind('close.optionModalToggle');
+      inst.bind('open.optionModalToggle', function () {
+        updateOptionModalBodyClass(true);
+      });
+      inst.bind('close.optionModalToggle', function () {
+        updateOptionModalBodyClass(false);
+      });
+      if (!inst._optionModalCloseWrapped) {
+        inst._optionModalCloseWrapped = true;
+        var originalClose = inst.close;
+        inst.close = function () {
+          updateOptionModalBodyClass(false);
+          return originalClose.call(inst);
+        };
+      }
+      return true;
+    }
+
+    function ensureOptionModalOpenHook() {
+      if (!window.VitsKendoWindow || optionModalOpenWrapped) {
+        return;
+      }
+      optionModalOpenWrapped = true;
+      var originalOpen = window.VitsKendoWindow.open;
+      var originalClose = window.VitsKendoWindow.close;
+
+      window.VitsKendoWindow.open = function (id, options) {
+        if (id === 'findOtherOptionModal') {
+          updateOptionModalBodyClass(true);
+        }
+        return originalOpen.call(window.VitsKendoWindow, id, options);
+      };
+
+      window.VitsKendoWindow.close = function (id) {
+        if (id === 'findOtherOptionModal') {
+          updateOptionModalBodyClass(false);
+        }
+        return originalClose.call(window.VitsKendoWindow, id);
+      };
     }
 
     function initOptionModalBodyClass() {
@@ -141,19 +192,20 @@
         window.VitsKendoWindow.initAll(document);
       }
 
-      var inst = $optionModal.data('kendoWindow');
-      if (inst) {
-        inst.unbind('open.optionModalToggle');
-        inst.unbind('close.optionModalToggle');
-        inst.bind('open.optionModalToggle', function () {
-          updateOptionModalBodyClass(true);
-        });
-        inst.bind('close.optionModalToggle', function () {
-          updateOptionModalBodyClass(false);
-        });
-        updateOptionModalBodyClass(inst.wrapper && inst.wrapper.is(':visible'));
-      } else {
-        updateOptionModalBodyClass($optionModal.is(':visible'));
+      ensureOptionModalOpenHook();
+
+      if (bindOptionModalEvents()) {
+        return;
+      }
+
+      if (!optionModalInitTimer) {
+        optionModalInitTimer = window.setInterval(function () {
+          ensureOptionModalOpenHook();
+          if (bindOptionModalEvents()) {
+            window.clearInterval(optionModalInitTimer);
+            optionModalInitTimer = null;
+          }
+        }, 200);
       }
     }
 

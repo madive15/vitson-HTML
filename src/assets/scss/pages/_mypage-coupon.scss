@@ -1,0 +1,298 @@
+// -----------------------------------------------------------------------------
+// pages/_mypage-coupon.scss
+// - 마이페이지  >  혜택관리 > 쿠폰함 전용 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+@use '@/assets/scss/pages/category' as category;
+
+.vits-mypage-top-tabs {
+  @include mx.flex($align: center);
+  width: 100%;
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+
+  [class*='vits-btn-'] {
+    @include button.btn-reset;
+    @include mx.flex($align: center, $justify: center);
+    gap: fn.rem(10);
+    width: 50%;
+    min-height: fn.rem(48);
+
+    .text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    .coupon-badge {
+      @include typo.typography('b4r', $color: map.get(color.$brand-colors, 'primary'));
+      @include mx.flex($align: center, $justify: center);
+      display: inline-flex;
+      min-width: fn.rem(22);
+      min-height: fn.rem(22);
+      padding: 0 fn.rem(4);
+      background-color: map.get(color.$layout-status, 'brand-bg-sub');
+      border-radius: 50%;
+    }
+
+    &.is-active {
+      @include mx.border(all, 2px, solid, map.get(color.$layout-border, 'brand'));
+      border-radius: map.get(var.$radius, 'md');
+
+      .text {
+        @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
+      }
+    }
+  }
+}
+
+.vits-mypage-content-promotion {
+  @include mx.flex($justify: space-between);
+  width: 100%;
+  padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+
+  .promotion-notice-box {
+    @include mx.flex($align: center, $justify: center);
+    gap: fn.rem(12);
+
+    .icon {
+      @include mx.flex($align: center, $justify: center);
+      width: fn.rem(56);
+      height: fn.rem(56);
+      color: map.get(color.$icon-neutral, 'primary');
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: 50%;
+
+      .ic {
+        width: fn.rem(32);
+        height: fn.rem(32);
+      }
+    }
+
+    .notice-text {
+      @include mx.flex($direction: column);
+      gap: fn.rem(4);
+
+      .text {
+        @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
+
+        em {
+          font-style: normal;
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      .desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
+
+  .promotion-register-btn {
+    min-width: fn.rem(160);
+
+    [class*='vits-btn-'] {
+      width: 100%;
+    }
+  }
+}
+
+// 쿠폰 리스트
+.vits-my-coupon-exist-list {
+  @include mx.flex;
+  flex-wrap: wrap;
+  gap: map.get(var.$unit, 20);
+
+  .coupon-item {
+    @include mx.flex;
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    position: relative;
+    gap: map.get(var.$unit, 16);
+    width: calc(50% - #{fn.rem(10)});
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+    background-color: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+
+    &.is-done {
+      pointer-events: none;
+      cursor: not-allowed;
+      filter: grayscale(1);
+      opacity: 0.7;
+
+      .vits-btn-download {
+        background-color: map.get(color.$layout-surf, 'secondary');
+      }
+    }
+
+    &-left {
+      @include mx.flex($align: center);
+      flex-shrink: 0;
+      min-width: fn.rem(140);
+    }
+
+    &-badge {
+      @include mx.flex($align: center, $justify: center, $direction: column);
+      @include mx.background('ic/ic-coupon-bg.svg');
+      width: 100%;
+      min-height: fn.rem(80);
+
+      .coupon-item-badge-value {
+        @include typo.typography('h1', $color: map.get(color.$text-status, 'info'));
+      }
+
+      .coupon-item-badge-value-max {
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+      }
+    }
+
+    &-body {
+      @include mx.flex($direction: column);
+      @include mx.ellipsis-single;
+      flex: 1;
+
+      .coupon-item-title {
+        @include mx.ellipsis-single;
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      .coupon-item-info {
+        button[type='button'] {
+          @include button.btn-reset;
+          @include icon.ic-size(fn.rem(16));
+          min-width: fn.rem(16);
+          color: map.get(color.$icon-neutral, 'secondary');
+        }
+      }
+
+      // 토글 영역
+      .coupon-item-info-text {
+        @include mx.flex($align: center);
+        width: 100%;
+        margin-top: fn.rem(2);
+
+        span {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          padding: 0;
+
+          &.content {
+            @include mx.ellipsis-single;
+            min-height: auto;
+          }
+        }
+      }
+
+      // 토글 영역 내부
+      .coupon-item-info-view {
+        @include mx.position(absolute, 30px, 16px, 0, 152px);
+        width: auto;
+        max-height: max-content;
+        padding: map.get(var.$unit, 12);
+        overflow: hidden !important;
+        background-color: map.get(color.$layout-surf, 'base');
+        border: 1px solid map.get(color.$layout-border, 'tertiary');
+        border-radius: map.get(var.$radius, 'sm');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        button[type='button'] {
+          position: absolute;
+          top: fn.rem(12);
+          right: fn.rem(12);
+        }
+
+        .info-view-text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          width: 90%;
+          white-space: normal;
+        }
+
+        .icon {
+          @include icon.ic-size(fn.rem(16));
+          color: map.get(color.$icon-neutral, 'primary');
+        }
+      }
+
+      .coupon-item-desc {
+        @include mx.flex($direction: column);
+        gap: fn.rem(2);
+        margin-top: fn.rem(8);
+
+        .desc-list-discount {
+          @include mx.flex($align: center);
+          gap: fn.rem(4);
+
+          dt,
+          dd {
+            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+      }
+
+      .coupon-item-period {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+        margin-top: fn.rem(8);
+      }
+    }
+
+    &-right {
+      @include mx.flex($align: center);
+      flex-shrink: 0;
+
+      .vits-btn-download {
+        @include button.btn-reset;
+        @include icon.ic-size(fn.rem(36));
+        background-color: map.get(color.$layout-surf, 'brand');
+        border-radius: 50%;
+
+        .icon {
+          @include icon.ic-size(fn.rem(20));
+          display: inline-flex;
+          color: map.get(color.$icon-neutral, 'inverse');
+        }
+      }
+    }
+  }
+}
+
+/* ----------------------------------- */
+.main-content-my-coupon {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 32);
+
+  .vits-mypage-query,
+  .vits-mypage-coupon-tabs,
+  .vits-mypage-records-box,
+  .vits-mypage-content-promotion {
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  .vits-mypage-records-box {
+    @include mx.flex($direction: column);
+
+    .vits-mypage-records-box-title {
+      @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+      padding-bottom: map.get(var.$unit, 36);
+    }
+
+    // 없음 상태 처리
+    &.type-empty {
+      padding: map.get(var.$unit, 36) map.get(var.$unit, 32);
+    }
+
+    // 있음 상태 처리
+    &.type-exist {
+      min-height: fn.rem(358);
+      padding: map.get(var.$unit, 32);
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'lg');
+    }
+  }
+}

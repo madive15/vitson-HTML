@@ -1,0 +1,90 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%  const _badgeValue = typeof badgeValue !== 'undefined' ? badgeValue : '1만원';
+  const _badgeValueMax = typeof badgeValueMax !== 'undefined' ? badgeValueMax : '최대 2만원 할인';
+  const _title = typeof title !== 'undefined' ? title : '12월 정기 세일 쿠폰';
+  const _showDownloadBtn = typeof showDownloadBtn !== 'undefined' ? showDownloadBtn : true;
+  const _showInfoButton = typeof showInfoButton !== 'undefined' ? showInfoButton : true;
+  const _infoTitle = typeof infoTitle !== 'undefined' ? infoTitle : '적용대상 :';
+  const _infoContent = typeof infoContent !== 'undefined' ? infoContent : '에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기';
+  const _minOrderAmount = typeof minOrderAmount !== 'undefined' ? minOrderAmount : '1,000,000원';
+  const _maxDiscountAmount = typeof maxDiscountAmount !== 'undefined' ? maxDiscountAmount : '100,000원';
+  const _usagePeriod = typeof usagePeriod !== 'undefined' ? usagePeriod : '2024.12.20 ~ 2024.12.26';
+  const _isDone = typeof isDone !== 'undefined' ? isDone : false;
+%>
+<div class="coupon-item<%= _isDone ? ' is-done' : '' %>">
+  <div class="coupon-item-left">
+    <span class="coupon-item-badge">
+      <strong class="coupon-item-badge-value"><%= _badgeValue %></strong>
+      <span class="coupon-item-badge-value-max"><%= _badgeValueMax %></span>
+    </span>
+  </div>
+
+  <div class="coupon-item-body" data-toggle-scope>
+    <strong class="coupon-item-title"><%= _title %></strong>
+
+    <div class="coupon-item-info">
+      <div class="coupon-item-info-text">
+        <span class="title"><%= _infoTitle %></span>
+        <span class="content"> <%= _infoContent %> </span>
+
+        <% if (_showInfoButton) { %>
+        <button
+          type="button"
+          class="icon-more"
+          aria-label="<%= _infoTitle %> 더보기"
+          data-toggle-btn
+          data-toggle-outside="true"
+          data-toggle-target="coupon-info-view"
+          aria-expanded="false"
+        >
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+        </button>
+        <% } %>
+      </div>
+      <% if (_showInfoButton) { %>
+      <div class="coupon-item-info-view" data-toggle-box="coupon-info-view">
+        <p class="info-view-text"><%= _infoTitle %> <%= _infoContent %></p>
+        <button
+          type="button"
+          class="icon"
+          aria-label="<%= _infoTitle %> 접기"
+          data-toggle-btn
+          data-toggle-target="coupon-info-view"
+        >
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-up' }) %>
+        </button>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="coupon-item-desc">
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최소주문금액:</dt>
+        <dd class="desc-value"><%= _minOrderAmount %></dd>
+      </dl>
+      <dl class="desc-list-discount">
+        <dt class="desc-title">최대할인금액:</dt>
+        <dd class="desc-value"><%= _maxDiscountAmount %></dd>
+      </dl>
+    </div>
+
+    <div class="coupon-item-period">사용기간: <%= _usagePeriod %></div>
+  </div>
+
+  <% if (_showDownloadBtn) { %>
+  <div class="coupon-item-right">
+    <!-- prettier-ignore -->
+    <button type="button" class="vits-btn-download">
+      <span class="icon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-download' }) %>
+        <span class="sr-only">다운로드</span>
+      </span>
+    </button>
+  </div>
+  <% } %>
+</div>

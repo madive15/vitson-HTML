@@ -1,8 +1,26 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-  // 'frequent' (자주구매) | 'like' (좋아요)
+  // 'frequent' (자주구매) | 'like' (좋아요) | 'like-list' (좋아요 상품목록) | 'folder' (폴더)
   const _pageType = typeof pageType !== 'undefined' ? pageType : 'frequent';
+  
+  // 상품 페이지 여부 (별도 변수)
+  const _isProduct = typeof isProduct !== 'undefined' ? isProduct : true;
+  
+  // 페이지 사이즈 옵션
+  const pageSizeOptions = _isProduct
+    ? [
+        { value: '20', text: '20개씩 보기' },
+        { value: '40', text: '40개씩 보기' },
+        { value: '60', text: '60개씩 보기' },
+      ]
+    : [
+        { value: '10', text: '10개씩 보기' },
+        { value: '20', text: '20개씩 보기' },
+        { value: '30', text: '30개씩 보기' },
+      ];
+  
+  const defaultPageSize = _isProduct ? '20' : '10';
 %>
 
 <div class="vits-mypage-favorites-meta type-<%= _pageType %>">
@@ -13,13 +31,9 @@
     <%- include(`${_src}/views/components/form/select.ejs`, {
         id: 'page-size',
         name: 'pageSize',
-        placeholder: '20개씩 보기',
-        options: [
-          { value: '20', text: '20개씩 보기' },
-          { value: '40', text: '40개씩 보기' },
-          { value: '60', text: '60개씩 보기' },
-        ],
-        value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '30',
+        placeholder: pageSizeOptions[0].text,
+        options: pageSizeOptions,
+        value: (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : defaultPageSize,
         disabled: false,
         className: 'type-ghost color-secondary'
       }) %>
@@ -33,13 +47,10 @@
       name: 'sort',
       placeholder: '정렬 선택',
       options: [
-        { value: '추천순', text: '추천순' },
-        { value: '판매량순', text: '판매량순' },
-        { value: '신상품순', text: '신상품순' },
-        { value: '높은 가격순', text: '높은 가격순' },
-        { value: '낮은 가격순', text: '낮은 가격순' },
+        { value: '자주 구매순', text: '자주 구매순' },
+        { value: '최근 구매순', text: '최근 구매순' },
       ],
-      value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '추천순',
+      value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '자주 구매순',
       disabled: false
     }) %>
   </div>

@@ -23,47 +23,49 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-orders">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-orders">
-                  <div class="vits-mypage-content-headline">
-                    <a href="" class="vits-mypage-content-back">
-                      <h2 class="vits-mypage-content-title">
-                        <span class="icon">
-                          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
-                        </span>
-                        주문상세
-                      </h2>
-                    </a>
-                    <div class="vits-mypage-content-order">
-                      <p class="order-title">주문번호</p>
-                      <p class="order-number">ORD-2024-001234</p>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-orders">
+                    <div class="vits-mypage-content-headline">
+                      <a href="" class="vits-mypage-content-back">
+                        <h2 class="vits-mypage-content-title">
+                          <span class="icon">
+                            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+                          </span>
+                          주문상세
+                        </h2>
+                      </a>
+                      <div class="vits-mypage-content-order">
+                        <p class="order-title">주문번호</p>
+                        <p class="order-number">ORD-2024-001234</p>
+                      </div>
+                    </div>
+
+                    <div class="vits-mypage-panel">
+                      <!-- 주문상세 상품 리스트 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-box-detail.ejs`) %>
+
+                      <!-- 배송정보 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-shipping.ejs`) %>
+
+                      <!-- 결제정보 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-payment.ejs`) %>
+
+                      <div class="vits-mypage-panel-actions">
+                        <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant:
+                        'outline-secondary', text: '목록으로', iconLeft: true, iconName: 'ic-arrow-left', className:
+                        'btn-fix-w160'}) %>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="vits-mypage-panel">
-                    <!-- 주문상세 상품 리스트 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-box-detail.ejs`) %>
-
-                    <!-- 배송정보 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-shipping.ejs`) %>
-
-                    <!-- 결제정보 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-payment.ejs`) %>
-
-                    <div class="vits-mypage-panel-actions">
-                      <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant:
-                      'outline-secondary', text: '목록으로', iconLeft: true, iconName: 'ic-arrow-left', className:
-                      'btn-fix-w160'}) %>
-                    </div>
-                  </div>
+                  <!-- E: vits-grid-main -->
                 </div>
-
-                <!-- E: vits-grid-main -->
               </div>
             </div>
           </div>

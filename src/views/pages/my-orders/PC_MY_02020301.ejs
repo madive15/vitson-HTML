@@ -23,41 +23,43 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-orders">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-orders">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">취소/반품내역</h2>
-                    <p class="vits-mypage-content-desc">
-                      취소 및 반품 신청 내역을 확인하고, 처리 현황을 조회할 수 있습니다.
-                    </p>
-                  </div>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-orders">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">취소/반품내역</h2>
+                      <p class="vits-mypage-content-desc">
+                        취소 및 반품 신청 내역을 확인하고, 처리 현황을 조회할 수 있습니다.
+                      </p>
+                    </div>
 
-                  <div class="vits-mypage-panel">
-                    <!-- 취소/반품내역 필터 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'cancle' }) %>
+                    <div class="vits-mypage-panel">
+                      <!-- 취소/반품내역 필터 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'cancle' }) %>
 
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
-                        size:'xl', variant: 'primary', text: '초특가 상품 보기', className: 'btn-fix-w150'
-                      }) %>
-
-                      <%- include(`${_src}/views/components/empty-state.ejs`, {
-                        iconName: 'box',
-                        title: '현재 취소/반품 상품이 없습니다.',
-                        buttonHtml
-                      }) %>
+                      <div class="vits-mypage-records-box type-empty">
+                        <!-- 주문 없음 -->
+                        <!-- prettier-ignore -->
+                        <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+                          size:'xl', variant: 'primary', text: '초특가 상품 보기', className: 'btn-fix-w150'
+                        }) %>
+  
+                        <%- include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'box',
+                          title: '현재 취소/반품 상품이 없습니다.',
+                          buttonHtml
+                        }) %>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- E: vits-grid-main -->
+                  <!-- E: vits-grid-main -->
+                </div>
               </div>
             </div>
           </div>

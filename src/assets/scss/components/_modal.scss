@@ -365,48 +365,50 @@ $modal-widths: (
   - 개별 윈도우 스타일은 이 영역 아래에서 작성하세요.
 ============================================================= */
 
-.k-window {
-  max-width: 95vw;
-  overflow: hidden;
-  border-radius: map.get(var.$radius, 'lg');
+body:not(.is-option-modal-open) {
+  .k-window:has(.vits-modal-header) {
+    max-width: 95vw;
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'lg');
 
-  &-titlebar {
-    display: none;
-  }
-
-  &-content {
-    min-height: 0;
-    max-height: calc(var(--vh, 1vh) * 95);
-    padding: 0 !important;
-    overflow: visible;
-  }
-
-  &.is-draggable .vits-modal-header {
-    cursor: move;
-  }
-
-  // 스크롤 생성 기준 예외처리
-  .vits-modal-content {
-    &:has(.vits-address-select),
-    &:has(.vits-claim-request) {
-      @include mx.flex(flex, column);
-
-      .vits-address-select,
-      .vits-claim-request {
-        flex: 1 1 auto;
-        min-height: 0;
-
-        &-body {
-          // margin collapse로 인한 불필요한 스크롤 방지
-          padding-bottom: 4px;
-          margin-bottom: -4px;
-          overflow-y: auto;
-        }
-      }
+    .k-window-titlebar {
+      display: none;
     }
 
-    &:has(.vits-address-select) {
-      overflow-y: hidden;
+    .k-window-content {
+      min-height: 0;
+      max-height: calc(var(--vh, 1vh) * 95);
+      padding: 0 !important;
+      overflow: visible;
+    }
+
+    &.is-draggable .vits-modal-header {
+      cursor: move;
+    }
+
+    // 스크롤 생성 기준 예외처리
+    .vits-modal-content {
+      &:has(.vits-address-select),
+      &:has(.vits-claim-request) {
+        @include mx.flex(flex, column);
+        margin-bottom: -4px;
+
+        .vits-address-select,
+        .vits-claim-request {
+          flex: 1 1 auto;
+          min-height: 0;
+
+          &-body {
+            // margin collapse로 인한 불필요한 스크롤 방지
+            padding-bottom: 4px;
+            overflow-y: auto;
+          }
+        }
+      }
+
+      &:has(.vits-address-select) {
+        overflow-y: hidden;
+      }
     }
   }
 }

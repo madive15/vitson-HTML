@@ -20,10 +20,18 @@
                 >
                   <span class="text">(전체옵션)다른 규격찾기</span>                            
                 </button>
+
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('getCouponModal')"
+                >
+                  <span class="text">할인쿠폰 받기</span>                            
+                </button>
               </div>
 
               <!-- prettier-ignore -->
-              <% const winModal = { 
+              <% const winOtherOptionModal = { 
                 id: 'findOtherOptionModal', 
                 size: '512', 
                 title: '다른규격 선택', 
@@ -34,7 +42,23 @@
                 }, 
                 contentPath: `${_src}/views/pages/kendo-window/product/kw-PC_PR_01020101_P.ejs`,
                 }; %>
-              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winOtherOptionModal) %>
+
+
+              <!-- prettier-ignore -->
+              <% const winCouponModal = { 
+                id: 'getCouponModal', 
+                size: '572', 
+                title: '쿠폰 다운로드 및 적용', 
+                subtitle: '해당 상품에 제공되는 전체 쿠폰 목록입니다.',
+                opt: { draggable: true }, 
+                contentPath: `${_src}/views/pages/kendo-window/product/kw-PC_CO_03010101_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' }, 
+                  { text: '전체받기', variant: 'primary', action: 'close' }
+                ]
+                }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winCouponModal) %>
             </div>
           </div>
         </div>
