@@ -23,28 +23,30 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-orders">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-orders">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">주문/배송조회</h2>
-                    <p class="vits-mypage-content-desc">주문 및 배송 현황을 확인하실 수 있습니다.</p>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-orders">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">주문/배송조회</h2>
+                      <p class="vits-mypage-content-desc">주문 및 배송 현황을 확인하실 수 있습니다.</p>
+                    </div>
+
+                    <div class="vits-mypage-panel">
+                      <!-- 주문/배송조회 필터 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'toggle' }) %>
+
+                      <!-- 주문/배송조회 리스트 -->
+                      <%- include(`${_src}/views/components/pg-my-orders/my-records-box.ejs`) %>
+                    </div>
                   </div>
 
-                  <div class="vits-mypage-panel">
-                    <!-- 주문/배송조회 필터 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-query.ejs`, { type: 'toggle' }) %>
-
-                    <!-- 주문/배송조회 리스트 -->
-                    <%- include(`${_src}/views/components/pg-my-orders/my-records-box.ejs`) %>
-                  </div>
+                  <!-- E: vits-grid-main -->
                 </div>
-
-                <!-- E: vits-grid-main -->
               </div>
             </div>
           </div>

@@ -93,23 +93,19 @@
   }
 
   function buildChipEl(groupName, value, name, category) {
-    var $chip = $('<div/>', {class: 'vits-chip-button type-filled'});
+    var $chip = $('<button/>', {
+      type: 'button',
+      class: 'vits-chip-button type-filled',
+      'data-chip-action': 'remove',
+      'aria-label': name + ' 삭제'
+    });
+
     $chip.attr(CHIP_VALUE, value);
     $chip.attr('data-chip-group', groupName);
 
     if (category) $('<span/>', {class: 'text category', text: category}).appendTo($chip);
     $('<span/>', {class: 'text', text: name}).appendTo($chip);
-
-    var $btn = $('<button/>', {
-      type: 'button',
-      class: 'remove',
-      'data-chip-action': 'remove',
-      'aria-label': name + ' 삭제',
-      text: '×'
-    });
-
-    $btn.attr(CHIP_VALUE, value);
-    $chip.append($btn);
+    $('<span/>', {class: 'icon ic ic-x', 'aria-hidden': 'true'}).appendTo($chip);
 
     return $chip;
   }

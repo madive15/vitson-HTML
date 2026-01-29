@@ -1789,3 +1789,100 @@
     }
   }
 }
+
+/* ===modal kendo window -화물 영업소 조회=== */
+.vits-freight-company{
+  position: relative;
+
+  .vits-carrier-search {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 24);
+  
+    /* 검색 영역 */
+    &-form {
+      // stylelint-disable-next-line no-descending-specificity
+      .vits-select-trigger{
+        min-height: inherit;
+      }
+    }
+  
+    .vits-form-row {
+      @include mx.flex($align: flex-end);
+      gap: map.get(var.$unit, 12);
+    }
+  
+    .vits-form-field {
+      @include mx.flex($direction: column);
+      gap: fn.rem(8);
+      min-width: fn.rem(200);
+  
+      &.is-grow {
+        flex: 1;
+      }
+    }
+  
+    .vits-form-label {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    }
+  
+    .vits-form-control {
+      width: 100%;
+    }
+  
+    .vits-form-actions {
+      flex-shrink: 0;
+
+      [class*='vits-btn']{
+        min-width: fn.rem(120);
+      }
+    }
+  
+    /* 결과 영역 */
+    &-result {
+      @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'md');
+    }
+  
+    .vits-table-carrier {
+      width: 100%;
+      border-collapse: collapse;
+  
+      thead {
+        background: map.get(color.$layout-surf, 'sunken');
+      }
+  
+      th,
+      td {
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid map.get(color.$layout-border, 'quaternary');
+
+        [class*='vits-btn']{
+          @include typo.typography('b4r', $color: map.get(color.$button-ghost-secondary, 'ghost-on_surf-secondary-default'));
+          margin: 0 auto;
+        }
+      }
+  
+      th {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        padding: fn.rem(10) map.get(var.$unit, 8);
+      }
+
+      td{
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+        padding: map.get(var.$unit, 8);
+      }
+
+      tr:last-child{
+        td{
+          border-bottom: 0;
+        }
+      }
+    }
+
+    &-pagination{
+      margin: 0 auto
+    }
+  }
+}

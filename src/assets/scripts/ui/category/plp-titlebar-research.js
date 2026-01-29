@@ -109,22 +109,16 @@
 
     if (hasChipValue(els, v)) return false;
 
-    var $chip = $('<div/>', {
-      class: 'vits-chip-button type-outline',
-      'data-chip-value': v
-    });
-
-    $('<span/>', {class: 'text', text: v}).appendTo($chip);
-
-    var $btn = $('<button/>', {
+    var $chip = $('<button/>', {
       type: 'button',
-      class: 'remove',
+      class: 'vits-chip-button type-outline',
       'data-chip-action': 'remove',
+      'data-chip-value': v,
       'aria-label': v + ' 삭제'
     });
 
-    $('<span/>', {class: 'ic ic-x', 'aria-hidden': 'true'}).appendTo($btn);
-    $btn.appendTo($chip);
+    $('<span/>', {class: 'text', text: v}).appendTo($chip);
+    $('<span/>', {class: 'icon ic ic-x', 'aria-hidden': 'true'}).appendTo($chip);
 
     els.$chipGroup.append($chip);
     return true;

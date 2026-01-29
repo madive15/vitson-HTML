@@ -1,0 +1,122 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-freight-company">
+  <h2 class="sr-only">화물 영업소 조회</h2>
+  
+  <div class="vits-carrier-search">
+    <!-- 검색 영역 -->
+    <div class="vits-carrier-search-form">
+      <div class="vits-form-row">
+        <div class="vits-form-field">
+          <label class="vits-form-label">화물사 구분</label>
+          <div class="vits-form-control">
+            <!-- prettier-ignore -->  
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'freight-company',
+              name: 'freightCompanyType',
+              placeholder: '전체',
+              options: [
+                { value: '', text: '전체' },
+                { value: 'kyungdong', text: '경동택배' },
+                { value: 'hanjin', text: '한진택배' },
+                { value: 'daesin', text: '대신택배' }
+              ],
+              value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+              disabled: false,
+              className: 'size-default'
+            }) %>
+          </div>
+        </div>
+  
+        <div class="vits-form-field is-grow">
+
+          <label class="vits-form-label">화물지점</label>
+          <div class="vits-form-control">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'freight-office',
+              name: 'freightOffice',
+              label: '화물지점',
+              placeholder: '지점명을 입력해주세요.',
+              required: true,
+              rootClass: 'size-default'
+            }) %>
+          </div>
+        </div>
+  
+        <div class="vits-form-actions">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'sm',
+            variant: 'secondary',
+            text: '검색',
+            iconLeft: true,
+            iconName: 'ic-magnifying-glass'
+          }) %>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 결과 테이블 -->
+    <div class="vits-carrier-search-result">
+      <table class="vits-table vits-table-carrier">
+        <caption class="sr-only">화물 지점 검색 결과</caption>
+        <colgroup>
+          <col width="50">
+          <col width="100">
+          <col>
+          <col>
+          <col width="130">
+          <col width="90">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">화물구분</th>
+            <th scope="col">영업소명</th>
+            <th scope="col">주소</th>
+            <th scope="col">전화번호</th>
+            <th scope="col">선택</th>
+          </tr>
+        </thead>
+        <% const freightList = [
+          { type: '경동택배', name: '과천지점', address: '경기 과천시 갈현동 123-45', phone: '02-1234-5678' },
+          { type: '한진택배', name: '성수지점', address: '서울 성동구 성수이로 222', phone: '02-2345-6789' },
+          { type: '대신택배', name: '부천지점', address: '경기 부천시 원미구 길주로 88', phone: '032-345-6789' },
+          { type: '경동택배', name: '수원지점', address: '경기 수원시 영통구 광교로 12', phone: '031-456-7890' },
+          { type: '한진택배', name: '강서지점', address: '서울 강서구 공항대로 55', phone: '02-5678-9012' },
+          { type: '대신택배', name: '인천지점', address: '인천 남동구 구월로 101', phone: '032-678-9012' },
+          { type: '경동택배', name: '안양지점', address: '경기 안양시 동안구 시민대로 200', phone: '031-789-0123' },
+          { type: '대신택배', name: '의정부지점', address: '경기 의정부시 시민로 77', phone: '031-901-2345' },
+          { type: '경동택배', name: '일산지점', address: '경기 고양시 일산동구 중앙로 400', phone: '031-012-3456' },
+          { type: '한진택배', name: '광명지점', address: '경기 광명시 철산로 66', phone: '02-7890-1234' }
+        ]; %>
+        <tbody>
+          <% freightList.forEach((item, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= item.type %></td>
+              <td><%= item.name %></td>
+              <td><%= item.address %></td>
+              <td><%= item.phone %></td>
+              <td>
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, {
+                  size: 'xxs',
+                  variant: 'outline-secondary',
+                  text: '선택',
+                }) %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="vits-carrier-search-pagination">
+      <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1, isPrevDisabled: true }) %>
+    </div>
+  </div>  
+  
+</section>

@@ -23,82 +23,83 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-favorites">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-favorites">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">좋아요</h2>
-                    <p class="vits-mypage-content-desc">좋아요 상품을 폴더별로 관리하세요</p>
-                  </div>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-favorites">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">좋아요</h2>
+                      <p class="vits-mypage-content-desc">좋아요한 상품을 폴더별로 관리하세요</p>
+                    </div>
 
-                  <div class="vits-mypage-panel">
-                    <section class="vits-mypage-favorites type-folder-list" data-checkbox-scope>
-                      <h3 class="sr-only">좋아요 폴더 리스트</h3>
+                    <div class="vits-mypage-panel">
+                      <section class="vits-mypage-favorites type-folder-list" data-checkbox-scope>
+                        <h3 class="sr-only">좋아요 폴더 리스트</h3>
 
-                      <!-- 상단 툴바 -->
-                      <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-toolbar.ejs`, { 
-                        showFolder: true }) %>
+                        <!-- 상단 툴바 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-toolbar.ejs`, { 
+                          showFolder: true }) %>
 
-                      <!-- 정렬/카운트 -->
-                      <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
-                        pageType: 'like' }) %>
+                        <!-- 정렬/카운트 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
+                            pageType: 'like', isProduct: false }) %>
 
-                      <!-- 리스트 -->
-                      <div class="favorites-folder-list-box">
-                        <ul class="favorites-folder-list">
-                          <li class="favorites-folder-list-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
-                              name: 'folder',
-                              value: '1',
-                              title: '자주 구매 목록',
-                              count: '12개',
-                              desc: '사무용품 관련 폴더',
-                              date: '2025-12-24',
-                              checked: false
-                            }) %>
-                          </li>
-                          <li class="favorites-folder-list-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
-                              name: 'folder2',
-                              value: '2',
-                              title: '상세 내용 없어요 타이틀만 있어요',
-                              count: '2개',
-                              date: '2025-12-24',
-                              checked: false
-                            }) %>
-                          </li>
-                          <li class="favorites-folder-list-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
-                              name: 'folder3',
-                              value: '3',
-                              title: '말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요',
-                              count: '2개',
-                              desc: '상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다',
-                              date: '2025-12-24',
-                              checked: false
-                            }) %>
-                          </li>
-                        </ul>
+                        <!-- 리스트 -->
+                        <div class="favorites-folder-list-box">
+                          <ul class="favorites-folder-list">
+                            <li class="favorites-folder-list-item">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
+                                name: 'folder',
+                                value: '1',
+                                title: '자주 구매 목록',
+                                count: '12개',
+                                desc: '사무용품 관련 폴더',
+                                date: '2025-12-24',
+                                checked: false
+                              }) %>
+                            </li>
+                            <li class="favorites-folder-list-item">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
+                                name: 'folder2',
+                                value: '2',
+                                title: '상세 내용 없어요 타이틀만 있어요',
+                                count: '2개',
+                                date: '2025-12-24',
+                                checked: false
+                              }) %>
+                            </li>
+                            <li class="favorites-folder-list-item">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-item.ejs`, {
+                                name: 'folder3',
+                                value: '3',
+                                title: '말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요',
+                                count: '2개',
+                                desc: '상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다',
+                                date: '2025-12-24',
+                                checked: false
+                              }) %>
+                            </li>
+                          </ul>
 
-                        <div class="vits-mypage-favorites-pagination">
-                          <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1,
-                          isPrevDisabled: true }) %>
+                          <div class="vits-mypage-favorites-pagination">
+                            <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1,
+                            isPrevDisabled: true }) %>
+                          </div>
                         </div>
-                      </div>
-                    </section>
+                      </section>
+                    </div>
                   </div>
+                  <!-- E: vits-grid-main -->
                 </div>
-
-                <!-- E: vits-grid-main -->
               </div>
             </div>
           </div>

@@ -982,30 +982,35 @@
 
       .info-inner {
         flex-wrap: wrap;
+        row-gap: map.get(var.$unit, 16);
 
         li {
-          gap: map.get(var.$unit, 12);
-          width: 50%;
+          gap: fn.rem(10);
+          width: auto;
 
           @include mx.flex($align: start);
 
           &:nth-of-type(even) {
-            padding-bottom: map.get(var.$unit, 16);
+            width: 42%;
             padding-left: map.get(var.$unit, 32);
+          }
+
+          &:nth-of-type(odd) {
+            width: 58%;
+
+            .value {
+              min-width: fn.rem(255);
+            }
           }
 
           &:last-child {
             padding-bottom: 0;
           }
-
-          span {
-            flex: 1;
-          }
         }
       }
 
       .label {
-        max-width: 74px;
+        min-width: fn.rem(74);
 
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       }
@@ -1016,8 +1021,11 @@
     }
 
     // 비회원 상태일 때 경계선 제거
-    &-price-info.is-guest + .product-minidetail {
-      border-bottom: 0;
+    // stylelint-disable-next-line no-duplicate-selectors
+    &-price-info.is-guest {
+      + .product-minidetail {
+        border-bottom: 0;
+      }
     }
   }
 }
@@ -1490,13 +1498,15 @@
 
 /* ===modal kendo window -다른 규격찾기 팝업 (특수 케이스 적용)=== */
 // s: 해당 모달만 적용되는 스타일
+// 윈도우 열/닫기 시 애니메이션 적용 (body 부분에 위치)
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
-.k-window.k-window-titleless:has(#findOtherOptionModal) {
+.k-window-titleless:has(#findOtherOptionModal) {
   position: fixed !important;
   top: 0 !important;
   right: -100% !important;
   left: auto !important;
   display: block !important;
+  max-width: 512px !important;
   height: 100vh !important;
   border-radius: 0 !important;
   transition:
@@ -1504,277 +1514,273 @@
     opacity 0.3s ease,
     right 0.3s ease;
   transform: translateX(100%);
-  transform-origin: right center;
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
+  #findOtherOptionModal{
+    &.k-window-content{
+      max-height: 100% !important;
+      padding:0;
+    }
 
-  .k-window-content{
-    max-height: 100% !important;
+    .vits-modal-header{
+      padding-bottom: fn.rem(32);
+      border-bottom: 1px solid map.get(color.$layout-surf, 'secondary');
+    }
+  
+    .vits-modal-content {
+      padding: 0;
+    }
+
+    .vits-find-other-option {
+      // 필터 버튼 위치 조정
+      .vits-modal-filter-btn{
+        position: absolute;
+        top: fn.rem(32);
+        right: fn.rem(76);
+        border-radius: map.get(var.$radius, 'sm');
+    
+        @include mx.common-mouse-event {
+          background-color: map.get(color.$layout-surf, 'secondary');
+        }
+      }
+    }
+    
+    // 필터영역 (우측 전체매뉴)
+    .filter-box {
+      background-color: map.get(color.$layout-surf, 'mypage');
+    
+      .vits-scrollbar {
+        max-height: fn.rem(452);
+        padding: map.get(var.$unit, 32) map.get(var.$unit, 20) 0;
+        margin: map.get(var.$unit, 24) map.get(var.$unit, 20) 0;
+        overflow: auto;
+        background-color: color.$color-white;
+        border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+      }
+    
+      .filter-box-list {
+        @include mx.flex($direction: column);
+        gap: fn.rem(30);
+    
+        .filter-box-item {
+          .filter-item-title {
+            @include mx.flex($align: center, $justify: space-between);
+            padding-bottom: fn.rem(14);
+    
+            .title-text{
+              @include typo.typography('b4b', $color: map.get(color.$text-colors, 'primary'));
+            }
+    
+            .vits-filter-more {
+              @include mx.flex($align: center);
+              background-color: transparent;
+              border: none;
+              
+              .text{
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+              }
+    
+              .icon {
+                display: inline-flex;
+                align-self: center;
+                width: fn.rem(10);
+                height: fn.rem(8);
+                color: map.get(color.$text-colors, 'tertiary');
+    
+                .ic{
+                  width:100%;
+                  height:100%;
+                }
+              }
+            }
+          }
+    
+          .filter-item-content {
+            .filter-chip-group {
+              @include mx.flex($direction: row, $wrap: wrap);
+              gap: fn.rem(6) fn.rem(8);
+              max-height: fn.rem(28);
+              overflow: hidden;
+    
+              .filter-chip {
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+                padding: fn.rem(5) fn.rem(8);
+                background-color: transparent;
+                border: 1px solid map.get(color.$layout-border, 'tertiary');
+                border-radius: map.get(var.$radius, 'sm');
+    
+                @include mx.common-mouse-event {
+                  color: map.get(color.$text-status, 'brand');
+                  border-color: map.get(color.$layout-border, 'brand');
+                }
+    
+                &.is-active {
+                  font-weight: 600;
+                  color: map.get(color.$text-status, 'brand');
+                  border-color: map.get(color.$layout-border, 'brand');
+                }
+    
+                &.disabled {
+                  color: map.get(color.$text-colors, 'tertiary');
+                  pointer-events: none;
+                  background-color: map.get(color.$layout-surf, 'sunken');
+                  border-color: map.get(color.$layout-border, 'tertiary');
+                }
+              }
+    
+              &.is-open {
+                max-height: fit-content;
+              }
+            }
+          }
+        }
+      }
+    
+      .filter-box-buttons {
+        @include mx.flex($align: center, $justify: center);
+        gap: fn.rem(12);
+        padding: fn.rem(36) 0;
+        margin: 0 map.get(var.$unit, 20) fn.rem(24);
+        background-color: color.$color-white;
+        border-radius: 0 0 map.get(var.$radius, 'md') map.get(var.$radius, 'md');
+    
+        button {
+          flex-shrink: 0;
+          min-width: fn.rem(130);
+          border-radius: map.get(var.$radius, 'sm');
+        }
+      }
+    }
+    
+    // 옵션 영역 (우측 전체매뉴)
+    .product-option-list {
+      @include mx.flex($direction: column);
+    
+      // 상품리스트
+      .product-option {
+        &-item {
+          @include mx.flex($align: center);
+          gap: map.get(var.$unit, 12);
+          width: 100%;
+          padding: map.get(var.$unit, 20) map.get(var.$unit, 24);
+          text-align: left;
+          cursor: pointer;
+    
+          // 기본 button 리셋 (필요 최소)
+          background: none;
+          border: 0;
+          border-bottom: 1px solid map.get(color.$gray-shades, '30');
+    
+          @include mx.common-mouse-event {
+            cursor: pointer;
+            background-color: map.get(color.$layout-surf, 'raised');
+    
+            .product-option-name {
+              color: map.get(color.$text-status, 'info');
+              text-decoration: underline;
+            }
+          }
+    
+          &.is-sold-out {
+            position: relative;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: map.get(color.$layout-surf, 'sunken');
+    
+            &::before {
+              @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+              @include mx.flex($align: center, $justify: center);
+              position: absolute;
+              inset: 0;
+              content: '일시품절';
+              background: hwb(0deg 94.12% 5.88% / 80%);
+            }
+          }
+        }
+    
+        &-thumb {
+          @include mx.flex($justify: center, $align: center);
+          flex: 0 0 92px;
+          height: 92px;
+          overflow: hidden;
+          border-radius: map.get(var.$radius, 'sm');
+    
+          img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+    
+        &-info {
+          @include mx.flex($direction: column);
+          flex: 0 0 240px;
+          gap: map.get(var.$unit, 4);
+        }
+    
+        &-title {
+          @include mx.flex($align: center);
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    
+          .product-option-code {
+            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+            padding: map.get(var.$unit, 2) map.get(var.$unit, 4);
+            margin-left: fn.rem(4);
+            border: 1px solid map.get(color.$gray-shades, '30');
+          }
+        }
+    
+        &-name {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
+        }
+    
+        &-spec {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        }
+    
+        &-tags {
+          @include mx.flex($wrap: wrap);
+          gap: map.get(var.$unit, 4);
+          padding-top: map.get(var.$unit, 5);
+    
+          .vits-product-flags {
+            gap: map.get(var.$unit, 4);
+          }
+        }
+    
+        &-price {
+          @include mx.flex($direction: column);
+          min-width: fn.rem(108);
+          text-align: right;
+    
+          .product-option-original {
+            @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+            text-decoration: line-through;
+          }
+    
+          .product-option-discount {
+            .discount {
+              @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+            }
+    
+            .amount {
+              min-width: auto;
+              padding-left: fn.rem(4);
+    
+              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+        }
+      }
+    }    
   }
 }
 
-// 윈도우 열림 시 애니메이션 적용 (bodt 부분에 위치)
-.is-kendo-window-open.is-option-modal-open {
-  /* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
-  .k-window.k-window-titleless:has(#findOtherOptionModal) {
+body.is-option-modal-open {
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown, selector-id-pattern */
+  .k-window-titleless:has(#findOtherOptionModal) {
     right: 0 !important;
     transform: translateX(0);
-  }
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#findOtherOptionModal {
-  .vits-modal-header{
-    padding-bottom: fn.rem(32);
-    border-bottom: 1px solid map.get(color.$layout-surf, 'secondary');
-  }
-
-  .vits-modal-content {
-    padding: 0;
-  }
-}
-
-// e.
-
-.vits-find-other-option {
-  // 필터 버튼 위치 조정
-  .vits-modal-filter-btn{
-    position: absolute;
-    top: fn.rem(34);
-    right: fn.rem(76);
-    border-radius: map.get(var.$radius, 'sm');
-
-    @include mx.common-mouse-event {
-      background-color: map.get(color.$layout-surf, 'secondary');
-    }
-  }
-}
-
-// 필터영역 (우측 전체매뉴)
-.filter-box {
-  background-color: map.get(color.$layout-surf, 'mypage');
-
-  .vits-scrollbar {
-    max-height: fn.rem(452);
-    padding: map.get(var.$unit, 32) map.get(var.$unit, 20) 0;
-    margin: map.get(var.$unit, 24) map.get(var.$unit, 20) 0;
-    overflow: auto;
-    background-color: color.$color-white;
-    border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
-  }
-
-  .filter-box-list {
-    @include mx.flex($direction: column);
-    gap: fn.rem(30);
-
-    .filter-box-item {
-      .filter-item-title {
-        @include mx.flex($align: center, $justify: space-between);
-        padding-bottom: fn.rem(14);
-
-        .title-text{
-          @include typo.typography('b4b', $color: map.get(color.$text-colors, 'primary'));
-        }
-
-        .vits-filter-more {
-          @include mx.flex($align: center);
-          background-color: transparent;
-          border: none;
-          
-          .text{
-            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
-          }
-
-          .icon {
-            display: inline-flex;
-            align-self: center;
-            width: fn.rem(10);
-            height: fn.rem(8);
-            color: map.get(color.$text-colors, 'tertiary');
-
-            .ic{
-              width:100%;
-              height:100%;
-            }
-          }
-        }
-      }
-
-      .filter-item-content {
-        .filter-chip-group {
-          @include mx.flex($direction: row, $wrap: wrap);
-          gap: fn.rem(6) fn.rem(8);
-          max-height: fn.rem(28);
-          overflow: hidden;
-
-          .filter-chip {
-            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
-            padding: fn.rem(5) fn.rem(8);
-            background-color: transparent;
-            border: 1px solid map.get(color.$layout-border, 'tertiary');
-            border-radius: map.get(var.$radius, 'sm');
-
-            @include mx.common-mouse-event {
-              color: map.get(color.$text-status, 'brand');
-              border-color: map.get(color.$layout-border, 'brand');
-            }
-
-            &.is-active {
-              font-weight: 600;
-              color: map.get(color.$text-status, 'brand');
-              border-color: map.get(color.$layout-border, 'brand');
-            }
-
-            &.disabled {
-              color: map.get(color.$text-colors, 'tertiary');
-              pointer-events: none;
-              background-color: map.get(color.$layout-surf, 'sunken');
-              border-color: map.get(color.$layout-border, 'tertiary');
-            }
-          }
-
-          &.is-open {
-            max-height: fit-content;
-          }
-        }
-      }
-    }
-  }
-
-  .filter-box-buttons {
-    @include mx.flex($align: center, $justify: center);
-    gap: fn.rem(12);
-    padding: fn.rem(36) 0;
-    margin: 0 map.get(var.$unit, 20) fn.rem(24);
-    background-color: color.$color-white;
-    border-radius: 0 0 map.get(var.$radius, 'md') map.get(var.$radius, 'md');
-
-    button {
-      flex-shrink: 0;
-      min-width: fn.rem(130);
-      border-radius: map.get(var.$radius, 'sm');
-    }
-  }
-}
-
-// 옵션 영역 (우측 전체매뉴)
-.product-option-list {
-  @include mx.flex($direction: column);
-
-  // 상품리스트
-  .product-option {
-    &-item {
-      @include mx.flex($align: center);
-      gap: map.get(var.$unit, 12);
-      width: 100%;
-      padding: map.get(var.$unit, 20) map.get(var.$unit, 24);
-      text-align: left;
-      cursor: pointer;
-
-      // 기본 button 리셋 (필요 최소)
-      background: none;
-      border: 0;
-      border-bottom: 1px solid map.get(color.$gray-shades, '30');
-
-      @include mx.common-mouse-event {
-        cursor: pointer;
-        background-color: map.get(color.$layout-surf, 'raised');
-
-        .product-option-name {
-          color: map.get(color.$text-status, 'info');
-          text-decoration: underline;
-        }
-      }
-
-      &.is-sold-out {
-        position: relative;
-        pointer-events: none;
-        cursor: not-allowed;
-        background-color: map.get(color.$layout-surf, 'sunken');
-
-        &::before {
-          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
-          @include mx.flex($align: center, $justify: center);
-          position: absolute;
-          inset: 0;
-          content: '일시품절';
-          background: hwb(0deg 94.12% 5.88% / 80%);
-        }
-      }
-    }
-
-    &-thumb {
-      @include mx.flex($justify: center, $align: center);
-      flex: 0 0 92px;
-      height: 92px;
-      overflow: hidden;
-      border-radius: map.get(var.$radius, 'sm');
-
-      img {
-        display: block;
-        max-width: 100%;
-        max-height: 100%;
-      }
-    }
-
-    &-info {
-      @include mx.flex($direction: column);
-      flex: 0 0 240px;
-      gap: map.get(var.$unit, 4);
-    }
-
-    &-title {
-      @include mx.flex($align: center);
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-
-      .product-option-code {
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
-        padding: map.get(var.$unit, 2) map.get(var.$unit, 4);
-        margin-left: fn.rem(4);
-        border: 1px solid map.get(color.$gray-shades, '30');
-      }
-    }
-
-    &-name {
-      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
-      @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
-    }
-
-    &-spec {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-    }
-
-    &-tags {
-      @include mx.flex($wrap: wrap);
-      gap: map.get(var.$unit, 4);
-      padding-top: map.get(var.$unit, 5);
-
-      .vits-product-flags {
-        gap: map.get(var.$unit, 4);
-      }
-    }
-
-    &-price {
-      @include mx.flex($direction: column);
-      min-width: fn.rem(108);
-      text-align: right;
-
-      .product-option-original {
-        @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
-        text-decoration: line-through;
-      }
-
-      .product-option-discount {
-        .discount {
-          @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
-        }
-
-        .amount {
-          min-width: auto;
-          padding-left: fn.rem(4);
-
-          @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
-        }
-      }
-    }
   }
 }
 

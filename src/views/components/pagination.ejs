@@ -33,10 +33,19 @@
   <%# 이전 %>
   <!-- prettier-ignore -->
   <% if (isPrevDisabled) { %>
+  <% if (type === 'truncated') { %>
+  <span class="vits-pagination-btn is-first is-disabled" data-pagination-first aria-disabled="true" aria-label="처음">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-first' }) %>
+  </span>
+  <% } %>
   <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
     <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
   </span>
-  <% } else { %>
+  <% } else { %> <% if (type === 'truncated') { %>
+  <a href="#" class="vits-pagination-btn is-first" data-pagination-first aria-label="처음">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-first' }) %>
+  </a>
+  <% } %>
   <a href="#" class="vits-pagination-btn is-prev" data-pagination-prev aria-label="이전">
     <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
   </a>
@@ -66,9 +75,17 @@
   <span class="vits-pagination-btn is-next is-disabled" data-pagination-next aria-disabled="true" aria-label="다음">
     <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
   </span>
-  <% } else { %>
+  <% if (type !== 'default') { %>
+  <span class="vits-pagination-btn is-finally is-disabled" data-pagination-finally aria-disabled="true" aria-label="끝">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-finally' }) %>
+  </span>
+  <% } %> <% } else { %>
   <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
     <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
   </a>
-  <% } %>
+  <% if (type !== 'default') { %>
+  <a href="#" class="vits-pagination-btn is-finally" data-pagination-finally aria-label="끝">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-finally' }) %>
+  </a>
+  <% } %> <% } %>
 </nav>

@@ -1,0 +1,82 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _hasAutoTransfer = typeof hasAutoTransfer !== 'undefined' ? hasAutoTransfer : false;
+%>
+<section class="credit-manage-usage">
+  <div class="credit-usage-head" data-scss="head">
+    <h3 class="credit-title">후불 사용 정보</h3>
+  </div>
+
+  <div class="credit-usage-body" data-scss="body">
+    <h4 class="credit-title">여신 정보<small>2025년 12월</small></h4>
+
+    <ul class="credit-usage-items">
+      <li class="credit-usage-item">
+        <div class="credit-usage-item-inner">
+          <p class="credit-usage-label">여신한도액</p>
+          <p class="credit-usage-value">999,999,999원</p>
+        </div>
+      </li>
+      <li class="credit-usage-item">
+        <div class="credit-usage-item-inner">
+          <p class="credit-usage-label">사용액</p>
+          <div class="credit-usage-detail">
+            <p class="credit-usage-value value-blue">9,999,999원</p>
+            <p class="credit-usage-desc">
+              <span class="credit-usage-desc-label">출하대기</span>
+              <span class="credit-usage-desc-value">+ 9,999원</span>
+            </p>
+          </div>
+        </div>
+      </li>
+      <li class="credit-usage-item">
+        <div class="credit-usage-item-inner">
+          <p class="credit-usage-label">미수금</p>
+          <p class="credit-usage-value value-red">999,999,999원</p>
+        </div>
+      </li>
+      <li class="credit-usage-item">
+        <div class="credit-usage-item-inner">
+          <p class="credit-usage-label">잔액</p>
+          <p class="credit-usage-value">999,999,999원</p>
+        </div>
+      </li>
+    </ul>
+
+    <h4 class="credit-title">
+      <!-- prettier-ignore -->
+      <% if (_hasAutoTransfer) { %>
+        자동이체정보
+      <% } else { %>
+        결제일
+      <% } %>
+    </h4>
+    <div class="credit-usage-info-box">
+      <dl class="credit-usage-info">
+        <% if (_hasAutoTransfer) { %>
+        <dt>이체일</dt>
+        <dd>5일, 15일, 25일</dd>
+        <dt>출금계좌</dt>
+        <dd>
+          <p class="credit-usage-account">
+            <span class="credit-usage-bank">우리은행</span><span class="credit-usage-number">235-13-3456901</span>
+          </p>
+        </dd>
+        <% } else { %>
+        <dt>결제예정일</dt>
+        <dd>익월 30일</dd>
+        <% } %>
+      </dl>
+
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size:'lg', 
+        variant: 'outline-secondary', 
+        text: '구매내역서 조회', 
+        iconLeft: true, 
+        iconName: 'ic-document-paper'
+      }) %>
+    </div>
+  </div>
+</section>

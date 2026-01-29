@@ -23,44 +23,48 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-favorites">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-favorites">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">총무관리123팀</h2>
-                    <p class="vits-mypage-content-desc">일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십</p>
-                  </div>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-favorites">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">총무관리123팀</h2>
+                      <p class="vits-mypage-content-desc">
+                        일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
+                      </p>
+                    </div>
 
-                  <div class="vits-mypage-panel">
-                    <section class="vits-mypage-favorites type-product-list" data-checkbox-scope>
-                      <h3 class="sr-only">좋아요 상품 리스트</h3>
+                    <div class="vits-mypage-panel">
+                      <section class="vits-mypage-favorites type-product-list" data-checkbox-scope>
+                        <h3 class="sr-only">좋아요 상품 리스트</h3>
 
-                      <!-- 상단 툴바 -->
-                      <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-toolbar.ejs`, { 
-                        showLike: true }) %>
-
-                      <div class="favorites-product-list-box">
+                        <!-- 상단 툴바 -->
                         <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
-                          pageType: 'like-list' }) %>
+                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-toolbar.ejs`, { 
+                          showLike: true }) %>
 
-                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-like-list.ejs`, {
-                          _src: _src,
-                          totalCount: 60,
-                          productList: [],
-                          pagination: {}  
-                        }) %>
-                      </div>
-                    </section>
+                        <div class="favorites-product-list-box">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
+                            pageType: 'like-list' }) %>
+  
+                          <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-like-list.ejs`, {
+                            _src: _src,
+                            totalCount: 60,
+                            productList: [],
+                            pagination: {}  
+                          }) %>
+                        </div>
+                      </section>
+                    </div>
                   </div>
-                </div>
 
-                <!-- E: vits-grid-main -->
+                  <!-- E: vits-grid-main -->
+                </div>
               </div>
             </div>
           </div>

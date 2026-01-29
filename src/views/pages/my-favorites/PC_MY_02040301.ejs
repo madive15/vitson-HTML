@@ -5,7 +5,7 @@
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
   -->
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '좋아요 상품목록 없음'}) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '좋아요한 상품목록 없음'}) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -23,32 +23,34 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <div class="vits-grid-main vits-main-my-favorites">
-              <div class="vits-grid-area vits-inner">
-                <!-- S: vits-grid-side-left -->
-                <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
-                <!-- E: vits-grid-side-left -->
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
 
-                <!-- S: vits-grid-main -->
-                <div class="vits-grid-main-content main-content-my-favorites">
-                  <div class="vits-mypage-content-headline">
-                    <h2 class="vits-mypage-content-title">총무관리123팀</h2>
-                    <p class="vits-mypage-content-desc">총무 관리 123팀</p>
-                  </div>
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-favorites">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">총무관리123팀</h2>
+                      <p class="vits-mypage-content-desc">총무 관리 123팀</p>
+                    </div>
 
-                  <div class="vits-mypage-panel">
-                    <div class="vits-mypage-records-box type-empty">
-                      <!-- 주문 없음 -->
-                      <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/empty-state.ejs`, {
-                        iconName: 'box',
-                        title: '좋아요 상품이 없습니다',
-                        desc: '좋아요 상품을 추가하여 폴더를 채워보세요',
-                      }) %>
+                    <div class="vits-mypage-panel">
+                      <div class="vits-mypage-records-box type-empty">
+                        <!-- 주문 없음 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'box',
+                          title: '좋아요한 상품이 없습니다',
+                          desc: '좋아요한 상품을 추가하여 폴더를 채워보세요',
+                        }) %>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- E: vits-grid-main -->
+                  <!-- E: vits-grid-main -->
+                </div>
               </div>
             </div>
           </div>

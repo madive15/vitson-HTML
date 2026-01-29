@@ -30,8 +30,9 @@
     @include wrapper.layout-sub-grid(map.get(color.$layout-surf, 'mypage'));
   }
 
-  // 마이페이지 - 자주구매, 좋아요
-  &.vits-main-my-favorites .vits-inner {
-    align-items: stretch;
+  &[class*='vits-main-my-'] {
+    .vits-grid-area {
+      align-items: stretch;
+    }
   }
 }
