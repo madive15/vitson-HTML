@@ -1,0 +1,300 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% var currentStep = 1; %>
+<% var totalStep = 4; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '후불관리 승인 전'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-my-credit">
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-credit">
+                    <div class="vits-mypage-content-headline">
+                      <h2 class="vits-mypage-content-title">후불 관리</h2>
+                      <p class="vits-mypage-content-desc">비츠온의 편리한 후불 결제를 신청해 보세요.</p>
+                    </div>
+
+                    <div class="vits-mypage-credit-process">
+                      <section class="credit-apply-process">
+                        <div class="credit-apply-process-head" data-scss="head">
+                          <h3 class="credit-title">후불 신청 프로세스</h3>
+                        </div>
+                        <div class="credit-apply-process-body" data-scss="body">
+                          <div class="vits-step-tab" data-step-scope="orderStep">
+                            <!-- 탭 헤더 -->
+                            <ul class="vits-step-tab-header">
+                              <li
+                                class="vits-step-tab-item<%= currentStep === 1 ? ' is-active' : (currentStep > 1 ? ' is-done' : ' is-disabled') %>"
+                                data-step-tab="1"
+                              >
+                                <div class="step-tab-inner">
+                                  <span class="step-tab-number">step 1</span>
+                                  <span class="step-tab-label">후불 신청서 작성</span>
+                                </div>
+                              </li>
+                              <li
+                                class="vits-step-tab-item<%= currentStep === 2 ? ' is-active' : (currentStep > 2 ? ' is-done' : ' is-disabled') %>"
+                                data-step-tab="2"
+                              >
+                                <div class="step-tab-inner">
+                                  <span class="step-tab-number">step 2</span>
+                                  <span class="step-tab-label">전자서명</span>
+                                </div>
+                              </li>
+                              <li
+                                class="vits-step-tab-item<%= currentStep === 3 ? ' is-active' : (currentStep > 3 ? ' is-done' : ' is-disabled') %>"
+                                data-step-tab="3"
+                              >
+                                <div class="step-tab-inner">
+                                  <span class="step-tab-number">step 3</span>
+                                  <span class="step-tab-label">비츠온 심사 진행</span>
+                                </div>
+                              </li>
+                              <li
+                                class="vits-step-tab-item<%= currentStep === 4 ? ' is-active' : (currentStep > 4 ? ' is-done' : ' is-disabled') %>"
+                                data-step-tab="4"
+                              >
+                                <div class="step-tab-inner">
+                                  <span class="step-tab-number">step 4</span>
+                                  <span class="step-tab-label">승인 완료</span>
+                                </div>
+                              </li>
+                            </ul>
+
+                            <!-- 탭 패널 -->
+                            <div class="vits-step-tab-panels">
+                              <!-- 스텝 1 - panel -->
+                              <div
+                                class="vits-step-tab-panel<%= currentStep === 1 ? ' is-active' : '' %>"
+                                data-step-panel="1"
+                              >
+                                <div class="vits-step-tab-content">
+                                  <div class="step-tab-main">
+                                    <div class="step-tab-desc">
+                                      <p>후불 결제 이용을 위해</p>
+                                      <p>회사정보 및 담당자정보를 입력하여 주세요.</p>
+                                    </div>
+
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'primary', text: '후불 신청서 작성'}) %>
+                                  </div>
+
+                                  <div class="step-tab-notice">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                                      theme: 'blue', text: '신청 전 확인사항', list:['후불 신청서 작성 및 필수 전자서명을 모두 완료해야 심사가 진행됩니다.','심사는 영업일 기준 2-3일 소요되며, 승인 결과는 등록하신 연락처로 안내됩니다.','계좌이체 CMS 동의는 선택사항이며, 자동이체를 원하시는 경우 서명해 주세요.']
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 스텝 2 - panel -->
+                              <div
+                                class="vits-step-tab-panel<%= currentStep === 2 ? ' is-active' : '' %>"
+                                data-step-panel="2"
+                              >
+                                <div class="vits-step-tab-content">
+                                  <p class="step-tab-guide">
+                                    후불 결제 이용을 위해 약정서 및 동의서에 전자서명을 진행해 주세요.
+                                  </p>
+
+                                  <ul class="credit-sign-items">
+                                    <li class="credit-sign-item">
+                                      <div class="credit-sign-item-inner">
+                                        <div class="credit-sign-info">
+                                          <p class="credit-sign-label">
+                                            <span class="text">거래약정서 전자서명 <em class="is-req">(필수)</em></span>
+                                          </p>
+                                        </div>
+                                        <div class="credit-sign-actions">
+                                          <button class="credit-sign-btn-help" type="button">도움말</button>
+                                          <!-- prettier-ignore -->
+                                          <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'primary-soft', text: '서명완료',disabled: true, }) %>
+                                        </div>
+                                      </div>
+                                    </li>
+                                    <li class="credit-sign-item">
+                                      <div class="credit-sign-item-inner">
+                                        <div class="credit-sign-info">
+                                          <p class="credit-sign-label">
+                                            <span class="text"
+                                              >개인 신용정보 제공 동의서 전자서명 <em class="is-req">(필수)</em></span
+                                            >
+                                          </p>
+                                        </div>
+                                        <div class="credit-sign-actions">
+                                          <button class="credit-sign-btn-help" type="button">도움말</button>
+                                          <!-- prettier-ignore -->
+                                          <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'primary-soft', text: '서명하기'}) %>
+                                        </div>
+                                      </div>
+                                    </li>
+                                    <li class="credit-sign-item">
+                                      <div class="credit-sign-item-inner">
+                                        <div class="credit-sign-info">
+                                          <p class="credit-sign-label">
+                                            <span class="text"
+                                              >계좌이체 CMS 동의 전자서명 <em class="is-opt">(선택)</em></span
+                                            >
+                                          </p>
+                                          <p class="credit-sign-desc">
+                                            계좌이체 CMS 동의는 자동이체를 원하시는 경우에만 서명해 주세요.
+                                          </p>
+                                        </div>
+                                        <div class="credit-sign-actions">
+                                          <button class="credit-sign-btn-help" type="button">도움말</button>
+                                          <!-- prettier-ignore -->
+                                          <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'primary-soft', text: '서명하기'}) %>
+                                        </div>
+                                      </div>
+                                    </li>
+                                  </ul>
+
+                                  <div class="step-tab-main">
+                                    <div class="step-tab-desc">
+                                      <p>
+                                        <span class="desc-bold">필수 서명</span>을
+                                        <span class="desc-point">완료</span>하신 후 반드시
+                                      </p>
+                                      <p>
+                                        <span class="desc-bold">'서명 완료'</span> 버튼을 클릭해 주셔야 심사 접수됩니다.
+                                      </p>
+                                    </div>
+
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'primary', disabled: true, text: '서명 완료'}) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 스텝 3 - panel -->
+                              <div
+                                class="vits-step-tab-panel<%= currentStep === 3 ? ' is-active' : '' %>"
+                                data-step-panel="3"
+                              >
+                                <div class="vits-step-tab-content">
+                                  <div class="step-tab-status">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/empty-state.ejs`, {
+                                      iconName: 'box',
+                                      title: '심사접수되었습니다',
+                                      desc: '신청 내용을 검토하고 심사를 진행합니다.'
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 스텝 4 - panel -->
+                              <div
+                                class="vits-step-tab-panel<%= currentStep === 4 ? ' is-active' : '' %>"
+                                data-step-panel="4"
+                              >
+                                <div class="vits-step-tab-content">
+                                  <div class="step-tab-status">
+                                    <!-- prettier-ignore -->
+                                    <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+                                      size:'sm', variant: 'primary-soft', text: '후불관리로 이동', className: 'btn-fix-w150'
+                                    }) %>
+
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/empty-state.ejs`, {
+                                      iconName: 'box',
+                                      title: '승인 완료',
+                                      desc: '후불 결제 승인 완료되었습니다.\n후불 관리 메뉴로 이동하여 후불 사용 현황을 확인하세요.', 
+                                      buttonHtml }) %>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- S: [REMOVE] 확인용 테스트 버튼 - 개발 적용 시 제거 -->
+                            <% if (currentStep < totalStep) { %>
+                            <button
+                              type="button"
+                              class="vits-test-btn"
+                              data-step-complete
+                              style="
+                                position: absolute;
+                                bottom: -120px;
+                                left: 50%;
+                                z-index: 99999;
+                                padding: 10px 20px;
+                                width: 200px;
+                                font-size: 16px;
+                                color: #fff;
+                                background: #1a73e8;
+                                border: 0;
+                                border-radius: 4px;
+                                transform: translateX(-50%);
+                              "
+                            >
+                              [TEST] 다음 스텝 이동
+                            </button>
+                            <% } %>
+                            <!-- E: [REMOVE] 확인용 테스트 버튼 - 개발 적용 시 제거 -->
+
+                            <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+                            <script>
+                              (function () {
+                                var scope = document.querySelector('[data-step-scope="orderStep"]');
+                                var btn = scope.querySelector('.vits-test-btn');
+                                var totalSteps = scope.querySelectorAll('[data-step-panel]').length;
+
+                                scope.addEventListener('stepTab:complete', function (e) {
+                                  if (e.detail.isLast || e.detail.nextStep >= totalSteps) {
+                                    btn.style.display = 'none';
+                                  }
+                                });
+                              })();
+                            </script>
+                            <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+
+                  <!-- E: vits-grid-main -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

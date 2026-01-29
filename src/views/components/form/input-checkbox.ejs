@@ -5,6 +5,7 @@
   const _gap = typeof gap !== 'undefined' ? gap : '';      // 예: 16
   const _size = (typeof size !== 'undefined' && size) ? String(size) : ''; // 'm' | 's'
   const sizeClass = _size ? `size-${_size}` : '';
+  const _type = typeof type !== 'undefined' ? type : 'checkbox'; // 기본값 checkbox
 
   // 예) list-row-gap16 형태로 조합
   const listClass = (_list && _gap !== '' && _gap !== null)
@@ -26,7 +27,7 @@
       <li class="checkbox-item-box">
         <label class="checkbox-item">
           <input
-            type="checkbox"
+            type="<%= _type %>"
             name="<%= name %>"
             value="<%= data.value %>"
             <% if (data.disabled === true) { %>disabled<% } %>
@@ -46,7 +47,7 @@
           <% } else if (variant === "card") { %>
           <!-- card -->
           <span class="label-name"><%= text %></span>
-          <span class="label-total"><%= data.total %>개 항목</span>
+          <span class="label-total"><%= data.total %>개 상품</span>
           <span class="checkbox-icon" aria-hidden="true">
             <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> 
           </span>

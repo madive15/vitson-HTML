@@ -1,0 +1,53 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-coupon-serial-register">
+  <h2 class="sr-only">쿠폰 등록</h2>
+
+  <div class="vits-coupon-serial-register-content">
+    <div class="coupon-serial-item">
+      <div class="coupon-serial-item-label">
+        <span class="label-text">쿠폰 등록</span>
+      </div>
+      <div class="coupon-serial-item-field">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'coupon-serial-input',
+          name: 'couponSerial',
+          label: '쿠폰 시리얼',
+          value: '',
+          placeholder: '대소문자 구분 없이 입력',
+          required: true,
+          rootClass: 'size-medium'
+        }) %>
+
+        <!-- [D]cas: 필수 입력 항목 -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'coupon-serial-input',
+          name: 'couponSerial',
+          label: '쿠폰 시리얼',
+          value: '',
+          placeholder: '대소문자 구분 없이 입력',
+          required: true,
+          isInvalid: true,
+          validationMessage: '존재하지 않는 쿠폰번호 입니다.',
+          rootClass: 'size-medium'
+        }) %>
+
+        <!-- [D]cas: 필수 입력 항목 -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'coupon-serial-input',
+          name: 'couponSerial',
+          label: '쿠폰 시리얼',
+          value: '',
+          placeholder: '대소문자 구분 없이 입력',
+          required: true,
+          isInvalid: true,
+          validationMessage: '이미 등록된 쿠폰번호 입니다.',
+          rootClass: 'size-medium'
+        }) %>
+      </div>
+    </div>
+  </div>
+</section>

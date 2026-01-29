@@ -44,7 +44,7 @@
 
     &.is-active {
       @include mx.border(all, 2px, solid, map.get(color.$layout-border, 'brand'));
-      border-radius: map.get(var.$radius, 'md');
+      border-radius: map.get(var.$radius, 'lg');
 
       .text {
         @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
@@ -193,25 +193,23 @@
       // 토글 영역 내부
       .coupon-item-info-view {
         @include mx.position(absolute, 30px, 16px, 0, 152px);
-        width: auto;
-        max-height: max-content;
-        padding: map.get(var.$unit, 12);
-        overflow: hidden !important;
-        background-color: map.get(color.$layout-surf, 'base');
-        border: 1px solid map.get(color.$layout-border, 'tertiary');
-        border-radius: map.get(var.$radius, 'sm');
-        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        .info-view-text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          width: 100%;
+          padding: map.get(var.$unit, 12) map.get(var.$unit, 24) map.get(var.$unit, 12) map.get(var.$unit, 12);
+          overflow: hidden !important;
+          white-space: normal;
+          background-color: map.get(color.$layout-surf, 'base');
+          border: 1px solid map.get(color.$layout-border, 'secondary');
+          border-radius: map.get(var.$radius, 'sm');
+          box-shadow: map.get(var.$box-shadow, 'elevation_2');
+        }
 
         button[type='button'] {
           position: absolute;
           top: fn.rem(12);
           right: fn.rem(12);
-        }
-
-        .info-view-text {
-          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-          width: 90%;
-          white-space: normal;
         }
 
         .icon {
@@ -245,7 +243,7 @@
     &-right {
       @include mx.flex($align: center);
       flex-shrink: 0;
-
+      // stylelint-disable-next-line no-descending-specificity
       .vits-btn-download {
         @include button.btn-reset;
         @include icon.ic-size(fn.rem(36));
@@ -268,7 +266,7 @@
   gap: map.get(var.$unit, 32);
 
   .vits-mypage-query,
-  .vits-mypage-coupon-tabs,
+  .vits-mypage-top-tabs,
   .vits-mypage-records-box,
   .vits-mypage-content-promotion {
     box-shadow: map.get(var.$box-shadow, 'elevation_1');
@@ -293,6 +291,34 @@
       padding: map.get(var.$unit, 32);
       background: color.$color-white;
       border-radius: map.get(var.$radius, 'lg');
+    }
+  }
+}
+
+/* kendo window - 쿠폰 등록 팝업 */
+.vits-coupon-serial-register {
+  .coupon-serial-item {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 12);
+    padding: map.get(var.$unit, 32);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+    border-radius: map.get(var.$radius, 'lg');
+
+    &-label {
+      .label-text {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    &-field {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+
+      .validation-message {
+        padding-top: map.get(var.$unit, 4);
+        padding-left: fn.rem(12);
+      }
     }
   }
 }

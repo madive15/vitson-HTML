@@ -3,6 +3,8 @@
 // - SVG 마스크 기반 아이콘(ico-svg) 공통 스타일 모음
 // -----------------------------------------------------------------------------
 
+@use '@/assets/scss/abstracts/functions' as fn;
+
 // 동일한 SVG 마스크 스타일 재사용
 // 실제 아이콘일 땐 ic 폴더 만들어서 하기
 @mixin ic-mask($class, $file: $class) {
@@ -92,4 +94,20 @@ $svg-map: (
 
 @each $class, $file in $svg-map {
   @include ic-mask($class, $file);
+}
+
+@mixin pse-icon($pos: before, $size, $my, $mx, $color, $icon, $except: null) {
+  $selector: if($except, '&:not(#{$except})', '&');
+
+  #{$selector}::#{$pos} {
+    display: block;
+    width: fn.rem($size);
+    height: fn.rem($size);
+    margin: fn.rem($my) fn.rem($mx);
+    color: $color;
+    content: '';
+    background-color: currentcolor;
+    mask: url(/public/resources/img/mro/renewal/ic/ic-#{$icon}.svg) no-repeat center / contain;
+    @content;
+  }
 }
