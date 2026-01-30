@@ -13,11 +13,75 @@
 @use '@/assets/scss/components/button' as button;
 
 .vits-footer {
-  padding: map.get(var.$unit, 44) 0;
   background: map.get(color.$layout-surf, 'footer');
 
-  .vits-inner {
+  > .vits-inner {
     @include mx.flex(flex, row, flex-start, stretch);
+    padding: map.get(var.$unit, 24) 0;
+  }
+
+  &-customer {
+    padding: map.get(var.$unit, 12);
+    background: map.get(color.$layout-surf, 'primary');
+
+    .vits-inner {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+
+      .footer-customer {
+        &-title {
+          @include typo.typography('h4s', $color: map.get(color.$text-colors, 'inverse'));
+        }
+
+        &-tel {
+          @include typo.typography('h3s', $color: map.get(color.$text-colors, 'inverse'));
+        }
+
+        &-schedule {
+          @include typo.font-style(
+            $weight: 400,
+            $size: 14,
+            $line-height: fn.rem(20),
+            $color: map.get(color.$text-colors, 'tertiary')
+          );
+        }
+
+        &-btn {
+          @include mx.flex(flex, row, center, center);
+          gap: map.get(var.$unit, 4);
+
+          .icon {
+            @include icon.ic-size(map.get(var.$unit, 20));
+            color: map.get(color.$icon-neutral, 'tertiary');
+          }
+
+          .text {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+          }
+
+          &:is(button) {
+            @include button.btn-reset;
+            background: transparent;
+          }
+        }
+      }
+    }
+
+    [class*='vits-footer-customer-'] {
+      @include mx.flex(flex, row, flex-start, center);
+    }
+
+    &-info {
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-hours {
+      gap: map.get(var.$unit, 4);
+      margin: 0 auto 0 fn.rem(46);
+    }
+
+    &-actions {
+      gap: map.get(var.$unit, 24);
+    }
   }
 
   &-brand {
@@ -31,7 +95,7 @@
 
   &-company {
     @include mx.flex(flex, column);
-    gap: map.get(var.$unit, 12);
+    gap: map.get(var.$unit, 20);
   }
 
   &-links {
@@ -39,7 +103,7 @@
     gap: map.get(var.$unit, 56);
 
     .footer-link {
-      @include typo.typography('b3r', $color: map.get(color.$gray-shades, '20'));
+      @include typo.typography('b3r', $color: color.$color-white);
 
       &.link-bold {
         font-weight: 700;
@@ -56,12 +120,20 @@
       &:has(.company-name) {
         @include mx.divider('p', 1, 12, 12, $color: map.get(color.$text-colors, 'muted'));
       }
+
+      &:first-of-type {
+        margin-bottom: map.get(var.$unit, 8);
+      }
+
+      &:not(:first-of-type, :last-of-type) {
+        margin-bottom: map.get(var.$unit, 2);
+      }
     }
 
     .company {
       &-name,
       &-email {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
       }
 
       &-email {
@@ -71,7 +143,7 @@
 
       &-text {
         @include mx.flex(flex, row, flex-start, center);
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
         gap: map.get(var.$unit, 4);
       }
 
@@ -101,8 +173,9 @@
     margin-left: auto;
 
     &-group {
-      @include mx.flex(flex, row, flex-start, flex-start);
+      @include mx.flex(flex, row, flex-end, flex-start);
       gap: map.get(var.$unit, 40);
+      width: 100%;
 
       // dropdown
       .footer-familysite {
@@ -113,20 +186,52 @@
 
   &-sns {
     @include mx.flex;
-    gap: map.get(var.$unit, 8);
+    gap: map.get(var.$unit, 16);
 
     .footer-sns {
       @include mx.flex(flex, row, center, center);
-      width: fn.rem(38);
-      height: fn.rem(38);
-      background: map.get(color.$gray-shades, '80');
+      @include mx.border('all', $color: map.get(color.$layout-border, 'secondary'));
+      position: relative;
+      width: fn.rem(37);
+      height: fn.rem(37);
       border-radius: 50%;
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .icon {
+        display: block;
+        width: fn.rem(24);
+        height: fn.rem(24);
+        color: map.get(color.$layout-border, 'secondary');
+        background: currentcolor;
+        mask: no-repeat center / fn.rem(24);
+      }
+
+      &.youtube {
+        .icon {
+          mask-image: url('/public/resources/img/mro/renewal/logo/logo-youtube.svg');
+        }
+      }
+
+      &.insta {
+        .icon {
+          mask-image: url('/public/resources/img/mro/renewal/logo/logo-instagram.svg');
+        }
+      }
+
+      &.naver {
+        .icon {
+          width: fn.rem(16);
+          height: fn.rem(16);
+          mask-image: url('/public/resources/img/mro/renewal/logo/logo-naver.svg');
+        }
+      }
     }
   }
 
   &-cert {
-    @include mx.flex(flex, row, flex-start, flex-start);
+    @include mx.flex(flex, row, flex-end, center);
     gap: fn.rem(10);
+    width: 100%;
     margin-top: auto;
 
     .footer-cert {
@@ -153,7 +258,14 @@
       }
 
       &-desc {
-        @include typo.typography('b4r', $color: map.get(color.$gray-shades, '60'));
+        .title {
+          @include typo.typography('b5s', $color: map.get(color.$gray-shades, '60'));
+        }
+
+        .text {
+          @include typo.typography('b5r', $color: map.get(color.$gray-shades, '60'));
+          margin-top: map.get(var.$unit, 4);
+        }
       }
     }
   }

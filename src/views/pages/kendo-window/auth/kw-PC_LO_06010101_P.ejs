@@ -1,0 +1,95 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-login-modal">
+  <h2 class="sr-only">로그인 폼</h2>
+  <!-- 로그인 팝업 -->
+  <div class="vits-login-content">
+    <!-- 로고 / 타이틀 -->
+    <h2 class="vits-login-logo">
+      <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+      <span class="vits-login-subtitle">일회성 로그인</span>
+    </h2>
+
+    <form class="vits-login-form" action="" method="post">
+      <!-- 인증 탭 버튼 -->
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/tabs.ejs`, {
+        size: 'sm',
+        className: 'vits-auth-tabs',
+        tabClassName: 'vits-btn-md vits-auth-tab-btn',
+        tabs: [
+          { text: '이메일 인증', isActive: true },
+          { text: '휴대전화번호', isActive: false }
+        ],
+        showBadge: false,
+        ariaLabel: '인증 방법 탭',
+        idPrefix: 'auth-tab'
+      }) %>
+
+      <div class="vits-login-form-fields">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-id',
+          name: 'loginId',
+          label: '아이디',
+          placeholder: '아이디',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-email',
+          name: 'loginEmail',
+          label: '이메일 주소',
+          placeholder: '이메일 주소',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </div>
+
+      <div class="vits-login-form-fields">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-id',
+          name: 'loginId',
+          label: '아이디',
+          placeholder: '아이디',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-phone',
+          name: 'loginPhone',
+          label: '휴대전화번호',
+          placeholder: '휴대전화번호',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+      </div>
+
+      <!-- 인증코드 받기 버튼 -->
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        text: '인증코드 받기',
+        size: 'xxl',
+        variant: 'primary',
+        type: 'submit',
+        className: 'login-submit',
+      }) %>
+
+      <!-- 일회성 로그인 -->
+      <div class="login-once-others">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '일반 로그인 돌아가기', target: '_blank' }) %>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- 
+이메일 . PC_LO_06010101_P
+휴대폰 인증 . PC_LO_06020101_P 
+-->

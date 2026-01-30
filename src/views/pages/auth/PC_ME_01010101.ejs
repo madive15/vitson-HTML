@@ -1,0 +1,250 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: '회원가입', } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup">
+                  <!-- 컨텐츠 헤딩 -->
+                  <div class="vits-signup-headline">
+                    <h2 class="vits-signup-title">회원가입</h2>
+                  </div>
+
+                  <form class="vits-signup-form-wrap" action="#" method="post" novalidate>
+                    <div class="vits-signup-inner">
+                      <!-- 안내 문구 -->
+                      <div class="vits-signup-alert">비츠온엠알오 회원가입을 위해 약관에 동의해주세요</div>
+
+                      <!-- S: 약관 동의 -->
+                      <div class="vits-signup-terms-card" data-checkbox-scope>
+                        <!-- 전체 동의 -->
+                        <div class="vits-signup-terms-all">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                            name: 'agreeAll',
+                            value: 'agreeAll',
+                            size: 'l',
+                            text: '전체 동의',
+                            checkboxType: 'all',
+                            checked: true,
+                          }) %>
+                          <p class="vits-signup-terms-all-desc">서비스 이용을 위한 필수 및 선택 동의 포함</p>
+                        </div>
+
+                        <ul class="vits-signup-terms-list">
+                          <li class="vits-signup-terms-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                              name: 'agreeTerms',
+                              value: 'terms',
+                              size: 'm',
+                              text: '이용약관',
+                              suffix: '(필수)',
+                              checkboxType: 'item',
+                              checked: true,
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <a href="#!" class="vits-signup-terms-link" aria-label="이용약관 상세보기"> 
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                            </a>
+                          </li>
+                          <li class="vits-signup-terms-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                              name: 'agreePrivacy',
+                              value: 'privacy',
+                              size: 'm',
+                              text: '개인정보 수집 및 이용 동의',
+                              suffix: '(필수)',
+                              checkboxType: 'item',
+                              checked: true,
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <a href="#!" class="vits-signup-terms-link" aria-label="개인정보 수집 및 이용 동의 상세보기"> 
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                            </a>
+                          </li>
+                          <li class="vits-signup-terms-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                              name: 'agreeBiz',
+                              value: 'biz',
+                              size: 'm',
+                              text: '기업회원 및 공급처 이용 동의',
+                              suffix: '(필수)',
+                              checkboxType: 'item',
+                              checked: true,
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <a href="#!" class="vits-signup-terms-link" aria-label="기업회원 및 공급처 이용 동의 상세보기"> 
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                            </a>
+                          </li>
+                          <li class="vits-signup-terms-item">
+                            <div class="vits-signup-terms-details" data-checkbox-scope data-toggle-scope>
+                              <div class="vits-signup-terms-summary">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                                  name: 'agreeMarketing',
+                                  value: 'marketing',
+                                  size: 'm',
+                                  text: '마케팅 및 광고 알림 설정',
+                                  suffix:'(선택)',
+                                  checkboxType: 'item',
+                                  checked: true,
+                                }) %>
+                                <button
+                                  type="button"
+                                  class="terms-toggle-btn icon"
+                                  data-toggle-btn
+                                  data-toggle-target="marketing-sub"
+                                  aria-expanded="false"
+                                  aria-label="마케팅 및 광고 알림 설정 열기"
+                                >
+                                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+                                </button>
+                                <!-- prettier-ignore -->
+                                <a href="#!" class="vits-signup-terms-link" aria-label="마케팅 및 광고 알림 설정 상세보기">
+                                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right'})%>
+                                </a>
+                              </div>
+                              <div class="vits-signup-terms-sub" data-toggle-box="marketing-sub">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                                  name: 'agreeMarketingSms',
+                                  value: 'sms',
+                                  size: 'm',
+                                  text: '문자 수신 동의',
+                                  checkboxType: 'item',
+                                  checked: true,
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                                  name: 'agreeMarketingEmail',
+                                  value: 'email',
+                                  size: 'm',
+                                  text: '이메일 수신 동의',
+                                  checkboxType: 'item',
+                                  checked: true,
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
+                                  name: 'agreeMarketingPush',
+                                  value: 'push',
+                                  size: 'm',
+                                  text: '앱 푸시 동의',
+                                  checkboxType: 'item',
+                                  checked: true,
+                                }) %>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- E: 약관 동의 -->
+
+                      <!-- S: 정보 입력 -->
+                      <div class="vits-signup-form vits-form-box">
+                        <div class="vits-form-row">
+                          <label class="vits-form-label" for="signup-bizno">
+                            사업자등록번호 <span class="label-required" aria-hidden="true">*</span>
+                          </label>
+                          <div class="vits-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'signup-bizno',
+                            name: 'bizNo',
+                            label: '사업자등록번호',
+                            placeholder: '사업자등록번호',
+                            required: true,
+                            rootClass: 'size-large',
+                          }) %>
+                          </div>
+                        </div>
+                        <div class="vits-form-row">
+                          <label class="vits-form-label">
+                            가입 경로 선택 <span class="label-required" aria-hidden="true">*</span>
+                          </label>
+                          <div class="vits-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/select.ejs`,{
+                            id: 'signup-path',
+                            name: 'signupPath',
+                            placeholder: '가입경로 선택',
+                            className: 'size-l',
+                            options: [
+                              { value: 'search', text: '검색엔진' },
+                              { value: 'intro', text: '지인 소개' },
+                              { value: 'ads', text: '광고' },
+                              { value: 'etc', text: '기타' },
+                            ], disabled: false}) %>
+                          </div>
+                        </div>
+                        <div class="vits-form-row">
+                          <label class="vits-form-label" for="signup-referrer">추천인 아이디</label>
+                          <div class="vits-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'signup-referrer',
+                            name: 'referrerId',
+                            label: '추천인 아이디',
+                            placeholder: '추천인 아이디',
+                            rootClass: 'size-large',
+                          }) %>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- E: 정보 입력 -->
+                    </div>
+
+                    <!-- 가입하기 버튼 -->
+                    <div class="vits-signup-submit">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`,{
+                        type: 'submit',
+                        size: 'xxl',
+                        variant: 'primary',
+                        text: '본인인증 후 가입하기',
+                        className: 'vits-signup-submit-btn',
+                      }) %>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+  </body>
+</html>

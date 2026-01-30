@@ -1,0 +1,119 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '가이드 - 탭'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-tabs-title">
+        <h2 class="vits-guide-title" id="guide-tabs-title">Tabs</h2>
+
+        <h3 class="vits-guide-subtitle">기본 사용법</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/tabs.ejs`, {
+  size: 'lg',
+  className: 'vits-mypage-top-tabs',
+  tabClassName: 'vits-btn-md vits-my-coupon-tab-btn',
+  tabs: [
+    { text: '보유 쿠폰', badge: '22', isActive: true },
+    { text: '쿠폰 받기', badge: 'N' }
+  ],
+  showBadge: true,
+  ariaLabel: '마이페이지 쿠폰 탭',
+  idPrefix: 'coupon-tab'
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/tabs.ejs`, {
+                size: 'lg',
+                className: 'vits-mypage-top-tabs',
+                tabClassName: 'vits-btn-md vits-my-coupon-tab-btn',
+                tabs: [
+                  { text: '보유 쿠폰', badge: '22', isActive: true },
+                  { text: '쿠폰 받기', badge: 'N' }
+                ],
+                showBadge: true,
+                ariaLabel: '마이페이지 쿠폰 탭',
+                idPrefix: 'coupon-tab-guide'
+              }) %>
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="vits-guide-subtitle">배지 미사용 / 사이즈 sm</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;%- include(`${_src}/views/components/tabs.ejs`, {
+  size: 'sm',
+  className: 'vits-auth-tabs',
+  tabClassName: 'vits-btn-md vits-auth-tab-btn',
+  tabs: [
+    { text: '이메일 인증', isActive: true },
+    { text: '휴대폰인증', isActive: false }
+  ],
+  showBadge: false,
+  ariaLabel: '인증 방법 탭',
+  idPrefix: 'auth-tab'
+}) %&gt;
+            </pre>
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/tabs.ejs`, {
+                size: 'sm',
+                className: 'vits-auth-tabs',
+                tabClassName: 'vits-btn-md vits-auth-tab-btn',
+                tabs: [
+                  { text: '이메일 인증', isActive: true },
+                  { text: '휴대폰인증', isActive: false }
+                ],
+                showBadge: false,
+                ariaLabel: '인증 방법 탭',
+                idPrefix: 'auth-tab-guide'
+              }) %>
+            </li>
+          </ul>
+        </div>
+
+        <div class="vits-guide-code">
+          <h4 class="vits-guide-code-title">파라미터 설명</h4>
+          <code>
+            <pre>
+- tabs: 필수 (array) - 탭 목록 [{ text, badge, isActive }]
+- size: 선택 (string) - 'lg' | 'sm' (기본: 'lg')
+- className: 선택 (string) - 탭 컨테이너 추가 클래스
+- tabClassName: 선택 (string) - 탭 버튼 클래스 (기본: 'vits-btn-md')
+- showBadge: 선택 (boolean) - 배지 노출 여부 (기본: true)
+- idPrefix: 선택 (string) - 탭 버튼 id 접두어 (기본: 'tab')
+- ariaLabel: 선택 (string) - tablist aria-label 텍스트 (기본: '탭')
+            </pre>
+          </code>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

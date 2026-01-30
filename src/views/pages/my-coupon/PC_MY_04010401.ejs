@@ -43,11 +43,17 @@
 
                     <div class="vits-mypage-panel">
                       <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/pg-my-coupon/my-top-tabs.ejs`, {
+                      <%- include(`${_src}/views/components/tabs.ejs`, {
+                        size: 'lg',
+                        className: 'vits-mypage-top-tabs',
+                        tabClassName: 'vits-btn-md vits-my-coupon-tab-btn',
                         tabs: [
-                          { text: '보유 쿠폰', badge: '22'},
-                          { text: '쿠폰 받기', badge: 'N', isActive: true }
-                        ]
+                          { text: '보유 쿠폰', badge: '22' },
+                          { text: '쿠폰 받기', badge: 'N' , isActive: true}
+                        ],
+                        showBadge: true,
+                        ariaLabel: '마이페이지 쿠폰 탭',
+                        idPrefix: 'coupon-tab'
                       }) %>
 
                       <!-- prettier-ignore -->

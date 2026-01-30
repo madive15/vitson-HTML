@@ -13,48 +13,34 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/form' as form;
 
-/* === kendo window 로그인 팝업 === */
-// 로그인 헤더 숨김
-#loginModal {
-  .vits-modal-header {
-    padding: fn.rem(28) fn.rem(32);
+/* === kendo window 로그인 팝업 , 일회성 로그인 팝업 === */
 
-    .vits-modal-close {
-      top: fn.rem(12);
-      right: fn.rem(12);
-      width: fn.rem(52);
-      height: fn.rem(52);
-      color: map.get(color.$icon-neutral, 'tertiary');
-    }
-  }
-
-  #loginModal-title {
-    font-size: 1px;
-    color: transparent;
-  }
-}
-
+/* === 로그인 팝업 (공통요소 있음)=== */
 .vits-login-modal {
-  &-logo {
-    width: fn.rem(200);
-    min-height: fn.rem(32.6);
-    padding-bottom: fn.rem(109);
-    margin: 0 auto;
-
-    img {
-      display: block;
-      width: 100%;
-    }
-  }
-
-  &-content {
-    padding: map.get(var.$unit, 52) map.get(var.$unit, 24) map.get(var.$unit, 24);
-  }
-
-  /* =========================
-   * Login Form
-   * ========================= */
   .vits-login {
+    &-logo {
+      @include mx.flex($direction: column, $justify: center, $align: center);
+      width: fn.rem(200);
+      width: 100%;
+      min-height: fn.rem(140);
+      margin: 0 auto fn.rem(56);
+
+      img {
+        display: block;
+        width: 100%;
+        max-width: fn.rem(200);
+      }
+
+      .vits-login-subtitle {
+        @include typo.typography('b1', $color: map.get(color.$text-colors, 'tertiary'));
+        margin-top: fn.rem(10);
+      }
+    }
+
+    &-content {
+      padding: 0 map.get(var.$unit, 24) map.get(var.$unit, 24);
+    }
+
     &-form {
       @include mx.flex($direction: column);
     }
@@ -63,6 +49,34 @@
     &-form-fields {
       @include mx.flex($direction: column);
       gap: map.get(var.$unit, 12);
+
+      /* 인증코드 유효시간 영역 */
+      .login-once-time-attack {
+        @include mx.flex($align: center, $direction: column, $justify: center);
+        gap: map.get(var.$unit, 16);
+        padding-top: map.get(var.$unit, 24);
+
+        .time-attack-info {
+          @include mx.flex($align: center, $justify: center);
+          gap: map.get(var.$unit, 12);
+
+          .time-attack-label {
+            @include typo.typography('H3s', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          .time-attack-value {
+            @include typo.typography('H3s', $color: map.get(color.$text-status, 'brand'));
+          }
+        }
+
+        .time-attack-btn {
+          padding: 0 fn.rem(25);
+
+          .text {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+      }
     }
 
     /* 옵션 영역 (아이디 저장) */
@@ -81,21 +95,31 @@
     margin-top: fn.rem(52);
   }
 
-  /* 일회성 로그인 */
-  .login-once {
-    margin-top: map.get(var.$unit, 16);
+  /* 일회성 로그인 링크 */
+  .login-once-others {
+    padding-top: map.get(var.$unit, 16);
     text-align: center;
 
     .vits-text-link {
       @include typo.typography('H4s', $color: map.get(color.$text-colors, 'tertiary'));
+      display: inline-block;
       padding-bottom: fn.rem(4);
       border-bottom: 2px solid map.get(color.$layout-border, 'tertiary');
     }
   }
 
+  .vits-auth-tabs {
+    min-height: fn.rem(48);
+    margin-bottom: map.get(var.$unit, 24);
+
+    [class*='vits-btn-'] {
+      min-height: fn.rem(48);
+    }
+  }
+
   /* 하단 링크 */
   .login-links {
-    margin-top: fn.rem(44);
+    padding-top: fn.rem(44);
 
     ul {
       @include mx.divider('li', $h: 12, $gap: 16, $color: map.get(color.$layout-border, 'tertiary'));
@@ -104,6 +128,267 @@
       li a {
         @include typo.typography('b2', $color: map.get(color.$text-colors, 'tertiary'));
       }
+    }
+  }
+}
+
+/* 로그인 헤더 숨김 (공통) */
+// stylelint-disable-next-line selector-id-pattern
+#loginModal {
+  .vits-modal-header {
+    padding: fn.rem(28) fn.rem(32);
+
+    .vits-modal-close {
+      top: fn.rem(12);
+      right: fn.rem(12);
+      width: fn.rem(52);
+      height: fn.rem(52);
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
+  }
+  // stylelint-disable-next-line selector-id-pattern
+  .vits-modal-title {
+    font-size: 1px;
+    color: transparent;
+  }
+}
+
+// === kendo window 휴면해제 팝업 === */
+.vits-auth-dormant-modal {
+  position: relative;
+
+  .vits-auth-dormant {
+    &-form {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+
+      &-fields {
+        @include mx.flex;
+        gap: map.get(var.$unit, 24);
+
+        .form-field-label {
+          @include typo.typography('b2', $color: map.get(color.$text-colors, 'primary'));
+          min-width: fn.rem(140);
+
+          .label-required {
+            @include typo.typography('b2', $color: map.get(color.$text-status, 'brand'));
+            margin-left: map.get(var.$unit, 2);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* === 회원가입 페이지 (PC_ME_01010101) === */
+.vits-main-auth {
+  padding-top: map.get(var.$unit, 40);
+  background-color: map.get(color.$layout-surf, 'mypage');
+
+  .vits-signup {
+    @include mx.flex($direction: column);
+    max-width: fn.rem(520);
+    margin: 0 auto;
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    &-headline {
+      padding: fn.rem(17) fn.rem(32);
+      border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+    }
+
+    &-title {
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-form-wrap {
+      @include mx.flex($direction: column);
+      padding: fn.rem(36) fn.rem(32);
+      background-color: map.get(color.$layout-surf, 'base');
+    }
+
+    &-inner {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 32);
+      padding: map.get(var.$unit, 32);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    &-alert {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'default'));
+    }
+
+    /* 약관 동의 카드 */
+    &-terms-card {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+      padding: map.get(var.$unit, 16);
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'quinary');
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    &-terms-all {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 2);
+      padding: 0 map.get(var.$unit, 16);
+
+      .vits-checkbox-item.size-l {
+        align-items: center;
+      }
+    }
+
+    &-terms-all-desc {
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+      padding-left: fn.rem(24);
+      margin: 0;
+    }
+
+    &-terms-list {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 4);
+    }
+
+    &-terms-item {
+      @include mx.flex($align: center, $justify: space-between);
+      gap: map.get(var.$unit, 4);
+      padding: map.get(var.$unit, 16);
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+      border-radius: map.get(var.$radius, 'md');
+
+      .vits-checkbox-item {
+        .label {
+          @include typo.typography('b2', $color: map.get(color.$text-colors, 'secondary'));
+        }
+
+        .label-tag {
+          margin-left: map.get(var.$unit, 8);
+          color: map.get(color.$text-status, 'brand-sub');
+        }
+
+        // 마케팅 및 광고 알림 설정 체크 시 텍스트 색상 변경
+        [value='marketing'] ~ .label {
+          .label-tag {
+            color: map.get(color.$text-colors, 'tertiary');
+          }
+        }
+      }
+    }
+
+    &-terms-link {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      display: inline-flex;
+      flex-shrink: 0;
+      gap: map.get(var.$unit, 4);
+      align-items: center;
+      text-decoration: none;
+
+      .ic {
+        width: fn.rem(16);
+        height: fn.rem(16);
+      }
+    }
+
+    &-terms-details {
+      width: 100%;
+    }
+
+    &-terms-summary {
+      @include mx.flex($align: center, $justify: space-between);
+      gap: map.get(var.$unit, 12);
+      list-style: none;
+      cursor: pointer;
+
+      .terms-toggle-btn {
+        @include button.btn-reset;
+        display: inline-flex;
+        flex: 1;
+        flex-shrink: 0;
+        justify-content: flex-start;
+        color: map.get(color.$text-colors, 'tertiary');
+
+        .ic {
+          width: fn.rem(16);
+          height: fn.rem(16);
+        }
+        transition: transform 0.2s;
+      }
+    }
+
+    .terms-toggle-btn[aria-expanded='true'] .ic {
+      transform: rotate(180deg);
+    }
+
+    &-terms-sub {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 16);
+      transition: none;
+
+      &.is-open {
+        padding-top: map.get(var.$unit, 16);
+        margin-top: map.get(var.$unit, 16);
+        border-top: 1px solid map.get(color.$layout-border, 'quaternary');
+      }
+    }
+  }
+
+  /* 정보 입력 폼 */
+  .vits-signup-form {
+    &.vits-form-box {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+    }
+
+    .vits-form {
+      &-row {
+        @include mx.flex($align: center, $justify: flex-start);
+        gap: map.get(var.$unit, 24);
+      }
+
+      &-label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        flex-shrink: 0;
+        min-width: fn.rem(140);
+
+        .label-required {
+          margin-left: map.get(var.$unit, 2);
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-field {
+        flex: 1;
+        min-width: 0;
+
+        .vits-input,
+        .vits-select {
+          width: 100%;
+        }
+
+        .vits-select-trigger {
+          width: 100%;
+
+          .vits-select-value {
+            color: map.get(color.$text-colors, 'tertiary');
+          }
+
+          .vits-select-icon {
+            color: map.get(color.$icon-neutral, 'tertiary');
+          }
+        }
+      }
+    }
+  }
+
+  // signup 버튼
+  .vits-signup-submit {
+    width: 100%;
+    padding-top: fn.rem(48);
+
+    &-btn {
+      width: 100%;
     }
   }
 }
