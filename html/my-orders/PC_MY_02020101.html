@@ -39195,8 +39195,9 @@
 
 
 
-<div class="vits-mypage-query type-ver2">
+<div class="vits-mypage-query" data-toggle-scope>
   <div class="mypage-query-fields">
+    <!-- 조회 기간 -->
     <dl class="mypage-query-period">
       <dt class="mypage-query-label">조회 기간</dt>
       <dd class="mypage-query-control">
@@ -39221,7 +39222,7 @@
 
 
 <div class="vits-kendo-range-picker size-md" 
-     id="kendoRangePicker_1769732244421"
+     id="kendoRangePicker_1769738287548"
      data-ui="kendo-range-picker"
      data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
     
@@ -39259,8 +39260,10 @@
       </dd>
     </dl>
 
-    <div class="mypage-query-advanced">
+    <div class="mypage-query-advanced" data-toggle-box="mypageQueryAdvanced">
       <ul class="mypage-query-detail">
+        
+        <!-- 취소반품선택 -->
         <li>
           <p class="mypage-query-label">취소/반품 선택</p>
           <div class="mypage-query-control type-select">
@@ -39339,6 +39342,9 @@
 
           </div>
         </li>
+        
+
+        <!-- 검색어 -->
         <li>
           <p class="mypage-query-label">검색어</p>
           <div class="mypage-query-control type-search">
@@ -39383,13 +39389,27 @@
     </div>
   </div>
 
+  <!-- 상세조회 & 조회하기 버튼 -->
   <div class="mypage-query-actions">
+    <button
+      type="button"
+      type="button"
+      class="mypage-query-toggle"
+      data-toggle-btn
+      data-toggle-target="mypageQueryAdvanced"
+      aria-expanded="false"
+      data-aria-label-base="상세조회"
+    >
+      <span class="icon"> <i class="ic ic-filter-2" aria-hidden="true"></i>
+ </span>
+      <span class="text">상세조회</span>
+    </button>
     
 
 
 <button
-  type="cancle"
-  class="vits-btn-xl vits-btn-secondary  disabled btn-fix-w120"
+  type="toggle"
+  class="vits-btn-sm vits-btn-secondary  disabled btn-fix-w120"
   disabled
   >
   
@@ -39401,6 +39421,8 @@
 
   </div>
 </div>
+
+<!-- prettier-ignore -->
 
 
 
