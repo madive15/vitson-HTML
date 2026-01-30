@@ -2,11 +2,13 @@
 <!-- prettier-ignore -->
 <%
   const _type = typeof type !== 'undefined' ? type : 'order';
+  const _queryType = typeof queryType !== 'undefined' ? queryType : 'order'; // 'order' | 'cancel'
 %>
 
 <% if (_type === 'toggle') { %>
 <div class="vits-mypage-query" data-toggle-scope>
   <div class="mypage-query-fields">
+    <!-- 조회 기간 -->
     <dl class="mypage-query-period">
       <dt class="mypage-query-label">조회 기간</dt>
       <dd class="mypage-query-control">
@@ -39,6 +41,8 @@
 
     <div class="mypage-query-advanced" data-toggle-box="mypageQueryAdvanced">
       <ul class="mypage-query-detail">
+        <%# 주문배송내역 일 때 %><% if (_queryType === 'order') { %>
+        <!-- 주문상태 -->
         <li>
           <p class="mypage-query-label">주문상태</p>
           <div class="mypage-query-control type-select">
@@ -65,6 +69,8 @@
             }) %>
           </div>
         </li>
+
+        <!-- 배송지 -->
         <li>
           <p class="mypage-query-label">배송지</p>
           <div class="mypage-query-control type-select">
@@ -85,6 +91,31 @@
             }) %>
           </div>
         </li>
+
+        <%# 취소반품내역 일 때 %> <% } else if (_queryType === 'cancel') { %>
+        <!-- 취소반품선택 -->
+        <li>
+          <p class="mypage-query-label">취소/반품 선택</p>
+          <div class="mypage-query-control type-select">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'my-order-status',
+            name: 'sort',
+            placeholder: '전체',
+            options: [
+              { value: '전체', text: '전체' },
+              { value: '취소', text: '취소' },
+              { value: '반품', text: '반품' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '전체',
+            disabled: false,
+            portal: true,
+          }) %>
+          </div>
+        </li>
+        <% } %>
+
+        <!-- 검색어 -->
         <li>
           <p class="mypage-query-label">검색어</p>
           <div class="mypage-query-control type-search">
@@ -102,6 +133,7 @@
     </div>
   </div>
 
+  <!-- 상세조회 & 조회하기 버튼 -->
   <div class="mypage-query-actions">
     <button
       type="button"
@@ -124,6 +156,7 @@
 <% } else if (_type === 'default') { %>
 <div class="vits-mypage-query type-ver2">
   <div class="mypage-query-fields">
+    <!-- 조회기간 -->
     <dl class="mypage-query-period">
       <dt class="mypage-query-label">조회 기간</dt>
       <dd class="mypage-query-control">
@@ -156,6 +189,7 @@
 
     <div class="mypage-query-advanced">
       <ul class="mypage-query-detail">
+        <!-- 주문상태 -->
         <li>
           <p class="mypage-query-label">주문상태</p>
           <div class="mypage-query-control type-select">
@@ -182,6 +216,7 @@
           }) %>
           </div>
         </li>
+        <!-- 배송지 -->
         <li>
           <p class="mypage-query-label">배송지</p>
           <div class="mypage-query-control type-select">
@@ -202,6 +237,7 @@
           }) %>
           </div>
         </li>
+        <!-- 검색어 -->
         <li>
           <p class="mypage-query-label">검색어</p>
           <div class="mypage-query-control type-search">
@@ -219,6 +255,7 @@
     </div>
   </div>
 
+  <!-- 조회하기 -->
   <div class="mypage-query-actions">
     <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant: 'secondary', text: '조회하기',
     disabled: true, className: 'btn-fix-w120'}) %>
@@ -229,6 +266,7 @@
 <% } else if (_type === 'cancle') { %>
 <div class="vits-mypage-query type-ver2">
   <div class="mypage-query-fields">
+    <!-- 조회 기간 -->
     <dl class="mypage-query-period">
       <dt class="mypage-query-label">조회 기간</dt>
       <dd class="mypage-query-control">
@@ -261,6 +299,7 @@
 
     <div class="mypage-query-advanced">
       <ul class="mypage-query-detail">
+        <!-- 취소반품 선택 -->
         <li>
           <p class="mypage-query-label">취소/반품 선택</p>
           <div class="mypage-query-control type-select">
@@ -280,6 +319,7 @@
           }) %>
           </div>
         </li>
+        <!-- 검색어 -->
         <li>
           <p class="mypage-query-label">검색어</p>
           <div class="mypage-query-control type-search">
@@ -297,6 +337,7 @@
     </div>
   </div>
 
+  <!-- 조회하기 -->
   <div class="mypage-query-actions">
     <%- include(`${_src}/views/components/button/button.ejs`, {size:'xl', variant: 'secondary', text: '조회하기',
     disabled: true, className: 'btn-fix-w120'}) %>

@@ -3,11 +3,18 @@
 // - 플로팅 최근 본 상품 + TOP 버튼
 // -----------------------------------------------------------------------------
 
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
 .vits-floating {
-  position: fixed;
-  right: 20px;
-  bottom: 100px;
-  z-index: 100;
+  @include mx.position(fixed, $right: fn.rem(20), $bottom: fn.rem(20));
+  z-index: var.$zindex-floating;
   display: flex;
   flex-direction: column;
   gap: 12px;
