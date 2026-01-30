@@ -54,7 +54,13 @@
   label: '이름',
   placeholder: '이름을 입력하세요',
   required: true,
-  _rootClass: 'size-default'
+  rootClass: 'size-default'
+  isInvalid: true,
+  validationMessage: '필수 입력 항목입니다.',
+  isValid: true,
+  successMessage: '사용 가능한 이메일입니다.',
+  value: 'test@example.com',
+  type: 'password', // 기본은 text
 }) %&gt;
 </pre
             >
@@ -192,6 +198,72 @@
   <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
   <div class="validation-message" >
     <p id="user-email-validation" aria-live="polite">필수 입력 항목입니다.</p>
+  </div>
+</div>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input size-large vits-validation is-valid">
+  <div class="input-item">
+    <label for="user-email-valid" class="sr-only">이메일</label>
+
+    <input
+      type="text"
+      name="emailValid"
+      id="user-email-valid"
+      placeholder="이메일을 입력하세요"
+      value="test@example.com"
+      
+      
+      required
+      
+      
+
+      aria-describedby="user-email-valid-validation"
+      
+      aria-invalid="false"
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" >
+    <p id="user-email-valid-validation" aria-live="polite">사용 가능한 이메일입니다.</p>
+  </div>
+</div>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="user-password" class="sr-only">비밀번호</label>
+
+    <input
+      type="password"
+      name="password"
+      id="user-password"
+      placeholder="비밀번호를 입력하세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="user-password-validation" aria-live="polite"></p>
   </div>
 </div>
             </li>

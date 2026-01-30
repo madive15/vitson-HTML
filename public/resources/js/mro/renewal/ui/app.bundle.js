@@ -1706,33 +1706,21 @@ if (document.body?.dataset?.guide === 'true') {
   // [2026-01-29 삭제] resetPromoHidden, applyPromoClip, getMoreMode - 클리핑 관련 함수 제거
 
   // 프로모션 링크를 more 패널용 li로 복제 추가
-  // [2026-01-29 수정] vits-gnb-promo-button 클래스 적용, text/subText 매핑
+  // [2026-01-29 수정] 메인 타이틀(text)만 표시, 최대 26자 제한
+  var PROMO_TEXT_MAX = 26;
   function appendMoreItem(fragment, $a) {
     var li = document.createElement('li');
     var a = document.createElement('a');
     a.className = 'vits-gnb-promo-button';
     a.href = $a.attr('href') || '#';
-    var $text = $a.find('.exhibition-item-text');
-    var $subText = $a.find('.exhibition-item-sub');
-    var span;
-    if ($text.length) {
-      span = document.createElement('span');
-      span.className = 'text';
-      span.textContent = $text.text();
-      a.appendChild(span);
+    var text = $.trim($a.attr('data-full-text') || $a.text());
+    if (text.length > PROMO_TEXT_MAX) {
+      text = text.substring(0, PROMO_TEXT_MAX);
     }
-    if ($subText.length) {
-      span = document.createElement('span');
-      span.className = 'subText';
-      span.textContent = $subText.text();
-      a.appendChild(span);
-    }
-    if (!$text.length && !$subText.length) {
-      span = document.createElement('span');
-      span.className = 'text';
-      span.textContent = $a.text();
-      a.appendChild(span);
-    }
+    var span = document.createElement('span');
+    span.className = 'text';
+    span.textContent = text;
+    a.appendChild(span);
     li.appendChild(a);
     fragment.appendChild(li);
   }
