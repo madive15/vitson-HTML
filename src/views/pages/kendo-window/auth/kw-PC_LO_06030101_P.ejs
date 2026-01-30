@@ -1,0 +1,59 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-login-modal">
+  <h2 class="sr-only">로그인 폼 - 인증코드 입력</h2>
+  <!-- 로그인 팝업 -->
+  <div class="vits-login-content">
+    <!-- 로고 / 타이틀 -->
+    <h2 class="vits-login-logo">
+      <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+      <span class="vits-login-subtitle">일회성 로그인</span>
+    </h2>
+
+    <form class="vits-login-form" action="" method="post">
+      <div class="vits-login-form-fields" id="login-once-code">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'login-code',
+          name: 'loginCode',
+          label: '6자리 인증코드',
+          placeholder: '6자리 인증코드',
+          required: true,
+          rootClass: 'size-large'
+        }) %>
+
+        <div class="login-once-time-attack">
+          <dl class="time-attack-info">
+            <dt class="time-attack-label">유효시간</dt>
+            <dd class="time-attack-value">00:00</dd>
+          </dl>
+
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            text: '인증코드 재전송',
+            size: 'md',
+            variant: 'outline-secondary',
+            type: 'submit',
+            className: 'time-attack-btn',
+          }) %>
+        </div>
+      </div>
+
+      <!-- 로그인 버튼 -->
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        text: '로그인',
+        size: 'xxl',
+        variant: 'primary',
+        type: 'submit',
+        className: 'login-submit',
+      }) %>
+
+      <!-- 일회성 로그인 -->
+      <div class="login-once-others">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/text-link.ejs`, { href: '#!', label: '일반 로그인 돌아가기', target: '_blank' }) %>
+      </div>
+    </form>
+  </div>
+</section>

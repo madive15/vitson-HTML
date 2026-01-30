@@ -102,15 +102,12 @@
                 aria-expanded="false"
                 aria-label="더보기"
               >
-                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %>
+                <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %> </span>
               </button>
             </div>
           </li>
           <li class="gnb-item gnb-item-promo">
             <a href="/plan" class="gnb-link">기획전</a>
-          </li>
-          <li class="gnb-item gnb-item-event">
-            <a href="/event" class="gnb-link">이벤트</a>
           </li>
         </ul>
       </nav>
@@ -119,9 +116,10 @@
     <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
     <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
       <div class="gnb-panel-inner">
-        <div class="gnb-panel-body">
+        <section class="gnb-panel-body vits-inner">
+          <h2 class="gnb-panel-body-title">비츠온이 전하는 더 많은 혜택</h2>
           <ul class="gnb-panel-list" data-gnb-more-list></ul>
-        </div>
+        </section>
       </div>
     </div>
   </div>

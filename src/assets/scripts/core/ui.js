@@ -20,6 +20,7 @@ import '../ui/swiper.js';
 import '../ui/swiper-test.js';
 import '../ui/chip-button.js';
 import '../ui/quantity-stepper.js';
+import '../ui/floating.js';
 import '../ui/form/textarea.js';
 import '../ui/form/checkbox-total.js';
 import '../ui/header/header-rank.js';
@@ -37,6 +38,7 @@ import '../ui/more-expand.js';
 import '../ui/filter-expand.js';
 import '../ui/cart-order/cart-order.js';
 import '../ui/kendo/kendo.js';
+import '../ui/auth-ui.js';
 
 (function (window) {
   'use strict';
@@ -62,6 +64,7 @@ import '../ui/kendo/kendo.js';
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.floating && window.UI.floating.init) window.UI.floating.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.checkboxTotal && window.UI.checkboxTotal.init) window.UI.checkboxTotal.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
@@ -80,6 +83,7 @@ import '../ui/kendo/kendo.js';
     if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
     if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
+    if (window.UI.authUi && window.UI.authUi.init) window.UI.authUi.init();
   };
 
   console.log('[core/ui] loaded');

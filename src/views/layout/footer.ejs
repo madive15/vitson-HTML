@@ -12,6 +12,44 @@
 %>
 
 <footer class="vits-footer" data-toggle-scope>
+  <div class="vits-footer-customer">
+    <div class="vits-inner">
+      <div class="vits-footer-customer-info">
+        <h3 class="footer-customer-title">고객센터</h3>
+        <p class="footer-customer-tel">1566-8967</p>
+      </div>
+
+      <div class="vits-footer-customer-hours">
+        <p class="footer-customer-schedule">평일 09:00 - 18:00 점심시간 12:00 - 13:00</p>
+        <p class="footer-customer-schedule">토·일·공휴일 휴무</p>
+      </div>
+
+      <div class="vits-footer-customer-actions">
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'kakao' }) %> </span>
+          <span class="text">카카오톡 상담</span>
+        </a>
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'textbox2' }) %> </span>
+          <span class="text">1:1문의</span></a
+        >
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-question' }) %>
+          </span>
+          <span class="text">FAQ</span>
+        </a>
+        <button type="button" class="footer-customer-btn">
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'electric-bulb' }) %> </span>
+          <span class="text">조명 AS 신청</span>
+        </button>
+        <a href="mailto:online@vitson.co.kr" class="footer-customer-btn">
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'partnership' }) %> </span>
+          <span class="text">제휴문의</span>
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="vits-inner">
     <div class="vits-footer-brand">
       <h2 class="vits-footer-logo">
@@ -63,14 +101,29 @@
     <div class="vits-footer-utility">
       <div class="vits-footer-utility-group">
         <div class="vits-footer-sns">
-          <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
-            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+          <a
+            href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg"
+            class="footer-sns youtube"
+            target="_blank"
+            aria-label="유튜브 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
-            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+          <a
+            href="https://www.instagram.com/vitson_official"
+            class="footer-sns insta"
+            target="_blank"
+            aria-label="인스타그램 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
-            <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+          <a
+            href="https://blog.naver.com/isvitson"
+            class="footer-sns naver"
+            target="_blank"
+            aria-label="블로그 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
         </div>
         <div class="footer-familysite">
@@ -100,8 +153,10 @@
           </a>
         </div>
         <div class="footer-cert-desc">
-          구매안전(에스크로)서비스 가맹점 가입확인<br />고객님의 안전한 거래를 위해 현금으로 결제 시 구매<br />안전(에스크로)서비스를
-          이용하실 수 있습니다
+          <p class="title">구매안전(에스크로)서비스 가맹점 가입확인</p>
+          <p class="text">
+            고객님의 안전한 거래를 위해 현금으로 결제 시<br />구매안전(에스크로)서비스를 이용하실 수 있습니다
+          </p>
         </div>
       </div>
     </div>
@@ -170,3 +225,5 @@
   </section>
   <!-- E: vits-footer-modal -->
 </footer>
+
+<%- include(`${_src}/views/components/floating.ejs`) %>

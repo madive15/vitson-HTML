@@ -1,0 +1,31 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# components/tabs.ejs %>
+<%
+  const tabs = locals.tabs || [];
+  const size = locals.size || 'lg';
+  const className = locals.className || '';
+  const tabClassName = locals.tabClassName || 'vits-btn-md';
+  const idPrefix = locals.idPrefix || 'tab';
+  const showBadge = typeof locals.showBadge === 'boolean' ? locals.showBadge : true;
+  const ariaLabel = locals.ariaLabel || '탭';
+
+  const wrapClass = [className, `vits-tabs-${size}`].filter(Boolean).join(' ');
+%>
+
+<div class="<%= wrapClass %>" role="tablist" aria-label="<%= ariaLabel %>">
+  <% tabs.forEach(function(tab, index) { %> <% const badge = tab.badge; const hasBadge = showBadge && badge !==
+  undefined && badge !== null && badge !== ''; %>
+  <button
+    type="button"
+    class="<%= [tabClassName, tab.isActive ? 'is-active' : ''].filter(Boolean).join(' ') %>"
+    aria-selected="<%= tab.isActive ? 'true' : 'false' %>"
+    id="<%= idPrefix %>-<%= index %>"
+  >
+    <span class="text"><%= tab.text %></span>
+    <% if (hasBadge) { %>
+    <span class="coupon-badge" aria-label="<%= badge === 'N' ? '신규' : badge + '개' %>"><%= badge %></span>
+    <% } %>
+  </button>
+  <% }); %>
+</div>

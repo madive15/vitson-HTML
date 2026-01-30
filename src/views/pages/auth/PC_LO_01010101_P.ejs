@@ -25,12 +25,20 @@
               <!-- prettier-ignore -->
               <% const winModal = { 
                 id: 'loginModal', 
-                size: '560',
-                title: '비츠온엠알오 로그인', 
+                size: '520', 
                 opt: { draggable: true }, 
                 contentPath: `${_src}/views/pages/kendo-window/auth/kw-PC_LO_01010101_P.ejs`}; 
                 %>
+                           
               <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+              <!-- 일회성 로그인 kw-PC_LO_06010101_P.ejs -->
+              <template id="loginModalTemplate-once">
+                <%- include(`${_src}/views/pages/kendo-window/auth/kw-PC_LO_06010101_P.ejs`, { size: undefined }) %>
+              </template>
+              <!-- 인증코드 입력 kw-PC_LO_06030101_P.ejs -->
+              <template id="loginModalTemplate-code">
+                <%- include(`${_src}/views/pages/kendo-window/auth/kw-PC_LO_06030101_P.ejs`, { size: undefined }) %>
+              </template>
             </div>
           </div>
         </div>
@@ -40,5 +48,20 @@
     </section>
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'code'이거나 'once' 일때 팝업 바뀜
+      if (type === 'code' || type === 'once') {
+        const template = document.getElementById(`loginModalTemplate-${type}`);
+        const content = document.querySelector('#loginModal .vits-modal-content');
+        if (template && content) {
+          content.innerHTML = template.innerHTML;
+        }
+      }
+    </script>
   </body>
 </html>

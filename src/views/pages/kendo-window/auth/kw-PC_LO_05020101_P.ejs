@@ -1,0 +1,36 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-auth-dormant-modal">
+  <h2 class="sr-only">휴면계정 해제</h2>
+
+  <form class="vits-auth-dormant-form" action="" method="post">
+    <div class="vits-auth-dormant-form-fields">
+      <span class="form-field-label">아이디<span class="label-required">*</span></span>
+
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'login-id',
+        name: 'loginId',
+        label: '아이디',
+        placeholder: 'mztest1',
+        required: true,
+        disabled: true,
+        rootClass: 'size-large'
+      }) %>
+    </div>
+
+    <div class="vits-auth-dormant-form-fields">
+      <span class="form-field-label">비밀번호<span class="label-required">*</span></span>
+
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'login-id',
+        name: 'loginId',
+        label: '아이디',
+        placeholder: '비밀번호',
+        required: true,
+        rootClass: 'size-large'
+      }) %>
+    </div>
+  </form>
+</section>

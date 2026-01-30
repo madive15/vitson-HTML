@@ -79,74 +79,64 @@
     $root.toggleClass(CLS_MORE_VISIBLE, !!on);
   }
 
-  // 클리핑 초기화(is-hidden 제거)
-  function resetPromoHidden(els) {
-    els.$promoLinks.removeClass('is-hidden');
-  }
-
-  // 프로모션 링크 클리핑 적용(overflow 해소까지 마지막 항목부터 숨김)
-  function applyPromoClip(els) {
-    if (!els.$promoList.length) return;
-
-    if (els.$promoItem.length) els.$promoItem[0].style.flex = '0 1 auto';
-
-    resetPromoHidden(els);
-
-    var promoEl = els.$promoList[0];
-    if (!promoEl) return;
-
-    var safety = 0;
-
-    while (promoEl.scrollWidth > promoEl.clientWidth + 1) {
-      var $lastVisible = els.$promoLinks.not('.is-hidden').last();
-      if (!$lastVisible.length) break;
-
-      $lastVisible.addClass('is-hidden');
-
-      safety += 1;
-      if (safety > els.$promoLinks.length) break;
-    }
-  }
-
-  // more 패널 모드 반환(all: 전체 / hidden: 접힌 것만)
-  function getMoreMode(els) {
-    if (!els.$morePanel.length) return 'hidden';
-    var mode = (els.$morePanel.attr('data-gnb-more-mode') || '').toLowerCase();
-    return mode === 'all' ? 'all' : 'hidden';
-  }
-
   // more 패널 리스트 비우기
   function clearMoreList(els) {
     if (els.$moreList.length) els.$moreList.empty();
   }
 
-  // 프로모션 링크를 more 패널용 li로 복제 추가
-  function appendMoreItem(els, $a) {
-    if (!els.$moreList.length) return;
+  // [2026-01-29 삭제] resetPromoHidden, applyPromoClip, getMoreMode - 클리핑 관련 함수 제거
 
-    var $li = $('<li/>');
-    var $copy = $('<a class="gnb-link" />', {href: $a.attr('href') || '#'});
-    $copy.html($a.html());
-    $li.append($copy);
-    els.$moreList.append($li);
+  // 프로모션 링크를 more 패널용 li로 복제 추가
+  // [2026-01-29 수정] vits-gnb-promo-button 클래스 적용, text/subText 매핑
+  function appendMoreItem(fragment, $a) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.className = 'vits-gnb-promo-button';
+    a.href = $a.attr('href') || '#';
+
+    var $text = $a.find('.exhibition-item-text');
+    var $subText = $a.find('.exhibition-item-sub');
+    var span;
+
+    if ($text.length) {
+      span = document.createElement('span');
+      span.className = 'text';
+      span.textContent = $text.text();
+      a.appendChild(span);
+    }
+
+    if ($subText.length) {
+      span = document.createElement('span');
+      span.className = 'subText';
+      span.textContent = $subText.text();
+      a.appendChild(span);
+    }
+
+    if (!$text.length && !$subText.length) {
+      span = document.createElement('span');
+      span.className = 'text';
+      span.textContent = $a.text();
+      a.appendChild(span);
+    }
+
+    li.appendChild(a);
+    fragment.appendChild(li);
   }
 
-  // more 패널 리스트 채우기(모드별)
-  function fillMoreList(els, mode) {
+  // more 패널 리스트 채우기
+  // [2026-01-29 수정] DocumentFragment 적용, 초기화 시 1회 실행
+  function fillMoreList(els) {
     if (!els.$moreList.length) return;
 
     clearMoreList(els);
 
+    var fragment = document.createDocumentFragment();
+
     els.$promoLinks.each(function () {
-      var $a = $(this);
-
-      if (mode === 'all') {
-        appendMoreItem(els, $a);
-        return;
-      }
-
-      if ($a.hasClass('is-hidden')) appendMoreItem(els, $a);
+      appendMoreItem(fragment, $(this));
     });
+
+    els.$moreList[0].appendChild(fragment);
   }
 
   // more 필요 여부 판단(overflow 체크)
@@ -156,32 +146,15 @@
     return (el.scrollWidth || 0) > (el.clientWidth || 0) + 1;
   }
 
-  // 프로모션 클리핑 + more 노출 + 패널 리스트 동기화
+  // more 버튼 노출 + 패널 리스트 동기화
+  // [2026-01-29 수정] 클리핑 로직 제거, overflow 체크만 수행
   function updatePromoMore(els) {
     if (!els.$promoList.length || !els.$moreBtn.length) return;
 
-    resetPromoHidden(els);
-
-    var mode = getMoreMode(els);
     var needMore = getNeedMore(els);
 
     setMoreVisible(els.$root, needMore);
     if (els.$moreBox.length) els.$moreBox.toggleClass('is-active', needMore);
-
-    if (needMore) applyPromoClip(els);
-    else resetPromoHidden(els);
-
-    if (mode === 'all') {
-      fillMoreList(els, 'all');
-      return;
-    }
-
-    if (!needMore) {
-      clearMoreList(els);
-      return;
-    }
-
-    fillMoreList(els, 'hidden');
   }
 
   // 리사이즈 이벤트 바인딩(디바운스)
@@ -783,6 +756,7 @@
     var els = getEls($root);
 
     if (els.$promoList.length && els.$moreBtn.length) {
+      fillMoreList(els); // [2026-01-29 추가] 초기화 시 1회만 리스트 채우기
       scheduleInitialMeasure(els);
       bindResize(els);
 

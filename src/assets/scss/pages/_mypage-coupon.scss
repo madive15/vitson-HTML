@@ -14,45 +14,6 @@
 @use '@/assets/scss/layout/list' as list;
 @use '@/assets/scss/pages/category' as category;
 
-.vits-mypage-top-tabs {
-  @include mx.flex($align: center);
-  width: 100%;
-  background-color: map.get(color.$layout-surf, 'base');
-  border-radius: map.get(var.$radius, 'md');
-
-  [class*='vits-btn-'] {
-    @include button.btn-reset;
-    @include mx.flex($align: center, $justify: center);
-    gap: fn.rem(10);
-    width: 50%;
-    min-height: fn.rem(48);
-
-    .text {
-      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-    }
-
-    .coupon-badge {
-      @include typo.typography('b4r', $color: map.get(color.$brand-colors, 'primary'));
-      @include mx.flex($align: center, $justify: center);
-      display: inline-flex;
-      min-width: fn.rem(22);
-      min-height: fn.rem(22);
-      padding: 0 fn.rem(4);
-      background-color: map.get(color.$layout-status, 'brand-bg-sub');
-      border-radius: 50%;
-    }
-
-    &.is-active {
-      @include mx.border(all, 2px, solid, map.get(color.$layout-border, 'brand'));
-      border-radius: map.get(var.$radius, 'lg');
-
-      .text {
-        @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
-      }
-    }
-  }
-}
-
 .vits-mypage-content-promotion {
   @include mx.flex($justify: space-between);
   width: 100%;
@@ -155,7 +116,7 @@
     }
 
     &-body {
-      @include mx.flex($direction: column);
+      @include mx.flex($direction: column, $justify: space-around);
       @include mx.ellipsis-single;
       flex: 1;
 
