@@ -30,7 +30,13 @@
   label: '이름',
   placeholder: '이름을 입력하세요',
   required: true,
-  _rootClass: 'size-default'
+  rootClass: 'size-default'
+  isInvalid: true,
+  validationMessage: '필수 입력 항목입니다.',
+  isValid: true,
+  successMessage: '사용 가능한 이메일입니다.',
+  value: 'test@example.com',
+  type: 'password', // 기본은 text
 }) %&gt;
 </pre
             >
@@ -83,6 +89,32 @@
                   value: 'test@example.com',
                   isInvalid: true,
                   validationMessage: '필수 입력 항목입니다.',
+                  rootClass: 'size-large',
+                }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                  id: 'user-email-valid',
+                  name: 'emailValid',
+                  label: '이메일',
+                  placeholder: '이메일을 입력하세요',
+                  required: true,
+                  value: 'test@example.com',
+                  isValid: true,
+                  successMessage: '사용 가능한 이메일입니다.',
+                  rootClass: 'size-large',
+                }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                  id: 'user-password',
+                  name: 'password',
+                  label: '비밀번호',
+                  placeholder: '비밀번호를 입력하세요',
+                  type: 'password',
+                  required: true,
                   rootClass: 'size-large',
                 }) %>
             </li>

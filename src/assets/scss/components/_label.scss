@@ -70,6 +70,11 @@
       flex-shrink: 0;
     }
 
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 20));
+      margin-left: map.get(var.$unit, 2) * -1;
+    }
+
     @if $type == 'outline' {
       @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
       background: map.get(color.$layout-surf, 'raised');

@@ -2058,12 +2058,14 @@
 
   .credit-manager-section {
     @include mx.flex(flex, column, flex-start, flex-start);
-    gap: map.get(var.$unit, 20);
+    gap: map.get(var.$unit, 12);
 
     .manager {
       &-header {
         @include mx.flex(flex, column, flex-start, flex-start);
         gap: map.get(var.$unit, 2);
+        width: 100%;
+        padding-bottom: map.get(var.$unit, 8);
       }
 
       &-title {
@@ -2075,15 +2077,11 @@
       }
 
       &-content {
-        @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
         width: 100%;
         padding: map.get(var.$unit, 16);
         background: map.get(color.$layout-surf, 'base');
         border-radius: map.get(var.$radius, 'md');
-
-        & + .manager-content {
-          margin-top: map.get(var.$unit, 16);
-        }
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
       }
 
       &-empty {

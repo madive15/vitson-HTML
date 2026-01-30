@@ -62,5 +62,97 @@
     <!-- E: vits-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      /** date 포맷 yyyy-mm-dd 값 변경
+ @param t : type(y/m/d/cm/pm/chy/chm)
+ @param v : value
+ */
+      function fn_formatDateAdd(t, v, v2) {
+        var sDate = new Date();
+        var yy = sDate.getFullYear();
+        var mm = sDate.getMonth();
+        var dd = sDate.getDate();
+        var hh = sDate.getHours();
+        var mi = sDate.getMinutes();
+
+        if (t == 'd') {
+          // 날짜 선택 (day)
+          d = new Date(yy, mm, dd + v);
+        } else if (t == 'm') {
+          // 월 선택 (month)
+          d = new Date(yy, mm + v, dd);
+        } else if (t == 'y') {
+          // 년도 선택 (year)
+          d = new Date(yy + v, mm, dd);
+        } else if (t == 'cm') {
+          // 현재월 날짜 선택 (current month)
+          d = new Date(yy, mm, v);
+        } else if (t == 'pm') {
+          // 한달전 날짜 선택 (previous month)
+          d = new Date(yy, mm - 1, v);
+        } else if (t == '1pm') {
+          // 현재기준으로 1개월전 (previous month)
+          d = new Date(yy, mm - 1, dd);
+        } else if (t == '3pm') {
+          // 현재기준으로 3개월전 (previous 3month)
+          d = new Date(yy, mm - 3, dd);
+        } else if (t == '6pm') {
+          // 현재기준으로 6개월전 (previous 6month)
+          d = new Date(yy, mm - 6, dd);
+        } else if (t == '1py') {
+          // 현재기준으로 1년전 (previous 1year)
+          d = new Date(yy - 1, mm, dd);
+        } else if (t == 'nm') {
+          // 다음달 날짜 선택 (next month)
+          d = new Date(yy, mm + 1, v);
+        } else if (t == 'chym') {
+          // 년도, 월 선택 (change year month)
+          d = new Date(v, v2, 1);
+        } else if (t == 'chymcd') {
+          // 년도, 다음달 선택 (change year month cur_date)
+          d = new Date(v, v2 + 1, 0);
+        } else {
+          d = new Date(yy, mm, dd + v);
+        }
+
+        yy = d.getFullYear();
+        mm = d.getMonth() + 1;
+        mm = mm < 10 ? '0' + mm : mm;
+        dd = d.getDate();
+        dd = dd < 10 ? '0' + dd : dd;
+
+        return '' + yy + '-' + mm + '-' + dd;
+      }
+
+      $(document).ready(function () {
+        $(document).on('click', '[data-ui="period-btn"]', function () {
+          const val = $(this).data('value');
+          const num = parseInt(val);
+          const unit = val.replace(num, '');
+
+          const startStr = fn_formatDateAdd(unit, -num);
+          const endStr = fn_formatDateAdd('d', 0);
+
+          const start = new Date(startStr);
+          const end = new Date(endStr);
+
+          // ⭐ Kendo Calendar 인스턴스
+          const calendar = VitsKendoRangePicker.getInstance('.vits-kendo-range-picker');
+
+          if (calendar) {
+            calendar.reset();
+            calendar.setValue(new Date(startStr), new Date(endStr));
+          }
+
+          // hidden 값
+          $('#rangeStartDate').val(startStr);
+          $('#rangeEndDate').val(endStr);
+
+          // 화면 표시
+          // $('.js-range-display').val(startStr + ' ~ ' + endStr);
+        });
+      });
+    </script>
   </body>
 </html>

@@ -33,6 +33,7 @@
   const _displayMessage = _isInvalid ? _errorMessage : (_isValid ? _successMessage : '');
   const _hasMessage = !!_displayMessage;
 
+  const _inputType = (typeof type !== 'undefined' && type) ? type : 'text';
   const _rootClass = (typeof rootClass !== 'undefined' && rootClass) ? rootClass : '';
   const _validationId = _id ? `${_id}-validation` : '';
 
@@ -60,7 +61,7 @@
     <label for="<%= _id %>" class="sr-only"><%= _label %></label>
 
     <input
-      type="text"
+      type="<%= _inputType %>"
       <% if (_name) { %>name="<%= _name %>"<% } %>
       id="<%= _id %>"
       <% if (_hasPlaceholder) { %>placeholder="<%= _placeholder %>"<% } %>
