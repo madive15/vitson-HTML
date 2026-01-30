@@ -1036,16 +1036,13 @@
                 aria-expanded="false"
                 aria-label="더보기"
               >
-                <i class="ic ic-plus" aria-hidden="true"></i>
-
+                <span class="icon"> <i class="ic ic-plus" aria-hidden="true"></i>
+ </span>
               </button>
             </div>
           </li>
           <li class="gnb-item gnb-item-promo">
             <a href="/plan" class="gnb-link">기획전</a>
-          </li>
-          <li class="gnb-item gnb-item-event">
-            <a href="/event" class="gnb-link">이벤트</a>
           </li>
         </ul>
       </nav>
@@ -1054,9 +1051,10 @@
     <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
     <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
       <div class="gnb-panel-inner">
-        <div class="gnb-panel-body">
+        <section class="gnb-panel-body vits-inner">
+          <h2 class="gnb-panel-body-title">비츠온이 전하는 더 많은 혜택</h2>
           <ul class="gnb-panel-list" data-gnb-more-list></ul>
-        </div>
+        </section>
       </div>
     </div>
   </div>
@@ -1083,6 +1081,7 @@
 
               <!-- prettier-ignore -->
               
+                           
               
 
 
@@ -1091,7 +1090,7 @@
   id="loginModal"
   class="vits-modal-inner"
   data-ui="kendo-window"
-  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
+  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:520}'
   role="dialog"
   aria-modal="true"
   aria-labelledby="loginModal-title"
@@ -1102,7 +1101,7 @@
   <!-- 헤더 -->
   <div class="vits-modal-header">
     <div class="vits-modal-header-content">
-      <h2 class="vits-modal-title" id="loginModal-title">비츠온엠알오 로그인</h2>
+      <h2 class="vits-modal-title" id="loginModal-title"></h2>
 
 
     </div>
@@ -1118,11 +1117,10 @@
     
 
 <section class="vits-login-modal">
-  <h2 class="sr-only"></h2>
   <!-- 로그인 팝업 -->
-  <div class="vits-login-modal-content">
+  <div class="vits-login-content">
     <!-- 로고 / 타이틀 -->
-    <h2 class="vits-login-modal-logo">
+    <h2 class="vits-login-logo">
       <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
     </h2>
 
@@ -1214,7 +1212,9 @@
   />
   <span class="icon" aria-hidden="true"></span>
   
-  <span class="label">아이디 저장</span>
+  <span class="label">
+    아이디 저장
+  </span>
   
 </label>
 
@@ -1240,7 +1240,7 @@
 
 
       <!-- 일회성 로그인 -->
-      <div class="login-once">
+      <div class="login-once-others">
         <!-- login-once-link -->
         
 
@@ -1305,6 +1305,335 @@
   <!-- 푸터 -->
 
 </div>
+              <!-- 일회성 로그인 kw-PC_LO_06010101_P.ejs -->
+              <template id="loginModalTemplate-once">
+                
+
+<section class="vits-login-modal">
+  <h2 class="sr-only">로그인 폼</h2>
+  <!-- 로그인 팝업 -->
+  <div class="vits-login-content">
+    <!-- 로고 / 타이틀 -->
+    <h2 class="vits-login-logo">
+      <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+      <span class="vits-login-subtitle">일회성 로그인</span>
+    </h2>
+
+    <form class="vits-login-form" action="" method="post">
+      <!-- 인증 탭 버튼 -->
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-auth-tabs vits-tabs-sm" role="tablist" aria-label="인증 방법 탭">
+   
+  <button
+    type="button"
+    class="vits-btn-md vits-auth-tab-btn is-active"
+    aria-selected="true"
+    id="auth-tab-0"
+  >
+    <span class="text">이메일 인증</span>
+    
+  </button>
+   
+  <button
+    type="button"
+    class="vits-btn-md vits-auth-tab-btn"
+    aria-selected="false"
+    id="auth-tab-1"
+  >
+    <span class="text">휴대전화번호</span>
+    
+  </button>
+  
+</div>
+
+
+      <div class="vits-login-form-fields">
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-id" class="sr-only">아이디</label>
+
+    <input
+      type="text"
+      name="loginId"
+      id="login-id"
+      placeholder="아이디"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-id-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-email" class="sr-only">이메일 주소</label>
+
+    <input
+      type="text"
+      name="loginEmail"
+      id="login-email"
+      placeholder="이메일 주소"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+
+      <div class="vits-login-form-fields">
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-id" class="sr-only">아이디</label>
+
+    <input
+      type="text"
+      name="loginId"
+      id="login-id"
+      placeholder="아이디"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-id-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-phone" class="sr-only">휴대전화번호</label>
+
+    <input
+      type="text"
+      name="loginPhone"
+      id="login-phone"
+      placeholder="휴대전화번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      </div>
+
+      <!-- 인증코드 받기 버튼 -->
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="submit"
+  class="vits-btn-xxl vits-btn-primary  login-submit"
+  
+  >
+  
+
+  <span class="text">인증코드 받기</span>
+
+  
+</button>
+
+
+      <!-- 일회성 로그인 -->
+      <div class="login-once-others">
+        <!-- prettier-ignore -->
+        
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  일반 로그인 돌아가기
+</a>
+
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- 
+이메일 . PC_LO_06010101_P
+휴대폰 인증 . PC_LO_06020101_P 
+-->
+
+              </template>
+              <!-- 인증코드 입력 kw-PC_LO_06030101_P.ejs -->
+              <template id="loginModalTemplate-code">
+                
+
+<section class="vits-login-modal">
+  <h2 class="sr-only">로그인 폼 - 인증코드 입력</h2>
+  <!-- 로그인 팝업 -->
+  <div class="vits-login-content">
+    <!-- 로고 / 타이틀 -->
+    <h2 class="vits-login-logo">
+      <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+      <span class="vits-login-subtitle">일회성 로그인</span>
+    </h2>
+
+    <form class="vits-login-form" action="" method="post">
+      <div class="vits-login-form-fields" id="login-once-code">
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-code" class="sr-only">6자리 인증코드</label>
+
+    <input
+      type="text"
+      name="loginCode"
+      id="login-code"
+      placeholder="6자리 인증코드"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-code-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+        <div class="login-once-time-attack">
+          <dl class="time-attack-info">
+            <dt class="time-attack-label">유효시간</dt>
+            <dd class="time-attack-value">00:00</dd>
+          </dl>
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="submit"
+  class="vits-btn-md vits-btn-outline-secondary  time-attack-btn"
+  
+  >
+  
+
+  <span class="text">인증코드 재전송</span>
+
+  
+</button>
+
+        </div>
+      </div>
+
+      <!-- 로그인 버튼 -->
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="submit"
+  class="vits-btn-xxl vits-btn-primary  login-submit"
+  
+  >
+  
+
+  <span class="text">로그인</span>
+
+  
+</button>
+
+
+      <!-- 일회성 로그인 -->
+      <div class="login-once-others">
+        <!-- prettier-ignore -->
+        
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  일반 로그인 돌아가기
+</a>
+
+      </div>
+    </form>
+  </div>
+</section>
+
+              </template>
             </div>
           </div>
         </div>
@@ -1316,6 +1645,49 @@
 
 
 <footer class="vits-footer" data-toggle-scope>
+  <div class="vits-footer-customer">
+    <div class="vits-inner">
+      <div class="vits-footer-customer-info">
+        <h3 class="footer-customer-title">고객센터</h3>
+        <p class="footer-customer-tel">1566-8967</p>
+      </div>
+
+      <div class="vits-footer-customer-hours">
+        <p class="footer-customer-schedule">평일 09:00 - 18:00 점심시간 12:00 - 13:00</p>
+        <p class="footer-customer-schedule">토·일·공휴일 휴무</p>
+      </div>
+
+      <div class="vits-footer-customer-actions">
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-kakao" aria-hidden="true"></i>
+ </span>
+          <span class="text">카카오톡 상담</span>
+        </a>
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
+ </span>
+          <span class="text">1:1문의</span></a
+        >
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon">
+            <i class="ic ic-document-question" aria-hidden="true"></i>
+
+          </span>
+          <span class="text">FAQ</span>
+        </a>
+        <button type="button" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-electric-bulb" aria-hidden="true"></i>
+ </span>
+          <span class="text">조명 AS 신청</span>
+        </button>
+        <a href="mailto:online@vitson.co.kr" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-partnership" aria-hidden="true"></i>
+ </span>
+          <span class="text">제휴문의</span>
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="vits-inner">
     <div class="vits-footer-brand">
       <h2 class="vits-footer-logo">
@@ -1367,14 +1739,29 @@
     <div class="vits-footer-utility">
       <div class="vits-footer-utility-group">
         <div class="vits-footer-sns">
-          <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+          <a
+            href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg"
+            class="footer-sns youtube"
+            target="_blank"
+            aria-label="유튜브 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+          <a
+            href="https://www.instagram.com/vitson_official"
+            class="footer-sns insta"
+            target="_blank"
+            aria-label="인스타그램 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+          <a
+            href="https://blog.naver.com/isvitson"
+            class="footer-sns naver"
+            target="_blank"
+            aria-label="블로그 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
         </div>
         <div class="footer-familysite">
@@ -1463,8 +1850,10 @@
           </a>
         </div>
         <div class="footer-cert-desc">
-          구매안전(에스크로)서비스 가맹점 가입확인<br />고객님의 안전한 거래를 위해 현금으로 결제 시 구매<br />안전(에스크로)서비스를
-          이용하실 수 있습니다
+          <p class="title">구매안전(에스크로)서비스 가맹점 가입확인</p>
+          <p class="text">
+            고객님의 안전한 거래를 위해 현금으로 결제 시<br />구매안전(에스크로)서비스를 이용하실 수 있습니다
+          </p>
         </div>
       </div>
     </div>
@@ -1534,6 +1923,50 @@
   <!-- E: vits-footer-modal -->
 </footer>
 
+<div class="vits-floating" data-floating-scope data-floating-visible="3" data-floating-item-height="68">
+  <!-- 최근 본 상품 -->
+  <div class="vits-floating-recent" data-floating-recent>
+    <button type="button" class="vits-floating-trigger">
+      <span class="vits-floating-trigger-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="" />
+      </span>
+      <span class="vits-floating-trigger-text">최근 본<br />(55)</span>
+    </button>
+
+    <div class="vits-floating-panel">
+      <button type="button" class="vits-floating-arrow is-prev is-disabled" data-floating-prev>
+        <span class="blind">이전</span>
+      </button>
+
+      <div class="vits-floating-list-wrap">
+        <ul class="vits-floating-list" data-floating-list>
+          <li class="vits-floating-item" data-floating-item>
+            <a href="#">
+              <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+            </a>
+          </li>
+          <li class="vits-floating-item" data-floating-item>
+            <a href="#">
+              <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <button type="button" class="vits-floating-arrow is-next" data-floating-next>
+        <span class="blind">다음</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TOP 버튼 -->
+  <button type="button" class="vits-floating-top" data-floating-top>
+    <span class="vits-floating-top-icon"></span>
+    <span class="vits-floating-top-text">TOP</span>
+  </button>
+</div>
+
+
     </section>
 
     
@@ -1551,5 +1984,20 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'code'이거나 'once' 일때 팝업 바뀜
+      if (type === 'code' || type === 'once') {
+        const template = document.getElementById(`loginModalTemplate-${type}`);
+        const content = document.querySelector('#loginModal .vits-modal-content');
+        if (template && content) {
+          content.innerHTML = template.innerHTML;
+        }
+      }
+    </script>
   </body>
 </html>

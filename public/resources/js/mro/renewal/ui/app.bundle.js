@@ -1007,6 +1007,8 @@ var swiper_bundle = __webpack_require__(111);
 var chip_button = __webpack_require__(755);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/quantity-stepper.js
 var quantity_stepper = __webpack_require__(397);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/floating.js
+var floating = __webpack_require__(478);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/form/textarea.js
 var form_textarea = __webpack_require__(803);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/form/checkbox-total.js
@@ -1079,6 +1081,8 @@ var kendo_window = __webpack_require__(238);
   };
   console.log('[kendo] loaded');
 })(window);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/auth-ui.js
+var auth_ui = __webpack_require__(593);
 ;// ./src/assets/scripts/core/ui.js
 /**
  * scripts/core/ui.js
@@ -1091,6 +1095,8 @@ var kendo_window = __webpack_require__(238);
  *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
+
+
 
 
 
@@ -1143,6 +1149,7 @@ var kendo_window = __webpack_require__(238);
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
+    if (window.UI.floating && window.UI.floating.init) window.UI.floating.init();
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.checkboxTotal && window.UI.checkboxTotal.init) window.UI.checkboxTotal.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
@@ -1161,6 +1168,7 @@ var kendo_window = __webpack_require__(238);
     if (window.UI.moreExpand && window.UI.moreExpand.init) window.UI.moreExpand.init();
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
     if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
+    if (window.UI.authUi && window.UI.authUi.init) window.UI.authUi.init();
   };
   console.log('[core/ui] loaded');
 })(window);
@@ -1690,64 +1698,55 @@ if (document.body?.dataset?.guide === 'true') {
     $root.toggleClass(CLS_MORE_VISIBLE, !!on);
   }
 
-  // 클리핑 초기화(is-hidden 제거)
-  function resetPromoHidden(els) {
-    els.$promoLinks.removeClass('is-hidden');
-  }
-
-  // 프로모션 링크 클리핑 적용(overflow 해소까지 마지막 항목부터 숨김)
-  function applyPromoClip(els) {
-    if (!els.$promoList.length) return;
-    if (els.$promoItem.length) els.$promoItem[0].style.flex = '0 1 auto';
-    resetPromoHidden(els);
-    var promoEl = els.$promoList[0];
-    if (!promoEl) return;
-    var safety = 0;
-    while (promoEl.scrollWidth > promoEl.clientWidth + 1) {
-      var $lastVisible = els.$promoLinks.not('.is-hidden').last();
-      if (!$lastVisible.length) break;
-      $lastVisible.addClass('is-hidden');
-      safety += 1;
-      if (safety > els.$promoLinks.length) break;
-    }
-  }
-
-  // more 패널 모드 반환(all: 전체 / hidden: 접힌 것만)
-  function getMoreMode(els) {
-    if (!els.$morePanel.length) return 'hidden';
-    var mode = (els.$morePanel.attr('data-gnb-more-mode') || '').toLowerCase();
-    return mode === 'all' ? 'all' : 'hidden';
-  }
-
   // more 패널 리스트 비우기
   function clearMoreList(els) {
     if (els.$moreList.length) els.$moreList.empty();
   }
 
+  // [2026-01-29 삭제] resetPromoHidden, applyPromoClip, getMoreMode - 클리핑 관련 함수 제거
+
   // 프로모션 링크를 more 패널용 li로 복제 추가
-  function appendMoreItem(els, $a) {
-    if (!els.$moreList.length) return;
-    var $li = $('<li/>');
-    var $copy = $('<a class="gnb-link" />', {
-      href: $a.attr('href') || '#'
-    });
-    $copy.html($a.html());
-    $li.append($copy);
-    els.$moreList.append($li);
+  // [2026-01-29 수정] vits-gnb-promo-button 클래스 적용, text/subText 매핑
+  function appendMoreItem(fragment, $a) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.className = 'vits-gnb-promo-button';
+    a.href = $a.attr('href') || '#';
+    var $text = $a.find('.exhibition-item-text');
+    var $subText = $a.find('.exhibition-item-sub');
+    var span;
+    if ($text.length) {
+      span = document.createElement('span');
+      span.className = 'text';
+      span.textContent = $text.text();
+      a.appendChild(span);
+    }
+    if ($subText.length) {
+      span = document.createElement('span');
+      span.className = 'subText';
+      span.textContent = $subText.text();
+      a.appendChild(span);
+    }
+    if (!$text.length && !$subText.length) {
+      span = document.createElement('span');
+      span.className = 'text';
+      span.textContent = $a.text();
+      a.appendChild(span);
+    }
+    li.appendChild(a);
+    fragment.appendChild(li);
   }
 
-  // more 패널 리스트 채우기(모드별)
-  function fillMoreList(els, mode) {
+  // more 패널 리스트 채우기
+  // [2026-01-29 수정] DocumentFragment 적용, 초기화 시 1회 실행
+  function fillMoreList(els) {
     if (!els.$moreList.length) return;
     clearMoreList(els);
+    var fragment = document.createDocumentFragment();
     els.$promoLinks.each(function () {
-      var $a = $(this);
-      if (mode === 'all') {
-        appendMoreItem(els, $a);
-        return;
-      }
-      if ($a.hasClass('is-hidden')) appendMoreItem(els, $a);
+      appendMoreItem(fragment, $(this));
     });
+    els.$moreList[0].appendChild(fragment);
   }
 
   // more 필요 여부 판단(overflow 체크)
@@ -1757,24 +1756,13 @@ if (document.body?.dataset?.guide === 'true') {
     return (el.scrollWidth || 0) > (el.clientWidth || 0) + 1;
   }
 
-  // 프로모션 클리핑 + more 노출 + 패널 리스트 동기화
+  // more 버튼 노출 + 패널 리스트 동기화
+  // [2026-01-29 수정] 클리핑 로직 제거, overflow 체크만 수행
   function updatePromoMore(els) {
     if (!els.$promoList.length || !els.$moreBtn.length) return;
-    resetPromoHidden(els);
-    var mode = getMoreMode(els);
     var needMore = getNeedMore(els);
     setMoreVisible(els.$root, needMore);
     if (els.$moreBox.length) els.$moreBox.toggleClass('is-active', needMore);
-    if (needMore) applyPromoClip(els);else resetPromoHidden(els);
-    if (mode === 'all') {
-      fillMoreList(els, 'all');
-      return;
-    }
-    if (!needMore) {
-      clearMoreList(els);
-      return;
-    }
-    fillMoreList(els, 'hidden');
   }
 
   // 리사이즈 이벤트 바인딩(디바운스)
@@ -2285,6 +2273,7 @@ if (document.body?.dataset?.guide === 'true') {
   function initRoot($root) {
     var els = getEls($root);
     if (els.$promoList.length && els.$moreBtn.length) {
+      fillMoreList(els); // [2026-01-29 추가] 초기화 시 1회만 리스트 채우기
       scheduleInitialMeasure(els);
       bindResize(els);
       $root.off('click.headerGnbMore').on('click.headerGnbMore', '[data-gnb-more]', function () {
@@ -3907,6 +3896,214 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
+/***/ 478:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/floating.js
+ * @purpose 플로팅 최근 본 상품 + TOP 버튼
+ * @description
+ *  - 스코프: [data-floating-scope] 내부에서만 동작
+ *  - 매핑: [data-floating-prev], [data-floating-next] → [data-floating-list]
+ *  - 상태: is-scrollable(4개 이상), is-disabled(처음/마지막)
+ * @option
+ *  - data-floating-visible="3" : 한 번에 보이는 개수(기본 3)
+ *  - data-floating-item-height="68" : 아이템 높이 + gap(기본 68)
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[floating] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var STATE = {
+    DISABLED: 'is-disabled',
+    SCROLLABLE: 'is-scrollable'
+  };
+  var SELECTOR = {
+    SCOPE: '[data-floating-scope]',
+    RECENT: '[data-floating-recent]',
+    LIST: '[data-floating-list]',
+    ITEM: '[data-floating-item]',
+    PREV: '[data-floating-prev]',
+    NEXT: '[data-floating-next]',
+    TOP: '[data-floating-top]'
+  };
+  var DATA_KEY = {
+    INDEX: 'floatingIndex',
+    BOUND: 'floatingBound'
+  };
+  var EVENT_NS = '.uiFloating';
+
+  // 스코프에서 설정값 추출
+  function getConfig($scope) {
+    return {
+      visibleCount: $scope.data('floatingVisible') || 3,
+      itemHeight: $scope.data('floatingItemHeight') || 68
+    };
+  }
+
+  // 현재 상태 조회
+  function getState($scope, config) {
+    var totalItems = $scope.find(SELECTOR.ITEM).length;
+    var currentIndex = $scope.data(DATA_KEY.INDEX) || 0;
+    var maxIndex = Math.max(0, totalItems - config.visibleCount);
+    return {
+      currentIndex: currentIndex,
+      totalItems: totalItems,
+      maxIndex: maxIndex,
+      isScrollable: totalItems > config.visibleCount
+    };
+  }
+
+  // 리스트 위치 이동
+  function updatePosition($scope, currentIndex, itemHeight) {
+    var $list = $scope.find(SELECTOR.LIST);
+    if (!$list.length) return;
+    var translateY = currentIndex * itemHeight;
+    $list.css('transform', 'translateY(-' + translateY + 'px)');
+  }
+
+  // 화살표 상태 갱신
+  function updateArrowState($scope, currentIndex, maxIndex) {
+    var $prev = $scope.find(SELECTOR.PREV);
+    var $next = $scope.find(SELECTOR.NEXT);
+    var isPrevDisabled = currentIndex === 0;
+    var isNextDisabled = currentIndex >= maxIndex;
+    if ($prev.length) {
+      $prev.toggleClass(STATE.DISABLED, isPrevDisabled).attr('aria-disabled', isPrevDisabled);
+    }
+    if ($next.length) {
+      $next.toggleClass(STATE.DISABLED, isNextDisabled).attr('aria-disabled', isNextDisabled);
+    }
+  }
+
+  // 이동 처리
+  function move($scope, direction) {
+    var config = getConfig($scope);
+    var state = getState($scope, config);
+    var newIndex = state.currentIndex;
+    if (direction === 'prev' && newIndex > 0) {
+      newIndex--;
+    } else if (direction === 'next' && newIndex < state.maxIndex) {
+      newIndex++;
+    }
+    if (newIndex === state.currentIndex) return;
+    $scope.data(DATA_KEY.INDEX, newIndex);
+    updatePosition($scope, newIndex, config.itemHeight);
+    updateArrowState($scope, newIndex, state.maxIndex);
+  }
+
+  // 페이지 상단 이동
+  function scrollToTop() {
+    $('html, body').animate({
+      scrollTop: 0
+    }, 300);
+  }
+
+  // 스코프 초기화
+  function initScope($scope) {
+    var config = getConfig($scope);
+    var $recent = $scope.find(SELECTOR.RECENT);
+    var totalItems = $scope.find(SELECTOR.ITEM).length;
+    var maxIndex = Math.max(0, totalItems - config.visibleCount);
+    var isScrollable = totalItems > config.visibleCount;
+    $scope.data(DATA_KEY.INDEX, 0);
+    if ($recent.length) {
+      $recent.toggleClass(STATE.SCROLLABLE, isScrollable);
+    }
+    updatePosition($scope, 0, config.itemHeight);
+    updateArrowState($scope, 0, maxIndex);
+  }
+
+  // 스코프 상태 초기화
+  function resetScope($scope) {
+    var $recent = $scope.find(SELECTOR.RECENT);
+    var $list = $scope.find(SELECTOR.LIST);
+    var $prev = $scope.find(SELECTOR.PREV);
+    var $next = $scope.find(SELECTOR.NEXT);
+    $scope.removeData(DATA_KEY.INDEX);
+    $scope.removeData(DATA_KEY.BOUND);
+    if ($recent.length) {
+      $recent.removeClass(STATE.SCROLLABLE);
+    }
+    if ($list.length) {
+      $list.css('transform', '');
+    }
+    if ($prev.length) {
+      $prev.removeClass(STATE.DISABLED).removeAttr('aria-disabled');
+    }
+    if ($next.length) {
+      $next.removeClass(STATE.DISABLED).removeAttr('aria-disabled');
+    }
+  }
+
+  // 이벤트 바인딩
+  function bindScope($scope) {
+    if ($scope.data(DATA_KEY.BOUND)) return;
+    $scope.data(DATA_KEY.BOUND, true);
+    $scope.on('click' + EVENT_NS, SELECTOR.PREV, function (e) {
+      e.preventDefault();
+      if ($(this).hasClass(STATE.DISABLED)) return;
+      move($scope, 'prev');
+    });
+    $scope.on('click' + EVENT_NS, SELECTOR.NEXT, function (e) {
+      e.preventDefault();
+      if ($(this).hasClass(STATE.DISABLED)) return;
+      move($scope, 'next');
+    });
+    $scope.on('click' + EVENT_NS, SELECTOR.TOP, function (e) {
+      e.preventDefault();
+      scrollToTop();
+    });
+  }
+
+  // 이벤트 해제
+  function unbindScope($scope) {
+    $scope.off(EVENT_NS);
+  }
+  window.UI.floating = {
+    // 초기화
+    init: function () {
+      $(SELECTOR.SCOPE).each(function () {
+        var $scope = $(this);
+        initScope($scope);
+        bindScope($scope);
+      });
+      console.log('[floating] init');
+    },
+    // 상태 갱신
+    refresh: function ($scope) {
+      if (!$scope) {
+        $(SELECTOR.SCOPE).each(function () {
+          initScope($(this));
+        });
+        return;
+      }
+      initScope($scope);
+    },
+    // 해제
+    destroy: function ($scope) {
+      if (!$scope) {
+        $(SELECTOR.SCOPE).each(function () {
+          var $s = $(this);
+          unbindScope($s);
+          resetScope($s);
+        });
+        return;
+      }
+      unbindScope($scope);
+      resetScope($scope);
+    }
+  };
+  console.log('[floating] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 504:
 /***/ (function() {
 
@@ -4763,6 +4960,76 @@ if (document.body?.dataset?.guide === 'true') {
     }
   };
   console.log('[stepTab] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 593:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/auth-ui.js
+ * @purpose 로그인 및 회원 인증 페이지 UI 컨트롤
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[auth-ui] jQuery not found');
+  }
+  window.UI = window.UI || {};
+  const initAuthTabs = (root = document) => {
+    const tabWraps = root.querySelectorAll('.vits-auth-tabs');
+    tabWraps.forEach(tabWrap => {
+      const buttons = Array.from(tabWrap.querySelectorAll('button'));
+      if (!buttons.length) {
+        return;
+      }
+      const form = tabWrap.closest('form');
+      if (!form) {
+        return;
+      }
+      const fieldGroups = Array.from(form.querySelectorAll('.vits-login-form-fields'));
+      if (fieldGroups.length < 2) {
+        return;
+      }
+      const setActive = index => {
+        buttons.forEach((button, idx) => {
+          const isActive = idx === index;
+          button.classList.toggle('is-active', isActive);
+          button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        fieldGroups.forEach((group, idx) => {
+          const isActive = idx === index;
+          group.style.display = isActive ? '' : 'none';
+          group.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        });
+      };
+      const currentIndex = Math.max(0, buttons.findIndex(button => button.classList.contains('is-active')));
+      setActive(currentIndex);
+      buttons.forEach((button, idx) => {
+        if (button.dataset.authTabBound === 'true') {
+          return;
+        }
+        button.dataset.authTabBound = 'true';
+        if (!button.getAttribute('type')) {
+          button.setAttribute('type', 'button');
+        }
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          setActive(idx);
+        });
+      });
+    });
+  };
+  initAuthTabs();
+  window.UI.authUi = {
+    init: function () {
+      console.log('[auth-ui] init');
+    }
+  };
+  console.log('[auth-ui] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),

@@ -39031,16 +39031,13 @@
                 aria-expanded="false"
                 aria-label="더보기"
               >
-                <i class="ic ic-plus" aria-hidden="true"></i>
-
+                <span class="icon"> <i class="ic ic-plus" aria-hidden="true"></i>
+ </span>
               </button>
             </div>
           </li>
           <li class="gnb-item gnb-item-promo">
             <a href="/plan" class="gnb-link">기획전</a>
-          </li>
-          <li class="gnb-item gnb-item-event">
-            <a href="/event" class="gnb-link">이벤트</a>
           </li>
         </ul>
       </nav>
@@ -39049,9 +39046,10 @@
     <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
     <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
       <div class="gnb-panel-inner">
-        <div class="gnb-panel-body">
+        <section class="gnb-panel-body vits-inner">
+          <h2 class="gnb-panel-body-title">비츠온이 전하는 더 많은 혜택</h2>
           <ul class="gnb-panel-list" data-gnb-more-list></ul>
-        </div>
+        </section>
       </div>
     </div>
   </div>
@@ -79587,6 +79585,49 @@
 
 
 <footer class="vits-footer" data-toggle-scope>
+  <div class="vits-footer-customer">
+    <div class="vits-inner">
+      <div class="vits-footer-customer-info">
+        <h3 class="footer-customer-title">고객센터</h3>
+        <p class="footer-customer-tel">1566-8967</p>
+      </div>
+
+      <div class="vits-footer-customer-hours">
+        <p class="footer-customer-schedule">평일 09:00 - 18:00 점심시간 12:00 - 13:00</p>
+        <p class="footer-customer-schedule">토·일·공휴일 휴무</p>
+      </div>
+
+      <div class="vits-footer-customer-actions">
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-kakao" aria-hidden="true"></i>
+ </span>
+          <span class="text">카카오톡 상담</span>
+        </a>
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
+ </span>
+          <span class="text">1:1문의</span></a
+        >
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon">
+            <i class="ic ic-document-question" aria-hidden="true"></i>
+
+          </span>
+          <span class="text">FAQ</span>
+        </a>
+        <button type="button" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-electric-bulb" aria-hidden="true"></i>
+ </span>
+          <span class="text">조명 AS 신청</span>
+        </button>
+        <a href="mailto:online@vitson.co.kr" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-partnership" aria-hidden="true"></i>
+ </span>
+          <span class="text">제휴문의</span>
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="vits-inner">
     <div class="vits-footer-brand">
       <h2 class="vits-footer-logo">
@@ -79638,14 +79679,29 @@
     <div class="vits-footer-utility">
       <div class="vits-footer-utility-group">
         <div class="vits-footer-sns">
-          <a href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-youtube.svg" alt="유튜브" />
+          <a
+            href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg"
+            class="footer-sns youtube"
+            target="_blank"
+            aria-label="유튜브 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://www.instagram.com/vitson_official" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-instagram.svg" alt="인스타그램" />
+          <a
+            href="https://www.instagram.com/vitson_official"
+            class="footer-sns insta"
+            target="_blank"
+            aria-label="인스타그램 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
-          <a href="https://blog.naver.com/isvitson" class="footer-sns" target="_blank">
-            <img src="../../public/resources/img/mro/renewal/logo/logo-naver.svg" alt="네이버" />
+          <a
+            href="https://blog.naver.com/isvitson"
+            class="footer-sns naver"
+            target="_blank"
+            aria-label="블로그 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
           </a>
         </div>
         <div class="footer-familysite">
@@ -79734,8 +79790,10 @@
           </a>
         </div>
         <div class="footer-cert-desc">
-          구매안전(에스크로)서비스 가맹점 가입확인<br />고객님의 안전한 거래를 위해 현금으로 결제 시 구매<br />안전(에스크로)서비스를
-          이용하실 수 있습니다
+          <p class="title">구매안전(에스크로)서비스 가맹점 가입확인</p>
+          <p class="text">
+            고객님의 안전한 거래를 위해 현금으로 결제 시<br />구매안전(에스크로)서비스를 이용하실 수 있습니다
+          </p>
         </div>
       </div>
     </div>
@@ -79804,6 +79862,50 @@
   </section>
   <!-- E: vits-footer-modal -->
 </footer>
+
+<div class="vits-floating" data-floating-scope data-floating-visible="3" data-floating-item-height="68">
+  <!-- 최근 본 상품 -->
+  <div class="vits-floating-recent" data-floating-recent>
+    <button type="button" class="vits-floating-trigger">
+      <span class="vits-floating-trigger-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="" />
+      </span>
+      <span class="vits-floating-trigger-text">최근 본<br />(55)</span>
+    </button>
+
+    <div class="vits-floating-panel">
+      <button type="button" class="vits-floating-arrow is-prev is-disabled" data-floating-prev>
+        <span class="blind">이전</span>
+      </button>
+
+      <div class="vits-floating-list-wrap">
+        <ul class="vits-floating-list" data-floating-list>
+          <li class="vits-floating-item" data-floating-item>
+            <a href="#">
+              <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+            </a>
+          </li>
+          <li class="vits-floating-item" data-floating-item>
+            <a href="#">
+              <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <button type="button" class="vits-floating-arrow is-next" data-floating-next>
+        <span class="blind">다음</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TOP 버튼 -->
+  <button type="button" class="vits-floating-top" data-floating-top>
+    <span class="vits-floating-top-icon"></span>
+    <span class="vits-floating-top-text">TOP</span>
+  </button>
+</div>
+
 
     </section>
 
