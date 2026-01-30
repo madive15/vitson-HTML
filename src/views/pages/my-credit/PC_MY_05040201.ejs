@@ -200,10 +200,19 @@
                               >
                                 <div class="vits-step-tab-content">
                                   <div class="step-tab-status">
+                                    <!-- case 1. 심사접수 -->
                                     <!-- prettier-ignore -->
                                     <%- include(`${_src}/views/components/empty-state.ejs`, {
                                       iconName: 'box',
                                       title: '심사접수되었습니다',
+                                      desc: '신청 내용을 검토하고 심사를 진행합니다.'
+                                    }) %>
+
+                                    <!-- case 2. 심사중 -->
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/empty-state.ejs`, {
+                                      iconName: 'box',
+                                      title: '심사중입니다',
                                       desc: '신청 내용을 검토하고 심사를 진행합니다.'
                                     }) %>
                                   </div>
