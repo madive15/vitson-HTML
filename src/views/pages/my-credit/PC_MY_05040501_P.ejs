@@ -20,6 +20,39 @@
                 >
                   <span class="text">후불 신청서 팝업</span>
                 </button>
+
+                <div>
+                  <pre style="font-size: 16px; line-height: 1.5">
+&lt;!-- ============================================
+  [UI GUIDE] 담당자 정보 영역 상태 확인
+  
+  ✅ 상태 1: 담당자 없음 (초기)
+     - "추가 담당자 정보가 없습니다." 문구 노출
+     
+  ✅ 상태 2: 담당자 추가 버튼 클릭 시
+     - 문구 → "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요."
+     - 입력폼 표시
+     
+  ✅ 상태 3: 입력폼 "추가" 클릭 시
+     - 입력폼 숨김
+     - 담당자 목록(chip) 표시
+     
+  ✅ 상태 4: 목록에서 "담당자 추가" 클릭 시
+     - 목록 유지 + 아래에 입력폼 추가
+     
+  ✅ 상태 5: 입력폼 "취소" 클릭 시
+     - 해당 입력폼만 삭제
+     - 목록 있으면 목록 유지
+     - 목록/폼 둘 다 없으면 초기 상태로
+     
+  ✅ 상태 6: 칩 전부 삭제 시
+     - 목록 영역 숨김
+     - 열린 입력폼은 유지
+     - 문구: 폼 있으면 "정보를 입력하신 후..." / 없으면 "추가 담당자 정보가 없습니다."
+============================================ --&gt;
+                </pre
+                  >
+                </div>
               </div>
 
               <!-- prettier-ignore -->
@@ -45,5 +78,153 @@
     </section>
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      /**
+       * 후불 신청서 - 담당자 추가
+       * 퍼블리싱 UI 확인용 코드
+       */
+      (function ($) {
+        if (!$) return;
+
+        var $root = $('[data-manager-section]');
+        if (!$root.length) return;
+
+        var $empty = $root.find('[data-manager-empty]');
+        var $emptyText = $empty.find('.empty-text');
+        var $formOriginal = $root.find('[data-manager-form]');
+        var $list = $root.find('[data-manager-list]');
+
+        var MSG_EMPTY = '추가 담당자 정보가 없습니다.';
+        var MSG_INPUT = "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요.";
+
+        // k-window 리사이즈
+        function refreshKWindow() {
+          setTimeout(function () {
+            var $kWindow = $root.closest('.k-window-content');
+
+            if ($kWindow.length && $kWindow.data('kendoWindow')) {
+              var inst = $kWindow.data('kendoWindow');
+              var $content = $kWindow.find('.vits-modal-content');
+
+              if ($content.length) {
+                if ($content[0].scrollHeight > $content[0].clientHeight) {
+                  $content.addClass('has-scroll');
+                } else {
+                  $content.removeClass('has-scroll');
+                }
+              }
+
+              inst.center();
+            }
+          }, 50);
+        }
+
+        // [1] 담당자 추가 버튼 → form 복제 생성
+        $root.on('click', '[data-manager-add-btn]', function () {
+          var $newForm = $formOriginal.clone();
+          $newForm.find('input[type="text"]').val('');
+          $newForm.find('input[type="checkbox"]').prop('checked', false);
+          $newForm.find('[name="ckb-phone"]').prop('checked', true);
+          $newForm.removeClass('is-hidden');
+          $newForm.css('margin-bottom', '2px');
+
+          var isListVisible = !$list.hasClass('is-hidden');
+
+          if (!isListVisible) {
+            $emptyText.text(MSG_INPUT);
+          }
+
+          var $lastForm = $root.find('[data-manager-form]:not(.is-hidden)').last();
+          if ($lastForm.length) {
+            $lastForm.after($newForm);
+          } else {
+            $list.after($newForm);
+          }
+
+          setTimeout(function () {
+            $newForm[0].scrollIntoView({behavior: 'smooth', block: 'nearest'});
+          }, 50);
+
+          refreshKWindow();
+        });
+
+        // [2] 취소 버튼 → 해당 form만 삭제
+        $root.on('click', '[data-manager-cancel-btn]', function () {
+          var $form = $(this).closest('[data-manager-form]');
+
+          if (!$form.is($formOriginal)) {
+            $form.remove();
+          } else {
+            $form.addClass('is-hidden');
+          }
+
+          var visibleForms = $root.find('[data-manager-form]:not(.is-hidden)').length;
+          var isListVisible = !$list.hasClass('is-hidden');
+
+          if (!visibleForms && !isListVisible) {
+            $empty.removeClass('is-hidden');
+            $emptyText.text(MSG_EMPTY);
+          }
+
+          refreshKWindow();
+        });
+
+        // [3] 추가 버튼 → 해당 form 삭제 + chip 생성 + list 표시
+        $root.on('click', '[data-manager-submit-btn]', function () {
+          var $form = $(this).closest('[data-manager-form]');
+          var valueId = 'user-' + Date.now();
+
+          // 더미 칩 마크업
+          var chipHtml = [
+            '<button type="button" class="vits-chip-button type-filled" data-chip-action="remove" data-chip-value="' +
+              valueId +
+              '">',
+            '  <span class="text">홍길동</span>',
+            '  <span class="text team">개발팀 대리</span>',
+            '  <span class="icon" aria-hidden="true">',
+            '    <i class="ic ic-x" aria-hidden="true"></i>',
+            '  </span>',
+            '</button>'
+          ].join('');
+
+          // .vits-chip-button-group에 칩 추가
+          $list.find('.vits-chip-button-group').append(chipHtml);
+
+          // form 정리
+          if (!$form.is($formOriginal)) {
+            $form.remove();
+          } else {
+            $form.addClass('is-hidden');
+          }
+
+          // list 표시
+          $empty.addClass('is-hidden');
+          $list.removeClass('is-hidden');
+
+          refreshKWindow();
+        });
+
+        // [4] chip 삭제 감지 (MutationObserver)
+        if ($list.length && window.MutationObserver) {
+          var observer = new MutationObserver(function () {
+            var chipCount = $list.find('.vits-chip-button').length; // div.vits-chip-button
+
+            if (chipCount === 0) {
+              $list.addClass('is-hidden');
+
+              var hasVisibleForm = $root.find('[data-manager-form]:not(.is-hidden)').length > 0;
+
+              $empty.removeClass('is-hidden');
+              $emptyText.text(hasVisibleForm ? MSG_INPUT : MSG_EMPTY);
+
+              refreshKWindow();
+            }
+          });
+
+          observer.observe($list[0], {childList: true, subtree: true});
+        }
+      })(window.jQuery);
+    </script>
   </body>
 </html>

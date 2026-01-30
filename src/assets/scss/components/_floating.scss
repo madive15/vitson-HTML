@@ -13,8 +13,10 @@
 @use '@/assets/scss/components/button' as button;
 
 .vits-floating {
-  @include mx.position(fixed, $right: fn.rem(20), $bottom: fn.rem(20));
-  z-index: var.$zindex-floating;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -22,55 +24,13 @@
 }
 
 .vits-floating-recent {
-  position: relative;
-}
-
-.vits-floating-trigger {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   align-items: center;
-  width: 60px;
-  padding: 12px 8px;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 30px;
-}
-
-.vits-floating-trigger-thumb {
-  width: 40px;
-  height: 40px;
-  overflow: hidden;
-  border-radius: 50%;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.vits-floating-trigger-text {
-  font-size: 12px;
-  line-height: 1.3;
-  color: #666;
-  text-align: center;
-}
-
-.vits-floating-panel {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  display: none;
   padding: 12px 8px;
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 30px;
-
-  .vits-floating-recent:hover & {
-    display: block;
-  }
 }
 
 .vits-floating-arrow {
@@ -144,6 +104,14 @@
     height: 100%;
     object-fit: cover;
   }
+}
+
+.vits-floating-count {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #666;
+  text-align: center;
 }
 
 .vits-floating-top {

@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
+@use 'sass:meta';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
 @use '@/assets/scss/abstracts/functions' as fn;
@@ -148,28 +149,32 @@ $button-sizes: (
     'padding': 12,
     'typography': 'b2b',
     'icon-size': 24,
-    'font-size': 16
+    'font-size': 16,
+    'border-radius': 'sm'
   ),
   'md': (
     'min-height': 36,
     'padding': 12,
     'typography': 'b3b',
     'icon-size': 20,
-    'font-size': 14
+    'font-size': 14,
+    'border-radius': 'sm'
   ),
   'sm': (
     'min-height': 32,
     'padding': 12,
     'typography': 'b3b',
     'icon-size': 20,
-    'font-size': 14
+    'font-size': 14,
+    'border-radius': 'sm'
   ),
   'xs': (
     'min-height': 28,
     'padding': 12,
     'typography': 'b4r',
     'icon-size': 16,
-    'font-size': 12
+    'font-size': 12,
+    'border-radius': 'sm'
   ),
   'xxs': (
     'min-height': 24,
@@ -188,7 +193,15 @@ $button-sizes: (
     font-size: fn.rem(map.get($config, 'font-size'));
 
     @if map.has-key($config, 'border-radius') {
-      border-radius: fn.rem(map.get($config, 'border-radius'));
+      $border-radius-value: map.get($config, 'border-radius');
+
+      @if meta.type-of($border-radius-value) == 'string' {
+        border-radius: map.get(var.$radius, $border-radius-value);
+      }
+      // stylelint-disable-next-line at-rule-empty-line-before
+      @else {
+        border-radius: fn.rem($border-radius-value);
+      }
     }
     // stylelint-disable-next-line no-descending-specificity
     @else {
@@ -622,6 +635,7 @@ $scoped-button-configs: (
     position: relative;
     padding-right: fn.rem(32);
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .quantity-input {
       min-width: fn.rem(56);
     }
@@ -719,17 +733,10 @@ $scoped-button-configs: (
 
   span {
     @include typo.typography('b3s');
+    @include mx.ellipsis-multi(calc(14px * 1.3), $text-overflow: false);
     flex: 0 1 auto;
     min-width: 0;
     max-width: 100%;
-
-    &:only-of-type {
-      @include mx.ellipsis-multi(1.3);
-    }
-
-    &:not(:only-of-type) {
-      @include mx.ellipsis-single;
-    }
   }
 
   @include mx.common-mouse-event {

@@ -16,8 +16,9 @@
   var _depth3Id = (typeof depth3Id !== 'undefined' && depth3Id) ? depth3Id : (_path.depth3Id || '');
 
   // 운영 타이틀 샘플(일부는 부제/2줄 케이스 포함)
+  // 서브 타이틀 미노출, 메인 타이틀만 노출. 최대 2줄 (26자)
   const promoPagesDefault = [
-    { text: '복사용지 스페셜딜', href: '/promo/1' },
+    { text: '복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜', href: '/promo/1' },
     { text: '사무용품 올인원', href: '/promo/2' },
     { text: '사무기기 기획전', href: '/promo/3' },
     { text: '포장 솔루션 제안전', href: '/promo/4' },
@@ -80,13 +81,14 @@
           <li class="gnb-item gnb-item-deal"><a href="/" class="gnb-link">초특가</a></li>
           <li class="gnb-item gnb-item-promo-list">
             <div class="gnb-promo-list">
+              <%# GNB 영역 - 기획전 타이틀 최대 10자 %>
+              <!-- prettier-ignore -->
+              <% const PROMO_TEXT_MAX = 10; %>
+              <!-- prettier-ignore -->
               <% promoPages.forEach(function (it) { %>
-              <a href="<%- it.href || '#' %>" class="gnb-link">
-                <% if (it.subText) { %>
-                <em class="exhibition-item-sub"><%- it.subText %></em>
-                <span class="exhibition-item-text"><%- it.text || '' %></span>
-                <% } else { %> <%- it.text || '' %> <% } %>
-              </a>
+              <% const fullText = it.text || ''; %>
+              <% const text = fullText.substring(0, PROMO_TEXT_MAX); %>
+              <a href="<%- it.href || '#' %>" class="gnb-link" data-full-text="<%- fullText %>"><%- text %></a>
               <% }); %>
             </div>
 

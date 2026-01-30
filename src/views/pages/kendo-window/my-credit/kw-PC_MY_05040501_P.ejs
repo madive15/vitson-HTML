@@ -31,24 +31,80 @@
   <!-- E: 회사 정보 -->
 
   <!-- S: 담당자 정보 -->
-  <div class="credit-manager-section">
+  <div class="credit-manager-section" data-manager-section>
     <div class="manager-header">
       <h3 class="manager-title">담당자 정보 입력하기</h3>
       <p class="manager-desc">기존 담당자 외 후불 관련 추가 담당자가 있을 경우 입력해 주세요.</p>
     </div>
 
-    <div class="manager-content">
-      <!-- S: 담당자 없을 때 -->
+    <!-- S: 담당자 없을 때 -->
+    <div class="manager-content" data-manager-empty>
       <div class="manager-empty">
-        <p class="empty-text">추가 담당자 정보가 없습니다.</p>
+        <p class="empty-text" data-manager-empty-text>추가 담당자 정보가 없습니다.</p>
         <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/button/button.ejs`, {size:'md', variant: 'outline-tertiary', text: '담당자 추가', iconLeft: true, iconName: 'ic-user'}) %>
+        <%- include(`${_src}/views/components/button/button.ejs`, {
+          size:'md', 
+          variant: 'outline-tertiary', 
+          text: '담당자 추가', 
+          iconLeft: true, 
+          iconName: 'ic-user',
+          attrs: 'data-manager-add-btn'
+        }) %>
       </div>
-      <!-- E: 담당자 없을 때 -->
     </div>
+    <!-- E: 담당자 없을 때 -->
 
-    <div class="manager-content">
-      <!-- S: 추가 담당자 입력 폼 -->
+    <!-- S: 추가 담당자 목록 -->
+    <div class="manager-content is-hidden" data-manager-list>
+      <div class="manager-list">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/label/chip-button.ejs`, {
+          datas: [
+            {
+              action: 'full',
+              variant: 'filled',
+              value: 'user1',
+              name: '김직원',
+              team: '영업팀 부장',
+            },
+            {
+              action: 'full',
+              variant: 'filled',
+              value: 'user2',
+              name: '김배달',
+              team: '물류팀 사원',
+            },
+            {
+              action: 'full',
+              variant: 'filled',
+              value: 'user3',
+              name: '제갈유진',
+              team: '글로벌 디지털 트랜스포메이션 전략기획팀 부장',
+            },
+            {
+              action: 'full',
+              variant: 'filled',
+              value: 'user4',
+              name: '황보지훈',
+              team: '인사팀 선임매니저',
+            },
+            {
+              action: 'full',
+              variant: 'filled',
+              value: 'user5',
+              name: '박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리',
+              team: '디지털혁신센터 플랫폼개발팀 책임연구원',
+            },
+          ]
+        }) %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'md', variant: 'outline-tertiary', text: '담당자 추가', iconLeft: true, iconName: 'ic-user', attrs: 'data-manager-add-btn'}) %>
+      </div>
+    </div>
+    <!-- E: 추가 담당자 목록 -->
+
+    <!-- S: 추가 담당자 입력 폼 -->
+    <div class="manager-content is-hidden" data-manager-form>
       <div class="manager-form">
         <p class="form-title">추가 담당자</p>
         <dl class="form-fields">
@@ -116,63 +172,14 @@
         </dl>
         <div class="form-actions">
           <!-- prettier-ignore -->
-          <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'outline-secondary', text: '취소'}) %>
+          <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'outline-secondary', text: '취소', attrs: 'data-manager-cancel-btn'}) %>
 
           <!-- prettier-ignore -->
-          <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '추가'}) %>
+          <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '추가', attrs: 'data-manager-submit-btn'}) %>
         </div>
       </div>
-      <!-- E: 추가 담당자 입력 폼 -->
     </div>
-
-    <div class="manager-content">
-      <!-- S: 추가 담당자 목록 -->
-      <div class="manager-list">
-        <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/label/chip-button.ejs`, {
-          datas: [
-            {
-              action: 'x',
-              variant: 'filled',
-              value: 'user1',
-              name: '김직원',
-              team: '영업팀 부장',
-            },
-            {
-              action: 'x',
-              variant: 'filled',
-              value: 'user2',
-              name: '김배달',
-              team: '물류팀 사원',
-            },
-            {
-              action: 'x',
-              variant: 'filled',
-              value: 'user3',
-              name: '제갈유진',
-              team: '글로벌 디지털 트랜스포메이션 전략기획팀 부장',
-            },
-            {
-              action: 'x',
-              variant: 'filled',
-              value: 'user4',
-              name: '황보지훈',
-              team: '인사팀 선임매니저',
-            },
-            {
-              action: 'x',
-              variant: 'filled',
-              value: 'user5',
-              name: '박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리',
-              team: '디지털혁신센터 플랫폼개발팀 책임연구원',
-            },
-          ]
-        }) %>
-        <!-- prettier-ignore -->
-        <%- include(`${_src}/views/components/button/button.ejs`, {size:'md', variant: 'outline-tertiary', text: '담당자 추가', iconLeft: true, iconName: 'ic-user'}) %>
-      </div>
-      <!-- E: 추가 담당자 목록 -->
-    </div>
+    <!-- E: 추가 담당자 입력 폼 -->
   </div>
   <!-- E: 담당자 정보 -->
 </section>

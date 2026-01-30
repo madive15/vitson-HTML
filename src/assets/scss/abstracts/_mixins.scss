@@ -209,13 +209,16 @@
 }
 
 /* 말줄임 - 2줄 이상 */
-@mixin ellipsis-multi($line-height: 1.4, $ea: 2) {
+@mixin ellipsis-multi($line-height: 1.4, $ea: 2, $text-overflow: true) {
   display: -webkit-box;
   max-height: calc(#{$line-height} * #{$ea});
   overflow: hidden;
   line-height: $line-height;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: #{$ea};
+
+  @if $text-overflow == true {
+    text-overflow: ellipsis;
+    -webkit-line-clamp: #{$ea};
+  }
   -webkit-box-orient: vertical;
 }
 
