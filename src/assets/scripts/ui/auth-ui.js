@@ -19,7 +19,13 @@
       if (!buttons.length) {
         return;
       }
-      const form = tabWrap.closest('form');
+      let form = tabWrap.closest('form');
+      if (!form && tabWrap.parentElement) {
+        var next = tabWrap.parentElement.nextElementSibling;
+        if (next && next.tagName === 'FORM') {
+          form = next;
+        }
+      }
       if (!form) {
         return;
       }

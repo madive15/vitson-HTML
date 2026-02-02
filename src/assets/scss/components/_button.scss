@@ -468,7 +468,7 @@ $scoped-button-configs: (
     }
 
     .text {
-      color: map.get(color.$text-colors, 'brand');
+      color: map.get(color.$text-status, 'brand');
     }
   }
 }
@@ -718,6 +718,11 @@ $scoped-button-configs: (
   @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
   height: fn.rem(19);
   background: transparent;
+
+  &.size-m {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    height: fn.rem(21);
+  }
 }
 
 /* header 기획전 버튼 */
@@ -733,7 +738,7 @@ $scoped-button-configs: (
 
   span {
     @include typo.typography('b3s');
-    @include mx.ellipsis-multi(calc(14px * 1.3), $text-overflow: false);
+    @include mx.ellipsis-multi(1.3, $text-overflow: false);
     flex: 0 1 auto;
     min-width: 0;
     max-width: 100%;

@@ -1,0 +1,143 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: '비밀번호 변경' } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup pw-change-wrap">
+                  <div class="pw-change-form-wrap">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/empty-state.ejs`, 
+                    { 
+                      iconName: 'check', 
+                      title: '비밀번호를 변경해 주세요.', 
+                    }) %>
+
+                    <!-- 안내 메시지 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                      theme: 'blue',
+                      text: '회원님의 비밀번호가 변경된지 6개월이 지났습니다. 소중한 개인정보보호를 위해 비밀번호를 변경해 주세요.',
+                    }) %>
+
+                    <!-- S: 비밀번호 변경 폼 -->
+                    <form class="pw-change-form" action="#" method="post" novalidate>
+                      <div class="pw-change-form-inner">
+                        <div class="vits-signup-form">
+                          <div class="vits-form-row">
+                            <label class="vits-form-label" for="pw-current">
+                              현재 비밀번호 <span class="label-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="vits-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'pw-current',
+                                name: 'currentPassword',
+                                type: 'password',
+                                label: '현재 비밀번호',
+                                placeholder: '현재 비밀번호',
+                                required: true,
+                                rootClass: 'size-large',
+                              }) %>
+                            </div>
+                          </div>
+                          <div class="vits-form-row">
+                            <label class="vits-form-label" for="pw-new">
+                              새 비밀번호 <span class="label-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="vits-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'pw-new',
+                                name: 'newPassword',
+                                type: 'password',
+                                label: '새 비밀번호',
+                                placeholder: '새 비밀번호',
+                                required: true,
+                                rootClass: 'size-large',
+                              }) %>
+                            </div>
+                          </div>
+                          <div class="vits-form-row">
+                            <label class="vits-form-label" for="pw-new-confirm">
+                              새 비밀번호 확인 <span class="label-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="vits-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'pw-new-confirm',
+                                name: 'newPasswordConfirm',
+                                type: 'password',
+                                label: '새 비밀번호 확인',
+                                placeholder: '새 비밀번호 확인',
+                                required: true,
+                                rootClass: 'size-large',
+                              }) %>
+                            </div>
+                          </div>
+                          <p class="vits-form-hint">영문/숫자/특수문자 조합 8자 이상</p>
+                        </div>
+                      </div>
+
+                      <!-- S: 액션 버튼 -->
+                      <div class="pw-change-actions">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          type: 'button',
+                          size: 'xl',
+                          variant: 'secondary',
+                          text: '다음에 변경',
+                          className: 'pw-change-btn-later',
+                        }) %>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          type: 'submit',
+                          size: 'xl',
+                          variant: 'primary',
+                          text: '비밀번호 변경',
+                          className: 'pw-change-btn-submit',
+                        }) %>
+                      </div>
+                      <!-- E: 액션 버튼 -->
+                    </form>
+                    <!-- E: 비밀번호 변경 폼 -->
+                  </div>
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+  </body>
+</html>

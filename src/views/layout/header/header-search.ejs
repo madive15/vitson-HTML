@@ -1,56 +1,50 @@
 <% const _src = srcPath; const _public = publicPath; %>
-<!-- prettier-ignore -->
-<%# 검색 패널(최근/연관/상품목록) %>
+<%# 검색 패널(최근/연관/상품목록) - 기획서 기준 %>
 <%
-  // 최근검색어(폴백)
+  // 최근검색어(폴백) - 최대 10개
   const recentDefault = [
-    { text: '조명', href: '/search?kw=조명' },
-    { text: '용접봉', href: '/search?kw=용접봉' },
+    { text: '브랜드명', href: '/search?kw=브랜드명' },
+    { text: '가', href: '/search?kw=가' },
+    { text: '검색어', href: '/search?kw=검색어' },
+    { text: '나다라마바', href: '/search?kw=나다라마바' },
+    { text: '다운라이트', href: '/search?kw=다운라이트' },
+    { text: '케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재', href: '/search?kw=케이블접속자재' },
+    { text: '비츠온', href: '/search?kw=비츠온' },
   ];
 
-  // 연관검색어(폴백)
+  // 연관검색어(폴백) - 화면산출물용 하이라이트 미리 적용
   const relatedDefault = [
-    { key: 'r1', label: 'LED홈조명 > 조명부속', text: '크리스마스 조명', href: '/search?kw=크리스마스%20조명' },
-    { key: 'r2', label: 'LED홈조명 > 조명부속', text: '태양광 LED 정원등 조명색', href: '/search?kw=태양광%20LED%20정원등%20조명색' },
-    { key: 'r3', label: '삼성전자 가전제품 > 생활가전 > LED 조명 > 홈 > LED 생체리듬형', text: '', href: '/category/1234' },
+    { key: 'r1', category: 'LED홈조명 > 조명부속', text: '크리스마스 <em>조명</em>', href: '/search?kw=크리스마스%20조명' },
+    { key: 'r2', category: 'LED홈조명 > 조명부속', text: '태양광 LED 정원등 <em>조명</em>색', href: '/search?kw=태양광%20LED%20정원등%20조명색' },
+    { key: 'r3', category: '삼성전자 가전제품 > 생활가전 > LED <em>조명</em> > 홈 LED 생체리듬형', text: '', href: '/category/1234' },
   ];
 
-  // 상품목록(폴백) - key(연관검색어 key)별 매핑
+  // 상품목록
   const productsDefault = {
     r1: [
-      { name: '상품 A', href: '/product/1', img: '' },
-      { name: '상품 B', href: '/product/2', img: '' },
-      { name: '상품 C', href: '/product/3', img: '' },
-      { name: '상품 D', href: '/product/4', img: '' },
+      { brand: '서경', name: '더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명', spec: '48mm x 50M', href: '/product/1', img: 'https://vitsonimg.co.kr/images/productsNew/304/304324.jpg', flags: { today: true, tomorrow: false, hot: false }, promoBadge: { text: '무료배송', variant: 'free-ship' } },
+      { brand: '서경', name: '더블 OPP 접착테이프 투명', spec: '48mm x 100M', href: '/product/2', img: 'https://vitsonimg.co.kr/images/productsNew/304/304360.jpg', flags: { today: false, tomorrow: true, hot: false }, promoBadge: null },
+      { brand: '서경', name: '더블 OPP 접착테이프 갈색', spec: '48mm x 50M', href: '/product/3', img: 'https://vitsonimg.co.kr/images/productsNew/304/304359.jpg', flags: { today: false, tomorrow: false, hot: true }, promoBadge: { text: '무료배송', variant: 'free-ship' } },
+      { brand: '서경', name: '크라프트 박스테이프', spec: '50mm x 50M', href: '/product/4', img: 'https://vitsonimg.co.kr/images/productsNew/392/392919.png', flags: { today: true, tomorrow: true, hot: false }, promoBadge: null },
+      { brand: '서경', name: '투명 포장테이프', spec: '48mm x 80M', href: '/product/5', img: 'https://vitsonimg.co.kr/images/productsNew/392/392808.png', flags: { today: false, tomorrow: false, hot: false }, promoBadge: { text: '무료배송', variant: 'free-ship' } },
+      { brand: '서경', name: '컬러 박스테이프 레드', spec: '48mm x 40M', href: '/product/6', img: 'https://vitsonimg.co.kr/images/productsNew/45/45213.png', flags: { today: true, tomorrow: false, hot: true }, promoBadge: null },
     ],
     r2: [
-      { name: '상품 E', href: '/product/5', img: '' },
-      { name: '상품 F', href: '/product/6', img: '' },
+      { brand: '서경', name: '태양광 정원등 A형', spec: 'LED 8W', href: '/product/7', img: 'https://vitsonimg.co.kr/images/productsNew/435/435731.png', flags: { today: true, tomorrow: false, hot: false }, promoBadge: { text: '무료배송', variant: 'free-ship' } },
+      { brand: '서경', name: '태양광 정원등 B형', spec: 'LED 12W', href: '/product/8', img: 'https://vitsonimg.co.kr/images/productsNew/522/ssd-1000n.png', flags: { today: false, tomorrow: true, hot: true }, promoBadge: null },
     ],
     r3: [
-      { name: '상품 G', href: '/product/7', img: '' },
+      { brand: '서경', name: '삼성 LED 조명 스마트', spec: '15W 주백색', href: '/product/9', img: 'https://vitsonimg.co.kr/images/productsNew/5/5599.png', flags: { today: true, tomorrow: true, hot: true }, promoBadge: { text: '무료배송', variant: 'free-ship' } },
     ],
   };
 
-  // 실제 데이터가 주입되면 그걸 우선 사용
-  const recentList =
-    (typeof recentKeywords !== 'undefined' && Array.isArray(recentKeywords) && recentKeywords.length)
-      ? recentKeywords
-      : recentDefault;
-
-  const relatedList =
-    (typeof relatedKeywords !== 'undefined' && Array.isArray(relatedKeywords) && relatedKeywords.length)
-      ? relatedKeywords
-      : relatedDefault;
-
-  const productsMap =
-    (typeof relatedProducts !== 'undefined' && relatedProducts && typeof relatedProducts === 'object')
-      ? relatedProducts
-      : productsDefault;
+  const recentList = (typeof recentKeywords !== 'undefined' && Array.isArray(recentKeywords) && recentKeywords.length) ? recentKeywords : recentDefault;
+  const relatedList = (typeof relatedKeywords !== 'undefined' && Array.isArray(relatedKeywords) && relatedKeywords.length) ? relatedKeywords : relatedDefault;
+  const productsMap = (typeof relatedProducts !== 'undefined' && relatedProducts && typeof relatedProducts === 'object') ? relatedProducts : productsDefault;
 %>
 
 <div class="header-main-search-form">
-  <form class="header-search" action="#" method="get" data-header-search data-toggle-scope data-search-test-key="ㅈ">
+  <form class="header-search" action="#" method="get" data-header-search>
     <div class="header-search-input">
       <label for="ipt-header-search" class="sr-only">검색어</label>
       <input
@@ -58,70 +52,113 @@
         id="ipt-header-search"
         class="header-search-field"
         name="ipt-header-search"
-        placeholder="할인 중인 믹스커피, 보러가실래요?"
-        data-toggle-btn
-        data-toggle-outside="true"
-        data-toggle-target="search-panel"
-        aria-expanded="false"
+        placeholder="찾고 싶은 상품을 검색해보세요!"
+        autocomplete="off"
+        data-search-input
       />
+      <%# 인풋 삭제 버튼 - 입력값 있을 때만 노출 (JS: is-visible) %>
+      <button type="button" class="header-search-clear" data-search-clear aria-label="검색어 삭제">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+      </button>
       <button type="submit" class="header-search-submit" aria-label="검색">
         <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
       </button>
     </div>
 
-    <div class="header-search-panel" data-toggle-box="search-panel">
-      <div class="search-panel-wrap">
-        <!-- 좌: 최근 + 연관(고정) -->
+    <%# 검색 패널 - 입력 시에만 노출 (JS: is-open) %>
+    <div class="header-search-panel" data-search-panel>
+      <div class="search-panel-wrap vits-scrollbar">
+        <%# 좌측: 최근검색어 + 연관검색어 %>
         <div class="search-panel-left">
-          <!-- 최근 검색어 -->
-          <div class="search-recent">
-            <div class="search-head">
-              <strong>최근 검색어</strong>
-              <button type="button" data-recent-clear>전체삭제</button>
+          <%# 최근 검색어 %>
+          <div class="search-recent" data-recent-wrap>
+            <div class="search-recent-head">
+              <p class="search-recent-title">최근 검색어</p>
+              <button type="button" class="vits-text-underline-button size-m" data-recent-clear>전체삭제</button>
             </div>
 
-            <ul class="search-keyword-list" data-recent-list>
-              <% recentList.forEach(function (it) { %>
-              <li data-recent-item data-href="<%- it.href || '' %>">
-                <span><%- it.text || '' %></span>
-                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+            <ul class="search-recent-list" data-recent-list>
+              <% recentList.slice(0, 10).forEach(function (it) { %>
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="<%- it.href || '#' %>" class="search-recent-link"><%- it.text || '' %></a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="<%- it.text %> 삭제">
+                    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+                  </button>
+                </div>
               </li>
               <% }); %>
             </ul>
           </div>
 
-          <!-- 연관 검색어 -->
-          <div class="search-related">
-            <strong class="search-title">연관검색어</strong>
+          <%# 연관 검색어 - 하이라이트(<em>) 적용 %>
+          <div class="search-related" data-related-wrap>
+            <p class="search-related-title">연관검색어</p>
 
             <ul class="search-related-list" data-related-list>
               <% relatedList.forEach(function (it) { %>
-              <li
-                class="search-related-item"
-                data-related-item="<%- it.key || '' %>"
-                data-related-href="<%- it.href || '' %>"
-              >
-                <span class="search-related-label"><%- it.label || '' %></span>
-
-                <% if (it.text && String(it.text).trim().length) { %>
-                <span class="search-related-text"><%- it.text %></span>
-                <% } %>
+              <li data-related-item="<%= it.key || '' %>">
+                <a href="<%= it.href || '#!' %>" class="search-related-item">
+                  <% if (it.text && String(it.text).trim().length) { %>
+                  <span class="search-related-text"><%- it.text %></span>
+                  <% } %>
+                  <%# 카테고리 경로: span으로 분리, > 구분자는 CSS ::before 이미지로 %>
+                  <% if (it.category) { %>
+                  <span class="search-related-category">
+                    <% it.category.split(' > ').forEach(function(cat) { 
+                      var t = cat.trim(); if (t) { %>
+                        <span class="search-category"><%- t %></span>
+                    <% } }); %>
+                  </span>
+                  <% } %>
+                </a>
               </li>
               <% }); %>
             </ul>
           </div>
         </div>
 
-        <!-- 우: 상품목록(hover 때만 표시, JS가 is-active 붙임) -->
-        <div class="search-panel-right" data-related-products-wrap>
+        <%# 우측: 상품목록 (연관검색어 hover 시 노출) %>
+        <div class="search-panel-right" data-products-wrap>
+          <p class="search-products-title" data-products-title></p>
           <% relatedList.forEach(function (rk) { %>
-          <div class="related-products-panel" data-related-products="<%- rk.key || '' %>">
-            <ul class="related-products-grid">
+          <div 
+            class="search-products-panel" 
+            data-products-panel="<%= rk.key || '' %>"
+            data-products-category="<%= rk.category || '' %>">
+            <ul class="search-products-grid">
               <% ((productsMap && productsMap[rk.key]) ? productsMap[rk.key] : []).forEach(function (p) { %>
-              <li class="product-card">
-                <a href="<%- p.href || '#' %>">
-                  <span class="thumb"></span>
-                  <span class="name"><%- p.name || '' %></span>
+              <li class="search-product-card">
+                <a href="<%= p.href || '#' %>">
+                  <div class="product-thumb">
+                    <% if (p.img) { %>
+                    <img src="<%= p.img %>" alt="<%= p.name || '' %>">
+                    <% } %>
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      <% if (p.brand) { %>
+                      <div class="product-brand"><span class="sr-only">브랜드</span><%= p.brand %></div>
+                      <% } %>
+
+                      <div class="product-name"><span class="sr-only">상품명</span><%= p.name || '' %></div>
+
+                      <% if (p.spec) { %>
+                      <div class="product-spec"><span class="sr-only">규격</span><%= p.spec %></div>
+                      <% } %>
+                    </div>
+
+                    <% if ((p.flags && (p.flags.today || p.flags.tomorrow || p.flags.hot)) || p.promoBadge) { %>
+                    <div class="product-extra">
+                      <% if (p.flags && (p.flags.today || p.flags.tomorrow || p.flags.hot)) { %>
+                      <%- include(`${_src}/views/components/label/product-flags.ejs`, p.flags) %>
+                      <% } %>
+                      <% if (p.promoBadge) { %>
+                      <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, p.promoBadge) %>
+                      <% } %>
+                    </div>
+                    <% } %>
+                  </div>
                 </a>
               </li>
               <% }); %>

@@ -1,0 +1,798 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const pageType = typeof type !== 'undefined' ? type :'signup'; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: pageType === 'modify' ? '회원 정보 수정' :
+  '회원가입>회원정보입력' } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup">
+                  <!-- 컨텐츠 헤딩 -->
+                  <div class="vits-signup-headline">
+                    <h2 class="vits-signup-title">
+                      <%= pageType === 'member-modify' ? '회원 정보 수정' : '회원가입' %>
+                    </h2>
+                  </div>
+
+                  <form class="vits-signup-form-wrap" action="#" method="post" novalidate>
+                    <!-- S: 회원정보입력 폼 작성 -->
+                    <div class="vits-signup-write-inner">
+                      <!-- S: 기본 정보 (필수) -->
+                      <section class="vits-signup-section">
+                        <h3 class="vits-signup-section-title">
+                          기본 정보
+                          <span class="label-required" aria-hidden="true">(필수)</span>
+                        </h3>
+
+                        <div class="vits-signup-form">
+                          <!-- case: 아이디 중복확인 버튼 행 (disabled) -->
+                          <div class="vits-form-row" data-hide-on-modify>
+                            <div class="vits-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'signup-id',
+                                name: 'userId',
+                                label: '아이디',
+                                placeholder: '아이디',
+                                required: true,
+                                rootClass: 'size-large'
+                              }) %>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                type: 'button',
+                                size: 'lg-p',
+                                variant: 'primary',
+                                text: '중복확인',
+                                className: 'vits-signup-btn',
+                                disabled: true,
+                              }) %>
+                            </div>
+                          </div>
+                          <!-- case: 아이디  중복확인 버튼 행 (enabled) -->
+                          <div class="vits-form-row" data-hide-on-modify>
+                            <div class="vits-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'signup-id',
+                                name: 'userId',
+                                label: '아이디',
+                                placeholder: '아이디',
+                                required: true,
+                                value: 'test1234',
+                                isValid: true,
+                                rootClass: 'size-large',
+                              }) %>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                type: 'button',
+                                size: 'lg-p',
+                                variant: 'primary',
+                                text: '중복확인',
+                                className: 'vits-signup-btn',
+                              }) %>
+                            </div>
+                          </div>
+                          <p class="vits-form-hint" data-hide-on-modify>영문/숫자 조합 6자 이상(시작은 영문자)</p>
+
+                          <!-- case: 비밀번호 변경 버튼 -->
+                          <div class="vits-form-column" data-hide-on-signup>
+                            <div class="vits-form-label">아이디</div>
+
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-id',
+                                  name: 'userId',
+                                  label: '아이디',
+                                  placeholder: '아이디',
+                                  required: true,
+                                  rootClass: 'size-large'
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/button/button.ejs`, {
+                                  type: 'button',
+                                  size: 'lg-p',
+                                  variant: 'secondary',
+                                  text: '비밀번호 변경',
+                                  className: 'vits-signup-btn',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- case: 비밀번호 입력 group -->
+                          <div class="vits-form-column">
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-pw',
+                                  name: 'password',
+                                  type: 'password',
+                                  label: '비밀번호',
+                                  placeholder: '비밀번호',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-pw-confirm',
+                                  name: 'passwordConfirm',
+                                  type: 'password',
+                                  label: '비밀번호 확인',
+                                  placeholder: '비밀번호 확인',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+                          <p class="vits-form-hint">영문/숫자/특수문자 조합 8자 이상</p>
+
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>이름</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-name',
+                                  name: 'userName',
+                                  label: '이름',
+                                  placeholder: '이름',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                  value: '김메가',
+                                  isValid: true,
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>부서/직위</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-dept',
+                                  name: 'dept',
+                                  label: '부서/직위',
+                                  placeholder: '부서/직위',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>휴대전화번호</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'signup-phone',
+                                name: 'mobile',
+                                label: '휴대전화번호',
+                                placeholder: '휴대전화번호',
+                                required: true,
+                                rootClass: 'size-large',
+                              }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- 이메일: @ 분리 + 도메인 선택 + 중복확인 -->
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>이메일</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-email-id',
+                                  name: 'emailId',
+                                  label: '이메일 아이디',
+                                  placeholder: '이메일',
+                                  rootClass: 'size-large',
+                                  isValid: true,
+                                  value: 'test',
+                                }) %>
+
+                                <span class="vits-email-at" aria-hidden="true">@</span>
+
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-email-domain',
+                                  name: 'emailDomain',
+                                  label: '이메일 도메인',
+                                  placeholder: '도메인',
+                                  rootClass: 'size-large',
+                                  isValid: true,
+                                  value: 'test.com',
+                                }) %>
+                              </div>
+                            </div>
+
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/select.ejs`, {
+                                  id: 'signup-email-domain-select',
+                                  name: 'emailDomainSelect',
+                                  placeholder: '직접입력',
+                                  className: 'size-l',
+                                  options: [
+                                    { value: 'direct', text: '직접입력' },
+                                    { value: 'naver.com', text: 'naver.com' },
+                                    { value: 'daum.net', text: 'daum.net' },
+                                    { value: 'hanmail.net', text: 'hanmail.net' },
+                                    { value: 'gmail.com', text: 'gmail.com' },
+                                  ],
+                                  isValid: true,
+                                  value: 'naver.com',
+                                  disabled: false,
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/button/button.ejs`, {
+                                  type: 'button',
+                                  size: 'lg-p',
+                                  variant: 'primary',
+                                  text: '중복확인',
+                                  className: 'vits-signup-btn',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- 우편번호 + 우편번호 찾기 -->
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>주소</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-zip',
+                                  name: 'zipCode',
+                                  label: '우편번호',
+                                  placeholder: '우편번호',
+                                  isValid: true,
+                                  value: '543-453',
+                                  rootClass: 'size-large',
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/button/button.ejs`, {
+                                  type: 'button',
+                                  size: 'lg-p',
+                                  variant: 'secondary',
+                                  text: '우편번호 찾기',
+                                  className: 'vits-signup-btn',
+                                }) %>
+                              </div>
+                            </div>
+
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-addr',
+                                  name: 'address',
+                                  label: '주소',
+                                  value: '경기도 성남시 분당구 어느아파트',
+                                  placeholder: '기본 주소',
+                                  rootClass: 'size-large',
+                                  isValid: true,
+                                }) %>
+                              </div>
+                            </div>
+
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-addr-detail',
+                                  name: 'addressDetail',
+                                  label: '상세주소',
+                                  placeholder: '상세 주소',
+                                  rootClass: 'size-large',
+                                  isValid: false,
+                                  validationMessage: '상세 주소를 맞게 입력해주세요.',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- 
+                            [D] 회원정보 수정 일 경우 
+                            case: 마케팅 및 광고 알림 설정 (전체) 
+                          -->
+                          <div class="vits-form-row type-member-modify" data-toggle-scope data-hide-on-signup>
+                            <div class="vits-modify-toggle-box" data-checkbox-scope>
+                              <div class="vits-modify-marketing-toggle">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                                  name: 'marketingAll',
+                                  value: 'marketing',
+                                  size: 'm',
+                                  text: '마케팅 및 광고 알림 설정 (전체)',
+                                  checkboxType: 'all',
+                                  checked: true,
+                                }) %>
+
+                                <button
+                                  type="button"
+                                  class="vits-modify-marketing-btn"
+                                  data-toggle-btn
+                                  data-toggle-target="marketing-detail"
+                                  aria-expanded="true"
+                                  aria-label="마케팅 및 광고 알림 설정 펼치기/접기"
+                                >
+                                  <span class="vits-modify-marketing-text is-expanded">접기</span>
+                                  <span class="vits-modify-marketing-text is-collapsed">펼치기</span>
+                                  <span class="vits-modify-marketing-icon">
+                                    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+                                  </span>
+                                </button>
+                              </div>
+                              <div class="vits-modify-marketing-body is-open" data-toggle-box="marketing-detail">
+                                <div class="vits-modify-marketing-list">
+                                  <div class="vits-modify-marketing-item">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                                      name: 'marketingSms',
+                                      value: 'sms',
+                                      size: 'm',
+                                      text: '문자 수신 동의',
+                                      checkboxType: 'item',
+                                      checked: true,
+                                    }) %>
+                                  </div>
+                                  <div class="vits-modify-marketing-item">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                                      name: 'marketingPush',
+                                      value: 'push',
+                                      size: 'm',
+                                      text: '앱 푸시 동의',
+                                      checkboxType: 'item',
+                                      checked: true,
+                                    }) %>
+                                  </div>
+                                  <div class="vits-modify-marketing-item">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                                      name: 'marketingEmail',
+                                      value: 'email',
+                                      size: 'm',
+                                      text: '이메일 수신 동의',
+                                      checkboxType: 'item',
+                                      checked: true,
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      <!-- E: 기본 정보 (필수) -->
+
+                      <!-- S: 회사 정보 (필수) -->
+                      <section class="vits-signup-section">
+                        <h3 class="vits-signup-section-title">
+                          회사 정보 <span class="label-required" aria-hidden="true">(필수)</span>
+                        </h3>
+
+                        <div class="vits-signup-form">
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>사업자등록번호</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-bizno',
+                                  name: 'bizNo',
+                                  label: '사업자등록번호',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                  disabled: true,
+                                  readonly: true,
+                                  value: '111-22-33567',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>회사명</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-company',
+                                  name: 'companyName',
+                                  label: '회사명',
+                                  placeholder: '회사명',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>대표자</div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-ceo',
+                                  name: 'ceoName',
+                                  label: '대표자',
+                                  placeholder: '대표자',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-company-phone',
+                                  name: 'companyPhone',
+                                  label: '회사 대표 전화번호',
+                                  placeholder: '회사 대표 전화번호',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                }) %>
+                              </div>
+                            </div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-name',
+                                  name: 'signup-userName',
+                                  label: '이름',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                  value: '김메가',
+                                  isValid: true,
+                                }) %>
+                              </div>
+                            </div>
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-phone',
+                                  name: 'signup-phone',
+                                  label: '휴대전화번호',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                  isValid: true,
+                                  value: '010-1234-5678',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      <!-- E: 회사 정보 (필수) -->
+
+                      <!-- S: 세금계산서 정보 (접기/펼치기) -->
+                      <section class="vits-signup-section vits-signup-tax" data-toggle-scope>
+                        <div class="vits-signup-tax-head">
+                          <h3 class="vits-signup-tax-title">세금계산서 정보</h3>
+                        </div>
+
+                        <div class="vits-signup-toggle-box">
+                          <div class="vits-signup-tax-toggle">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'taxSameAsMember',
+                              value: 'Y',
+                              size: 'm',
+                              text: '회원정보와 동일함',
+                              checkboxType: 'item',
+                              checked: true,
+                            }) %>
+
+                            <button
+                              type="button"
+                              class="vits-signup-tax-btn"
+                              data-toggle-btn
+                              data-toggle-target="tax-detail"
+                              aria-expanded="true"
+                              aria-label="세금계산서 정보 펼치기/접기"
+                            >
+                              <span class="vits-signup-tax-text is-expanded">접기</span>
+                              <span class="vits-signup-tax-text is-collapsed">펼치기</span>
+                              <span class="vits-signup-tax-icon">
+                                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+                              </span>
+                            </button>
+                          </div>
+                          <div class="vits-signup-tax-body is-open" data-toggle-box="tax-detail">
+                            <div class="vits-signup-form">
+                              <!-- 세금계산서 수령 이메일 -->
+                              <div class="vits-form-column">
+                                <div class="vits-form-label">세금계산서 수령 이메일</div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                      id: 'signup-tax-email-id',
+                                      name: 'emailId',
+                                      label: '이메일 아이디',
+                                      placeholder: '이메일',
+                                      rootClass: 'size-large',
+                                    }) %>
+
+                                    <span class="vits-email-at" aria-hidden="true">@</span>
+
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                      id: 'signup-tax-email-domain',
+                                      name: 'emailDomain',
+                                      label: '이메일 도메인',
+                                      placeholder: '도메인',
+                                      rootClass: 'size-large',
+                                    }) %>
+                                  </div>
+                                </div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/select.ejs`, {
+                                      id: 'signup-tax-email-domain-select',
+                                      name: 'emailDomainSelect',
+                                      placeholder: '직접입력',
+                                      className: 'size-l',
+                                      options: [
+                                        { value: 'direct', text: '직접입력' },
+                                        { value: 'naver.com', text: 'naver.com' },
+                                        { value: 'daum.net', text: 'daum.net' },
+                                        { value: 'hanmail.net', text: 'hanmail.net' },
+                                        { value: 'gmail.com', text: 'gmail.com' },
+                                      ],
+                                      disabled: false,
+                                    }) %>
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                                      type: 'button',
+                                      size: 'lg-p',
+                                      variant: 'primary',
+                                      text: '중복확인',
+                                      className: 'vits-signup-btn',
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 세금계산서 발행 주소 -->
+                              <div class="vits-form-column">
+                                <div class="vits-form-label">세금계산서 발행 주소</div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                      id: 'signup-zip',
+                                      name: 'zipCode',
+                                      label: '우편번호',
+                                      placeholder: '우편번호',
+                                      rootClass: 'size-large',
+                                    }) %>
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                                      type: 'button',
+                                      size: 'lg-p',
+                                      variant: 'secondary',
+                                      text: '우편번호 찾기',
+                                      className: 'vits-signup-btn',
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 환불계좌 -->
+                              <div class="vits-form-column">
+                                <div class="vits-form-label">환불계좌</div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/select.ejs`, {
+                                      id: 'signup-refund-bank',
+                                      name: 'refundBank',
+                                      placeholder: '은행선택',
+                                      className: 'size-l',
+                                      options: [
+                                        { value: '', text: '은행선택' },
+                                        { value: 'kb', text: '국민은행' },
+                                        { value: 'shinhan', text: '신한은행' },
+                                        { value: 'woori', text: '우리은행' },
+                                        { value: 'hana', text: '하나은행' },
+                                        { value: 'nh', text: '농협은행' },
+                                      ],
+                                      disabled: false,
+                                    }) %>
+                                  </div>
+                                </div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                      id: 'signup-refund-account',
+                                      name: 'refundAccount',
+                                      label: '계좌번호',
+                                      placeholder: '계좌번호',
+                                      rootClass: 'size-large',
+                                    }) %>
+                                  </div>
+                                </div>
+
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <!-- prettier-ignore -->
+                                    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                      id: 'signup-refund-holder',
+                                      name: 'refundHolder',
+                                      label: '예금주',
+                                      placeholder: '예금주',
+                                      rootClass: 'size-large',
+                                    }) %>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 사업자등록증 첨부 -->
+                              <div class="vits-form-column">
+                                <div class="vits-form-label">사업자등록증</div>
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <div class="vits-signup-file">
+                                      <!-- 파일 첨부 버튼 -->
+                                      <label class="vits-file-btn" for="signup-biz-file">
+                                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'upload' }) %>
+                                        <span class="vits-file-btn-text">파일 첨부하기</span>
+                                        <input
+                                          type="file"
+                                          id="signup-biz-file"
+                                          name="bizCertFile"
+                                          accept=".pdf,.jpg,.jpeg,.png"
+                                          class="sr-only"
+                                        />
+                                      </label>
+                                      <p class="vits-form-hint">&#8226; PDF, JPG, PNG 파일 10MB 이하</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- 사업자등록증 첨부 -->
+                              <div class="vits-form-column">
+                                <div class="vits-form-label">사업자등록증</div>
+                                <div class="vits-form-row">
+                                  <div class="vits-form-field">
+                                    <div class="vits-signup-file">
+                                      <!-- 첨부된 파일 목록 -->
+                                      <!-- prettier-ignore -->
+                                      <%- include(`${_src}/views/components/label/chip-file.ejs`, {
+                                        filename: '2025년_상반기_보고서.PDF'
+                                      }) %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      <!-- E: 세금계산서 정보 -->
+                    </div>
+
+                    <!-- 가입하기 버튼 -->
+                    <div class="vits-signup-submit">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        type: 'submit',
+                        size: 'xl',
+                        variant: 'primary',
+                        text: '가입하기',
+                        className: 'vits-signup-submit-btn',
+                      }) %>
+                    </div>
+
+                    <!-- 회원탈퇴 및 ISVM 전환 신청 버튼 -->
+                    <div class="vits-signup-footer">
+                      <ul class="vits-signup-footer-list">
+                        <li class="vits-signup-footer-item">
+                          <button class="type-member-delete vits-text-underline-button" type="button">회원탈퇴</button>
+                        </li>
+                        <li class="vits-signup-footer-item">
+                          <button class="type-member-transfer vits-text-underline-button" type="button">
+                            ISVM 전환 신청
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'modify'일 때
+      if (type === 'modify') {
+        document.title = '회원 정보 수정';
+        document.querySelector('.vits-signup-title').textContent = '회원 정보 수정';
+        document.querySelector('.vits-signup-submit-btn').textContent = '수정하기';
+        document.querySelectorAll('[data-hide-on-modify]').forEach(function (el) {
+          el.style.display = 'none';
+        });
+      }
+      // type 파라미터가 'signup'일 때
+      if (type === 'signup') {
+        document.querySelectorAll('[data-hide-on-signup]').forEach(function (el) {
+          el.style.display = 'none';
+        });
+      }
+    </script>
+
+    <!--
+      [개발 참고] PC_ME_02010101 회원가입/ PC_MY_05010201 회원정보수정 , 같은 폼을 사용했습니다.
+      
+      · type 파라미터: 'signup'(회원가입, 기본값) | 'modify' (회원정보수정)
+        - meta title, 페이지 제목, 폼 UI 분기에 사용
+      · data-hide-on-signup, data-hide-on-modify: 퍼블 시안 확인용으로 실제 개발 시 사용하지 않아도 됩니다.
+    -->
+  </body>
+</html>

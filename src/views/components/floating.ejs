@@ -1,45 +1,75 @@
-<div class="vits-floating" data-floating-scope data-floating-visible="3" data-floating-item-height="68">
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const recentProducts = [
+  { id: 1, img: 'https://vitsonimg.co.kr/images/productsNew/92/39.jpg', name: '충전 직쏘/컷쏘 (GSC 10.8V-LI)', price: '407,700원', url: '/product/detail/1' },
+  { id: 2, img: 'https://vitsonimg.co.kr/images/productsNew/54/54153-.jpg', name: 'T5 LED 20W 1200 주백 4K', price: '3,050원', url: '/product/detail/2' },
+  { id: 3, img: 'https://vitsonimg.co.kr/images/productsNew/535/535665.png', name: '레일부속_NEW (전원+마감 화이트)', price: '640원', url: '/product/detail/3' },
+  { id: 4, img: 'https://vitsonimg.co.kr/images/productsNew/448/448374.png', name: 'POSMAC TRAY BODY (W200 * H100)', price: '22,991원', url: '/product/detail/4' },
+  { id: 5, img: 'https://vitsonimg.co.kr/images/productsNew/557/55-b.jpg', name: '달력(탁상용) 에코그린이미지', price: '2,290원', url: '/product/detail/5' },
+  { id: 6, img: 'https://vitsonimg.co.kr/images/productsNew/535/5350421-1.jpg', name: '팬던트 LED 리본 40W 주백 4K 골드', price: '42,100원', url: '/product/detail/6' },
+  { id: 7, img: 'https://vitsonimg.co.kr/images/productsNew/473/1.jpg', name: '절단석 5(127mm) 실버 그라인더날', price: '1,788원', url: '/product/detail/7' },
+  { id: 8, img: 'https://vitsonimg.co.kr/images/productsNew/286/286799.png', name: '철브러쉬 10(250mm) THT92102', price: '1,170원', url: '/product/detail/8' }
+];
+%>
+<div class="vits-floating-section" data-floating-scope>
   <!-- 최근 본 상품 -->
   <div class="vits-floating-recent" data-floating-recent>
-    <button type="button" class="vits-floating-arrow is-prev is-disabled" data-floating-prev>
-      <span class="blind">이전</span>
-    </button>
+    <span class="vits-floating-arrow">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-up' }) %>
+    </span>
 
     <div class="vits-floating-list-wrap">
-      <ul class="vits-floating-list" data-floating-list>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+      <ul class="vits-floating-list">
+        <% recentProducts.forEach(function(product) { %>
+        <li class="vits-floating-item" data-floating-item data-item-id="<%= product.id %>">
+          <a href="<%= product.url %>">
+            <img src="<%= product.img %>" alt="<%= product.name %>" />
           </a>
         </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
-          </a>
-        </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
-          </a>
-        </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
-          </a>
-        </li>
+        <% }); %>
       </ul>
     </div>
 
-    <button type="button" class="vits-floating-arrow is-next" data-floating-next>
-      <span class="blind">다음</span>
-    </button>
+    <span class="vits-floating-arrow">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+    </span>
 
-    <span class="vits-floating-count">최근 본<br />(55)</span>
+    <p class="vits-floating-count">최근 본<br />(<span data-floating-count-num>0</span>)</p>
+
+    <div class="vits-floating-panel" data-floating-panel>
+      <div class="vits-floating-panel-scroll vits-scrollbar">
+        <div class="vits-floating-panel-head">
+          <p class="vits-floating-panel-title">최근 본 상품</p>
+          <button type="button" class="vits-floating-delete-all" data-floating-delete-all>전체 삭제</button>
+          <button type="button" class="vits-floating-close" data-floating-panel-close aria-label="닫기">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+          </button>
+        </div>
+        <ul class="vits-floating-panel-list">
+          <% recentProducts.forEach(function(product) { %>
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="<%= product.id %>">
+            <a href="<%= product.url %>">
+              <span class="thumb">
+                <img src="<%= product.img %>" alt="" />
+              </span>
+              <span class="info">
+                <span class="name"><%= product.name %></span>
+                <span class="price"><%= product.price %></span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+            </button>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <!-- TOP 버튼 -->
-  <button type="button" class="vits-floating-top" data-floating-top>
-    <span class="vits-floating-top-icon"></span>
-    <span class="vits-floating-top-text">TOP</span>
+  <button type="button" class="vits-floating-top" data-floating-top aria-label="위로 이동">
+    <img src="<%= _public %>/resources/img/mro/renewal/ic/ic-top.svg" alt="" />
   </button>
 </div>

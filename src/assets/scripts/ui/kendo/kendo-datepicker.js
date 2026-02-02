@@ -52,10 +52,7 @@
     return y + '-' + m + '-' + d;
   }
 
-  function isSameDate(d1, d2) {
-    if (!d1 || !d2) return false;
-    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-  }
+  // 2026-01-30 isSameDate 함수 삭제
 
   function applyVitsClassToWrapper($wrap, $popup) {
     if (!$wrap || !$wrap.length) return;
@@ -104,6 +101,8 @@
       isSelectingEnd: false,
       isOpen: false
     };
+
+    var isHighlighting = false; // 2026-01-30 추가
 
     var startVal = $startInput.val();
     var endVal = $endInput.val();
@@ -218,11 +217,25 @@
       });
     }
 
+    var isUpdatingUI = false; // 2026-01-30 추가
+
+    // 2026-01-30 var uiObserver 수정
     var uiObserver = new MutationObserver(function () {
-      scheduleNavTitle();
-      scheduleDayNames();
-      scheduleMonthNames();
+      if (isHighlighting || isUpdatingUI) return;
+
+      isUpdatingUI = true;
+      uiObserver.disconnect();
+
+      // schedule 함수 대신 직접 호출
+      updateNavTitle();
+      updateDayNames();
+      updateMonthNames();
       highlightRange();
+
+      window.setTimeout(function () {
+        uiObserver.observe($calendarWrap[0], {childList: true, subtree: true, characterData: true});
+        isUpdatingUI = false;
+      }, 50);
     });
     uiObserver.observe($calendarWrap[0], {childList: true, subtree: true, characterData: true});
 
@@ -266,8 +279,8 @@
     }
 
     function highlightRange() {
-      // var $cells = $calendarWrap.find('td:not(.k-other-month)');
-      // 변경: 전체 td 포함
+      isHighlighting = true; // 2026-01-30 추가
+
       var $cells = $calendarWrap.find('td');
       $cells.removeClass('k-range-start k-range-end k-range-mid');
 
@@ -277,7 +290,21 @@
         $calendarWrap.removeClass('has-range');
       }
 
-      if (!state.startDate) return;
+      // 2026-01-30 수정
+      if (!state.startDate) {
+        isHighlighting = false;
+        return;
+      }
+
+      // 2026-01-30 추가 - 시간 제거한 순수 날짜로 비교
+      var startTime = new Date(
+        state.startDate.getFullYear(),
+        state.startDate.getMonth(),
+        state.startDate.getDate()
+      ).getTime();
+      var endTime = state.endDate
+        ? new Date(state.endDate.getFullYear(), state.endDate.getMonth(), state.endDate.getDate()).getTime()
+        : null;
 
       $cells.each(function () {
         var $cell = $(this);
@@ -288,15 +315,18 @@
 
         var parts = dateValue.split('/');
         var cellDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10));
+        var cellTime = cellDate.getTime(); // 2026-01-30 추가
 
-        var isStart = isSameDate(cellDate, state.startDate);
-        var isEnd = state.endDate && isSameDate(cellDate, state.endDate);
-        var isInRange = state.startDate && state.endDate && cellDate > state.startDate && cellDate < state.endDate;
+        var isStart = cellTime === startTime; // 2026-01-30 수정
+        var isEnd = endTime && cellTime === endTime; // 2026-01-30 수정
+        var isInRange = endTime && cellTime > startTime && cellTime < endTime; // 2026-01-30 수정
 
         if (isStart) $cell.addClass('k-range-start');
         if (isEnd) $cell.addClass('k-range-end');
         if (isInRange) $cell.addClass('k-range-mid');
       });
+
+      isHighlighting = false; // 2026-01-30 추가
     }
 
     function updateDisplay() {

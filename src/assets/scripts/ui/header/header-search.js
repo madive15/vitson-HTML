@@ -1,407 +1,577 @@
 /**
  * @file scripts/ui/header/header-search.js
- * @purpose 헤더 검색 패널 UI(참고용)
+ * @purpose 헤더 검색 패널 UI (최근검색어 + 연관검색어 + 상품패널)
  * @description
- *  - 입력 발생 시에만 패널 오픈(기본 정책)
- *  - 값이 남아있는 상태로 재포커스되면 조건 만족 시 패널 재오픈(운영 UX)
- *  - 최근검색어 삭제/이동, 연관검색어 hover 상품패널 전환/클릭 이동
- *  - 하이라이트: 연관검색어 text만(카테고리 label 제외), 초성 1글자(ㄱ~ㅎ) 입력 지원
+ *  - 스코프: [data-header-search] 내부에서만 동작
+ *  - 패널: 인풋 포커스/입력 시 열림, ESC/외부클릭 시 닫힘
+ *  - 연관검색어 hover → 상품패널 노출 (200ms 딜레이로 숨김)
+ * @markup_contract
+ *  - 인풋: [data-search-input] + [data-search-clear]
+ *  - 패널: [data-search-panel]
+ *  - 최근검색어: [data-recent-wrap] > [data-recent-list] > li[data-recent-item]
+ *  - 연관검색어: [data-related-wrap] > [data-related-list] > li[data-related-item="key"] > a.search-related-item
+ *  - 상품패널: [data-products-wrap] > [data-products-panel="key"] (key로 매핑)
+ * @state_classes
+ *  - is-open: 패널 열림
+ *  - is-active: 연관검색어/상품패널 활성
+ *  - is-visible: 삭제버튼 표시
+ *  - is-hidden: 전체삭제 숨김
  * @requires jQuery
- * @note toggle.js의 is-open 토글과 연동(패널 open/close는 click 트리거)
- *
- * @maintenance
- *  - 콘솔 출력 제거(운영 품질)
- *  - 문서 위임 이벤트는 1회만 바인딩(__bound)하여 init 재호출에도 안전하게 유지
- *  - 스코프 인스턴스(data)로 observer/스코프 이벤트를 관리(destroy로 정리)
- *  - 패널 닫힘 감지는 MutationObserver 사용(미지원 환경은 reset 생략: UX 영향만)
- *  - 최근검색어가 0개면 "전체삭제" 버튼도 숨김 처리(syncRecentClearBtn)
  */
 
 (function ($, window, document) {
   'use strict';
 
-  if (!$) return;
+  if (!$) {
+    console.warn('[headerSearch] jQuery not found');
+    return;
+  }
 
   window.UI = window.UI || {};
 
   var MODULE_KEY = 'headerSearch';
-
   var SCOPE_SEL = '[data-header-search]';
 
+  var CONFIG = {
+    PRODUCTS_TOP_GAP: 100,
+    HIDE_DELAY: 200,
+    RESIZE_DEBOUNCE: 150,
+    VIEWPORT_MARGIN: 10
+  };
+
+  var KEY = {ESC: 27};
+  var DUMMY_HREFS = ['', '#', '#!'];
+
   var CLS = {
-    ACTIVE: 'is-active',
     OPEN: 'is-open',
+    ACTIVE: 'is-active',
+    VISIBLE: 'is-visible',
     HIDDEN: 'is-hidden'
   };
 
-  var PANEL_TARGET = 'search-panel';
-
   var SEL = {
-    INPUT: '.header-search-input input[type="search"]',
-    RIGHT: '.search-panel-right',
-    RELATED_ITEM: '.search-related-item[data-related-item]',
-    RELATED_TEXT: '.search-related-text',
-    PRODUCTS_PANEL: '.related-products-panel',
-
-    RECENT_WRAP: '.search-recent',
-    RECENT_CLEAR: '[data-recent-clear]',
+    INPUT: '[data-search-input]',
+    CLEAR_BTN: '[data-search-clear]',
+    PANEL: '[data-search-panel]',
+    RECENT_WRAP: '[data-recent-wrap]',
     RECENT_LIST: '[data-recent-list]',
     RECENT_ITEM: '[data-recent-item]',
-
-    TOGGLE_BOX: '[data-toggle-box="' + PANEL_TARGET + '"]',
-    TOGGLE_BTN: '.btn-search[data-toggle-btn][data-toggle-target="' + PANEL_TARGET + '"]'
+    RECENT_DEL: '[data-recent-del]',
+    RECENT_CLEAR: '[data-recent-clear]',
+    RELATED_WRAP: '[data-related-wrap]',
+    RELATED_LIST: '[data-related-list]',
+    RELATED_ITEM: '[data-related-item]',
+    RELATED_LINK: '[data-related-item] > a.search-related-item',
+    PRODUCTS_WRAP: '[data-products-wrap]',
+    PRODUCTS_PANEL: '[data-products-panel]',
+    PRODUCTS_TITLE: '[data-products-title]'
   };
 
-  var CHO = [
-    'ㄱ',
-    'ㄲ',
-    'ㄴ',
-    'ㄷ',
-    'ㄸ',
-    'ㄹ',
-    'ㅁ',
-    'ㅂ',
-    'ㅃ',
-    'ㅅ',
-    'ㅆ',
-    'ㅇ',
-    'ㅈ',
-    'ㅉ',
-    'ㅊ',
-    'ㅋ',
-    'ㅌ',
-    'ㅍ',
-    'ㅎ'
-  ];
-
-  // innerHTML 출력 안전 처리
-  function escHtml(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  // 고유 ID 생성
+  function generateId() {
+    return '_' + Math.random().toString(36).slice(2, 11);
   }
 
-  // 초성 1글자인지 판별
-  function isChoJamo1(k) {
-    return typeof k === 'string' && k.length === 1 && CHO.indexOf(k) >= 0;
-  }
-
-  // 한글 완성형 음절의 초성 추출
-  function getChoseongOfSyllable(ch) {
-    var code = ch.charCodeAt(0);
-    if (code < 0xac00 || code > 0xd7a3) return null;
-
-    var sIndex = code - 0xac00;
-    var choIndex = Math.floor(sIndex / 588);
-
-    return CHO[choIndex] || null;
-  }
-
-  // text에 keyword 하이라이트 적용(<em> 감싸기)
-  function applyHighlight(text, keyword) {
-    var t = String(text || '');
-    var k = String(keyword || '').trim();
-
-    if (!t) return '';
-    if (!k) return escHtml(t);
-
-    // 초성 1글자 입력: 해당 초성 음절을 통째로 하이라이트
-    if (isChoJamo1(k)) {
-      var out1 = '';
-      for (var i = 0; i < t.length; i += 1) {
-        var ch = t.charAt(i);
-        var cho = getChoseongOfSyllable(ch);
-        out1 += cho === k ? '<em>' + escHtml(ch) + '</em>' : escHtml(ch);
-      }
-      return out1;
-    }
-
-    // 일반 문자열 하이라이트(정규식 escape)
-    var safeK = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    var re = new RegExp(safeK, 'g');
-
-    var parts = t.split(re);
-    if (parts.length === 1) return escHtml(t);
-
-    var matches = t.match(re) || [];
-    var out = '';
-
-    for (var j = 0; j < parts.length; j += 1) {
-      out += escHtml(parts[j]);
-      if (j < matches.length) out += '<em>' + escHtml(matches[j]) + '</em>';
-    }
-
-    return out;
-  }
-
-  // toggle.js로 전달되는 focus/click 전파를 차단(자동 오픈 방지)
-  function bindPreventAutoToggleOpen($input) {
-    if (!$input || !$input.length) return;
-
-    var el = $input[0];
-
-    el.addEventListener(
-      'focusin',
-      function (e) {
-        e.stopPropagation();
-      },
-      true
-    );
-
-    el.addEventListener(
-      'click',
-      function (e) {
-        e.stopPropagation();
-      },
-      true
-    );
-  }
-
-  // 최근검색어 개수에 따라 "전체삭제" 버튼 노출 동기화
-  function syncRecentClearBtn($ctx) {
-    if (!$ctx || !$ctx.length) return;
-
-    var $wrap = $ctx.is(SEL.RECENT_WRAP) ? $ctx : $ctx.closest(SEL.RECENT_WRAP);
-    if (!$wrap.length) $wrap = $ctx.find(SEL.RECENT_WRAP).first();
-    if (!$wrap.length) return;
-
-    var hasAny = $wrap.find(SEL.RECENT_ITEM).length > 0;
-    $wrap.find(SEL.RECENT_CLEAR).first().toggleClass(CLS.HIDDEN, !hasAny);
-  }
-
-  // 연관검색어 text만 하이라이트(카테고리 label 제외)
-  function updateRelatedHighlightTextOnly($scope, keyword) {
-    $scope.find(SEL.RELATED_ITEM).each(function () {
-      var $it = $(this);
-      var $text = $it.find(SEL.RELATED_TEXT).first();
-      if (!$text.length) return;
-
-      var rawText = $text.attr('data-raw') || $text.text();
-      $text.attr('data-raw', rawText);
-
-      if (!String(rawText || '').trim().length) {
-        $text.text(rawText);
-        return;
-      }
-
-      $text.html(applyHighlight(rawText, keyword));
-    });
-  }
-
-  // toggle.js(버튼 click) 기반으로 패널 open/close를 제어하는 래퍼
-  function createPanelController($scope) {
-    var $input = $scope.find(SEL.INPUT).first();
-    var $panel = $scope.find(SEL.TOGGLE_BOX).first();
-
-    var $toggleBtn = $scope.find(SEL.TOGGLE_BTN).first();
-    if (!$toggleBtn.length) $toggleBtn = $input;
-
-    function isOpen() {
-      return $panel.length && $panel.hasClass(CLS.OPEN);
-    }
-
-    function openPanel() {
-      if (isOpen()) return;
-      $toggleBtn.trigger('click');
-    }
-
-    function closePanel() {
-      if (!isOpen()) return;
-      $toggleBtn.trigger('click');
-    }
-
-    return {
-      $input: $input,
-      $panel: $panel,
-      isOpen: isOpen,
-      open: openPanel,
-      close: closePanel
+  // 셀렉터 이스케이프 (XSS 방지)
+  var escapeSelector =
+    $.escapeSelector ||
+    function (str) {
+      return String(str).replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
     };
+
+  // state 조회/저장
+  function getState($scope) {
+    return $scope.data(MODULE_KEY) || {};
   }
 
-  // (테스트키 등) 현재 입력값이 패널 오픈 조건을 만족하는지
-  function isAllowedToOpen($scope, value) {
-    var testKey = String($scope.attr('data-search-test-key') || '').trim();
-    var vt = String(value || '').trim();
-
-    if (!vt.length) return false;
-    if (!testKey) return true;
-    return vt === testKey;
+  function setState($scope, state) {
+    $scope.data(MODULE_KEY, state);
   }
 
-  // 현재 input 값 기준으로 패널/하이라이트를 동기화(입력/재포커스 공용)
-  function syncPanelByValue($scope, panelCtrl) {
-    var v = panelCtrl.$input.val();
-    var vt = String(v || '').trim();
+  // DOM 캐싱 조회
+  function getEls($scope) {
+    var state = getState($scope);
+    if (state.$els) return state.$els;
 
-    if (!isAllowedToOpen($scope, vt)) {
-      panelCtrl.close();
-      updateRelatedHighlightTextOnly($scope, '');
-      return;
-    }
-
-    panelCtrl.open();
-    updateRelatedHighlightTextOnly($scope, vt);
+    state.$els = {
+      $input: $scope.find(SEL.INPUT).first(),
+      $clearBtn: $scope.find(SEL.CLEAR_BTN).first(),
+      $panel: $scope.find(SEL.PANEL).first(),
+      $recentWrap: $scope.find(SEL.RECENT_WRAP).first(),
+      $recentList: $scope.find(SEL.RECENT_LIST).first(),
+      $relatedWrap: $scope.find(SEL.RELATED_WRAP).first(),
+      $relatedList: $scope.find(SEL.RELATED_LIST).first(),
+      $productsWrap: $scope.find(SEL.PRODUCTS_WRAP).first()
+    };
+    return state.$els;
   }
 
-  // input 시 오픈 + 값 유지된 재포커스 시 재오픈
-  function bindInputOpenPolicy($scope, panelCtrl) {
-    $scope.on('input', SEL.INPUT, function () {
-      syncPanelByValue($scope, panelCtrl);
-    });
-
-    $scope.on('focusin', SEL.INPUT, function () {
-      syncPanelByValue($scope, panelCtrl);
-    });
-
-    $scope.on('click', SEL.INPUT, function () {
-      syncPanelByValue($scope, panelCtrl);
-    });
+  // 인풋 값 조회
+  function getInputValue($scope) {
+    return String(getEls($scope).$input.val() || '').trim();
   }
 
-  // 연관검색어 hover -> 우측 상품목록 전환 / 클릭 이동 / 패널 닫힐 때만 초기화
-  function bindRelatedProducts($scope, panelCtrl) {
-    var $rightCol = $scope.find(SEL.RIGHT).first();
-
-    function resetProducts() {
-      if ($rightCol.length) $rightCol.removeClass(CLS.ACTIVE);
-      $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
-    }
-
-    function showProducts(key) {
-      if (!key) return;
-      if (!panelCtrl.isOpen()) return;
-
-      if ($rightCol.length) $rightCol.addClass(CLS.ACTIVE);
-
-      $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
-      var $p = $scope.find(SEL.PRODUCTS_PANEL + '[data-related-products="' + key + '"]');
-      if (!$p.length) return;
-
-      $p.addClass(CLS.ACTIVE);
-    }
-
-    $scope.on('mouseenter', SEL.RELATED_ITEM, function () {
-      showProducts($(this).attr('data-related-item'));
-    });
-
-    $scope.on('click', SEL.RELATED_ITEM, function () {
-      var href = ($(this).attr('data-related-href') || '').trim();
-      if (!href) return;
-      window.location.href = href;
-    });
-
-    if (panelCtrl.$panel.length && window.MutationObserver) {
-      var obs = new MutationObserver(function () {
-        if (!panelCtrl.$panel.hasClass(CLS.OPEN)) {
-          resetProducts();
-        }
-      });
-
-      obs.observe(panelCtrl.$panel[0], {attributes: true, attributeFilter: ['class']});
-      $scope.data('headerSearchObserver', obs);
+  // 타이머/rAF 취소
+  function cancelRaf(state) {
+    if (state.rafId) {
+      cancelAnimationFrame(state.rafId);
+      state.rafId = null;
     }
   }
 
-  // 최근검색어 전체삭제/개별삭제/이동(문서 위임 1회)
-  function bindRecentActionsOnce() {
-    if (window.UI.headerSearch && window.UI.headerSearch.__recentBound) return;
-
-    // 전체삭제
-    $(document).on('click', SEL.RECENT_CLEAR, function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      var $wrap = $(this).closest(SEL.RECENT_WRAP);
-      if (!$wrap.length) {
-        var $scope0 = $(this).closest(SCOPE_SEL);
-        if ($scope0.length) $wrap = $scope0.find(SEL.RECENT_WRAP).first();
-      }
-      if (!$wrap.length) return;
-
-      $wrap.find(SEL.RECENT_LIST).first().empty();
-      syncRecentClearBtn($wrap);
-    });
-
-    // 개별삭제
-    $(document).on('click', '[data-recent-del]', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      var $wrap = $(this).closest(SEL.RECENT_WRAP);
-      $(this).closest(SEL.RECENT_ITEM).remove();
-      syncRecentClearBtn($wrap);
-    });
-
-    // 항목 클릭 이동
-    $(document).on('click', SEL.RECENT_ITEM, function () {
-      var href = ($(this).attr('data-href') || '').trim();
-      if (!href) return;
-
-      window.location.href = href;
-    });
-
-    window.UI.headerSearch = window.UI.headerSearch || {};
-    window.UI.headerSearch.__recentBound = true;
+  function cancelHideTimer(state) {
+    if (state.hideTimer) {
+      clearTimeout(state.hideTimer);
+      state.hideTimer = null;
+    }
   }
 
-  // 스코프 1개 초기화
-  function initScope($scope) {
-    var prev = $scope.data(MODULE_KEY);
-    if (prev && typeof prev.destroy === 'function') prev.destroy();
+  // 상품패널 타이머 정리
+  function cleanupProductsTimers(state) {
+    cancelHideTimer(state);
+    cancelRaf(state);
+  }
 
-    var panelCtrl = createPanelController($scope);
+  // 전체 타이머 정리 (destroy용)
+  function cleanupAllTimers(state) {
+    cleanupProductsTimers(state);
+    if (state.resizeTimer) {
+      clearTimeout(state.resizeTimer);
+      state.resizeTimer = null;
+    }
+  }
 
-    bindPreventAutoToggleOpen(panelCtrl.$input);
-    bindInputOpenPolicy($scope, panelCtrl);
-    bindRelatedProducts($scope, panelCtrl);
+  // 패널 열기/닫기
+  function openPanel($scope) {
+    var state = getState($scope);
+    if (state.isOpen) return;
 
-    $scope.find(SEL.RIGHT).removeClass(CLS.ACTIVE);
-    $scope.find(SEL.PRODUCTS_PANEL + '.' + CLS.ACTIVE).removeClass(CLS.ACTIVE);
-    updateRelatedHighlightTextOnly($scope, '');
+    var els = getEls($scope);
+    if (!els.$panel.length) return;
 
-    // 초기 UI: 최근검색어 0개면 전체삭제 숨김
+    els.$panel.addClass(CLS.OPEN);
+    els.$input.attr('aria-expanded', 'true');
+    state.isOpen = true;
+    setState($scope, state);
+  }
+
+  function closePanel($scope, opts) {
+    opts = opts || {};
+    var state = getState($scope);
+    if (!state.isOpen) return;
+
+    var els = getEls($scope);
+    els.$panel.removeClass(CLS.OPEN);
+    els.$input.attr('aria-expanded', 'false');
+    state.isOpen = false;
+    setState($scope, state);
+
+    if (!opts.skipProducts) resetProducts($scope);
+  }
+
+  // 삭제버튼 동기화
+  function syncClearBtn($scope) {
+    var $clearBtn = getEls($scope).$clearBtn;
+    if ($clearBtn.length) {
+      $clearBtn.toggleClass(CLS.VISIBLE, getInputValue($scope).length > 0);
+    }
+  }
+
+  // 최근검색어 전체삭제 버튼 동기화
+  function syncRecentClearBtn($scope) {
+    var $recentWrap = getEls($scope).$recentWrap;
+    if (!$recentWrap.length) return;
+
+    var $clearBtn = $recentWrap.find(SEL.RECENT_CLEAR);
+    if ($clearBtn.length) {
+      $clearBtn.toggleClass(CLS.HIDDEN, !$recentWrap.find(SEL.RECENT_ITEM).length);
+    }
+  }
+
+  // 최근검색어 삭제 핸들러
+  function handleRecentDelClick($scope, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $(e.currentTarget).closest(SEL.RECENT_ITEM).remove();
     syncRecentClearBtn($scope);
-
-    var api = {
-      destroy: function () {
-        $scope.off();
-
-        var obs = $scope.data('headerSearchObserver');
-        if (obs && typeof obs.disconnect === 'function') obs.disconnect();
-        $scope.removeData('headerSearchObserver');
-
-        $scope.removeData(MODULE_KEY);
-      }
-    };
-
-    $scope.data(MODULE_KEY, api);
   }
 
-  window.UI.headerSearch = window.UI.headerSearch || {};
+  function handleRecentClearAll($scope, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var $recentList = getEls($scope).$recentList;
+    if ($recentList.length) $recentList.empty();
+    syncRecentClearBtn($scope);
+  }
 
-  window.UI.headerSearch.init = function (root) {
-    bindRecentActionsOnce();
+  // 상품패널 노출 (rAF로 위치 계산)
+  function showProducts($scope, key, opts) {
+    if (!key) return;
+    opts = opts || {};
 
-    var $root = root ? $(root) : $(document);
+    var els = getEls($scope);
+    var $productsWrap = els.$productsWrap;
+    if (!$productsWrap.length) return;
 
-    $root.find(SCOPE_SEL).each(function () {
-      initScope($(this));
+    var $targetPanel = $productsWrap.find('[data-products-panel="' + escapeSelector(key) + '"]').first();
+    if (!$targetPanel.length) return;
+
+    var state = getState($scope);
+    if (opts.fromResize) {
+      state.resizeTimer = null;
+      state.baseLeft = null;
+    }
+
+    cancelRaf(state);
+
+    var mySeq = (state.showSeq || 0) + 1;
+    state.showSeq = mySeq;
+
+    $productsWrap.css({top: '', left: ''}).addClass(CLS.ACTIVE);
+
+    // 타이틀: 마지막 카테고리명만
+    var $title = $productsWrap.find(SEL.PRODUCTS_TITLE);
+    if ($title.length) {
+      var category = String($targetPanel.data('products-category') || '');
+      $title.text(category.split(' > ').pop().trim());
+    }
+
+    // rAF: 위치 계산 + 뷰포트 오버플로우 보정
+    state.rafId = requestAnimationFrame(function () {
+      var s = getState($scope);
+      if (!s.bound || s.showSeq !== mySeq) return;
+      s.rafId = null;
+
+      // baseLeft 캐싱 (최초 1회)
+      if (typeof s.baseLeft !== 'number') {
+        var posLeft = $productsWrap.position().left;
+        s.baseLeft = typeof posLeft === 'number' && !isNaN(posLeft) ? posLeft : 0;
+      }
+
+      // top 위치 계산
+      var $relatedWrap = els.$relatedWrap;
+      var $panel = els.$panel;
+      if ($relatedWrap.length && $panel.length) {
+        var panelOffset = $panel.offset();
+        var wrapOffset = $relatedWrap.offset();
+        if (panelOffset && wrapOffset) {
+          var gap = parseInt($productsWrap.data('products-gap'), 10) || CONFIG.PRODUCTS_TOP_GAP;
+          $productsWrap.css('top', wrapOffset.top - panelOffset.top - gap + 'px');
+        }
+      }
+
+      // 뷰포트 오른쪽 오버플로우 보정
+      var productsOffset = $productsWrap.offset();
+      var productsWidth = $productsWrap.outerWidth();
+      var viewportWidth = $(window).width();
+      if (productsOffset && productsWidth) {
+        var rightEdge = productsOffset.left + productsWidth;
+        if (rightEdge > viewportWidth) {
+          var overflow = rightEdge - viewportWidth + CONFIG.VIEWPORT_MARGIN;
+          $productsWrap.css('left', s.baseLeft - overflow + 'px');
+        }
+      }
+
+      $productsWrap.find(SEL.PRODUCTS_PANEL).removeClass(CLS.ACTIVE);
+      $targetPanel.addClass(CLS.ACTIVE);
+      setState($scope, s);
     });
-  };
 
-  window.UI.headerSearch.destroy = function (root) {
-    var $root = root ? $(root) : $(document);
+    setState($scope, state);
+  }
 
-    $root.find(SCOPE_SEL).each(function () {
-      var $scope = $(this);
-      var api = $scope.data(MODULE_KEY);
+  // 상품패널 UI 초기화
+  function resetProductsUI($scope) {
+    var els = getEls($scope);
+    if (els.$productsWrap.length) {
+      els.$productsWrap.removeClass(CLS.ACTIVE).css({top: '', left: ''});
+      els.$productsWrap.find(SEL.PRODUCTS_PANEL).removeClass(CLS.ACTIVE);
+    }
+    if (els.$relatedList.length) {
+      els.$relatedList.find(SEL.RELATED_ITEM).removeClass(CLS.ACTIVE);
+    }
+  }
 
-      if (api && typeof api.destroy === 'function') api.destroy();
-      else $scope.removeData(MODULE_KEY);
+  // 상품패널 초기화 (state + UI)
+  function resetProducts($scope) {
+    var state = getState($scope);
+    cleanupProductsTimers(state);
+    state.showSeq = (state.showSeq || 0) + 1;
+    setState($scope, state);
+    resetProductsUI($scope);
+  }
+
+  // 상품패널 숨김 예약/취소
+  function scheduleProductsHide($scope) {
+    var state = getState($scope);
+    cancelHideTimer(state);
+    state.hideTimer = setTimeout(function () {
+      resetProducts($scope);
+    }, CONFIG.HIDE_DELAY);
+    setState($scope, state);
+  }
+
+  function cancelProductsHide($scope) {
+    var state = getState($scope);
+    if (!state.hideTimer) return;
+    cancelHideTimer(state);
+    setState($scope, state);
+  }
+
+  // 연관검색어 hover 핸들러
+  function handleRelatedEnter($scope, e) {
+    cancelProductsHide($scope);
+
+    var $item = $(e.currentTarget);
+    var key = $item.attr('data-related-item');
+    if (!key) return;
+
+    var $relatedList = getEls($scope).$relatedList;
+    if ($relatedList.length) $relatedList.find(SEL.RELATED_ITEM).removeClass(CLS.ACTIVE);
+    $item.addClass(CLS.ACTIVE);
+
+    showProducts($scope, key);
+  }
+
+  // 연관검색어 leave (li 내부/상품패널 이동은 무시)
+  function handleRelatedLeave($scope, e) {
+    var toElement = e.relatedTarget || e.toElement;
+
+    if (toElement && $(toElement).closest(SEL.RELATED_ITEM)[0] === e.currentTarget) return;
+
+    var $productsWrap = getEls($scope).$productsWrap;
+    if (toElement && $productsWrap.length && $(toElement).closest($productsWrap).length) return;
+
+    scheduleProductsHide($scope);
+  }
+
+  // 연관검색어 클릭 (a 기본동작 허용)
+  function handleRelatedClick($scope, e) {
+    var href = String($(e.currentTarget).attr('href') || '').trim();
+    if (DUMMY_HREFS.indexOf(href) > -1) e.preventDefault();
+    closePanel($scope);
+  }
+
+  // 상품패널 leave
+  function handleProductsLeave($scope, e) {
+    var toElement = e.relatedTarget || e.toElement;
+    if (toElement && $(toElement).closest(SEL.RELATED_ITEM).length) return;
+    scheduleProductsHide($scope);
+  }
+
+  // 인풋 핸들러
+  function handleInput($scope) {
+    syncClearBtn($scope);
+    if (getInputValue($scope).length > 0) {
+      openPanel($scope);
+    } else {
+      closePanel($scope);
+    }
+  }
+
+  function handleClearClick($scope, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    getEls($scope).$input.val('').trigger('focus');
+    syncClearBtn($scope);
+    closePanel($scope);
+  }
+
+  function handleFormSubmit($scope, e) {
+    e.preventDefault();
+    closePanel($scope);
+    var els = getEls($scope);
+    els.$input.trigger('blur');
+    if (els.$clearBtn.length) els.$clearBtn.removeClass(CLS.VISIBLE);
+  }
+
+  // 외부클릭/ESC 핸들러
+  function handleOutsideClick($scope, e) {
+    var state = getState($scope);
+    if (!state.isOpen) return;
+    if ($(e.target).closest($scope[0]).length) return;
+    closePanel($scope);
+  }
+
+  function handleKeydown($scope, e) {
+    var state = getState($scope);
+    if (!state.isOpen) return;
+    if (e.keyCode === KEY.ESC) {
+      e.preventDefault();
+      closePanel($scope);
+      getEls($scope).$input.trigger('blur');
+    }
+  }
+
+  // 이벤트 바인딩
+  function bindScope($scope) {
+    var ns = '.' + MODULE_KEY;
+    var state = getState($scope);
+    if (state.bound) return;
+
+    if (!state.id) state.id = generateId();
+
+    var els = getEls($scope);
+    if (!els.$input.length || !els.$panel.length) return;
+
+    setState($scope, state);
+
+    // 인풋
+    els.$input.on('input' + ns, function () {
+      handleInput($scope);
     });
+    els.$input.on('focus' + ns, function () {
+      if (getInputValue($scope).length > 0) {
+        syncClearBtn($scope);
+        openPanel($scope);
+      }
+    });
+
+    // 삭제버튼
+    if (els.$clearBtn.length) {
+      els.$clearBtn.on('click' + ns, function (e) {
+        handleClearClick($scope, e);
+      });
+    }
+
+    // 폼
+    $scope.on('submit' + ns, function (e) {
+      handleFormSubmit($scope, e);
+    });
+
+    // 최근검색어 (위임)
+    if (els.$recentWrap.length) {
+      $scope.on('click' + ns, SEL.RECENT_DEL, function (e) {
+        handleRecentDelClick($scope, e);
+      });
+      $scope.on('click' + ns, SEL.RECENT_CLEAR, function (e) {
+        handleRecentClearAll($scope, e);
+      });
+    }
+
+    // 연관검색어 (위임)
+    if (els.$relatedList.length) {
+      $scope.on('mouseenter' + ns, SEL.RELATED_ITEM, function (e) {
+        handleRelatedEnter($scope, e);
+      });
+      $scope.on('mouseleave' + ns, SEL.RELATED_ITEM, function (e) {
+        handleRelatedLeave($scope, e);
+      });
+      $scope.on('click' + ns, SEL.RELATED_LINK, function (e) {
+        handleRelatedClick($scope, e);
+      });
+    }
+
+    // 상품패널 (직접)
+    if (els.$productsWrap.length) {
+      els.$productsWrap.on('mouseenter' + ns, function () {
+        cancelProductsHide($scope);
+      });
+      els.$productsWrap.on('mouseleave' + ns, function (e) {
+        handleProductsLeave($scope, e);
+      });
+    }
+
+    // document 이벤트
+    var docNs = ns + state.id;
+    $(document).on('click' + docNs, function (e) {
+      handleOutsideClick($scope, e);
+    });
+    $(document).on('keydown' + docNs, function (e) {
+      handleKeydown($scope, e);
+    });
+
+    // 리사이즈 (디바운스)
+    $(window).on('resize' + docNs, function () {
+      var state = getState($scope);
+      if (state.resizeTimer) clearTimeout(state.resizeTimer);
+
+      state.resizeTimer = setTimeout(function () {
+        var s = getState($scope);
+        if (s.isOpen && els.$productsWrap.hasClass(CLS.ACTIVE)) {
+          var $activeItem = els.$relatedList.find(SEL.RELATED_ITEM + '.' + CLS.ACTIVE);
+          var activeKey = $activeItem.attr('data-related-item');
+          if (activeKey) {
+            showProducts($scope, activeKey, {fromResize: true});
+            return;
+          }
+        }
+        s.resizeTimer = null;
+        setState($scope, s);
+      }, CONFIG.RESIZE_DEBOUNCE);
+
+      setState($scope, state);
+    });
+
+    // 초기 동기화
+    syncClearBtn($scope);
+    if (els.$recentWrap.length) syncRecentClearBtn($scope);
+
+    state.bound = true;
+    state.docNs = docNs;
+    state.resizeTimer = null;
+    setState($scope, state);
+  }
+
+  // 이벤트 해제
+  function unbindScope($scope) {
+    var ns = '.' + MODULE_KEY;
+    var state = getState($scope);
+
+    cleanupAllTimers(state);
+
+    var els = getEls($scope);
+    els.$input.off(ns);
+    els.$clearBtn.off(ns);
+    $scope.off(ns);
+    if (els.$productsWrap.length) els.$productsWrap.off(ns);
+
+    if (state.docNs) {
+      $(document).off(state.docNs);
+      $(window).off(state.docNs);
+    }
+
+    els.$panel.removeClass(CLS.OPEN);
+    resetProductsUI($scope);
+    $scope.removeData(MODULE_KEY);
+  }
+
+  // Public API
+  window.UI.headerSearch = {
+    init: function (root) {
+      var $root = root ? $(root) : $(document);
+      $root.find(SCOPE_SEL).each(function () {
+        var $scope = $(this);
+        var prev = getState($scope);
+        if (prev.bound) unbindScope($scope);
+
+        setState($scope, {
+          id: generateId(),
+          isOpen: false,
+          hideTimer: null,
+          resizeTimer: null,
+          rafId: null,
+          showSeq: 0,
+          baseLeft: null,
+          bound: false,
+          docNs: null,
+          $els: null
+        });
+
+        bindScope($scope);
+      });
+    },
+
+    destroy: function (root) {
+      var $root = root ? $(root) : $(document);
+      $root.find(SCOPE_SEL).each(function () {
+        unbindScope($(this));
+      });
+    },
+
+    refresh: function (root) {
+      this.destroy(root);
+      this.init(root);
+    }
   };
 })(window.jQuery || window.$, window, document);

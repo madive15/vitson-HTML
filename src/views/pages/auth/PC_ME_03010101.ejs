@@ -1,0 +1,153 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const pageType = typeof type !== 'undefined' ? type : 'signup'; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: (pageType === 'isvm' || (typeof meta_title !== 'undefined'
+  && meta_title === 'isvm')) ? 'ISVM 전환 신청완료' : '회원가입>가입완료' } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup">
+                  <!-- 컨텐츠 헤딩 -->
+                  <div class="vits-signup-headline">
+                    <h2 class="vits-signup-title">회원가입</h2>
+                  </div>
+
+                  <div class="vits-signup-form-wrap join-complete">
+                    <!-- S: 가입 완료 카드 -->
+                    <div class="join-complete-card">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'check',
+                        title: '가입 완료',
+                        desc: '비츠온엠알오 회원 가입이 완료되었습니다.',
+                      }) %>
+                    </div>
+                    <!-- [D] case: ISVM 전환 신청 완료 상태 -->
+                    <div class="join-complete-card" data-isvm-complete>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'check',
+                        title: '전환 신청 완료',
+                        desc: 'ISVM 전환 신청이 정상적으로 접수되었습니다. \n 담당자 승인 완료 후 ISVM 서비스 이용 가능합니다.',
+                      }) %>
+                    </div>
+                    <!-- E: 가입 완료 카드 -->
+
+                    <!-- S: 액션 버튼 -->
+                    <div class="join-complete-actions">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`,{
+                        type: 'button',
+                        size: 'xl',
+                        variant: 'secondary',
+                        text: '메인 화면 가기',
+                        className: 'join-complete-btn-main',
+                      }) %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`,{
+                        type: 'button',
+                        size: 'xl',
+                        variant: 'primary',
+                        text: '로그인',
+                        className: 'join-complete-btn-login',
+                      }) %>
+                    </div>
+
+                    <!-- [D] case: ISVM 전환 신청 완료 상태 -->
+                    <div class="join-complete-actions" data-isvm-complete>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`,{
+                        type: 'button',
+                        size: 'xl',
+                        variant: 'primary',
+                        text: 'ISVM 이동하기',
+                        className: 'join-complete-btn-isvm',
+                      }) %>
+                    </div>
+                    <!-- E: 액션 버튼 -->
+
+                    <!-- S: 고객 지원 -->
+                    <%- include(`${_src}/views/components/pg-auth/auth-contact.ejs`) %>
+                    <!-- E: 고객 지원 -->
+                  </div>
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+
+    <script>
+      /**
+       * [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+       *
+       * PC_ME_03010101 (회원가입 완료) / PC_MY_05010204 (ISVM 계정전환) 페이지 공통 사용
+       *
+       * - 기본: 회원가입 완료 UI 표시, [data-isvm-complete] 영역 hidden
+       * - ?type=isvm: ISVM 전환 신청 완료 UI 표시
+       *   - [data-isvm-complete] 노출
+       *   - .vits-signup-headline, 일반 join-complete-card/actions, .auth-contact 숨김
+       */
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      const isvmElements = document.querySelectorAll('[data-isvm-complete]');
+      const headlineEl = document.querySelector('.vits-signup-headline');
+
+      // 기본값: data-isvm-complete는 hidden
+      isvmElements.forEach(function (el) {
+        el.setAttribute('hidden', '');
+      });
+
+      // type=isvm일 때: data-isvm-complete는 hidden 제거, 그 외 vits-signup 내 요소들은 hidden, 페이지 타이틀 변경
+      if (type === 'isvm') {
+        document.title = 'ISVM 전환 신청완료';
+        isvmElements.forEach(function (el) {
+          el.removeAttribute('hidden');
+        });
+        headlineEl.setAttribute('hidden', '');
+        // data-isvm-complete 제외: join-complete-card, join-complete-actions, auth-contact 숨김
+        var signupEl = document.querySelector('.vits-signup');
+        signupEl
+          .querySelectorAll(
+            '.join-complete-card:not([data-isvm-complete]), .join-complete-actions:not([data-isvm-complete]), .auth-contact'
+          )
+          .forEach(function (el) {
+            el.setAttribute('hidden', '');
+          });
+      }
+    </script>
+  </body>
+</html>

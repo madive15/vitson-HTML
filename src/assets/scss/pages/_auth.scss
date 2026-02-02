@@ -13,6 +13,7 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/form' as form;
 
+/* stylelint-disable no-descending-specificity */
 /* === kendo window 로그인 팝업 , 일회성 로그인 팝업 === */
 
 /* === 로그인 팝업 (공통요소 있음)=== */
@@ -97,7 +98,7 @@
 
   /* 일회성 로그인 링크 */
   .login-once-others {
-    padding-top: map.get(var.$unit, 16);
+    padding: map.get(var.$unit, 16) 0 fn.rem(44);
     text-align: center;
 
     .vits-text-link {
@@ -114,20 +115,6 @@
 
     [class*='vits-btn-'] {
       min-height: fn.rem(48);
-    }
-  }
-
-  /* 하단 링크 */
-  .login-links {
-    padding-top: fn.rem(44);
-
-    ul {
-      @include mx.divider('li', $h: 12, $gap: 16, $color: map.get(color.$layout-border, 'tertiary'));
-      justify-content: center;
-
-      li a {
-        @include typo.typography('b2', $color: map.get(color.$text-colors, 'tertiary'));
-      }
     }
   }
 }
@@ -171,7 +158,7 @@
           min-width: fn.rem(140);
 
           .label-required {
-            @include typo.typography('b2', $color: map.get(color.$text-status, 'brand'));
+            @include typo.typography('b2', $color: map.get(color.$text-status, 'brand-sub'));
             margin-left: map.get(var.$unit, 2);
           }
         }
@@ -180,10 +167,87 @@
   }
 }
 
-/* === 회원가입 페이지 (PC_ME_01010101) === */
+/* === kendo window 회원 정보 확인 팝업 (비밀번호 확인)=== */
+.vits-info-check {
+  position: relative;
+
+  &-form {
+    @include mx.flex($direction: column);
+  }
+
+  &-fields {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 12);
+
+    .vits-form-row {
+      @include mx.flex;
+      gap: map.get(var.$unit, 24);
+
+      .vits-form-label {
+        @include typo.typography('b2', $color: map.get(color.$text-colors, 'primary'));
+        min-width: fn.rem(140);
+        padding-top: fn.rem(12);
+
+        .label-required {
+          @include typo.typography('b2', $color: map.get(color.$text-status, 'brand-sub'));
+          margin-left: map.get(var.$unit, 2);
+        }
+      }
+
+      .vits-form-field {
+        flex: 1;
+        min-width: 0;
+
+        // input disabled 시 .input-item 스타일
+        &:has(input:disabled) {
+          .input-item {
+            cursor: not-allowed;
+            border: 1px solid map.get(color.$layout-border, 'quaternary');
+          }
+        }
+      }
+    }
+  }
+}
+
+/* === 회원가입 페이지 (PC_ME_01010101, PC_ME_02010101)=== */
+// stylelint-disable-next-line selector-id-pattern
 .vits-main-auth {
+  @include mx.flex($direction: column, $justify: center);
+  min-height: fn.rem(840);
   padding-top: map.get(var.$unit, 40);
   background-color: map.get(color.$layout-surf, 'mypage');
+
+  /* auth 공통 컴포넌트 (회원가입 완료, 아이디 찾기 결과 등) */
+  .auth-contact {
+    @include mx.flex($align: center, $justify: center);
+    gap: map.get(var.$unit, 32);
+    padding-top: fn.rem(48);
+
+    &-call,
+    &-kakaotalk {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+      text-decoration: none;
+    }
+
+    &-icon {
+      @include mx.flex($align: center, $justify: center);
+      flex-shrink: 0;
+      width: fn.rem(32);
+      height: fn.rem(32);
+      border-radius: 50%;
+
+      img {
+        display: block;
+        object-fit: contain;
+      }
+    }
+
+    &-text {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
 
   .vits-signup {
     @include mx.flex($direction: column);
@@ -205,7 +269,77 @@
     &-form-wrap {
       @include mx.flex($direction: column);
       padding: fn.rem(36) fn.rem(32);
-      background-color: map.get(color.$layout-surf, 'base');
+    }
+
+    /* 회원가입 작성 단계  - PC_ME_02010101 */
+    &-steps {
+      padding: 0 map.get(var.$unit, 16);
+      margin-bottom: map.get(var.$unit, 32);
+    }
+
+    &-steps-list {
+      @include mx.flex($align: center, $justify: space-between);
+      gap: map.get(var.$unit, 16);
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    &-steps-item {
+      @include mx.flex($direction: column, $align: center);
+      flex: 1;
+      gap: map.get(var.$unit, 12);
+      max-width: fn.rem(120);
+
+      .vits-signup-steps-img-wrap {
+        @include mx.flex($align: center, $justify: center);
+        width: fn.rem(80);
+        height: fn.rem(80);
+        overflow: hidden;
+        background-color: map.get(color.$layout-surf, 'sunken');
+        border-radius: map.get(var.$radius, 'md');
+      }
+
+      .vits-signup-steps-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+        /* src 없을 때 placeholder */
+        &:not([src]),
+        &[src=''] {
+          opacity: 0.4;
+        }
+      }
+
+      .vits-signup-steps-label {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+        text-align: center;
+      }
+
+      /* 완료 단계 */
+      &.is-done {
+        .vits-signup-steps-img-wrap {
+          background-color: map.get(color.$layout-surf, 'secondary');
+        }
+
+        .vits-signup-steps-label {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+
+      /* 현재 단계 */
+      &.is-current {
+        .vits-signup-steps-img-wrap {
+          background-color: map.get(color.$layout-surf, 'base');
+          border: 2px solid map.get(color.$layout-border, 'brand');
+        }
+
+        .vits-signup-steps-label {
+          @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand'));
+        }
+      }
     }
 
     &-inner {
@@ -218,6 +352,174 @@
 
     &-alert {
       @include typo.typography('b2s', $color: map.get(color.$text-colors, 'default'));
+    }
+
+    /* 회원정보입력 섹션 (PC_ME_02010101) */
+    &-section {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+
+      & ~ .vits-signup-section {
+        padding-top: map.get(var.$unit, 32);
+      }
+    }
+
+    &-section-title {
+      @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+      margin: 0;
+
+      .label-required {
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+
+    /* 세금계산서 정보  */
+    .vits-signup-tax {
+      &-head {
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-title {
+        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+        margin: 0;
+      }
+
+      &-btn {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        @include button.btn-reset;
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-body {
+        overflow: hidden;
+        transition:
+          margin 0.3s,
+          padding 0.3s,
+          max-height 0.3s,
+          clip-path 0.3s,
+          opacity 0.2s,
+          visibility 0s 0s;
+
+        &:not(.is-open) {
+          overflow: hidden;
+        }
+
+        &.is-open {
+          display: block;
+          padding-top: map.get(var.$unit, 24);
+          margin-top: map.get(var.$unit, 16);
+        }
+      }
+
+      &-text {
+        &.is-collapsed {
+          display: none;
+        }
+
+        &.is-expanded {
+          display: inline;
+        }
+      }
+
+      &-icon {
+        width: fn.rem(16);
+        height: fn.rem(16);
+        transition: transform 0.2s;
+      }
+
+      // 접기/펼치기 영역 box
+      .vits-signup-toggle-box {
+        padding: map.get(var.$unit, 20);
+        background-color: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'lg');
+
+        .vits-signup-tax-toggle {
+          @include mx.flex($align: center, $justify: space-between);
+
+          .vits-checkbox-item .label {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+
+        // 접기/펼치기 텍스트
+        .vits-signup-tax-text {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+
+          &.is-expanded {
+            display: inline;
+          }
+
+          &.is-collapsed {
+            display: none;
+          }
+        }
+      }
+
+      // 버튼의 aria-expanded 상태에 따른 텍스트 표시 제어
+      &-btn[aria-expanded='true'] {
+        .vits-signup-tax-text.is-expanded {
+          display: inline;
+        }
+
+        .vits-signup-tax-text.is-collapsed {
+          display: none;
+        }
+
+        .vits-signup-tax-icon .ic {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-btn[aria-expanded='false'] {
+        .vits-signup-tax-text.is-expanded {
+          display: none;
+        }
+
+        .vits-signup-tax-text.is-collapsed {
+          display: inline;
+        }
+
+        .vits-signup-tax-icon .ic {
+          transform: rotate(0deg);
+        }
+      }
+    }
+
+    /* 파일 첨부 (회원정보입력) */
+    .vits-form-row-file {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    .vits-file-btn {
+      @include mx.flex($align: center, $justify: center);
+      @include typo.typography('b2', $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default'));
+      gap: map.get(var.$unit, 8);
+      max-width: fn.rem(132);
+      min-height: fn.rem(32);
+      padding: fn.rem(6) map.get(var.$unit, 12);
+      background-color: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+      border-radius: map.get(var.$radius, 'sm');
+
+      .ic {
+        width: fn.rem(20);
+        height: fn.rem(20);
+      }
+
+      .vits-file-btn-text {
+        @include typo.typography(
+          'b3r',
+          $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default')
+        );
+        display: inline-block;
+      }
+
+      & + .vits-form-hint {
+        @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand-sub'));
+        margin-top: fn.rem(4);
+      }
     }
 
     /* 약관 동의 카드 */
@@ -324,7 +626,13 @@
     &-terms-sub {
       @include mx.flex($direction: column);
       gap: map.get(var.$unit, 16);
-      transition: none;
+      transition:
+        margin 0.3s,
+        padding 0.3s,
+        max-height 0.3s,
+        clip-path 0.3s,
+        opacity 0.2s,
+        visibility 0s 0s;
 
       &.is-open {
         padding-top: map.get(var.$unit, 16);
@@ -334,61 +642,827 @@
     }
   }
 
-  /* 정보 입력 폼 */
+  /* 정보 입력 폼 (PC_ME_02010101 구조에 맞춤) */
   .vits-signup-form {
-    &.vits-form-box {
-      @include mx.flex($direction: column);
-      gap: map.get(var.$unit, 20);
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 20);
+
+    .vits-form-hint {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      padding-left: fn.rem(16);
+      margin-top: fn.rem(-16);
     }
 
-    .vits-form {
-      &-row {
-        @include mx.flex($align: center, $justify: flex-start);
-        gap: map.get(var.$unit, 24);
+    .label-required {
+      color: map.get(color.$text-status, 'brand-sub');
+    }
+
+    /* 행 공통: .vits-form-row */
+    .vits-form-row {
+      @include mx.flex($align: center, $justify: flex-start);
+      gap: map.get(var.$unit, 24);
+
+      .vits-form-label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
       }
+    }
 
-      &-label {
-        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
-        flex-shrink: 0;
-        min-width: fn.rem(140);
+    /* 열 공통: .vits-form-column */
+    .vits-form-column {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+      align-items: stretch;
+    }
 
-        .label-required {
-          margin-left: map.get(var.$unit, 2);
-          color: map.get(color.$text-status, 'brand');
+    /* 필드 공통 */
+    .vits-form-field {
+      flex: 1;
+      min-width: 0;
+
+      // 유효성 검사 시, 테두리 색상 변경
+      .vits-validation {
+        &.is-valid {
+          .input-item {
+            box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+          }
         }
       }
 
-      &-field {
-        flex: 1;
-        min-width: 0;
+      // input disabled 시 .input-item 스타일
+      &:has(input:disabled) {
+        .input-item {
+          cursor: not-allowed;
+          border: 1px solid map.get(color.$layout-border, 'quaternary');
+        }
+      }
 
-        .vits-input,
-        .vits-select {
-          width: 100%;
+      .vits-input,
+      .vits-select {
+        width: 100%;
+      }
+
+      .vits-select-trigger {
+        width: 100%;
+
+        .vits-select-value {
+          color: map.get(color.$text-colors, 'tertiary');
         }
 
-        .vits-select-trigger {
-          width: 100%;
+        .vits-select-icon {
+          color: map.get(color.$icon-neutral, 'tertiary');
+        }
+      }
 
-          .vits-select-value {
-            color: map.get(color.$text-colors, 'tertiary');
-          }
+      /* 아이디 행: .vits-form-field 안에 버튼이 있을 때 */
+      &:has(.vits-signup-btn) {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 12);
 
-          .vits-select-icon {
-            color: map.get(color.$icon-neutral, 'tertiary');
-          }
+        .vits-input {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .vits-signup-btn {
+          flex-shrink: 0;
+          min-width: fn.rem(120);
         }
       }
     }
   }
 
-  // signup 버튼
+  // submit 버튼 스타일
   .vits-signup-submit {
     width: 100%;
     padding-top: fn.rem(48);
 
     &-btn {
       width: 100%;
+      background-color: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+    }
+  }
+
+  // 회원탈퇴 및 ISVM 전환 신청 버튼 스타일
+  .vits-signup-footer {
+    padding-top: fn.rem(20);
+
+    .vits-signup-footer-list {
+      @include mx.flex($align: center, $justify: flex-start);
+      gap: map.get(var.$unit, 32);
+
+      .vits-text-underline-button {
+        @include typo.typography('h4s', $color: map.get(color.$text-status, 'brand-sub'));
+        height: fn.rem(28);
+
+        &.type-member-delete {
+          color: map.get(color.$text-status, 'brand-sub');
+          border-color: map.get(color.$text-status, 'brand-sub');
+        }
+
+        &.type-member-transfer {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+    }
+  }
+
+  // .vits-signup 클래스가 있을 때, submit 버튼 스타일
+  .vits-signup .vits-signup-submit {
+    margin-top: fn.rem(32);
+    border-top: 1px solid map.get(color.$layout-surf, 'secondary');
+
+    [class*='vits-btn-'] {
+      background-color: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+    }
+  }
+
+  /* === 회원정보 수정 전용 스타일 (vits-type-member-modify) === */
+  .type-member-modify {
+    .vits-modify-toggle-box {
+      width: 100%;
+      padding: map.get(var.$unit, 20);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'lg');
+
+      .vits-modify-marketing-toggle {
+        @include mx.flex($align: center, $justify: space-between);
+
+        .vits-checkbox-item .label {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      .vits-modify-marketing-btn {
+        @include button.btn-reset;
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 4);
+      }
+
+      .vits-modify-marketing-text {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+
+        &.is-expanded {
+          display: inline;
+        }
+
+        &.is-collapsed {
+          display: none;
+        }
+      }
+
+      .vits-modify-marketing-icon {
+        width: fn.rem(16);
+        height: fn.rem(16);
+        transition: transform 0.2s;
+      }
+
+      // 버튼의 aria-expanded 상태에 따른 텍스트 표시 제어
+      .vits-modify-marketing-btn[aria-expanded='true'] {
+        .vits-modify-marketing-text.is-expanded {
+          display: inline;
+        }
+
+        .vits-modify-marketing-text.is-collapsed {
+          display: none;
+        }
+
+        .vits-modify-marketing-icon .ic {
+          transform: rotate(180deg);
+        }
+      }
+
+      .vits-modify-marketing-btn[aria-expanded='false'] {
+        .vits-modify-marketing-text.is-expanded {
+          display: none;
+        }
+
+        .vits-modify-marketing-text.is-collapsed {
+          display: inline;
+        }
+
+        .vits-modify-marketing-icon .ic {
+          transform: rotate(0deg);
+        }
+      }
+
+      .vits-modify-marketing-body {
+        overflow: hidden;
+        transition:
+          margin 0.3s,
+          padding-top 0.3s,
+          max-height 0.3s,
+          clip-path 0.3s,
+          opacity 0.2s,
+          visibility 0s 0s;
+
+        &:not(.is-open) {
+          overflow: hidden;
+        }
+
+        &.is-open {
+          display: block;
+          padding-top: map.get(var.$unit, 24);
+        }
+      }
+
+      .vits-modify-marketing-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: map.get(var.$unit, 36);
+      }
+
+      .vits-modify-marketing-item {
+        @include mx.flex($align: center);
+
+        .vits-checkbox-item {
+          .label {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+          }
+        }
+
+        // 2열 레이아웃: 첫 번째와 두 번째 아이템은 50% 너비
+        flex: 0 0 calc(50% - #{map.get(var.$unit, 6)});
+        min-width: 0;
+
+        // 세 번째 아이템은 전체 너비
+        &:nth-child(3) {
+          flex: 0 0 100%;
+        }
+      }
+    }
+  }
+}
+
+/* === 회원가입 완료 페이지 (PC_ME_03010101) === */
+.vits-main-auth .vits-signup .join-complete {
+  @include mx.flex($direction: column);
+  gap: 0;
+  padding: fn.rem(36) fn.rem(32);
+
+  &-card {
+    @include mx.flex($direction: column, $align: center, $justify: center);
+    gap: map.get(var.$unit, 20);
+    min-height: fn.rem(320);
+    padding: fn.rem(48) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+
+    .vits-empty-state-desc {
+      text-align: center;
+    }
+  }
+
+  &-title {
+    @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+    margin: 0;
+  }
+
+  &-desc {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'default'));
+    margin: 0;
+    text-align: center;
+  }
+
+  &-actions {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+    padding-top: fn.rem(48);
+
+    [class*='vits-btn-'] {
+      flex: 1;
+
+      &.join-complete-btn-login {
+        min-width: fn.rem(266);
+      }
+    }
+  }
+}
+
+/* === 아이디 찾기 결과 페이지 (PC_LO_02040101) === */
+.vits-main-auth .vits-signup.id-find-wrap {
+  margin-top: fn.rem(67);
+  background-color: transparent;
+  box-shadow: none;
+
+  .vits-signup-headline {
+    text-align: center;
+
+    .vits-signup-title {
+      @include typo.typography('h1b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .vits-signup-desc {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+      margin-top: map.get(var.$unit, 8);
+    }
+  }
+
+  .id-find-form {
+    @include mx.flex($direction: column);
+    gap: 0;
+    padding: fn.rem(36) fn.rem(32);
+  }
+
+  .id-info-card {
+    @include mx.flex($align: center, $justify: center);
+    min-height: fn.rem(200);
+    padding: fn.rem(32) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .id-info-text {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'default'));
+      margin: 0;
+      text-align: center;
+    }
+
+    .found-id-text {
+      @include typo.typography('h1s', $color: map.get(color.$text-status, 'brand'));
+    }
+  }
+
+  .id-find-main-link {
+    padding-top: fn.rem(56);
+    text-align: center;
+
+    .vits-text-link {
+      @include typo.typography('H4s', $color: map.get(color.$text-colors, 'tertiary'));
+      display: inline-block;
+      padding-bottom: fn.rem(4);
+      border-bottom: 1px solid map.get(color.$layout-border, 'tertiary');
+    }
+  }
+
+  .id-find-actions {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+    padding-top: fn.rem(16);
+
+    [class*='vits-btn-'] {
+      flex: 1;
+
+      &.id-find-btn-login {
+        min-width: fn.rem(266);
+      }
+    }
+  }
+}
+
+/* === 비밀번호 찾기 페이지 공통사용 (PC_LO_03010101) === */
+.vits-main-auth .vits-signup.info-find-wrap {
+  background-color: transparent;
+  box-shadow: none;
+
+  .vits-signup-headline {
+    padding: 0;
+    margin-bottom: fn.rem(56);
+    text-align: center;
+
+    .vits-signup-title {
+      @include typo.typography('h1b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .vits-signup-desc {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+      margin-top: map.get(var.$unit, 8);
+    }
+  }
+
+  .info-find-tabs-wrap {
+    .vits-auth-tabs {
+      min-height: fn.rem(60);
+      padding: 0;
+      background-color: transparent;
+
+      [class*='vits-btn-'] {
+        min-height: fn.rem(60);
+        border: 0;
+        border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+
+        .text {
+          @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+    }
+
+    .info-find-tab-btn {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+
+      &.is-active {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+
+        .text {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+        }
+      }
+    }
+  }
+
+  .info-find-form {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 32);
+    padding: fn.rem(56) fn.rem(52);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .vits-login-form-fields {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-fields {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-actions {
+      width: 100%;
+      margin-top: fn.rem(20);
+
+      [class*='vits-btn-'] {
+        width: 100%;
+      }
+    }
+  }
+
+  .info-find-tabs-wrap + .info-find-form {
+    border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+  }
+}
+
+/* === 휴면 계정 안내 페이지 (PC_LO_05010101) === */
+.vits-main-auth .vits-signup.auth-dormant-wrap {
+  margin: fn.rem(108) auto fn.rem(148);
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+
+  .auth-dormant-form {
+    @include mx.flex($direction: column, $align: center);
+    gap: map.get(var.$unit, 32);
+    padding: fn.rem(36) fn.rem(32);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  .auth-dormant {
+    &-info-box {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+      padding: map.get(var.$unit, 32);
+      text-align: center;
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'sm');
+    }
+
+    &-info-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      .highlight-text {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'info'));
+      }
+
+      .point-text {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+      }
+    }
+
+    &-actions {
+      width: 100%;
+
+      [class*='vits-btn-'] {
+        min-width: fn.rem(150);
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+/* === ISVM 전환 신청 페이지 (PC_MY_05010204) === */
+.vits-main-auth .isvm {
+  &-transfer {
+    @include mx.flex($direction: column);
+    max-width: fn.rem(520);
+    margin: 0 auto;
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  &-brand {
+    @include mx.flex($align: center, $justify: center);
+    flex-wrap: wrap;
+    gap: map.get(var.$unit, 12);
+    padding-bottom: map.get(var.$unit, 20);
+
+    img {
+      width: auto;
+      height: fn.rem(20);
+    }
+  }
+
+  &-brand-arrow {
+    @include mx.background('ic/ic-triple-arrow.svg');
+    display: inline-flex;
+    align-items: center;
+    width: fn.rem(13.5);
+    height: fn.rem(9);
+  }
+
+  &-brand-sub {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 2);
+
+    &-text {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+// 하단 안내
+.vits-isvm-info {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 12);
+  margin-top: map.get(var.$unit, 32);
+
+  &-warning {
+    @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+
+    .point-dot {
+      @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand'));
+      padding-left: fn.rem(10);
+      margin-right: map.get(var.$unit, 4);
+    }
+  }
+
+  &-sub {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+    margin: 0;
+
+    &.typo-b4r {
+      @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+    }
+  }
+
+  &-list {
+    @include mx.flex($direction: column);
+    @include mx.bullet-style(10, 7, 2, 2, map.get(color.$icon-neutral, 'primary'));
+    gap: map.get(var.$unit, 4);
+
+    li {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+/* === 비밀번호 변경 페이지 (PC_LO_04010101) === */
+.vits-main-auth .vits-signup.pw-change-wrap {
+  @include mx.flex($direction: column);
+  max-width: fn.rem(520);
+  margin: 0 auto;
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .pw-change-form-wrap {
+    @include mx.flex($direction: column, $align: center);
+    gap: map.get(var.$unit, 32);
+    padding: fn.rem(36) fn.rem(32);
+
+    .alerts-anatomy-text {
+      max-width: fn.rem(300);
+      word-break: keep-all;
+    }
+  }
+
+  .pw-change {
+    &-form {
+      width: 100%;
+    }
+
+    &-form-inner {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+      padding: map.get(var.$unit, 24);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'lg');
+
+      .vits-signup-form {
+        gap: map.get(var.$unit, 12);
+      }
+
+      .vits-form-label {
+        min-width: fn.rem(140);
+      }
+
+      .vits-form-hint {
+        margin-top: fn.rem(-5);
+        margin-left: fn.rem(164);
+      }
+    }
+
+    &-actions {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+      width: 100%;
+      padding-top: fn.rem(48);
+
+      [class*='vits-btn-'] {
+        flex: 1;
+
+        &.pw-change-btn-submit {
+          min-width: fn.rem(266);
+        }
+      }
+    }
+  }
+}
+
+/* === 회원탈퇴 팝업 (PC_MY_05010203_P) === */
+// stylelint-disable-next-line selector-id-pattern
+.vits-withdraw-modal {
+  .vits-withdraw-content {
+    padding: 0 map.get(var.$unit, 24) map.get(var.$unit, 24);
+  }
+
+  .vits-withdraw {
+    &-agree {
+      margin: 0 auto;
+    }
+
+    &-form {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 24);
+    }
+
+    &-notice {
+      .vits-alerts-anatomy.type-red {
+        margin-bottom: 0;
+
+        .alerts-anatomy-list {
+          li {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+            padding-left: 0;
+          }
+
+          li::before {
+            content: none;
+          }
+        }
+
+        .alerts-anatomy-list-sub {
+          @include mx.bullet-style(8, 6, 2, 2, map.get(color.$icon-neutral, 'secondary'), 2);
+
+          li {
+            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+            margin-left: fn.rem(14);
+          }
+        }
+      }
+    }
+    // stylelint-disable-next-line no-duplicate-selectors
+    &-agree {
+      .vits-checkbox-item .label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    &-fields {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+      padding-top: map.get(var.$unit, 32);
+      margin-top: map.get(var.$unit, 8);
+      border-top: 1px solid map.get(color.$layout-surf, 'secondary');
+
+      .vits-form-row {
+        @include mx.flex($align: center, $justify: flex-start);
+        gap: map.get(var.$unit, 24);
+
+        .vits-form-label {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+          min-width: fn.rem(140);
+
+          .label-required {
+            @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand-sub'));
+            margin-left: map.get(var.$unit, 2);
+          }
+        }
+
+        .vits-form-field {
+          flex: 1;
+          min-width: 0;
+        }
+
+        &.type-withdraw-reason {
+          align-items: flex-start;
+
+          .vits-form-field {
+            @include mx.flex($direction: column, $align: flex-start);
+            padding: map.get(var.$unit, 16);
+            background-color: map.get(color.$layout-surf, 'raised');
+            border-radius: map.get(var.$radius, 'md');
+
+            .vits-withdraw-reason-list {
+              @include mx.flex($direction: column, $align: flex-start);
+              gap: map.get(var.$unit, 16);
+              width: 100%;
+
+              .reason-etc {
+                width: 100%;
+
+                .vits-withdraw-reason-etc-box {
+                  margin-top: map.get(var.$unit, 16);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &-actions {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+      width: 100%;
+      padding-top: map.get(var.$unit, 24);
+
+      [class*='vits-btn-'] {
+        flex: 1;
+      }
+
+      .vits-withdraw-btn-submit {
+        background-color: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+      }
+    }
+  }
+}
+
+/* === ISVM 전환 안내 팝업 (PC_CO_01010101_P) === */
+.isvm-guide {
+  &-content {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 40);
+    padding: 0 map.get(var.$unit, 24) map.get(var.$unit, 24);
+  }
+
+  &-msg {
+    padding: map.get(var.$unit, 24);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+
+    &-text {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      margin: 0 0 map.get(var.$unit, 24);
+      text-align: center;
+
+      .point-text {
+        font-style: normal;
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+  }
+
+  &-ask {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+    margin: 0;
+    text-align: center;
+  }
+
+  &-agree {
+    margin: 0 auto;
+
+    .vits-checkbox-item {
+      align-items: center;
+
+      .label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+}
+
+/* === 하단 링크 (auth 페이지에서 공통사용) === */
+.login-links {
+  ul {
+    @include mx.divider('li', $h: 12, $gap: 16, $color: map.get(color.$layout-border, 'tertiary'));
+    justify-content: center;
+
+    li {
+      flex: 1;
+      text-align: center;
+
+      a {
+        @include typo.typography('b2', $color: map.get(color.$text-colors, 'tertiary'));
+      }
     }
   }
 }
