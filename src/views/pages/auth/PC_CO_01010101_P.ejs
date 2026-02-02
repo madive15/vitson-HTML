@@ -1,7 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!DOCTYPE html>
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, { meta_title: 'ISVM 전환 안내' }) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '이용약관 (공통팝업)'}) %>
   <body class="vits-scope">
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
 
@@ -16,24 +16,24 @@
                 <button
                   type="button"
                   class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('isvmConvertModal')"
+                  onclick="VitsKendoWindow.open('termsCommonModal')"
                 >
-                  <span class="text">ISVM 전환 안내 팝업</span>
+                  <!-- prettier-ignore -->
+                  <span class="text" style="text-align: left;">이용약관,<br>개인정보처리방침,<br>마케팅 및 광고 알림 설정 상세보기 ,<br>기업회원 및 공급처 이용 동의 팝업
+                    (공통팝업)</span>
                 </button>
               </div>
 
               <!-- prettier-ignore -->
-              <% const winModal = {
-                id: 'isvmConvertModal',
-                size: '560',
-                title: 'ISVM 전환 안내',
-                opt: { draggable: true },
+              <% const winModal = { 
+                id: 'termsCommonModal', 
+                size: '960',
+                title: '이용약관', 
+                opt: { draggable: true }, 
                 contentPath: `${_src}/views/pages/kendo-window/auth/kw-PC_CO_01010101_P.ejs`,
-                buttons: [
-                  { text: '취소', type: 'button', variant: 'secondary', action: 'close' },
-                  { text: '전환 신청하기', type: 'button', variant: 'primary', action: 'close' }
-                ],
-              }; %>
+                buttons: [{text: '확인', type: 'submit', variant: 'primary', size: 'full', action: 'close' }],
+              }; 
+              %>
               <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
             </div>
           </div>
@@ -44,5 +44,33 @@
     </section>
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      /**
+       * [REMOVE] 퍼블 확인용 - 개발 적용 시 제거
+       * type 파라미터에 따라 document.title, 모달 타이틀, vits-signup-terms-article 노출 제어
+       */
+      (function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type') || 'terms';
+
+        var titles = {
+          terms: '이용약관 (공통팝업)',
+          privacy: '개인정보 수집 및 이용 동의',
+          marketing: '마케팅 및 광고 알림 설정 상세보기',
+          'marketing-enterprise': '기업회원 및 공급처 이용 동의'
+        };
+
+        document.title = titles[type] || titles.terms;
+
+        var modalTitle = document.querySelector('#termsCommonModal .vits-modal-title');
+        var articles = document.querySelectorAll('#termsCommonModal .vits-signup-terms-article');
+
+        if (modalTitle) modalTitle.textContent = titles[type] || titles.terms;
+        articles.forEach(function (el) {
+          el.hidden = el.getAttribute('data-terms-type') !== type;
+        });
+      })();
+    </script>
   </body>
 </html>

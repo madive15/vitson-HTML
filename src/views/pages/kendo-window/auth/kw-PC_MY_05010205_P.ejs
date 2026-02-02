@@ -1,0 +1,24 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<section class="isvm-guide" data-checkbox-scope>
+  <div class="isvm-guide-content">
+    <div class="isvm-guide-msg">
+      <p class="isvm-guide-msg-text">
+        전환 신청 시점부터 <em class="point-text">기존 MRO 서비스이용 및 주문이 불가</em>하며,
+        <em class="point-text"> 승인 완료 후 ISVM 서비스 이용이 가능</em>합니다.
+      </p>
+      <p class="isvm-guide-ask">해당 내용을 확인하셨습니까?</p>
+    </div>
+
+    <div class="isvm-guide-agree">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+        name: 'isvmConvertAgree',
+        value: 'agree',
+        size: 'l',
+        text: '위 내용을 확인했습니다.',
+        checked: false,
+        required: true,
+      }) %>
+    </div>
+  </div>
+</section>

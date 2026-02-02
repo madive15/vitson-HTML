@@ -2,6 +2,7 @@
 
 <!-- prettier-ignore -->
 <%
+  const _formClass = (typeof formClass !== 'undefined' && formClass) ? formClass : 'vits-input-search-form';
   const _id = (typeof idPrefix !== 'undefined' && idPrefix) ? idPrefix : 'plp';
   const _inputId = `${_id}-searchKeyword`;
   const _action = (typeof action !== 'undefined' && action) ? action : '';
@@ -19,11 +20,20 @@
 
   const _addClassNameRaw = (typeof addClassName !== 'undefined' && addClassName) ? addClassName : '';  
   const _addClassName = Array.isArray(_addClassNameRaw) ? _addClassNameRaw.filter(Boolean).join(' ') : String(_addClassNameRaw).trim();
-  
+  const _addBtnText = (typeof addBtnText !== 'undefined' && addBtnText) ? addBtnText : '';
+  const _addDataForm = (typeof addDataForm !== 'undefined' && addDataForm) ? addDataForm : '';
+  const _addDataInput = (typeof addDataInput !== 'undefined' && addDataInput) ? addDataInput : '';
 %>
 
 <div class="vits-input-search vits-validation<% if (_addClassName) { %> <%= _addClassName %><% } %>">
-  <form class="vits-input-search-form" role="search" action="<%= _action %>" method="get" data-search-form>
+  <form 
+    class="<%= _formClass %>" 
+    role="search" 
+    action="<%= _action %>" 
+    method="get" 
+    data-search-form
+    <% if (_addDataForm) { %> data-<%= _addDataForm %><% } %>
+  >
     <label for="<%= _inputId %>" class="sr-only">검색어</label>
 
     <input
@@ -35,12 +45,14 @@
       enterkeyhint="search"
       placeholder="<%= _placeholder %>"
       data-search-input
+      <% if (_addDataInput) { %>data-<%= _addDataInput %><% } %>
       <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
       <% if (_isInvalid) { %>aria-invalid="true"<% } %>
     />
 
     <button type="submit" class="input-search-btn" aria-label="검색">
       <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+      <% if (_addBtnText) { %> <span class="text"><%= _addBtnText %></span><% } %>
     </button>
   </form>
 
