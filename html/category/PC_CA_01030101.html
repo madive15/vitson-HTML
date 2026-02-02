@@ -153,7 +153,8 @@
         data-toggle-target="rankPanel"
         aria-label="실시간 검색어 닫기"
       >
-        닫기
+        <i class="ic ic-x" aria-hidden="true"></i>
+
       </button>
     </div>
 
@@ -307,12 +308,11 @@
 
         <!-- S: hheader-main-search-form (통합 검색창) -->
         
-<!-- prettier-ignore -->
 
 
 
 <div class="header-main-search-form">
-  <form class="header-search" action="#" method="get" data-header-search data-toggle-scope data-search-test-key="ㅈ">
+  <form class="header-search" action="#" method="get" data-header-search>
     <div class="header-search-input">
       <label for="ipt-header-search" class="sr-only">검색어</label>
       <input
@@ -320,152 +320,653 @@
         id="ipt-header-search"
         class="header-search-field"
         name="ipt-header-search"
-        placeholder="할인 중인 믹스커피, 보러가실래요?"
-        data-toggle-btn
-        data-toggle-outside="true"
-        data-toggle-target="search-panel"
-        aria-expanded="false"
+        placeholder="찾고 싶은 상품을 검색해보세요!"
+        autocomplete="off"
+        data-search-input
       />
+      
+      <button type="button" class="header-search-clear" data-search-clear aria-label="검색어 삭제">
+        <i class="ic ic-x" aria-hidden="true"></i>
+
+      </button>
       <button type="submit" class="header-search-submit" aria-label="검색">
         <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
 
       </button>
     </div>
 
-    <div class="header-search-panel" data-toggle-box="search-panel">
-      <div class="search-panel-wrap">
-        <!-- 좌: 최근 + 연관(고정) -->
+    
+    <div class="header-search-panel" data-search-panel>
+      <div class="search-panel-wrap vits-scrollbar">
+        
         <div class="search-panel-left">
-          <!-- 최근 검색어 -->
-          <div class="search-recent">
-            <div class="search-head">
-              <strong>최근 검색어</strong>
-              <button type="button" data-recent-clear>전체삭제</button>
+          
+          <div class="search-recent" data-recent-wrap>
+            <div class="search-recent-head">
+              <p class="search-recent-title">최근 검색어</p>
+              <button type="button" class="vits-text-underline-button size-m" data-recent-clear>전체삭제</button>
             </div>
 
-            <ul class="search-keyword-list" data-recent-list>
+            <ul class="search-recent-list" data-recent-list>
               
-              <li data-recent-item data-href="/search?kw=조명">
-                <span>조명</span>
-                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=브랜드명" class="search-recent-link">브랜드명</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="브랜드명 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
               </li>
               
-              <li data-recent-item data-href="/search?kw=용접봉">
-                <span>용접봉</span>
-                <button type="button" data-recent-del aria-label="최근검색어 삭제">×</button>
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=가" class="search-recent-link">가</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="가 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=검색어" class="search-recent-link">검색어</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="검색어 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=나다라마바" class="search-recent-link">나다라마바</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="나다라마바 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=다운라이트" class="search-recent-link">다운라이트</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="다운라이트 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=케이블접속자재" class="search-recent-link">케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=비츠온" class="search-recent-link">비츠온</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="비츠온 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
               </li>
               
             </ul>
           </div>
 
-          <!-- 연관 검색어 -->
-          <div class="search-related">
-            <strong class="search-title">연관검색어</strong>
+          
+          <div class="search-related" data-related-wrap>
+            <p class="search-related-title">연관검색어</p>
 
             <ul class="search-related-list" data-related-list>
               
-              <li
-                class="search-related-item"
-                data-related-item="r1"
-                data-related-href="/search?kw=크리스마스%20조명"
-              >
-                <span class="search-related-label">LED홈조명 > 조명부속</span>
-
-                
-                <span class="search-related-text">크리스마스 조명</span>
-                
+              <li data-related-item="r1">
+                <a href="/search?kw=크리스마스%20조명" class="search-related-item">
+                  
+                  <span class="search-related-text">크리스마스 <em>조명</em></span>
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">LED홈조명</span>
+                    
+                        <span class="search-category">조명부속</span>
+                    
+                  </span>
+                  
+                </a>
               </li>
               
-              <li
-                class="search-related-item"
-                data-related-item="r2"
-                data-related-href="/search?kw=태양광%20LED%20정원등%20조명색"
-              >
-                <span class="search-related-label">LED홈조명 > 조명부속</span>
-
-                
-                <span class="search-related-text">태양광 LED 정원등 조명색</span>
-                
+              <li data-related-item="r2">
+                <a href="/search?kw=태양광%20LED%20정원등%20조명색" class="search-related-item">
+                  
+                  <span class="search-related-text">태양광 LED 정원등 <em>조명</em>색</span>
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">LED홈조명</span>
+                    
+                        <span class="search-category">조명부속</span>
+                    
+                  </span>
+                  
+                </a>
               </li>
               
-              <li
-                class="search-related-item"
-                data-related-item="r3"
-                data-related-href="/category/1234"
-              >
-                <span class="search-related-label">삼성전자 가전제품 > 생활가전 > LED 조명 > 홈 > LED 생체리듬형</span>
-
-                
+              <li data-related-item="r3">
+                <a href="/category/1234" class="search-related-item">
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">삼성전자 가전제품</span>
+                    
+                        <span class="search-category">생활가전</span>
+                    
+                        <span class="search-category">LED <em>조명</em></span>
+                    
+                        <span class="search-category">홈 LED 생체리듬형</span>
+                    
+                  </span>
+                  
+                </a>
               </li>
               
             </ul>
           </div>
         </div>
 
-        <!-- 우: 상품목록(hover 때만 표시, JS가 is-active 붙임) -->
-        <div class="search-panel-right" data-related-products-wrap>
+        
+        <div class="search-panel-right" data-products-wrap>
+          <p class="search-products-title" data-products-title></p>
           
-          <div class="related-products-panel" data-related-products="r1">
-            <ul class="related-products-grid">
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r1"
+            data-products-category="LED홈조명 &gt; 조명부속">
+            <ul class="search-products-grid">
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/1">
-                  <span class="thumb"></span>
-                  <span class="name">상품 A</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304324.jpg" alt="더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+     
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/2">
-                  <span class="thumb"></span>
-                  <span class="name">상품 B</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304360.jpg" alt="더블 OPP 접착테이프 투명">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 100M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+    
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/3">
-                  <span class="thumb"></span>
-                  <span class="name">상품 C</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304359.jpg" alt="더블 OPP 접착테이프 갈색">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 갈색</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+    
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/4">
-                  <span class="thumb"></span>
-                  <span class="name">상품 D</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/392/392919.png" alt="크라프트 박스테이프">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>크라프트 박스테이프</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>50mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+    
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
-            </ul>
-          </div>
-          
-          <div class="related-products-panel" data-related-products="r2">
-            <ul class="related-products-grid">
-              
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/5">
-                  <span class="thumb"></span>
-                  <span class="name">상품 E</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/392/392808.png" alt="투명 포장테이프">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>투명 포장테이프</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 80M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/6">
-                  <span class="thumb"></span>
-                  <span class="name">상품 F</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/45/45213.png" alt="컬러 박스테이프 레드">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>컬러 박스테이프 레드</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 40M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+    
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
             </ul>
           </div>
           
-          <div class="related-products-panel" data-related-products="r3">
-            <ul class="related-products-grid">
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r2"
+            data-products-category="LED홈조명 &gt; 조명부속">
+            <ul class="search-products-grid">
               
-              <li class="product-card">
+              <li class="search-product-card">
                 <a href="/product/7">
-                  <span class="thumb"></span>
-                  <span class="name">상품 G</span>
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/435/435731.png" alt="태양광 정원등 A형">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>태양광 정원등 A형</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>LED 8W</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+     
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/8">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/522/ssd-1000n.png" alt="태양광 정원등 B형">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>태양광 정원등 B형</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>LED 12W</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r3"
+            data-products-category="삼성전자 가전제품 &gt; 생활가전 &gt; LED &lt;em&gt;조명&lt;/em&gt; &gt; 홈 LED 생체리듬형">
+            <ul class="search-products-grid">
+              
+              <li class="search-product-card">
+                <a href="/product/9">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/5/5599.png" alt="삼성 LED 조명 스마트">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>삼성 LED 조명 스마트</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>15W 주백색</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
                 </a>
               </li>
               
@@ -499,31 +1000,6 @@
   </a>
 
 
-<!-- 
-  components/button/button-vertical-icon.ejs
-
-  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
-  - 입력:
-    - as(선택): 'a' | 'button' (기본: 'a')
-    - icon(필수): 아이콘 이름
-    - label(필수): 텍스트
-    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
-    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
-    - href(선택): as='a'일 때 링크 (기본: '#')
-    - target(선택): as='a'일 때 타겟
-    - type(선택): as='button'일 때 타입 (기본: 'button')
-    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
-
-  - 동작:
-    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-    - btnAction이 있으면 data-btn-vertical-action 속성 출력
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
--->
 
         
 
@@ -542,31 +1018,6 @@
   </a>
 
 
-<!-- 
-  components/button/button-vertical-icon.ejs
-
-  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
-  - 입력:
-    - as(선택): 'a' | 'button' (기본: 'a')
-    - icon(필수): 아이콘 이름
-    - label(필수): 텍스트
-    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
-    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
-    - href(선택): as='a'일 때 링크 (기본: '#')
-    - target(선택): as='a'일 때 타겟
-    - type(선택): as='button'일 때 타입 (기본: 'button')
-    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
-
-  - 동작:
-    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-    - btnAction이 있으면 data-btn-vertical-action 속성 출력
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
--->
 
         
 
@@ -579,37 +1030,12 @@
     <span class="icon">
       <i class="ic ic-bag" aria-hidden="true"></i>
 
-      <span class="badge">3</span>
+      <span class="badge">99+</span>
     </span>
     <span class="text">장바구니</span>
   </a>
 
 
-<!-- 
-  components/button/button-vertical-icon.ejs
-
-  - 아이콘(상단) + 텍스트(하단) 형태의 세로형 버튼/링크 컴포넌트
-  - 입력:
-    - as(선택): 'a' | 'button' (기본: 'a')
-    - icon(필수): 아이콘 이름
-    - label(필수): 텍스트
-    - badge(선택): 숫자/문자 배지(null/undefined/''이면 미표시, 0은 표시)
-    - variant(선택): 타입 클래스(type-*) 추가용 (예: 'v-header', 'v-product')
-    - href(선택): as='a'일 때 링크 (기본: '#')
-    - target(선택): as='a'일 때 타겟
-    - type(선택): as='button'일 때 타입 (기본: 'button')
-    - btnAction(선택): as='button'일 때 data-btn-vertical-action 값
-
-  - 동작:
-    - as='a'이고 target='_blank'일 때 rel='noopener noreferrer' 자동 적용
-    - btnAction이 있으면 data-btn-vertical-action 속성 출력
-
-  - 사용:
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'favorite', label: '자주구매', href: '/mypage/favorite' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { icon: 'mypage', label: '마이페이지', href: '/mypage' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { as: 'button', icon: 'cart', label: '장바구니', badge: 3, btnAction: 'cart' }) 
-  < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, { variant: 'v-header', icon: 'bag-check', label: '자주구매', href: '/mypage/favorite' }) 
--->
 
       </div>
     </div>
@@ -79861,49 +80287,226 @@
   <!-- E: vits-footer-modal -->
 </footer>
 
-<div class="vits-floating" data-floating-scope data-floating-visible="3" data-floating-item-height="68">
+
+<!-- prettier-ignore -->
+
+<div class="vits-floating-section" data-floating-scope>
   <!-- 최근 본 상품 -->
   <div class="vits-floating-recent" data-floating-recent>
-    <button type="button" class="vits-floating-arrow is-prev is-disabled" data-floating-prev>
-      <span class="blind">이전</span>
-    </button>
+    <span class="vits-floating-arrow">
+      <i class="ic ic-arrow-up" aria-hidden="true"></i>
+
+    </span>
 
     <div class="vits-floating-list-wrap">
-      <ul class="vits-floating-list" data-floating-list>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+      <ul class="vits-floating-list">
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="1">
+          <a href="/product/detail/1">
+            <img src="https://vitsonimg.co.kr/images/productsNew/92/39.jpg" alt="충전 직쏘/컷쏘 (GSC 10.8V-LI)" />
           </a>
         </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="2">
+          <a href="/product/detail/2">
+            <img src="https://vitsonimg.co.kr/images/productsNew/54/54153-.jpg" alt="T5 LED 20W 1200 주백 4K" />
           </a>
         </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="3">
+          <a href="/product/detail/3">
+            <img src="https://vitsonimg.co.kr/images/productsNew/535/535665.png" alt="레일부속_NEW (전원+마감 화이트)" />
           </a>
         </li>
-        <li class="vits-floating-item" data-floating-item>
-          <a href="#">
-            <img src="https://vitsonimg.co.kr/images/productsNew/488/488682.jpg" alt="상품명" />
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="4">
+          <a href="/product/detail/4">
+            <img src="https://vitsonimg.co.kr/images/productsNew/448/448374.png" alt="POSMAC TRAY BODY (W200 * H100)" />
           </a>
         </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="5">
+          <a href="/product/detail/5">
+            <img src="https://vitsonimg.co.kr/images/productsNew/557/55-b.jpg" alt="달력(탁상용) 에코그린이미지" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="6">
+          <a href="/product/detail/6">
+            <img src="https://vitsonimg.co.kr/images/productsNew/535/5350421-1.jpg" alt="팬던트 LED 리본 40W 주백 4K 골드" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="7">
+          <a href="/product/detail/7">
+            <img src="https://vitsonimg.co.kr/images/productsNew/473/1.jpg" alt="절단석 5(127mm) 실버 그라인더날" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="8">
+          <a href="/product/detail/8">
+            <img src="https://vitsonimg.co.kr/images/productsNew/286/286799.png" alt="철브러쉬 10(250mm) THT92102" />
+          </a>
+        </li>
+        
       </ul>
     </div>
 
-    <button type="button" class="vits-floating-arrow is-next" data-floating-next>
-      <span class="blind">다음</span>
-    </button>
+    <span class="vits-floating-arrow">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
 
-    <span class="vits-floating-count">최근 본<br />(55)</span>
+    </span>
+
+    <p class="vits-floating-count">최근 본<br />(<span data-floating-count-num>0</span>)</p>
+
+    <div class="vits-floating-panel" data-floating-panel>
+      <div class="vits-floating-panel-scroll vits-scrollbar">
+        <div class="vits-floating-panel-head">
+          <p class="vits-floating-panel-title">최근 본 상품</p>
+          <button type="button" class="vits-floating-delete-all" data-floating-delete-all>전체 삭제</button>
+          <button type="button" class="vits-floating-close" data-floating-panel-close aria-label="닫기">
+            <i class="ic ic-x" aria-hidden="true"></i>
+
+          </button>
+        </div>
+        <ul class="vits-floating-panel-list">
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="1">
+            <a href="/product/detail/1">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/92/39.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">충전 직쏘/컷쏘 (GSC 10.8V-LI)</span>
+                <span class="price">407,700원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="2">
+            <a href="/product/detail/2">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/54/54153-.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">T5 LED 20W 1200 주백 4K</span>
+                <span class="price">3,050원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="3">
+            <a href="/product/detail/3">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/535/535665.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">레일부속_NEW (전원+마감 화이트)</span>
+                <span class="price">640원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="4">
+            <a href="/product/detail/4">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/448/448374.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">POSMAC TRAY BODY (W200 * H100)</span>
+                <span class="price">22,991원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="5">
+            <a href="/product/detail/5">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/557/55-b.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">달력(탁상용) 에코그린이미지</span>
+                <span class="price">2,290원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="6">
+            <a href="/product/detail/6">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/535/5350421-1.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">팬던트 LED 리본 40W 주백 4K 골드</span>
+                <span class="price">42,100원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="7">
+            <a href="/product/detail/7">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/473/1.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">절단석 5(127mm) 실버 그라인더날</span>
+                <span class="price">1,788원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="8">
+            <a href="/product/detail/8">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/286/286799.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">철브러쉬 10(250mm) THT92102</span>
+                <span class="price">1,170원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
   </div>
 
   <!-- TOP 버튼 -->
-  <button type="button" class="vits-floating-top" data-floating-top>
-    <span class="vits-floating-top-icon"></span>
-    <span class="vits-floating-top-text">TOP</span>
+  <button type="button" class="vits-floating-top" data-floating-top aria-label="위로 이동">
+    <img src="../../public/resources/img/mro/renewal/ic/ic-top.svg" alt="" />
   </button>
 </div>
 

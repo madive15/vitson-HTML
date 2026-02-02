@@ -1,0 +1,2735 @@
+
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  />
+  <title>비밀번호(아이디입력)찾기</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      
+<!-- prettier-ignore -->
+
+
+<!-- S: vits-header -->
+<header class="vits-header">
+  <div class="gnb-dim" data-gnb-dim aria-hidden="true"></div>
+  <!-- S: vits-header-topbar -->
+  <div class="vits-header-topbar">
+    <div class="vits-inner">
+      <div class="header-topbar-left">
+        <button type="button" class="vits-btn-favorite">
+          <span class="icon"> <i class="ic ic-tag" aria-hidden="true"></i>
+ </span>
+          <span class="text">즐겨찾기</span>
+        </button>
+      </div>
+      <ul class="header-topbar-right">
+        <li>
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  로그인
+</a>
+</li>
+        <li class="header-topbar-right-spacer">
+          
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  회원가입
+</a>
+ 
+
+<a class="vits-text-link"
+   href="#!"
+   
+   >
+  고객센터
+</a>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- E: vits-header-topbar -->
+
+  <!-- S: vits-header-main -->
+  <div class="vits-header-main">
+    <div class="vits-inner">
+      <a href="/" class="header-main-logo">
+        <img src="../../public/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+      </a>
+      <div class="header-main-search">
+        <!-- S: header-main-search-rank (실시간 검색어) -->
+        
+<!-- prettier-ignore -->
+
+
+<div
+  class="header-main-search-rank"
+  data-toggle-scope
+  data-toggle-group="true"
+  data-header-rank
+  data-rank-interval="2500"
+  data-rank-duration="600"
+>
+  <div class="header-rank-bar">
+    <!-- 현재 노출(롤링 영역) : JS가 내부를 track 방식으로 교체 -->
+    <a class="header-rank-link" href="/?keyword=%EB%B3%B5%EC%82%AC%EC%9A%A9%EC%A7%80" data-rank-current>
+      <span class="header-rank-num">1</span>
+      <span class="header-rank-word">복사용지</span>
+      <span class="header-rank-move" aria-hidden="true"></span>
+    </a>
+
+    <!-- 토글 버튼: toggle.js 규칙 준수 -->
+    <button
+      type="button"
+      class="header-rank-btn"
+      data-toggle-btn
+      data-toggle-target="rankPanel"
+      aria-expanded="false"
+      data-aria-label-base="실시간 검색어 목록"
+      aria-label="실시간 검색어 목록 열기"
+    >
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 패널: toggle.js가 is-open 토글 -->
+  <div class="header-rank-panel" data-toggle-box="rankPanel" role="dialog" aria-label="실시간 검색어">
+    <div class="header-rank-panel-head">
+      <span class="header-rank-panel-title">실시간 검색어</span>
+
+      <!-- 닫기: 같은 target으로 닫힘 -->
+      <button
+        type="button"
+        class="header-rank-panel-close"
+        data-toggle-btn
+        data-toggle-target="rankPanel"
+        aria-label="실시간 검색어 닫기"
+      >
+        <i class="ic ic-x" aria-hidden="true"></i>
+
+      </button>
+    </div>
+
+    <ol class="header-rank-list" data-rank-list>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="3"
+        data-curr-rank="1"
+        data-word="복사용지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">1</span>
+          <span class="header-rank-word">복사용지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="1"
+        data-curr-rank="2"
+        data-word="물티슈"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">2</span>
+          <span class="header-rank-word">물티슈</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="5"
+        data-curr-rank="3"
+        data-word="마스크"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">3</span>
+          <span class="header-rank-word">마스크</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="4"
+        data-curr-rank="4"
+        data-word="핸드워시"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">4</span>
+          <span class="header-rank-word">핸드워시</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="7"
+        data-curr-rank="5"
+        data-word="손소독제"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">5</span>
+          <span class="header-rank-word">손소독제</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="2"
+        data-curr-rank="6"
+        data-word="라벨지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">6</span>
+          <span class="header-rank-word">라벨지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="10"
+        data-curr-rank="7"
+        data-word="박스테이프"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">7</span>
+          <span class="header-rank-word">박스테이프</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="8"
+        data-curr-rank="8"
+        data-word="종이컵"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">8</span>
+          <span class="header-rank-word">종이컵</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="6"
+        data-curr-rank="9"
+        data-word="세정제"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">9</span>
+          <span class="header-rank-word">세정제</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+      <li
+        class="header-rank-item"
+        data-rank-item
+        data-prev-rank="10"
+        data-curr-rank="10"
+        data-word="건전지"
+      >
+        <a class="header-rank-item-link" href="javascript:void(0)">
+          <span class="header-rank-num">10</span>
+          <span class="header-rank-word">건전지</span>
+          <span class="header-rank-move" data-rank-item-move aria-hidden="true"></span>
+        </a>
+      </li>
+      
+    </ol>
+  </div>
+</div>
+
+        <!-- E: header-main-search-rank (실시간 검색어) -->
+
+        <!-- S: hheader-main-search-form (통합 검색창) -->
+        
+
+
+
+<div class="header-main-search-form">
+  <form class="header-search" action="#" method="get" data-header-search>
+    <div class="header-search-input">
+      <label for="ipt-header-search" class="sr-only">검색어</label>
+      <input
+        type="search"
+        id="ipt-header-search"
+        class="header-search-field"
+        name="ipt-header-search"
+        placeholder="찾고 싶은 상품을 검색해보세요!"
+        autocomplete="off"
+        data-search-input
+      />
+      
+      <button type="button" class="header-search-clear" data-search-clear aria-label="검색어 삭제">
+        <i class="ic ic-x" aria-hidden="true"></i>
+
+      </button>
+      <button type="submit" class="header-search-submit" aria-label="검색">
+        <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+      </button>
+    </div>
+
+    
+    <div class="header-search-panel" data-search-panel>
+      <div class="search-panel-wrap vits-scrollbar">
+        
+        <div class="search-panel-left">
+          
+          <div class="search-recent" data-recent-wrap>
+            <div class="search-recent-head">
+              <p class="search-recent-title">최근 검색어</p>
+              <button type="button" class="vits-text-underline-button size-m" data-recent-clear>전체삭제</button>
+            </div>
+
+            <ul class="search-recent-list" data-recent-list>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=브랜드명" class="search-recent-link">브랜드명</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="브랜드명 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=가" class="search-recent-link">가</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="가 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=검색어" class="search-recent-link">검색어</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="검색어 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=나다라마바" class="search-recent-link">나다라마바</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="나다라마바 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=다운라이트" class="search-recent-link">다운라이트</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="다운라이트 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=케이블접속자재" class="search-recent-link">케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재케이블접속자재 케이블접속자재 케이블접속자재 케이블접속자재 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+              <li data-recent-item>
+                <div class="search-recent-item">
+                  <a href="/search?kw=비츠온" class="search-recent-link">비츠온</a>
+                  <button type="button" class="search-recent-del" data-recent-del aria-label="비츠온 삭제">
+                    <i class="ic ic-x" aria-hidden="true"></i>
+
+                  </button>
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+
+          
+          <div class="search-related" data-related-wrap>
+            <p class="search-related-title">연관검색어</p>
+
+            <ul class="search-related-list" data-related-list>
+              
+              <li data-related-item="r1">
+                <a href="/search?kw=크리스마스%20조명" class="search-related-item">
+                  
+                  <span class="search-related-text">크리스마스 <em>조명</em></span>
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">LED홈조명</span>
+                    
+                        <span class="search-category">조명부속</span>
+                    
+                  </span>
+                  
+                </a>
+              </li>
+              
+              <li data-related-item="r2">
+                <a href="/search?kw=태양광%20LED%20정원등%20조명색" class="search-related-item">
+                  
+                  <span class="search-related-text">태양광 LED 정원등 <em>조명</em>색</span>
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">LED홈조명</span>
+                    
+                        <span class="search-category">조명부속</span>
+                    
+                  </span>
+                  
+                </a>
+              </li>
+              
+              <li data-related-item="r3">
+                <a href="/category/1234" class="search-related-item">
+                  
+                  
+                  
+                  <span class="search-related-category">
+                    
+                        <span class="search-category">삼성전자 가전제품</span>
+                    
+                        <span class="search-category">생활가전</span>
+                    
+                        <span class="search-category">LED <em>조명</em></span>
+                    
+                        <span class="search-category">홈 LED 생체리듬형</span>
+                    
+                  </span>
+                  
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+
+        
+        <div class="search-panel-right" data-products-wrap>
+          <p class="search-products-title" data-products-title></p>
+          
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r1"
+            data-products-category="LED홈조명 &gt; 조명부속">
+            <ul class="search-products-grid">
+              
+              <li class="search-product-card">
+                <a href="/product/1">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304324.jpg" alt="더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명더블 OPP 접착테이프 투명</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+     
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/2">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304360.jpg" alt="더블 OPP 접착테이프 투명">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 100M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+    
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/3">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/304/304359.jpg" alt="더블 OPP 접착테이프 갈색">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 갈색</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+    
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/4">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/392/392919.png" alt="크라프트 박스테이프">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>크라프트 박스테이프</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>50mm x 50M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+    
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/5">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/392/392808.png" alt="투명 포장테이프">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>투명 포장테이프</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 80M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/6">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/45/45213.png" alt="컬러 박스테이프 레드">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>컬러 박스테이프 레드</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>48mm x 40M</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+    
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r2"
+            data-products-category="LED홈조명 &gt; 조명부속">
+            <ul class="search-products-grid">
+              
+              <li class="search-product-card">
+                <a href="/product/7">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/435/435731.png" alt="태양광 정원등 A형">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>태양광 정원등 A형</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>LED 8W</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+     
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+              <li class="search-product-card">
+                <a href="/product/8">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/522/ssd-1000n.png" alt="태양광 정원등 B형">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>태양광 정원등 B형</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>LED 12W</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+          <div 
+            class="search-products-panel" 
+            data-products-panel="r3"
+            data-products-category="삼성전자 가전제품 &gt; 생활가전 &gt; LED &lt;em&gt;조명&lt;/em&gt; &gt; 홈 LED 생체리듬형">
+            <ul class="search-products-grid">
+              
+              <li class="search-product-card">
+                <a href="/product/9">
+                  <div class="product-thumb">
+                    
+                    <img src="https://vitsonimg.co.kr/images/productsNew/5/5599.png" alt="삼성 LED 조명 스마트">
+                    
+                  </div>
+                  <div class="product-body">
+                    <div class="product-summary">
+                      
+                      <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                      
+
+                      <div class="product-name"><span class="sr-only">상품명</span>삼성 LED 조명 스마트</div>
+
+                      
+                      <div class="product-spec"><span class="sr-only">규격</span>15W 주백색</div>
+                      
+                    </div>
+
+                    
+                    <div class="product-extra">
+                      
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                      
+                      
+                      <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                      
+                    </div>
+                    
+                  </div>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+        <!-- E: hheader-main-search-form (통합 검색창) -->
+      </div>
+      <div class="header-main-util">
+        <!-- prettier-ignore -->
+        
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-bag-check" aria-hidden="true"></i>
+
+      
+    </span>
+    <span class="text">자주구매</span>
+  </a>
+
+
+
+        
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+
+      
+    </span>
+    <span class="text">마이페이지</span>
+  </a>
+
+
+
+        
+
+
+
+  <a class="vits-btn-vertical-icon"
+     href="/mypage/favorite"
+     
+     >
+    <span class="icon">
+      <i class="ic ic-bag" aria-hidden="true"></i>
+
+      <span class="badge">99+</span>
+    </span>
+    <span class="text">장바구니</span>
+  </a>
+
+
+
+      </div>
+    </div>
+  </div>
+  <!-- E: vits-header-main -->
+
+  <!-- S: vits-header-gnb -->
+  <!-- prettier-ignore -->
+  
+
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-header-gnb" data-header-gnb>
+  <div class="gnb-bar-box" data-toggle-scope data-toggle-group="true">
+    <div class="gnb-bar vits-inner">
+      <!-- 좌: 전체카테고리/브랜드 (toggle.js 사용) -->
+      <div class="gnb-left" data-gnb-panel-scope>
+        <!-- 1) 전체카테고리 세트 -->
+        <!-- prettier-ignore -->
+        
+<!-- prettier-ignore -->
+
+
+<div class="gnb-left-item">
+  <button
+    type="button"
+    class="gnb-btn category"
+    data-toggle-btn
+    data-toggle-target="gnb-category"
+    data-toggle-outside="true"
+    aria-expanded="false"
+  >
+    <span class="icon left"> <i class="ic ic-menu" aria-hidden="true"></i>
+ </span>
+    <span class="text">전체카테고리</span>
+    <span class="icon right"> <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ </span>
+  </button>
+
+  <div class="gnb-panel gnb-panel-category" data-toggle-box="gnb-category">
+    <h2 class="sr-only">전체카테고리</h2>
+    <div class="vits-inner">
+      <div class="gnb-panel-body">
+        <div class="gnb-category" data-gnb-category>
+          <!-- 1뎁스 -->
+          <div class="gnb-category-col gnb-category-col-1" data-scroll-boundary>
+            <ul class="gnb-category-list gnb-category-list-1" data-gnb-d1>
+              <!-- prettier-ignore -->
+              
+            </ul>
+          </div>
+
+          <!-- 2뎁스(영역 고정) -->
+          <div class="gnb-category-col gnb-category-col-2" data-gnb-d2-col data-scroll-boundary>
+            <!-- prettier-ignore -->
+            
+          </div>
+
+          <!-- 3뎁스(영역 고정) -->
+          <div class="gnb-category-col gnb-category-col-3" data-gnb-d3-col data-scroll-boundary>
+            <!-- prettier-ignore -->
+            
+          </div>
+
+          <!-- 추천(항상 오른쪽, 영역 고정) -->
+          <div class="gnb-category-col gnb-category-col-4">
+            <div class="gnb-reco">
+              <div class="gnb-reco-title">
+                <span class="gnb-reco-title-point">요즘 잘 팔리는</span>
+                <span class="gnb-reco-title-text">이 제품 어떠세요?</span>
+              </div>
+
+              <!-- 
+                [D] 상품 상태 (li.gnb-reco-item)
+                    data-member="true"  : 회원
+                    data-member="false" : 비회원
+
+                    data-stock="true"   : 판매중
+                    data-stock="false"  : 일시품절
+              -->
+              <ul class="gnb-reco-list">
+                <li class="gnb-reco-item" data-member="true" data-stock="true">
+                  <div class="gnb-reco-item-card">
+                    <div class="product-thumb">
+                      <a href="#!">
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-01.png" alt="" />
+                      </a>
+                    </div>
+                    <div class="product-body">
+                      <div class="product-summary">
+                        <a href="#!">
+                          <div class="product-name"><span class="sr-only">상품명</span>튀김우동 컵라면 6개입</div>
+                        </a>
+                      </div>
+
+                      <div class="product-price">
+                        <!-- 
+                            [D] 가격 노출 
+                              ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                              ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                        -->
+                        <div class="vits-price-box is-normal">
+                          <div class="price-origin-label">
+                            <span class="sr-only">표준단가(정상가)</span>999,999,999원
+                          </div>
+
+                          <div class="price-sale-row">
+                            <div class="price-rate"><span class="sr-only">할인율</span>30%</div>
+                            <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>24,900원</div>
+                          </div>
+                        </div>
+
+                        <!-- 
+                            [D] 가격 비노출 => 일시품절
+                              ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                              ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-soldout">일시품절</div>
+
+                        <!-- 
+                            [D] 가격 비노출 (비회원)
+                              ㄴ data-member="true"  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-guest">
+                          <div class="price-guest-text">
+                            <p class="price-guest-text-title">회원 전용 혜택가</p>
+                            <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                          </div>
+                          <div class="price-guest-action">
+                            <button class="price-login-button">
+                              <span class="icon">
+                                <i class="ic ic-lock-close" aria-hidden="true"></i>
+
+                              </span>
+                              <span class="text">로그인하고 가격 확인</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="gnb-reco-item" data-member="true" data-stock="false">
+                  <div class="gnb-reco-item-card">
+                    <div class="product-thumb">
+                      <a href="#!">
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-03.png" alt="" />
+                      </a>
+                    </div>
+                    <div class="product-body">
+                      <div class="product-summary">
+                        <a href="#!">
+                          <div class="product-name">
+                            <span class="sr-only">상품명</span>튀김우동 컵라면 6개입 상품명이 길어질 땐 말줄임으로
+                            표시가 됩니다 상품명이 길어요 길어요
+                          </div>
+                        </a>
+                      </div>
+
+                      <div class="product-price">
+                        <!-- 
+                            [D] 가격 노출 
+                              ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                              ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                        -->
+                        <div class="vits-price-box is-normal">
+                          <div class="price-origin-label">
+                            <span class="sr-only">표준단가(정상가)</span>999,999,999원
+                          </div>
+
+                          <div class="price-sale-row">
+                            <div class="price-rate"><span class="sr-only">할인율</span>30%</div>
+                            <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>24,900원</div>
+                          </div>
+                        </div>
+
+                        <!-- 
+                            [D] 가격 비노출 => 일시품절
+                              ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                              ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-soldout">일시품절</div>
+
+                        <!-- 
+                            [D] 가격 비노출 (비회원)
+                              ㄴ data-member="true"  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-guest">
+                          <div class="price-guest-text">
+                            <p class="price-guest-text-title">회원 전용 혜택가</p>
+                            <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                          </div>
+                          <div class="price-guest-action">
+                            <button class="price-login-button">
+                              <span class="icon">
+                                <i class="ic ic-lock-close" aria-hidden="true"></i>
+
+                              </span>
+                              <span class="text">로그인하고 가격 확인</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="gnb-reco-item" data-member="false">
+                  <div class="gnb-reco-item-card">
+                    <div class="product-thumb">
+                      <a href="#!">
+                        <img src="../../public/resources/img/mro/renewal/temp/temp-product-thumb-05.png" alt="" />
+                      </a>
+                    </div>
+                    <div class="product-body">
+                      <div class="product-summary">
+                        <a href="#!">
+                          <div class="product-name"><span class="sr-only">상품명</span>튀김우동 컵라면 6개입</div>
+                        </a>
+                      </div>
+
+                      <div class="product-price">
+                        <!-- 
+                          [D] 가격 노출 
+                            ㄴ data-member="false" : 비회원   => 비노출 (css로도 적용)
+                            ㄴ data-stock="false" : 일시품절  => 비노출 (css로도 적용)
+                      -->
+                        <div class="vits-price-box is-normal">
+                          <div class="price-origin-label">
+                            <span class="sr-only">표준단가(정상가)</span>999,999,999원
+                          </div>
+
+                          <div class="price-sale-row">
+                            <div class="price-rate"><span class="sr-only">할인율</span>30%</div>
+                            <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>24,900원</div>
+                          </div>
+                        </div>
+
+                        <!-- 
+                            [D] 가격 비노출 => 일시품절
+                              ㄴ data-member="false" : 비회원  => 비노출 (css로도 적용)
+                              ㄴ data-stock="true"   : 판매중  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-soldout">일시품절</div>
+
+                        <!-- 
+                            [D] 가격 비노출 (비회원)
+                              ㄴ data-member="true"  => 비노출 (css로도 적용)
+                        -->
+                        <div class="product-price-alt is-guest">
+                          <div class="price-guest-text">
+                            <p class="price-guest-text-title">회원 전용 혜택가</p>
+                            <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                          </div>
+                          <div class="price-guest-action">
+                            <button class="price-login-button">
+                              <span class="icon">
+                                <i class="ic ic-lock-close" aria-hidden="true"></i>
+
+                              </span>
+                              <span class="text">로그인하고 가격 확인</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- /.gnb-category -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <!-- 2) 브랜드 세트 -->
+        
+
+<div class="gnb-left-item">
+  <button
+    type="button"
+    class="gnb-btn brand"
+    data-toggle-btn
+    data-toggle-target="gnb-brand"
+    data-toggle-outside="true"
+    aria-expanded="false"
+  >
+    <span class="icon left"> <i class="ic ic-label" aria-hidden="true"></i>
+ </span>
+    <span class="text">브랜드</span>
+    <span class="icon right"> <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ </span>
+  </button>
+
+  <div class="gnb-panel gnb-panel-brand" data-toggle-box="gnb-brand">
+    <div class="gnb-panel-inner">
+      <div class="gnb-panel-head">
+        <strong class="gnb-panel-title">브랜드</strong>
+      </div>
+      <div class="gnb-panel-body">
+        <ul class="gnb-panel-list">
+          <li><a href="/brand/1">브랜드 1</a></li>
+          <li><a href="/brand/2">브랜드 2</a></li>
+          <li><a href="/brand/3">브랜드 3</a></li>
+          <li><a href="/brand/4">브랜드 4</a></li>
+          <li><a href="/brand/5">브랜드 5</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+
+      <!-- 중: 프로모션 + 고정 + 더보기 -->
+      <nav class="gnb-nav vits-scrollbar" data-gnb-nav>
+        <ul class="gnb-nav-list" data-gnb-nav-list>
+          <li class="gnb-item gnb-item-home"><a href="/" class="gnb-link">홈</a></li>
+          <li class="gnb-item gnb-item-deal"><a href="/" class="gnb-link">초특가</a></li>
+          <li class="gnb-item gnb-item-promo-list">
+            <div class="gnb-promo-list">
+              
+              <!-- prettier-ignore -->
+              
+              <!-- prettier-ignore -->
+              
+              
+              
+              <a href="/promo/1" class="gnb-link" data-full-text="복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜복사용지 스페셜딜">복사용지 스페셜딜복</a>
+              
+              
+              
+              <a href="/promo/2" class="gnb-link" data-full-text="사무용품 올인원">사무용품 올인원</a>
+              
+              
+              
+              <a href="/promo/3" class="gnb-link" data-full-text="사무기기 기획전">사무기기 기획전</a>
+              
+              
+              
+              <a href="/promo/4" class="gnb-link" data-full-text="포장 솔루션 제안전">포장 솔루션 제안전</a>
+              
+              
+              
+              <a href="/promo/5" class="gnb-link" data-full-text="장갑 끝판왕">장갑 끝판왕</a>
+              
+              
+              
+              <a href="/promo/6" class="gnb-link" data-full-text="계양 기획전">계양 기획전</a>
+              
+              
+              
+              <a href="/promo/7" class="gnb-link" data-full-text="디월트 기획전">디월트 기획전</a>
+              
+              
+              
+              <a href="/promo/8" class="gnb-link" data-full-text="안전 멀티탭">안전 멀티탭</a>
+              
+              
+              
+              <a href="/promo/9" class="gnb-link" data-full-text="비츠온 조명 기획전">비츠온 조명 기획전</a>
+              
+              
+              
+              <a href="/promo/10" class="gnb-link" data-full-text="실속할인">실속할인</a>
+              
+              
+              
+              <a href="/promo/11" class="gnb-link" data-full-text="비츠온 PB 기획전">비츠온 PB 기획전</a>
+              
+              
+              
+              <a href="/promo/12" class="gnb-link" data-full-text="뜯어보자">뜯어보자</a>
+              
+              
+              
+              <a href="/promo/13" class="gnb-link" data-full-text="받아보자">받아보자</a>
+              
+              
+              
+              <a href="/promo/14" class="gnb-link" data-full-text="장비용품 총집합">장비용품 총집합</a>
+              
+              
+              
+              <a href="/promo/15" class="gnb-link" data-full-text="F/W 음료모음전">F/W 음료모음전</a>
+              
+              
+              
+              <a href="/promo/16" class="gnb-link" data-full-text="제설용품 총집합">제설용품 총집합</a>
+              
+              
+              
+              <a href="/promo/17" class="gnb-link" data-full-text="3M 기획전">3M 기획전</a>
+              
+              
+              
+              <a href="/promo/18" class="gnb-link" data-full-text="현진정밀 기획전">현진정밀 기획전</a>
+              
+              
+              
+              <a href="/promo/19" class="gnb-link" data-full-text="케이텔 기획전">케이텔 기획전</a>
+              
+              
+              
+              <a href="/promo/20" class="gnb-link" data-full-text="서경 기획전">서경 기획전</a>
+              
+              
+              
+              <a href="/promo/21" class="gnb-link" data-full-text="소화기 기획전">소화기 기획전</a>
+              
+              
+              
+              <a href="/promo/22" class="gnb-link" data-full-text="밀워키 기획전">밀워키 기획전</a>
+              
+              
+              
+              <a href="/promo/23" class="gnb-link" data-full-text="설 선물세트">설 선물세트</a>
+              
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div class="gnb-more-box">
+              <button
+                type="button"
+                class="gnb-more"
+                data-gnb-more
+                data-toggle-btn
+                data-toggle-target="gnb-more"
+                data-toggle-group-except="true"
+                aria-expanded="false"
+                aria-label="더보기"
+              >
+                <span class="icon"> <i class="ic ic-plus" aria-hidden="true"></i>
+ </span>
+              </button>
+            </div>
+          </li>
+          <li class="gnb-item gnb-item-promo">
+            <a href="/plan" class="gnb-link">기획전</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 접힌 메뉴에 있는 메뉴도 포함 => data-gnb-more-mode="all" -->
+    <div class="gnb-panel gnb-panel-more" data-toggle-box="gnb-more" data-gnb-more-mode="all">
+      <div class="gnb-panel-inner">
+        <section class="gnb-panel-body vits-inner">
+          <h2 class="gnb-panel-body-title">비츠온이 전하는 더 많은 혜택</h2>
+          <ul class="gnb-panel-list" data-gnb-more-list></ul>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- E: vits-header-gnb -->
+</header>
+<!-- E: vits-header -->
+
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup info-find-wrap">
+                  <!-- S: 비밀번호 찾기 (아이디 입력) -->
+                  <div class="info-find-block info-find-block-pw">
+                    <div class="vits-signup-headline">
+                      <h2 class="vits-signup-title">비밀번호 찾기</h2>
+                      <p class="vits-signup-desc">아이디 인증 후 비밀번호 찾기를 진행할 수 있습니다.</p>
+                    </div>
+
+                    <form class="info-find-form" action="#" method="post">
+                      <div class="info-find-form-fields">
+                        <!-- prettier-ignore -->
+                        
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="info-find-id" class="sr-only">아이디</label>
+
+    <input
+      type="text"
+      name="userId"
+      id="info-find-id"
+      placeholder="아이디"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="info-find-id-validation" aria-live="polite"></p>
+  </div>
+</div>
+                      </div>
+
+                      <div class="info-find-form-actions">
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="submit"
+  class="vits-btn-xl vits-btn-primary  info-find-btn"
+  
+  >
+  
+
+  <span class="text">확인</span>
+
+  
+</button>
+
+                      </div>
+
+                      <!-- S: 하단 링크 -->
+                      <!-- prettier-ignore -->
+                      <!-- prettier-ignore -->
+
+
+<div class="login-links">
+  <ul>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  아이디 찾기
+</a>
+
+    </li>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  회원가입
+</a>
+
+    </li>
+    
+  </ul>
+</div>
+
+                      <!-- E: 하단 링크 -->
+                    </form>
+                  </div>
+                  <!-- E: 비밀번호 찾기 (아이디 입력) -->
+
+                  <!-- S: 비밀번호 찾기 (탭) -->
+                  
+<!-- 비밀번호 찾기 폼 (탭)
+PC_LO_03020101 (비밀번호 찾기_이름/휴대전화번호로 찾기)
+PC_LO_03030101 (비밀번호 찾기_이름/이메일로 찾기)
+-->
+
+<div class="info-find-block info-find-block-pw-tab" hidden>
+  <div class="vits-signup-headline">
+    <h2 class="vits-signup-title">비밀번호 찾기</h2>
+  </div>
+
+  <!-- prettier-ignore -->
+  
+  <div class="info-find-tabs-wrap">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-auth-tabs vits-tabs-sm" role="tablist" aria-label="비밀번호 찾기 방법">
+   
+  <button
+    type="button"
+    class="vits-btn-md info-find-tab-btn is-active"
+    aria-selected="true"
+    id="info-find-tab-0"
+  >
+    <span class="text">휴대전화번호</span>
+    
+  </button>
+   
+  <button
+    type="button"
+    class="vits-btn-md info-find-tab-btn"
+    aria-selected="false"
+    id="info-find-tab-1"
+  >
+    <span class="text">이메일</span>
+    
+  </button>
+  
+</div>
+
+  </div>
+
+  <form class="info-find-form" action="#" method="post">
+    <div class="vits-login-form-fields" aria-hidden="false">
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="pw-find-name-phone" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="userName"
+      id="pw-find-name-phone"
+      placeholder="이름"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="pw-find-name-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="pw-find-phone" class="sr-only">휴대전화번호</label>
+
+    <input
+      type="text"
+      name="userPhone"
+      id="pw-find-phone"
+      placeholder="휴대전화번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="pw-find-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
+    <div class="vits-login-form-fields" aria-hidden="true">
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="pw-find-name-email" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="userNameEmail"
+      id="pw-find-name-email"
+      placeholder="이름"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="pw-find-name-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="pw-find-email" class="sr-only">이메일</label>
+
+    <input
+      type="text"
+      name="userEmail"
+      id="pw-find-email"
+      placeholder="이메일"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="pw-find-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
+
+    <div class="info-find-form-actions">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="submit"
+  class="vits-btn-xl vits-btn-primary  info-find-btn"
+  
+  >
+  
+
+  <span class="text">비밀번호 찾기</span>
+
+  
+</button>
+
+    </div>
+
+    <!-- S: 하단 링크 -->
+    <!-- prettier-ignore -->
+    <!-- prettier-ignore -->
+
+
+<div class="login-links">
+  <ul>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  로그인
+</a>
+
+    </li>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  회원가입
+</a>
+
+    </li>
+    
+  </ul>
+</div>
+
+    <!-- E: 하단 링크 -->
+  </form>
+</div>
+
+                  <!-- E: 비밀번호 찾기 (탭) -->
+
+                  <!-- S: 아이디 찾기 (탭) -->
+                  
+<!-- 아이디 찾기 폼 (탭)
+PC_LO_02010101 (ID찾기_휴대전화번호로 찾기) 
+PC_LO_02020101 (ID찾기_이메일로 찾기) 
+PC_LO_02030101 (ID찾기_사업자등록번호로 찾기)
+-->
+
+<div class="info-find-block info-find-block-id" hidden>
+  <div class="vits-signup-headline">
+    <h2 class="vits-signup-title">아이디 찾기</h2>
+  </div>
+
+  <!-- prettier-ignore -->
+  
+  <div class="info-find-tabs-wrap">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-auth-tabs vits-tabs-sm" role="tablist" aria-label="아이디 찾기 방법">
+   
+  <button
+    type="button"
+    class="vits-btn-md info-find-tab-btn is-active"
+    aria-selected="true"
+    id="info-find-tab-0"
+  >
+    <span class="text">휴대전화번호</span>
+    
+  </button>
+   
+  <button
+    type="button"
+    class="vits-btn-md info-find-tab-btn"
+    aria-selected="false"
+    id="info-find-tab-1"
+  >
+    <span class="text">이메일</span>
+    
+  </button>
+   
+  <button
+    type="button"
+    class="vits-btn-md info-find-tab-btn"
+    aria-selected="false"
+    id="info-find-tab-2"
+  >
+    <span class="text">사업자등록번호</span>
+    
+  </button>
+  
+</div>
+
+  </div>
+
+  <form class="info-find-form" action="#" method="post">
+    <div class="vits-login-form-fields" aria-hidden="false">
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-name-phone" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="userName"
+      id="id-find-name-phone"
+      placeholder="이름"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-name-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-phone" class="sr-only">휴대전화번호</label>
+
+    <input
+      type="text"
+      name="userPhone"
+      id="id-find-phone"
+      placeholder="휴대전화번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
+    <div class="vits-login-form-fields" aria-hidden="true">
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-name-email" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="userNameEmail"
+      id="id-find-name-email"
+      placeholder="이름"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-name-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-email" class="sr-only">이메일 주소</label>
+
+    <input
+      type="text"
+      name="userEmail"
+      id="id-find-email"
+      placeholder="이메일 주소"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
+    <div class="vits-login-form-fields" aria-hidden="true">
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-rep-name" class="sr-only">대표자 이름</label>
+
+    <input
+      type="text"
+      name="repName"
+      id="id-find-rep-name"
+      placeholder="대표자 이름"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-rep-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="id-find-biz-no" class="sr-only">사업자등록번호</label>
+
+    <input
+      type="text"
+      name="bizNo"
+      id="id-find-biz-no"
+      placeholder="사업자등록번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="id-find-biz-no-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
+
+    <div class="info-find-form-actions">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="submit"
+  class="vits-btn-xl vits-btn-primary  info-find-btn"
+  
+  >
+  
+
+  <span class="text">아이디 찾기</span>
+
+  
+</button>
+
+    </div>
+
+    <!-- S: 하단 링크 -->
+    <!-- prettier-ignore -->
+    <!-- prettier-ignore -->
+
+
+<div class="login-links">
+  <ul>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  비밀번호 찾기
+</a>
+
+    </li>
+    
+    <li>
+      <!-- prettier-ignore -->
+      
+
+<a class="vits-text-link"
+   href="#!"
+    target="_blank"
+    rel="noopener noreferrer">
+  회원가입
+</a>
+
+    </li>
+    
+  </ul>
+</div>
+
+    <!-- E: 하단 링크 -->
+  </form>
+</div>
+
+                  <!-- E: 아이디 찾기 (탭) -->
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      
+
+<!-- prettier-ignore -->
+
+
+<footer class="vits-footer" data-toggle-scope>
+  <div class="vits-footer-customer">
+    <div class="vits-inner">
+      <div class="vits-footer-customer-info">
+        <h3 class="footer-customer-title">고객센터</h3>
+        <p class="footer-customer-tel">1566-8967</p>
+      </div>
+
+      <div class="vits-footer-customer-hours">
+        <p class="footer-customer-schedule">평일 09:00 - 18:00 점심시간 12:00 - 13:00</p>
+        <p class="footer-customer-schedule">토·일·공휴일 휴무</p>
+      </div>
+
+      <div class="vits-footer-customer-actions">
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-kakao" aria-hidden="true"></i>
+ </span>
+          <span class="text">카카오톡 상담</span>
+        </a>
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
+ </span>
+          <span class="text">1:1문의</span></a
+        >
+        <a href="#!" class="footer-customer-btn">
+          <span class="icon">
+            <i class="ic ic-document-question" aria-hidden="true"></i>
+
+          </span>
+          <span class="text">FAQ</span>
+        </a>
+        <button type="button" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-electric-bulb" aria-hidden="true"></i>
+ </span>
+          <span class="text">조명 AS 신청</span>
+        </button>
+        <a href="mailto:online@vitson.co.kr" class="footer-customer-btn">
+          <span class="icon"> <i class="ic ic-partnership" aria-hidden="true"></i>
+ </span>
+          <span class="text">제휴문의</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="vits-inner">
+    <div class="vits-footer-brand">
+      <h2 class="vits-footer-logo">
+        <img src="../../public/resources/img/mro/renewal/logo/logo-footer.svg" alt="비츠온엠알오" />
+      </h2>
+    </div>
+    <div class="vits-footer-company">
+      <div class="vits-footer-links">
+        <a href="" class="footer-link">회사소개</a><a href="" class="footer-link">이용약관</a
+        ><a href="" class="footer-link link-bold">개인정보취급방침</a>
+      </div>
+      <ul class="vits-footer-info">
+        <li>
+          <p class="company-name">(주)일신비츠온</p>
+          <p>
+            <a href="mailto:online@vitson.co.kr" class="company-email">online@vitson.co.kr</a>
+          </p>
+        </li>
+        <li>
+          <p class="company-text">주소 : (12017) 경기도 남양주시 진접읍 팔야산단로12번길 55</p>
+          <p class="company-text">대표 : 진미애</p>
+        </li>
+        <li>
+          <p class="company-text">
+            사업자등록번호 : 132-81-52217
+            <button
+              type="button"
+              class="company-btn-lookup"
+              data-toggle-btn
+              data-toggle-target="modal-company"
+              aria-expanded="false"
+              data-biz-brno="1328152217"
+            >
+              [사업자정보확인]
+            </button>
+          </p>
+          <p class="company-text">통신판매업신고 : 제 2017-진접오남-0205호</p>
+        </li>
+        <li>
+          <p class="company-text">
+            <a href="tel:+82315107237" class="company-tel">TEL. 031-510-7237</a>
+          </p>
+          <p class="company-text">FAX. 031-951-1375</p>
+          <p class="company-text">개인정보책임관리자 : 이경덕</p>
+        </li>
+      </ul>
+      <p class="vits-footer-copyright">CopyrightⓒILSHIN All rights reserved</p>
+    </div>
+    <div class="vits-footer-utility">
+      <div class="vits-footer-utility-group">
+        <div class="vits-footer-sns">
+          <a
+            href="https://www.youtube.com/channel/UCC-XrHu-ZU3yamsLqj3wSBg"
+            class="footer-sns youtube"
+            target="_blank"
+            aria-label="유튜브 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
+          </a>
+          <a
+            href="https://www.instagram.com/vitson_official"
+            class="footer-sns insta"
+            target="_blank"
+            aria-label="인스타그램 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
+          </a>
+          <a
+            href="https://blog.naver.com/isvitson"
+            class="footer-sns naver"
+            target="_blank"
+            aria-label="블로그 바로가기"
+          >
+            <span class="icon" aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="footer-familysite">
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select type-dark vits-select-dropup"
+  data-vits-select
+   data-select-id="plp-sort" 
+  
+  
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="FAMILY SITE"
+    >FAMILY SITE</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="일신 비츠온"
+         data-url="https://www.vitson.co.kr/site/new_main/"    
+        aria-selected="false"
+        
+      >일신 비츠온</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="ISVM주문통합시스템"
+         data-url="https://isvm.co.kr/"    
+        aria-selected="false"
+        
+      >ISVM주문통합시스템</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="SCM주문통합시스템"
+         data-url="https://isvm.co.kr/scm"    
+        aria-selected="false"
+        
+      >SCM주문통합시스템</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="sort" value="FAMILY SITE" data-vits-select-hidden />
+  
+</div>
+
+        </div>
+      </div>
+      <div class="vits-footer-cert">
+        <div class="footer-cert-logos">
+          <a href="" class="footer-cert-logo cert-kftc">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-kftc.png" alt="공정거래위원회" />
+          </a>
+          <a href="" class="footer-cert-logo cert-inipay">
+            <img src="../../public/resources/img/mro/renewal/logo/logo-inipay.png" alt="INIPAY" />
+          </a>
+        </div>
+        <div class="footer-cert-desc">
+          <p class="title">구매안전(에스크로)서비스 가맹점 가입확인</p>
+          <p class="text">
+            고객님의 안전한 거래를 위해 현금으로 결제 시<br />구매안전(에스크로)서비스를 이용하실 수 있습니다
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- S: vits-footer-modal -->
+  <section class="vits-footer-modal" data-toggle-box="modal-company" aria-hidden="true">
+    <div class="vits-footer-modal-dim" data-toggle-dim="modal-company"></div>
+
+    <div class="vits-footer-modal-panel" role="dialog" aria-modal="true" aria-labelledby="footerBizInfoTitle">
+      <div class="vits-footer-modal-head">
+        <h2 id="footerBizInfoTitle" class="vits-footer-modal-title">사업자 정보</h2>
+
+        <button type="button" class="vits-footer-modal-close" data-toggle-btn data-toggle-target="modal-company">
+          닫기
+        </button>
+      </div>
+
+      <div class="vits-footer-modal-body">
+        <p class="vits-footer-modal-status" data-biz-status></p>
+
+        <div class="vits-footer-modal-table" data-biz-table hidden>
+          <table class="vits-footer-modal-table-inner">
+            <caption class="sr-only">
+              통신판매사업자 등록 정보
+            </caption>
+            <colgroup>
+              <col style="width: 34%" />
+              <col />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">상호</th>
+                <td data-biz-field="bzmnNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">사업자등록번호</th>
+                <td data-biz-field="brno">-</td>
+              </tr>
+              <tr>
+                <th scope="row">운영상태</th>
+                <td data-biz-field="operSttusCdNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">시/도</th>
+                <td data-biz-field="ctpvNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고기관</th>
+                <td data-biz-field="dclrInsttNm">-</td>
+              </tr>
+              <tr>
+                <th scope="row">신고일자</th>
+                <td data-biz-field="fromYmd">-</td>
+              </tr>
+              <tr>
+                <th scope="row">인허가(등록)번호</th>
+                <td data-biz-field="prmmiMnno">-</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="vits-footer-modal-note">표시 정보는 OpenAPI 조회 결과 기준입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- E: vits-footer-modal -->
+</footer>
+
+
+<!-- prettier-ignore -->
+
+<div class="vits-floating-section" data-floating-scope>
+  <!-- 최근 본 상품 -->
+  <div class="vits-floating-recent" data-floating-recent>
+    <span class="vits-floating-arrow">
+      <i class="ic ic-arrow-up" aria-hidden="true"></i>
+
+    </span>
+
+    <div class="vits-floating-list-wrap">
+      <ul class="vits-floating-list">
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="1">
+          <a href="/product/detail/1">
+            <img src="https://vitsonimg.co.kr/images/productsNew/92/39.jpg" alt="충전 직쏘/컷쏘 (GSC 10.8V-LI)" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="2">
+          <a href="/product/detail/2">
+            <img src="https://vitsonimg.co.kr/images/productsNew/54/54153-.jpg" alt="T5 LED 20W 1200 주백 4K" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="3">
+          <a href="/product/detail/3">
+            <img src="https://vitsonimg.co.kr/images/productsNew/535/535665.png" alt="레일부속_NEW (전원+마감 화이트)" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="4">
+          <a href="/product/detail/4">
+            <img src="https://vitsonimg.co.kr/images/productsNew/448/448374.png" alt="POSMAC TRAY BODY (W200 * H100)" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="5">
+          <a href="/product/detail/5">
+            <img src="https://vitsonimg.co.kr/images/productsNew/557/55-b.jpg" alt="달력(탁상용) 에코그린이미지" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="6">
+          <a href="/product/detail/6">
+            <img src="https://vitsonimg.co.kr/images/productsNew/535/5350421-1.jpg" alt="팬던트 LED 리본 40W 주백 4K 골드" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="7">
+          <a href="/product/detail/7">
+            <img src="https://vitsonimg.co.kr/images/productsNew/473/1.jpg" alt="절단석 5(127mm) 실버 그라인더날" />
+          </a>
+        </li>
+        
+        <li class="vits-floating-item" data-floating-item data-item-id="8">
+          <a href="/product/detail/8">
+            <img src="https://vitsonimg.co.kr/images/productsNew/286/286799.png" alt="철브러쉬 10(250mm) THT92102" />
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <span class="vits-floating-arrow">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+
+    <p class="vits-floating-count">최근 본<br />(<span data-floating-count-num>0</span>)</p>
+
+    <div class="vits-floating-panel" data-floating-panel>
+      <div class="vits-floating-panel-scroll vits-scrollbar">
+        <div class="vits-floating-panel-head">
+          <p class="vits-floating-panel-title">최근 본 상품</p>
+          <button type="button" class="vits-floating-delete-all" data-floating-delete-all>전체 삭제</button>
+          <button type="button" class="vits-floating-close" data-floating-panel-close aria-label="닫기">
+            <i class="ic ic-x" aria-hidden="true"></i>
+
+          </button>
+        </div>
+        <ul class="vits-floating-panel-list">
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="1">
+            <a href="/product/detail/1">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/92/39.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">충전 직쏘/컷쏘 (GSC 10.8V-LI)</span>
+                <span class="price">407,700원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="2">
+            <a href="/product/detail/2">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/54/54153-.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">T5 LED 20W 1200 주백 4K</span>
+                <span class="price">3,050원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="3">
+            <a href="/product/detail/3">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/535/535665.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">레일부속_NEW (전원+마감 화이트)</span>
+                <span class="price">640원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="4">
+            <a href="/product/detail/4">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/448/448374.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">POSMAC TRAY BODY (W200 * H100)</span>
+                <span class="price">22,991원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="5">
+            <a href="/product/detail/5">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/557/55-b.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">달력(탁상용) 에코그린이미지</span>
+                <span class="price">2,290원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="6">
+            <a href="/product/detail/6">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/535/5350421-1.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">팬던트 LED 리본 40W 주백 4K 골드</span>
+                <span class="price">42,100원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="7">
+            <a href="/product/detail/7">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/473/1.jpg" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">절단석 5(127mm) 실버 그라인더날</span>
+                <span class="price">1,788원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+          <li class="vits-floating-panel-item" data-floating-panel-item data-item-id="8">
+            <a href="/product/detail/8">
+              <span class="thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/286/286799.png" alt="" />
+              </span>
+              <span class="info">
+                <span class="name">철브러쉬 10(250mm) THT92102</span>
+                <span class="price">1,170원</span>
+              </span>
+            </a>
+            <button type="button" class="vits-floating-delete" data-floating-delete aria-label="삭제">
+              <i class="ic ic-x" aria-hidden="true"></i>
+
+            </button>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP 버튼 -->
+  <button type="button" class="vits-floating-top" data-floating-top aria-label="위로 이동">
+    <img src="../../public/resources/img/mro/renewal/ic/ic-top.svg" alt="" />
+  </button>
+</div>
+
+
+    </section>
+    <!-- E: vits-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+
+    <script>
+      /**
+       * [REMOVE] 퍼블 확인용 - 개발 적용 시 제거 후 라우팅/상태로 처리
+       *
+       * URL type 파라미터로 노출 블록·타이틀 제어
+       * - type 없음: 기존 비밀번호 찾기(아이디 입력) .info-find-block-pw
+       * - type=find-pw: 비밀번호 찾기 탭(휴대전화/이메일) .info-find-block-pw-tab
+       * - type=find-id: 아이디 찾기 탭 .info-find-block-id
+       */
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      var blockPw = document.querySelector('.info-find-block-pw');
+      var blockPwTab = document.querySelector('.info-find-block-pw-tab');
+      var blockId = document.querySelector('.info-find-block-id');
+      if (type === 'find-id') {
+        document.title = '아이디 찾기';
+        if (blockPw) blockPw.hidden = true;
+        if (blockPwTab) blockPwTab.hidden = true;
+        if (blockId) blockId.hidden = false;
+      } else if (type === 'find-pw') {
+        document.title = '비밀번호 찾기';
+        if (blockPw) blockPw.hidden = true;
+        if (blockPwTab) blockPwTab.hidden = false;
+        if (blockId) blockId.hidden = true;
+      } else {
+        if (blockPw) blockPw.hidden = false;
+        if (blockPwTab) blockPwTab.hidden = true;
+        if (blockId) blockId.hidden = true;
+      }
+    </script>
+  </body>
+</html>
