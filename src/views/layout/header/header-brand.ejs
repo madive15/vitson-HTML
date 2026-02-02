@@ -1,5 +1,58 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
+<%
+// 브랜드 데이터 로드 및 분류
+const rawBrands = require(_src + '/views/mock-data/common/brand.mock.json');
+const allBrands = rawBrands.map(item => item.brandNm.trim()).filter(name => name);
+
+// 초성 추출 (유니코드 계산용 - 순서 변경 금지)
+function getChosung(char) {
+  const code = char.charCodeAt(0) - 0xAC00;
+  if (code < 0 || code > 11171) return null;
+  const list = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  return list[Math.floor(code / 588)];
+}
+
+// 쌍자음 → 단자음 변환
+function normalizeChosung(cho) {
+  const map = { 'ㄲ': 'ㄱ', 'ㄸ': 'ㄷ', 'ㅃ': 'ㅂ', 'ㅆ': 'ㅅ', 'ㅉ': 'ㅈ' };
+  return map[cho] || cho;
+}
+
+// 탭 버튼용
+const krChars = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const enChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// 분류 초기화
+const korean = {};
+const alphabet = {};
+krChars.forEach(c => korean[c] = []);
+enChars.forEach(c => alphabet[c] = []);
+
+// 브랜드 분류
+allBrands.forEach(name => {
+  for (let i = 0; i < name.length; i++) {
+    const char = name.charAt(i);
+    
+    if (/[가-힣]/.test(char)) {
+      const cho = normalizeChosung(getChosung(char));
+      if (cho && korean[cho]) korean[cho].push(name);
+      break;
+    }
+    
+    if (/[A-Za-z]/.test(char)) {
+      const upper = char.toUpperCase();
+      if (alphabet[upper]) alphabet[upper].push(name);
+      break;
+    }
+  }
+});
+
+// 정렬
+Object.keys(korean).forEach(k => korean[k].sort());
+Object.keys(alphabet).forEach(k => alphabet[k].sort());
+%>
+
 <div class="gnb-left-item">
   <button
     type="button"
@@ -9,25 +62,136 @@
     data-toggle-outside="true"
     aria-expanded="false"
   >
-    <span class="icon left"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'label' }) %> </span>
+    <span class="icon left"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'label' }) %></span>
     <span class="text">브랜드</span>
-    <span class="icon right"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+    <span class="icon right"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %></span>
   </button>
 
   <div class="gnb-panel gnb-panel-brand" data-toggle-box="gnb-brand">
-    <div class="gnb-panel-inner">
-      <div class="gnb-panel-head">
-        <strong class="gnb-panel-title">브랜드</strong>
+    <h2 class="sr-only">전체브랜드</h2>
+    <div class="vits-inner">
+
+      <%# 브랜드 검색 %>
+      <div class="gnb-panel-head" data-brand-search-scope>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-search.ejs`, {
+          idPrefix: 'bnSearch',
+          action: '/brand/search',
+          name: 'bnSearch',
+          placeholder: '브랜드명을 검색하세요',
+          formClass: 'vits-brand-search-form',
+          addDataForm: 'brand-search',
+          addDataInput: 'brand-search-input',
+          addBtnText: '검색하기',
+          hasClear: true
+        }) %>
+
+        <%# 검색어 칩 리스트 %>
+        <div class="vits-chip-button-group" data-brand-chips hidden>
+          <button type="button" class="chip-reset" data-brand-chips-reset>
+            <span>초기화</span>
+          </button>
+        </div>
       </div>
+
+      <%# ========== 브랜드 리스트 ========== %>
       <div class="gnb-panel-body">
-        <ul class="gnb-panel-list">
-          <li><a href="/brand/1">브랜드 1</a></li>
-          <li><a href="/brand/2">브랜드 2</a></li>
-          <li><a href="/brand/3">브랜드 3</a></li>
-          <li><a href="/brand/4">브랜드 4</a></li>
-          <li><a href="/brand/5">브랜드 5</a></li>
-        </ul>
+
+        <div class="vits-brand-tab" data-brand-tab>
+          <%# 탭 네비게이션 %>
+          <div class="tab-nav" role="tablist" aria-label="브랜드 정렬">
+            <button type="button" role="tab" class="tab-btn"
+                    id="brand-tab-all"
+                    data-tab-trigger="all"
+                    aria-selected="false"
+                    aria-controls="brand-panel-all"
+                    tabindex="-1">전체</button>
+
+            <%# 가나다순 (디폴트) %>
+            <div class="tab-group is-open" data-tab-group="korean">
+              <button type="button" role="tab" class="tab-btn is-active"
+                      id="brand-tab-korean"
+                      data-tab-trigger="korean"
+                      aria-selected="true"
+                      aria-controls="brand-panel-korean">가나다순</button>
+              <div class="tab-sub-nav" role="tablist" aria-label="가나다순 필터">
+                <% krChars.forEach((c, i) => { %>
+                <button type="button" role="tab"
+                        class="tab-sub-btn<%= i === 0 ? ' is-active' : '' %>"
+                        data-sub-trigger="<%= c %>"
+                        aria-selected="<%= i === 0 %>"
+                        <%= i !== 0 ? 'tabindex="-1"' : '' %>><%= c %></button>
+                <% }); %>
+              </div>
+            </div>
+
+            <%# 알파벳순 %>
+            <div class="tab-group" data-tab-group="alphabet">
+              <button type="button" role="tab" class="tab-btn"
+                      id="brand-tab-alphabet"
+                      data-tab-trigger="alphabet"
+                      aria-selected="false"
+                      aria-controls="brand-panel-alphabet"
+                      tabindex="-1">알파벳순</button>
+              <div class="tab-sub-nav" role="tablist" aria-label="알파벳순 필터">
+                <% enChars.forEach((c, i) => { %>
+                <button type="button" role="tab"
+                        class="tab-sub-btn<%= i === 0 ? ' is-active' : '' %>"
+                        data-sub-trigger="<%= c %>"
+                        aria-selected="<%= i === 0 %>"
+                        <%= i !== 0 ? 'tabindex="-1"' : '' %>><%= c %></button>
+                <% }); %>
+              </div>
+            </div>
+          </div>
+
+          <%# 탭 패널 %>
+          <div class="tab-panels">
+            <div class="tab-panels-inner">
+            <%# 전체 %>
+              <div class="tab-panel" id="brand-panel-all" role="tabpanel" aria-labelledby="brand-tab-all" data-tab-panel="all" hidden>
+                <p class="result-count"><strong><%= allBrands.length %></strong>개의 브랜드</p>
+                <div class="result-list">
+                  <% allBrands.forEach(name => { %>
+                  <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                  <% }); %>
+                </div>
+              </div>
+
+              <%# 가나다순 (디폴트) %>
+              <div class="tab-panel is-active" id="brand-panel-korean" role="tabpanel" aria-labelledby="brand-tab-korean" data-tab-panel="korean">
+                <% krChars.forEach((c, i) => { %>
+                <div class="tab-sub-panel<%= i === 0 ? ' is-active' : '' %>" data-sub-panel="<%= c %>"<%= i !== 0 ? ' hidden' : '' %>>
+                  <p class="result-count"><strong><%= korean[c].length %></strong>개의 브랜드</p>
+                  <div class="result-list">
+                    <% korean[c].forEach(name => { %>
+                    <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                    <% }); %>
+                  </div>
+                </div>
+                <% }); %>
+              </div>
+
+              <%# 알파벳순 %>
+              <div class="tab-panel" id="brand-panel-alphabet" role="tabpanel" aria-labelledby="brand-tab-alphabet" data-tab-panel="alphabet" hidden>
+                <% enChars.forEach((c, i) => { %>
+                <div class="tab-sub-panel<%= i === 0 ? ' is-active' : '' %>" data-sub-panel="<%= c %>"<%= i !== 0 ? ' hidden' : '' %>>
+                  <p class="result-count"><strong><%= alphabet[c].length %></strong>개의 브랜드</p>
+                  <div class="result-list">
+                    <% alphabet[c].forEach(name => { %>
+                    <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                    <% }); %>
+                  </div>
+                </div>
+                <% }); %>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </div>
+
     </div>
   </div>
 </div>

@@ -19,6 +19,7 @@ $header-search-input: fn.rem(380);
 $header-search-panel: fn.rem(460);
 $header-search-width: fn.rem(460);
 $header-gnb-more-height: fn.rem(28);
+$brand-scroll-common: map.get(var.$unit, 24);
 
 @mixin gnb-btn-active-style {
   .icon {
@@ -1031,6 +1032,42 @@ $header-gnb-more-height: fn.rem(28);
           }
         }
       }
+
+      &-panel-brand {
+        @include mx.flex(flex, column);
+        min-height: fn.rem(680);
+
+        @media screen and (height <= 1000px) {
+          min-height: 0;
+        }
+
+        .vits-inner {
+          @include mx.flex(flex, column);
+          max-width: fn.rem(1320);
+          height: 100%;
+          padding-right: $brand-scroll-common;
+          padding-left: $brand-scroll-common;
+          overflow: hidden;
+        }
+
+        .gnb-panel {
+          &-head {
+            @include mx.flex(flex, column);
+            flex-shrink: 0;
+            gap: map.get(var.$unit, 12);
+            padding: map.get(var.$unit, 36) 0;
+          }
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          &-body {
+            @include mx.flex(flex, column);
+            flex: 1;
+            width: calc(100% + $brand-scroll-common);
+            min-height: 0;
+            overflow: hidden;
+          }
+        }
+      }
     }
 
     &.is-more-visible {
@@ -1170,4 +1207,185 @@ $header-gnb-more-height: fn.rem(28);
       }
     }
   }
+}
+
+/* 브랜드 검색 */
+.vits-brand-search-form {
+  @include mx.input-search-reset;
+  @include mx.flex(flex, row, flex-start, stretch);
+  gap: map.get(var.$unit, 12);
+  min-height: fn.rem(60);
+  padding: map.get(var.$unit, 4) 0;
+
+  .input-search {
+    &,
+    &[type='search'] {
+      @include typo.typography('b2r');
+      flex-grow: 1;
+      min-width: 0;
+      padding: 0 map.get(var.$unit, 12);
+      background: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+      &::placeholder {
+        color: map.get(color.$text-colors, 'muted');
+      }
+    }
+
+    &-btn {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      flex: 0 0 fn.rem(300);
+      gap: map.get(var.$unit, 8);
+      padding: fn.rem(14) map.get(var.$unit, 12);
+      background: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
+      border-radius: map.get(var.$radius, 'md');
+
+      .ic {
+        width: map.get(var.$unit, 24);
+        height: map.get(var.$unit, 24);
+        color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default');
+      }
+
+      .text {
+        @include typo.typography('b2b', $color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default'));
+      }
+    }
+  }
+}
+
+// ===========================================
+// 검색 칩
+// ===========================================
+.vits-chip-button-group {
+  .chip-reset {
+    padding: 4px 12px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    background: none;
+    border: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ===========================================
+// 브랜드 탭
+// ===========================================
+.vits-brand-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  .tab-nav {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tab-btn {
+    padding: 8px 16px;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #ddd;
+
+    &.is-active {
+      color: #fff;
+      background: #333;
+      border-color: #333;
+    }
+  }
+
+  .tab-group {
+    display: flex;
+    align-items: center;
+
+    &.is-open .tab-sub-nav {
+      max-width: 800px;
+      margin-left: 8px;
+      opacity: 1;
+    }
+  }
+
+  .tab-sub-nav {
+    display: flex;
+    gap: 2px;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      max-width 0.3s ease,
+      opacity 0.2s ease,
+      margin 0.3s ease;
+  }
+
+  .tab-sub-btn {
+    min-width: 28px;
+    padding: 6px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #ddd;
+
+    &.is-active {
+      color: #fff;
+      background: #333;
+      border-color: #333;
+    }
+  }
+
+  .tab-panels {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+  }
+
+  .tab-panels-inner {
+    padding-top: 16px;
+    padding-right: $brand-scroll-common;
+    margin-right: $brand-scroll-common * -1;
+  }
+
+  .vits-brand-tab {
+  }
+
+  .tab-panel {
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .tab-sub-panel {
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+// ===========================================
+// 브랜드 결과
+// ===========================================
+.result-count {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+
+  strong {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.result-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }

@@ -1290,10 +1290,6 @@
 /* === 회원탈퇴 팝업 (PC_MY_05010203_P) === */
 // stylelint-disable-next-line selector-id-pattern
 .vits-withdraw-modal {
-  .vits-withdraw-content {
-    padding: 0 map.get(var.$unit, 24) map.get(var.$unit, 24);
-  }
-
   .vits-withdraw {
     &-agree {
       margin: 0 auto;
@@ -1402,6 +1398,39 @@
       .vits-withdraw-btn-submit {
         background-color: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
       }
+    }
+  }
+}
+
+/* === 이용약관 모달 (공통팝업) PC_CO_01010101_P === */
+.vits-signup-terms {
+  padding: map.get(var.$unit, 16) map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'raised');
+  border-radius: map.get(var.$radius, 'lg');
+
+  &-body {
+    max-height: fn.rem(225);
+    padding-right: map.get(var.$unit, 8);
+    overflow-y: auto;
+  }
+
+  &-article {
+    &[hidden] {
+      display: none;
+    }
+
+    &:not([hidden]) + .vits-signup-terms-article:not([hidden]) {
+      padding-top: map.get(var.$unit, 24);
+      margin-top: map.get(var.$unit, 24);
+      border-top: 1px solid map.get(color.$layout-border, 'quaternary');
+    }
+  }
+
+  &-section {
+    @include typo.typography('b4r', 'Noto Sans KR', 0, map.get(color.$text-colors, 'secondary'));
+
+    & + .vits-signup-terms-section {
+      margin-top: map.get(var.$unit, 24);
     }
   }
 }
