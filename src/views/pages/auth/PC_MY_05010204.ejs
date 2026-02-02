@@ -1,0 +1,106 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: 'ISVM 전환 신청', } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="isvm-transfer">
+                  <!-- 컨텐츠 헤딩 -->
+                  <div class="vits-signup-headline">
+                    <h2 class="vits-signup-title">ISVM 전환 신청</h2>
+                  </div>
+
+                  <form class="vits-signup-form-wrap" action="#" method="post" novalidate>
+                    <div class="vits-signup-inner">
+                      <!-- S: 브랜드 영역 -->
+                      <div class="isvm-brand">
+                        <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+                        <span class="isvm-brand-arrow" aria-hidden="true"></span>
+                        <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-isvm.svg" alt="ISVM" />
+
+                        <!-- 안내 문구 -->
+                        <div class="isvm-brand-sub">
+                          <p class="isvm-brand-sub-text">현재 사용 중인 계정을 약관 동의 후 ISVM으로 이관합니다.</p>
+                          <p class="isvm-brand-sub-text">
+                            ISVM으로 이관할 경우 비츠온엠알오 서비스 이용 및 접속 할 수 없습니다.
+                          </p>
+                        </div>
+                      </div>
+                      <!-- E: 브랜드 영역 -->
+
+                      <!-- S: 약관 동의 -->
+                      <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`) %>
+                      <!-- E: 약관 동의 -->
+                    </div>
+
+                    <!-- S: 하단 안내 -->
+                    <div class="vits-isvm-info">
+                      <p class="vits-isvm-info-sub">
+                        ISVM은 사업자대상 B2B 쇼핑몰로,<br />
+                        가입 승인 후 상품 단가 조회 및 구매가 가능합니다.
+                      </p>
+                      <p class="vits-isvm-info-sub typo-b4r">
+                        회원가입 신청 시 담당자 확인을 거쳐 승인 처리가 진행됩니다.
+                      </p>
+                      <ul class="vits-isvm-info-list">
+                        <li>승인 소요 시간: 평일 08:30~18:00 기준 1시간 이내</li>
+                        <li>주말 및 공휴일: 휴무로 인해 승인 처리가 어려우며, 평일 업무시간에 순차 처리됩니다.</li>
+                      </ul>
+                      <p class="vits-isvm-info-warning">
+                        <span class="point-dot">*</span>승인 전에는 서비스 이용이 제한되며, 추가 확인이 필요한 경우
+                        영업팀에서 연락드릴 수 있습니다.
+                      </p>
+                    </div>
+                    <!-- E: 하단 안내 -->
+
+                    <!-- 전환 신청 버튼 -->
+                    <div class="vits-signup-submit">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`,{
+                        type: 'submit',
+                        size: 'xxl',
+                        variant: 'primary',
+                        text: '전환 신청',
+                        className: 'vits-signup-submit-btn',
+                      }) %>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+  </body>
+</html>

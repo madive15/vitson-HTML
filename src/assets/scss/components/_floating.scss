@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
+@use 'sass:math';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
 @use '@/assets/scss/abstracts/functions' as fn;
@@ -12,142 +13,234 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
-.vits-floating {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-}
+$section-gap: map.get(var.$unit, 8);
+$common-size: fn.rem(60);
 
-.vits-floating-recent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 8px;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 30px;
-}
-
-.vits-floating-arrow {
-  display: none;
+@mixin floating-panel-border {
   width: 100%;
-  padding: 8px 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: $common-size;
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'secondary');
+}
 
-  &::before {
-    display: block;
-    width: 12px;
-    height: 12px;
-    margin: 0 auto;
-    content: '';
-    border-color: #333;
-    border-style: solid;
-    border-width: 2px 2px 0 0;
+.vits-floating {
+  &-section {
+    @include mx.position(fixed, $right: map.get(var.$unit, 20), $bottom: map.get(var.$unit, 20));
+    @include mx.flex(flex, column, flex-end, center);
+    z-index: var.$zindex-floating;
+    gap: $section-gap;
+    width: $common-size;
   }
 
-  &.is-prev::before {
-    transform: rotate(-45deg);
-  }
+  &-recent {
+    @include mx.flex(flex, column, flex-end, center);
+    @include floating-panel-border;
+    gap: map.get(var.$unit, 4);
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 8);
+    cursor: pointer;
 
-  &.is-next::before {
-    transform: rotate(135deg);
-  }
-
-  &.is-disabled {
-    cursor: default;
-
-    &::before {
-      border-color: #ccc;
+    &.is-empty {
+      cursor: default;
     }
   }
 
-  .is-scrollable & {
-    display: block;
+  &-list {
+    @include mx.flex(flex, column);
+    gap: fn.rem(6);
+    transition: transform 0.3s ease;
+
+    &-wrap {
+      width: 100%;
+      max-height: fn.rem(144);
+      overflow: hidden;
+    }
   }
-}
 
-.vits-floating-list-wrap {
-  width: 60px;
-  max-height: 204px;
-  overflow: hidden;
-}
-
-.vits-floating-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: transform 0.3s ease;
-}
-
-.vits-floating-item {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  border-radius: 50%;
-
-  a {
-    display: block;
+  &-item {
+    @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+    flex-shrink: 0;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 50%;
+
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  &-arrow {
+    @include icon.ic-size(map.get(var.$unit, 20));
+    display: none;
+    color: map.get(color.$icon-neutral, 'tertiary');
+    cursor: pointer;
+
+    &.is-disabled {
+      cursor: default;
+      opacity: 0.3;
+    }
+
+    .is-scrollable & {
+      display: block;
+    }
   }
-}
 
-.vits-floating-count {
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 1.3;
-  color: #666;
-  text-align: center;
-}
-
-.vits-floating-top {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #f5f5f5;
+  &-count {
+    &,
+    span {
+      @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '4'));
+      text-align: center;
+    }
   }
-}
 
-.vits-floating-top-icon {
-  &::before {
-    display: block;
-    width: 10px;
-    height: 10px;
-    content: '';
-    border-color: #333;
-    border-style: solid;
-    border-width: 2px 2px 0 0;
-    transform: rotate(-45deg);
+  &-top {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    @include floating-panel-border;
+    width: $common-size;
+    height: $common-size;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 7px rgb(0 0 0 / 4%));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &.is-visible {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    img {
+      width: fn.rem(35);
+      aspect-ratio: 35 / 24;
+    }
   }
-}
 
-.vits-floating-top-text {
-  font-size: 12px;
-  font-weight: 600;
-  color: #333;
+  &-panel {
+    $panel-bottom: $common-size + $section-gap;
+
+    @include mx.position(absolute, $right: 0, $bottom: $panel-bottom);
+    @include mx.flex(flex, column);
+    @include mx.border('all', $color: map.get(color.$layout-border, 'secondary'));
+    z-index: var.$zindex-floating-panel;
+    display: none;
+    gap: map.get(var.$unit, 12);
+    width: fn.rem(238);
+    max-height: fn.rem(514);
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 4);
+    background: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+
+    &-scroll {
+      flex-grow: 1;
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    &-head {
+      @include mx.flex(flex, row, flex-start, center);
+      @include mx.position(sticky, 0);
+      z-index: var.$zindex-base;
+      gap: map.get(var.$unit, 8);
+      padding: 0 map.get(var.$unit, 8) map.get(var.$unit, 16);
+      background: #fff;
+      background: linear-gradient(
+        180deg,
+        rgb(255 255 255 / 100%) 60%,
+        rgb(255 255 255 / 50%) 70%,
+        rgb(255 255 255 / 0%) 100%
+      );
+    }
+
+    &-title {
+      @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+      width: 100%;
+      height: fn.rem(26);
+      margin-right: auto;
+    }
+
+    &-list {
+      @include mx.flex(flex, column);
+      padding: 0 map.get(var.$unit, 8);
+    }
+
+    &-item {
+      &,
+      a {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+      }
+
+      .thumb {
+        @include mx.img-fit;
+        flex-shrink: 0;
+        width: fn.rem(60);
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-radius: map.get(var.$radius, 'sm');
+      }
+
+      .info {
+        @include mx.flex(flex, column);
+        gap: fn.rem(6);
+      }
+
+      .name {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+        @include mx.ellipsis-multi(1.3, 2);
+      }
+
+      .price {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'seconary'));
+      }
+
+      &:not(:last-of-type) {
+        @include mx.border('bottom', $color: map.get(color.$layout-surf, 'sunken'));
+        padding-bottom: map.get(var.$unit, 8);
+        margin-bottom: map.get(var.$unit, 8);
+      }
+    }
+
+    &.is-open {
+      display: flex;
+    }
+  }
+
+  &-delete-all,
+  &-delete,
+  &-close {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    flex-shrink: 0;
+    background: transparent;
+    border: 0;
+  }
+
+  &-delete-all {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
+    height: map.get(var.$unit, 16);
+    font-size: fn.rem(12);
+    color: map.get(color.$text-colors, 'tertiary');
+  }
+
+  &-delete {
+    @include icon.ic-size(map.get(var.$unit, 20));
+    flex-shrink: 0;
+    color: map.get(color.$icon-neutral, 'tertiary');
+  }
+
+  &-close {
+    @include icon.ic-size(map.get(var.$unit, 20));
+    color: map.get(color.$icon-neutral, 'primary');
+  }
 }

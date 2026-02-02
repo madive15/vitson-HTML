@@ -1,0 +1,41 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<section class="vits-info-check" data-check-scope>
+  <h2 class="sr-only">회원 정보 확인</h2>
+
+  <form class="vits-info-check-form" action="#" method="post" novalidate>
+    <div class="vits-info-check-fields">
+      <div class="vits-form-row">
+        <label class="vits-form-label" for="my-info-check-id">아이디</label>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'my-info-check-id',
+            name: 'myInfoCheckId',
+            label: '아이디',
+            placeholder: '아이디',
+            value: 'mztest',
+            disabled: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+      <div class="vits-form-row">
+        <label class="vits-form-label" for="my-info-check-pw">
+          비밀번호 <span class="label-required" aria-hidden="true">*</span>
+        </label>
+        <div class="vits-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'my-info-check-pw',
+            name: 'myInfoCheckPw',
+            type: 'password',
+            label: '비밀번호',
+            placeholder: '비밀번호',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

@@ -422,7 +422,7 @@
     });
 
     $root.find(VALUE).text($opt.text());
-    setHiddenVal($root, $opt.attr('data-value') || $opt.text());
+    setHiddenVal($root, $opt.attr('data-value') || ''); // [2026-01-30 수정] data-value 없으면 빈 값
   }
 
   // hidden 값 기준 선택 복원

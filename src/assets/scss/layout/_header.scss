@@ -11,11 +11,13 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/pages/mypage' as mypage;
 
 $header-rank-height: fn.rem(24);
 $header-rank-bar-height: fn.rem(18);
-$header-search-width: fn.rem(380);
-$header-search-panel-right: fn.rem(200);
+$header-search-input: fn.rem(380);
+$header-search-panel: fn.rem(460);
+$header-search-width: fn.rem(460);
 $header-gnb-more-height: fn.rem(28);
 
 @mixin gnb-btn-active-style {
@@ -90,6 +92,154 @@ $header-gnb-more-height: fn.rem(28);
 
     .vits-inner {
       @include mx.flex(flex, row, space-between, center);
+      height: 100%;
+      padding-top: map.get(var.$unit, 16);
+      padding-bottom: map.get(var.$unit, 16);
+
+      @media screen and (width >= 1280px) and (width <= 1320px) {
+        padding-right: map.get(var.$unit, 24);
+      }
+    }
+
+    .header-rank {
+      &-bar {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+        height: $header-rank-bar-height;
+      }
+
+      &-link {
+        @include mx.flex(inline-flex, row, flex-start, center);
+        min-width: 0;
+        margin-right: auto;
+      }
+
+      &-track {
+        display: block;
+        transition: transform 0.6s ease;
+        transform: translateY(0);
+        will-change: transform;
+      }
+
+      &-view {
+        display: block;
+        width: 100%;
+        height: $header-rank-height;
+        overflow: hidden;
+
+        &.is-rolling .header-rank-track {
+          transform: translateY(-#{$header-rank-height});
+        }
+      }
+
+      &-row {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+        height: $header-rank-height;
+        line-height: $header-rank-height;
+      }
+
+      &-num {
+        @include typo.typography('b3sb', $color: map.get(color.$brand-colors, 'primary'));
+      }
+
+      &-word {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+        @include mx.ellipsis-single;
+      }
+
+      &-btn {
+        @include button.btn-reset;
+        @include icon.ic-size(fn.rem(16));
+        box-sizing: content-box;
+        flex-shrink: 0;
+        padding: map.get(var.$unit, 4);
+        margin: -#{map.get(var.$unit, 4)};
+        color: map.get(color.$icon-neutral, 'primary');
+        transition: transform 0.4s;
+      }
+
+      &-list {
+        list-style: none;
+      }
+
+      &-item-link {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 4);
+        height: fn.rem(34);
+        padding: map.get(var.$unit, 8) map.get(var.$unit, 4);
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'md');
+        transition: background 0.5s;
+
+        [class*='header-rank-'] {
+          &[class*='-num'] {
+            flex-shrink: 0;
+            width: map.get(var.$unit, 16);
+            text-align: right;
+          }
+
+          &[class*='move'] {
+            box-sizing: content-box;
+            flex-shrink: 0;
+            padding: 0 fn.rem(6) 0 fn.rem(1);
+            margin-left: auto;
+
+            &[class*='rank-move-'] {
+              display: block;
+              width: fn.rem(7);
+              height: fn.rem(6);
+            }
+
+            &.rank-move-up {
+              @include mx.background('ic/rank-up.svg', transparent);
+            }
+
+            &.rank-move-down {
+              @include mx.background('ic/rank-down.svg', transparent);
+            }
+
+            &.rank-move-same {
+              @include mx.background('ic/rank-same.svg', transparent);
+            }
+          }
+        }
+
+        @include mx.common-mouse-event {
+          background: map.get(color.$layout-surf, 'mypage');
+        }
+      }
+
+      &-panel {
+        @include mx.position(absolute, (map.get(var.$unit, 4) * -1), -30px);
+        @include mx.flex(flex, column);
+        @include mx.border('all', $color: map.get(color.$layout-border, 'secondary'));
+        z-index: var.$zindex-header-rank;
+        gap: map.get(var.$unit, 8);
+        width: fn.rem(280);
+        padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+        clip-path: none !important;
+        background: map.get(color.$layout-surf, 'base');
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: map.get(var.$box-shadow, 'elevation_2');
+
+        &-head {
+          @include mx.flex(flex, row, space-between, center);
+        }
+
+        &-title {
+          @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
+        }
+
+        &-close {
+          @include button.btn-reset;
+          @include icon.ic-size(map.get(var.$unit, 24));
+        }
+
+        &:not(.is-open) {
+          max-height: 0;
+        }
+      }
     }
 
     .header-main {
@@ -102,127 +252,9 @@ $header-gnb-more-height: fn.rem(28);
         @include mx.flex(flex, row, center, center);
         gap: map.get(var.$unit, 20);
 
-        /* 실시간 검색어 */
         &-rank {
           position: relative;
           width: fn.rem(140);
-
-          .header-rank {
-            &-bar {
-              @include mx.flex(flex, row, flex-start, center);
-              gap: map.get(var.$unit, 8);
-              height: $header-rank-bar-height;
-            }
-
-            &-link {
-              @include mx.flex(inline-flex, row, flex-start, center);
-              min-width: 0;
-              margin-right: auto;
-            }
-
-            /* 2줄을 쌓아두는 트랙(여기만 움직임) */
-            &-track {
-              display: block;
-              transition: transform 0.6s ease; /* JS data-rank-duration과 맞추기 */
-              transform: translateY(0);
-              will-change: transform;
-            }
-
-            /* 롤링 뷰(마스킹) */
-            &-view {
-              display: block;
-              width: 100%;
-              height: $header-rank-height;
-              overflow: hidden;
-
-              /* 롤링 상태: 트랙을 한 줄만큼 올림 */
-              &.is-rolling .header-rank-track {
-                transform: translateY(-#{$header-rank-height});
-              }
-            }
-
-            /* 한 줄(현재/다음) */
-            &-row {
-              @include mx.flex(flex, row, flex-start, center);
-              gap: map.get(var.$unit, 8);
-              height: $header-rank-height;
-              line-height: $header-rank-height;
-            }
-
-            &-num {
-              @include typo.typography('b3sb', $color: map.get(color.$brand-colors, 'primary'));
-            }
-
-            &-word {
-              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
-              @include mx.ellipsis-single;
-            }
-
-            &-move {
-              &::before {
-                @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
-                display: block;
-              }
-
-              &.rank-move-up::before {
-                color: map.get(color.$brand-colors, 'primary');
-                content: '\2191';
-              }
-
-              &.rank-move-down::before {
-                color: map.get(color.$blue-shades, '100');
-                content: '\2193';
-              }
-
-              &.rank-move-same::before {
-                content: '-';
-              }
-            }
-
-            /* 토글 버튼 */
-            &-btn {
-              @include button.btn-reset;
-              @include icon.ic-size(fn.rem(16));
-              box-sizing: content-box;
-              flex-shrink: 0;
-              padding: map.get(var.$unit, 4);
-              margin: -#{map.get(var.$unit, 4)};
-              color: map.get(color.$brand-colors, 'primary');
-              transition: transform 0.4s;
-            }
-
-            /* 패널(toggle.js: is-open 사용) */
-            &-panel {
-              position: absolute;
-              top: $header-rank-bar-height;
-              left: 0;
-              z-index: var.$zindex-header-rank;
-              min-width: 260px;
-              padding: 12px;
-              background: #fff;
-              border: 1px solid #dadada;
-              border-radius: map.get(var.$radius, 'md');
-
-              &-head {
-                display: flex;
-                gap: 12px;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 8px;
-              }
-
-              &-close {
-                padding: 0;
-                cursor: pointer;
-                background: transparent;
-                border: 0;
-              }
-
-              &:not(.is-open) {
-                max-height: 0;
-              }
-            }
-          }
 
           &:has(.header-rank-panel.is-open) {
             .header-rank-btn {
@@ -231,69 +263,364 @@ $header-gnb-more-height: fn.rem(28);
           }
         }
 
-        /* 통합 검색어창 */
         &-form {
           position: relative;
-
-          .header-search {
-            &-input {
-              @include mx.flex(flex, row, space-between, center);
-              @include mx.border('all', $width: 2px, $color: map.get(color.$layout-border, 'primary'));
-              @include mx.input-search-reset;
-              gap: map.get(var.$unit, 8);
-              width: $header-search-width;
-              height: fn.rem(40);
-              padding: 0 map.get(var.$unit, 20);
-              background: color.$color-white;
-              border-radius: map.get(var.$radius, 'sm');
-            }
-
-            &-field {
-              @include typo.typography('b3r');
-              flex-grow: 1;
-            }
-
-            &-submit {
-              @include button.btn-reset;
-              @include icon.ic-size(map.get(var.$unit, 24));
-              margin-right: -#{map.get(var.$unit, 2)};
-            }
-
-            &-panel {
-              @include mx.position(absolute, 100%, $left: 0);
-              @include mx.border('all');
-              z-index: var.$zindex-header-search;
-              width: $header-search-width;
-              background: color.$color-white;
-
-              .search-panel {
-                &-left {
-                  position: relative;
-                  z-index: var.$zindex-base;
-                  width: $header-search-width;
-                }
-
-                &-right {
-                  @include mx.position(absolute, 0, 0);
-                  width: $header-search-panel-right;
-                  padding: 12px;
-                  border-left: 1px solid #eee;
-                }
-              }
-
-              &.is-open {
-                &:has(.search-panel-right.is-active) {
-                  width: $header-search-width + $header-search-panel-right;
-                }
-              }
-            }
-          }
         }
       }
 
       &-util {
         @include mx.flex;
-        gap: map.get(var.$unit, 12);
+        gap: map.get(var.$unit, 24);
+
+        .vits-btn-vertical-icon .badge {
+          right: unset;
+          left: map.get(var.$unit, 20);
+          width: auto;
+          min-width: fn.rem(15);
+          padding: 0 map.get(var.$unit, 4);
+        }
+      }
+    }
+
+    .header-search {
+      position: relative;
+
+      &-input {
+        @include mx.flex(flex, row, space-between, center);
+        @include mx.border('all', $width: 2px, $color: map.get(color.$layout-border, 'primary'));
+        gap: map.get(var.$unit, 8);
+        width: $header-search-input;
+        height: fn.rem(40);
+        padding: 0 fn.rem(17) 0 map.get(var.$unit, 20);
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'sm');
+      }
+
+      &-field {
+        @include typo.typography('b3r');
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        appearance: none;
+        background: transparent;
+        border: 0;
+        outline: none;
+
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-decoration,
+        &::-webkit-search-results-button,
+        &::-webkit-search-results-decoration {
+          display: none;
+          appearance: none;
+        }
+
+        &::-ms-clear,
+        &::-ms-reveal {
+          display: none;
+          width: 0;
+          height: 0;
+        }
+      }
+
+      &-clear {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, center, center);
+        @include icon.ic-size(fn.rem(18));
+        display: none;
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'inverse');
+        background: #797979;
+        border-radius: fn.rem(18);
+        transition: color 0.2s;
+
+        &.is-visible {
+          display: flex;
+        }
+      }
+
+      &-submit {
+        @include button.btn-reset;
+        @include icon.ic-size(map.get(var.$unit, 24));
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      &-panel {
+        @include mx.position(absolute, 100%, $left: 0);
+        @include mx.border('all', $color: map.get(color.$layout-border, 'secondary'));
+        z-index: var.$zindex-header-search;
+        display: none;
+        width: $header-search-panel;
+        padding: map.get(var.$unit, 32);
+        margin-top: map.get(var.$unit, 4);
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        &.is-open {
+          display: block;
+        }
+      }
+    }
+
+    .search-panel {
+      &-wrap {
+        @include mx.flex;
+        position: relative;
+        height: 100%;
+      }
+
+      &-left {
+        flex: 0 0 100%;
+        width: 100%;
+        height: 100%;
+      }
+
+      // 우측 상품 패널
+      &-right {
+        @include mx.flex(flex, column);
+        position: absolute;
+        top: 0;
+        left: calc(#{$header-search-width} - 55px);
+        z-index: var.$zindex-base;
+        display: none;
+        gap: map.get(var.$unit, 16);
+        width: fn.rem(456);
+        height: fn.rem(550);
+        padding: map.get(var.$unit, 32);
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'secondary');
+
+        &.is-active {
+          display: flex;
+        }
+      }
+    }
+
+    .search-recent {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 16);
+
+      &-head {
+        @include mx.flex(flex, row, space-between, flex-start);
+      }
+
+      &-title {
+        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-clear {
+        @include button.btn-reset;
+        @include typo.typography('d2r', $color: map.get(color.$text-colors, 'tertiary'));
+
+        &:hover,
+        &:focus {
+          color: map.get(color.$text-colors, 'primary');
+          text-decoration: underline;
+        }
+
+        &.is-hidden {
+          display: none;
+        }
+      }
+
+      // 최근 검색어 목록 (태그 형태, 최대 2줄)
+      &-list {
+        @include mx.flex(flex, row, flex-start, flex-start, wrap);
+        gap: map.get(var.$unit, 8);
+
+        > li {
+          flex: 0 0 auto;
+          max-width: 100%;
+        }
+      }
+
+      &-item {
+        @include mx.flex(inline-flex, row, flex-start, center);
+        flex-shrink: 0;
+        gap: map.get(var.$unit, 2);
+        max-width: 100%;
+        min-height: map.get(var.$unit, 32);
+        padding: map.get(var.$unit, 4) map.get(var.$unit, 8) map.get(var.$unit, 4) map.get(var.$unit, 12);
+        background: color.$color-white;
+        border-radius: map.get(var.$unit, 32);
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+      }
+
+      &-link {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+        display: block;
+        min-width: 0;
+        max-height: 2.6em; // line-height 1.3 × 2줄
+        overflow: hidden;
+      }
+
+      &-del {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, center, center);
+        @include icon.ic-size(map.get(var.$unit, 24));
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+    }
+
+    .search-related {
+      @include mx.flex(flex, column);
+      @include mx.border('top', $color: map.get(color.$layout-surf, 'sunken'));
+      gap: map.get(var.$unit, 16);
+      padding-top: map.get(var.$unit, 16);
+      margin-top: map.get(var.$unit, 16);
+
+      &-title {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-item {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 4);
+        padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
+        border-radius: map.get(var.$radius, 'md');
+        transition: background-color 0.2s;
+
+        span em {
+          font-style: normal;
+          color: map.get(color.$text-status, 'info-sub');
+        }
+
+        // 카테고리만 보여질 때
+        &:not(:has(.search-related-text)) {
+          .search-related-category {
+            @include typo.typography('b3r');
+
+            em {
+              font-weight: 600;
+            }
+
+            .search-category {
+              &:not(:only-of-type, :last-of-type) {
+                &::after {
+                  color: map.get(color.$text-colors, 'default');
+                }
+              }
+            }
+          }
+        }
+
+        @include mx.common-mouse-event {
+          background: map.get(color.$layout-surf, 'mypage');
+        }
+      }
+
+      &-list > li {
+        &.is-active {
+          .search-related-item {
+            background: map.get(color.$layout-surf, 'mypage');
+          }
+        }
+      }
+
+      &-text {
+        @include typo.typography('b3b');
+      }
+
+      &-category {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        gap: map.get(var.$unit, 4);
+
+        .search-category {
+          @include mx.flex(flex, row, flex-start, center, wrap);
+          gap: map.get(var.$unit, 4);
+
+          &:not(:only-of-type, :last-of-type) {
+            /* stylelint-disable-next-line no-descending-specificity */
+            &::after {
+              display: block;
+              width: map.get(var.$unit, 12);
+              height: map.get(var.$unit, 12);
+              color: map.get(color.$icon-neutral, 'tertiary');
+              content: '';
+              background-color: currentcolor;
+              mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') no-repeat center / contain;
+            }
+          }
+        }
+      }
+    }
+
+    .search-products {
+      &-title {
+        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
+        flex-shrink: 0;
+      }
+
+      &-panel {
+        display: none;
+        flex-grow: 1;
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+
+        &.is-active {
+          display: block;
+        }
+      }
+
+      &-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: map.get(var.$unit, 20) map.get(var.$unit, 16);
+      }
+    }
+
+    .search-product {
+      &-card {
+        /* stylelint-disable-next-line no-descending-specificity */
+        a {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 8);
+        }
+
+        .product {
+          &-body {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 8);
+          }
+
+          &-thumb {
+            @include mx.common-list-thumb;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: map.get(var.$radius, 'lg');
+          }
+
+          &-summary {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 2);
+          }
+
+          &-brand {
+            @include typo.typography('b5r');
+            padding-left: fn.rem(1.5);
+          }
+
+          &-name {
+            @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+            @include mx.ellipsis-multi(1.3, 2);
+          }
+
+          &-spec {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          }
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          &-extra {
+            @include mx.flex(flex, row, flex-start, flex-start, wrap);
+            gap: fn.rem(3.2);
+          }
+        }
       }
     }
   }
@@ -315,13 +642,10 @@ $header-gnb-more-height: fn.rem(28);
         padding: 0 map.get(var.$unit, 24);
       }
 
-      /* 오버플로우 판정 대상(홈+프로모션) */
       &-nav {
         @include mx.flex(flex, row, flex-start, flex-start);
         flex-grow: 1;
         min-width: 0;
-
-        // max-width: max-content;
         max-height: var.$header-gnb-height;
         overflow: hidden;
 
@@ -331,7 +655,6 @@ $header-gnb-more-height: fn.rem(28);
           width: 100%;
           min-width: 0;
 
-          // 더보기 버튼 노출 시, 마진값 변경
           &:has(.gnb-more-box.is-active) {
             .gnb-item-promo {
               margin-left: map.get(var.$unit, 32);
@@ -339,7 +662,6 @@ $header-gnb-more-height: fn.rem(28);
           }
         }
 
-        /* 펼침: 목록은 필요 시 다음 줄로 내려가도 됨(wrap), 각 링크 텍스트는 1줄(말줄임) */
         &.is-expanded {
           max-height: var.$header-gnb-full-height;
           overflow: hidden auto;
@@ -382,13 +704,11 @@ $header-gnb-more-height: fn.rem(28);
         &.gnb-item-promo {
           margin-left: map.get(var.$unit, 12);
 
-          /* stylelint-disable-next-line no-descending-specificity */
           .gnb-link {
             padding-right: 0;
           }
         }
 
-        // 기획전 페이지 나열
         &.gnb-item-promo-list {
           @include mx.flex(flex, row, flex-start, stretch);
           position: relative;
@@ -408,7 +728,6 @@ $header-gnb-more-height: fn.rem(28);
             }
           }
 
-          // 더보기 버튼 옆 세로선, 더보기 있을 때만 표시
           &:has(.gnb-more-box.is-active) {
             &::after {
               @include mx.position(absolute, calc((var.$header-gnb-height - $header-gnb-more-height) / 2), 0);
@@ -423,7 +742,6 @@ $header-gnb-more-height: fn.rem(28);
         }
       }
 
-      /* 가획전, 이벤트 목록 */
       &-fixed-list {
         @include mx.flex;
         flex-shrink: 0;
@@ -436,7 +754,6 @@ $header-gnb-more-height: fn.rem(28);
         gap: map.get(var.$unit, 32);
       }
 
-      /* 전체카테고리, 브랜드 버튼 */
       &-btn {
         @include button.btn-reset;
         @include mx.flex(flex, row, center, center);
@@ -471,7 +788,6 @@ $header-gnb-more-height: fn.rem(28);
         }
       }
 
-      /* 더보기(+) */
       &-more {
         @include button.btn-reset;
         position: relative;
@@ -487,7 +803,6 @@ $header-gnb-more-height: fn.rem(28);
           will-change: transform;
         }
 
-        // 공통 “강조 상태” 스타일(aria-expanded/hover 공용)
         @mixin more-active-style {
           .icon {
             color: map.get(color.$brand-colors, 'primary');
@@ -509,9 +824,8 @@ $header-gnb-more-height: fn.rem(28);
           display: none;
           background: color.$color-white;
 
-          // 그라데이션
           &::before {
-            @include mx.position(absolute, 0, fn.rem(37)); // 버튼 + mr
+            @include mx.position(absolute, 0, fn.rem(37));
             z-index: var.$zindex-base;
             width: fn.rem(116);
             height: 100%;
@@ -556,7 +870,6 @@ $header-gnb-more-height: fn.rem(28);
           max-height: var.$header-panel-height-max;
         }
 
-        /* 기획전 리스트 */
         &.gnb-panel-more {
           position: static;
           border-bottom: 0;
@@ -605,7 +918,6 @@ $header-gnb-more-height: fn.rem(28);
         }
       }
 
-      // 전체 카테고리 패널
       &-panel-category {
         &.is-open {
           max-height: 100vh;
@@ -657,7 +969,6 @@ $header-gnb-more-height: fn.rem(28);
             }
           }
 
-          // 전체카테고리 > 추천 상품
           .gnb-category-col-4 {
             flex: 1 1 auto;
             min-width: 0;
@@ -690,18 +1001,15 @@ $header-gnb-more-height: fn.rem(28);
             }
           }
 
-          // 현재 포커스(마우스 기준) 표시
           &-item.is-current > .gnb-category-link {
             @include gnb-category-link;
           }
 
-          // view - none
           .gnb-category-col-2,
           .gnb-category-col-2 .gnb-category-box,
           .gnb-category-col-3,
           .gnb-category-col-3 .gnb-category-box,
           .gnb-category-col-3 .gnb-category-box:not(:has(.gnb-category-list-3 li)) {
-            // 3뎁스 박스는 하위(li)가 없으면 아예 숨김(영역 차지 방지)
             display: none;
           }
 
@@ -712,7 +1020,6 @@ $header-gnb-more-height: fn.rem(28);
             display: block;
           }
 
-          // 하위 메뉴 있으면 화살표 아이콘 노출
           &.is-col2-open .gnb-category-col-1 .gnb-category-item.is-active .gnb-category-link,
           &.is-col3-open .gnb-category-col-2 .gnb-category-item.is-active .gnb-category-link {
             padding-right: map.get(var.$unit, 24);
@@ -747,14 +1054,12 @@ $header-gnb-more-height: fn.rem(28);
 
 /* HEADER GNB 추천 상품 아이템 */
 .gnb-reco-item {
-  // 회원 시, 비노출
   &[data-member='true'] {
     .product-price-alt.is-guest {
       display: none !important;
     }
   }
 
-  // 비회원 시, 비노출
   &[data-member='false'] {
     .product-extra,
     .vits-price-box.is-normal,
@@ -764,21 +1069,18 @@ $header-gnb-more-height: fn.rem(28);
     }
   }
 
-  // 판매중, 비노출
   &[data-stock='true'] {
     .product-price-alt.is-soldout {
       display: none !important;
     }
   }
 
-  // 일시품절, 비노출
   &[data-stock='false'] {
     .vits-price-box.is-normal {
       display: none !important;
     }
   }
 
-  // 상품 아이템
   &-card {
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 8);
@@ -788,6 +1090,7 @@ $header-gnb-more-height: fn.rem(28);
         @include mx.common-list-thumb;
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &-body {
         @include mx.flex(flex, column);
         gap: map.get(var.$unit, 8);
@@ -803,7 +1106,6 @@ $header-gnb-more-height: fn.rem(28);
         .price-origin-label {
           @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
           text-decoration: line-through;
-          text-decoration-line: line-through;
         }
 
         .price-sale-row {
@@ -853,6 +1155,7 @@ $header-gnb-more-height: fn.rem(28);
               padding: 0 map.get(var.$unit, 8);
               border-radius: map.get(var.$radius, 'sm');
 
+              /* stylelint-disable-next-line no-descending-specificity */
               .icon {
                 @include icon.ic-size(map.get(var.$unit, 16));
                 color: map.get(color.$icon-neutral, 'primary');
@@ -867,147 +1170,4 @@ $header-gnb-more-height: fn.rem(28);
       }
     }
   }
-}
-
-// 디자인 나오면 수정하기
-// == 실시간 검색어 ==
-/* 리스트 */
-.header-rank-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.header-rank-item + .header-rank-item {
-  margin-top: 6px;
-}
-
-.header-rank-item-link {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  color: inherit;
-  text-decoration: none;
-}
-
-// == 통합 검색어 ==
-/* 패널 내부 3칸: 좌(고정) + 가운데(여백) + 우(고정) */
-.search-panel-wrap {
-  display: flex;
-  align-items: stretch;
-}
-
-/* 우측 상품목록: 기본 숨김, 활성화 시만 표시(맨 오른쪽 끝에 붙음) */
-/* 최근 검색어 */
-.search-recent {
-  padding: 12px;
-
-  .search-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .search-keyword-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-
-    li {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      padding: 4px 8px;
-      border: 1px solid #eee;
-      border-radius: map.get(var.$radius, 'lg');
-    }
-  }
-}
-
-/* 연관 검색어 */
-.search-related {
-  padding: 12px;
-  border-top: 1px solid #eee;
-
-  .search-title {
-    display: block;
-    margin-bottom: 8px;
-  }
-}
-
-.search-related-item {
-  padding: 10px 8px;
-  cursor: pointer;
-
-  &:hover {
-    background: #f6f6f6;
-  }
-}
-
-.search-related-label {
-  display: block;
-  font-size: 12px;
-  line-height: 1.3;
-  color: #888;
-  word-break: break-word;
-}
-
-.search-related-label em {
-  font-style: normal;
-  color: #ff6a00;
-}
-
-.search-related-text {
-  display: block;
-  margin-top: 4px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #222;
-
-  &:empty {
-    display: none;
-  }
-
-  em {
-    font-style: normal;
-    color: #ff6a00;
-  }
-}
-
-/* 우측 상품목록 패널(내용 전환) */
-.related-products-panel {
-  display: none;
-}
-
-.related-products-panel.is-active {
-  display: block;
-}
-
-/* 더미 상품 카드 */
-.related-products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.product-card a {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.product-card .thumb {
-  display: block;
-  width: 100%;
-  padding-top: 100%;
-  background: #f2f2f2;
-  border-radius: map.get(var.$radius, 'md');
-}
-
-.product-card .name {
-  display: block;
-  margin-top: 6px;
-  font-size: 13px;
-  line-height: 1.3;
 }

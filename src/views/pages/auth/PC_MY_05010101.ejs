@@ -1,0 +1,50 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '회원 정보 확인'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('authMyInfoCheckModal')"
+                >
+                  <span class="text">회원 정보 확인 팝업</span>
+                </button>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = {
+                id: 'authMyInfoCheckModal',
+                size: '560',
+                title: '회원 정보 확인',
+                subtitle: '정보를 안전하게 보호하기 위해 비밀번호를 한번 더 입력해주세요.',
+                opt: { draggable: true },
+                contentPath: `${_src}/views/pages/kendo-window/auth/kw-PC_MY_05010101.ejs`,
+                buttons: [
+                  { text: '취소', type: 'button', variant: 'secondary', size: 'full', action: 'close' },
+                  { text: '확인', type: 'submit', variant: 'primary', size: 'full', action: 'close' }
+                ],
+              };
+              %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

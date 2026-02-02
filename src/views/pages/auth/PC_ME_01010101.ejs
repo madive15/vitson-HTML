@@ -5,7 +5,7 @@
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
   -->
 <html lang="ko" class="vits-scope">
-  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: '회원가입', } ) %>
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: '회원가입>동의하기', } ) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -37,135 +37,11 @@
                       <div class="vits-signup-alert">비츠온엠알오 회원가입을 위해 약관에 동의해주세요</div>
 
                       <!-- S: 약관 동의 -->
-                      <div class="vits-signup-terms-card" data-checkbox-scope>
-                        <!-- 전체 동의 -->
-                        <div class="vits-signup-terms-all">
-                          <!-- prettier-ignore -->
-                          <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                            name: 'agreeAll',
-                            value: 'agreeAll',
-                            size: 'l',
-                            text: '전체 동의',
-                            checkboxType: 'all',
-                            checked: true,
-                          }) %>
-                          <p class="vits-signup-terms-all-desc">서비스 이용을 위한 필수 및 선택 동의 포함</p>
-                        </div>
-
-                        <ul class="vits-signup-terms-list">
-                          <li class="vits-signup-terms-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                              name: 'agreeTerms',
-                              value: 'terms',
-                              size: 'm',
-                              text: '이용약관',
-                              suffix: '(필수)',
-                              checkboxType: 'item',
-                              checked: true,
-                            }) %>
-                            <!-- prettier-ignore -->
-                            <a href="#!" class="vits-signup-terms-link" aria-label="이용약관 상세보기"> 
-                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
-                            </a>
-                          </li>
-                          <li class="vits-signup-terms-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                              name: 'agreePrivacy',
-                              value: 'privacy',
-                              size: 'm',
-                              text: '개인정보 수집 및 이용 동의',
-                              suffix: '(필수)',
-                              checkboxType: 'item',
-                              checked: true,
-                            }) %>
-                            <!-- prettier-ignore -->
-                            <a href="#!" class="vits-signup-terms-link" aria-label="개인정보 수집 및 이용 동의 상세보기"> 
-                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
-                            </a>
-                          </li>
-                          <li class="vits-signup-terms-item">
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                              name: 'agreeBiz',
-                              value: 'biz',
-                              size: 'm',
-                              text: '기업회원 및 공급처 이용 동의',
-                              suffix: '(필수)',
-                              checkboxType: 'item',
-                              checked: true,
-                            }) %>
-                            <!-- prettier-ignore -->
-                            <a href="#!" class="vits-signup-terms-link" aria-label="기업회원 및 공급처 이용 동의 상세보기"> 
-                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
-                            </a>
-                          </li>
-                          <li class="vits-signup-terms-item">
-                            <div class="vits-signup-terms-details" data-checkbox-scope data-toggle-scope>
-                              <div class="vits-signup-terms-summary">
-                                <!-- prettier-ignore -->
-                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                                  name: 'agreeMarketing',
-                                  value: 'marketing',
-                                  size: 'm',
-                                  text: '마케팅 및 광고 알림 설정',
-                                  suffix:'(선택)',
-                                  checkboxType: 'item',
-                                  checked: true,
-                                }) %>
-                                <button
-                                  type="button"
-                                  class="terms-toggle-btn icon"
-                                  data-toggle-btn
-                                  data-toggle-target="marketing-sub"
-                                  aria-expanded="false"
-                                  aria-label="마케팅 및 광고 알림 설정 열기"
-                                >
-                                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
-                                </button>
-                                <!-- prettier-ignore -->
-                                <a href="#!" class="vits-signup-terms-link" aria-label="마케팅 및 광고 알림 설정 상세보기">
-                                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right'})%>
-                                </a>
-                              </div>
-                              <div class="vits-signup-terms-sub" data-toggle-box="marketing-sub">
-                                <!-- prettier-ignore -->
-                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                                  name: 'agreeMarketingSms',
-                                  value: 'sms',
-                                  size: 'm',
-                                  text: '문자 수신 동의',
-                                  checkboxType: 'item',
-                                  checked: true,
-                                }) %>
-                                <!-- prettier-ignore -->
-                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                                  name: 'agreeMarketingEmail',
-                                  value: 'email',
-                                  size: 'm',
-                                  text: '이메일 수신 동의',
-                                  checkboxType: 'item',
-                                  checked: true,
-                                }) %>
-                                <!-- prettier-ignore -->
-                                <%- include(`${_src}/views/components/form/checkbox-item.ejs`,{
-                                  name: 'agreeMarketingPush',
-                                  value: 'push',
-                                  size: 'm',
-                                  text: '앱 푸시 동의',
-                                  checkboxType: 'item',
-                                  checked: true,
-                                }) %>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
+                      <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`) %>
                       <!-- E: 약관 동의 -->
 
                       <!-- S: 정보 입력 -->
-                      <div class="vits-signup-form vits-form-box">
+                      <div class="vits-signup-form">
                         <div class="vits-form-row">
                           <label class="vits-form-label" for="signup-bizno">
                             사업자등록번호 <span class="label-required" aria-hidden="true">*</span>

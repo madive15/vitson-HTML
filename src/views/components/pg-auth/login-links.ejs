@@ -1,0 +1,22 @@
+<!-- prettier-ignore -->
+<% const _src = srcPath; const _links = Array.isArray(links) ? links : [ 
+  { href: '#!', label: '아이디 찾기', target:'_blank' }, 
+  { href: '#!', label: '비밀번호 찾기', target: '_blank' }, 
+  { href: '#!', label: '회원가입', target: '_blank'}, 
+  ]; 
+%>
+
+<div class="login-links">
+  <ul>
+    <% _links.forEach(function(link) { %>
+    <li>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-link.ejs`, {
+        href: link.href || '#!',
+        label: link.label || '',
+        target: link.target || '_blank'
+      }) %>
+    </li>
+    <% }); %>
+  </ul>
+</div>

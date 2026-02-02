@@ -198,6 +198,13 @@ $vits-datepicker-single-sizes: (
           }
         }
 
+        /* stylelint-disable-next-line no-descending-specificity */
+        .k-calendar-nav-fast {
+          display: block;
+          flex-basis: fn.rem(150) !important;
+          width: fn.rem(150) !important;
+        }
+
         .k-header {
           @include mx.flex(flex, row, center, center);
           gap: map.get(var.$unit, 16);
@@ -307,21 +314,22 @@ $vits-datepicker-single-sizes: (
               }
 
               &.k-range-mid {
-                background: #fee1e2;
-
-                /* stylelint-disable-next-line no-descending-specificity */
-                .k-link {
-                  color: map.get(color.$text-status, 'brand');
-
-                  &:hover {
-                    background: transparent !important;
-                  }
-                }
-
                 &,
                 &:hover,
                 &.k-hover {
                   background: #fee1e2 !important;
+                }
+
+                /* stylelint-disable-next-line no-descending-specificity */
+                .k-link {
+                  color: map.get(color.$text-status, 'brand');
+                }
+
+                &:hover .k-link,
+                .k-link:hover {
+                  color: map.get(color.$text-status, 'brand') !important;
+                  background: transparent !important;
+                  box-shadow: none !important;
                 }
               }
             }

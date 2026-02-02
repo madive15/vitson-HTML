@@ -1,0 +1,93 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- 비밀번호 찾기 폼 (탭)
+PC_LO_03020101 (비밀번호 찾기_이름/휴대전화번호로 찾기)
+PC_LO_03030101 (비밀번호 찾기_이름/이메일로 찾기)
+-->
+
+<div class="info-find-block info-find-block-pw-tab" hidden>
+  <div class="vits-signup-headline">
+    <h2 class="vits-signup-title">비밀번호 찾기</h2>
+  </div>
+
+  <!-- prettier-ignore -->
+  <% const pwFindTabs = [
+    { text: '휴대전화번호', isActive: true },
+    { text: '이메일', isActive: false }
+  ]; %>
+  <div class="info-find-tabs-wrap">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/tabs.ejs`, {
+      size: 'sm',
+      className: 'vits-auth-tabs',
+      tabClassName: 'vits-btn-md info-find-tab-btn',
+      tabs: pwFindTabs,
+      showBadge: false,
+      ariaLabel: '비밀번호 찾기 방법',
+      idPrefix: 'info-find-tab'
+    }) %>
+  </div>
+
+  <form class="info-find-form" action="#" method="post">
+    <div class="vits-login-form-fields" aria-hidden="false">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'pw-find-name-phone',
+        name: 'userName',
+        label: '이름',
+        placeholder: '이름',
+        required: true,
+        rootClass: 'size-large',
+      }) %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'pw-find-phone',
+        name: 'userPhone',
+        label: '휴대전화번호',
+        placeholder: '휴대전화번호',
+        required: true,
+        rootClass: 'size-large',
+      }) %>
+    </div>
+    <div class="vits-login-form-fields" aria-hidden="true">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'pw-find-name-email',
+        name: 'userNameEmail',
+        label: '이름',
+        placeholder: '이름',
+        required: true,
+        rootClass: 'size-large',
+      }) %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'pw-find-email',
+        name: 'userEmail',
+        label: '이메일',
+        placeholder: '이메일',
+        required: true,
+        rootClass: 'size-large',
+      }) %>
+    </div>
+
+    <div class="info-find-form-actions">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        type: 'submit',
+        size: 'xl',
+        variant: 'primary',
+        text: '비밀번호 찾기',
+        className: 'info-find-btn',
+      }) %>
+    </div>
+
+    <!-- S: 하단 링크 -->
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/pg-auth/login-links.ejs`, {
+      links: [
+        { href: '#!', label: '로그인' },
+        { href: '#!', label: '회원가입' },
+      ],
+    }) %>
+    <!-- E: 하단 링크 -->
+  </form>
+</div>

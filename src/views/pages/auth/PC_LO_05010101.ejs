@@ -1,0 +1,84 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include( `${_src}/views/layout/head.ejs`, { meta_title: '휴면 계정 안내' } ) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include( `${_src}/views/layout/header.ejs` ) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup auth-dormant-wrap">
+                  <div class="auth-dormant-form">
+                    <!-- S: 휴면 상태 안내 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/empty-state.ejs`, {
+                      iconName: 'box',
+                      title: '계정이 휴면 상태로 전환되었습니다',
+                    }) %>
+                    <!-- E: 휴면 상태 안내 -->
+
+                    <!-- S: 안내 문구 블록 -->
+                    <div class="auth-dormant-info-box">
+                      <p class="auth-dormant-info-text">
+                        회원님은 최근 <strong class="highlight-text">1년 이상서비스를 이용하지 않아</strong> 관련 법령에
+                        따라<br /><strong class="point-text">휴면 상태</strong>로 전환되었습니다.
+                      </p>
+                      <p class="auth-dormant-info-text">
+                        서비스 이용하시려면 <strong class="point-text">[휴면 해제하기]</strong>버튼을 눌러주세요.
+                      </p>
+                    </div>
+                    <!-- E: 안내 문구 블록 -->
+
+                    <!-- S: 액션 버튼 -->
+                    <div class="auth-dormant-actions">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        type: 'button',
+                        size: 'xl',
+                        variant: 'primary',
+                        text: '휴면 해제하기',
+                        className: 'auth-dormant-btn',
+                      }) %>
+                    </div>
+                    <!-- E: 액션 버튼 -->
+                  </div>
+
+                  <!-- S: 고객 지원 -->
+                  <%- include(`${_src}/views/components/pg-auth/auth-contact.ejs`) %>
+                  <!-- E: 고객 지원 -->
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include( `${_src}/views/layout/footer.ejs` ) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include( `${_src}/views/layout/footer.links.ejs` ) %>
+  </body>
+</html>

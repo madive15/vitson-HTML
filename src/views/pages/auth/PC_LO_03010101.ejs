@@ -1,0 +1,129 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, { meta_title: '비밀번호(아이디입력)찾기' }) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup info-find-wrap">
+                  <!-- S: 비밀번호 찾기 (아이디 입력) -->
+                  <div class="info-find-block info-find-block-pw">
+                    <div class="vits-signup-headline">
+                      <h2 class="vits-signup-title">비밀번호 찾기</h2>
+                      <p class="vits-signup-desc">아이디 인증 후 비밀번호 찾기를 진행할 수 있습니다.</p>
+                    </div>
+
+                    <form class="info-find-form" action="#" method="post">
+                      <div class="info-find-form-fields">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'info-find-id',
+                          name: 'userId',
+                          label: '아이디',
+                          placeholder: '아이디',
+                          required: true,
+                          rootClass: 'size-large',
+                        }) %>
+                      </div>
+
+                      <div class="info-find-form-actions">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          type: 'submit',
+                          size: 'xl',
+                          variant: 'primary',
+                          text: '확인',
+                          className: 'info-find-btn',
+                        }) %>
+                      </div>
+
+                      <!-- S: 하단 링크 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-auth/login-links.ejs`, {
+                        links: [
+                          { href: '#!', label: '아이디 찾기' },
+                          { href: '#!', label: '회원가입' },
+                        ],
+                      }) %>
+                      <!-- E: 하단 링크 -->
+                    </form>
+                  </div>
+                  <!-- E: 비밀번호 찾기 (아이디 입력) -->
+
+                  <!-- S: 비밀번호 찾기 (탭) -->
+                  <%- include(`${_src}/views/components/pg-auth/info-find-pw.ejs`) %>
+                  <!-- E: 비밀번호 찾기 (탭) -->
+
+                  <!-- S: 아이디 찾기 (탭) -->
+                  <%- include(`${_src}/views/components/pg-auth/info-find-id.ejs`) %>
+                  <!-- E: 아이디 찾기 (탭) -->
+                </section>
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      /**
+       * [REMOVE] 퍼블 확인용 - 개발 적용 시 제거 후 라우팅/상태로 처리
+       *
+       * URL type 파라미터로 노출 블록·타이틀 제어
+       * - type 없음: 기존 비밀번호 찾기(아이디 입력) .info-find-block-pw
+       * - type=find-pw: 비밀번호 찾기 탭(휴대전화/이메일) .info-find-block-pw-tab
+       * - type=find-id: 아이디 찾기 탭 .info-find-block-id
+       */
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      var blockPw = document.querySelector('.info-find-block-pw');
+      var blockPwTab = document.querySelector('.info-find-block-pw-tab');
+      var blockId = document.querySelector('.info-find-block-id');
+      if (type === 'find-id') {
+        document.title = '아이디 찾기';
+        if (blockPw) blockPw.hidden = true;
+        if (blockPwTab) blockPwTab.hidden = true;
+        if (blockId) blockId.hidden = false;
+      } else if (type === 'find-pw') {
+        document.title = '비밀번호 찾기';
+        if (blockPw) blockPw.hidden = true;
+        if (blockPwTab) blockPwTab.hidden = false;
+        if (blockId) blockId.hidden = true;
+      } else {
+        if (blockPw) blockPw.hidden = false;
+        if (blockPwTab) blockPwTab.hidden = true;
+        if (blockId) blockId.hidden = true;
+      }
+    </script>
+  </body>
+</html>
