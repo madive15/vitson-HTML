@@ -1,5 +1,5 @@
 <head><script defer src="../../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
-<section class="vits-withdraw-modal" data-checkbox-scope>
+<section class="vits-withdraw-modal">
   <div class="vits-withdraw-content">
     <form class="vits-withdraw-form" action="#" method="post" novalidate>
       <!-- S: 회원 탈퇴 유의사항 -->
@@ -55,9 +55,9 @@
   <input
     type="checkbox"
     name="withdrawAgree"
-    value="all"
-    data-checkbox-all
+    value="agree"
     
+    data-checkbox-item
     
     
     required
@@ -156,7 +156,7 @@
         <div class="vits-form-row type-withdraw-reason">
           <label class="vits-form-label">탈퇴 사유 <span class="label-required" aria-hidden="true">*</span> </label>
           <div class="vits-form-field">
-            <ul class="vits-withdraw-reason-list">
+            <ul class="vits-withdraw-reason-list" data-checkbox-scope>
               <li class="vits-withdraw-reason-item">
                 <!-- prettier-ignore -->
                 

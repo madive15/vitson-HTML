@@ -1601,6 +1601,8 @@ var ui_layer = __webpack_require__(847);
 var modal = __webpack_require__(95);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/tooltip.js
 var tooltip = __webpack_require__(265);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/tab.js
+var tab = __webpack_require__(369);
 // EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
 var swiper_bundle = __webpack_require__(111);
 ;// ./src/assets/scripts/ui/swiper.js
@@ -2240,16 +2242,13 @@ var header_gnb = __webpack_require__(105);
 var header_rank = __webpack_require__(596);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-search.js
 var header_search = __webpack_require__(978);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-brand-tab.js
-var header_brand_tab = __webpack_require__(663);
-// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-brand-search.js
-var header_brand_search = __webpack_require__(486);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/header/header-brand.js
+var header_brand = __webpack_require__(697);
 ;// ./src/assets/scripts/ui/header/header.js
 /**
  * scripts/ui/kendo/kendo.js
  * @purpose Kendo UI 관련 모듈 통합 관리
  */
-
 
 
 
@@ -2263,8 +2262,7 @@ var header_brand_search = __webpack_require__(486);
       if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
       if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
       if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-      if (window.UI.BrandTab && window.UI.BrandTab.init) window.UI.BrandTab.init();
-      if (window.UI.BrandSearch && window.UI.BrandSearch.init) window.UI.BrandSearch.init();
+      if (window.UI.Brand && window.UI.Brand.init) window.UI.Brand.init();
       console.log('[header] all modules initialized');
     }
   };
@@ -2374,6 +2372,7 @@ var auth_ui = __webpack_require__(593);
 
 
 
+
 (function (window) {
   'use strict';
 
@@ -2395,6 +2394,7 @@ var auth_ui = __webpack_require__(593);
     if (window.UI.layer && window.UI.layer.init) window.UI.layer.init();
     if (window.UI.modal && window.UI.modal.init) window.UI.modal.init();
     if (window.UI.tooltip && window.UI.tooltip.init) window.UI.tooltip.init();
+    if (window.UI.tab && window.UI.tab.init) window.UI.tab.init();
     if (window.UI.swiper && window.UI.swiper.init) window.UI.swiper.init();
     if (window.UI.swiperTest && window.UI.swiperTest.init) window.UI.swiperTest.init();
     if (window.UI.chipButton && window.UI.chipButton.init) window.UI.chipButton.init();
@@ -3055,6 +3055,237 @@ if (document.body?.dataset?.guide === 'true') {
   };
   console.log('[toggle] module loaded');
 })(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 369:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/tab.js
+ * @description data-속성 기반 탭 전환 공통
+ * @scope [data-vits-tab] 내부에서만 동작
+ * @mapping [data-tab-id] ↔ [data-tab-panel]
+ * @state is-active 클래스 + aria-selected/aria-hidden 값으로 제어
+ * @option
+ *  - URL 해시(#tab=xxx) 지원
+ *  - 키보드: 좌우 화살표, Home/End
+ * @a11y
+ *  - aria-selected, aria-hidden, tabindex, aria-controls 자동 관리
+ *  - role은 마크업에서 선언
+ * @events ui:tab-change - { selectedId, containerId, root, btn, panel }
+ * @note data-tab-nav, data-tab-content는 CSS 셀렉터용 (JS 미참조)
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiTab';
+  var ACTIVE_CLS = 'is-active';
+  var EVENT_CHANGE = 'ui:tab-change';
+  var HASH_PARAM = 'tab';
+  var SEL = {
+    ROOT: '[data-vits-tab]',
+    BTN: '[data-tab-id]',
+    PANEL: '[data-tab-panel]'
+  };
+  var DATA = {
+    TAB_ID: 'tab-id',
+    TAB_PANEL: 'tab-panel',
+    VITS_TAB: 'vits-tab'
+  };
+  var KEYS = {
+    LEFT: 37,
+    RIGHT: 39,
+    HOME: 36,
+    END: 35
+  };
+
+  // Selector Injection 방지용 data 속성 필터
+  function filterByData($els, value, attrName) {
+    return $els.filter(function () {
+      return $(this).data(attrName) === value;
+    });
+  }
+
+  // containerId로 루트 요소 반환
+  function getRootById(containerId) {
+    return filterByData($(SEL.ROOT), containerId, DATA.VITS_TAB);
+  }
+
+  // 가장 가까운 탭 루트 반환
+  function getRoot($el) {
+    return $el.closest(SEL.ROOT);
+  }
+
+  // 인덱스 순환 (처음↔끝 연결)
+  function wrapIndex(current, total, delta) {
+    return (current + delta + total) % total;
+  }
+
+  // 탭 선택 (opts.focus: 키보드 탐색 시 포커스 이동)
+  function select($root, id, opts) {
+    if (!$root.length || !id) return;
+    opts = opts || {};
+    var $btns = $root.find(SEL.BTN);
+    var $currentActive = $btns.filter('.' + ACTIVE_CLS);
+
+    // 이미 활성화된 탭이면 스킵
+    if ($currentActive.length && $currentActive.data(DATA.TAB_ID) === id) return;
+    var $panels = $root.find(SEL.PANEL);
+    var $targetBtn = filterByData($btns, id, DATA.TAB_ID);
+    var $targetPanel = filterByData($panels, id, DATA.TAB_PANEL);
+    if (!$targetBtn.length) return;
+
+    // 전체 비활성화
+    $btns.removeClass(ACTIVE_CLS).attr({
+      'aria-selected': 'false',
+      tabindex: '-1'
+    });
+    $panels.removeClass(ACTIVE_CLS).attr('aria-hidden', 'true');
+
+    // 대상 활성화
+    $targetBtn.addClass(ACTIVE_CLS).attr({
+      'aria-selected': 'true',
+      tabindex: '0'
+    });
+    $targetPanel.addClass(ACTIVE_CLS).attr('aria-hidden', 'false');
+    if (opts.focus) $targetBtn.focus();
+
+    // 외부 연동용 이벤트 발행
+    $(document).trigger(EVENT_CHANGE, {
+      selectedId: id,
+      containerId: $root.data(DATA.VITS_TAB),
+      root: $root[0],
+      btn: $targetBtn[0],
+      panel: $targetPanel[0]
+    });
+  }
+
+  // 인접 탭 선택 (delta: -1 이전, 1 다음)
+  function selectAdjacent($root, $currentBtn, delta) {
+    var $btns = $root.find(SEL.BTN);
+    var nextIdx = wrapIndex($btns.index($currentBtn), $btns.length, delta);
+    select($root, $btns.eq(nextIdx).data(DATA.TAB_ID), {
+      focus: true
+    });
+  }
+
+  // 처음/끝 탭 선택
+  function selectEdge($root, isFirst) {
+    var $btns = $root.find(SEL.BTN);
+    var $target = isFirst ? $btns.first() : $btns.last();
+    select($root, $target.data(DATA.TAB_ID), {
+      focus: true
+    });
+  }
+  function onClickTab(e) {
+    select(getRoot($(e.currentTarget)), $(e.currentTarget).data(DATA.TAB_ID));
+  }
+  function onKeydownTab(e) {
+    var $btn = $(e.currentTarget);
+    var $root = getRoot($btn);
+    var key = e.which || e.keyCode;
+    switch (key) {
+      case KEYS.LEFT:
+        e.preventDefault();
+        selectAdjacent($root, $btn, -1);
+        break;
+      case KEYS.RIGHT:
+        e.preventDefault();
+        selectAdjacent($root, $btn, 1);
+        break;
+      case KEYS.HOME:
+        e.preventDefault();
+        selectEdge($root, true);
+        break;
+      case KEYS.END:
+        e.preventDefault();
+        selectEdge($root, false);
+        break;
+    }
+  }
+
+  // URL 해시 파싱 후 탭 적용 (예: #tab=tab2)
+  function applyHash() {
+    var hash = location.hash.slice(1);
+    if (!hash) return;
+    var id = null;
+    if (typeof URLSearchParams !== 'undefined') {
+      id = new URLSearchParams(hash).get(HASH_PARAM);
+    } else {
+      var match = hash.match(new RegExp('(?:^|&)' + HASH_PARAM + '=([^&]+)'));
+      id = match ? decodeURIComponent(match[1]) : null;
+    }
+    if (!id) return;
+    var $btn = filterByData($(SEL.BTN), id, DATA.TAB_ID);
+    if ($btn.length) select(getRoot($btn.first()), id);
+  }
+
+  //초기화 / 정리
+  function initA11yForRoot($root) {
+    if (!$root.length) return;
+    var $btns = $root.find(SEL.BTN);
+    var $panels = $root.find(SEL.PANEL);
+    $btns.each(function () {
+      var $btn = $(this);
+      var id = $btn.data(DATA.TAB_ID);
+      var $panel = filterByData($panels, id, DATA.TAB_PANEL);
+      var panelId = $panel.attr('id');
+      var isActive = $btn.hasClass(ACTIVE_CLS);
+      if (!panelId && $panel.length) {
+        panelId = 'tabpanel-' + id + '-' + Math.random().toString(36).slice(2, 8);
+        $panel.attr('id', panelId);
+      }
+      var attrs = {
+        'aria-selected': isActive ? 'true' : 'false',
+        tabindex: isActive ? '0' : '-1'
+      };
+      if (panelId) attrs['aria-controls'] = panelId;
+      $btn.attr(attrs);
+      $panel.attr('aria-hidden', isActive ? 'false' : 'true');
+    });
+  }
+  function initA11y() {
+    $(SEL.ROOT).each(function () {
+      initA11yForRoot($(this));
+    });
+  }
+  function bind() {
+    $(document).off('click' + NS, SEL.ROOT + ' ' + SEL.BTN).off('keydown' + NS, SEL.ROOT + ' ' + SEL.BTN).on('click' + NS, SEL.ROOT + ' ' + SEL.BTN, onClickTab).on('keydown' + NS, SEL.ROOT + ' ' + SEL.BTN, onKeydownTab);
+    $(window).off('hashchange' + NS).on('hashchange' + NS, applyHash);
+  }
+  function unbind() {
+    $(document).off(NS);
+    $(window).off(NS);
+  }
+  window.UI.tab = {
+    init: function () {
+      bind();
+      initA11y();
+      applyHash();
+    },
+    destroy: function () {
+      unbind();
+    },
+    select: function (containerId, selectedId) {
+      select(getRootById(containerId), selectedId);
+    },
+    getActiveId: function (containerId) {
+      var $active = getRootById(containerId).find(SEL.BTN + '.' + ACTIVE_CLS);
+      return $active.length ? $active.data(DATA.TAB_ID) : null;
+    },
+    refresh: function (containerId) {
+      if (containerId) {
+        initA11yForRoot(getRootById(containerId));
+      } else {
+        initA11y();
+      }
+    }
+  };
+})(window.jQuery, window, document);
 
 /***/ }),
 
@@ -4335,107 +4566,6 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
-/***/ 486:
-/***/ (function() {
-
-/**
- * @file scripts/ui/header/header-brand-search.js
- * @description 브랜드 검색 + 칩 관리
- */
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var SEL = {
-    ROOT: '[data-brand-search]',
-    SCOPE: '[data-brand-search-scope]',
-    INPUT: '[data-brand-search-input]',
-    CHIPS: '[data-brand-chips]',
-    CHIP: '[data-chip-action="remove"]',
-    RESET: '[data-brand-chips-reset]'
-  };
-  function getChips($root) {
-    return $root.closest(SEL.SCOPE).find(SEL.CHIPS);
-  }
-  function createChipHtml(keyword) {
-    var escaped = $('<div>').text(keyword).html();
-    return '<button type="button" class="vits-chip-button type-outline" ' + 'data-chip-action="remove" data-chip-value="' + escaped + '">' + '<span class="text">' + escaped + '</span>' + '<span class="icon" aria-hidden="true"><i class="ic ic-x"></i></span>' + '</button>';
-  }
-  function toggleChipsVisibility($chips) {
-    var hasChips = $chips.find('[data-chip-value]').length > 0;
-    $chips.attr('hidden', hasChips ? null : '');
-  }
-  function addChip($root, keyword) {
-    var $chips = getChips($root);
-    var $reset = $chips.find(SEL.RESET);
-    if ($chips.find('[data-chip-value="' + keyword + '"]').length) return;
-    $(createChipHtml(keyword)).insertBefore($reset);
-    toggleChipsVisibility($chips);
-    $root.trigger('brandSearch:add', {
-      keyword: keyword
-    });
-  }
-  function removeChip($chip) {
-    var $chips = $chip.closest(SEL.CHIPS);
-    var keyword = $chip.data('chipValue');
-    $chip.remove();
-    toggleChipsVisibility($chips);
-    $chips.trigger('brandSearch:remove', {
-      keyword: keyword
-    });
-  }
-  function resetAll($chips) {
-    $chips.find('[data-chip-value]').remove();
-    toggleChipsVisibility($chips);
-    $chips.trigger('brandSearch:reset');
-  }
-  function bindEvents($root) {
-    var $input = $root.find(SEL.INPUT);
-    var $chips = getChips($root);
-    $root.on('submit.brandSearch', function (e) {
-      e.preventDefault();
-      var keyword = $.trim($input.val());
-      if (!keyword) return;
-      addChip($root, keyword);
-      $input.val('').focus();
-    });
-    $chips.on('click.brandSearch', SEL.CHIP, function () {
-      removeChip($(this));
-    });
-    $chips.on('click.brandSearch', SEL.RESET, function () {
-      resetAll($chips);
-    });
-  }
-  window.UI.BrandSearch = {
-    init: function ($scope) {
-      $($scope || SEL.ROOT).each(function () {
-        var $root = $(this);
-        if ($root.data('brandSearchInit')) return;
-        $root.data('brandSearchInit', true);
-        bindEvents($root);
-      });
-      console.log('[brandSearch] init');
-    },
-    destroy: function ($scope) {
-      $($scope || SEL.ROOT).each(function () {
-        var $root = $(this);
-        getChips($root).off('.brandSearch');
-        $root.off('.brandSearch').removeData('brandSearchInit');
-      });
-    },
-    add: function ($root, keyword) {
-      addChip($root, keyword);
-    },
-    reset: function ($root) {
-      resetAll(getChips($root));
-    }
-  };
-  console.log('[brandSearch] module loaded');
-})(window.jQuery || window.$, window);
-
-/***/ }),
-
 /***/ 504:
 /***/ (function() {
 
@@ -5660,30 +5790,80 @@ if (document.body?.dataset?.guide === 'true') {
 
 /***/ }),
 
-/***/ 663:
+/***/ 697:
 /***/ (function() {
 
 /**
- * @file scripts/ui/header/header-brand-tab.js
- * @description 브랜드 탭 + 서브탭 슬라이드
+ * @file scripts/ui/header/header-brand.js
+ * @description 브랜드 탭 + 검색 + 칩 필터링
+ * @requires jQuery
+ *
+ * @fires brand:tabChange - 탭 전환 시 { tabId }
+ * @fires brand:subChange - 서브탭 전환 시 { groupId, subId }
+ * @fires brand:chipAdd - 칩 추가 시 { keyword }
+ * @fires brand:chipRemove - 칩 삭제 시 { keyword }
+ * @fires brand:reset - 초기화 시
  */
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
+
+  // ── 상수 ──
+
   var SEL = {
     ROOT: '[data-brand-tab]',
+    SCOPE: '[data-brand-search-scope]',
+    PANEL: '.gnb-panel-brand',
+    // 탭
     TAB_TRIGGER: '[data-tab-trigger]',
     TAB_PANEL: '[data-tab-panel]',
     TAB_GROUP: '[data-tab-group]',
     SUB_TRIGGER: '[data-sub-trigger]',
-    SUB_PANEL: '[data-sub-panel]'
+    SUB_PANEL: '[data-sub-panel]',
+    // 검색
+    FORM: '[data-brand-search]',
+    INPUT: '[data-brand-search-input]',
+    CHIPS: '[data-brand-chips]',
+    CHIP: '[data-chip-value]',
+    CHIP_REMOVE: '[data-chip-action="remove"]',
+    RESET: '[data-brand-chips-reset]',
+    // 브랜드 목록
+    BRAND_LINK: '[data-brand-item]',
+    COUNT: '[data-brand-count]'
   };
   var CLS = {
     ACTIVE: 'is-active',
-    OPEN: 'is-open'
+    OPEN: 'is-open',
+    SEARCH_MODE: 'is-search-mode'
   };
+  var TAB = {
+    ALL: 'all',
+    KOREAN: 'korean',
+    ALPHABET: 'alphabet',
+    EMPTY: 'empty'
+  };
+
+  // 스크롤 유무 판단 → 클래스 토글
+  function checkScroll($root) {
+    var el = $root.find('.tab-panels')[0];
+    if (!el) return;
+    var hasScroll = el.scrollHeight > el.clientHeight;
+    $root.toggleClass('has-scroll', hasScroll);
+  }
+
+  // 칩 컨테이너 찾기
+  function getChips($root) {
+    return $root.closest(SEL.PANEL).find(SEL.CHIPS);
+  }
+
+  // XSS 방지용 이스케이프
+  function escapeHtml(str) {
+    return $('<div>').text(str).html();
+  }
+
+  // 1차 탭 활성화 (전체/가나다순/알파벳순)
   function activateTab($root, tabId) {
     var $triggers = $root.find(SEL.TAB_TRIGGER);
     var $panels = $root.find(SEL.TAB_PANEL);
@@ -5692,7 +5872,7 @@ if (document.body?.dataset?.guide === 'true') {
     var $targetPanel = $root.find('[data-tab-panel="' + tabId + '"]');
     if (!$targetPanel.length) return;
 
-    // 모든 탭 비활성
+    // 전체 비활성
     $triggers.removeClass(CLS.ACTIVE).attr({
       'aria-selected': 'false',
       tabindex: '-1'
@@ -5700,27 +5880,26 @@ if (document.body?.dataset?.guide === 'true') {
     $panels.removeClass(CLS.ACTIVE).attr('hidden', '');
     $groups.removeClass(CLS.OPEN);
 
-    // 선택 탭 활성
+    // 선택 활성
     $targetTrigger.addClass(CLS.ACTIVE).attr({
       'aria-selected': 'true',
       tabindex: '0'
     });
     $targetPanel.addClass(CLS.ACTIVE).removeAttr('hidden');
 
-    // 그룹 탭이면 그룹 열기
+    // 그룹 탭이면 서브탭 영역 열기
     var $group = $targetTrigger.closest(SEL.TAB_GROUP);
-    if ($group.length) {
-      $group.addClass(CLS.OPEN);
-    }
-    $root.trigger('brandTab:change', {
+    if ($group.length) $group.addClass(CLS.OPEN);
+    $root.trigger('brand:tabChange', {
       tabId: tabId
     });
   }
-  function activateSubTab($group, subId) {
-    var $subTriggers = $group.find(SEL.SUB_TRIGGER);
+
+  // 2차 서브탭 활성화 (ㄱ,ㄴ,ㄷ... / A,B,C...Z)
+  function activateSubTab($root, $group, subId) {
     var groupId = $group.data('tabGroup');
-    var $root = $group.closest(SEL.ROOT);
     var $parentPanel = $root.find('[data-tab-panel="' + groupId + '"]');
+    var $subTriggers = $group.find(SEL.SUB_TRIGGER);
     var $subPanels = $parentPanel.find(SEL.SUB_PANEL);
     var $targetTrigger = $group.find('[data-sub-trigger="' + subId + '"]');
     var $targetPanel = $parentPanel.find('[data-sub-panel="' + subId + '"]');
@@ -5735,45 +5914,248 @@ if (document.body?.dataset?.guide === 'true') {
       tabindex: '0'
     });
     $targetPanel.addClass(CLS.ACTIVE).removeAttr('hidden');
-    $root.trigger('brandTab:subChange', {
+    $root.trigger('brand:subChange', {
       groupId: groupId,
       subId: subId
     });
   }
-  function bindEvents($root) {
-    // 1차 탭 클릭
-    $root.on('click.brandTab', SEL.TAB_TRIGGER, function (e) {
-      e.preventDefault();
-      var tabId = $(this).data('tabTrigger');
-      activateTab($root, tabId);
+
+  // 검색 모드 진입 → 전체 탭으로 고정
+  function enterSearchMode($root) {
+    $root.addClass(CLS.SEARCH_MODE);
+    activateTab($root, TAB.ALL);
+    $root.find(SEL.TAB_GROUP).removeClass(CLS.OPEN);
+  }
+
+  // 검색 모드 해제 → 기본 탭으로 복원
+  function resetTabState($root) {
+    var defaultTab = $root.data('defaultTab') || TAB.KOREAN;
+    $root.removeClass(CLS.SEARCH_MODE);
+    activateTab($root, defaultTab);
+
+    // 서브탭 첫번째로 복원
+    var $group = $root.find('[data-tab-group="' + defaultTab + '"]');
+    if ($group.length) {
+      var $firstSub = $group.find(SEL.SUB_TRIGGER).first();
+      if ($firstSub.length) {
+        activateSubTab($root, $group, $firstSub.data('subTrigger'));
+      }
+    }
+  }
+
+  // 칩 버튼 HTML 생성
+  function createChipHtml(keyword, isActive) {
+    var escaped = escapeHtml(keyword);
+    return '<button type="button" class="vits-chip-button type-outline' + (isActive ? ' ' + CLS.ACTIVE : '') + '" data-chip-value="' + escaped + '">' + '<span class="text">' + escaped + '</span>' + '<span class="icon" aria-hidden="true" data-chip-action="remove">' + '<i class="ic ic-x"></i></span></button>';
+  }
+
+  // 칩 유무에 따라 컨테이너 표시/숨김
+  function toggleChipsVisibility($chips) {
+    var hasChips = $chips.find(SEL.CHIP).length > 0;
+    $chips.attr('hidden', hasChips ? null : '');
+  }
+
+  // 현재 활성 칩의 키워드 반환
+  function getActiveKeyword($chips) {
+    var $active = $chips.find(SEL.CHIP + '.' + CLS.ACTIVE);
+    return $active.length ? String($active.data('chipValue')).toLowerCase() : '';
+  }
+
+  // 특정 칩 활성화 (나머지 비활성)
+  function setActiveChip($chips, keyword) {
+    $chips.find(SEL.CHIP).removeClass(CLS.ACTIVE);
+    if (keyword) {
+      $chips.find('[data-chip-value="' + keyword + '"]').addClass(CLS.ACTIVE);
+    }
+  }
+
+  // 전체 패널 초기 상태로 복원 (링크 전부 표시 + 카운트 복원)
+  function resetAllPanel($root) {
+    var $panelAll = $root.find('[data-tab-panel="' + TAB.ALL + '"]');
+    var $links = $panelAll.find(SEL.BRAND_LINK);
+    $links.removeAttr('hidden');
+    $panelAll.find(SEL.COUNT).text($links.length);
+  }
+
+  // 활성 칩 키워드로 브랜드 목록 필터링
+  function filterBrands($root) {
+    var $chips = getChips($root);
+    var $panelAll = $root.find('[data-tab-panel="' + TAB.ALL + '"]');
+    var $panelEmpty = $root.find('[data-tab-panel="' + TAB.EMPTY + '"]');
+    var keyword = getActiveKeyword($chips);
+
+    // 키워드 없으면 초기 상태로
+    if (!keyword) {
+      resetAllPanel($root);
+      $panelEmpty.attr('hidden', '');
+      resetTabState($root);
+      return;
+    }
+    enterSearchMode($root);
+
+    // 필터링 실행
+    var matchCount = 0;
+    $panelAll.find(SEL.BRAND_LINK).each(function () {
+      var $link = $(this);
+      var isMatch = $link.text().toLowerCase().indexOf(keyword) > -1;
+      $link.attr('hidden', isMatch ? null : '');
+      if (isMatch) matchCount++;
     });
 
-    // 서브탭 클릭
-    $root.on('click.brandTab', SEL.SUB_TRIGGER, function (e) {
-      e.preventDefault();
-      var $btn = $(this);
-      var $group = $btn.closest(SEL.TAB_GROUP);
-      var subId = $btn.data('subTrigger');
-      activateSubTab($group, subId);
+    // 결과 카운트 업데이트
+    $panelAll.find(SEL.COUNT).text(matchCount);
+
+    // 결과 없으면 빈 상태 표시
+    if (matchCount === 0) {
+      $panelAll.attr('hidden', '');
+      $panelEmpty.removeAttr('hidden');
+    } else {
+      $panelEmpty.attr('hidden', '');
+    }
+  }
+
+  // 칩 추가 (중복 시 활성화만)
+  function addChip($root, keyword) {
+    var $chips = getChips($root);
+    var $reset = $chips.find(SEL.RESET);
+    var trimmed = $.trim(keyword);
+    if (!trimmed) return;
+    var $existing = $chips.find('[data-chip-value="' + trimmed + '"]');
+
+    // 중복이면 활성화만
+    if ($existing.length) {
+      setActiveChip($chips, trimmed);
+      filterBrands($root);
+      return;
+    }
+    setActiveChip($chips, '');
+    $(createChipHtml(trimmed, true)).insertBefore($reset);
+    toggleChipsVisibility($chips);
+    filterBrands($root);
+    $root.trigger('brand:chipAdd', {
+      keyword: trimmed
     });
   }
-  window.UI.BrandTab = {
+
+  // 칩 삭제 (활성 칩 삭제 시 마지막으로 이동 후 필터링)
+  function removeChip($root, $chip) {
+    var $chips = getChips($root);
+    var wasActive = $chip.hasClass(CLS.ACTIVE);
+    var keyword = $chip.data('chipValue');
+    $chip.remove();
+    toggleChipsVisibility($chips);
+
+    // 활성 칩 삭제 시 남은 마지막 칩 활성화
+    if (wasActive) {
+      var $last = $chips.find(SEL.CHIP).last();
+      if ($last.length) {
+        setActiveChip($chips, $last.data('chipValue'));
+      }
+    }
+    filterBrands($root);
+    $root.trigger('brand:chipRemove', {
+      keyword: keyword
+    });
+  }
+
+  // 전체 초기화 (칩 전부 삭제 + 탭 복원)
+  function resetAll($root) {
+    var $chips = getChips($root);
+    $chips.find(SEL.CHIP).remove();
+    toggleChipsVisibility($chips);
+    filterBrands($root);
+    $root.trigger('brand:reset');
+  }
+  function bindEvents($root) {
+    var $panel = $root.closest(SEL.PANEL);
+    var $form = $panel.find(SEL.FORM);
+    var $input = $panel.find(SEL.INPUT);
+    var $chips = getChips($root);
+
+    // 1차 탭 클릭
+    $root.on('click.brand', SEL.TAB_TRIGGER, function (e) {
+      e.preventDefault();
+      if ($root.hasClass(CLS.SEARCH_MODE)) return;
+      activateTab($root, $(this).data('tabTrigger'));
+    });
+
+    // 2차 서브탭 클릭
+    $root.on('click.brand', SEL.SUB_TRIGGER, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      activateSubTab($root, $btn.closest(SEL.TAB_GROUP), $btn.data('subTrigger'));
+    });
+
+    // 검색 폼 제출
+    $form.on('submit.brand', function (e) {
+      e.preventDefault();
+      addChip($root, $input.val());
+      $input.val('');
+    });
+
+    // 칩 클릭 → 해당 칩 활성화 후 필터링
+    $chips.on('click.brand', SEL.CHIP, function (e) {
+      if ($(e.target).closest(SEL.CHIP_REMOVE).length) return;
+      setActiveChip($chips, $(this).data('chipValue'));
+      filterBrands($root);
+    });
+
+    // 칩 X 버튼 → 삭제
+    $chips.on('click.brand', SEL.CHIP_REMOVE, function (e) {
+      e.stopPropagation();
+      removeChip($root, $(this).closest(SEL.CHIP));
+    });
+
+    // 초기화 버튼
+    $chips.on('click.brand', SEL.RESET, function () {
+      resetAll($root);
+    });
+
+    // 초기 스크롤 체크
+    checkScroll($root);
+
+    // 탭 전환 시 스크롤 체크
+    $root.on('brand:tabChange brand:subChange', function () {
+      checkScroll($root);
+    });
+
+    // 필터링 후 스크롤 체크
+    $root.on('brand:chipAdd brand:chipRemove brand:reset', function () {
+      checkScroll($root);
+    });
+  }
+  window.UI.Brand = {
     init: function ($scope) {
       $($scope || SEL.ROOT).each(function () {
         var $root = $(this);
-        if ($root.data('brandTabInit')) return;
-        $root.data('brandTabInit', true);
+        if ($root.data('brandInit')) return;
+        $root.data('brandInit', true);
         bindEvents($root);
       });
-      console.log('[brandTab] init');
     },
     destroy: function ($scope) {
       $($scope || SEL.ROOT).each(function () {
-        $(this).off('.brandTab').removeData('brandTabInit');
+        var $root = $(this);
+        var $panel = $root.closest(SEL.PANEL);
+        $root.off('.brand');
+        $panel.find(SEL.FORM).off('.brand');
+        getChips($root).off('.brand');
+        $root.removeData('brandInit');
       });
+    },
+    // 외부에서 칩 추가
+    addChip: function ($root, keyword) {
+      addChip($($root), keyword);
+    },
+    // 외부에서 초기화
+    reset: function ($root) {
+      resetAll($($root));
+    },
+    // 외부에서 탭 전환
+    showTab: function ($root, tabId) {
+      activateTab($($root), tabId);
     }
   };
-  console.log('[brandTab] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -8115,7 +8497,7 @@ if (document.body?.dataset?.guide === 'true') {
  * @purpose 공통 유틸 모음(항상 로드)
  * @assumption
  *  - 전역 오염 최소화(필요 시 window.Utils 네임스페이스로만 제공)
- *  - UI 기능이 아닌 “범용/반복 로직”만 둔다
+ *  - UI 기능이 아닌 "범용/반복 로직"만 둔다
  * @maintenance
  *  - 실행 트리거(DOMReady/이벤트 바인딩) 금지
  *  - 특정 페이지/컴포넌트 전용 로직 금지
@@ -8125,18 +8507,19 @@ if (document.body?.dataset?.guide === 'true') {
 (function (window, document) {
   'use strict';
 
-  /**
-   * @purpose 모바일 환경 100vh 보정용 --vh CSS 변수 계산
-   * @returns {void}
-   * @example
-   * // SCSS: min-height: calc(var(--vh, 1vh) * 100);
-   */
+  // 모바일 환경 100vh 보정용 --vh CSS 변수 계산
   function setVh() {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', vh + 'px');
   }
   setVh();
   window.addEventListener('resize', setVh);
+
+  // 초기 로딩 transition 방지
+  document.body.classList.add('is-loading');
+  requestAnimationFrame(function () {
+    document.body.classList.remove('is-loading');
+  });
 })(window, document);
 
 /***/ }),
