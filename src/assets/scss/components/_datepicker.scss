@@ -214,7 +214,7 @@ $vits-datepicker-single-sizes: (
           box-shadow: none;
 
           .k-button.k-rounded-md .k-button-text {
-            @include typo.typography('h2b');
+            @include typo.typography('h3b');
 
             .nav-dot {
               padding: 0 map.get(var.$unit, 12);
@@ -402,6 +402,12 @@ $vits-datepicker-single-sizes: (
       height: fn.rem(36);
     }
   }
+
+  &.is-selected {
+    .picker-input {
+      border-color: map.get(color.$layout-border, 'primary');
+    }
+  }
 }
 
 /* ===single datepicker=== */
@@ -469,7 +475,7 @@ $vits-datepicker-single-sizes: (
       padding: 0;
 
       .k-button-text {
-        @include typo.typography('h2b', $color: map.get(color.$text-status, 'primary'));
+        @include typo.typography('h3b', $color: map.get(color.$text-status, 'primary'));
 
         .nav-dot {
           padding: 0 map.get(var.$unit, 12);
@@ -637,6 +643,10 @@ $vits-datepicker-single-sizes: (
       pointer-events: none;
       cursor: none;
     }
+  }
+
+  &.is-selected {
+    border-color: map.get(color.$layout-border, 'primary');
   }
 }
 /* stylelint-enable no-descending-specificity */
