@@ -3530,6 +3530,8 @@ if (document.body?.dataset?.guide === 'true') {
     if ($el.data('kendoDatePicker')) return;
     var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
     var $calendarWrap = null;
+    var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]'); // 2026-02-03 추가
+
     function getCalendar() {
       var inst = $el.data('kendoDatePicker');
       return inst && inst.dateView && inst.dateView.calendar;
@@ -3714,6 +3716,13 @@ if (document.body?.dataset?.guide === 'true') {
       }
     }
 
+    // 2026-02-03 추가 - 값 선택 시 래퍼에 is-selected 클래스 토글
+    function updateSelectedState() {
+      if (!$wrapper.length) return;
+      var inst = $el.data('kendoDatePicker');
+      $wrapper.toggleClass('is-selected', !!(inst && inst.value()));
+    }
+
     /* 옵션 */
     opts.format = opts.format || 'yyyy.MM.dd';
     opts.culture = opts.culture || 'ko-KR';
@@ -3766,6 +3775,12 @@ if (document.body?.dataset?.guide === 'true') {
         forceApplyYearViewMonthNames();
         updatePrevNavState();
       });
+
+      // 2026-02-03 추가 - 날짜 선택/변경 시 is-selected 토글
+      inst.bind('change', function () {
+        updateSelectedState();
+      });
+      updateSelectedState(); // 2026-02-03 추가 - 초기값 대응
     }
     if (parseBool($el.attr('data-open')) && inst) {
       window.setTimeout(function () {
@@ -8743,6 +8758,15 @@ if (document.body?.dataset?.guide === 'true') {
     });
 
     // ============================================
+    // 상태 클래스 관리
+    // ============================================
+
+    // 2026-02-03 추가 - 범위 선택 완료 시 래퍼에 is-selected 클래스 토글
+    function updateSelectedState() {
+      $wrap.toggleClass('is-selected', !!(state.startDate && state.endDate));
+    }
+
+    // ============================================
     // 이벤트 핸들러
     // ============================================
 
@@ -8766,6 +8790,7 @@ if (document.body?.dataset?.guide === 'true') {
       updateDisplay();
       updateHiddenInputs();
       highlightRange();
+      updateSelectedState(); // 2026-02-03 추가
     }
     function onCalendarNavigate() {
       forceUpdateUI();
@@ -8894,6 +8919,8 @@ if (document.body?.dataset?.guide === 'true') {
         updateDisplay();
         updateHiddenInputs();
         highlightRange();
+        updateSelectedState(); // 2026-02-03 추가
+
         if (calendar && state.startDate) {
           calendar.navigate(state.startDate);
         }
@@ -8910,6 +8937,7 @@ if (document.body?.dataset?.guide === 'true') {
           calendar.value(null);
         }
         highlightRange();
+        updateSelectedState(); // 2026-02-03 추가
         $el.trigger('rangepicker:reset');
       },
       open: openPopup,
@@ -8941,6 +8969,8 @@ if (document.body?.dataset?.guide === 'true') {
     $el.data('vitsKendoRangePicker', instance);
     updateDisplay();
     highlightRange();
+    updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
+
     console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }
 
