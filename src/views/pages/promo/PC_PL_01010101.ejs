@@ -1,0 +1,194 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const tabId = 'promo';
+const activeId = 'all';
+const IMG_BASE = `${_public}/resources/img/mro/renewal/temp`;
+
+// 탭 카테고리
+const tabItems = [
+  { id: 'all', label: '전체' },
+  { id: 'office', label: '사무용품 올인원' },
+  { id: 'paper', label: '복사용지 스페셜딜' },
+  { id: 'safety', label: '안전용품 총집합' },
+  { id: 'tool', label: '공구대전' },
+  { id: 'cleaning', label: '청소/위생용품' },
+  { id: 'package', label: '포장솔루션 제안전' },
+  { id: 'season', label: '시즌 특가전' },
+  { id: 'brand', label: '브랜드 기획전' },
+  { id: 'long-test', label: '2025 신년맞이 스마트 오피스 환경개선 토탈 솔루션 기획전 특별 프로모션 페이지' }
+];
+
+// 탭별 컨텐츠 데이터
+const tabContents = {
+  'all': [
+    { img: 'temp-ex01.jpg', alt: '복사용지 스페셜딜', href: '/event/101' },
+    { img: 'temp-1280x220-02.jpg', alt: '안전용품 총집합', href: '/event/102' },
+    { img: 'temp-1280x220-03.jpg', alt: '사무기기 기획전', href: '/event/103' },
+    { img: 'temp-1280x220-04.jpg', alt: '포장재 특가', href: '/event/104' },
+    { img: 'temp-1280x220-05.jpg', alt: '브랜드위크', href: '/event/105' },
+    { img: 'temp-1280x220-06.jpg', alt: '시즌오프', href: '/event/106' }
+  ],
+  'office': [
+    { img: 'temp-1280x220-07.jpg', alt: '문구류 총집합', href: '/event/201' },
+    { img: 'temp-1280x220-08.jpg', alt: '사무가구 특가', href: '/event/202' },
+    { img: 'temp-1280x220-09.jpg', alt: '수납용품전', href: '/event/203' },
+    { img: 'temp-1280x220-10.jpg', alt: '오피스 필수템', href: '/event/204' },
+    { img: 'temp-1280x220-01.jpg', alt: '데스크셋업', href: '/event/205' }
+  ],
+  'paper': [
+    { img: 'temp-1280x220-02.jpg', alt: 'A4용지 대량구매', href: '/event/301' },
+    { img: 'temp-1280x220-03.jpg', alt: '친환경용지전', href: '/event/302' },
+    { img: 'temp-1280x220-04.jpg', alt: '컬러용지 모음', href: '/event/303' },
+    { img: 'temp-1280x220-05.jpg', alt: '라벨용지 특가', href: '/event/304' },
+    { img: 'temp-1280x220-06.jpg', alt: '포토용지 기획전', href: '/event/305' },
+    { img: 'temp-1280x220-07.jpg', alt: '용지 브랜드전', href: '/event/306' }
+  ],
+  'safety': [
+    { img: 'temp-1280x220-08.jpg', alt: '안전화 특가', href: '/event/401' },
+    { img: 'temp-1280x220-09.jpg', alt: '보호장갑 모음', href: '/event/402' },
+    { img: 'temp-1280x220-10.jpg', alt: '안전표지판', href: '/event/403' },
+    { img: 'temp-1280x220-01.jpg', alt: '소화기 기획전', href: '/event/404' },
+    { img: 'temp-1280x220-02.jpg', alt: '작업복 특가', href: '/event/405' }
+  ],
+  'tool': [
+    { img: 'temp-1280x220-03.jpg', alt: '전동공구 모음', href: '/event/501' },
+    { img: 'temp-1280x220-04.jpg', alt: '수공구 특가', href: '/event/502' },
+    { img: 'temp-1280x220-05.jpg', alt: '측정공구전', href: '/event/503' },
+    { img: 'temp-1280x220-06.jpg', alt: '공구세트 기획전', href: '/event/504' },
+    { img: 'temp-1280x220-07.jpg', alt: '브랜드공구 할인', href: '/event/505' },
+    { img: 'temp-1280x220-08.jpg', alt: '공구함 특가', href: '/event/506' }
+  ],
+  'cleaning': [
+    { img: 'temp-1280x220-09.jpg', alt: '청소용품 총집합', href: '/event/601' },
+    { img: 'temp-1280x220-10.jpg', alt: '위생용품 특가', href: '/event/602' },
+    { img: 'temp-1280x220-01.jpg', alt: '세제류 모음', href: '/event/603' },
+    { img: 'temp-1280x220-02.jpg', alt: '쓰레기봉투전', href: '/event/604' },
+    { img: 'temp-1280x220-03.jpg', alt: '화장실용품', href: '/event/605' }
+  ],
+  'package': [
+    { img: 'temp-1280x220-04.jpg', alt: '박스 대량구매', href: '/event/701' },
+    { img: 'temp-1280x220-05.jpg', alt: '테이프류 특가', href: '/event/702' },
+    { img: 'temp-1280x220-06.jpg', alt: '완충재 모음', href: '/event/703' },
+    { img: 'temp-1280x220-07.jpg', alt: '포장비닐전', href: '/event/704' },
+    { img: 'temp-1280x220-08.jpg', alt: '라벨프린터', href: '/event/705' },
+    { img: 'temp-1280x220-09.jpg', alt: '포장솔루션 세트', href: '/event/706' }
+  ],
+  'season': [
+    { img: 'temp-1280x220-10.jpg', alt: '여름시즌 특가', href: '/event/801' },
+    { img: 'temp-1280x220-01.jpg', alt: '냉방용품 모음', href: '/event/802' },
+    { img: 'temp-1280x220-02.jpg', alt: '제습용품전', href: '/event/803' },
+    { img: 'temp-1280x220-03.jpg', alt: '휴가시즌 준비', href: '/event/804' },
+    { img: 'temp-1280x220-04.jpg', alt: '방역용품 특가', href: '/event/805' }
+  ],
+  'brand': [
+    { img: 'temp-1280x220-05.jpg', alt: '3M 기획전', href: '/event/901' },
+    { img: 'temp-1280x220-06.jpg', alt: '보쉬 특가', href: '/event/902' },
+    { img: 'temp-1280x220-07.jpg', alt: '스탠리 모음', href: '/event/903' },
+    { img: 'temp-1280x220-08.jpg', alt: '밀워키 기획전', href: '/event/904' },
+    { img: 'temp-1280x220-09.jpg', alt: '디월트전', href: '/event/905' },
+    { img: 'temp-1280x220-10.jpg', alt: '마끼다 할인', href: '/event/906' }
+  ],
+  'long-test': [
+    { img: 'temp-1280x220-01.jpg', alt: '신년 사무환경 개선', href: '/event/1001' },
+    { img: 'temp-1280x220-02.jpg', alt: '스마트오피스 구축', href: '/event/1002' },
+    { img: 'temp-1280x220-03.jpg', alt: '업무효율 UP', href: '/event/1003' },
+    { img: 'temp-1280x220-04.jpg', alt: '오피스 리뉴얼', href: '/event/1004' },
+    { img: 'temp-1280x220-05.jpg', alt: '신년 특별 프로모션', href: '/event/1005' }
+  ]
+};
+%>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '기획전 목록'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-promo">
+              <div class="vits-inner">
+                <!-- S: 기획전 탭 -->
+                <div class="vits-promo-tab" data-vits-tab="promo-category">
+                  <ul class="vits-promo-tab-nav" data-tab-nav role="tablist" aria-label="기획전 카테고리">
+                    <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+                    <li>
+                      <button
+                        type="button"
+                        id="tab-<%= tabId %>-<%= item.id %>"
+                        class="tab-btn<%= isActive ? ' is-active' : '' %>"
+                        data-tab-id="<%= item.id %>"
+                        role="tab"
+                        aria-selected="<%= isActive %>"
+                        aria-controls="panel-<%= tabId %>-<%= item.id %>"
+                        tabindex="<%= isActive ? '0' : '-1' %>"
+                      >
+                        <span class="tab-btn-text"><%= item.label %></span>
+                      </button>
+                    </li>
+                    <% }) %>
+                  </ul>
+
+                  <div class="vits-promo-tab-content" data-tab-content>
+                    <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+                    <div
+                      class="tab-panel<%= isActive ? ' is-active' : '' %>"
+                      data-tab-panel="<%= item.id %>"
+                      id="panel-<%= tabId %>-<%= item.id %>"
+                      role="tabpanel"
+                      aria-labelledby="tab-<%= tabId %>-<%= item.id %>"
+                      aria-hidden="<%= !isActive %>"
+                    >
+                      <ul class="tab-banner-list">
+                        <% (tabContents[item.id] || []).forEach((banner) => { %>
+                        <li class="tab-banner-item">
+                          <a href="<%= banner.href %>">
+                            <img src="<%= IMG_BASE %>/<%= banner.img %>" alt="<%= banner.alt %>" />
+                          </a>
+                        </li>
+                        <% }) %>
+                      </ul>
+                    </div>
+                    <% }) %>
+
+                    <!-- [D] 페이지네이션: 탭 전환 시 1페이지로 리셋 -->
+                    <div class="vits-product-pagination">
+                      <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1,
+                      isPrevDisabled: true }) %>
+                    </div>
+                  </div>
+                </div>
+                <!-- E: 기획전 탭 -->
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

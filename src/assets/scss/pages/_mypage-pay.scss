@@ -1,0 +1,268 @@
+// -----------------------------------------------------------------------------
+// pages/_mypage-pay.scss
+// - 마이페이지 결제 페이지 전용 스타일
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+/* -----------------------------------
+ * 비츠온페이 관리 (my-paymanage)
+ * ----------------------------------- */
+.pay-headline {
+  @include mx.flex($align: center, $justify: space-between);
+  width: 100%;
+
+  .vits-mypage-content-title {
+    margin: 0;
+  }
+
+  &-link {
+    @include mx.flex($align: center);
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    gap: fn.rem(8);
+    padding: fn.rem(6) fn.rem(12);
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+  }
+}
+
+.pay-tabs {
+  &.vits-tabs-lg {
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+  }
+
+  .pay-tab-btn {
+    &:not(.is-active) .text {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &.is-active {
+      border-bottom: 2px solid map.get(color.$layout-border, 'brand');
+    }
+  }
+}
+
+.pay-reg-btn {
+  @include button.btn-reset;
+  @include mx.flex($align: center, $justify: center);
+  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'inverse'));
+  gap: fn.rem(8);
+  width: 100%;
+  min-height: fn.rem(48);
+  padding: 0 map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'primary');
+  border-radius: map.get(var.$radius, 'md');
+
+  .ic {
+    width: fn.rem(24);
+    height: fn.rem(24);
+  }
+
+  /* stylelint-disable-next-line at-rule-empty-line-before */
+  @include mx.common-mouse-event {
+    background-color: map.get(color.$gray-shades, '70');
+  }
+}
+
+.pay-card-list {
+  @include mx.flex;
+  flex-wrap: wrap;
+  gap: map.get(var.$unit, 12);
+}
+
+.pay-card-item {
+  @include mx.flex($align: center);
+  @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+  position: relative;
+  gap: map.get(var.$unit, 16);
+  width: calc(50% - #{fn.rem(10)});
+  min-width: fn.rem(280);
+  padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+  background-color: color.$color-white;
+  border-radius: map.get(var.$radius, 'lg');
+
+  &-icon {
+    @include mx.flex($align: center, $justify: center);
+    flex-shrink: 0;
+    width: fn.rem(48);
+    height: fn.rem(48);
+    color: map.get(color.$icon-neutral, 'inverse');
+    background-color: map.get(color.$layout-status, 'info-bg-default');
+    border-radius: 50%;
+
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+    .ic {
+      width: fn.rem(24);
+      height: fn.rem(24);
+    }
+  }
+
+  &-body {
+    @include mx.flex($direction: column);
+    flex: 1;
+    gap: fn.rem(4);
+    min-width: 0;
+  }
+
+  &-name {
+    margin: 0;
+
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+    @include mx.ellipsis-multi(1.5, 1);
+  }
+
+  &-badge {
+    display: inline-block;
+    align-self: flex-start;
+    min-width: fn.rem(26);
+    padding: fn.rem(3) fn.rem(4);
+    line-height: normal;
+    background-color: map.get(color.$info-colors, 'primary-surface');
+    border-radius: map.get(var.$radius, 'sm');
+
+    @include typo.typography('b5s', $color: map.get(color.$text-status, 'info'));
+  }
+
+  &-num {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    margin: 0;
+  }
+
+  &-option-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  &-option {
+    @include button.btn-reset;
+    @include mx.flex($align: center, $justify: center);
+    flex-shrink: 0;
+    width: fn.rem(32);
+    height: fn.rem(32);
+    color: map.get(color.$icon-neutral, 'secondary');
+
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+    .ic {
+      width: fn.rem(20);
+      height: fn.rem(20);
+    }
+
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+    @include mx.common-mouse-event {
+      color: map.get(color.$icon-neutral, 'primary');
+    }
+  }
+
+  /* 계좌 목록 유형: 연한 녹색 원형 + 은행 아이콘 */
+  &.type-account {
+    .pay-card-item-icon {
+      color: map.get(color.$text-colors, 'inverse');
+      background-color: map.get(color.$layout-status, 'success-bg-default');
+    }
+  }
+}
+
+/* pay-card-item-option 클릭 시 노출되는 토글 메뉴 (data-toggle-btn) */
+.pay-card-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: var.$zindex-tooltip;
+  padding: fn.rem(12) 0;
+  overflow: hidden;
+  text-align: left;
+  background-color: color.$color-white;
+  border: 1px solid map.get(color.$layout-border, '');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  &[data-toggle-box].is-open {
+    overflow: hidden;
+  }
+
+  &-title {
+    @include typo.typography('b4s', $color: map.get(color.$text-colors, 'muted'));
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  &-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  &-btn {
+    @include mx.flex($align: center);
+    @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+    gap: fn.rem(8);
+    width: calc(100% - map.get(var.$unit, 24));
+    padding: fn.rem(12) 0 0;
+    margin: 0 fn.rem(12);
+    white-space: nowrap;
+    background-color: map.get(color.$layout-surf, 'base');
+    border: 0;
+
+    @include mx.common-mouse-event {
+      .text,
+      .ic {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+
+    .ic {
+      width: fn.rem(18);
+      height: fn.rem(18);
+      color: map.get(color.$icon-neutral, 'secondary');
+    }
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+
+    &.is-danger {
+      margin-top: fn.rem(12);
+      border-top: 1px solid map.get(color.$layout-surf, 'sunken');
+
+      @include mx.common-mouse-event {
+        color: map.get(color.$text-colors, 'primary');
+
+        .ic,
+        .text {
+          font-weight: 600;
+          color: map.get(color.$text-status, 'brand-sub');
+        }
+      }
+    }
+  }
+}
+
+.main-content-paymanage {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 32);
+
+  .pay-tabs,
+  .pay-reg-btn {
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  .vits-mypage-panel {
+    gap: 24px;
+
+    &-inner {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 36);
+      width: 100%;
+      padding: map.get(var.$unit, 56);
+      background-color: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'lg');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+    }
+  }
+}

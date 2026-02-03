@@ -28,7 +28,7 @@
   $text-color: map.get(color.$text-status, 'info-sub'),
   $icon-color: map.get(color.$text-status, 'info-sub'),
   $bold-selector: null
-){
+) {
   $icon-size: fn.rem(12);
 
   @include mx.flex($align: flex-start);
@@ -40,7 +40,7 @@
     }
   }
 
-  &::before{
+  &::before {
     display: inline-block;
     width: $icon-size;
     min-width: $icon-size;
@@ -54,9 +54,8 @@
 }
 
 /* 최상위 class: vits-main-cart-order */
-.vits-main-cart-order{
+.vits-main-cart-order {
   min-width: 1024px;
-
 }
 
 /* ===장바구니=== */
@@ -92,11 +91,11 @@
     padding: 0 fn.rem(32) fn.rem(20);
   }
 
-  &-toolbar-left{
-    .checkbox-wrapper{
+  &-toolbar-left {
+    .checkbox-wrapper {
       // 장바구니 > 전체선택 checkbox
       .checkbox-item {
-        .label-name{
+        .label-name {
           min-width: auto;
         }
       }
@@ -131,8 +130,8 @@
     /* 상단 util (비교 / 삭제) */
     &-top {
       @include mx.flex($align: center, $justify: space-between);
-      padding: map.get(var.$unit, 12) map.get(var.$unit, 8) map.get(var.$unit, 8) map.get(var.$unit, 16) ;
-      border-bottom: 1px solid map.get(color.$layout-border, 'quinary'); 
+      padding: map.get(var.$unit, 12) map.get(var.$unit, 8) map.get(var.$unit, 8) map.get(var.$unit, 16);
+      border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
     }
 
     &-soldout {
@@ -152,11 +151,11 @@
         @include button.btn-reset;
       }
 
-      .vits-btn-compare{
+      .vits-btn-compare {
         @include mx.flex($align: center);
         gap: fn.rem(5);
-        
-        .text{
+
+        .text {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
           line-height: normal;
 
@@ -165,24 +164,22 @@
           }
         }
 
-        .icon{
+        .icon {
           @include mx.flex($align: center);
           @include icon.ic-size(map.get(var.$unit, 16));
           color: map.get(color.$icon-neutral, 'primary');
         }
       }
 
-      .vits-btn-delete{
+      .vits-btn-delete {
         width: fn.rem(20);
         height: fn.rem(20);
 
-        .ic{
+        .ic {
           @include icon.ic-size(map.get(var.$unit, 20));
           color: map.get(color.$icon-neutral, 'primary');
         }
       }
-
-      
     }
 
     /* 메인 영역 */
@@ -192,7 +189,7 @@
       align-items: flex-start;
       padding: 0 map.get(var.$unit, 24);
     }
-    
+
     &-check {
       .checkbox-single-s {
         margin-top: fn.rem(32);
@@ -234,7 +231,7 @@
       .code {
         @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
         min-height: map.get(var.$unit, 16);
-        padding:0 map.get(var.$unit, 4);
+        padding: 0 map.get(var.$unit, 4);
         text-align: center;
         border: 1px solid map.get(color.$layout-border, 'tertiary');
       }
@@ -248,11 +245,11 @@
     &-option {
       @include mx.divider('span', 1, 12, 6, $color: map.get(color.$layout-surf, 'secondary'));
 
-      .option-label{
+      .option-label {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
       }
 
-      .option-value{
+      .option-value {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
       }
     }
@@ -267,13 +264,14 @@
     &-quantity {
       display: inline-flex;
       flex-wrap: wrap;
-      gap: map.get(var.$unit, 2);
+      gap: map.get(var.$unit, 8);
       padding-top: map.get(var.$unit, 20);
 
-      .unit-control{
-        margin-right: map.get(var.$unit, 4);
+      .unit-control {
+        @include mx.flex($align: center, $justify: flex-end, $wrap: wrap);
+        gap: map.get(var.$unit, 8);
 
-        &-btn{
+        &-btn {
           min-height: fn.rem(30);
           padding: 0 fn.rem(17.5);
           background: map.get(color.$layout-surf, 'base');
@@ -281,21 +279,26 @@
           border-radius: map.get(var.$radius, 'sm');
 
           @include mx.common-mouse-event {
-            background-color: map.get(color.$layout-surf, 'sunken');
+            background-color: map.get(color.$layout-surf, 'raised');
+            border-color: map.get(color.$layout-border, 'tertiary');
+          }
+
+          &.is-active {
+            background-color: map.get(color.$layout-surf, 'raised');
             border-color: map.get(color.$layout-border, 'tertiary');
           }
         }
 
-        &-input{
+        &-input {
           position: relative;
           min-height: fn.rem(30);
           padding: 0 fn.rem(8);
           background: map.get(color.$layout-surf, 'base');
           border: 1px solid map.get(color.$layout-border, 'quaternary');
-          border-radius: map.get(var.$radius, 'sm'); 
+          border-radius: map.get(var.$radius, 'sm');
 
           @include mx.common-mouse-event {
-            background-color: map.get(color.$layout-surf, 'sunken');
+            background-color: map.get(color.$layout-surf, 'raised');
             border-color: map.get(color.$layout-border, 'tertiary');
           }
 
@@ -313,29 +316,28 @@
           }
         }
       }
-      
-      .unit-add-btn{
-        margin-left: fn.rem(10);
+
+      .unit-add-btn {
         font-weight: 400;
         border-radius: map.get(var.$radius, 'sm');
       }
 
-      .quantity-control{
-        &.type-horiz{
+      .quantity-control {
+        &.type-horiz {
           height: calc(fn.rem(28) + fn.rem(2));
 
-          .unit{
+          .unit {
             @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
             height: fn.rem(28);
           }
-  
-          .quantity-input{
+
+          .quantity-input {
             @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
             min-width: fn.rem(40);
             height: fn.rem(28);
           }
 
-          .btn-step{
+          .btn-step {
             width: fn.rem(28);
             height: fn.rem(28);
           }
@@ -350,27 +352,27 @@
       gap: map.get(var.$unit, 20);
       text-align: right;
 
-      .price-group{
+      .price-group {
         padding-top: fn.rem(18);
 
         .price-origin {
           @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
           text-decoration: line-through;
         }
-  
+
         .price-sale {
           @include mx.flex(inline-flex, row, flex-end, center);
           flex-wrap: wrap;
           column-gap: map.get(var.$unit, 4);
-  
+
           .rate {
             @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
           }
-  
+
           .price {
             @include typo.typography('b3s', $color: map.get(color.$text-colors, 'neutral'));
           }
-  
+
           .vat {
             @include typo.typography('b5r', $color: map.get(color.$text-colors, 'muted'));
             width: 100%;
@@ -378,11 +380,11 @@
         }
       }
 
-      .price-discount{
+      .price-discount {
         @include mx.flex($direction: column, $align: flex-end);
         gap: map.get(var.$unit, 4);
 
-        button{
+        button {
           padding: 0 fn.rem(20);
         }
       }
@@ -401,7 +403,7 @@
       background: map.get(color.$layout-surf, 'raised');
     }
   }
-  
+
   /* 금액 요약 */
   &-price-summary {
     @include mx.flex($align: flex-start, $wrap: wrap);
@@ -413,38 +415,36 @@
     .vits-cart-summary-item {
       @include mx.flex($align: center);
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-      flex:1;
+      flex: 1;
       gap: map.get(var.$unit, 24);
 
-
-      &.has-discount{
+      &.has-discount {
         @include mx.flex($direction: column);
         gap: map.get(var.$unit, 12);
 
-        .discount-info{
+        .discount-info {
           @include mx.flex($align: center, $justify: space-between);
           width: 100%;
 
-          .discount-toggle{
+          .discount-toggle {
             @include button.btn-reset;
             @include mx.flex($align: center);
             gap: fn.rem(2);
-
           }
 
-          .value{
+          .value {
             @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand'));
           }
         }
 
-        .discount-info-detail{
+        .discount-info-detail {
           display: none;
 
-          .detail-row{
+          .detail-row {
             @include mx.flex($align: center, $justify: space-between);
             padding-top: map.get(var.$unit, 4);
 
-            &:first-child{
+            &:first-child {
               padding-top: 0;
             }
           }
@@ -464,14 +464,14 @@
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
         white-space: nowrap;
 
-        &.is-discount{
+        &.is-discount {
           color: map.get(color.$text-status, 'brand');
         }
       }
 
-      &:last-child{
+      &:last-child {
         .label,
-        .value{
+        .value {
           flex: 1;
           text-align: right;
         }
@@ -498,7 +498,7 @@
   &-more {
     @include mx.flex($justify: center);
 
-    .vits-btn-lg{
+    .vits-btn-lg {
       width: 100%;
       font-weight: 700;
     }
@@ -586,7 +586,7 @@
   &-sender {
     @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
   }
-  
+
   &-section-title {
     @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
   }
@@ -604,7 +604,7 @@
     flex: 1;
     height: map.get(var.$unit, 56);
     border-radius: map.get(var.$radius, 'md');
-  
+
     &.is-active {
       font-weight: 600;
     }
@@ -614,7 +614,7 @@
     @include mx.flex;
     gap: map.get(var.$unit, 16);
 
-    .vits-shipping-method-btn{
+    .vits-shipping-method-btn {
       @include button.btn-reset;
       @include mx.flex($align: center, $justify: center);
       @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'tertiary'));
@@ -622,21 +622,21 @@
       min-height: fn.rem(60);
       background-color: map.get(color.$layout-surf, 'base');
       border-radius: map.get(var.$radius, 'md');
-      
-      .text{
+
+      .text {
         @include typo.typography('b2m', $color: map.get(color.$text-colors, 'tertiary'));
       }
 
-      .icon{
+      .icon {
         @include icon.ic-size(fn.rem(26));
         color: map.get(color.$text-colors, 'tertiary');
       }
 
-      &.is-active{
+      &.is-active {
         @include mx.border(all, 2px, solid, map.get(color.$layout-border, 'brand'));
 
         .text,
-        .icon{
+        .icon {
           color: map.get(color.$text-status, 'brand');
         }
       }
@@ -655,11 +655,11 @@
   gap: map.get(var.$unit, 20);
 }
 
-.vits-shipping-form{
+.vits-shipping-form {
   padding-top: map.get(var.$unit, 32);
 }
 
-.vits-form{
+.vits-form {
   padding-top: map.get(var.$unit, 32);
 
   &-row {
@@ -668,20 +668,20 @@
   }
 
   &-row-group {
-    @include mx.flex($align: center,$justify: space-between);
+    @include mx.flex($align: center, $justify: space-between);
     gap: map.get(var.$unit, 16);
 
-    .vits-form-row{
+    .vits-form-row {
       flex: 1;
       min-width: 0;
     }
 
-    .vits-btn-scoped-info{
+    .vits-btn-scoped-info {
       padding: 0 fn.rem(12);
     }
   }
 
-  &-label{
+  &-label {
     @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
   }
 
@@ -689,32 +689,36 @@
     @include mx.flex($align: center);
     gap: map.get(var.$unit, 8);
 
-    .vits-datepicker-single{
-      width: 100%;
-    }
-  
-    /* 셀렉트 영역 */
-    .vits-select{
+    .vits-datepicker-single {
       width: 100%;
     }
 
-    .vits-select-value{
+    /* 셀렉트 영역 */
+    .vits-select {
+      width: 100%;
+    }
+
+    .vits-select-value {
       font-size: fn.rem(14);
     }
 
-    .vits-select-trigger{
+    .vits-select-trigger {
       justify-content: space-between;
       width: 100%;
       min-height: map.get(var.$unit, 36);
       padding: 0 map.get(var.$unit, 16);
     }
 
-    .vits-select-list{
+    .vits-select-list {
       width: 100%;
     }
 
-    .vits-input{
-      .disabled,&.disabled,&.is-disabled,&[disabled],[disabled]{
+    .vits-input {
+      .disabled,
+      &.disabled,
+      &.is-disabled,
+      &[disabled],
+      [disabled] {
         color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable') !important;
         pointer-events: none;
         cursor: none;
@@ -734,15 +738,15 @@
 }
 
 /* quick 패널 전용 스타일 */
-.vits-shipping-panel[data-panel="quick"] {
-  .vits-form-label{
+.vits-shipping-panel[data-panel='quick'] {
+  .vits-form-label {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
   }
 }
 
 /* ===결제 정보=== */
 /* aside 영역 초상위 */
-.vits-side-payment{
+.vits-side-payment {
   position: sticky;
   top: 0;
   min-width: 400px;
@@ -768,25 +772,24 @@
   }
 
   // 가격 영역
-  &-price{
+  &-price {
     padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
 
     @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
   }
-  
-  &-price-list{
+
+  &-price-list {
     @include mx.flex($direction: column);
     gap: map.get(var.$unit, 16);
-
 
     li {
       @include mx.flex($align: center, $justify: space-between);
 
-      span{
+      span {
         @include typo.typography('b2r', $color: map.get(color.$text-colors, 'default'));
       }
 
-      strong{
+      strong {
         @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
       }
 
@@ -801,15 +804,15 @@
   &-price-sub {
     @include mx.flex($direction: column);
     gap: map.get(var.$unit, 12);
-  
+
     li {
       @include mx.flex($align: center, $justify: space-between);
 
-      span{
+      span {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
       }
 
-      strong{
+      strong {
         @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
       }
     }
@@ -818,22 +821,22 @@
   &-total {
     @include mx.flex($align: center, $justify: space-between);
     padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
-  
-    span{
+
+    span {
       @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
     }
-  
-    strong{
+
+    strong {
       @include typo.typography('h4b', $color: map.get(color.$text-status, 'brand'));
     }
   }
 
   &-notice {
-    padding:0 map.get(var.$unit, 32);
+    padding: 0 map.get(var.$unit, 32);
 
     @include cart-order-info-icon(
       $text-color: map.get(color.$text-status, 'info-sub'),
-      $icon-color: map.get(color.$text-status, 'info'),
+      $icon-color: map.get(color.$text-status, 'info')
     );
   }
 
@@ -842,7 +845,7 @@
     width: calc(100% - fn.rem(64));
     margin: map.get(var.$unit, 16) auto 0;
 
-    .checkbox-single-s{
+    .checkbox-single-s {
       align-items: flex-start;
     }
   }
@@ -865,13 +868,13 @@
       @include mx.flex($align: center);
       gap: map.get(var.$unit, 8);
       cursor: pointer;
-    
+
       /* stylelint-disable-next-line no-descending-specificity */
       .label-name {
         @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
         align-items: center;
         white-space: nowrap;
-    
+
         em {
           @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
           margin-left: map.get(var.$unit, 2);
@@ -885,7 +888,7 @@
   /* ===간편결제 탭=== */
   &-tabs {
     @include mx.flex;
-    padding: map.get(var.$unit, 2) ;
+    padding: map.get(var.$unit, 2);
     background-color: map.get(color.$layout-surf, 'sunken');
     border-radius: map.get(var.$radius, 'sm');
   }
@@ -897,7 +900,6 @@
     color: map.get(color.$text-colors, 'tertiary');
     border-radius: map.get(var.$radius, 'sm');
 
-    
     &.is-active {
       padding: map.get(var.$unit, 8) 0;
       font-weight: 600;
@@ -910,45 +912,45 @@
 }
 
 /* 간편결제 > 탭 패널 */
-.vits-payment-tab-panel {  
+.vits-payment-tab-panel {
   display: none;
   margin-top: map.get(var.$unit, 12);
   border: 1px solid map.get(color.$layout-border, 'quinary');
   border-radius: map.get(var.$radius, 'md');
 
-  .vits-payment-notice{
+  .vits-payment-notice {
     min-height: fn.rem(34);
     padding: 0 map.get(var.$unit, 16);
 
-    .notice-text{
+    .notice-text {
       flex: 1;
     }
 
-    .pay-manage{
+    .pay-manage {
       @include mx.flex($align: center, $justify: end);
       text-align: right;
 
-      .vits-text-link{
+      .vits-text-link {
         @include mx.flex($align: center);
         @include typo.typography('b4b', $color: map.get(color.$text-colors, 'tertiary'));
       }
     }
   }
 
-  &#panel-simple-card{
-    padding: map.get(var.$unit, 16) 0 ;
+  &#panel-simple-card {
+    padding: map.get(var.$unit, 16) 0;
   }
 
-  &#panel-simple-account{
-    padding: map.get(var.$unit, 16) map.get(var.$unit, 36) map.get(var.$unit, 24) ;
+  &#panel-simple-account {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 36) map.get(var.$unit, 24);
 
-    .vits-payment-notice{
+    .vits-payment-notice {
       align-items: center;
       justify-content: flex-end;
       padding: 0;
       margin-bottom: map.get(var.$unit, 24);
 
-      &::before{
+      &::before {
         content: none;
       }
     }
@@ -959,12 +961,12 @@
   }
 
   /* ===비츠온페이 카드=== */
-  .vits-card{
-    &-list{
-      padding: map.get(var.$unit, 20)  0;
+  .vits-card {
+    &-list {
+      padding: map.get(var.$unit, 20) 0;
       padding-left: map.get(var.$unit, 16);
 
-      .vits-swiper-navs{
+      .vits-swiper-navs {
         &::after {
           position: absolute;
           top: 0;
@@ -974,7 +976,12 @@
           height: 100%;
           content: '';
           background: #fff;
-          background: linear-gradient(90deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 78%) 50%, rgb(255 255 255 / 100%) 100%);
+          background: linear-gradient(
+            90deg,
+            rgb(255 255 255 / 0%) 0%,
+            rgb(255 255 255 / 78%) 50%,
+            rgb(255 255 255 / 100%) 100%
+          );
         }
 
         &::before {
@@ -986,39 +993,44 @@
           height: 100%;
           content: '';
           background: #fff;
-          background: linear-gradient(-90deg, rgb(255 255 255 / 0%) 0%, rgb(255 255 255 / 78%) 50%, rgb(255 255 255 / 100%) 100%);
+          background: linear-gradient(
+            -90deg,
+            rgb(255 255 255 / 0%) 0%,
+            rgb(255 255 255 / 78%) 50%,
+            rgb(255 255 255 / 100%) 100%
+          );
         }
       }
 
-      .swiper-button-next{
+      .swiper-button-next {
         right: 5px;
       }
 
-      .swiper-button-prev{
+      .swiper-button-prev {
         left: 5px;
       }
 
-      .swiper-button-disabled{
+      .swiper-button-disabled {
         opacity: 0;
       }
     }
 
     /* 비츠온페이 카드 리스트 (swiper) */
-    &-item{
+    &-item {
       @include mx.flex($direction: column, $justify: center);
       min-height: fn.rem(106);
       padding: 0 map.get(var.$unit, 24);
       background-color: map.get(color.$layout-surf, 'base');
       border: 1px solid map.get(color.$icon-neutral, 'tertiary');
       border-radius: map.get(var.$radius, 'md');
-      
-      .card-brand{
+
+      .card-brand {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
         margin-bottom: map.get(var.$unit, 10);
       }
 
       .card-name,
-      .card-number{
+      .card-number {
         @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
         margin-bottom: map.get(var.$unit, 4);
       }
@@ -1030,42 +1042,42 @@
     }
 
     /* 비츠온페이 카드할부 폼 */
-    &-form{
+    &-form {
       @include cart-order-surf-box(map.get(color.$layout-surf, 'raised'));
-      padding: map.get(var.$unit, 24) map.get(var.$unit, 32) ;
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
       margin: 0 map.get(var.$unit, 16);
 
-      .vits-form-row{
+      .vits-form-row {
         @include mx.flex($align: center, $justify: flex-start);
         padding-bottom: map.get(var.$unit, 16);
       }
 
-      .vits-form-item{
+      .vits-form-item {
         @include mx.flex($direction: column);
         flex: 1;
         gap: map.get(var.$unit, 4);
       }
 
-      .vits-form-label{
+      .vits-form-label {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
       }
 
-      .vits-form-value{
+      .vits-form-value {
         @include typo.typography('b4b', $color: map.get(color.$text-colors, 'primary'));
         padding-top: map.get(var.$unit, 4);
       }
 
       .vits-form-select,
-      .vits-select{
+      .vits-select {
         width: 100%;
-        
-        .vits-select-trigger{
+
+        .vits-select-trigger {
           @include mx.flex($align: center, $justify: space-between);
           width: 100%;
         }
 
-        .vits-select-list{
-          width: 100% ;
+        .vits-select-list {
+          width: 100%;
         }
       }
     }
@@ -1080,13 +1092,13 @@
     border: 1px solid map.get(color.$layout-border, 'quaternary');
     border-radius: map.get(var.$radius, 'md');
     box-shadow: 0 4px 7px 0 rgb(0 0 0 / 3.9%);
-  
+
     &:hover .icon {
       color: map.get(color.$text-colors, 'inverse');
     }
-  
+
     /* stylelint-disable-next-line no-descending-specificity */
-    .icon{
+    .icon {
       width: fn.rem(24);
       height: fn.rem(24);
       color: map.get(color.$text-colors, 'inverse');
@@ -1094,7 +1106,7 @@
       border-radius: 50%;
     }
 
-    .text{
+    .text {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
     }
   }
@@ -1109,55 +1121,54 @@
   }
 
   // 무통장입금 패널
-  &#panel-bank{
-    padding: map.get(var.$unit, 24) map.get(var.$unit, 32) ;
+  &#panel-bank {
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
     border: 1px solid map.get(color.$layout-border, 'quinary');
     border-radius: map.get(var.$radius, 'md');
 
-    .vits-payment-bank{
-      &-list{
+    .vits-payment-bank {
+      &-list {
         padding: 0;
         padding-top: map.get(var.$unit, 24);
         margin: 0;
       }
-      
-      &-item{
+
+      &-item {
         @include mx.flex($align: center);
         gap: map.get(var.$unit, 20);
         padding-bottom: map.get(var.$unit, 16);
 
-        dt{
+        dt {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
           min-width: fn.rem(74);
         }
 
-        dd{
+        dd {
           @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
         }
       }
 
       // 입금자명 입력 필드
-      &-input{
+      &-input {
         @include mx.flex($direction: column);
         gap: fn.rem(10);
 
-        .vits-form-label{
+        .vits-form-label {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
         }
 
-        .vits-form-field{
-          ::placeholder{
+        .vits-form-field {
+          ::placeholder {
             color: map.get(color.$text-colors, 'muted');
           }
-          
         }
       }
     }
   }
 
   // 여신결제 패널
-  &#panel-credit{
-    .info-text{
+  &#panel-credit {
+    .info-text {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
       padding-top: map.get(var.$unit, 20);
     }
@@ -1165,29 +1176,29 @@
 }
 
 /* ===세금계산서 발급 신청=== */
-.vits-tax{
+.vits-tax {
   @include cart-order-surf-box;
   display: none;
   margin: 0 map.get(var.$unit, 32) map.get(var.$unit, 20);
 
-  &.is-active{
+  &.is-active {
     display: block;
   }
 
-  &-title{
+  &-title {
     @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
     padding-bottom: map.get(var.$unit, 16);
   }
 
-  &-options{
+  &-options {
     @include mx.flex($align: flex-start, $direction: column);
     gap: map.get(var.$unit, 12);
 
-    .radio-item{
+    .radio-item {
       @include mx.flex($align: center);
       gap: map.get(var.$unit, 4);
 
-      .label-name{
+      .label-name {
         @include typo.typography('b4b', $color: map.get(color.$text-colors, 'secondary'));
       }
     }
@@ -1199,47 +1210,46 @@
   margin-top: map.get(var.$unit, 20);
   background-color: map.get(color.$layout-surf, 'base');
 
-  .vits-btn-xxl{
-    width: 100%;  
+  .vits-btn-xxl {
+    width: 100%;
 
     /* stylelint-disable-next-line no-descending-specificity */
-    .text{
+    .text {
       font-size: fn.rem(20);
     }
   }
 }
 
 /* ===modal kendo window -배송지 등록/수정=== */
-.vits-address-modify{
-  padding: map.get(var.$unit, 32) ;
+.vits-address-modify {
+  padding: map.get(var.$unit, 32);
   border: 1px solid map.get(color.$layout-border, 'tertiary');
   border-radius: map.get(var.$radius, 'md');
 
-  &-form{
+  &-form {
     position: relative;
 
-    .vits-address{
-
-      /* 배송 방식 선택 */
-      &-type{
+    .vits-address {
+      // 배송 방식 선택
+      &-type {
         @include mx.flex($align: center, $justify: space-between);
         gap: map.get(var.$unit, 20);
         padding-bottom: map.get(var.$unit, 32);
-  
-        .radio-item{
+
+        .radio-item {
           flex: 1;
           text-align: center;
 
-          .radio-icon{
-            margin-top:1px ;
+          .radio-icon {
+            margin-top: 1px;
           }
-  
-          .label-name{
+
+          .label-name {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
           }
-  
-          &:has(input:checked){
-            .label-name{
+
+          &:has(input:checked) {
+            .label-name {
               color: map.get(color.$text-status, 'brand');
             }
           }
@@ -1247,60 +1257,59 @@
       }
 
       /* 배송지 입력 */
-      &-fields{
+      &-fields {
         display: none;
 
-        &.is-active{
+        &.is-active {
           display: block;
         }
 
-        .vits-field{
+        .vits-field {
           @include mx.flex($align: center);
           gap: map.get(var.$unit, 12);
           margin-top: map.get(var.$unit, 12);
 
-          &:first-child{
+          &:first-child {
             margin-top: 0;
           }
 
-          &-label{
+          &-label {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
             min-width: fn.rem(60);
             white-space: nowrap;
 
-            .vits-required{
+            .vits-required {
               @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
               margin-right: 2px;
             }
           }
 
-          .input-item{
-            ::placeholder{
+          .input-item {
+            ::placeholder {
               @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
-
             }
           }
 
           // 주소 입력 필드
-          &.vits-address{
+          &.vits-address {
             gap: map.get(var.$unit, 12);
             align-items: flex-start;
-            justify-content: space-between;  
+            justify-content: space-between;
 
-            .vits-field-label{
+            .vits-field-label {
               padding-top: map.get(var.$unit, 8);
             }
 
-            .vits-address-input{
+            .vits-address-input {
               @include mx.flex($direction: column);
               flex: 1;
               gap: map.get(var.$unit, 12);
 
-              .vits-address-zipcode{
+              .vits-address-zipcode {
                 @include mx.flex($align: center);
                 gap: map.get(var.$unit, 8);
-  
-                .vits-input{
+
+                .vits-input {
                   width: 100%;
                 }
               }
@@ -1309,43 +1318,43 @@
         }
 
         // 화물 배송지 입력 필드
-        &.panel-freight{
-          .vits-address-freight{
+        &.panel-freight {
+          .vits-address-freight {
             @include cart-order-surf-box;
             margin-bottom: map.get(var.$unit, 32);
-            
-            &-notice{
+
+            &-notice {
               @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
               padding-bottom: fn.rem(10);
 
-              .required{
+              .required {
                 color: map.get(color.$text-status, 'brand-sub');
               }
             }
 
-            &-fields{
-              @include mx.flex($align: center , $direction: column);
+            &-fields {
+              @include mx.flex($align: center, $direction: column);
               gap: fn.rem(10);
             }
 
-            &-row{
+            &-row {
               @include mx.flex($align: center);
               gap: map.get(var.$unit, 8);
               width: 100%;
             }
 
-            &-label{
+            &-label {
               @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
               min-width: fn.rem(60);
               white-space: nowrap;
             }
 
-            &-search{
+            &-search {
               @include mx.flex($align: center);
               gap: map.get(var.$unit, 8);
 
               // 영업소 조회 간격조정
-              .vits-btn-scoped-info{
+              .vits-btn-scoped-info {
                 padding: 0 fn.rem(20);
               }
             }
@@ -1354,10 +1363,10 @@
       }
     }
 
-    .vits-default-address{
+    .vits-default-address {
       padding-top: map.get(var.$unit, 32);
 
-      .agree-text{
+      .agree-text {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
       }
     }
@@ -1365,8 +1374,8 @@
 }
 
 /* ===modal kendo window -쿠폰 적용=== */
-.vits-apply-coupon-content{
-  &.vits-scrollbar{
+.vits-apply-coupon-content {
+  &.vits-scrollbar {
     max-height: fn.rem(630);
     padding-bottom: map.get(var.$unit, 4);
     overflow: auto;
@@ -1424,18 +1433,19 @@
           @include mx.flex($direction: column);
           gap: map.get(var.$unit, 4);
 
-          .desc-list-discount{
+          .desc-list-discount {
             @include mx.flex($align: center, $justify: flex-start);
             gap: map.get(var.$unit, 4);
 
-            dt, dd{
+            dt,
+            dd {
               @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
             }
           }
         }
       }
 
-      @include mx.common-mouse-event{
+      @include mx.common-mouse-event {
         border-color: map.get(color.$layout-border, 'secondary');
         box-shadow: 0 4px 7px 0 rgb(0 0 0 / 10%);
       }
@@ -1450,7 +1460,7 @@
     border: 2px solid map.get(color.$text-status, 'info');
     border-radius: map.get(var.$radius, 'md');
 
-    .vits-benefit{
+    .vits-benefit {
       &-title {
         @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
         margin-bottom: map.get(var.$unit, 12);
@@ -1460,7 +1470,7 @@
         @include mx.flex($align: stretch);
       }
 
-      &-item{
+      &-item {
         @include mx.flex($direction: column);
         gap: map.get(var.$unit, 2);
         min-width: fit-content;
@@ -1507,16 +1517,16 @@
 }
 
 /* ===modal kendo window -쿠폰 자동 적용=== */
-.vits-auto-alert{
-  .vits-auto-alert-content{
+.vits-auto-alert {
+  .vits-auto-alert-content {
     @include cart-order-surf-box;
     padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
 
-    .vits-auto-alert-list{
-      @include mx.bullet-style($bg: map.get(color.$text-colors, 'secondary')); ;
+    .vits-auto-alert-list {
+      @include mx.bullet-style($bg: map.get(color.$text-colors, 'secondary'));
 
-      .vits-auto-alert-item{
-        .vits-auto-alert-text{
+      .vits-auto-alert-item {
+        .vits-auto-alert-text {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
         }
       }
@@ -1526,50 +1536,49 @@
 
 /* ===modal kendo window -상품 추가 (조장상품)=== */
 /* 상품 요약 */
-.vits-add-product-order{
-
-  /* 입력 영역 */
+.vits-add-product-order {
+  // 입력 영역
   .vits-order-input-row {
     @include mx.flex($align: flex-end, $justify: space-between);
     gap: map.get(var.$unit, 20);
     padding: map.get(var.$unit, 32) 0;
     border-radius: map.get(var.$radius, 'md');
-  
+
     // 수량 입력 영역 : .order-cell이 2개이고 3개는 없을 때
     &:has(.order-cell:nth-of-type(2)):not(:has(.order-cell:nth-of-type(3))) {
       justify-content: flex-start;
     }
-  
+
     .guide-text {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       padding-bottom: map.get(var.$unit, 8);
     }
-  
+
     .order-cell {
       @include mx.flex($direction: column, $align: flex-start, $justify: flex-end);
-  
+
       .unit-control {
-        &-btn{
+        &-btn {
           @include mx.flex($align: center);
           min-height: fn.rem(38);
           padding: 0 fn.rem(13);
           border: 1px solid map.get(color.$layout-border, 'quaternary');
           border-radius: map.get(var.$radius, 'sm');
-  
+
           @include mx.common-mouse-event {
             background-color: map.get(color.$layout-surf, 'sunken');
             border-color: map.get(color.$layout-border, 'tertiary');
           }
         }
-  
-        &-input{
+
+        &-input {
           position: relative;
           min-height: fn.rem(36);
           padding: 0 fn.rem(8);
           background: map.get(color.$layout-surf, 'base');
           border: 1px solid map.get(color.$layout-border, 'quaternary');
-          border-radius: map.get(var.$radius, 'sm'); 
-          
+          border-radius: map.get(var.$radius, 'sm');
+
           .unit-input {
             min-height: fn.rem(36);
             padding-right: fn.rem(4);
@@ -1578,31 +1587,31 @@
             background-color: transparent;
             border: 0;
           }
-          
+
           .unit-text {
             @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
           }
-  
+
           @include mx.common-mouse-event {
             background-color: map.get(color.$layout-surf, 'sunken');
             border-color: map.get(color.$layout-border, 'tertiary');
           }
         }
       }
-  
+
       .quantity-control {
         .unit {
           @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
           line-height: normal;
         }
       }
-  
-      .vits-add-btn{
+
+      .vits-add-btn {
         min-width: fn.rem(130);
       }
     }
   }
-  
+
   /* 추가된 항목 리스트 */
   .vits-order-list {
     @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
@@ -1611,36 +1620,36 @@
     overflow: auto;
     background: map.get(color.$layout-surf, 'raised');
     border-radius: map.get(var.$radius, 'md');
-  
+
     .vits-order-item {
       @include mx.flex($align: center);
       @include mx.border(top, 1px, solid, map.get(color.$layout-border, 'quinary'));
       gap: map.get(var.$unit, 8);
       padding: fn.rem(10) 0;
-  
+
       &:first-child {
         @include mx.border(top, 0, none, transparent);
       }
-  
+
       .vits-order-spec {
         @include mx.ellipsis-single;
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
         flex: 1 1 auto;
       }
-  
+
       .vits-order-price {
         @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand-sub'));
         white-space: nowrap;
       }
-  
+
       .vits-order-remove {
         flex: 0 0 fn.rem(20);
         height: fn.rem(20);
         cursor: pointer;
         background: transparent;
         border: none;
-  
-        .ic{
+
+        .ic {
           width: 100%;
           height: 100%;
         }
@@ -1674,23 +1683,23 @@
   .vits-product-meta {
     @include mx.flex($align: center);
     gap: fn.rem(4);
-    
+
     .vits-product-brand {
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     }
-    
+
     .vits-product-code {
       @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'tertiary'));
       @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
       padding: fn.rem(1) fn.rem(4);
     }
   }
-  
+
   .vits-product-name {
     @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
     margin-top: fn.rem(8);
   }
-  
+
   .vits-product-desc {
     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     margin-top: fn.rem(2);
@@ -1698,87 +1707,87 @@
 }
 
 /* ===modal kendo window -쿠폰 변경 (상품별 쿠폰 변경)=== */
-.vits-coupon-change{
-  .vits-coupon-change-header{
+.vits-coupon-change {
+  .vits-coupon-change-header {
     [class*='vits-btn'] {
       width: 100%;
     }
   }
 
-  .vits-coupon-change-body{
+  .vits-coupon-change-body {
     max-height: fn.rem(632);
     padding-top: map.get(var.$unit, 16);
     overflow: auto;
 
-    .coupon-change-list{
+    .coupon-change-list {
       @include mx.flex($direction: column);
       gap: map.get(var.$unit, 16);
 
-      .coupon-change-item{
+      .coupon-change-item {
         @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
         border-radius: map.get(var.$radius, 'md');
       }
 
-      .coupon-change-card{
-        .vits-product-summary{ 
+      .coupon-change-card {
+        .vits-product-summary {
           padding: map.get(var.$unit, 16);
           background-color: transparent;
-          border:0;
+          border: 0;
           border-radius: 0;
         }
 
-        .vits-coupon-select{
+        .vits-coupon-select {
           padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 16);
 
-          .coupon-label{
+          .coupon-label {
             @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
             padding-bottom: map.get(var.$unit, 4);
           }
 
-          .coupon-field{
+          .coupon-field {
             .vits-select,
-            .vits-select-list{
+            .vits-select-list {
               width: 100%;
             }
 
-            .vits-select-trigger{
-              width: 100%;  
+            .vits-select-trigger {
+              width: 100%;
               padding: 0 map.get(var.$unit, 20);
             }
 
-            .vits-select-disabled{
-              .vits-select-trigger{
+            .vits-select-disabled {
+              .vits-select-trigger {
                 background: map.get(color.$layout-surf, 'sunken');
               }
             }
           }
         }
 
-        .vits-coupon-price{
+        .vits-coupon-price {
           padding: map.get(var.$unit, 16) map.get(var.$unit, 24);
           background: map.get(color.$layout-surf, 'raised');
           border-radius: map.get(var.$radius, 'md');
 
-          ul{
+          ul {
             @include mx.flex($justify: space-between);
             gap: fn.rem(33);
 
-            li{
+            li {
               @include mx.flex($align: center);
               gap: fn.rem(20);
 
-              .price-label{
+              .price-label {
                 @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
               }
 
-              .price-value{
+              .price-value {
                 @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
 
-                &.is-discount{
+                &.is-discount {
                   @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand'));
                 }
 
-                &.is-max-benefit{
+                &.is-max-benefit {
                   @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
                 }
               }
@@ -1791,98 +1800,140 @@
 }
 
 /* ===modal kendo window -화물 영업소 조회=== */
-.vits-freight-company{
+.vits-freight-company {
   position: relative;
 
   .vits-carrier-search {
     @include mx.flex($direction: column);
     gap: map.get(var.$unit, 24);
-  
+
     /* 검색 영역 */
     &-form {
       // stylelint-disable-next-line no-descending-specificity
-      .vits-select-trigger{
+      .vits-select-trigger {
         min-height: inherit;
       }
     }
-  
+
     .vits-form-row {
       @include mx.flex($align: flex-end);
       gap: map.get(var.$unit, 12);
     }
-  
+
     .vits-form-field {
       @include mx.flex($direction: column);
       gap: fn.rem(8);
       min-width: fn.rem(200);
-  
+
       &.is-grow {
         flex: 1;
       }
     }
-  
+
     .vits-form-label {
       @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
     }
-  
+
     .vits-form-control {
       width: 100%;
     }
-  
+
     .vits-form-actions {
       flex-shrink: 0;
 
-      [class*='vits-btn']{
+      [class*='vits-btn'] {
         min-width: fn.rem(120);
       }
     }
-  
+
     /* 결과 영역 */
     &-result {
       @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
       overflow: hidden;
       border-radius: map.get(var.$radius, 'md');
     }
-  
+
     .vits-table-carrier {
       width: 100%;
       border-collapse: collapse;
-  
+
       thead {
         background: map.get(color.$layout-surf, 'sunken');
       }
-  
+
       th,
       td {
         text-align: center;
         vertical-align: middle;
         border-bottom: 1px solid map.get(color.$layout-border, 'quaternary');
 
-        [class*='vits-btn']{
-          @include typo.typography('b4r', $color: map.get(color.$button-ghost-secondary, 'ghost-on_surf-secondary-default'));
+        [class*='vits-btn'] {
+          @include typo.typography(
+            'b4r',
+            $color: map.get(color.$button-ghost-secondary, 'ghost-on_surf-secondary-default')
+          );
           margin: 0 auto;
         }
       }
-  
+
       th {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
         padding: fn.rem(10) map.get(var.$unit, 8);
       }
 
-      td{
+      td {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
         padding: map.get(var.$unit, 8);
       }
 
-      tr:last-child{
-        td{
+      tr:last-child {
+        td {
           border-bottom: 0;
         }
       }
     }
 
-    &-pagination{
-      margin: 0 auto
+    &-pagination {
+      margin: 0 auto;
+    }
+  }
+}
+
+/* === 비츠온페이 로고 리뉴얼 변경 === */
+.ci .header-cont.vitsonpay-header-cont {
+  p {
+    @include mx.flex($align: center, $justify: center);
+    min-height: fn.rem(60);
+
+    img {
+      display: block;
+      min-height: fn.rem(32);
+    }
+  }
+}
+
+.ci .header-cont p::before,
+.ci .header-cont p::after {
+  content: none;
+}
+
+.vitsonpay-btn {
+  @include mx.flex($align: center, $justify: center);
+  min-height: fn.rem(60);
+  padding: 0 fn.rem(20);
+  background-color: map.get(color.$text-status, 'brand');
+
+  &[disabled],
+  &.disabled {
+    background-color: #c9c9c9;
+  }
+
+  .vitsonpay-btn-text {
+    @include typo.typography('h1b', $color: map.get(color.$text-colors, 'white'));
+
+    &::before,
+    &::after {
+      content: none;
     }
   }
 }

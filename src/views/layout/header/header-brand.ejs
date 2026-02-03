@@ -88,19 +88,18 @@ Object.keys(alphabet).forEach(k => alphabet[k].sort());
 
         <%# 검색어 칩 리스트 %>
         <div class="vits-chip-button-group" data-brand-chips hidden>
-          <button type="button" class="chip-reset" data-brand-chips-reset>
-            <span>초기화</span>
+          <button type="button" class="vits-text-underline-button size-l" data-brand-chips-reset>
+            초기화
           </button>
         </div>
       </div>
 
-      <%# ========== 브랜드 리스트 ========== %>
+      <%# 브랜드 리스트 %>
       <div class="gnb-panel-body">
-
-        <div class="vits-brand-tab" data-brand-tab>
+        <div class="vits-brand-tab" data-brand-tab data-default-tab="korean">
           <%# 탭 네비게이션 %>
           <div class="tab-nav" role="tablist" aria-label="브랜드 정렬">
-            <button type="button" role="tab" class="tab-btn"
+            <button type="button" role="tab" class="tab-btn is-all"
                     id="brand-tab-all"
                     data-tab-trigger="all"
                     aria-selected="false"
@@ -148,12 +147,12 @@ Object.keys(alphabet).forEach(k => alphabet[k].sort());
           <%# 탭 패널 %>
           <div class="tab-panels">
             <div class="tab-panels-inner">
-            <%# 전체 %>
+              <%# 전체 %>
               <div class="tab-panel" id="brand-panel-all" role="tabpanel" aria-labelledby="brand-tab-all" data-tab-panel="all" hidden>
-                <p class="result-count"><strong><%= allBrands.length %></strong>개의 브랜드</p>
+                <p class="result-count"><strong data-brand-count><%= allBrands.length %></strong>개의 브랜드</p>
                 <div class="result-list">
                   <% allBrands.forEach(name => { %>
-                  <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                  <a class="vits-gnb-promo-button" href="#!" data-brand-item><span class="text"><%= name %></span></a>
                   <% }); %>
                 </div>
               </div>
@@ -162,10 +161,10 @@ Object.keys(alphabet).forEach(k => alphabet[k].sort());
               <div class="tab-panel is-active" id="brand-panel-korean" role="tabpanel" aria-labelledby="brand-tab-korean" data-tab-panel="korean">
                 <% krChars.forEach((c, i) => { %>
                 <div class="tab-sub-panel<%= i === 0 ? ' is-active' : '' %>" data-sub-panel="<%= c %>"<%= i !== 0 ? ' hidden' : '' %>>
-                  <p class="result-count"><strong><%= korean[c].length %></strong>개의 브랜드</p>
+                  <p class="result-count"><strong data-brand-count><%= korean[c].length %></strong>개의 브랜드</p>
                   <div class="result-list">
                     <% korean[c].forEach(name => { %>
-                    <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                    <a class="vits-gnb-promo-button" href="#!" data-brand-item><span class="text"><%= name %></span></a>
                     <% }); %>
                   </div>
                 </div>
@@ -176,19 +175,24 @@ Object.keys(alphabet).forEach(k => alphabet[k].sort());
               <div class="tab-panel" id="brand-panel-alphabet" role="tabpanel" aria-labelledby="brand-tab-alphabet" data-tab-panel="alphabet" hidden>
                 <% enChars.forEach((c, i) => { %>
                 <div class="tab-sub-panel<%= i === 0 ? ' is-active' : '' %>" data-sub-panel="<%= c %>"<%= i !== 0 ? ' hidden' : '' %>>
-                  <p class="result-count"><strong><%= alphabet[c].length %></strong>개의 브랜드</p>
+                  <p class="result-count"><strong data-brand-count><%= alphabet[c].length %></strong>개의 브랜드</p>
                   <div class="result-list">
                     <% alphabet[c].forEach(name => { %>
-                    <a class="vits-gnb-promo-button" href="#!"><span class="text"><%= name %></span></a>
+                    <a class="vits-gnb-promo-button" href="#!" data-brand-item><span class="text"><%= name %></span></a>
                     <% }); %>
                   </div>
                 </div>
                 <% }); %>
               </div>
 
+              <%# 검색결과 없음 %>
+              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" data-tab-panel="empty" hidden>
+                <div class="result-empty">
+                  <p>검색결과가 없습니다.</p>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
 

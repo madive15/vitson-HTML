@@ -36,8 +36,9 @@
                       <!-- 안내 문구 -->
                       <div class="vits-signup-alert">비츠온엠알오 회원가입을 위해 약관에 동의해주세요</div>
 
-                      <!-- S: 약관 동의 -->
-                      <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`) %>
+                      <!-- S: 약관 동의 (일반 회원가입: 기업회원 및 공급처 이용 동의 문구 사용) -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`, { agreeBizText: '기업회원 및 공급처 이용 동의' }) %>
                       <!-- E: 약관 동의 -->
 
                       <!-- S: 정보 입력 -->
@@ -70,10 +71,21 @@
                             placeholder: '가입경로 선택',
                             className: 'size-l',
                             options: [
-                              { value: 'search', text: '검색엔진' },
+                              { value: 'search', text: '키워드 검색' },
+                              { value: 'intro', text: '유투브' },
+                              { value: 'intro', text: '블로그' },
+                              { value: 'intro', text: '카페' },
+                              { value: 'intro', text: '라디오 광고' },
+                              { value: 'intro', text: '페이스북' },
+                              { value: 'intro', text: '인스타' },
+                              { value: 'intro', text: '뉴스' },
+                              { value: 'intro', text: '온라인 배너' },
                               { value: 'intro', text: '지인 소개' },
-                              { value: 'ads', text: '광고' },
                               { value: 'etc', text: '기타' },
+                              { value: 'intro', text: '책자우편물' },
+                              { value: 'ads', text: '차량광고' },
+                              { value: 'intro', text: '방문영업' },
+                              { value: 'intro', text: 'FAX' }
                             ], disabled: false}) %>
                           </div>
                         </div>

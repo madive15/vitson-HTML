@@ -1,0 +1,48 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '비츠온페이'}) %>
+  <!-- inicis 공통 스타일 : 커스텀 X -->
+  <link rel="stylesheet" href="https://wpaystd.inicis.com/wpaystd/site/stdwpay/public/css/style.css?v=20260202052004" />
+  <!-- s: 커스텀 스타일 - as-is 소스 유지 -->
+  <link rel="stylesheet" href="<%= _public %>/resources/css/inicis/custom_guide.css" />
+  <link rel="stylesheet" href="<%= _public %>/resources/css/inicis/custom_text_guide.css" />
+  <!-- e: 커스텀 스타일 -->
+
+  <body class="vits-scope" style="width: 450px">
+    <!-- s: 비츠온페이 as-is 팝업 -->
+    <div class="ci">
+      <div class="ci-area">
+        <a class="btn_l" id="btn_back">
+          <div class="btn_back"></div>
+        </a>
+        <!-- s: 커스텀 가능 영역 (로고) -->
+        <div class="header-tit">
+          <div class="header-cont vitsonpay-header-cont">
+            <p class="cst-text">
+              <!-- [D] 리뉴얼 로고 적용  -->
+              <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-vitsonpay.svg" alt="비츠온페이 로고" />
+            </p>
+          </div>
+        </div>
+        <!-- e: 커스텀 가능 영역 (로고) -->
+        <a class="btn_r" id="btn_close">
+          <div class="btn_close"></div>
+        </a>
+      </div>
+      <div class="space-60"></div>
+    </div>
+
+    <!-- s: 하단 버튼 영역 -->
+    <button type="button" id="verifyBtn" class="mobilianceVerify">
+      <!-- s: 커스텀 가능 영역 (버튼)-->
+      <!-- [D]비활성화 disabled -->
+      <div class="btn_bot vitsonpay-btn" disabled>
+        <span class="cst_auth_btn vitsonpay-btn-text">인증번호 요청</span>
+      </div>
+      <!-- e: 커스텀 가능 영역 (버튼) -->
+    </button>
+    <!--e: 비츠온페이 as-is 팝업 -->
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>
