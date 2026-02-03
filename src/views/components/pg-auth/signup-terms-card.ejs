@@ -1,4 +1,6 @@
+<!-- prettier-ignore -->
 <% const _src = srcPath; const _public = publicPath; %>
+<% const agreeBizLabel = typeof agreeBizText !== 'undefined' ? agreeBizText : '매출처 이용 동의'; %>
 <!-- [D] case: 회원가입> 동의하기 , ISVM 전환 신청 페이지 공통으로 사용-->
 <div class="vits-signup-terms-card" data-checkbox-scope>
   <!-- 전체 동의 -->
@@ -54,14 +56,13 @@
         name: 'agreeBiz',
         value: 'biz',
         size: 'm',
-        text: '매출처 이용 동의',
+        text: agreeBizLabel,
         suffix: '(필수)',
         checkboxType: 'item',
         checked: true,
       }) %>
       <!-- prettier-ignore -->
-      <a href="#!" class="vits-signup-terms-link" aria-label="매출처 이용 동의 상세보기">
-        <!-- case:일반 회원가입에선 마케팅정보 수신동의  -->
+      <a href="#!" class="vits-signup-terms-link" aria-label="<%= agreeBizLabel %> 상세보기">
         <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
       </a>
     </li>

@@ -7,6 +7,7 @@
   <!-- 상단 컨트롤 영역 -->
   <div class="vits-cart-toolbar">
     <div class="vits-cart-toolbar-left">
+      <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
         variant: 'basic', 
         size: 's', 
@@ -28,27 +29,31 @@
     </div>
 
     <div class="vits-cart-toolbar-right">
+      <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, { 
         size: 'xs', 
         variant: 'outline-secondary', 
         text: '품절 상품 삭제', 
       }) %>
-      <%- include(`${_src}/views/components/button/button.ejs`, { 
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
         size: 'xs', 
         variant: 'outline-secondary', 
         text: '선택 상품 삭제', 
       }) %>
-      <%- include(`${_src}/views/components/button/button.ejs`, { 
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
         size: 'xs', 
         variant: 'outline-secondary', 
-        text: '견적서 출력', 
+        text: '견적서 출력',
         iconLeft: true, 
         iconName: 'ic-print' 
       }) %>
-      <%- include(`${_src}/views/components/button/button.ejs`, { 
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
         size: 'xs', 
         variant: 'outline-secondary', 
-        text: '엑셀 다운로드', 
+        text: '엑셀 다운로드',
         iconLeft: true, 
         iconName: 'ic-download-2' 
       }) %>
@@ -59,9 +64,9 @@
   <div class="vits-cart-body">
     <!-- 상품 리스트 -->
     <div class="vits-cart-list">
-      
       <!-- 상품 카드 -->
       <!-- [D]일시 품절 일때 is-sold-out 클래스 추가 -->
+      <!-- prettier-ignore -->
       <% for (let i = 0; i < 3; i++) { %>
       <div class="<%= i === 0 ? 'vits-cart-item is-sold-out' : 'vits-cart-item' %>">
         <!-- 상단 영역 -->
@@ -90,6 +95,7 @@
         <div class="vits-cart-item-main">
           <!-- 체크 -->
           <div class="vits-cart-item-check">
+            <!-- prettier-ignore -->
             <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
               datas: [
                 {
@@ -100,14 +106,14 @@
               ],
             }) %>
           </div>
-      
+
           <!-- 썸네일 -->
           <div class="vits-cart-item-thumb">
             <a href="#!">
-              <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="접착테이프">
+              <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="접착테이프" />
             </a>
           </div>
-      
+
           <!-- 상품 정보 -->
           <div class="vits-cart-item-info">
             <a href="#!" class="vits-cart-item-link">
@@ -115,34 +121,36 @@
                 <span class="brand">서경</span>
                 <span class="code">63531</span>
               </div>
-        
+
               <div class="vits-cart-item-name">
                 <span class="name-text">더블 OPP 접착테이프 투명 (초강력 접착제)</span>
               </div>
-        
+
               <div class="vits-cart-item-option">
                 <span class="option-label">2.6mm(공~5kg)</span>
-                <span class="option-value">낱개(1)</span>
               </div>
 
               <div class="vits-cart-item-badge">
+                <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components/label/product-flags.ejs`, {
                   today: true, 
                   tomorrow: true,
                   hot: true
                 }) %>
+                <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { 
                   text: '무료배송', 
                   variant: 'free-ship' 
                 }) %>
               </div>
             </a>
-      
+
             <!-- 수량조절 -->
             <div class="vits-cart-item-quantity">
               <div class="unit-control">
-                <!-- 낱개 ,   -->
-                <button type="button" class="unit-control-btn" aria-label="낱개(1)">
+                <!-- [D] 26-02-02 is-active 시 클래스 추가 -->
+                <!-- 낱개  -->
+                <button type="button" class="unit-control-btn is-active" aria-label="낱개(1)">
                   <span class="unit-text">낱개(1)</span>
                 </button>
                 <!-- 대포장 -->
@@ -150,7 +158,7 @@
                   <span class="unit-text">대포장(250)</span>
                 </button>
                 <button type="button" class="unit-control-input" aria-label="길이">
-                  <input type="text" id="" class="unit-input" value="12">
+                  <input type="text" id="" class="unit-input" value="12" />
                   <span class="unit-text">BOX</span>
                 </button>
               </div>
@@ -164,7 +172,7 @@
                 step: 1,
                 unit: 'BOX'
               }) %>
-
+              <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/button/button.ejs`, {
                 size: 'xs',
                 variant: 'tertiary',
@@ -186,39 +194,38 @@
             </div>
 
             <div class="price-discount">
+              <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/button/button.ejs`, {
                 size: 'xs',
                 variant: 'scoped-primary',
                 text: '쿠폰적용',
               }) %>
-              <p class="vits-cart-coupon-desc">
-                쿠폰 적용 시 최대 2,000원 할인
-              </p>
+              <p class="vits-cart-coupon-desc">쿠폰 적용 시 최대 2,000원 할인</p>
             </div>
           </div>
         </div>
-      
+
         <!-- 하단 금액 요약 -->
         <div class="vits-cart-item-bottom">
           <div class="vits-cart-price-summary">
-
             <!-- 상품금액 -->
             <div class="vits-cart-summary-item">
               <span class="label">상품금액(VAT별도)</span>
               <strong class="value">14,500원</strong>
             </div>
-        
+
             <!-- s: 할인금액 (토글) -->
             <!-- [D] 할인금액 없을 시 해당 영역 비노출 -->
             <div class="vits-cart-summary-item has-discount">
               <div class="discount-info is-active">
                 <button type="button" class="discount-toggle" aria-expanded="true">
                   <span class="label">할인금액</span>
+                  <!-- prettier-ignore -->
                   <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
                 </button>
                 <span class="value">-2,000원</span>
               </div>
-        
+
               <!-- 할인 상세 -->
               <div class="discount-info-detail" aria-hidden="false">
                 <div class="detail-row">
@@ -232,14 +239,14 @@
               </div>
             </div>
             <!-- e: 할인금액 -->
-        
+
             <!-- 배송비 -->
             <div class="vits-cart-summary-item">
               <span class="label">배송비</span>
               <strong class="value">3,000원</strong>
             </div>
           </div>
-        
+
           <!-- 우측: 주문금액 -->
           <div class="vits-cart-order-total">
             <span class="label">주문금액</span>
@@ -254,6 +261,7 @@
 
     <!-- 더보기 -->
     <div class="vits-cart-more">
+      <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, { 
         size: 'lg', 
         variant: 'outline-secondary', 

@@ -737,9 +737,13 @@ $textarea-size: (
       box-shadow: inset 0 0 0 1px map.get(color.$text-status, 'brand');
     }
 
-    .input-item input,
     .vits-textarea textarea {
       color: map.get(color.$text-status, 'brand');
+    }
+
+    // 실패 > text 색상은 primary 색상 (02.02)
+    .input-item input {
+      color: map.get(color.$text-status, 'primary');
     }
 
     .validation-message p {

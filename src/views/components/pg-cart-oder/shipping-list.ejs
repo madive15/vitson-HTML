@@ -19,12 +19,12 @@
 
   <!-- 배송 방법 선택 -->
   <div class="vits-shipping-method">
-    
     <h3 class="vits-shipping-method-title">배송 방법 선택</h3>
 
     <div class="vits-shipping-method-tabs">
       <button type="button" class="vits-shipping-method-btn is-active" data-method="parcel">
         <span class="icon">
+          <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %>
         </span>
         <span class="text">택배</span>
@@ -32,14 +32,15 @@
 
       <button type="button" class="vits-shipping-method-btn" data-method="quick">
         <span class="icon">
+          <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %>
         </span>
         <span class="text">퀵배송</span>
       </button>
 
       <button type="button" class="vits-shipping-method-btn" data-method="freight">
-        
         <span class="icon">
+          <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'freight' }) %>
         </span>
         <span class="text">화물</span>
@@ -55,9 +56,7 @@
       <div class="vits-shipping-guide">
         <ul>
           <li>선택하신 택배로 배송되는 것을 원칙으로 합니다.</li>
-          <li class="is-warning">
-            단, 비츠영업용 차량으로 직배송될 수도 있습니다.
-          </li>
+          <li class="is-warning">단, 비츠영업용 차량으로 직배송될 수도 있습니다.</li>
           <li>발송 마감 시간은 16시입니다.</li>
         </ul>
       </div>
@@ -101,6 +100,7 @@
           <div class="vits-form-row">
             <label class="vits-form-label">도착 희망일</label>
             <div class="vits-form-field">
+              <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
                 id: 'transArrival',
                 name: 'transArrival',
@@ -163,6 +163,7 @@
       <div class="vits-form-row">
         <div class="vits-form-row-group">
           <label class="vits-form-label">배송지 선택</label>
+          <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/button/button.ejs`, {
             size: 'xs',
             variant: 'scoped-info',
@@ -325,9 +326,9 @@
                 value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '메가존',
                 disabled: false,
               }) %>
-            </div>  
+            </div>
           </div>
-          
+
           <div class="vits-form-row">
             <label class="vits-form-label">운임 선택</label>
             <div class="vits-form-field">
