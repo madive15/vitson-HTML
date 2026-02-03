@@ -49,6 +49,7 @@
 
     var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
     var $calendarWrap = null;
+    var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]'); // 2026-02-03 추가
 
     function getCalendar() {
       var inst = $el.data('kendoDatePicker');
@@ -271,6 +272,13 @@
       }
     }
 
+    // 2026-02-03 추가 - 값 선택 시 래퍼에 is-selected 클래스 토글
+    function updateSelectedState() {
+      if (!$wrapper.length) return;
+      var inst = $el.data('kendoDatePicker');
+      $wrapper.toggleClass('is-selected', !!(inst && inst.value()));
+    }
+
     /* 옵션 */
     opts.format = opts.format || 'yyyy.MM.dd';
     opts.culture = opts.culture || 'ko-KR';
@@ -328,6 +336,13 @@
         forceApplyYearViewMonthNames();
         updatePrevNavState();
       });
+
+      // 2026-02-03 추가 - 날짜 선택/변경 시 is-selected 토글
+      inst.bind('change', function () {
+        updateSelectedState();
+      });
+
+      updateSelectedState(); // 2026-02-03 추가 - 초기값 대응
     }
 
     if (parseBool($el.attr('data-open')) && inst) {

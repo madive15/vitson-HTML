@@ -743,7 +743,7 @@ $scoped-button-configs: (
 
   span {
     @include typo.typography('b3s');
-    @include mx.ellipsis-multi(1.3, $text-overflow: false);
+    @include mx.ellipsis-multi(1.4, $text-overflow: false);
     flex: 0 1 auto;
     min-width: 0;
     max-width: 100%;
@@ -840,6 +840,15 @@ $scoped-button-configs: (
           @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
         }
       }
+    }
+  }
+}
+
+/* 버튼 폰트 굵기 */
+@each $key, $value in typo.$typo-weight {
+  [class*='vits-btn-'] {
+    &.weight-#{$key} .text {
+      font-weight: $value !important;
     }
   }
 }

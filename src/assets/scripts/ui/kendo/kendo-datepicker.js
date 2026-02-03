@@ -240,6 +240,15 @@
     uiObserver.observe($calendarWrap[0], {childList: true, subtree: true, characterData: true});
 
     // ============================================
+    // 상태 클래스 관리
+    // ============================================
+
+    // 2026-02-03 추가 - 범위 선택 완료 시 래퍼에 is-selected 클래스 토글
+    function updateSelectedState() {
+      $wrap.toggleClass('is-selected', !!(state.startDate && state.endDate));
+    }
+
+    // ============================================
     // 이벤트 핸들러
     // ============================================
 
@@ -267,6 +276,7 @@
       updateDisplay();
       updateHiddenInputs();
       highlightRange();
+      updateSelectedState(); // 2026-02-03 추가
     }
 
     function onCalendarNavigate() {
@@ -425,6 +435,7 @@
         updateDisplay();
         updateHiddenInputs();
         highlightRange();
+        updateSelectedState(); // 2026-02-03 추가
 
         if (calendar && state.startDate) {
           calendar.navigate(state.startDate);
@@ -447,6 +458,7 @@
         }
 
         highlightRange();
+        updateSelectedState(); // 2026-02-03 추가
         $el.trigger('rangepicker:reset');
       },
 
@@ -486,6 +498,7 @@
 
     updateDisplay();
     highlightRange();
+    updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
 
     console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }

@@ -43,6 +43,26 @@
               *  ㄴ/g-ui/g-toggle.html 참고
             </div>
           </code>
+          <code>
+            <div style="font-size: 12px">
+              <pre>
+* [ 폰트 굵기 적용 ]
+* &lt;%- include(`${_src}/views/components/button/button.ejs`, { className: 'weight-r' }) %&gt;
+  ㄴ className으로 적용
+*
+* Button_semantic 
+  ㄴ 사이즈 sm                        => default font-weight: 600
+*
+* Button_semantic 외 버튼
+  ㄴ 사이즈 sm, md, lg, lg-p, xl, xxl => default font-weight: 700
+  ㄴ 사이즈 xs, xxs                   => default font-weight: 400
+*
+* 폰트 굵기 설정 클래스:
+  ㄴ weight-r(400), weight-m(500), weight-s(600), weight-b(700)
+            </pre
+              >
+            </div>
+          </code>
         </div>
         <!-- Button_sementic -->
         <h3 class="vits-guide-subtitle">Button_sementic</h3>
@@ -57,7 +77,7 @@
           <ul class="vits-guide-list flex-start">
             <li>
               <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'scoped-primary', text: 'scoped-primary 버튼'}) %>
+              <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'scoped-primary', text: 'scoped-primary 버튼', className: 'weight-s'}) %>
             </li>
             <li>
               <!-- prettier-ignore -->
