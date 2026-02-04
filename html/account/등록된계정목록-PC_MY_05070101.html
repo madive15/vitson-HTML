@@ -1,5 +1,9 @@
 
 <!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
 <html lang="ko" class="vits-scope">
   
 <head>
@@ -10,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>사업자등록증 (공통 첨부파일)</title>
+  <title>아이디 찾기</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -29,9 +33,13 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
+    <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
 
+    <!-- S: vits-wrapper -->
     <section class="vits-wrapper">
       
 <!-- prettier-ignore -->
@@ -21762,84 +21770,110 @@
 <!-- E: vits-header -->
 
 
+      <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
         <div class="vits-wrap">
+          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-grid-main vits-main-plp">
-              <div class="vits-inner" style="padding: 100px 0">
-                <button
-                  type="button"
-                  class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('commonAttachmentModal')"
-                >
-                  <span class="text">사업자등록증 (공통 첨부파일)</span>
-                </button>
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-auth">
+              <div class="vits-inner inner-column">
+                <section class="vits-signup id-find-wrap">
+                  <!-- 컨텐츠 헤딩 -->
+                  <div class="vits-signup-headline">
+                    <h2 class="vits-signup-title">아이디 찾기</h2>
+                  </div>
 
-                <!-- prettier-ignore -->
+                  <div class="vits-signup-form-wrap id-find-form">
+                    <!-- S: 아이디 표시 카드 -->
+                    <div class="id-info-card">
+                      <p class="id-info-text">회원님의 아이디는 <span class="found-id-text">mzte****</span> 입니다.</p>
+                    </div>
+                    <!-- E: 아이디 표시 카드 -->
 
-                 
-                
+                    <!-- S: 메인 링크 -->
+                    <div class="id-find-main-link">
+                      <!-- prettier-ignore -->
+                      
+
+<a class="vits-text-link"
+   href="#"
+   
+   >
+  메인 화면 가기
+</a>
+
+                    </div>
+                    <!-- E: 메인 링크 -->
+
+                    <!-- S: 액션 버튼 -->
+                    <div class="id-find-actions">
+                      <!-- prettier-ignore -->
+                      
 
 
-
-<div 
-  id="commonAttachmentModal"
-  class="vits-modal-inner"
-  data-ui="kendo-window"
-  data-opt='{}'
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="commonAttachmentModal-title"
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-outline-secondary  id-find-btn-pw"
   
+  >
   
-  style="display:none;"
->
-  <!-- 헤더 -->
-  <div class="vits-modal-header">
-    <div class="vits-modal-header-content">
-      <h2 class="vits-modal-title" id="commonAttachmentModal-title">사업자등록증</h2>
 
-
-    </div>
-    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('commonAttachmentModal')" aria-label="닫기">
-      <i class="ic ic-x" aria-hidden="true"></i>
-
-    </button>
-  </div>
-
-  <!-- 컨텐츠 -->
-  <div class="vits-modal-content" data-scroll-check>
-  
-    <!-- prettier-ignore -->
-
-
-<section class="vits-attachment-popup">
-  <img src="../../public/resources/img/mro/renewal/temp/temp-a4-file.png" alt="" />
-</section>
+  <span class="text">비밀번호 찾기</span>
 
   
-  </div>
+</button>
 
-  <!-- 푸터 -->
+                      <!-- prettier-ignore -->
+                      
 
-  <div class="vits-modal-footer">
 
-    <div class="vits-modal-buttons is-single">
+<button
+  type="button"
+  class="vits-btn-xl vits-btn-primary  id-find-btn-login"
+  
+  >
+  
 
-      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('commonAttachmentModal')">
-        <span class="text">확인</span>
-      </button>
+  <span class="text">로그인</span>
 
-    </div>
+  
+</button>
 
-  </div>
+                    </div>
+                    <!-- E: 액션 버튼 -->
 
+                    <!-- S: 고객 지원 -->
+                    
+<!-- [D] case: 회원가입 완료 / 아이디 찾기 결과 / 휴면상태 안내 페이지 공통 사용 -->
+<div class="auth-contact">
+  <a href="tel:15668967" class="auth-contact-call" aria-label="고객센터 1566-8967">
+    <span class="auth-contact-icon">
+      <img src="../../public/resources/img/mro/renewal/ic/ic-calling.svg" alt="" aria-hidden="true" />
+    </span>
+    <span class="auth-contact-text">고객센터 1566-8967</span>
+  </a>
+  <a href="#!" class="auth-contact-kakaotalk" aria-label="카카오톡 채널 문의">
+    <span class="auth-contact-icon">
+      <img src="../../public/resources/img/mro/renewal/ic/ic-kakaotalk.svg" alt="" aria-hidden="true" />
+    </span>
+    <span class="auth-contact-text">카카오톡 채널 문의</span>
+  </a>
 </div>
+
+                    <!-- E: 고객 지원 -->
+                  </div>
+                </section>
               </div>
             </div>
+            <!-- E: vits-grid-main -->
           </div>
+          <!-- E: vits-grid -->
         </div>
+        <!-- E: vits-wrap -->
       </main>
+      <!-- E: vits-main -->
 
       
 
@@ -22350,6 +22384,7 @@
 
 
     </section>
+    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->

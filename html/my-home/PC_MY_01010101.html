@@ -1,5 +1,12 @@
 
+
+<!-- prettier-ignore -->
+
 <!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
 <html lang="ko" class="vits-scope">
   
 <head>
@@ -10,7 +17,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
   />
-  <title>후불 신청서 팝업</title>
+  <title>마이페이지 홈</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -29,9 +36,13 @@
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
 <script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
+    <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
 
+    <!-- S: vits-wrapper -->
     <section class="vits-wrapper">
       
 <!-- prettier-ignore -->
@@ -59744,557 +59755,399 @@
 <!-- E: vits-header -->
 
 
+      <!-- S: vits-main -->
       <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
         <div class="vits-wrap">
+          <!-- S: vits-grid -->
           <div class="vits-grid">
-            <div class="vits-grid-main vits-main-plp">
-              <div class="vits-inner" style="padding: 100px 0">
-                <button
-                  type="button"
-                  class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('creditModal')"
-                >
-                  <span class="text">후불 신청서 팝업</span>
-                </button>
-
-                <div>
-                  <pre style="font-size: 16px; line-height: 1.5">
-&lt;!-- ============================================
-  [UI GUIDE] 담당자 정보 영역 상태 확인
-  
-  ✅ 상태 1: 담당자 없음 (초기)
-     - "추가 담당자 정보가 없습니다." 문구 노출
-     
-  ✅ 상태 2: 담당자 추가 버튼 클릭 시
-     - 문구 → "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요."
-     - 입력폼 표시
-     
-  ✅ 상태 3: 입력폼 "추가" 클릭 시
-     - 입력폼 숨김
-     - 담당자 목록(chip) 표시
-     
-  ✅ 상태 4: 목록에서 "담당자 추가" 클릭 시
-     - 목록 유지 + 아래에 입력폼 추가
-     
-  ✅ 상태 5: 입력폼 "취소" 클릭 시
-     - 해당 입력폼만 삭제
-     - 목록 있으면 목록 유지
-     - 목록/폼 둘 다 없으면 초기 상태로
-     
-  ✅ 상태 6: 칩 전부 삭제 시
-     - 목록 영역 숨김
-     - 열린 입력폼은 유지
-     - 문구: 폼 있으면 "정보를 입력하신 후..." / 없으면 "추가 담당자 정보가 없습니다."
-============================================ --&gt;
-                </pre
-                  >
-                </div>
-              </div>
-
-              <!-- prettier-ignore -->
-              
-              
-
-
-
-<div 
-  id="creditModal"
-  class="vits-modal-inner"
-  data-ui="kendo-window"
-  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="creditModal-title"
-  
-  
-  style="display:none;"
->
-  <!-- 헤더 -->
-  <div class="vits-modal-header">
-    <div class="vits-modal-header-content">
-      <h2 class="vits-modal-title" id="creditModal-title">후불 신청서</h2>
-
-
-    </div>
-    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('creditModal')" aria-label="닫기">
-      <i class="ic ic-x" aria-hidden="true"></i>
-
-    </button>
-  </div>
-
-  <!-- 컨텐츠 -->
-  <div class="vits-modal-content" data-scroll-check>
-  
-    
-
-<section class="vits-credit-application">
-  <h2 class="sr-only">후불 신청서</h2>
-
-  <!-- S: 회사 정보 -->
-  <dl class="credit-company-info">
-    <dt>회사명</dt>
-    <dd>메가존</dd>
-    <dt>사업자번호</dt>
-    <dd>123-45-67890</dd>
-
-    <!-- S: 사업자등록증 첨부 전 -->
-    <dt>사업자등록증 첨부하기</dt>
-    <dd>
-      <!-- prettier-ignore -->
-      
-
-
-<button
-  type="button"
-  class="vits-btn-sm vits-btn-secondary icon-left"
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-upload" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">파일 첨부하기</span>
-
-  
-</button>
-
-    </dd>
-    <!-- E: 사업자등록증 첨부 전 -->
-
-    <!-- S: 사업자등록증 첨부 후 -->
-    <dt>사업자등록증 첨부하기</dt>
-    <dd>
-      <!-- prettier-ignore -->
-      
+            <div class="vits-grid-main vits-main-my-home">
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-chip-file">
-  <span class="text name">회사 사업자 등록증</span>
-  <span class="text ext">.PDF</span>
-  <span class="icon"> <i class="ic ic-x" aria-hidden="true"></i>
- </span>
-</button>
-
-    </dd>
-    <!-- E: 사업자등록증 첨부 후 -->
-  </dl>
-  <!-- E: 회사 정보 -->
-
-  <!-- S: 담당자 정보 -->
-  <div class="credit-manager-section" data-manager-section>
-    <div class="manager-header">
-      <h3 class="manager-title">담당자 정보 입력하기</h3>
-      <p class="manager-desc">기존 담당자 외 후불 관련 추가 담당자가 있을 경우 입력해 주세요.</p>
-    </div>
-
-    <!-- S: 담당자 없을 때 -->
-    <div class="manager-content" data-manager-empty>
-      <div class="manager-empty">
-        <p class="empty-text" data-manager-empty-text>추가 담당자 정보가 없습니다.</p>
-        <!-- prettier-ignore -->
-        
+ 
 
 
-<button
-  type="button"
-  class="vits-btn-md vits-btn-outline-tertiary icon-left"
-  
-  
-  data-manager-add-btn
-    >
-  
-    <span class="icon">
-      <i class="ic ic-user" aria-hidden="true"></i>
-    </span>
-  
+<aside class="vits-grid-side vits-grid-side-left vits-side-mypage">
+  <h2 class="mypage-sidemenu-title">마이페이지</h2>
+  <nav class="mypage-sidemenu" aria-label="마이페이지 메뉴">
+    <ul class="mypage-sidemenu-list">
+      
+      <li class="mypage-sidemenu-item" data-menu-id="order">
+        <a class="mypage-sidemenu-link" href="/mypage/order">주문관리</a>
 
-  <span class="text">담당자 추가</span>
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-delivery">
+            <a class="mypage-sidemenu-link" href="/mypage/order/delivery">주문/배송조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-cancel">
+            <a class="mypage-sidemenu-link" href="/mypage/order/cancel">취소/반품내역</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-frequent">
+            <a class="mypage-sidemenu-link" href="/mypage/order/frequent">자주구매</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="order-like">
+            <a class="mypage-sidemenu-link" href="/mypage/order/like">좋아요</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="docs">
+        <a class="mypage-sidemenu-link" href="/mypage/docs">서류관리</a>
 
-  
-</button>
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-tax">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/tax">세금계산서 조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-quote">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/quote">견적서 조회</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-bill">
+            <a class="mypage-sidemenu-link" href="/mypage/docs/bill">청구서 조회</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="benefit">
+        <a class="mypage-sidemenu-link" href="/mypage/benefit">혜택관리</a>
 
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="benefit-coupon">
+            <a class="mypage-sidemenu-link" href="/mypage/benefit/coupon">쿠폰함</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+      <li class="mypage-sidemenu-item" data-menu-id="info">
+        <a class="mypage-sidemenu-link" href="/mypage/info">정보관리</a>
+
+        <ul class="mypage-sidemenu-sub-list">
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-member">
+            <a class="mypage-sidemenu-link" href="/mypage/info/member">회원정보 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-address">
+            <a class="mypage-sidemenu-link" href="/mypage/info/address">배송지 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-pay">
+            <a class="mypage-sidemenu-link" href="/mypage/info/pay">비츠온페이 관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-postpay">
+            <a class="mypage-sidemenu-link" href="/mypage/info/postpay">후불관리</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-qna">
+            <a class="mypage-sidemenu-link" href="/mypage/info/qna">1:1 문의</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-bulk">
+            <a class="mypage-sidemenu-link" href="/mypage/info/bulk">대량구매문의</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-account">
+            <a class="mypage-sidemenu-link" href="/mypage/info/account">계정등록</a>
+          </li>
+          
+          <li class="mypage-sidemenu-sub-item" data-menu-id="info-survey">
+            <a class="mypage-sidemenu-link" href="/mypage/info/survey">설문조사</a>
+          </li>
+          
+        </ul>
+      </li>
+      
+    </ul>
+  </nav>
+</aside>
+
+                  <!-- E: vits-grid-side-left -->
+
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-home">
+                    <div class="vits-mypage-panel">
+                      <!-- S: 프로필 -->
+                      <div class="vits-mypage-home-profile">
+                        <p class="profile-greeting">김비츠님, 안녕하세요</p>
+                        <a href="#!" class="profile-coupon">
+                          <span class="coupon-icon">
+                            <i class="ic ic-coupon-fill" aria-hidden="true"></i>
+
+                          </span>
+                          <span class="coupon-label">나의 쿠폰</span>
+                          <span class="coupon-count">3</span>
+                        </a>
+                        <div class="profile-shortcuts">
+                          <a href="#!" class="vits-btn-lg vits-btn-outline-secondary weight-r">
+                            <span class="icon">
+                              <i class="ic ic-user"></i>
+                            </span>
+                            <span class="text">내 정보</span>
+                          </a>
+
+                          <a href="#!" class="vits-btn-lg vits-btn-outline-secondary weight-r">
+                            <span class="icon">
+                              <i class="ic ic-plus"></i>
+                            </span>
+                            <span class="text">계정 등록</span>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- E: 프로필 -->
+
+                      <!-- S: 주문현황 -->
+                      
+
+<!-- prettier-ignore -->
+
+
+<div class="vits-mypage-home-order is-empty">
+  <ul class="order-status-list">
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><i class="ic ic-order" aria-hidden="true"></i>
+</div>
+        <p class="status-label">주문접수</p>
+        <p class="status-sub">입금대기중</p>
+        <p class="status-count">0</p>
       </div>
-    </div>
-    <!-- E: 담당자 없을 때 -->
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><i class="ic ic-money-bag" aria-hidden="true"></i>
+</div>
+        <p class="status-label">결제완료</p>
+        <p class="status-count">0</p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><i class="ic ic-compare" aria-hidden="true"></i>
+</div>
+        <p class="status-label">주문완료</p>
+        <p class="status-sub">여신주문 완료</p>
+        <p class="status-count">0</p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><i class="ic ic-box" aria-hidden="true"></i>
+</div>
+        <p class="status-label">배송준비중</p>
+        <p class="status-count">0</p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><i class="ic ic-speed-truck" aria-hidden="true"></i>
+</div>
+        <p class="status-label">배송중</p>
+        <p class="status-count">0</p>
+      </div>
+    </li>
+  </ul>
+</div>
 
-    <!-- S: 추가 담당자 목록 -->
-    <div class="manager-content is-hidden" data-manager-list>
-      <div class="manager-list">
-        <!-- prettier-ignore -->
-        
+                      <!-- E: 주문현황 -->
 
-<div class="vits-chip-button-group">
+                      
+
+                      <!-- prettier-ignore -->
+                      
+
+                      <!-- prettier-ignore -->
+                      
+
+                      <!-- S: 자주 구매 -->
+                      
+
+<!-- prettier-ignore -->
+
+
+<div class="vits-mypage-home-frequent is-empty">
+  <div class="frequent-head" data-scss="head">
+    <p class="vits-mypage-home-title">자주 구매하신 상품이에요</p>
+    <!-- prettier-ignore -->
     
-  <button
-    type="button"
-    class="vits-chip-button type-filled"
-    data-chip-action="remove"
-    data-chip-value="user1"
-  >
-    <span class="text">김직원</span>
-    <span class="text team">영업팀 부장</span>
-    <span class="icon" aria-hidden="true">
-      <i class="ic ic-x" aria-hidden="true"></i>
 
-    </span>
-  </button>
+<!-- prettier-ignore -->
+ 
 
-     
-  <button
-    type="button"
-    class="vits-chip-button type-filled"
-    data-chip-action="remove"
-    data-chip-value="user2"
-  >
-    <span class="text">김배달</span>
-    <span class="text team">물류팀 사원</span>
-    <span class="icon" aria-hidden="true">
-      <i class="ic ic-x" aria-hidden="true"></i>
 
-    </span>
-  </button>
-
-     
-  <button
-    type="button"
-    class="vits-chip-button type-filled"
-    data-chip-action="remove"
-    data-chip-value="user3"
-  >
-    <span class="text">제갈유진</span>
-    <span class="text team">글로벌 디지털 트랜스포메이션 전략기획팀 부장</span>
-    <span class="icon" aria-hidden="true">
-      <i class="ic ic-x" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-     
-  <button
-    type="button"
-    class="vits-chip-button type-filled"
-    data-chip-action="remove"
-    data-chip-value="user4"
-  >
-    <span class="text">황보지훈</span>
-    <span class="text team">인사팀 선임매니저</span>
-    <span class="icon" aria-hidden="true">
-      <i class="ic ic-x" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-     
-  <button
-    type="button"
-    class="vits-chip-button type-filled"
-    data-chip-action="remove"
-    data-chip-value="user5"
-  >
-    <span class="text">박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리</span>
-    <span class="text team">디지털혁신센터 플랫폼개발팀 책임연구원</span>
-    <span class="icon" aria-hidden="true">
-      <i class="ic ic-x" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
+<a class="vits-text-arrow-link"
+   href="#!"
    
-</div>
+   >
+  <span class="text">자주 구매 더보기</span>
+  <span class="icon"><i class="ic ic-arrow-right" aria-hidden="true"></i>
+</span>
+</a>
+  </div>
+  <div class="frequent-body" data-scss="body">
+    
+    <!-- prettier-ignore -->
+    
+      
 
-        <!-- prettier-ignore -->
-        
+<!-- prettier-ignore -->
+
+
+<section class="vits-empty-state" data-ui="empty-state">
+  <div class="vits-empty-state-content">
+    <div class="vits-empty-state-text">
+      <h2 class="vits-empty-state-title">아직 자주 구매 상품이 없습니다</h2>
+      
+      <p class="vits-empty-state-desc">비츠온만의 초특가를 경험해 보세요.</p>
+      
+    </div>
+    <div class="vits-empty-state-icon" aria-hidden="true">
+      <i class="ic ic-document-paper" aria-hidden="true"></i>
+
+    </div>
+  </div>
+  
+  <div class="vits-empty-state-action">
 
 
 <button
   type="button"
-  class="vits-btn-md vits-btn-outline-tertiary icon-left"
+  class="vits-btn-xl vits-btn-primary icon-left btn-fix-w200"
   
-  
-  data-manager-add-btn
-    >
+  >
   
     <span class="icon">
-      <i class="ic ic-user" aria-hidden="true"></i>
+      <i class="ic ic-lightning" aria-hidden="true"></i>
     </span>
   
 
-  <span class="text">담당자 추가</span>
+  <span class="text">초특가 상품 보기</span>
 
   
 </button>
-
-      </div>
-    </div>
-    <!-- E: 추가 담당자 목록 -->
-
-    <!-- S: 추가 담당자 입력 폼 -->
-    <div class="manager-content is-hidden" data-manager-form>
-      <div class="manager-form">
-        <p class="form-title">추가 담당자</p>
-        <dl class="form-fields">
-          <dt>이름</dt>
-          <dd>
-            <!-- prettier-ignore -->
-            
-
-<div class="vits-input size-default ">
-  <div class="input-item">
-    <label for="credit-name" class="sr-only">이름</label>
-
-    <input
-      type="text"
-      name="credit-name"
-      id="credit-name"
-      placeholder="이름"
-      
-      
-      
-      
-      
-      
-
-      
-      
-      
-    />
-  </div>
-
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="credit-name-validation" aria-live="polite"></p>
-  </div>
 </div>
-          </dd>
-          <dt>부서/지위</dt>
-          <dd>
-            <!-- prettier-ignore -->
-            
-
-<div class="vits-input size-default ">
-  <div class="input-item">
-    <label for="credit-team" class="sr-only">부서/직위</label>
-
-    <input
-      type="text"
-      name="credit-team"
-      id="credit-team"
-      placeholder="부서/직위"
-      
-      
-      
-      
-      
-      
-
-      
-      
-      
-    />
-  </div>
-
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="credit-team-validation" aria-live="polite"></p>
-  </div>
-</div>
-          </dd>
-          <dt>휴대폰번호</dt>
-          <dd>
-            <!-- prettier-ignore -->
-            
-
-<div class="vits-input size-default ">
-  <div class="input-item">
-    <label for="credit-phone" class="sr-only">휴대폰 번호</label>
-
-    <input
-      type="text"
-      name="credit-phone"
-      id="credit-phone"
-      placeholder="010-0000-0000"
-      
-      
-      
-      
-      
-      
-
-      
-      
-      
-    />
-  </div>
-
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="credit-phone-validation" aria-live="polite"></p>
-  </div>
-</div>
-
-            <!-- prettier-ignore -->
-            
-<!-- prettier-ignore -->
-
-
-<label class="vits-checkbox-item size-m">
-  <input
-    type="checkbox"
-    name="ckb-phone"
-    value="ckb-phone"
-    
-    
-    
-    checked
-    
-  />
-  <span class="icon" aria-hidden="true"></span>
   
-  <span class="label">
-    문자 수신 동의
-  </span>
-  
-</label>
-
-          </dd>
-          <dt>이메일</dt>
-          <dd>
-            <!-- prettier-ignore -->
-            
-
-<div class="vits-input size-default ">
-  <div class="input-item">
-    <label for="credit-email" class="sr-only">이메일</label>
-
-    <input
-      type="text"
-      name="credit-email"
-      id="credit-email"
-      placeholder="email@example.com"
-      
-      
-      
-      
-      
-      
-
-      
-      
-      
-    />
-  </div>
-
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="credit-email-validation" aria-live="polite"></p>
-  </div>
-</div>
-
-            <!-- prettier-ignore -->
-            
-<!-- prettier-ignore -->
-
-
-<label class="vits-checkbox-item size-m">
-  <input
-    type="checkbox"
-    name="ckb-email"
-    value="ckb-email"
-    
-    
-    
-    
-    
-  />
-  <span class="icon" aria-hidden="true"></span>
-  
-  <span class="label">
-    이메일 수신 동의
-  </span>
-  
-</label>
-
-          </dd>
-        </dl>
-        <div class="form-actions">
-          <!-- prettier-ignore -->
-          
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-outline-secondary "
-  
-  
-  data-manager-cancel-btn
-    >
-  
-
-  <span class="text">취소</span>
-
-  
-</button>
-
-
-          <!-- prettier-ignore -->
-          
-
-
-<button
-  type="button"
-  class="vits-btn-lg vits-btn-secondary "
-  
-  
-  data-manager-submit-btn
-    >
-  
-
-  <span class="text">추가</span>
-
-  
-</button>
-
-        </div>
-      </div>
-    </div>
-    <!-- E: 추가 담당자 입력 폼 -->
-  </div>
-  <!-- E: 담당자 정보 -->
 </section>
 
-  
+    
   </div>
-
-  <!-- 푸터 -->
-
-  <div class="vits-modal-footer">
-
-    <div class="vits-modal-buttons is-double">
-
-      <button type="button" class="vits-modal-btn vits-modal-btn-secondary" onclick="VitsKendoWindow.close('creditModal')">
-        <span class="text">취소</span>
-      </button>
-
-      <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('creditModal')">
-        <span class="text">신청</span>
-      </button>
-
-    </div>
-
-  </div>
-
 </div>
+
+                      <!-- E: 자주 구매 -->
+
+                      <!-- S: 여신 & 중요 서류 -->
+                      
+
+<div class="vits-mypage-home-guides">
+  <!-- S: 중요 서류 없을 떄 -->
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <i class="ic ic-money-bag" aria-hidden="true"></i>
+ </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      
+
+<!-- prettier-ignore -->
+ 
+
+
+<a class="vits-text-arrow-link"
+   href="#!"
+   
+   >
+  <span class="text">후불 관리</span>
+  <span class="icon"><i class="ic ic-arrow-right" aria-hidden="true"></i>
+</span>
+</a>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-desc">비츠온엠알오의</p>
+        <p class="guides-desc"><b>편리한 후불 결제</b>를 이용해 보세요.</p>
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-secondary  weight-m"
+  
+  >
+  
+
+  <span class="text">후불 신청 관리</span>
+
+  
+</button>
+
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <i class="ic ic-document-paper" aria-hidden="true"></i>
+ </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-desc">세금계산서, 견적서, 월별 구매내역서 등</p>
+        <p class="guides-desc"><b>회사 운영에 필요한 서류</b>가 제공됩니다.</p>
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-secondary  weight-m"
+  
+  >
+  
+
+  <span class="text">서류 관리 가기</span>
+
+  
+</button>
+
+      </div>
+    </div>
+  </div>
+  <!-- E: 중요 서류 없을 떄 -->
+</div>
+
+                      <!-- E: 여신 & 중요 서류 -->
+                    </div>
+                  </div>
+                  <!-- E: vits-grid-main -->
+                </div>
+              </div>
             </div>
           </div>
+          <!-- E: vits-grid -->
         </div>
+        <!-- E: vits-wrap -->
       </main>
+      <!-- E: vits-main -->
 
       
 
@@ -60805,6 +60658,7 @@
 
 
     </section>
+    <!-- E: vits-wrapper -->
 
     
 <!-- jquery -->
@@ -60823,121 +60677,95 @@
 
 
     <script>
-      /**
-       * 후불 신청서 - 담당자 추가
-       * 퍼블리싱 UI 확인용 코드
-       */
-      (function ($) {
-        if (!$) return;
+      /** date 포맷 yyyy-mm-dd 값 변경
+ @param t : type(y/m/d/cm/pm/chy/chm)
+ @param v : value
+ */
+      function fn_formatDateAdd(t, v, v2) {
+        var sDate = new Date();
+        var yy = sDate.getFullYear();
+        var mm = sDate.getMonth();
+        var dd = sDate.getDate();
+        var hh = sDate.getHours();
+        var mi = sDate.getMinutes();
 
-        var $root = $('[data-manager-section]');
-        if (!$root.length) return;
-
-        var $empty = $root.find('[data-manager-empty]');
-        var $emptyText = $empty.find('.empty-text');
-        var $formOriginal = $root.find('[data-manager-form]');
-        var $list = $root.find('[data-manager-list]');
-
-        var MSG_EMPTY = '추가 담당자 정보가 없습니다.';
-        var MSG_INPUT = "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요.";
-
-        // [1] 담당자 추가 버튼 → form 복제 생성
-        $root.on('click', '[data-manager-add-btn]', function () {
-          var $newForm = $formOriginal.clone();
-          $newForm.find('input[type="text"]').val('');
-          $newForm.find('input[type="checkbox"]').prop('checked', false);
-          $newForm.find('[name="ckb-phone"]').prop('checked', true);
-          $newForm.removeClass('is-hidden');
-          $newForm.css('margin-bottom', '2px');
-
-          var isListVisible = !$list.hasClass('is-hidden');
-
-          if (!isListVisible) {
-            $emptyText.text(MSG_INPUT);
-          }
-
-          var $lastForm = $root.find('[data-manager-form]:not(.is-hidden)').last();
-          if ($lastForm.length) {
-            $lastForm.after($newForm);
-          } else {
-            $list.after($newForm);
-          }
-
-          setTimeout(function () {
-            $newForm[0].scrollIntoView({behavior: 'smooth', block: 'nearest'});
-          }, 50);
-        });
-
-        // [2] 취소 버튼 → 해당 form만 삭제
-        $root.on('click', '[data-manager-cancel-btn]', function () {
-          var $form = $(this).closest('[data-manager-form]');
-
-          if (!$form.is($formOriginal)) {
-            $form.remove();
-          } else {
-            $form.addClass('is-hidden');
-          }
-
-          var visibleForms = $root.find('[data-manager-form]:not(.is-hidden)').length;
-          var isListVisible = !$list.hasClass('is-hidden');
-
-          if (!visibleForms && !isListVisible) {
-            $empty.removeClass('is-hidden');
-            $emptyText.text(MSG_EMPTY);
-          }
-        });
-
-        // [3] 추가 버튼 → 해당 form 삭제 + chip 생성 + list 표시
-        $root.on('click', '[data-manager-submit-btn]', function () {
-          var $form = $(this).closest('[data-manager-form]');
-          var valueId = 'user-' + Date.now();
-
-          // 더미 칩 마크업
-          var chipHtml = [
-            '<button type="button" class="vits-chip-button type-filled" data-chip-action="remove" data-chip-value="' +
-              valueId +
-              '">',
-            '  <span class="text">홍길동</span>',
-            '  <span class="text team">개발팀 대리</span>',
-            '  <span class="icon" aria-hidden="true">',
-            '    <i class="ic ic-x" aria-hidden="true"></i>',
-            '  </span>',
-            '</button>'
-          ].join('');
-
-          // .vits-chip-button-group에 칩 추가
-          $list.find('.vits-chip-button-group').append(chipHtml);
-
-          // form 정리
-          if (!$form.is($formOriginal)) {
-            $form.remove();
-          } else {
-            $form.addClass('is-hidden');
-          }
-
-          // list 표시
-          $empty.addClass('is-hidden');
-          $list.removeClass('is-hidden');
-        });
-
-        // [4] chip 삭제 감지 (MutationObserver)
-        if ($list.length && window.MutationObserver) {
-          var observer = new MutationObserver(function () {
-            var chipCount = $list.find('.vits-chip-button').length; // div.vits-chip-button
-
-            if (chipCount === 0) {
-              $list.addClass('is-hidden');
-
-              var hasVisibleForm = $root.find('[data-manager-form]:not(.is-hidden)').length > 0;
-
-              $empty.removeClass('is-hidden');
-              $emptyText.text(hasVisibleForm ? MSG_INPUT : MSG_EMPTY);
-            }
-          });
-
-          observer.observe($list[0], {childList: true, subtree: true});
+        if (t == 'd') {
+          // 날짜 선택 (day)
+          d = new Date(yy, mm, dd + v);
+        } else if (t == 'm') {
+          // 월 선택 (month)
+          d = new Date(yy, mm + v, dd);
+        } else if (t == 'y') {
+          // 년도 선택 (year)
+          d = new Date(yy + v, mm, dd);
+        } else if (t == 'cm') {
+          // 현재월 날짜 선택 (current month)
+          d = new Date(yy, mm, v);
+        } else if (t == 'pm') {
+          // 한달전 날짜 선택 (previous month)
+          d = new Date(yy, mm - 1, v);
+        } else if (t == '1pm') {
+          // 현재기준으로 1개월전 (previous month)
+          d = new Date(yy, mm - 1, dd);
+        } else if (t == '3pm') {
+          // 현재기준으로 3개월전 (previous 3month)
+          d = new Date(yy, mm - 3, dd);
+        } else if (t == '6pm') {
+          // 현재기준으로 6개월전 (previous 6month)
+          d = new Date(yy, mm - 6, dd);
+        } else if (t == '1py') {
+          // 현재기준으로 1년전 (previous 1year)
+          d = new Date(yy - 1, mm, dd);
+        } else if (t == 'nm') {
+          // 다음달 날짜 선택 (next month)
+          d = new Date(yy, mm + 1, v);
+        } else if (t == 'chym') {
+          // 년도, 월 선택 (change year month)
+          d = new Date(v, v2, 1);
+        } else if (t == 'chymcd') {
+          // 년도, 다음달 선택 (change year month cur_date)
+          d = new Date(v, v2 + 1, 0);
+        } else {
+          d = new Date(yy, mm, dd + v);
         }
-      })(window.jQuery);
+
+        yy = d.getFullYear();
+        mm = d.getMonth() + 1;
+        mm = mm < 10 ? '0' + mm : mm;
+        dd = d.getDate();
+        dd = dd < 10 ? '0' + dd : dd;
+
+        return '' + yy + '-' + mm + '-' + dd;
+      }
+
+      $(document).ready(function () {
+        $(document).on('click', '[data-ui="period-btn"]', function () {
+          const val = $(this).data('value');
+          const num = parseInt(val);
+          const unit = val.replace(num, '');
+
+          const startStr = fn_formatDateAdd(unit, -num);
+          const endStr = fn_formatDateAdd('d', 0);
+
+          const start = new Date(startStr);
+          const end = new Date(endStr);
+
+          // ⭐ Kendo Calendar 인스턴스
+          const calendar = VitsKendoRangePicker.getInstance('.vits-kendo-range-picker');
+
+          if (calendar) {
+            calendar.reset();
+            calendar.setValue(new Date(startStr), new Date(endStr));
+          }
+
+          // hidden 값
+          $('#rangeStartDate').val(startStr);
+          $('#rangeEndDate').val(endStr);
+
+          // 화면 표시
+          // $('.js-range-display').val(startStr + ' ~ ' + endStr);
+        });
+      });
     </script>
   </body>
 </html>

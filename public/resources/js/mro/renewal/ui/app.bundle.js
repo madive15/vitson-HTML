@@ -2464,9 +2464,11 @@ if (document.body?.dataset?.guide === 'true') {
 /**
  * @file kendo-window.js
  * @description Kendo Window 자동 초기화 모듈
+ * @note 컨텐츠 DOM 변화 시 자동으로 스크롤 체크 + 센터 정렬
  *
  * VitsKendoWindow.open('myWindow');
  * VitsKendoWindow.close('myWindow');
+ * VitsKendoWindow.refresh('myWindow');
  * VitsKendoWindow.initAll();
  */
 
@@ -2476,6 +2478,13 @@ if (document.body?.dataset?.guide === 'true') {
   var BODY_LOCK_CLASS = 'is-kendo-window-open';
   var scrollY = 0;
   var openedWindows = [];
+
+  // 컨텐츠 변화 감지용 Observer 저장 (id → observer)
+  var contentObservers = {};
+
+  // 디바운스 타이머 저장 (id → timerId)
+  var debounceTimers = {};
+  var DEBOUNCE_DELAY = 80;
   function parseJsonSafe(str) {
     try {
       return JSON.parse(str);
@@ -2513,14 +2522,80 @@ if (document.body?.dataset?.guide === 'true') {
   function checkScroll(id) {
     var $ = window.jQuery;
     var $el = $('#' + id);
+    $el.find('[data-scroll-check]').each(function () {
+      $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
+    });
+  }
+
+  /**
+   * 스크롤 체크 + 센터 정렬 (디바운스 적용)
+   * - 컨텐츠 DOM 변화, 수동 호출 모두 이 함수로 통일
+   */
+  function refresh(id) {
+    var $ = window.jQuery;
+    clearTimeout(debounceTimers[id]);
+    debounceTimers[id] = setTimeout(function () {
+      var $el = $('#' + id);
+      var inst = $el.data('kendoWindow');
+      if (!inst) return;
+      checkScroll(id);
+      var $kWindow = $el.closest('.k-window');
+      var prevTop = $kWindow.position().top;
+      inst.center();
+      var nextTop = $kWindow.position().top;
+      if (prevTop === nextTop) return;
+
+      // 이전 위치로 되돌린 뒤 다음 프레임에서 transition 이동
+      $kWindow.css({
+        top: prevTop,
+        transition: 'none'
+      });
+      requestAnimationFrame(function () {
+        $kWindow.css({
+          top: nextTop,
+          transition: 'top 0.2s ease'
+        });
+        $kWindow.one('transitionend', function () {
+          $kWindow.css('transition', '');
+        });
+      });
+    }, DEBOUNCE_DELAY);
+  }
+
+  /**
+   * 컨텐츠 영역 MutationObserver 시작
+   * - open 시 호출, close 시 해제
+   */
+  function observeContent(id) {
+    if (!window.MutationObserver) return;
+    if (contentObservers[id]) return; // 중복 방지
+
+    var $ = window.jQuery;
+    var $el = $('#' + id);
     var $content = $el.find('.vits-modal-content');
-    if ($content.length) {
-      if ($content[0].scrollHeight > $content[0].clientHeight) {
-        $content.addClass('has-scroll');
-      } else {
-        $content.removeClass('has-scroll');
-      }
+    if (!$content.length) return;
+    var obs = new MutationObserver(function () {
+      refresh(id);
+    });
+    obs.observe($content[0], {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'hidden', 'style']
+    });
+    contentObservers[id] = obs;
+  }
+
+  /**
+   * 컨텐츠 영역 MutationObserver 해제
+   */
+  function disconnectContent(id) {
+    if (contentObservers[id]) {
+      contentObservers[id].disconnect();
+      delete contentObservers[id];
     }
+    clearTimeout(debounceTimers[id]);
+    delete debounceTimers[id];
   }
   function initOne(el) {
     var $ = window.jQuery;
@@ -2542,8 +2617,10 @@ if (document.body?.dataset?.guide === 'true') {
         if (openedWindows.indexOf(id) === -1) {
           openedWindows.push(id);
         }
+        observeContent(id);
       },
       close: function () {
+        disconnectContent(id);
         var idx = openedWindows.indexOf(id);
         if (idx > -1) openedWindows.splice(idx, 1);
         if (openedWindows.length === 0) {
@@ -2605,13 +2682,15 @@ if (document.body?.dataset?.guide === 'true') {
     if (options && typeof options.onOpen === 'function') {
       inst.unbind('open').bind('open', function () {
         lockBody();
+        if (openedWindows.indexOf(id) === -1) {
+          openedWindows.push(id);
+        }
+        observeContent(id);
         options.onOpen.call(inst);
       });
     }
     if (inst) {
       inst.center().open();
-
-      // 스크롤 여부 체크
       setTimeout(function () {
         checkScroll(id);
       }, 0);
@@ -2651,7 +2730,8 @@ if (document.body?.dataset?.guide === 'true') {
     initAll: initAll,
     autoBindStart: autoBindStart,
     open: open,
-    close: close
+    close: close,
+    refresh: refresh
   };
 })(window);
 
@@ -7756,7 +7836,8 @@ if (document.body?.dataset?.guide === 'true') {
   // 특정 루트 닫기
   function closeOne($root) {
     if (!$root || !$root.length) return;
-    $root.removeClass(CLS_OPEN + ' ' + CLS_DROPUP);
+    $root.removeClass(CLS_OPEN); // CLS_DROPUP은 유지 → 닫힘 애니메이션 중 위치 점프 방지
+
     $root.find(TRIGGER).attr('aria-expanded', 'false');
     if (isPortal($root)) {
       closePortal($root);
@@ -7797,6 +7878,9 @@ if (document.body?.dataset?.guide === 'true') {
   // 오픈 직전 dropup/최대높이 계산 (일반 모드)
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
+
+    // 이전 방향 초기화 (다음 열림에서 재계산)
+    $root.removeClass(CLS_DROPUP);
     var $trigger = $root.find(TRIGGER);
     var $list = $root.find(LIST);
     if (!$trigger.length || !$list.length) return;
@@ -7815,12 +7899,16 @@ if (document.body?.dataset?.guide === 'true') {
     listEl.style.maxHeight = 'none';
     var listH = listEl.scrollHeight;
     listEl.style.maxHeight = prevMaxH;
-    var forced = $root.hasClass(CLS_DROPUP);
-    var shouldDropUp = forced ? true : spaceBelow < listH && spaceAbove > spaceBelow;
-    if (!forced) $root.toggleClass(CLS_DROPUP, shouldDropUp);
-    var maxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
-    if (maxH < MIN_H) maxH = MIN_H;
-    listEl.style.maxHeight = maxH + 'px';
+    var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
+    $root.toggleClass(CLS_DROPUP, shouldDropUp);
+    var calcMaxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
+    if (calcMaxH < MIN_H) calcMaxH = MIN_H;
+
+    // 커스텀 max-height 적용 (portal과 동일 패턴)
+    var customMaxH = $root.attr('data-max-height');
+    if (customMaxH && /^\d+$/.test(customMaxH)) customMaxH = customMaxH + 'px';
+    var maxH = customMaxH || calcMaxH + 'px';
+    listEl.style.maxHeight = maxH;
     listEl.style.overflowY = 'auto';
   }
 
@@ -7923,6 +8011,7 @@ if (document.body?.dataset?.guide === 'true') {
 
   // placeholder/hidden/선택표시 초기화
   function resetToPlaceholder($root, clearOptions) {
+    $root.removeClass('is-selected'); // 26-02-03 추가
     var $value = $root.find(VALUE);
     if ($value.length) $value.text($value.attr('data-placeholder') || '');
     setHiddenVal($root, '');
@@ -7974,6 +8063,7 @@ if (document.body?.dataset?.guide === 'true') {
       $el.toggleClass(CLS_SELECTED, sel);
       $el.attr('aria-selected', sel ? 'true' : 'false');
     });
+    $root.addClass('is-selected'); // 26-02-03 추가
     $root.find(VALUE).text($opt.text());
     setHiddenVal($root, $opt.attr('data-value') || ''); // [2026-01-30 수정] data-value 없으면 빈 값
   }
@@ -8194,12 +8284,15 @@ if (document.body?.dataset?.guide === 'true') {
     });
 
     // 모든 스크롤 감지 (capture phase)
-    document.addEventListener('scroll', function () {
+    document.addEventListener('scroll', function (e) {
+      // 셀렉트 리스트 내부 스크롤은 무시
+      var $scrolled = $(e.target);
+      if ($scrolled.closest(LIST).length || $scrolled.hasClass(CLS_PORTAL_LIST)) return;
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
           // 열린 셀렉트가 특정 영역 안에 있을 때만 닫기
-          if (scope.openRoot.closest('.vits-claim-request-body').length) {
+          if (scope.openRoot.closest('.k-window').length) {
             closeOpenedInScope(k);
           } else {
             // 다른 곳은 기존처럼 위치 따라감

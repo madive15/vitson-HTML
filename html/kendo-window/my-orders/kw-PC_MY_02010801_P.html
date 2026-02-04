@@ -16,10 +16,12 @@
     <h3 class="vits-claim-request-title">반품 신청 상품</h3>
   </div>
 
-  <div class="vits-claim-request-body">
+  <div class="vits-claim-request-body" data-scroll-check>
     <!-- 반품 신청 상품 1개 일 때 -->
     <div class="vits-claim-request-section">
       
+<!-- prettier-ignore -->
+
 
 <div class="vits-claim-request-box">
   <div class="vits-claim-request-product">
@@ -51,9 +53,10 @@
             </p>
             <p class="product-quantity-price">999,999,999원</p>
           </div>
+          
           <div class="product-quantity-select">
             <div class="product-quantity-label">반품 신청 수량</div>
-            <div class="product-quantity-select">
+            <div class="product-quantity-control">
               <!-- prettier-ignore -->
               
 
@@ -66,7 +69,7 @@
    data-select-id="return-sort" 
   
    data-vits-select-portal 
-  
+   data-max-height="150" 
 >
   <button
     type="button"
@@ -110,16 +113,6 @@
         
       >1</li>
     
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="2"
-           
-        aria-selected="false"
-        
-      >2</li>
-    
   </ul>
 
   
@@ -129,9 +122,11 @@
 
             </div>
           </div>
+          
         </div>
       </div>
     </div>
+    
     <div class="vits-claim-request-reason" data-toggle-scope>
       <button
         type="button"
@@ -358,6 +353,7 @@
         </dl>
       </div>
     </div>
+    
   </div>
 </div>
 
@@ -468,6 +464,295 @@
         </div>
       </div>
     </div>
+
+    <!-- 환불 계좌 -->
+    
+
+<div class="vits-claim-request-section" data-scope="claim-refund-bank">
+  <h3 class="vits-claim-request-title">환불계좌</h3>
+  <div class="vits-claim-request-box">
+    <div class="vits-claim-request-pickup">
+      <dl class="claim-request-pickup-info return-bank">
+        <dt class="is-required has-gap">환불 계좌</dt>
+        <dd>
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select size-s select-fix"
+  data-vits-select
+   data-select-id="select-bank" 
+  
+  
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="계좌선택"
+    >계좌선택</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="bank1"
+           
+        aria-selected="false"
+        
+      >신규 계좌</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="bank2"
+           
+        aria-selected="false"
+        
+      >내 계좌</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="select-bank" value="계좌선택" data-vits-select-hidden />
+  
+</div>
+
+        </dd>
+
+        <!-- S: 신규 계좌 선택 시 -->
+        <dt class="is-required has-gap" data-bank-type="bank1" hidden>은행</dt>
+        <dd data-bank-type="bank1" hidden>
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select size-s select-fix"
+  data-vits-select
+   data-select-id="sel-bank" 
+  
+   data-vits-select-portal 
+   data-max-height="150" 
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="은행명"
+    >은행명</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="shinhan"
+           
+        aria-selected="false"
+        
+      >신한은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="kb"
+           
+        aria-selected="false"
+        
+      >국민은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="woori"
+           
+        aria-selected="false"
+        
+      >우리은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="hana"
+           
+        aria-selected="false"
+        
+      >하나은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="nh"
+           
+        aria-selected="false"
+        
+      >NH농협은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="ibk"
+           
+        aria-selected="false"
+        
+      >IBK기업은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="sc"
+           
+        aria-selected="false"
+        
+      >SC제일은행</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="sel-bank" value="은행명" data-vits-select-hidden />
+  
+</div>
+
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-s ">
+  <div class="input-item">
+    <label for="bank-user" class="sr-only">예금주</label>
+
+    <input
+      type="text"
+      name="bank-user"
+      id="bank-user"
+      placeholder="예금주"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="bank-user-validation" aria-live="polite"></p>
+  </div>
+</div>
+        </dd>
+        <dt class="is-required has-gap" data-bank-type="bank1" hidden>계좌번호</dt>
+        <dd data-bank-type="bank1" hidden>
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-s ">
+  <div class="input-item">
+    <label for="bank-number" class="sr-only">계좌번호</label>
+
+    <input
+      type="text"
+      name="bank-number"
+      id="bank-number"
+      placeholder="계좌번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="bank-number-validation" aria-live="polite"></p>
+  </div>
+</div>
+        </dd>
+        <!-- E: 신규 계좌 선택 시 -->
+
+        <!-- S: 내 계좌 선택 시 -->
+        <dt class="is-required" data-bank-type="bank2" hidden>계좌번호</dt>
+        <dd data-bank-type="bank2" hidden>국민은행 100-545-54152454</dd>
+        <!-- E: 내 계좌 선택 시 -->
+      </dl>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 환불계좌 셀렉트 → 영역 토글 (커스텀 셀렉트 대응)
+  document.addEventListener('click', function (e) {
+    var option = e.target.closest('[data-select-id="select-bank"] [data-value]');
+    if (!option) return;
+
+    var scope = option.closest('[data-scope="claim-refund-bank"]');
+    if (!scope) return;
+
+    var val = option.dataset.value;
+    scope.querySelectorAll('[data-bank-type]').forEach(function (el) {
+      if (el.dataset.bankType === val) {
+        el.removeAttribute('hidden');
+      } else {
+        el.setAttribute('hidden', '');
+      }
+    });
+  });
+</script>
+
 
     <!-- 환불 예정 금액 -->
     <div class="vits-claim-request-total">
