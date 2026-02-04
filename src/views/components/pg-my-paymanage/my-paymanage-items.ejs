@@ -1,0 +1,54 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const itemType = typeof type !== 'undefined' ? type : 'card';
+  const itemShowBadge = typeof showBadge !== 'undefined' ? showBadge : false;
+  const itemBadgeText = typeof badgeText !== 'undefined' ? badgeText : '대표';
+  const itemNameVal = typeof itemName !== 'undefined' ? itemName : '';
+  const itemNumVal = typeof itemNum !== 'undefined' ? itemNum : '';
+  const itemMenuIndex = typeof menuIndex !== 'undefined' ? menuIndex : 0;
+  const isCard = itemType === 'card';
+  const itemClass = isCard ? 'pay-card-item' : 'pay-card-item type-account';
+  const iconClass = isCard ? 'ic-card' : 'ic-bank';
+%>
+<div class="<%= itemClass %>">
+  <div class="pay-card-item-icon">
+    <i class="ic <%= iconClass %>" aria-hidden="true"></i>
+  </div>
+  <div class="pay-card-item-body">
+    <p class="pay-card-item-name">
+      <%- itemNameVal %><% if (itemShowBadge) { %> <span class="pay-card-item-badge"><%= itemBadgeText %></span><% } %>
+    </p>
+    <p class="pay-card-item-num"><%= itemNumVal %></p>
+  </div>
+  <div class="pay-card-item-option-wrap">
+    <button
+      type="button"
+      class="pay-card-item-option"
+      aria-label="결제 수단 메뉴 열기"
+      data-toggle-btn
+      data-toggle-target="pay-card-menu-<%= itemMenuIndex %>"
+      data-toggle-outside="true"
+      aria-expanded="false"
+    >
+      <i class="ic ic-ellipsis" aria-hidden="true"></i>
+    </button>
+    <div class="pay-card-menu" data-toggle-box="pay-card-menu-<%= itemMenuIndex %>">
+      <p class="pay-card-menu-title">결제 수단 관리</p>
+      <ul class="pay-card-menu-list">
+        <li>
+          <button type="button" class="pay-card-menu-btn">
+            <i class="ic ic-pencil" aria-hidden="true"></i>
+            <span class="text">정보수정</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="pay-card-menu-btn is-delete">
+            <i class="ic ic-waste-basket" aria-hidden="true"></i>
+            <span class="text">삭제</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

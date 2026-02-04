@@ -1,0 +1,30 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const _hasFrequentData = (typeof hasFrequentData !== 'undefined') ? hasFrequentData : false; %>
+
+<div class="vits-mypage-home-frequent<%= !_hasFrequentData ? ' is-empty' : '' %>">
+  <div class="frequent-head" data-scss="head">
+    <p class="vits-mypage-home-title">자주 구매하신 상품이에요</p>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+      href: '#!', text: '자주 구매 더보기' 
+    }) %>
+  </div>
+  <div class="frequent-body" data-scss="body">
+    <% if (_hasFrequentData) { %>
+    <!-- 상품 리스트 -->
+    <% } else { %>
+    <!-- prettier-ignore -->
+    <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+        size:'xl', variant: 'primary', text: '초특가 상품 보기', iconLeft: true, iconName: 'ic-lightning', className: 'btn-fix-w200'
+      }) %>
+      <%- include(`${_src}/views/components/empty-state.ejs`, {
+        iconName: 'document-paper',
+        title: '아직 자주 구매 상품이 없습니다',
+        desc: '비츠온만의 초특가를 경험해 보세요.',
+        buttonHtml
+      }) %>
+    <% } %>
+  </div>
+</div>

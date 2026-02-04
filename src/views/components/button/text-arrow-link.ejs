@@ -1,0 +1,19 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+ 
+<%
+  const _href = typeof href !== 'undefined' ? href : '#';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _target = typeof target !== 'undefined' ? target : null;
+  const _rel = (_target === '_blank') ? 'noopener noreferrer' : null;
+  const _iconName = typeof iconName !== 'undefined' ? iconName : 'arrow-right';
+%>
+
+<a class="vits-text-arrow-link"
+   href="<%= _href %>"
+   <% if (_target) { %> target="<%= _target %>"<% } %>
+   <% if (_rel) { %> rel="<%= _rel %>"<% } %>>
+  <span class="text"><%= _text %></span>
+  <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: _iconName }) %></span>
+</a>

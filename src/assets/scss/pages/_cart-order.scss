@@ -1018,11 +1018,19 @@
     /* 비츠온페이 카드 리스트 (swiper) */
     &-item {
       @include mx.flex($direction: column, $justify: center);
+      width: 80px;
       min-height: fn.rem(106);
       padding: 0 map.get(var.$unit, 24);
       background-color: map.get(color.$layout-surf, 'base');
-      border: 1px solid map.get(color.$icon-neutral, 'tertiary');
+      filter: grayscale(1);
+
+      // test-here 0203
+      // border: 1px solid map.get(color.$icon-neutral, 'tertiary');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: fn.rem(80) fn.rem(80);
       border-radius: map.get(var.$radius, 'md');
+      opacity: 0.5;
 
       .card-brand {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
@@ -1036,8 +1044,9 @@
       }
 
       &.swiper-slide-active {
-        @include mx.border(all, 2px, solid, map.get(color.$icon-status, 'info'));
         background-color: map.get(color.$layout-status, 'info-bg-sub');
+        filter: grayscale(0);
+        opacity: 1;
       }
     }
 
@@ -1055,16 +1064,32 @@
       .vits-form-item {
         @include mx.flex($direction: column);
         flex: 1;
-        gap: map.get(var.$unit, 4);
+        gap: map.get(var.$unit, 8);
       }
 
       .vits-form-label {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+
+        .vits-default-badge {
+          @include typo.typography('b5r', $color: map.get(color.$text-status, 'info'));
+          display: inline-block;
+          min-width: fn.rem(26);
+          padding: fn.rem(4);
+          margin-left: fn.rem(4);
+          line-height: normal;
+          vertical-align: middle;
+          background-color: map.get(color.$layout-status, 'info-bg-sub');
+          border-radius: map.get(var.$radius, 'sm');
+        }
       }
 
       .vits-form-value {
         @include typo.typography('b4b', $color: map.get(color.$text-colors, 'primary'));
         padding-top: map.get(var.$unit, 4);
+      }
+
+      .vits-form-number {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
       }
 
       .vits-form-select,
@@ -1078,6 +1103,14 @@
 
         .vits-select-list {
           width: 100%;
+        }
+      }
+
+      &.type-account {
+        margin: 0;
+
+        .vits-form-row {
+          padding-bottom: 0;
         }
       }
     }
@@ -1398,7 +1431,7 @@
         .coupon-item-badge {
           position: relative;
           display: block;
-          width: fn.rem(96);
+          width: fn.rem(148);
           height: fn.rem(68);
 
           @include mx.background('ic/ic-coupon-badge.svg');
@@ -1406,9 +1439,15 @@
 
         .coupon-item-badge-value {
           @include typo.typography('h1b', $color: map.get(color.$text-status, 'info'));
-          display: block;
-          padding-top: fn.rem(24);
-          text-align: center;
+          @include mx.flex($direction: column, $justify: center, $align: center);
+          height: 100%;
+          padding-top: fn.rem(3);
+
+          &::before {
+            @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+            display: block;
+            content: '할인';
+          }
         }
       }
 
@@ -1575,6 +1614,7 @@
           position: relative;
           min-height: fn.rem(36);
           padding: 0 fn.rem(8);
+          white-space: nowrap;
           background: map.get(color.$layout-surf, 'base');
           border: 1px solid map.get(color.$layout-border, 'quaternary');
           border-radius: map.get(var.$radius, 'sm');

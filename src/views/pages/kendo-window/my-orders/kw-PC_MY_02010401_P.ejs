@@ -1,0 +1,105 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-track-shipment" data-track-shipment>
+  <h2 class="sr-only">배송조회</h2>
+
+  <!-- head -->
+  <%- include(`${_src}/views/components/pg-my-orders/my-track-shipment-head.ejs`) %>
+
+  <div class="vits-track-shipment-body">
+    <!-- [D] 현재 단계 숫자 표시 :: 1 ~ 5 -->
+    <ul class="shipment-steps" data-current="1">
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %> </span>
+          <span class="step-text">상품인수</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %>
+          </span>
+          <span class="step-text">상품이동중</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'pin' }) %> </span>
+          <span class="step-text">배송지도착</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'home' }) %> </span>
+          <span class="step-text">배송출발</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+          <span class="step-text">배송완료</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="shipment-detail">
+      <p class="shipment-detail-title">배송 상세 내역</p>
+      <div class="shipment-detail-list">
+        <div class="shipment-detail-list-inner">
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <!-- [D] 배송완료만 data-status='completed' 표시 요청  -->
+              <span class="shipment-detail-status" data-status="completed">배달완료</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var $ = window.jQuery;
+
+    // ?step=1~5 : 배송 단계 확인
+    var step = params.get('step');
+    if (step) {
+      var steps = document.querySelector('[data-current]');
+      if (steps) steps.setAttribute('data-current', step);
+    }
+  })();
+</script>

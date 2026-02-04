@@ -26,7 +26,7 @@
   }
 }
 
-@mixin roundbox-white($variant: 'single', $custom: 'base') {
+@mixin roundbox-white($variant: 'single', $custom: 'base', $myhY: null, $myhX: null) {
   background: color.$color-white;
   border-radius: map.get(var.$radius, 'lg');
 
@@ -57,6 +57,24 @@
       @include records-box-type-detail02 {
         padding-top: map.get(var.$unit, 36);
         padding-bottom: map.get(var.$unit, 36);
+      }
+    }
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $variant == 'myh' {
+    @if $custom == 'base' {
+      padding: fn.rem($myhY) fn.rem($myhX);
+    }
+    // stylelint-disable-next-line at-rule-empty-line-before
+    @else if $custom == 'detail' {
+      [data-scss='head'] {
+        @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+        height: fn.rem(60);
+        padding: 0 map.get(var.$unit, 32);
+      }
+
+      [data-scss='body'] {
+        padding: map.get(var.$unit, 36);
       }
     }
   }
@@ -158,12 +176,214 @@
       }
     }
   }
+
+  &.main-content-my-home {
+    padding-top: map.get(var.$unit, 56);
+
+    .vits-mypage-panel {
+      gap: map.get(var.$unit, 24);
+
+      > div {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .vits-mypage {
+  &-home {
+    &-title {
+      @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+      gap: map.get(var.$unit, 4);
+
+      .icon {
+        @include icon.ic-size(fn.rem(28));
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+    }
+
+    // 프로필
+    &-profile {
+      @include mx.flex(flex, row, flex-start, center);
+      @include roundbox-white('myh', $myhY: 24, $myhX: 32);
+      gap: map.get(var.$unit, 12);
+
+      .profile {
+        &-greeting {
+          @include typo.typography('h3s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-coupon {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 8);
+          height: map.get(var.$unit, 40);
+          padding: 0 map.get(var.$unit, 12);
+          background: map.get(color.$layout-status, 'info-bg-sub');
+          border-radius: map.get(var.$radius, 'md');
+
+          .coupon {
+            &-icon {
+              @include icon.ic-size(map.get(var.$unit, 16));
+              color: map.get(color.$icon-status, 'info');
+            }
+
+            &-label {
+              @include typo.typography('b2r', $color: map.get(color.$text-status, 'info-sub'));
+            }
+
+            &-count {
+              @include typo.typography('b2b', $color: map.get(color.$text-status, 'info-sub'));
+            }
+          }
+        }
+
+        &-shortcuts {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 8);
+          margin-left: auto;
+
+          [class*='vits-btn-'] {
+            flex: 0 0 fn.rem(130);
+            width: fn.rem(130);
+          }
+        }
+      }
+    }
+
+    // 주문현황
+    &-order {
+      @include roundbox-white('myh', $myhY: 32, $myhX: 20);
+
+      .order-status {
+        &-list {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          @include mx.divider('li', 1, 118, 12, map.get(color.$layout-surf, 'sunken'));
+        }
+
+        &-item {
+          @include mx.flex(flex, row, center, flex-start);
+          flex: 1 1 0;
+          align-self: flex-start;
+          min-width: 0;
+
+          &:not(:has(.status-sub)) {
+            .status-label {
+              height: fn.rem(38);
+              line-height: fn.rem(38);
+            }
+          }
+        }
+
+        &-inner {
+          @include mx.flex(flex, column, flex-start, center);
+          gap: map.get(var.$unit, 2);
+
+          .status {
+            &-icon {
+              @include icon.ic-size(fn.rem(50));
+              padding: fn.rem(10);
+              color: map.get(color.$icon-neutral, 'primary');
+              background: map.get(color.$layout-surf, 'raised');
+              border-radius: 50%;
+            }
+
+            /* stylelint-disable-next-line no-descending-specificity */
+            &-label {
+              @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+              margin-top: map.get(var.$unit, 2);
+            }
+
+            &-sub {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            &-count {
+              @include typo.typography('d2b', $color: map.get(color.$text-status, 'brand'));
+              margin-top: auto;
+            }
+          }
+        }
+      }
+    }
+
+    // 자주구매
+    &-frequent {
+      @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+
+      .frequent {
+        &-head {
+          @include mx.flex(flex, row, space-between, center);
+          height: fn.rem(60);
+          padding: 0 map.get(var.$unit, 32);
+        }
+      }
+
+      &.is-empty {
+        .frequent-body {
+          @include mx.flex(flex, row, center, center);
+          height: fn.rem(512);
+
+          .vits-empty-state {
+            &,
+            &-content {
+              gap: map.get(var.$unit, 20);
+            }
+
+            &-icon {
+              width: fn.rem(70);
+              height: fn.rem(70);
+              padding: fn.rem(19);
+              color: map.get(color.$icon-neutral, 'tertiary');
+              background: map.get(color.$layout-surf, 'raised');
+            }
+          }
+        }
+      }
+    }
+
+    // 여신 & 중요 서류
+    &-guides {
+      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      gap: map.get(var.$unit, 24);
+
+      .guides {
+        &-head {
+          @include mx.flex(flex, row, space-between, center);
+        }
+
+        &-item {
+          @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+          flex: 0 0 calc(50% - map.get(var.$unit, 12));
+        }
+
+        &-content {
+          @include mx.flex(flex, column, center, center);
+          gap: map.get(var.$unit, 4);
+          height: fn.rem(264);
+
+          [class*='vits-btn-'] {
+            width: fn.rem(160);
+            margin-top: map.get(var.$unit, 32);
+          }
+        }
+
+        &-desc {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+
+          b {
+            font-weight: 600;
+            color: map.get(color.$text-colors, 'primary');
+          }
+        }
+      }
+    }
+  }
+
   &-content {
     &-headline {
-      @include mx.flex(flex, row, flex-start, flex-end);
+      @include mx.flex(flex, row, flex-start, center);
       gap: map.get(var.$unit, 12);
       width: 100%;
 
@@ -182,7 +402,7 @@
     }
 
     &-title {
-      @include typo.typography('h2b', $color: #101828);
+      @include typo.typography('h3b', $color: #101828);
 
       .icon {
         @include icon.ic-size(map.get(var.$unit, 24));
@@ -201,11 +421,15 @@
       margin-left: auto;
 
       .order-title {
-        @include typo.typography('h3s', $color: map.get(color.$text-colors, 'tertiary'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+
+        & ~ .order-title {
+          margin-left: map.get(var.$unit, 12);
+        }
       }
 
       .order-number {
-        @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+        @include typo.typography('b3s');
       }
     }
   }
@@ -426,6 +650,10 @@
     &-list {
       @include mx.flex(flex, column, flex-start, flex-start);
       gap: map.get(var.$unit, 32);
+      width: 100%;
+    }
+
+    &-item {
       width: 100%;
     }
 
@@ -1486,10 +1714,12 @@
 }
 
 /* empty state - nodata */
+/* stylelint-disable-next-line no-descending-specificity */
 .vits-empty-state {
   @include mx.flex(flex, column, center, center);
   gap: map.get(var.$unit, 32);
 
+  /* stylelint-disable-next-line no-descending-specificity */
   &-content {
     @include mx.flex(flex, column-reverse, center, center);
     gap: map.get(var.$unit, 32);
@@ -1590,6 +1820,7 @@
   &-header {
     flex-shrink: 0;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     [class*='vits-btn-'] {
       width: 100%;
     }
@@ -1739,15 +1970,24 @@
   &-body {
     flex-grow: 1;
     width: 100%;
-    min-height: fn.rem(190);
-    max-height: fn.rem(240);
+
+    &:has(.vits-claim-request-reason) {
+      min-height: fn.rem(190);
+      max-height: fn.rem(240);
+    }
 
     &:has(.vits-claim-request-chekbox) {
       @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+      max-height: fn.rem(400);
       padding: map.get(var.$unit, 16) map.get(var.$unit, 4) map.get(var.$unit, 16) map.get(var.$unit, 16) !important;
       margin-bottom: 0 !important;
+      overflow: hidden auto;
       background: map.get(color.$layout-surf, 'mypage');
       border-radius: map.get(var.$radius, 'lg');
+    }
+
+    &:has(.vits-claim-request-chekbox):not(.has-scroll) {
+      padding: map.get(var.$unit, 16) !important;
     }
   }
 
@@ -1788,6 +2028,7 @@
 
   &-box {
     @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+    width: 100%;
     padding: map.get(var.$unit, 16);
     background: color.$color-white;
     border-radius: map.get(var.$radius, 'md');
@@ -1886,6 +2127,11 @@
         @include mx.flex(flex, row, flex-start, center);
         flex-shrink: 0;
         gap: fn.rem(10);
+      }
+
+      &-control {
+        @include mx.flex(flex, row, flex-start, center);
+        flex-shrink: 0;
         min-width: fn.rem(68);
       }
     }
@@ -2014,17 +2260,36 @@
           flex-grow: 1;
           width: calc(100% - fn.rem(90));
         }
+
+        &.return-bank {
+          /* stylelint-disable-next-line no-descending-specificity */
+          dd {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: fn.rem(10);
+            align-self: center;
+
+            .select-fix {
+              flex: 0 0 fn.rem(160);
+            }
+
+            .vits-input {
+              flex-grow: 1 1 auto;
+              min-width: 0;
+            }
+          }
+        }
       }
     }
   }
 
   &-footer {
     @include mx.flex(flex, column, flex-start, stretch);
-    gap: map.get(var.$unit, 40);
+    gap: map.get(var.$unit, 36);
   }
 
   &-total {
     @include mx.flex(flex, row, space-between, flex-start);
+    margin-top: map.get(var.$unit, 4);
 
     &-label {
       @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
@@ -2141,6 +2406,236 @@
       &-list {
         @include mx.flex(flex, row, flex-start, flex-start);
         gap: map.get(var.$unit, 8);
+      }
+    }
+  }
+}
+
+// 배송조회 & 반품회수조회
+.vits-track-shipment {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: map.get(var.$unit, 48);
+
+  &-head {
+    @include mx.flex(flex, row, center, center);
+    gap: map.get(var.$unit, 56);
+    width: 100%;
+    height: fn.rem(100);
+    background: map.get(color.$layout-surf, 'raised');
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quinary');
+
+    .shipment-info {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 4);
+
+      dt {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      dd,
+      &-number {
+        @include typo.typography('h3s', $color: #101828);
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      dd {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-number {
+        text-decoration: underline;
+        text-underline-offset: 6px;
+      }
+
+      &-copy {
+        @include button.btn-reset;
+        @include icon.ic-size(map.get(var.$unit, 24));
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+  }
+
+  &-body {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 48);
+    width: 100%;
+
+    .shipment-steps {
+      @include mx.flex;
+      width: 100%;
+
+      @for $i from 1 through 5 {
+        &[data-current='#{$i}'] li:nth-of-type(#{$i}) {
+          .step-icon {
+            color: map.get(color.$icon-neutral, 'inverse');
+            background: map.get(color.$layout-surf, 'brand');
+          }
+
+          .step-text,
+          .step-title {
+            color: map.get(color.$text-status, 'brand');
+          }
+
+          &::after {
+            background-image: url('/public/resources/img/mro/renewal/ic/ic-triple-arrow-red.svg');
+          }
+        }
+      }
+
+      .step {
+        &-item {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          width: 100%;
+
+          &:not(:last-of-type)::after {
+            @include mx.background('ic/ic-triple-arrow.svg');
+            display: block;
+            flex-shrink: 0;
+            width: fn.rem(14);
+            aspect-ratio: 16 / 11;
+            margin: map.get(var.$unit, 20) map.get(var.$unit, 20) 0;
+            content: '';
+          }
+        }
+
+        &-marker {
+          @include mx.flex(flex, column, flex-start, center);
+          gap: map.get(var.$unit, 20);
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        &-icon {
+          @include mx.flex(flex, row, center, center);
+          @include icon.ic-size(map.get(var.$unit, 52));
+          flex-shrink: 0;
+          padding: fn.rem(10);
+          color: map.get(color.$icon-neutral, 'primary');
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: 50%;
+        }
+
+        &-text {
+          @include typo.typography('b3s');
+          white-space: nowrap;
+        }
+      }
+
+      &.type-column {
+        flex-direction: column;
+        width: fn.rem(331);
+        margin: 0 auto;
+
+        .step {
+          &-item {
+            flex-direction: column;
+
+            &::after {
+              position: static;
+              margin: map.get(var.$unit, 20) 0 map.get(var.$unit, 20) fn.rem(21);
+              transform: rotate(90deg);
+            }
+          }
+
+          &-marker {
+            flex-direction: row;
+            gap: map.get(var.$unit, 24);
+          }
+
+          &-content {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 8);
+          }
+
+          &-title {
+            @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          &-desc {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+      }
+    }
+
+    .shipment-detail {
+      width: 100%;
+
+      &:not(.is-empty) {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 20);
+      }
+
+      &.is-empty {
+        @include mx.flex(flex, row, center, center);
+        height: fn.rem(358);
+      }
+
+      &-title {
+        @include typo.typography('b1b');
+      }
+
+      &-list {
+        width: 100%;
+        height: fn.rem(280);
+        padding: 0 map.get(var.$unit, 2) 0 map.get(var.$unit, 4);
+        background: linear-gradient(
+          to right,
+          transparent 32px,
+          map.get(color.$layout-border, 'quaternary') 32px,
+          map.get(color.$layout-border, 'quaternary') 36px,
+          transparent 36px
+        );
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+        &-inner {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 20);
+          height: 100%;
+          padding: map.get(var.$unit, 20) 0;
+          overflow: hidden auto;
+        }
+      }
+
+      &-item {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        position: relative;
+        gap: map.get(var.$unit, 4);
+        width: 100%;
+        padding: 0 map.get(var.$unit, 20) 0 fn.rem(60);
+
+        &::before {
+          @include mx.position(absolute, 50%, $left: map.get(var.$unit, 20));
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
+          content: '';
+          background: map.get(color.$layout-surf, 'base');
+          border-radius: 50%;
+          box-shadow: inset 0 0 0 4px map.get(color.$layout-border, 'brand');
+          transform: translateY(-50%);
+        }
+      }
+
+      &-info {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-location {
+        @include typo.typography('b2m', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-status {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+
+        &[data-status='completed'] {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-date {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       }
     }
   }

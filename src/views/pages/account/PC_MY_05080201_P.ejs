@@ -1,0 +1,47 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, { meta_title: '계정 등록 팝업' }) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('accountRegisterModal')"
+                >
+                  <span class="text">계정 등록 팝업</span>
+                </button>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = {
+                id: 'accountRegisterModal',
+                size: '520',
+                title: '계정 등록',
+                opt: { draggable: true },
+                contentPath: `${_src}/views/pages/kendo-window/account/kw-PC_MY_05080201_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' },
+                  { text: '등록', variant: 'primary', action: 'close' }
+                ]
+              }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

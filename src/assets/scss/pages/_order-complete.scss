@@ -230,8 +230,109 @@
       padding: map.get(var.$unit, 32);
     }
 
-    &.order-payment &-content {
-      padding: 0;
+    &.order-payment {
+      .order-section-content {
+        padding: 0;
+      }
+    }
+
+    // 주문 상품: 택배 불가 경고 + 상품 목록
+    &.order-product .order-product-notice-column {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 20);
+    }
+  }
+
+  // 택배 불가 + 상품 목록 래퍼
+  .order-product-parcel-wrap {
+    @include mx.flex($align: stretch);
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 16);
+    margin-left: fn.rem(100);
+    background-color: map.get(color.$layout-surf, 'mypage');
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  // 택배 불가 경고 박스
+  .parcel-notice {
+    @include mx.flex($direction: column);
+    flex: 1;
+    gap: map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 16);
+
+    &-header {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-icon {
+      @include mx.flex($align: center, $justify: center);
+      flex-shrink: 0;
+      width: fn.rem(24);
+      height: fn.rem(24);
+      color: map.get(color.$text-status, 'brand');
+
+      .ic {
+        width: fn.rem(24);
+        height: fn.rem(24);
+      }
+    }
+
+    &-title {
+      @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
+    }
+
+    &-desc {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      padding-left: fn.rem(32);
+      margin: 0;
+
+      strong {
+        position: relative;
+        font-weight: map.get(typo.$typo-weight, 's');
+
+        &::before {
+          @include mx.position(absolute, $top: 8px, $left: -9px);
+          width: fn.rem(2);
+          height: fn.rem(2);
+          content: '';
+          background-color: map.get(color.$layout-border, 'secondary');
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  // 주문 상품 목록 박스
+  .order-product-list {
+    @include mx.flex($direction: column);
+    flex: 1;
+    gap: map.get(var.$unit, 4);
+    min-width: 0;
+    padding: map.get(var.$unit, 16);
+  }
+
+  .order-product-item {
+    @include mx.flex($align: center);
+    gap: fn.rem(10);
+    padding: map.get(var.$unit, 4) fn.rem(6);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'sm');
+
+    &-thumb {
+      width: fn.rem(24);
+      height: fn.rem(24);
+      background: map.get(color.$gray-shades, '30');
+
+      img {
+        @include mx.common-list-thumb;
+      }
+    }
+
+    &-name {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+      flex: 1;
+      min-width: 0;
     }
   }
 
@@ -302,10 +403,10 @@
 
     &-item {
       @include mx.flex($align: center);
-      gap: map.get(var.$unit, 16);
+      gap: map.get(var.$unit, 8);
 
       .info-label {
-        flex: 0 0 fn.rem(120);
+        flex: 0 0 fn.rem(92);
         white-space: normal;
 
         @include typo.typography('b3', $color: map.get(color.$text-colors, 'tertiary'));
@@ -346,7 +447,7 @@
     &-list {
       @include mx.flex($direction: column);
       gap: fn.rem(16);
-      padding: map.get(var.$unit, 32);
+      padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 32);
     }
 
     &-item {

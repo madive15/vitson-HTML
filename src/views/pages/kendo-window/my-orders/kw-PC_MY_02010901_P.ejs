@@ -1,0 +1,39 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<section class="vits-claim-request">
+  <h2 class="sr-only">취소 신청</h2>
+
+  <div class="vits-claim-request-header">
+    <!-- 안내 문구 -->
+    <ul class="vits-claim-request-notice">
+      <li>취소 상품을 선택하여 취소 신청하실 수 있습니다.</li>
+      <li>
+        배송이 이미 준비된 경우에는 관리자 승인 처리가 필요할 수 있습니다. 취소 신청 후 마이페이지에서 처리 상태를
+        확인해 주세요.
+      </li>
+      <li>취소 처리가 완료된 후에도 결제 수단에 따라 환불까지는 시간이 소요될 수 있습니다.</li>
+    </ul>
+  </div>
+
+  <div class="vits-claim-request-toolbar">
+    <h3 class="vits-claim-request-title">취소 신청 상품</h3>
+  </div>
+
+  <div class="vits-claim-request-body" data-scroll-check>
+    <!-- 취소 신청 상품 1개 일 때 -->
+    <div class="vits-claim-request-section">
+      <%- include(`${_src}/views/components/pg-my-orders/my-return-product.ejs`, { isReturn: false }) %>
+    </div>
+  </div>
+
+  <div class="vits-claim-request-footer">
+    <!-- 환불 계좌 -->
+    <%- include(`${_src}/views/components/pg-my-orders/my-return-bank.ejs`) %>
+
+    <!-- 환불 예정 금액 -->
+    <div class="vits-claim-request-total">
+      <p class="vits-claim-request-total-label">환불예정금액</p>
+      <p class="vits-claim-request-total-price">370,950원</p>
+    </div>
+  </div>
+</section>

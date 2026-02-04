@@ -428,10 +428,42 @@ $checkbox-item: (
 }
 
 /* input text */
-$input-size: (
-  'default': fn.rem(32),
-  'medium': fn.rem(36),
-  'large': fn.rem(44)
+$input-type: (
+  's': (
+    fn.rem(28),
+    map.get(var.$unit, 8),
+    'b4r'
+  ),
+  'm': (
+    fn.rem(32),
+    map.get(var.$unit, 12),
+    'b3r'
+  ),
+  'l': (
+    fn.rem(36),
+    map.get(var.$unit, 12),
+    'b3r'
+  ),
+  'xl': (
+    fn.rem(44),
+    map.get(var.$unit, 16),
+    'b2r'
+  ),
+  'default': (
+    fn.rem(32),
+    map.get(var.$unit, 12),
+    'b3r'
+  ),
+  'medium': (
+    fn.rem(36),
+    map.get(var.$unit, 12),
+    'b3r'
+  ),
+  'large': (
+    fn.rem(44),
+    map.get(var.$unit, 16),
+    'b2r'
+  )
 );
 
 .vits-input {
@@ -459,29 +491,14 @@ $input-size: (
     }
   }
 
-  @each $key, $minh in $input-size {
+  @each $key, $values in $input-type {
     &.size-#{$key} .input-item {
-      height: $minh;
+      height: list.nth($values, 1);
 
-      @if $key == 'default' {
-        input {
-          @include typo.typography('b3r');
-          padding: 0 map.get(var.$unit, 12);
-        }
-      }
+      input {
+        padding: 0 list.nth($values, 2);
 
-      @if $key == 'medium' {
-        input {
-          @include typo.typography('b3r');
-          padding: 0 map.get(var.$unit, 12);
-        }
-      }
-
-      @if $key == 'large' {
-        input {
-          @include typo.typography('b2r');
-          padding: 0 map.get(var.$unit, 16);
-        }
+        @include typo.typography(list.nth($values, 3));
       }
     }
   }

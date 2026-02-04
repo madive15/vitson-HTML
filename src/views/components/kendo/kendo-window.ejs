@@ -35,6 +35,7 @@ const winInfoTitle = (typeof infotitle !== 'undefined' && infotitle) ? infotitle
 const winContentPath = (typeof contentPath !== 'undefined' && contentPath) ? contentPath : '';
 const winButtons = (typeof buttons !== 'undefined' && buttons) ? buttons : [];
 const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0);
+const winContentData = (typeof contentData !== 'undefined' && contentData) ? contentData : {};
 
 const winOpt = (typeof opt !== 'undefined' && opt) ? opt : {};
 if (winSize) winOpt.width = Number(winSize);
@@ -70,9 +71,9 @@ const winOptStr = JSON.stringify(winOpt);
   </div>
 
   <!-- 컨텐츠 -->
-  <div class="vits-modal-content<% if (!winHasFooter) { %> no-footer<% } %>">
+  <div class="vits-modal-content<% if (!winHasFooter) { %> no-footer<% } %>" data-scroll-check>
   <% if (winContentPath) { %>
-    <%- include(winContentPath, { size: undefined }) %>
+    <%- include(winContentPath, Object.assign({ size: undefined }, winContentData)) %>
   <% } %>
   </div>
 
