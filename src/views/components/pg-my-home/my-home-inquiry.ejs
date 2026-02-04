@@ -1,0 +1,46 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<% const _hasRecentInquiry = (typeof hasRecentInquiry !== 'undefined') ? hasRecentInquiry : false; %>
+
+<% if (_hasRecentInquiry) { %>
+<div class="vits-mypage-home-inquiry">
+  <div class="inquiry-head" data-scss="head">
+    <p class="vits-mypage-home-title">
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'textbox2' }) %> </span>
+      최근 문의를 확인하세요
+    </p>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '최근 문의 더보기', size: 'sm'
+      }) %>
+  </div>
+  <div class="inquiry-body" data-scss="body">
+    <a href="#!">
+      <div class="inquiry-item">
+        <div class="inquiry-info">
+          <p class="inquiry-title">배송지 변경 가능한가요?</p>
+          <p class="inquiry-meta">
+            <span class="meta-category">배송문의</span>
+            <span class="meta-order">ORD-134-086549</span>
+            <span class="meta-date">2026-04-20</span>
+          </p>
+        </div>
+        <div class="inquiry-status">
+          <!-- prettier-ignore -->
+          <%# 답변대기 %>
+          <!-- < %- include(`${_src}/views/components/label/general-label.ejs`, { 
+            text: '답변대기', variant: 'gray' 
+          }) %>  -->
+
+          <!-- prettier-ignore -->
+          <%# 답변완료 %>
+          <%- include(`${_src}/views/components/label/general-label.ejs`, { 
+            text: '답변완료', variant: 'green' 
+          }) %>
+        </div>
+      </div>
+    </a>
+  </div>
+  <% } %>
+</div>

@@ -205,21 +205,20 @@
             }
           }
         }
-
-        // 세금계산서 발급 섹션 표시/숨김 처리
-        updateTaxSectionVisibility();
       }
 
-      // 결제수단 라디오 버튼과 패널 처리
+      // 결제수단 라디오 버튼과 패널 처리 (vits-tax 내부 세금계산서 라디오는 제외)
       var paymentItemSelector = '.vits-payment-item';
-      var paymentRadioSelector = '.vits-payment-item .radio-item input[type="radio"]';
+      var paymentRadioSelector = '.vits-payment-item input[type="radio"][aria-controls]';
       var paymentPanelSelector = '.vits-payment-panel';
 
       function setPaymentPanelState($radio) {
         if (!$radio.length) return;
+        // vits-tax 세금계산서 라디오는 패널 전환에 영향 주지 않음
+        var controlsId = $radio.attr('aria-controls');
+        if (!controlsId) return;
 
         var radioId = $radio.attr('id');
-        var controlsId = $radio.attr('aria-controls');
         var $item = $radio.closest(paymentItemSelector);
         var $methodWrap = $item.closest('.vits-payment-method');
         var $allItems = $methodWrap.find(paymentItemSelector);
@@ -249,9 +248,9 @@
           $r.attr('aria-expanded', 'false');
         });
 
-        // 선택된 라디오 버튼의 패널 활성화
+        // 선택된 라디오 버튼의 패널 활성화 (같은 결제 영역 내에서만 탐색)
         if (controlsId) {
-          var $targetPanel = $('#' + controlsId);
+          var $targetPanel = $methodWrap.find('#' + controlsId);
           if ($targetPanel.length) {
             $targetPanel.addClass('is-active');
             // aria-expanded 업데이트 (선택된 라디오 버튼만 true)
@@ -268,44 +267,6 @@
         } else {
           // aria-controls가 없으면 false로 설정
           $radio.attr('aria-expanded', 'false');
-        }
-
-        // 세금계산서 발급 섹션 표시/숨김 처리
-        updateTaxSectionVisibility();
-
-        // pay-credit 선택 시 tax-invoice-batch 자동 체크
-        if (radioId === 'pay-credit') {
-          var $taxInvoiceBatch = $('#tax-invoice-batch');
-          if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
-            $taxInvoiceBatch.prop('checked', true).trigger('change');
-          }
-        }
-      }
-
-      // 세금계산서 발급 섹션 표시/숨김 처리 함수
-      function updateTaxSectionVisibility() {
-        var $taxSection = $('.vits-tax');
-        var showTax = false;
-
-        // 활성화된 탭 확인 (tab-simple-account)
-        var $activeTab = $(paymentTabSelector + '.is-active');
-        if ($activeTab.length && $activeTab.attr('id') === 'tab-simple-account') {
-          showTax = true;
-        }
-
-        // 체크된 라디오 버튼 확인 (pay-transfer, pay-bank, pay-credit)
-        if (!showTax) {
-          var checkedRadioId = $(paymentRadioSelector + ':checked').attr('id');
-          var showTaxIds = ['pay-transfer', 'pay-bank', 'pay-credit'];
-          if (showTaxIds.indexOf(checkedRadioId) !== -1) {
-            showTax = true;
-          }
-        }
-
-        if (showTax) {
-          $taxSection.addClass('is-active');
-        } else {
-          $taxSection.removeClass('is-active');
         }
       }
 
@@ -358,18 +319,6 @@
       $(paymentRadioSelector + ':checked').each(function () {
         setPaymentPanelState($(this));
       });
-
-      // 초기 상태에서 pay-credit이 체크되어 있으면 tax-invoice-batch도 체크
-      var $payCredit = $('#pay-credit');
-      if ($payCredit.length && $payCredit.is(':checked')) {
-        var $taxInvoiceBatch = $('#tax-invoice-batch');
-        if ($taxInvoiceBatch.length && !$taxInvoiceBatch.is(':checked')) {
-          $taxInvoiceBatch.prop('checked', true);
-        }
-      }
-
-      // 초기 상태에서 세금계산서 섹션 표시 여부 확인
-      updateTaxSectionVisibility();
 
       // 결제수단 탭 클릭 이벤트
       $(document)

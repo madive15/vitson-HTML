@@ -10,7 +10,6 @@
   // --- 데이터 없으면 미노출 ---
   const _hasRecentOrder = false;      // 최근주문
   const _hasRecentClaim = false;      // 최근 취소/반품
-  const _hasRecentInquiry = false;    // 최근 문의
 %>
 <!DOCTYPE html>
 <!-- 
@@ -74,7 +73,7 @@
                       <!-- E: 프로필 -->
 
                       <!-- S: 주문현황 -->
-                      <%- include(`${_src}/views/components/pg-my-home/my-home-order.ejs`, { hasOrderData: false }) %>
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-order.ejs`, { hasOrderData: true }) %>
                       <!-- E: 주문현황 -->
 
                       <% if (_hasRecentOrder) { %>
@@ -94,23 +93,26 @@
                       <!-- E: 최근 취소/반품 -->
                       <% } %>
 
-                      <!-- prettier-ignore -->
-                      <% if (_hasRecentInquiry) { %>
-                      <!-- S: 최근 문의 -->
-                      <div class="myhome-recent-inquiry">
-                        <!-- 최근 문의 리스트 -->
-                      </div>
-                      <!-- E: 최근 문의 -->
-                      <% } %>
-
                       <!-- S: 자주 구매 -->
-                      <%- include(`${_src}/views/components/pg-my-home/my-home-frequent.ejs`, { hasFrequentData: false
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-frequent.ejs`, { 
+                        hasFrequentData: true 
                       }) %>
                       <!-- E: 자주 구매 -->
 
                       <!-- S: 여신 & 중요 서류 -->
-                      <%- include(`${_src}/views/components/pg-my-home/my-home-guides.ejs`) %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-guides.ejs`, {
+                        hasGuidesData: true
+                      }) %>
                       <!-- E: 여신 & 중요 서류 -->
+
+                      <!-- S: 최근 문의 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-inquiry.ejs`, {
+                        hasRecentInquiry: true
+                      }) %>
+                      <!-- E: 최근 문의 -->
                     </div>
                   </div>
                   <!-- E: vits-grid-main -->

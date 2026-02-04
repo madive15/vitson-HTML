@@ -1,0 +1,27 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _title = (typeof title !== 'undefined') ? title : '';
+  const _amount = (typeof amount !== 'undefined') ? amount : '';
+  const _buttonText = (typeof buttonText !== 'undefined') ? buttonText : '';
+  const _href = (typeof href !== 'undefined') ? href : '#!';
+%>
+
+<div class="guides-docs-item">
+  <div class="guides-docs-head">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+      href: _href, text: '더보기', size: 'sm' 
+    }) %>
+  </div>
+  <div class="guides-docs-body">
+    <div class="guides-docs-title">
+      <p><%= _title %></p>
+    </div>
+    <div class="guides-docs-amount"><p><%= _amount %></p></div>
+    <div class="guides-docs-button">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {size:'xs', variant: 'outline-tertiary', text: _buttonText }) %>
+    </div>
+  </div>
+</div>

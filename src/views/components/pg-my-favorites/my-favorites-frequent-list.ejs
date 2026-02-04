@@ -1,18 +1,9 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
 <!-- prettier-ignore -->
-<%
-  // PLP 메인 클래스 교체용 (기본: 'vits-main-plp')
-  var plpMainClass = (locals.plpMainClass || 'main-content-plp').trim();
-  
-  // 함께 본 상품 표시 여부 (기본: false)
-  var showAlsoViewedSection = locals.showAlsoViewedSection === true;
+<% const _count = (typeof count !== 'undefined') ? count : Infinity; %>
+<% let _idx = 0; %>
 
-  // swiperBaseCard를 locals에서 받아옴
-  var swiperBaseCard = locals.swiperBaseCard || [];
-%>
-
-<!-- prettier-ignore -->
 <%# 
   [D] [상품 카드 상태/뷰 제어용 data & class 규칙]
 
