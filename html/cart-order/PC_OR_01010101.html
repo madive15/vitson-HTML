@@ -23796,29 +23796,6 @@
     </div>
 
     <p class="vits-payment-notice">도착지에서 착불 운임이 청구됩니다.</p>
-
-    <div class="vits-payment-agree">
-      <!-- prettier-ignore -->
-      
-
-
-  <label class="checkbox-single-s">
-    <input
-      type="checkbox"
-      name="payment-agree"
-      value="payment-agree"
-      
-      
-      
-    />
-    <span class="sr-only">동의 체크란</span> 
-    
-      <p class="agree-text">주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며, 구매에 동의하시겠습니까? (전자상거래법 제8조 2항)</p>
-    
-  </label>
-
-
-    </div>
   </div>
 
   <!-- 결제수단 선택 -->
@@ -23893,35 +23870,36 @@
               </a>
             </div>
           </div>
+
           <!-- 카드 스와이퍼 -->
           <div class="vits-card-list swiper-container js-swiper" data-swiper-type="payment" data-desktop="2.5">
             <div class="swiper-wrapper">
               <!-- prettier-ignore -->
               
-              
+            
               <div
                 class="swiper-slide vits-card-item is-selected"
-                style="background-image: url(''); background-color: #4a6bc2"
+                style="background-image: url('https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/shinhan@2x.png'); background-color: #4a6bc2"
               ></div>
               
               <div
                 class="swiper-slide vits-card-item"
-                style="background-image: url(''); background-color: #4a6bc2"
+                style="background-image: url('https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/ibk@2x.png'); background-color: #004c9d"
               ></div>
               
               <div
                 class="swiper-slide vits-card-item"
-                style="background-image: url(''); background-color: #4a6bc2"
+                style="background-image: url('https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/kb@2x.png'); background-color: #ffbc00"
               ></div>
               
               <div
                 class="swiper-slide vits-card-item"
-                style="background-image: url(''); background-color: #4a6bc2"
+                style="background-image: url('https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/keb@2x.png'); background-color: #f2f9f8"
               ></div>
               
               <div
                 class="swiper-slide vits-card-item"
-                style="background-image: url(''); background-color: #4a6bc2"
+                style="background-image: url('https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/woori@2x.png'); background-color: #0067AC"
               ></div>
               
             </div>
@@ -24033,20 +24011,22 @@
           role="tabpanel"
           aria-labelledby="tab-simple-account"
         >
-          <!-- 안내 메시지 -->
-          <div class="vits-payment-notice">
-            <div class="pay-manage">
-              <a class="vits-text-link" href="!#"
-                >비츠온페이 관리하기
-                <!-- prettier-ignore -->
-                <i class="ic ic-arrow-right" aria-hidden="true"></i>
+          <div class="payment-tab-panel-inner">
+            <!-- 안내 메시지 -->
+            <div class="vits-payment-notice">
+              <div class="pay-manage">
+                <a class="vits-text-link" href="!#"
+                  >비츠온페이 관리하기
+                  <!-- prettier-ignore -->
+                  <i class="ic ic-arrow-right" aria-hidden="true"></i>
 
-              </a>
+                </a>
+              </div>
             </div>
-          </div>
 
-          <!-- prettier-ignore -->
-          
+            <!-- 계좌 등록 버튼 -->
+            <!-- prettier-ignore -->
+            
 
 
 
@@ -24064,22 +24044,93 @@
 
 
 
+            <!--case: 등록된계좌 -->
+            <div class="vits-card-form type-account">
+              <div class="vits-form-row">
+                <div class="vits-form-item">
+                  <span class="vits-form-label">계좌번호 <span class="vits-default-badge">대표</span></span>
+                  <span class="vits-form-value">신한은행(1234)</span>
+                  <span class="vits-form-number">3318 - 12******</span>
+                </div>
 
-          <!-- 등록된계좌 -->
-          <div class="vits-card-form type-account">
-            <div class="vits-form-row">
-              <div class="vits-form-item">
-                <span class="vits-form-label">카드번호 <span class="vits-default-badge">대표</span></span>
-                <span class="vits-form-value">신한카드(3318)</span>
-                <span class="vits-form-number">3318 **** **** ****</span>
-              </div>
-
-              <div class="vits-form-item">
-                <span class="vits-form-label">카드별칭</span>
-                <span class="vits-form-value">김비츠 신한</span>
+                <div class="vits-form-item">
+                  <span class="vits-form-label">계좌별칭</span>
+                  <span class="vits-form-value">김비츠 신한</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- prettier-ignore -->
+           
+<!-- 세금계산서 발급 신청 -->
+<div class="vits-tax">
+  <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
+
+  <div class="vits-tax-options">
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-single"
+    value="single"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-batch"
+    value="batch"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">일괄 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-none"
+    value="none"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">발급 안함</span>
+  
+</label>
+  </div>
+</div>
+
         </div>
       </div>
     </div>
@@ -24201,6 +24252,77 @@
   
 </div>
 
+
+        <!-- prettier-ignore -->
+         
+<!-- 세금계산서 발급 신청 -->
+<div class="vits-tax">
+  <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
+
+  <div class="vits-tax-options">
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-single"
+    value="single"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-batch"
+    value="batch"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">일괄 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-none"
+    value="none"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">발급 안함</span>
+  
+</label>
+  </div>
+</div>
+
       </div>
     </div>
 
@@ -24228,9 +24350,10 @@
 </label>
 
       <div id="panel-bank" class="vits-payment-panel" aria-labelledby="pay-bank">
-        <!-- 안내 메시지 -->
-        <!-- prettier-ignore -->
-        <!-- prettier-ignore -->
+        <div class="payment-tab-panel-inner">
+          <!-- 안내 메시지 -->
+          <!-- prettier-ignore -->
+          <!-- prettier-ignore -->
 
 
 <div class="vits-order-alerts type-b-warning">
@@ -24272,23 +24395,23 @@
 </div>
 
 
-        <div class="vits-payment-bank">
-          <dl class="vits-payment-bank-list">
-            <div class="vits-payment-bank-item">
-              <dt>입금 계좌</dt>
-              <dd>국민 288965-04-531311</dd>
-            </div>
-            <div class="vits-payment-bank-item">
-              <dt>예금주명</dt>
-              <dd>주식회사 일신비츠온</dd>
-            </div>
-          </dl>
+          <div class="vits-payment-bank">
+            <dl class="vits-payment-bank-list">
+              <div class="vits-payment-bank-item">
+                <dt>입금 계좌</dt>
+                <dd>국민 288965-04-531311</dd>
+              </div>
+              <div class="vits-payment-bank-item">
+                <dt>예금주명</dt>
+                <dd>주식회사 일신비츠온</dd>
+              </div>
+            </dl>
 
-          <div class="vits-payment-bank-input">
-            <label class="vits-form-label" for="pay-bank-depositor">입금자명</label>
-            <div class="vits-form-field">
-              <!-- prettier-ignore -->
-              
+            <div class="vits-payment-bank-input">
+              <label class="vits-form-label" for="pay-bank-depositor">입금자명</label>
+              <div class="vits-form-field">
+                <!-- prettier-ignore -->
+                
 
 <div class="vits-input size-medium ">
   <div class="input-item">
@@ -24318,9 +24441,81 @@
     <p id="pay-bank-depositor-validation" aria-live="polite"></p>
   </div>
 </div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- prettier-ignore -->
+         
+<!-- 세금계산서 발급 신청 -->
+<div class="vits-tax">
+  <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
+
+  <div class="vits-tax-options">
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-single"
+    value="single"
+    checked
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">개별 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-batch"
+    value="batch"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">일괄 발급</span>
+  
+</label>
+    <!-- prettier-ignore -->
+    
+
+<label class="radio-item">
+  <input
+    type="radio"
+    name="tax-invoice"
+    id="tax-invoice-none"
+    value="none"
+    
+    
+    
+    
+    
+  />
+  <span class="radio-icon" aria-hidden="true"></span>
+  
+    <span class="label-name">발급 안함</span>
+  
+</label>
+  </div>
+</div>
+
       </div>
     </div>
 
@@ -24349,18 +24544,16 @@
 
       <div id="panel-credit" class="vits-payment-panel" aria-labelledby="pay-credit">
         <div class="info-text">후불 고객이 정해진 여신 한도 내에서 결제하시는 방법입니다.</div>
-      </div>
-    </div>
-    <!-- e.  -->
-  </div>
 
-  <!-- 세금계산서 발급 -->
-  <div class="vits-tax">
-    <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
+        <!-- prettier-ignore -->
+         
+<!-- 세금계산서 발급 신청 -->
+<div class="vits-tax">
+  <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
-    <div class="vits-tax-options">
-      <!-- prettier-ignore -->
-      
+  <div class="vits-tax-options">
+    <!-- prettier-ignore -->
+    
 
 <label class="radio-item">
   <input
@@ -24368,7 +24561,7 @@
     name="tax-invoice"
     id="tax-invoice-single"
     value="single"
-    checked
+    
     
     
     
@@ -24379,8 +24572,8 @@
     <span class="label-name">개별 발급</span>
   
 </label>
-      <!-- prettier-ignore -->
-      
+    <!-- prettier-ignore -->
+    
 
 <label class="radio-item">
   <input
@@ -24388,7 +24581,7 @@
     name="tax-invoice"
     id="tax-invoice-batch"
     value="batch"
-    
+    checked
     
     
     
@@ -24399,8 +24592,8 @@
     <span class="label-name">일괄 발급</span>
   
 </label>
-      <!-- prettier-ignore -->
-      
+    <!-- prettier-ignore -->
+    
 
 <label class="radio-item">
   <input
@@ -24419,7 +24612,36 @@
     <span class="label-name">발급 안함</span>
   
 </label>
+  </div>
+</div>
+
+      </div>
     </div>
+
+    <!-- 동의 체크박스 -->
+    <div class="vits-payment-agree">
+      <!-- prettier-ignore -->
+      
+
+
+  <label class="checkbox-single-s">
+    <input
+      type="checkbox"
+      name="payment-agree"
+      value="payment-agree"
+      
+      
+      
+    />
+    <span class="sr-only">동의 체크란</span> 
+    
+      <p class="agree-text">주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며, 구매에 동의하시겠습니까? (전자상거래법 제8조 2항)</p>
+    
+  </label>
+
+
+    </div>
+    <!-- e.  -->
   </div>
 </section>
 
