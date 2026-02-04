@@ -15,7 +15,8 @@ publicPath : ''; %>
 <tr>
   <td>
     <% if (_isDefault) { %>
-    <span class="shipping-table-badge">대표배송지</span>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지', variant: 'red' }) %>
     <% } %>
   </td>
   <td><span class="shipping-table-name"><%= _addrName || '—' %></span></td>

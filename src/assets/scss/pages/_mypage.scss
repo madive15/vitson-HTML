@@ -29,6 +29,7 @@
 @mixin roundbox-white($variant: 'single', $custom: 'base', $myhY: null, $myhX: null) {
   background: color.$color-white;
   border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
 
   @if $variant == 'single' {
     padding: map.get(var.$unit, 32);
@@ -68,13 +69,14 @@
     // stylelint-disable-next-line at-rule-empty-line-before
     @else if $custom == 'detail' {
       [data-scss='head'] {
+        @include mx.flex(flex, row, space-between, center);
         @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
         height: fn.rem(60);
         padding: 0 map.get(var.$unit, 32);
       }
 
       [data-scss='body'] {
-        padding: map.get(var.$unit, 36);
+        padding: map.get(var.$unit, 16) map.get(var.$unit, 36);
       }
     }
   }
@@ -312,14 +314,6 @@
     &-frequent {
       @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
 
-      .frequent {
-        &-head {
-          @include mx.flex(flex, row, space-between, center);
-          height: fn.rem(60);
-          padding: 0 map.get(var.$unit, 32);
-        }
-      }
-
       &.is-empty {
         .frequent-body {
           @include mx.flex(flex, row, center, center);
@@ -345,17 +339,25 @@
 
     // 여신 & 중요 서류
     &-guides {
-      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      @include mx.flex(flex, row, flex-start, stretch, wrap);
       gap: map.get(var.$unit, 24);
 
       .guides {
-        &-head {
-          @include mx.flex(flex, row, space-between, center);
-        }
-
         &-item {
           @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+          @include mx.flex(flex, column);
           flex: 0 0 calc(50% - map.get(var.$unit, 12));
+
+          &.guides-docs {
+            [data-scss='body'] {
+              padding-bottom: map.get(var.$unit, 36);
+            }
+          }
+        }
+
+        &-body {
+          flex-grow: 1;
+          min-height: fn.rem(264);
         }
 
         &-content {
@@ -369,6 +371,11 @@
           }
         }
 
+        &-title {
+          @include typo.typography('h4s', $color: map.get(color.$text-colors, 'secondary'));
+          padding-bottom: map.get(var.$unit, 4);
+        }
+
         &-desc {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
 
@@ -376,6 +383,144 @@
             font-weight: 600;
             color: map.get(color.$text-colors, 'primary');
           }
+        }
+
+        // 여신관리
+        &-credit {
+          .credit-usage {
+            @include mx.flex(flex, column, space-between, stretch);
+            height: 100%;
+            padding: map.get(var.$unit, 20) 0;
+
+            &-item {
+              @include mx.flex(flex, row, space-between, center, wrap);
+            }
+
+            &-label {
+              @include typo.typography('b2s');
+            }
+
+            &-value {
+              p {
+                span:not(.won) {
+                  @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+                }
+
+                .won {
+                  @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+                }
+
+                &.point-color span {
+                  color: map.get(color.$text-status, 'brand-sub');
+                }
+              }
+            }
+
+            &-divider {
+              width: 100%;
+              height: 1px;
+              margin: 0;
+              background: map.get(color.$layout-surf, 'sunken');
+              border: 0;
+            }
+          }
+        }
+
+        // 중요 서류
+        &-docs {
+          &-item {
+            @include mx.flex(flex, column, flex-start, flex-end);
+            gap: map.get(var.$unit, 8);
+            width: 100%;
+
+            &-list {
+              @include mx.flex(flex, column, flex-start, flex-end);
+              gap: map.get(var.$unit, 16);
+              height: 100%;
+            }
+          }
+
+          &-body {
+            @include mx.flex(flex, row, flex-start, center);
+            @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+            width: 100%;
+            height: fn.rem(60);
+            padding: 0 map.get(var.$unit, 12);
+            background: map.get(color.$layout-surf, 'raised');
+            border-radius: map.get(var.$radius, 'sm');
+          }
+
+          &-title {
+            @include mx.flex(flex, row, flex-start, center);
+            @include mx.ellipsis-multi;
+            flex: 1 1 35.82%;
+
+            p {
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+
+          &-amount {
+            @include mx.flex(flex, row, center, center);
+            flex: 1 1 34.33%;
+
+            p {
+              @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+
+          &-button {
+            flex: 0 0 fn.rem(96);
+
+            [class*='vits-btn-'] {
+              width: 100%;
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+
+    // 최근 문의
+    &-inquiry {
+      @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+
+      .inquiry {
+        &-body {
+          padding: map.get(var.$unit, 36) map.get(var.$unit, 44);
+
+          > a {
+            display: block;
+            width: 100%;
+          }
+        }
+
+        &-item {
+          @include mx.flex(flex, row, space-between, center);
+          width: 100%;
+        }
+
+        &-info {
+          @include mx.flex(flex, column, space-between, flex-start);
+          flex-grow: 1;
+          gap: map.get(var.$unit, 12);
+        }
+
+        &-title {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-meta {
+          @include mx.divider('span', 1, 8, 8, #d9d9d9);
+          width: 100%;
+
+          span {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+
+        &-status {
+          flex-shrink: 0;
         }
       }
     }
@@ -1738,6 +1883,7 @@
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   &-icon {
     @include icon.ic-size(fn.rem(82));
     overflow: hidden;

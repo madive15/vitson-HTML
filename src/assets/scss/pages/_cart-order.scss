@@ -768,7 +768,6 @@
   &-title {
     @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
     padding: fn.rem(17) fn.rem(32);
-    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
   }
 
   // 가격 영역
@@ -843,7 +842,7 @@
   &-agree {
     @include cart-order-surf-box;
     width: calc(100% - fn.rem(64));
-    margin: map.get(var.$unit, 16) auto 0;
+    margin: 0 auto map.get(var.$unit, 24);
 
     .checkbox-single-s {
       align-items: flex-start;
@@ -854,13 +853,13 @@
 
   /* 결제수단 단위 */
   &-item {
-    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    @include mx.border(top, 1px, solid, map.get(color.$layout-border, 'quinary'));
     @include mx.flex($direction: column);
     gap: map.get(var.$unit, 16);
     padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
 
-    &:last-child {
-      border-bottom: 0;
+    &:first-child {
+      border-top: 0;
     }
 
     /* 라디오 공통 */
@@ -915,8 +914,15 @@
 .vits-payment-tab-panel {
   display: none;
   margin-top: map.get(var.$unit, 12);
-  border: 1px solid map.get(color.$layout-border, 'quinary');
-  border-radius: map.get(var.$radius, 'md');
+
+  .payment-tab-panel-inner {
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 36);
+    border: 1px solid map.get(color.$layout-border, 'quinary');
+    border-radius: map.get(var.$radius, 'md');
+
+    @include mx.flex($direction: column);
+  }
 
   .vits-payment-notice {
     min-height: fn.rem(34);
@@ -932,23 +938,22 @@
 
       .vits-text-link {
         @include mx.flex($align: center);
-        @include typo.typography('b4b', $color: map.get(color.$text-colors, 'tertiary'));
+        @include typo.typography('b4r ', $color: map.get(color.$text-colors, 'tertiary'));
       }
     }
   }
 
   &#panel-simple-card {
-    padding: map.get(var.$unit, 16) 0;
+    padding: map.get(var.$unit, 24) 0 map.get(var.$unit, 16);
+    border: 1px solid map.get(color.$layout-border, 'quinary');
+    border-radius: map.get(var.$radius, 'md');
   }
 
   &#panel-simple-account {
-    padding: map.get(var.$unit, 16) map.get(var.$unit, 36) map.get(var.$unit, 24);
-
     .vits-payment-notice {
       align-items: center;
       justify-content: flex-end;
       padding: 0;
-      margin-bottom: map.get(var.$unit, 24);
 
       &::before {
         content: none;
@@ -1021,16 +1026,15 @@
       width: 80px;
       min-height: fn.rem(106);
       padding: 0 map.get(var.$unit, 24);
+      cursor: pointer;
       background-color: map.get(color.$layout-surf, 'base');
       filter: grayscale(1);
-
-      // test-here 0203
-      // border: 1px solid map.get(color.$icon-neutral, 'tertiary');
       background-repeat: no-repeat;
       background-position: center;
       background-size: fn.rem(80) fn.rem(80);
+      border: 1px solid map.get(color.$layout-border, 'tertiary');
       border-radius: map.get(var.$radius, 'md');
-      opacity: 0.5;
+      opacity: 0.3;
 
       .card-brand {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
@@ -1044,8 +1048,8 @@
       }
 
       &.swiper-slide-active {
-        background-color: map.get(color.$layout-status, 'info-bg-sub');
         filter: grayscale(0);
+        border: 0;
         opacity: 1;
       }
     }
@@ -1057,7 +1061,7 @@
       margin: 0 map.get(var.$unit, 16);
 
       .vits-form-row {
-        @include mx.flex($align: center, $justify: flex-start);
+        @include mx.flex($align: flex-start, $justify: flex-start);
         padding-bottom: map.get(var.$unit, 16);
       }
 
@@ -1124,7 +1128,7 @@
     background-color: map.get(color.$layout-surf, 'base');
     border: 1px solid map.get(color.$layout-border, 'quaternary');
     border-radius: map.get(var.$radius, 'md');
-    box-shadow: 0 4px 7px 0 rgb(0 0 0 / 3.9%);
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
 
     &:hover .icon {
       color: map.get(color.$text-colors, 'inverse');
@@ -1153,12 +1157,14 @@
     display: block;
   }
 
-  // 무통장입금 패널
-  &#panel-bank {
-    padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+  .payment-tab-panel-inner {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 32) map.get(var.$unit, 24);
     border: 1px solid map.get(color.$layout-border, 'quinary');
     border-radius: map.get(var.$radius, 'md');
+  }
 
+  // 무통장입금 패널
+  &#panel-bank {
     .vits-payment-bank {
       &-list {
         padding: 0;
@@ -1211,15 +1217,15 @@
 /* ===세금계산서 발급 신청=== */
 .vits-tax {
   @include cart-order-surf-box;
-  display: none;
-  margin: 0 map.get(var.$unit, 32) map.get(var.$unit, 20);
+  padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+  margin-top: map.get(var.$unit, 16);
 
   &.is-active {
     display: block;
   }
 
   &-title {
-    @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
     padding-bottom: map.get(var.$unit, 16);
   }
 
@@ -1232,7 +1238,7 @@
       gap: map.get(var.$unit, 4);
 
       .label-name {
-        @include typo.typography('b4b', $color: map.get(color.$text-colors, 'secondary'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
       }
     }
   }

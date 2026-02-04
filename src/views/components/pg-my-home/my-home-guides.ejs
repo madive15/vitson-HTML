@@ -1,6 +1,227 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
+<!-- prettier-ignore -->
+<% const _hasGuidesData = (typeof hasGuidesData !== 'undefined') ? hasGuidesData : false; %>
+
 <div class="vits-mypage-home-guides">
+  <% if (_hasGuidesData) { %>
+  <!-- S: 데이터 있을 때 -->
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %> </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '후불 관리', size: 'sm' 
+      }) %>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="credit-usage">
+        <dl class="credit-usage-item">
+          <dt class="credit-usage-label">여신한도액</dt>
+          <dd class="credit-usage-value">
+            <p><span>50,000,000</span><span class="won">원</span></p>
+          </dd>
+        </dl>
+        <hr class="credit-usage-divider" />
+        <dl class="credit-usage-item">
+          <dt class="credit-usage-label">사용액</dt>
+          <dd class="credit-usage-value">
+            <p><span>15,000,000</span><span class="won">원</span></p>
+          </dd>
+        </dl>
+        <hr class="credit-usage-divider" />
+        <dl class="credit-usage-item">
+          <dt class="credit-usage-label">잔액</dt>
+          <dd class="credit-usage-value">
+            <p class="point-color"><span>35,000,000</span><span class="won">원</span></p>
+          </dd>
+        </dl>
+        <hr class="credit-usage-divider" />
+        <dl class="credit-usage-item">
+          <dt class="credit-usage-label">미수금</dt>
+          <dd class="credit-usage-value">
+            <p><span>8,500,000</span><span class="won">원</span></p>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-paper' }) %> </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-docs-item-list">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2024-12-20 발행', amount: '5,500,000원', buttonText: '세금계산서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: 'LED 외등 25W 외 2건 견적서 2줄을 초과할 경우LED 외등 25W 외 2건 견적서 2줄을 초과할 경우', amount: '232,000원', buttonText: '견적서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2025년 12월 청구서', amount: '8,500,000원', buttonText: '구매내역서 보기', href: '#!'
+        }) %>
+      </div>
+    </div>
+  </div>
+  <!-- E: 데이터 있을 때 -->
+
+  <!-- S: 후불 미신청 ~ 신청중 상태일 때 -->
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %> </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '후불 관리', size: 'sm' 
+      }) %>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-desc">비츠온엠알오의</p>
+        <p class="guides-desc"><b>편리한 후불 결제</b>를 이용해 보세요.</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '후불 신청 관리', className: 'weight-m'}) %>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-paper' }) %> </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-docs-item-list">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2024-12-20 발행', amount: '5,500,000원', buttonText: '세금계산서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: 'LED 외등 25W 외 2건 견적서 2줄을 초과할 경우LED 외등 25W 외 2건 견적서 2줄을 초과할 경우', amount: '232,000원', buttonText: '견적서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2025년 12월 청구서', amount: '8,500,000원', buttonText: '구매내역서 보기', href: '#!'
+        }) %>
+      </div>
+    </div>
+  </div>
+  <!-- E: 후불 미신청 ~ 신청중 상태일 때 -->
+
+  <!-- S: 후불 심사접수 ~ 심사중 상태일 때 -->
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %> </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '후불 관리', size: 'sm' 
+      }) %>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-title">심사접수되었습니다</p>
+        <p class="guides-desc">신청 내용을 검토하고 심사를 진행합니다.</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '후불 신청 관리', className: 'weight-m'}) %>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-paper' }) %> </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-docs-item-list">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2024-12-20 발행', amount: '5,500,000원', buttonText: '세금계산서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: 'LED 외등 25W 외 2건 견적서 2줄을 초과할 경우LED 외등 25W 외 2건 견적서 2줄을 초과할 경우', amount: '232,000원', buttonText: '견적서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2025년 12월 청구서', amount: '8,500,000원', buttonText: '구매내역서 보기', href: '#!'
+        }) %>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %> </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '후불 관리', size: 'sm' 
+      }) %>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-title">심사중입니다</p>
+        <p class="guides-desc">신청 내용을 검토하고 심사를 진행합니다.</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '후불 신청 관리', className: 'weight-m'}) %>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-paper' }) %> </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-docs-item-list">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2024-12-20 발행', amount: '5,500,000원', buttonText: '세금계산서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: 'LED 외등 25W 외 2건 견적서 2줄을 초과할 경우LED 외등 25W 외 2건 견적서 2줄을 초과할 경우', amount: '232,000원', buttonText: '견적서 보기', href: '#!'
+        }) %>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-my-home/my-home-docs-item.ejs`, {
+          title: '2025년 12월 청구서', amount: '8,500,000원', buttonText: '구매내역서 보기', href: '#!'
+        }) %>
+      </div>
+    </div>
+  </div>
+  <!-- E: 후불 심사접수 ~ 심사중 상태일 때 -->
+  <!-- prettier-ignore -->
+  <% } else { %>
   <!-- S: 중요 서류 없을 떄 -->
   <div class="guides-item guides-credit">
     <div class="guides-head" data-scss="head">
@@ -10,7 +231,7 @@
       </p>
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
-        href: '#!', text: '후불 관리' 
+        href: '#!', text: '후불 관리', size: 'sm' 
       }) %>
     </div>
     <div class="guides-body" data-scss="body">
@@ -39,4 +260,5 @@
     </div>
   </div>
   <!-- E: 중요 서류 없을 떄 -->
+  <% } %>
 </div>

@@ -17,7 +17,10 @@
   </div>
   <div class="pay-card-item-body">
     <p class="pay-card-item-name">
-      <%- itemNameVal %><% if (itemShowBadge) { %> <span class="pay-card-item-badge"><%= itemBadgeText %></span><% } %>
+      <%- itemNameVal %><% if (itemShowBadge) { %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/label/general-label.ejs`, {text: itemBadgeText, variant: 'blue' }) %>
+      <% } %>
     </p>
     <p class="pay-card-item-num"><%= itemNumVal %></p>
   </div>

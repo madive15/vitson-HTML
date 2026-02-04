@@ -1,0 +1,33 @@
+<% const _src = srcPath; const _public = publicPath; %> <% const taxChecked = (typeof defaultTax !== 'undefined' &&
+defaultTax) ? defaultTax : 'single'; %>
+<!-- 세금계산서 발급 신청 -->
+<div class="vits-tax">
+  <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
+
+  <div class="vits-tax-options">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+    name: 'tax-invoice',
+    id: 'tax-invoice-single',
+    value: 'single',
+    text: '개별 발급',
+    checked: taxChecked === 'single',
+  }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+    name: 'tax-invoice',
+    id: 'tax-invoice-batch',
+    value: 'batch',
+    text: '일괄 발급',
+    checked: taxChecked === 'batch',
+  }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+    name: 'tax-invoice',
+    id: 'tax-invoice-none',
+    value: 'none',
+    text: '발급 안함',
+    checked: taxChecked === 'none',
+  }) %>
+  </div>
+</div>
