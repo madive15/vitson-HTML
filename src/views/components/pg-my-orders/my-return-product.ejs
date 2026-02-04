@@ -1,4 +1,8 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _isReturn = typeof isReturn !== 'undefined' ? !!isReturn : true;
+%>
 
 <div class="vits-claim-request-box">
   <div class="vits-claim-request-product">
@@ -30,9 +34,10 @@
             </p>
             <p class="product-quantity-price">999,999,999원</p>
           </div>
+          <% if (_isReturn) { %>
           <div class="product-quantity-select">
             <div class="product-quantity-label">반품 신청 수량</div>
-            <div class="product-quantity-select">
+            <div class="product-quantity-control">
               <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/form/select.ejs`, {
                 id: 'return-sort',
@@ -41,17 +46,19 @@
                 options: [
                   { value: '0', text: '0' },
                   { value: '1', text: '1' },
-                  { value: '2', text: '2' },
                 ],
                 value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '0',
                 disabled: false,
                 portal: true,
+                maxHeight: 150,
               }) %>
             </div>
           </div>
+          <% } %>
         </div>
       </div>
     </div>
+    <% if (_isReturn) { %>
     <div class="vits-claim-request-reason" data-toggle-scope>
       <button
         type="button"
@@ -121,5 +128,6 @@
         </dl>
       </div>
     </div>
+    <% } %>
   </div>
 </div>

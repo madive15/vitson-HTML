@@ -147,7 +147,7 @@ $button-sizes: (
   'lg': (
     'min-height': 40,
     'padding': 12,
-    'typography': 'b2b',
+    'typography': 'b2s',
     'icon-size': 24,
     'font-size': 16,
     'border-radius': 'sm'
@@ -155,7 +155,7 @@ $button-sizes: (
   'md': (
     'min-height': 36,
     'padding': 12,
-    'typography': 'b3b',
+    'typography': 'b3s',
     'icon-size': 20,
     'font-size': 14,
     'border-radius': 'sm'
@@ -163,7 +163,7 @@ $button-sizes: (
   'sm': (
     'min-height': 32,
     'padding': 12,
-    'typography': 'b3b',
+    'typography': 'b3r',
     'icon-size': 20,
     'font-size': 14,
     'border-radius': 'sm'
@@ -208,7 +208,11 @@ $button-sizes: (
       border-radius: map.get(var.$radius, 'md');
     }
 
-    @include typo.typography(map.get($config, 'typography'));
+    .text {
+      @include typo.typography(map.get($config, 'typography'));
+      line-height: normal;
+      color: inherit;
+    }
 
     .icon {
       @include icon.ic-size(fn.rem(map.get($config, 'icon-size')));
@@ -754,17 +758,30 @@ $scoped-button-configs: (
   }
 }
 
+/* 화살표 텍스트 버튼 */
+.vits-text-arrow-link {
+  @include mx.flex(flex, row, flex-start, center);
+
+  .text {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .icon {
+    flex-shrink: 0;
+    width: map.get(var.$unit, 16);
+    height: map.get(var.$unit, 16);
+    color: map.get(color.$icon-neutral, 'secondary');
+  }
+}
+
 /* button - 고정값 */
-.btn-fix-w120 {
-  width: fn.rem(120);
-}
+$btn-fix-widths: 120, 150, 160, 200;
 
-.btn-fix-w150 {
-  width: fn.rem(150);
-}
-
-.btn-fix-w160 {
-  width: fn.rem(160);
+@each $w in $btn-fix-widths {
+  .btn-fix-w#{$w} {
+    width: fn.rem($w);
+  }
 }
 
 /* -----------------------------------------------------------------------------

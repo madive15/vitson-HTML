@@ -1,0 +1,46 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const _hasOrderData = (typeof hasOrderData !== 'undefined') ? hasOrderData : false; %>
+
+<div class="vits-mypage-home-order<%= !_hasOrderData ? ' is-empty' : '' %>">
+  <ul class="order-status-list">
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'order' }) %></div>
+        <p class="status-label">주문접수</p>
+        <p class="status-sub">입금대기중</p>
+        <p class="status-count"><%= _hasOrderData ? '2' : '0' %></p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %></div>
+        <p class="status-label">결제완료</p>
+        <p class="status-count"><%= _hasOrderData ? '1' : '0' %></p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'compare' }) %></div>
+        <p class="status-label">주문완료</p>
+        <p class="status-sub">여신주문 완료</p>
+        <p class="status-count"><%= _hasOrderData ? '3' : '0' %></p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %></div>
+        <p class="status-label">배송준비중</p>
+        <p class="status-count"><%= _hasOrderData ? '1' : '0' %></p>
+      </div>
+    </li>
+    <li class="order-status-item">
+      <div class="order-status-inner">
+        <div class="status-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %></div>
+        <p class="status-label">배송중</p>
+        <p class="status-count"><%= _hasOrderData ? '2' : '0' %></p>
+      </div>
+    </li>
+  </ul>
+</div>

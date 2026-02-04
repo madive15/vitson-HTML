@@ -165,7 +165,8 @@
   function closeOne($root) {
     if (!$root || !$root.length) return;
 
-    $root.removeClass(CLS_OPEN + ' ' + CLS_DROPUP);
+    $root.removeClass(CLS_OPEN); // CLS_DROPUP은 유지 → 닫힘 애니메이션 중 위치 점프 방지
+
     $root.find(TRIGGER).attr('aria-expanded', 'false');
 
     if (isPortal($root)) {
@@ -212,6 +213,9 @@
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
 
+    // 이전 방향 초기화 (다음 열림에서 재계산)
+    $root.removeClass(CLS_DROPUP);
+
     var $trigger = $root.find(TRIGGER);
     var $list = $root.find(LIST);
     if (!$trigger.length || !$list.length) return;
@@ -232,15 +236,20 @@
     var listH = listEl.scrollHeight;
     listEl.style.maxHeight = prevMaxH;
 
-    var forced = $root.hasClass(CLS_DROPUP);
-    var shouldDropUp = forced ? true : spaceBelow < listH && spaceAbove > spaceBelow;
+    var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
 
-    if (!forced) $root.toggleClass(CLS_DROPUP, shouldDropUp);
+    $root.toggleClass(CLS_DROPUP, shouldDropUp);
 
-    var maxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
-    if (maxH < MIN_H) maxH = MIN_H;
+    var calcMaxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
+    if (calcMaxH < MIN_H) calcMaxH = MIN_H;
 
-    listEl.style.maxHeight = maxH + 'px';
+    // 커스텀 max-height 적용 (portal과 동일 패턴)
+    var customMaxH = $root.attr('data-max-height');
+    if (customMaxH && /^\d+$/.test(customMaxH)) customMaxH = customMaxH + 'px';
+
+    var maxH = customMaxH || calcMaxH + 'px';
+
+    listEl.style.maxHeight = maxH;
     listEl.style.overflowY = 'auto';
   }
 
@@ -357,6 +366,7 @@
 
   // placeholder/hidden/선택표시 초기화
   function resetToPlaceholder($root, clearOptions) {
+    $root.removeClass('is-selected'); // 26-02-03 추가
     var $value = $root.find(VALUE);
     if ($value.length) $value.text($value.attr('data-placeholder') || '');
 
@@ -421,6 +431,7 @@
       $el.attr('aria-selected', sel ? 'true' : 'false');
     });
 
+    $root.addClass('is-selected'); // 26-02-03 추가
     $root.find(VALUE).text($opt.text());
     setHiddenVal($root, $opt.attr('data-value') || ''); // [2026-01-30 수정] data-value 없으면 빈 값
   }
@@ -688,12 +699,16 @@
     // 모든 스크롤 감지 (capture phase)
     document.addEventListener(
       'scroll',
-      function () {
+      function (e) {
+        // 셀렉트 리스트 내부 스크롤은 무시
+        var $scrolled = $(e.target);
+        if ($scrolled.closest(LIST).length || $scrolled.hasClass(CLS_PORTAL_LIST)) return;
+
         Object.keys(scopes).forEach(function (k) {
           var scope = scopes[k];
           if (scope && scope.openRoot && isPortal(scope.openRoot)) {
             // 열린 셀렉트가 특정 영역 안에 있을 때만 닫기
-            if (scope.openRoot.closest('.vits-claim-request-body').length) {
+            if (scope.openRoot.closest('.k-window').length) {
               closeOpenedInScope(k);
             } else {
               // 다른 곳은 기존처럼 위치 따라감

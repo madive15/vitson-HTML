@@ -1,0 +1,53 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _totalCount = typeof totalCount !== 'undefined' ? totalCount : 23;
+  const _pageSizeOptions = [
+    { value: '20', text: '20개씩 보기' },
+    { value: '40', text: '40개씩 보기' },
+    { value: '60', text: '60개씩 보기' }
+  ];
+  const _pageSize = (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '60';
+%>
+
+<div class="vits-mypage-shipping-toolbar">
+  <div class="shipping-toolbar-left">
+    <p class="shipping-toolbar-count">총 <b><%= _totalCount %></b>개</p>
+    <div class="shipping-toolbar-size">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'shipping-page-size',
+        name: 'pageSize',
+        placeholder: _pageSizeOptions[0].text,
+        options: _pageSizeOptions,
+        value: _pageSize,
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+    </div>
+  </div>
+  <div class="shipping-toolbar-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'sm',
+      variant: 'outline-tertiary',
+      text: '전체삭제',
+      className: 'shipping-toolbar-delete'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'sm',
+      variant: 'outline-primary',
+      text: '신규 배송지 등록',
+      iconLeft: true,
+      iconName: 'ic-plus',
+      className: 'shipping-toolbar-add'
+    }) %>
+  </div>
+</div>

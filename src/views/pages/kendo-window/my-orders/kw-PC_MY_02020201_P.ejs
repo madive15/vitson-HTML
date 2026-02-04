@@ -1,0 +1,114 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const _hasTrackingData = (typeof hasTrackingData !== 'undefined') ? hasTrackingData : false; %>
+
+<section class="vits-track-shipment" data-track-shipment>
+  <h2 class="sr-only">반품회수조회</h2>
+
+  <!-- head -->
+  <%- include(`${_src}/views/components/pg-my-orders/my-track-shipment-head.ejs`) %>
+
+  <div class="vits-track-shipment-body">
+    <% if (_hasTrackingData) { %>
+    <!-- [D] 현재 단계 숫자 표시 :: 1 ~ 3 -->
+    <ul class="shipment-steps type-column" data-current="1">
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %> </span>
+          <div class="step-content">
+            <span class="step-title">상품수거</span>
+            <span class="step-desc">정상적으로 반품 상품을 수거하였습니다.</span>
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %>
+          </span>
+          <div class="step-content">
+            <span class="step-title">회수중</span>
+            <span class="step-desc">반품 상품을 수거하여 회수지로 이동중입니다.</span>
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'check' }) %> </span>
+          <div class="step-content">
+            <span class="step-title">회수완료</span>
+            <span class="step-desc">
+              반품 상품이 회수지에 도착하였습니다.<br />
+              반품 상품을 검수하여 환불 여부를 결정합니다.<br />
+              2~3일 내 완료되므로 양해를 부탁드립니다.
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <% } else { %>
+    <div class="shipment-detail is-empty">
+      <%- include(`${_src}/views/components/empty-state.ejs`, { iconName: 'box', title: '현재 준비중입니다.', }) %>
+    </div>
+    <% } %>
+
+    <!-- <div class="shipment-detail">
+      <p class="shipment-detail-title">배송 상세 내역</p>
+      <div class="shipment-detail-list">
+        <div class="shipment-detail-list-inner">
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <! -- [D] 배송완료만 data-status='completed' 표시 요청  -- >
+              <span class="shipment-detail-status" data-status="completed">배달완료</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var $ = window.jQuery;
+
+    // ?step=1~5 : 배송 단계 확인
+    var step = params.get('step');
+    if (step) {
+      var steps = document.querySelector('[data-current]');
+      if (steps) steps.setAttribute('data-current', step);
+    }
+  })();
+</script>

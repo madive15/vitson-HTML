@@ -1,0 +1,39 @@
+<% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ?
+publicPath : ''; %>
+<!-- prettier-ignore -->
+<%
+  const _isDefault = typeof isDefault !== 'undefined' ? isDefault : true;
+  const _classify = typeof classify !== 'undefined' ? classify : '';
+  const _addrName = typeof addrName !== 'undefined' ? addrName : '';
+  const _recipient = typeof recipient !== 'undefined' ? recipient : '';
+  const _contact = typeof contact !== 'undefined' ? contact : '';
+  const _address = typeof address !== 'undefined' ? address : '';
+  const _cargo = typeof cargo !== 'undefined' ? cargo : '-';
+  const _office = typeof office !== 'undefined' ? office : '-';
+  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+%>
+<tr>
+  <td>
+    <% if (_isDefault) { %>
+    <span class="shipping-table-badge">대표배송지</span>
+    <% } %>
+  </td>
+  <td><span class="shipping-table-name"><%= _addrName || '—' %></span></td>
+  <td><span class="shipping-table-recipient"><%= _recipient %></span></td>
+  <td><span class="shipping-table-contact"><%= _contact %></span></td>
+  <td>
+    <span class="shipping-table-addr"><%- _address || '—' %></span>
+  </td>
+  <td><span class="shipping-table-cargo"><%= _cargo %></span></td>
+  <td><span class="shipping-table-office"><%= _office %></span></td>
+  <td>
+    <div class="shipping-table-actions">
+      <button type="button" class="shipping-table-edit" aria-label="수정">
+        <i class="ic ic-pencil" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="shipping-table-delete" aria-label="삭제">
+        <i class="ic ic-waste-basket" aria-hidden="true"></i>
+      </button>
+    </div>
+  </td>
+</tr>

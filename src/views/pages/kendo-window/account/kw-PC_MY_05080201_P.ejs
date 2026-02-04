@@ -1,0 +1,161 @@
+<!-- prettier-ignore -->
+<% 
+  const _src = (typeof srcPath !== 'undefined' && srcPath) ? srcPath : ''; 
+  const _public = (typeof publicPath !== 'undefined' && publicPath) ? publicPath : '';
+%>
+<!-- prettier-ignore -->
+<section class="vits-account">
+  <h2 class="sr-only">계정 등록</h2>
+
+  <form class="vits-account-form" action="" method="post" novalidate>
+    <div class="vits-account-body">
+      <div class="vits-account-row">
+        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-id',
+            name: 'userId',
+            label: '아이디',
+            placeholder: '아이디',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">비밀번호<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-pw',
+            name: 'password',
+            type: 'password',
+            label: '비밀번호',
+            placeholder: '비밀번호',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-pw-confirm',
+            name: 'passwordConfirm',
+            type: 'password',
+            label: '비밀번호 확인',
+            placeholder: '비밀번호 확인',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+        <p class="vits-account-hint">영문/숫자/특수문자 조합 8자 이상</p>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">이름<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-name',
+            name: 'userName',
+            label: '이름',
+            placeholder: '이름',
+            required: true,
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">휴대전화번호</span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-mobile',
+            name: 'mobile',
+            label: '휴대전화번호',
+            placeholder: '010-1234-5678',
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">이메일</span>
+        <div class="vits-account-field vits-account-field-btn">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-email',
+            name: 'email',
+            label: '이메일',
+            placeholder: '이메일',
+            rootClass: 'size-large'
+          }) %>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            type: 'button',
+            size: 'lg-p',
+            variant: 'primary',
+            text: '중복확인',
+            className: 'vits-account-btn'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">담당업무</span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'account-job',
+            name: 'jobRole',
+            placeholder: '선택',
+            className: 'size-l',
+            maxHeight: 240,
+            options: [
+              { value: '', text: '선택' },
+              { value: '경영', text: '경영' },
+              { value: '영업', text: '영업' },
+              { value: '구매', text: '구매' },
+              { value: '기타', text: '기타' }
+            ],
+            value: (typeof jobRole !== 'undefined' && jobRole !== null) ? String(jobRole) : '선택',
+            disabled: false
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">직급</span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-position',
+            name: 'position',
+            label: '직급',
+            placeholder: '직급',
+            rootClass: 'size-large'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row">
+        <span class="vits-account-label">사용여부</span>
+        <div class="vits-account-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-radio.ejs`, {
+            name: 'useYn',
+            list: 'row',
+            gap: 16,
+            datas: [
+              { value: 'Y', text: '사용', checked: true },
+              { value: 'N', text: '미사용' }
+            ]
+          }) %>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,192 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '배송지 관리'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-shipping">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-shipping">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline shipping-headline">
+                      <h2 class="vits-mypage-content-title">배송지 관리</h2>
+                      <p class="vits-mypage-content-desc">자주 사용하는 배송지를 등록하고 관리하세요.</p>
+                    </div>
+
+                    <!-- case : 배송지 목록이 없을 때 -->
+                    <div class="vits-mypage-panel shipping-panel shipping-empty">
+                      <!-- prettier-ignore -->
+                      <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xl',
+                          variant: 'secondary',
+                          text: '신규 배송지 등록',
+                          iconLeft: true,
+                          iconName: 'ic-plus',
+                          className: 'shipping-empty-btn'
+                        }) 
+                      %> 
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'document-paper',
+                        title: '등록된 배송지가 없습니다',
+                        desc: '배송지를 등록해주세요',
+                        buttonHtml
+                      }) %>
+                    </div>
+                    <!-- case : 배송지 목록 있을 때 -->
+                    <div class="vits-mypage-panel shipping-panel">
+                      <!-- 상단 툴바 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-shipping/shipping-toolbar.ejs`, { srcPath: _src, publicPath: _public, totalCount: 23, pageSize: '60' }) %>
+
+                      <!-- 배송지 목록 테이블 -->
+                      <div class="shipping-table-wrap">
+                        <table class="shipping-table" summary="배송지 목록">
+                          <caption class="sr-only">
+                            배송지 목록
+                          </caption>
+                          <colgroup>
+                            <col width="80" />
+                            <col width="100" />
+                            <col width="80" />
+                            <col width="130" />
+                            <col />
+                            <col width="80" />
+                            <col width="80" />
+                            <col width="100" />
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th scope="col">구분</th>
+                              <th scope="col">배송지명</th>
+                              <th scope="col">받는 사람</th>
+                              <th scope="col">연락처</th>
+                              <th scope="col">주소</th>
+                              <th scope="col">화물업체</th>
+                              <th scope="col">영업소</th>
+                              <th scope="col">관리</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                              srcPath: _src,
+                              publicPath: _public,
+                              isDefault: true,
+                              addrName: '본사',
+                              recipient: '김철수',
+                              contact: '010-1234-5678',
+                              address: '서울시 강남구 테헤란로 123, 위워크빌딩 5층',
+                              cargo: '-',
+                              office: '-'
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                              srcPath: _src,
+                              publicPath: _public,
+                              isDefault: false,
+                              classify: '홍길동',
+                              addrName: '경동택배 과천 지점',
+                              recipient: '이화물',
+                              contact: '010-1234-5678',
+                              address: '(06000) 서울특별시 강남구 대로 123, 지하1층',
+                              cargo: '-',
+                              office: '-'
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                              srcPath: _src,
+                              publicPath: _public,
+                              isDefault: false,
+                              classify: '홍길동',
+                              addrName: '한진택배',
+                              recipient: '김철수',
+                              contact: '010-1234-5678',
+                              address: '-',
+                              cargo: '한진택배',
+                              office: '성수지점'
+                            }) %>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- 페이지네이션 -->
+                      <div class="shipping-pagination">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pagination.ejs`, {
+                          type: 'default',
+                          current: 1,
+                          isPrevDisabled: true
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!--
+      [D] URL 파라미터 type=none 일 때 패널 전환
+        - type=none: 배송지 목록 패널(shipping-panel) 숨김, 빈 상태(shipping-empty) 표시
+        - 그 외: 목록 패널 표시, 빈 상태 숨김
+    -->
+    <script>
+      (function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var listPanel = document.querySelector('.vits-mypage-panel.shipping-panel:not(.shipping-empty)');
+        var emptyPanel = document.querySelector('.vits-mypage-panel.shipping-panel.shipping-empty');
+
+        if (type === 'none') {
+          if (listPanel) listPanel.hidden = true;
+          if (emptyPanel) emptyPanel.removeAttribute('hidden');
+        } else {
+          if (listPanel) listPanel.removeAttribute('hidden');
+          if (emptyPanel) emptyPanel.hidden = true;
+        }
+      })();
+    </script>
+  </body>
+</html>

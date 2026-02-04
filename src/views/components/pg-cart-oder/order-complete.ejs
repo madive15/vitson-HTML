@@ -5,41 +5,77 @@
   </div>
   <!-- 주문 완료 상태 안내 -->
   <div class="order-complete-status">
-    <%- include(`${_src}/views/components/empty-state.ejs`, {
-      iconName: 'box',
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/empty-state.ejs`, { 
+      iconName: 'box', 
       title: '주문이 완료 되었습니다.',
     }) %>
-    <p class="order-complete-number">
-      주문번호 <strong>ora0008432397</strong>
-    </p>
-    <p class="order-complete-notice">
-      다음의 실패 사유를 확인한 후 다시 시도해 주세요
-    </p>
-  </div>  
+
+    <p class="order-complete-number">주문번호 <strong>ora0008432397</strong></p>
+    <p class="order-complete-notice">다음의 실패 사유를 확인한 후 다시 시도해 주세요</p>
+  </div>
 
   <section class="order-section-wrap">
-    <!-- 상품 정보 -->
+    <!-- 주문 상품 -->
     <div class="order-section order-product">
-      <h2 class="order-section-title">상품정보</h2>
-  
+      <h2 class="order-section-title">주문 상품</h2>
+
       <div class="order-section-content">
-        <ul class="info-list">
-          <li class="info-item">
-            <span class="info-label">주문 상품</span>
-            <span class="info-value">
-              더블 OPP 접착테이프 투명 (초강력 접착제) 외 5건
-            </span>
-          </li>
-        </ul>
+        <div class="order-product-notice-column">
+          <ul class="info-list">
+            <li class="info-item">
+              <span class="info-label">주문 상품</span>
+              <span class="info-value"> 더블 OPP 접착테이프 투명 (초강력 접착제) 외 5건 </span>
+            </li>
+          </ul>
+
+          <!-- [D] 택배 불가 시에만 노출 -->
+          <div class="order-product-parcel-wrap">
+            <div class="parcel-notice">
+              <div class="parcel-notice-header">
+                <span class="parcel-notice-icon" aria-hidden="true">
+                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %>
+                </span>
+                <strong class="parcel-notice-title">택배 불가</strong>
+              </div>
+              <p class="parcel-notice-desc">
+                <strong>택배 배송이 불가한 상품이 포함</strong>되어 있습니다.<br />
+                이에 배송 전 사전 안내를 위해 연락드릴 수 있으며, 배송이 불가한 경우<br />
+                주문이 취소될 수 있습니다.
+              </p>
+            </div>
+            <!-- [D] 택배 불가 상품이 여러 건일 경우 .order-product-item 반복 -->
+            <div class="order-product-list">
+              <!-- prettier-ignore -->
+              <% const productList = [
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[123571] LED 트리구 96구 연결형(DC24V)' },
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[56290] 더블 OPP 접착테이프 투명 (초강력 접착제)' },
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[88234] 산업용 장갑 내마모 그레이 L' },
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[11205] 산업용 마스크 KF94 100매' },
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[33412] 안전화 컴포넌트 270mm' },
+                { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[55678] 방진마스크 필터 교체용 5개입' }
+              ]; %>
+
+              <% productList.forEach(product => { %>
+              <div class="order-product-item">
+                <div class="order-product-item-thumb">
+                  <img src="<%= product.img %>" alt="<%= product.alt %>" />
+                </div>
+                <span class="order-product-item-name"><%= product.name %></span>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  
+
     <!-- 배송 / 결제 정보 영역 -->
     <div class="order-section-group">
       <!-- 배송 정보 -->
       <section class="order-section order-shipping">
         <h2 class="order-section-title">배송정보</h2>
-  
+
         <div class="order-section-content">
           <ul class="info-list">
             <li class="info-item">
@@ -52,9 +88,7 @@
             </li>
             <li class="info-item">
               <span class="info-label">배송 주소</span>
-              <span class="info-value">
-                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층
-              </span>
+              <span class="info-value"> [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층 </span>
             </li>
             <li class="info-item">
               <span class="info-label">배송메모</span>
@@ -67,11 +101,11 @@
           </ul>
         </div>
       </section>
-  
+
       <!-- 결제 정보 -->
       <section class="order-section order-payment">
         <h2 class="order-section-title">결제정보</h2>
-  
+
         <div class="order-section-content">
           <ul class="price-list">
             <li class="price-item">
@@ -91,7 +125,7 @@
               <span class="price-value">+1,030,000원</span>
             </li>
           </ul>
-  
+
           <div class="price-total">
             <span class="price-total-label">최종결제금액</span>
             <strong class="price-total-value">1,030,000원</strong>
@@ -99,12 +133,12 @@
         </div>
       </section>
     </div>
-  
+
     <!-- 결제 수단 -->
     <!-- [D] case : 결제 수단 . 카드드-->
     <div class="order-section order-method">
       <h2 class="order-section-title">결제 수단</h2>
-  
+
       <div class="order-section-content">
         <ul class="info-list">
           <li class="info-item">
@@ -117,7 +151,7 @@
     <!-- [D] case : 결제 수단 . 무통장 입금-->
     <div class="order-section order-method">
       <h2 class="order-section-title">결제 수단</h2>
-  
+
       <div class="order-section-content">
         <ul class="info-list">
           <li class="info-item">
@@ -144,7 +178,7 @@
     <!-- [D] case : 결제 수단 . 여러 결제-->
     <div class="order-section order-method">
       <h2 class="order-section-title">결제 수단</h2>
-  
+
       <div class="order-section-content">
         <ul class="info-list">
           <li class="info-item">
@@ -163,12 +197,10 @@
     <!-- [D] case : 결제 실피-->
     <div class="order-section order-slip">
       <h2 class="order-section-title">
-        <span class="icon">
-          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %>
-        </span>
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %> </span>
         실패 상세 정보
       </h2>
-  
+
       <div class="order-section-content">
         <ul class="info-list">
           <li class="info-item">
@@ -188,4 +220,3 @@
     </div>
   </section>
 </div>
-

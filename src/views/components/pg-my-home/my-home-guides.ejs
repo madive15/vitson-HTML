@@ -1,0 +1,42 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="vits-mypage-home-guides">
+  <!-- S: 중요 서류 없을 떄 -->
+  <div class="guides-item guides-credit">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'money-bag' }) %> </span>
+        여신 관리 한눈에!
+      </p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+        href: '#!', text: '후불 관리' 
+      }) %>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-desc">비츠온엠알오의</p>
+        <p class="guides-desc"><b>편리한 후불 결제</b>를 이용해 보세요.</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '후불 신청 관리', className: 'weight-m'}) %>
+      </div>
+    </div>
+  </div>
+  <div class="guides-item guides-docs">
+    <div class="guides-head" data-scss="head">
+      <p class="vits-mypage-home-title">
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'document-paper' }) %> </span>
+        중요 서류는 여기에!
+      </p>
+    </div>
+    <div class="guides-body" data-scss="body">
+      <div class="guides-content">
+        <p class="guides-desc">세금계산서, 견적서, 월별 구매내역서 등</p>
+        <p class="guides-desc"><b>회사 운영에 필요한 서류</b>가 제공됩니다.</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {size:'lg', variant: 'secondary', text: '서류 관리 가기', className: 'weight-m'}) %>
+      </div>
+    </div>
+  </div>
+  <!-- E: 중요 서류 없을 떄 -->
+</div>

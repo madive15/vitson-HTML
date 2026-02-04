@@ -1,9 +1,11 @@
 /**
  * @file kendo-window.js
  * @description Kendo Window 자동 초기화 모듈
+ * @note 컨텐츠 DOM 변화 시 자동으로 스크롤 체크 + 센터 정렬
  *
  * VitsKendoWindow.open('myWindow');
  * VitsKendoWindow.close('myWindow');
+ * VitsKendoWindow.refresh('myWindow');
  * VitsKendoWindow.initAll();
  */
 
@@ -13,6 +15,13 @@
   var BODY_LOCK_CLASS = 'is-kendo-window-open';
   var scrollY = 0;
   var openedWindows = [];
+
+  // 컨텐츠 변화 감지용 Observer 저장 (id → observer)
+  var contentObservers = {};
+
+  // 디바운스 타이머 저장 (id → timerId)
+  var debounceTimers = {};
+  var DEBOUNCE_DELAY = 80;
 
   function parseJsonSafe(str) {
     try {
@@ -59,15 +68,93 @@
   function checkScroll(id) {
     var $ = window.jQuery;
     var $el = $('#' + id);
-    var $content = $el.find('.vits-modal-content');
 
-    if ($content.length) {
-      if ($content[0].scrollHeight > $content[0].clientHeight) {
-        $content.addClass('has-scroll');
-      } else {
-        $content.removeClass('has-scroll');
-      }
+    $el.find('[data-scroll-check]').each(function () {
+      $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
+    });
+  }
+
+  /**
+   * 스크롤 체크 + 센터 정렬 (디바운스 적용)
+   * - 컨텐츠 DOM 변화, 수동 호출 모두 이 함수로 통일
+   */
+  function refresh(id) {
+    var $ = window.jQuery;
+
+    clearTimeout(debounceTimers[id]);
+    debounceTimers[id] = setTimeout(function () {
+      var $el = $('#' + id);
+      var inst = $el.data('kendoWindow');
+      if (!inst) return;
+
+      checkScroll(id);
+
+      var $kWindow = $el.closest('.k-window');
+      var prevTop = $kWindow.position().top;
+
+      inst.center();
+
+      var nextTop = $kWindow.position().top;
+
+      if (prevTop === nextTop) return;
+
+      // 이전 위치로 되돌린 뒤 다음 프레임에서 transition 이동
+      $kWindow.css({
+        top: prevTop,
+        transition: 'none'
+      });
+
+      requestAnimationFrame(function () {
+        $kWindow.css({
+          top: nextTop,
+          transition: 'top 0.2s ease'
+        });
+
+        $kWindow.one('transitionend', function () {
+          $kWindow.css('transition', '');
+        });
+      });
+    }, DEBOUNCE_DELAY);
+  }
+
+  /**
+   * 컨텐츠 영역 MutationObserver 시작
+   * - open 시 호출, close 시 해제
+   */
+  function observeContent(id) {
+    if (!window.MutationObserver) return;
+    if (contentObservers[id]) return; // 중복 방지
+
+    var $ = window.jQuery;
+    var $el = $('#' + id);
+    var $content = $el.find('.vits-modal-content');
+    if (!$content.length) return;
+
+    var obs = new MutationObserver(function () {
+      refresh(id);
+    });
+
+    obs.observe($content[0], {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'hidden', 'style']
+    });
+
+    contentObservers[id] = obs;
+  }
+
+  /**
+   * 컨텐츠 영역 MutationObserver 해제
+   */
+  function disconnectContent(id) {
+    if (contentObservers[id]) {
+      contentObservers[id].disconnect();
+      delete contentObservers[id];
     }
+
+    clearTimeout(debounceTimers[id]);
+    delete debounceTimers[id];
   }
 
   function initOne(el) {
@@ -93,8 +180,11 @@
         if (openedWindows.indexOf(id) === -1) {
           openedWindows.push(id);
         }
+        observeContent(id);
       },
       close: function () {
+        disconnectContent(id);
+
         var idx = openedWindows.indexOf(id);
         if (idx > -1) openedWindows.splice(idx, 1);
         if (openedWindows.length === 0) {
@@ -165,6 +255,10 @@
     if (options && typeof options.onOpen === 'function') {
       inst.unbind('open').bind('open', function () {
         lockBody();
+        if (openedWindows.indexOf(id) === -1) {
+          openedWindows.push(id);
+        }
+        observeContent(id);
         options.onOpen.call(inst);
       });
     }
@@ -172,7 +266,6 @@
     if (inst) {
       inst.center().open();
 
-      // 스크롤 여부 체크
       setTimeout(function () {
         checkScroll(id);
       }, 0);
@@ -215,6 +308,7 @@
     initAll: initAll,
     autoBindStart: autoBindStart,
     open: open,
-    close: close
+    close: close,
+    refresh: refresh
   };
 })(window);

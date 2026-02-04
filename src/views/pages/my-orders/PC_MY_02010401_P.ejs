@@ -1,0 +1,52 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '배송조회 팝업'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('modal')"
+                >
+                  <span class="text">배송조회 팝업</span>
+                </button>
+
+                <!-- [REMOVE] 퍼블 확인용 안내 -->
+                <p style="margin-top: 20px; color: #000; font-size: 14px">
+                  배송 단계 확인: <strong>my-orders/PC_MY_02010401_P.html?step=<b style="color: red">1</b></strong
+                  >&nbsp;&nbsp;~&nbsp;&nbsp; <strong>?step=<b style="color: red">5</b></strong> <br />1: 상품인수 / 2:
+                  상품이동중 / 3: 배송지도착 / 4: 배송출발 / 5: 배송완료
+                </p>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = { 
+                id: 'modal', 
+                size: '560', 
+                title: '배송조회', 
+                opt: { draggable: true }, 
+                contentPath: `${_src}/views/pages/kendo-window/my-orders/kw-PC_MY_02010401_P.ejs`,
+                buttons: [ { text: '닫기', variant: 'secondary', action: 'close' } ]
+              }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

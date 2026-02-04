@@ -266,7 +266,7 @@ $modal-widths: (
   &-content {
     flex: 1 1 auto;
     min-width: 0;
-    padding: 0 map.get(var.$unit, 32);
+    padding: 0 map.get(var.$unit, 32) map.get(var.$unit, 4);
     overflow: hidden auto;
     background: color.$color-white;
 
@@ -291,7 +291,7 @@ $modal-widths: (
 
   // footer
   &-footer {
-    padding: fn.rem(44) map.get(var.$unit, 32) map.get(var.$unit, 32);
+    padding: map.get(var.$unit, 40) map.get(var.$unit, 32) map.get(var.$unit, 32);
     background: color.$color-white;
 
     /* [legacy] k-window 전환 전 코드 - 추후 제거
@@ -389,9 +389,8 @@ body:not(.is-option-modal-open) {
     // 스크롤 생성 기준 예외처리
     .vits-modal-content {
       &:has(.vits-address-select),
-      &:has(.vits-claim-request) {
+      &:has(.vits-claim-request .vits-claim-request-reason) {
         @include mx.flex(flex, column);
-        margin-bottom: -4px;
 
         .vits-address-select,
         .vits-claim-request {
@@ -402,10 +401,15 @@ body:not(.is-option-modal-open) {
             // margin collapse로 인한 불필요한 스크롤 방지
             padding-bottom: 4px;
             overflow-y: auto;
+
+            & + .vits-claim-request-footer {
+              padding-top: map.get(var.$unit, 16);
+            }
           }
         }
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &:has(.vits-address-select) {
         overflow-y: hidden;
       }

@@ -18,7 +18,7 @@
   max-width: 100vw;
 
   &-value {
-    @include typo.typography('b3r');
+    @include typo.typography('b3r', map.get(color.$text-colors, 'tertiary'));
     @include mx.ellipsis-single;
     min-width: 0;
     max-width: 100vw;
@@ -27,7 +27,7 @@
   &-icon {
     @include icon.ic-size(map.get(var.$unit, 20));
     flex-shrink: 0;
-    color: map.get(color.$icon-neutral, 'primary');
+    color: map.get(color.$icon-neutral, 'tertiary');
     transition: transform 0.3s;
     will-change: transform;
   }
@@ -130,7 +130,8 @@
   }
 
   &-selected {
-    background: map.get(color.$layout-surf, 'sunken');
+    font-weight: 600;
+    background: color.$color-white;
   }
 
   &-option-disabled {
@@ -161,11 +162,11 @@
   &.size-s {
     .vits-select {
       &-trigger {
-        height: map.get(var.$unit, 28);
+        height: fn.rem(28);
       }
 
       &-option {
-        min-height: map.get(var.$unit, 28);
+        min-height: fn.rem(28);
         font-size: fn.rem(12);
       }
 
@@ -188,6 +189,22 @@
 
       &-value {
         font-size: fn.rem(16);
+      }
+    }
+  }
+
+  &.is-selected {
+    .vits-select {
+      &-value {
+        color: map.get(color.$text-colors, 'default');
+      }
+
+      &-icon {
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      &-trigger {
+        box-shadow: 0 0 0 1px map.get(color.$layout-border, 'primary');
       }
     }
   }

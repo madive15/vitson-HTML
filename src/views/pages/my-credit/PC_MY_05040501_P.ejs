@@ -98,28 +98,6 @@
         var MSG_EMPTY = '추가 담당자 정보가 없습니다.';
         var MSG_INPUT = "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요.";
 
-        // k-window 리사이즈
-        function refreshKWindow() {
-          setTimeout(function () {
-            var $kWindow = $root.closest('.k-window-content');
-
-            if ($kWindow.length && $kWindow.data('kendoWindow')) {
-              var inst = $kWindow.data('kendoWindow');
-              var $content = $kWindow.find('.vits-modal-content');
-
-              if ($content.length) {
-                if ($content[0].scrollHeight > $content[0].clientHeight) {
-                  $content.addClass('has-scroll');
-                } else {
-                  $content.removeClass('has-scroll');
-                }
-              }
-
-              inst.center();
-            }
-          }, 50);
-        }
-
         // [1] 담당자 추가 버튼 → form 복제 생성
         $root.on('click', '[data-manager-add-btn]', function () {
           var $newForm = $formOriginal.clone();
@@ -145,8 +123,6 @@
           setTimeout(function () {
             $newForm[0].scrollIntoView({behavior: 'smooth', block: 'nearest'});
           }, 50);
-
-          refreshKWindow();
         });
 
         // [2] 취소 버튼 → 해당 form만 삭제
@@ -166,8 +142,6 @@
             $empty.removeClass('is-hidden');
             $emptyText.text(MSG_EMPTY);
           }
-
-          refreshKWindow();
         });
 
         // [3] 추가 버튼 → 해당 form 삭제 + chip 생성 + list 표시
@@ -201,8 +175,6 @@
           // list 표시
           $empty.addClass('is-hidden');
           $list.removeClass('is-hidden');
-
-          refreshKWindow();
         });
 
         // [4] chip 삭제 감지 (MutationObserver)
@@ -217,8 +189,6 @@
 
               $empty.removeClass('is-hidden');
               $emptyText.text(hasVisibleForm ? MSG_INPUT : MSG_EMPTY);
-
-              refreshKWindow();
             }
           });
 

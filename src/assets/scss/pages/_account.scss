@@ -1,0 +1,90 @@
+// -----------------------------------------------------------------------------
+// pages/_account.scss
+// - 계정등록 페이지 전용 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+/* -----------------------------------
+ * 비츠온페이 계정등록 (account-register)
+ * ----------------------------------- */
+.vits-account {
+  position: relative;
+
+  &-form {
+    @include mx.flex($direction: column);
+  }
+
+  &-body {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 20);
+  }
+
+  &-row {
+    @include mx.flex($direction: column);
+    flex: 1;
+
+    .vits-account-label {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      flex-shrink: 0;
+      min-width: fn.rem(140);
+
+      .label-required {
+        @include typo.typography('b2', $color: map.get(color.$text-status, 'brand-sub'));
+        margin-left: map.get(var.$unit, 2);
+      }
+    }
+    gap: map.get(var.$unit, 12);
+
+    .vits-account-field {
+      flex: 1;
+      min-width: 0;
+
+      .vits-input,
+      .vits-select {
+        width: 100%;
+      }
+
+      .vits-select-trigger,
+      .vits-select-list {
+        width: 100%;
+      }
+
+      &.vits-account-field-btn {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 12);
+
+        .vits-input {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .vits-account-btn {
+          flex-shrink: 0;
+          min-width: fn.rem(120);
+        }
+      }
+
+      .radio-wrapper {
+        .radio-item-area.list-row-gap16 {
+          @include mx.flex($align: center);
+          gap: map.get(var.$unit, 16);
+        }
+      }
+    }
+  }
+
+  &-hint {
+    @include typo.typography('b3', $color: map.get(color.$text-colors, 'tertiary'));
+    padding-left: fn.rem(16);
+    margin-top: map.get(var.$unit, -4);
+  }
+}
