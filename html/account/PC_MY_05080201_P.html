@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
   />
   <title>계정 등록 팝업</title>
   <!-- favicon -->
@@ -1329,7 +1329,7 @@
     <div class="vits-inner">
 
       
-      <div class="gnb-panel-head" data-brand-search-scope>
+      <div class="gnb-panel-head">
         <!-- prettier-ignore -->
         
 
@@ -1337,13 +1337,12 @@
 
 
 <div class="vits-input-search vits-validation">
-  <form 
-    class="vits-brand-search-form" 
-    role="search" 
-    action="/brand/search" 
-    method="get" 
+  <form
+    class="vits-brand-search-form"
+    role="search"
+    action="/brand/search"
+    method="get"
     data-search-form
-     data-brand-search
   >
     <label for="bnSearch-searchKeyword" class="sr-only">검색어</label>
 
@@ -1357,9 +1356,16 @@
       placeholder="브랜드명을 검색하세요"
       data-search-input
       data-brand-search-input
-      
-      
+      aria-describedby="bnSearch-searchKeyword-validation"
+      aria-invalid="false"
     />
+
+    
+    <button type="button" class="input-clear-btn" data-search-clear hidden aria-label="검색어 지우기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+    
 
     <button type="submit" class="input-search-btn" aria-label="검색">
       <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
@@ -1368,24 +1374,16 @@
     </button>
   </form>
 
-  <!-- validation 영역(교체) -->
   <div class="input-validation" hidden>
     <p id="bnSearch-searchKeyword-validation" aria-live="polite"></p>
   </div>
 </div>
-
-
-        
-        <div class="vits-chip-button-group" data-brand-chips hidden>
-          <button type="button" class="vits-text-underline-button size-l" data-brand-chips-reset>
-            초기화
-          </button>
-        </div>
       </div>
 
       
       <div class="gnb-panel-body">
         <div class="vits-brand-tab" data-brand-tab data-default-tab="korean">
+
           
           <div class="tab-nav" role="tablist" aria-label="브랜드 정렬">
             <button type="button" role="tab" class="tab-btn is-all"
@@ -1664,6 +1662,7 @@
           
           <div class="tab-panels">
             <div class="tab-panels-inner">
+
               
               <div class="tab-panel" id="brand-panel-all" role="tabpanel" aria-labelledby="brand-tab-all" data-tab-panel="all" hidden>
                 <p class="result-count"><strong data-brand-count>4910</strong>개의 브랜드</p>
@@ -21599,11 +21598,12 @@
               </div>
 
               
-              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" data-tab-panel="empty" hidden>
+              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" aria-label="검색결과 없음" data-tab-panel="empty" hidden>
                 <div class="result-empty">
                   <p>검색결과가 없습니다.</p>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -21796,7 +21796,7 @@
   <!-- 헤더 -->
   <div class="vits-modal-header">
     <div class="vits-modal-header-content">
-      <h2 class="vits-modal-title" id="accountRegisterModal-title">계정 등록</h2>
+      <h2 class="vits-modal-title" id="accountRegisterModal-title">계정 수정</h2>
 
 
     </div>
@@ -21813,13 +21813,13 @@
 
 <!-- prettier-ignore -->
 <section class="vits-account">
-  <h2 class="sr-only">계정 등록</h2>
+  <h2 class="sr-only">계정 수정</h2>
 
   <form class="vits-account-form" action="" method="post" novalidate>
     <div class="vits-account-body">
-      <div class="vits-account-row">
-        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
-        <div class="vits-account-field">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           
 
@@ -21851,11 +21851,82 @@
     <p id="account-id-validation" aria-live="polite"></p>
   </div>
 </div>
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg-p vits-btn-primary  vits-account-btn"
+  
+  >
+  
+
+  <span class="text">중복확인</span>
+
+  
+</button>
+
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">비밀번호<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column" data-hide>
+        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="account-id-chg" class="sr-only"></label>
+
+    <input
+      type="text"
+      name="userIdChg"
+      id="account-id-chg"
+      placeholder="아이디"
+      
+      
+      
+      
+      disabled
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="account-id-chg-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg-p vits-btn-secondary  vits-account-btn"
+  
+  >
+  
+
+  <span class="text">비밀번호 변경</span>
+
+  
+</button>
+
+        </div>
+      </div>
+
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>비밀번호<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -21889,7 +21960,7 @@
   </div>
 </div>
         </div>
-        <div class="vits-account-field">
+        <div class="vits-account-field type-column">
           <!-- prettier-ignore -->
           
 
@@ -21925,8 +21996,8 @@
         <p class="vits-account-hint">영문/숫자/특수문자 조합 8자 이상</p>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이름<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이름<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -21962,8 +22033,8 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">휴대전화번호</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>휴대전화번호</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -21999,9 +22070,9 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이메일</span>
-        <div class="vits-account-field vits-account-field-btn">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이메일</span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           
 
@@ -22039,8 +22110,8 @@
 
 <button
   type="button"
-  class="vits-btn-lg-p vits-btn-primary  vits-account-btn"
-  
+  class="vits-btn-lg-p vits-btn-primary  disabled vits-account-btn"
+  disabled
   >
   
 
@@ -22052,8 +22123,8 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">담당업무</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>담당업무</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -22080,8 +22151,8 @@
     <span
       class="vits-select-value"
       data-vits-select-value
-      data-placeholder="선택"
-    >선택</span>
+      data-placeholder="담당업무"
+    >담당업무</span>
 
     <span class="vits-select-icon" aria-hidden="true">
       <i class="ic ic-arrow-down" aria-hidden="true"></i>
@@ -22099,27 +22170,17 @@
            
         aria-selected="false"
         
-      >선택</li>
+      >기타</li>
     
       <li
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="경영"
+        data-value="회계"
            
         aria-selected="false"
         
-      >경영</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="영업"
-           
-        aria-selected="false"
-        
-      >영업</li>
+      >회계</li>
     
       <li
         class="vits-select-option"
@@ -22135,6 +22196,26 @@
         class="vits-select-option"
         role="option"
         tabindex="-1"
+        data-value="물류"
+           
+        aria-selected="false"
+        
+      >물류</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="경영"
+           
+        aria-selected="false"
+        
+      >경영</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
         data-value="기타"
            
         aria-selected="false"
@@ -22144,15 +22225,15 @@
   </ul>
 
   
-    <input type="hidden" name="jobRole" value="선택" data-vits-select-hidden />
+    <input type="hidden" name="jobRole" value="담당업무" data-vits-select-hidden />
   
 </div>
 
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">직급</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>직급</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -22189,7 +22270,7 @@
       </div>
 
       <div class="vits-account-row">
-        <span class="vits-account-label">사용여부</span>
+        <span class="vits-account-label" data-hide>사용여부</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -22262,7 +22343,7 @@
       </button>
 
       <button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close('accountRegisterModal')">
-        <span class="text">등록</span>
+        <span class="text">저장</span>
       </button>
 
     </div>
@@ -22800,5 +22881,27 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'account'일 때
+      if (type === 'account') {
+        // data-hide 처리: display none
+        document.querySelectorAll('[data-hide]').forEach(function (el) {
+          el.style.display = 'none';
+        });
+
+        // 모달 타이틀 변경
+        const modalTitle = document.querySelector('#accountRegisterModal .vits-modal-title');
+        if (modalTitle) modalTitle.textContent = '계정 등록';
+
+        // 버튼 텍스트 변경: 저장 -> 등록 (primary 버튼 기준)
+        const primaryBtnText = document.querySelector('#accountRegisterModal .vits-modal-btn-primary .text');
+        if (primaryBtnText) primaryBtnText.textContent = '등록';
+      }
+    </script>
   </body>
 </html>

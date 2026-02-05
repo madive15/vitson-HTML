@@ -2,13 +2,13 @@
 
 <!-- prettier-ignore -->
 <section class="vits-account">
-  <h2 class="sr-only">계정 등록</h2>
+  <h2 class="sr-only">계정 수정</h2>
 
   <form class="vits-account-form" action="" method="post" novalidate>
     <div class="vits-account-body">
-      <div class="vits-account-row">
-        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
-        <div class="vits-account-field">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           
 
@@ -40,11 +40,82 @@
     <p id="account-id-validation" aria-live="polite"></p>
   </div>
 </div>
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg-p vits-btn-primary  vits-account-btn"
+  
+  >
+  
+
+  <span class="text">중복확인</span>
+
+  
+</button>
+
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">비밀번호<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column" data-hide>
+        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="account-id-chg" class="sr-only"></label>
+
+    <input
+      type="text"
+      name="userIdChg"
+      id="account-id-chg"
+      placeholder="아이디"
+      
+      
+      
+      
+      disabled
+      
+
+      
+      
+      
+    />
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="account-id-chg-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-lg-p vits-btn-secondary  vits-account-btn"
+  
+  >
+  
+
+  <span class="text">비밀번호 변경</span>
+
+  
+</button>
+
+        </div>
+      </div>
+
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>비밀번호<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -78,7 +149,7 @@
   </div>
 </div>
         </div>
-        <div class="vits-account-field">
+        <div class="vits-account-field type-column">
           <!-- prettier-ignore -->
           
 
@@ -114,8 +185,8 @@
         <p class="vits-account-hint">영문/숫자/특수문자 조합 8자 이상</p>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이름<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이름<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -151,8 +222,8 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">휴대전화번호</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>휴대전화번호</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -188,9 +259,9 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이메일</span>
-        <div class="vits-account-field vits-account-field-btn">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이메일</span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           
 
@@ -228,8 +299,8 @@
 
 <button
   type="button"
-  class="vits-btn-lg-p vits-btn-primary  vits-account-btn"
-  
+  class="vits-btn-lg-p vits-btn-primary  disabled vits-account-btn"
+  disabled
   >
   
 
@@ -241,8 +312,8 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">담당업무</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>담당업무</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -269,8 +340,8 @@
     <span
       class="vits-select-value"
       data-vits-select-value
-      data-placeholder="선택"
-    >선택</span>
+      data-placeholder="담당업무"
+    >담당업무</span>
 
     <span class="vits-select-icon" aria-hidden="true">
       <i class="ic ic-arrow-down" aria-hidden="true"></i>
@@ -288,27 +359,17 @@
            
         aria-selected="false"
         
-      >선택</li>
+      >기타</li>
     
       <li
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="경영"
+        data-value="회계"
            
         aria-selected="false"
         
-      >경영</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="영업"
-           
-        aria-selected="false"
-        
-      >영업</li>
+      >회계</li>
     
       <li
         class="vits-select-option"
@@ -324,6 +385,26 @@
         class="vits-select-option"
         role="option"
         tabindex="-1"
+        data-value="물류"
+           
+        aria-selected="false"
+        
+      >물류</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="경영"
+           
+        aria-selected="false"
+        
+      >경영</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
         data-value="기타"
            
         aria-selected="false"
@@ -333,15 +414,15 @@
   </ul>
 
   
-    <input type="hidden" name="jobRole" value="선택" data-vits-select-hidden />
+    <input type="hidden" name="jobRole" value="담당업무" data-vits-select-hidden />
   
 </div>
 
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">직급</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>직급</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           
@@ -378,7 +459,7 @@
       </div>
 
       <div class="vits-account-row">
-        <span class="vits-account-label">사용여부</span>
+        <span class="vits-account-label" data-hide>사용여부</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           

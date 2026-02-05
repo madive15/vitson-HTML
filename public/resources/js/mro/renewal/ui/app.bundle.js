@@ -2246,8 +2246,8 @@ var header_search = __webpack_require__(978);
 var header_brand = __webpack_require__(697);
 ;// ./src/assets/scripts/ui/header/header.js
 /**
- * scripts/ui/kendo/kendo.js
- * @purpose Kendo UI 관련 모듈 통합 관리
+ * scripts/ui/header/header.js
+ * @purpose header UI 관련 모듈 통합 관리
  */
 
 
@@ -2257,16 +2257,15 @@ var header_brand = __webpack_require__(697);
   'use strict';
 
   window.UI = window.UI || {};
+  var modules = ['headerRank', 'headerSearch', 'headerGnb', 'Brand'];
   window.UI.header = {
     init: function () {
-      if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
-      if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
-      if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-      if (window.UI.Brand && window.UI.Brand.init) window.UI.Brand.init();
-      console.log('[header] all modules initialized');
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
     }
   };
-  console.log('[header] loaded');
 })(window);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/footer.js
 var footer = __webpack_require__(795);
@@ -2402,8 +2401,6 @@ var auth_ui = __webpack_require__(593);
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.checkboxTotal && window.UI.checkboxTotal.init) window.UI.checkboxTotal.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-    if (window.UI.header && window.UI.header.init) window.UI.header.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
     if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
     if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
@@ -2416,6 +2413,8 @@ var auth_ui = __webpack_require__(593);
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
     if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
     if (window.UI.authUi && window.UI.authUi.init) window.UI.authUi.init();
+    if (window.UI.header && window.UI.header.init) window.UI.header.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
   console.log('[core/ui] loaded');
 })(window);
@@ -5840,121 +5839,127 @@ if (document.body?.dataset?.guide === 'true') {
 
 /**
  * @file scripts/ui/header/header-brand.js
- * @description 브랜드 탭 + 검색 + 칩 필터링
- * @requires jQuery
+ * @description 브랜드 탭 + 검색 필터링
+ * @requires jQuery, UI.inputSearch
  *
- * @fires brand:tabChange - 탭 전환 시 { tabId }
- * @fires brand:subChange - 서브탭 전환 시 { groupId, subId }
- * @fires brand:chipAdd - 칩 추가 시 { keyword }
- * @fires brand:chipRemove - 칩 삭제 시 { keyword }
- * @fires brand:reset - 초기화 시
+ * @scope [data-brand-tab]
+ * @mapping inputSearch:submit / inputSearch:clear → 필터링 + 탭 제어
+ * @state is-search-mode, has-scroll
+ *
+ * @option onSearch(keyword, $root) — API 연동 시 filterBrands 대체
+ * @option onClear($root)          — API 연동 시 필터 해제 대체
+ *
+ * @events brand:tabChange, brand:subChange, brand:search, brand:searchClear
  */
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-
-  // ── 상수 ──
-
   var SEL = {
     ROOT: '[data-brand-tab]',
-    SCOPE: '[data-brand-search-scope]',
     PANEL: '.gnb-panel-brand',
-    // 탭
+    SCROLL_AREA: '.tab-panels',
     TAB_TRIGGER: '[data-tab-trigger]',
     TAB_PANEL: '[data-tab-panel]',
     TAB_GROUP: '[data-tab-group]',
     SUB_TRIGGER: '[data-sub-trigger]',
     SUB_PANEL: '[data-sub-panel]',
-    // 검색
-    FORM: '[data-brand-search]',
-    INPUT: '[data-brand-search-input]',
-    CHIPS: '[data-brand-chips]',
-    CHIP: '[data-chip-value]',
-    CHIP_REMOVE: '[data-chip-action="remove"]',
-    RESET: '[data-brand-chips-reset]',
-    // 브랜드 목록
+    INPUT: '[data-search-input]',
     BRAND_LINK: '[data-brand-item]',
     COUNT: '[data-brand-count]'
   };
   var CLS = {
     ACTIVE: 'is-active',
     OPEN: 'is-open',
-    SEARCH_MODE: 'is-search-mode'
+    SEARCH_MODE: 'is-search-mode',
+    HAS_SCROLL: 'has-scroll'
   };
   var TAB = {
     ALL: 'all',
-    KOREAN: 'korean',
-    ALPHABET: 'alphabet',
-    EMPTY: 'empty'
+    EMPTY: 'empty',
+    DEFAULT: 'korean'
   };
 
-  // 스크롤 유무 판단 → 클래스 토글
+  // init 시 브랜드 링크 캐싱 — 검색마다 DOM 재탐색 제거
+  function cacheBrandData($root) {
+    var $panelAll = findByData($root, SEL.TAB_PANEL, 'tabPanel', TAB.ALL);
+    var links = [];
+    $panelAll.find(SEL.BRAND_LINK).each(function () {
+      var $el = $(this);
+      links.push({
+        $el: $el,
+        text: $el.text().toLowerCase()
+      });
+    });
+    $root.data('brandCache', {
+      $panelAll: $panelAll,
+      $panelEmpty: findByData($root, SEL.TAB_PANEL, 'tabPanel', TAB.EMPTY),
+      $count: $panelAll.find(SEL.COUNT),
+      links: links
+    });
+  }
+
+  // $root → .gnb-panel-brand
+  function getBrandPanel($root) {
+    return $root.closest(SEL.PANEL);
+  }
+
+  // 저장된 옵션 반환
+  function getOpt($root) {
+    return $root.data('brandOpt') || {};
+  }
+
+  // 스크롤 유무 → 클래스 토글
   function checkScroll($root) {
-    var el = $root.find('.tab-panels')[0];
+    var el = $root.find(SEL.SCROLL_AREA)[0];
     if (!el) return;
-    var hasScroll = el.scrollHeight > el.clientHeight;
-    $root.toggleClass('has-scroll', hasScroll);
+    $root.toggleClass(CLS.HAS_SCROLL, el.scrollHeight > el.clientHeight);
   }
 
-  // 칩 컨테이너 찾기
-  function getChips($root) {
-    return $root.closest(SEL.PANEL).find(SEL.CHIPS);
+  // 셀렉터 인젝션 방지 — data 값 비교로 검색
+  function findByData($scope, sel, key, val) {
+    return $scope.find(sel).filter(function () {
+      return $(this).data(key) === val;
+    });
   }
 
-  // XSS 방지용 이스케이프
-  function escapeHtml(str) {
-    return $('<div>').text(str).html();
-  }
-
-  // 1차 탭 활성화 (전체/가나다순/알파벳순)
+  // 1차 탭 활성화
   function activateTab($root, tabId) {
-    var $triggers = $root.find(SEL.TAB_TRIGGER);
-    var $panels = $root.find(SEL.TAB_PANEL);
-    var $groups = $root.find(SEL.TAB_GROUP);
-    var $targetTrigger = $root.find('[data-tab-trigger="' + tabId + '"]');
-    var $targetPanel = $root.find('[data-tab-panel="' + tabId + '"]');
+    var $target = findByData($root, SEL.TAB_TRIGGER, 'tabTrigger', tabId);
+    var $targetPanel = findByData($root, SEL.TAB_PANEL, 'tabPanel', tabId);
     if (!$targetPanel.length) return;
-
-    // 전체 비활성
-    $triggers.removeClass(CLS.ACTIVE).attr({
+    $root.find(SEL.TAB_TRIGGER).removeClass(CLS.ACTIVE).attr({
       'aria-selected': 'false',
       tabindex: '-1'
     });
-    $panels.removeClass(CLS.ACTIVE).attr('hidden', '');
-    $groups.removeClass(CLS.OPEN);
-
-    // 선택 활성
-    $targetTrigger.addClass(CLS.ACTIVE).attr({
+    $root.find(SEL.TAB_PANEL).removeClass(CLS.ACTIVE).attr('hidden', '');
+    $root.find(SEL.TAB_GROUP).removeClass(CLS.OPEN);
+    $target.addClass(CLS.ACTIVE).attr({
       'aria-selected': 'true',
       tabindex: '0'
     });
     $targetPanel.addClass(CLS.ACTIVE).removeAttr('hidden');
-
-    // 그룹 탭이면 서브탭 영역 열기
-    var $group = $targetTrigger.closest(SEL.TAB_GROUP);
+    var $group = $target.closest(SEL.TAB_GROUP);
     if ($group.length) $group.addClass(CLS.OPEN);
     $root.trigger('brand:tabChange', {
       tabId: tabId
     });
   }
 
-  // 2차 서브탭 활성화 (ㄱ,ㄴ,ㄷ... / A,B,C...Z)
+  // 2차 서브탭 활성화
   function activateSubTab($root, $group, subId) {
     var groupId = $group.data('tabGroup');
-    var $parentPanel = $root.find('[data-tab-panel="' + groupId + '"]');
-    var $subTriggers = $group.find(SEL.SUB_TRIGGER);
-    var $subPanels = $parentPanel.find(SEL.SUB_PANEL);
-    var $targetTrigger = $group.find('[data-sub-trigger="' + subId + '"]');
-    var $targetPanel = $parentPanel.find('[data-sub-panel="' + subId + '"]');
+    var $parentPanel = findByData($root, SEL.TAB_PANEL, 'tabPanel', groupId);
+    var $target = findByData($group, SEL.SUB_TRIGGER, 'subTrigger', subId);
+    var $targetPanel = findByData($parentPanel, SEL.SUB_PANEL, 'subPanel', subId);
     if (!$targetPanel.length) return;
-    $subTriggers.removeClass(CLS.ACTIVE).attr({
+    $group.find(SEL.SUB_TRIGGER).removeClass(CLS.ACTIVE).attr({
       'aria-selected': 'false',
       tabindex: '-1'
     });
-    $subPanels.removeClass(CLS.ACTIVE).attr('hidden', '');
-    $targetTrigger.addClass(CLS.ACTIVE).attr({
+    $parentPanel.find(SEL.SUB_PANEL).removeClass(CLS.ACTIVE).attr('hidden', '');
+    $target.addClass(CLS.ACTIVE).attr({
       'aria-selected': 'true',
       tabindex: '0'
     });
@@ -5965,163 +5970,111 @@ if (document.body?.dataset?.guide === 'true') {
     });
   }
 
-  // 검색 모드 진입 → 전체 탭으로 고정
-  function enterSearchMode($root) {
+  // 기본 탭 + 첫 서브탭으로 복원
+  function restoreDefaultTab($root) {
+    var defaultTab = $root.data('defaultTab') || TAB.DEFAULT;
+    $root.removeClass(CLS.SEARCH_MODE);
+    activateTab($root, defaultTab);
+    var $group = findByData($root, SEL.TAB_GROUP, 'tabGroup', defaultTab);
+    if (!$group.length) return;
+    var firstSubId = $group.find(SEL.SUB_TRIGGER).first().data('subTrigger');
+    if (firstSubId != null) activateSubTab($root, $group, firstSubId);
+  }
+
+  // destroy용 — 이벤트 없이 DOM 초기 상태로 리셋
+  function resetDomState($root) {
+    $root.find(SEL.TAB_TRIGGER).removeClass(CLS.ACTIVE).attr({
+      'aria-selected': 'false',
+      tabindex: '-1'
+    });
+    $root.find(SEL.TAB_PANEL).removeClass(CLS.ACTIVE).attr('hidden', '');
+    $root.find(SEL.TAB_GROUP).removeClass(CLS.OPEN);
+    $root.find(SEL.SUB_TRIGGER).removeClass(CLS.ACTIVE).attr({
+      'aria-selected': 'false',
+      tabindex: '-1'
+    });
+    $root.find(SEL.SUB_PANEL).removeClass(CLS.ACTIVE).attr('hidden', '');
+
+    // 캐시 기반 복원
+    var cache = $root.data('brandCache');
+    if (cache) {
+      cache.links.forEach(function (item) {
+        item.$el.removeAttr('hidden');
+      });
+      cache.$count.text(cache.links.length);
+    }
+  }
+
+  // 키워드로 전체 패널 필터링 (캐시 사용)
+  function filterBrands($root, keyword) {
+    var cache = $root.data('brandCache');
+    if (!cache) return;
+    if (!keyword) {
+      cache.links.forEach(function (item) {
+        item.$el.removeAttr('hidden');
+      });
+      cache.$count.text(cache.links.length);
+      cache.$panelAll.removeAttr('hidden');
+      cache.$panelEmpty.attr('hidden', '');
+      return;
+    }
+    var matchCount = 0;
+    cache.links.forEach(function (item) {
+      if (item.text.indexOf(keyword) > -1) {
+        item.$el.removeAttr('hidden');
+        matchCount++;
+      } else {
+        item.$el.attr('hidden', '');
+      }
+    });
+    cache.$count.text(matchCount);
+    if (matchCount === 0) {
+      cache.$panelAll.attr('hidden', '');
+      cache.$panelEmpty.removeAttr('hidden');
+    } else {
+      cache.$panelAll.removeAttr('hidden');
+      cache.$panelEmpty.attr('hidden', '');
+    }
+  }
+
+  // 검색 모드 진입 → 전체 탭 고정 + 필터링
+  function enterSearchMode($root, keyword) {
+    var opt = getOpt($root);
     $root.addClass(CLS.SEARCH_MODE);
     activateTab($root, TAB.ALL);
     $root.find(SEL.TAB_GROUP).removeClass(CLS.OPEN);
-  }
-
-  // 검색 모드 해제 → 기본 탭으로 복원
-  function resetTabState($root) {
-    var defaultTab = $root.data('defaultTab') || TAB.KOREAN;
-    $root.removeClass(CLS.SEARCH_MODE);
-    activateTab($root, defaultTab);
-
-    // 서브탭 첫번째로 복원
-    var $group = $root.find('[data-tab-group="' + defaultTab + '"]');
-    if ($group.length) {
-      var $firstSub = $group.find(SEL.SUB_TRIGGER).first();
-      if ($firstSub.length) {
-        activateSubTab($root, $group, $firstSub.data('subTrigger'));
-      }
-    }
-  }
-
-  // 칩 버튼 HTML 생성
-  function createChipHtml(keyword, isActive) {
-    var escaped = escapeHtml(keyword);
-    return '<button type="button" class="vits-chip-button type-outline' + (isActive ? ' ' + CLS.ACTIVE : '') + '" data-chip-value="' + escaped + '">' + '<span class="text">' + escaped + '</span>' + '<span class="icon" aria-hidden="true" data-chip-action="remove">' + '<i class="ic ic-x"></i></span></button>';
-  }
-
-  // 칩 유무에 따라 컨테이너 표시/숨김
-  function toggleChipsVisibility($chips) {
-    var hasChips = $chips.find(SEL.CHIP).length > 0;
-    $chips.attr('hidden', hasChips ? null : '');
-  }
-
-  // 현재 활성 칩의 키워드 반환
-  function getActiveKeyword($chips) {
-    var $active = $chips.find(SEL.CHIP + '.' + CLS.ACTIVE);
-    return $active.length ? String($active.data('chipValue')).toLowerCase() : '';
-  }
-
-  // 특정 칩 활성화 (나머지 비활성)
-  function setActiveChip($chips, keyword) {
-    $chips.find(SEL.CHIP).removeClass(CLS.ACTIVE);
-    if (keyword) {
-      $chips.find('[data-chip-value="' + keyword + '"]').addClass(CLS.ACTIVE);
-    }
-  }
-
-  // 전체 패널 초기 상태로 복원 (링크 전부 표시 + 카운트 복원)
-  function resetAllPanel($root) {
-    var $panelAll = $root.find('[data-tab-panel="' + TAB.ALL + '"]');
-    var $links = $panelAll.find(SEL.BRAND_LINK);
-    $links.removeAttr('hidden');
-    $panelAll.find(SEL.COUNT).text($links.length);
-  }
-
-  // 활성 칩 키워드로 브랜드 목록 필터링
-  function filterBrands($root) {
-    var $chips = getChips($root);
-    var $panelAll = $root.find('[data-tab-panel="' + TAB.ALL + '"]');
-    var $panelEmpty = $root.find('[data-tab-panel="' + TAB.EMPTY + '"]');
-    var keyword = getActiveKeyword($chips);
-
-    // 키워드 없으면 초기 상태로
-    if (!keyword) {
-      resetAllPanel($root);
-      $panelEmpty.attr('hidden', '');
-      resetTabState($root);
-      return;
-    }
-    enterSearchMode($root);
-
-    // 필터링 실행
-    var matchCount = 0;
-    $panelAll.find(SEL.BRAND_LINK).each(function () {
-      var $link = $(this);
-      var isMatch = $link.text().toLowerCase().indexOf(keyword) > -1;
-      $link.attr('hidden', isMatch ? null : '');
-      if (isMatch) matchCount++;
-    });
-
-    // 결과 카운트 업데이트
-    $panelAll.find(SEL.COUNT).text(matchCount);
-
-    // 결과 없으면 빈 상태 표시
-    if (matchCount === 0) {
-      $panelAll.attr('hidden', '');
-      $panelEmpty.removeAttr('hidden');
+    if (typeof opt.onSearch === 'function') {
+      opt.onSearch(keyword, $root);
     } else {
-      $panelEmpty.attr('hidden', '');
+      filterBrands($root, keyword);
     }
-  }
-
-  // 칩 추가 (중복 시 활성화만)
-  function addChip($root, keyword) {
-    var $chips = getChips($root);
-    var $reset = $chips.find(SEL.RESET);
-    var trimmed = $.trim(keyword);
-    if (!trimmed) return;
-    var $existing = $chips.find('[data-chip-value="' + trimmed + '"]');
-
-    // 중복이면 활성화만
-    if ($existing.length) {
-      setActiveChip($chips, trimmed);
-      filterBrands($root);
-      return;
-    }
-    setActiveChip($chips, '');
-    $(createChipHtml(trimmed, true)).insertBefore($reset);
-    toggleChipsVisibility($chips);
-    filterBrands($root);
-    $root.trigger('brand:chipAdd', {
-      keyword: trimmed
-    });
-  }
-
-  // 칩 삭제 (활성 칩 삭제 시 마지막으로 이동 후 필터링)
-  function removeChip($root, $chip) {
-    var $chips = getChips($root);
-    var wasActive = $chip.hasClass(CLS.ACTIVE);
-    var keyword = $chip.data('chipValue');
-    $chip.remove();
-    toggleChipsVisibility($chips);
-
-    // 활성 칩 삭제 시 남은 마지막 칩 활성화
-    if (wasActive) {
-      var $last = $chips.find(SEL.CHIP).last();
-      if ($last.length) {
-        setActiveChip($chips, $last.data('chipValue'));
-      }
-    }
-    filterBrands($root);
-    $root.trigger('brand:chipRemove', {
+    checkScroll($root);
+    $root.trigger('brand:search', {
       keyword: keyword
     });
   }
 
-  // 전체 초기화 (칩 전부 삭제 + 탭 복원)
-  function resetAll($root) {
-    var $chips = getChips($root);
-    $chips.find(SEL.CHIP).remove();
-    toggleChipsVisibility($chips);
-    filterBrands($root);
-    $root.trigger('brand:reset');
+  // 검색 모드 해제 → 필터 초기화 + 기본 탭 복원
+  function exitSearchMode($root) {
+    var opt = getOpt($root);
+    if (typeof opt.onClear === 'function') {
+      opt.onClear($root);
+    } else {
+      filterBrands($root, '');
+    }
+    restoreDefaultTab($root);
+    checkScroll($root);
+    $root.trigger('brand:searchClear');
   }
   function bindEvents($root) {
-    var $panel = $root.closest(SEL.PANEL);
-    var $form = $panel.find(SEL.FORM);
-    var $input = $panel.find(SEL.INPUT);
-    var $chips = getChips($root);
+    var $panel = getBrandPanel($root);
 
-    // 1차 탭 클릭
+    // 1차 탭 클릭 — 검색 모드 잠금
     $root.on('click.brand', SEL.TAB_TRIGGER, function (e) {
       e.preventDefault();
       if ($root.hasClass(CLS.SEARCH_MODE)) return;
       activateTab($root, $(this).data('tabTrigger'));
+      checkScroll($root);
     });
 
     // 2차 서브탭 클릭
@@ -6129,76 +6082,73 @@ if (document.body?.dataset?.guide === 'true') {
       e.preventDefault();
       var $btn = $(this);
       activateSubTab($root, $btn.closest(SEL.TAB_GROUP), $btn.data('subTrigger'));
+      checkScroll($root);
     });
 
-    // 검색 폼 제출
-    $form.on('submit.brand', function (e) {
-      e.preventDefault();
-      addChip($root, $input.val());
-      $input.val('');
+    // inputSearch 검색 완료 → 필터링
+    $panel.on('inputSearch:submit.brand', SEL.INPUT, function (e, data) {
+      enterSearchMode($root, data.query);
     });
 
-    // 칩 클릭 → 해당 칩 활성화 후 필터링
-    $chips.on('click.brand', SEL.CHIP, function (e) {
-      if ($(e.target).closest(SEL.CHIP_REMOVE).length) return;
-      setActiveChip($chips, $(this).data('chipValue'));
-      filterBrands($root);
+    // inputSearch 클리어 → 탭 복원
+    $panel.on('inputSearch:clear.brand', SEL.INPUT, function () {
+      exitSearchMode($root);
     });
-
-    // 칩 X 버튼 → 삭제
-    $chips.on('click.brand', SEL.CHIP_REMOVE, function (e) {
-      e.stopPropagation();
-      removeChip($root, $(this).closest(SEL.CHIP));
-    });
-
-    // 초기화 버튼
-    $chips.on('click.brand', SEL.RESET, function () {
-      resetAll($root);
-    });
-
-    // 초기 스크롤 체크
+    cacheBrandData($root);
     checkScroll($root);
-
-    // 탭 전환 시 스크롤 체크
-    $root.on('brand:tabChange brand:subChange', function () {
-      checkScroll($root);
-    });
-
-    // 필터링 후 스크롤 체크
-    $root.on('brand:chipAdd brand:chipRemove brand:reset', function () {
-      checkScroll($root);
-    });
   }
   window.UI.Brand = {
-    init: function ($scope) {
+    init: function ($scope, opt) {
       $($scope || SEL.ROOT).each(function () {
         var $root = $(this);
         if ($root.data('brandInit')) return;
         $root.data('brandInit', true);
+        $root.data('brandOpt', opt || {});
         bindEvents($root);
       });
     },
     destroy: function ($scope) {
       $($scope || SEL.ROOT).each(function () {
         var $root = $(this);
-        var $panel = $root.closest(SEL.PANEL);
+        if (!$root.data('brandInit')) return;
         $root.off('.brand');
-        $panel.find(SEL.FORM).off('.brand');
-        getChips($root).off('.brand');
-        $root.removeData('brandInit');
+        getBrandPanel($root).off('.brand');
+        resetDomState($root);
+        $root.removeClass(CLS.SEARCH_MODE + ' ' + CLS.HAS_SCROLL).removeData('brandInit brandOpt brandCache');
       });
     },
-    // 외부에서 칩 추가
-    addChip: function ($root, keyword) {
-      addChip($($root), keyword);
+    // 외부에서 검색 — inputSearch.setValue로 인풋 위임
+    search: function ($root, keyword) {
+      if (!keyword) return;
+      var $r = $($root);
+      var normalized = window.UI.inputSearch ? window.UI.inputSearch.normalize(keyword).toLowerCase() : String(keyword).toLowerCase();
+      if (!normalized) return;
+      if (window.UI.inputSearch) {
+        window.UI.inputSearch.setValue(getBrandPanel($r), keyword);
+      }
+      enterSearchMode($r, normalized);
     },
-    // 외부에서 초기화
-    reset: function ($root) {
-      resetAll($($root));
+    // 외부에서 초기화 — inputSearch.clear → 이벤트 → exitSearchMode
+    clear: function ($root) {
+      if (window.UI.inputSearch) {
+        window.UI.inputSearch.clear(getBrandPanel($($root)));
+      }
     },
-    // 외부에서 탭 전환
+    // 탭 전환 — 검색 모드면 조용히 해제 후 직행
     showTab: function ($root, tabId) {
-      activateTab($($root), tabId);
+      var $r = $($root);
+      if ($r.hasClass(CLS.SEARCH_MODE)) {
+        if (window.UI.inputSearch) window.UI.inputSearch.setValue(getBrandPanel($r), '');
+        var opt = getOpt($r);
+        if (typeof opt.onClear === 'function') {
+          opt.onClear($r);
+        } else {
+          filterBrands($r, '');
+        }
+        $r.removeClass(CLS.SEARCH_MODE);
+      }
+      activateTab($r, tabId);
+      checkScroll($r);
     }
   };
 })(window.jQuery || window.$, window);
@@ -8376,172 +8326,259 @@ if (document.body?.dataset?.guide === 'true') {
 
 /**
  * @file scripts/ui/form/input-search.js
- * @purpose input-search 공통: submit 가로채기 + 검색어 정규화 + validation(aria-invalid/메시지) 토글 + submit 훅 제공
- * @scope input-search.ejs 내부 요소만 제어(페이지별 UI 로직은 onSubmit에서 처리)
+ * @description input-search 공통 — submit 정규화 + 클리어 + validation
+ * @scope [data-search-form]
  *
- * @hook
- *  - form: [data-search-form]
- *  - input: [data-search-input]
- *  - validation: .vits-input-search.vits-validation 내부 .input-validation (hidden 토글)
+ * @events (인풋에서 버블링)
+ *  inputSearch:submit { query } — 성공 시만
+ *  inputSearch:clear
  *
- * @contract
- *  - init(root?): 문서/루트 스캔 초기화
- *  - init({$form,$input,$validation}, { onSubmit }): 단일 폼 초기화
- *  - onSubmit(query, ctx) 반환값:
- *    - false => invalid 표시(중복 등)
- *    - 그 외 => invalid 해제(정상)
+ * @events ($(document))
+ *  ui:input-search-submit { query, form, input } — 성공 시만
+ *  ui:input-search-clear  { form, input }
  *
- * @maintenance
- *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
- *  - 빈 값 submit은 무시(에러 표시 없음)하는 정책을 유지
+ * @api
+ *  init(root?, opt?)                    스캔 초기화
+ *  init({$form,$input}, {onSubmit})     단일 폼 초기화
+ *  destroy(root?)                       해제
+ *  setValue(target, value)              값 세팅 (이벤트 미발생)
+ *  clear(target)                        초기화 + 이벤트
+ *  setInvalid(arg, on)                  validation 토글
+ *  setMessage(target, message)          메시지 변경 + invalid 토글
+ *  normalize(str)                       trim + 연속공백 → 1칸
  */
-
 (function ($, window, document) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
   window.UI.inputSearch = window.UI.inputSearch || {};
-  var MODULE_KEY = 'inputSearch';
-  var NS = '.' + MODULE_KEY;
+  var NS = '.inputSearch';
+  var DATA_KEY = 'inputSearchInit';
   var FORM = '[data-search-form]';
   var INPUT = '[data-search-input]';
+  var CLEAR = '[data-search-clear]';
   var VALID_WRAP = '.vits-input-search.vits-validation';
   var VALID_MSG = '.input-validation';
+  var MSG_TEXT = '[aria-live="polite"]';
 
-  // 문자열 앞뒤 공백 제거
+  // 앞뒤 공백 제거
   function trimText(str) {
     return String(str || '').replace(/^\s+|\s+$/g, '');
   }
 
-  // 연속 공백을 1칸으로 정규화
+  // trim + 연속 공백 → 1칸
   function normalizeSpaces(str) {
     return trimText(str).replace(/\s+/g, ' ');
   }
 
-  // input 기준으로 validation 메시지 엘리먼트를 찾음
+  // input 기준 validation 래퍼 탐색
   function findValidation($input) {
     if (!$input || !$input.length) return $();
     var $wrap = $input.closest(VALID_WRAP);
     return $wrap.length ? $wrap.find(VALID_MSG).first() : $();
   }
 
-  // validation UI를 토글(input aria-invalid + 메시지 hidden)
+  // aria-invalid + validation hidden 토글
   function setInvalid($input, $validation, on) {
-    if ($input && $input.length) $input.attr('aria-invalid', on ? 'true' : null);
-    if ($validation && $validation.length) $validation.prop('hidden', !on);
+    if ($input && $input.length) {
+      $input.attr('aria-invalid', on ? 'true' : 'false');
+    }
+    if ($validation && $validation.length) {
+      if (on) {
+        $validation.removeAttr('hidden');
+      } else {
+        $validation.attr('hidden', '');
+      }
+    }
   }
 
-  // 옵션에서 onSubmit 훅을 안전하게 추출
-  function getOnSubmit(opt) {
-    return opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
+  // $form 기준 내부 요소 수집
+  function resolveFromForm($form) {
+    var $input = $form.find(INPUT).first();
+    return {
+      $form: $form,
+      $input: $input,
+      $clear: $form.find(CLEAR),
+      $validation: $input.length ? findValidation($input) : $()
+    };
   }
 
-  // 입력 중이면 validation을 해제
-  function bindClearOnInput($input, $validation) {
-    if (!$input || !$input.length) return;
-    $input.off('input' + NS).on('input' + NS, function () {
-      setInvalid($input, $validation, false);
+  // 외부 전달 인자에서 요소 정규화
+  function resolveFromArg(arg) {
+    if (!arg || !arg.$form || !arg.$input) return null;
+    return {
+      $form: arg.$form,
+      $input: arg.$input,
+      $clear: arg.$clear && arg.$clear.length ? arg.$clear : arg.$form.find(CLEAR),
+      $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
+    };
+  }
+
+  // target → 저장된 el 객체 반환
+  function getEl(target) {
+    var $t = $(target);
+    var $form = $t.is(FORM) ? $t : $t.closest(FORM);
+    if (!$form.length) $form = $t.find(FORM).first();
+    return $form.data(DATA_KEY) || null;
+  }
+
+  // 클리어 버튼 표시/숨김 동기화
+  function syncClearBtn(el) {
+    if (!el.$clear.length) return;
+    if (trimText(el.$input.val())) {
+      el.$clear.removeAttr('hidden');
+    } else {
+      el.$clear.attr('hidden', '');
+    }
+  }
+
+  // 인풋 초기화 + 이벤트 발생
+  function doClear(el) {
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    setInvalid(el.$input, el.$validation, false);
+    el.$input.trigger('inputSearch:clear');
+    $(document).trigger('ui:input-search-clear', {
+      form: el.$form[0],
+      input: el.$input[0]
     });
   }
 
-  // submit 시 query를 정규화하고 onSubmit/이벤트로 전달
-  function bindSubmit($form, $input, $validation, opt) {
-    if (!$form || !$form.length || !$input || !$input.length) return;
-    var onSubmit = getOnSubmit(opt);
-    $form.off('submit' + NS).on('submit' + NS, function (e) {
-      e.preventDefault();
-      var query = normalizeSpaces($input.val());
+  // 이벤트 바인딩
+  function bindEvents(el, opt) {
+    var onSubmit = opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
 
-      // 빈 값은 아무 것도 하지 않음(에러 표시도 하지 않음)
+    // 입력 → validation 해제 + 클리어 버튼 토글
+    el.$input.off('input' + NS).on('input' + NS, function () {
+      setInvalid(el.$input, el.$validation, false);
+      syncClearBtn(el);
+    });
+
+    // 클리어(X) 버튼
+    if (el.$clear.length) {
+      el.$clear.off('click' + NS).on('click' + NS, function () {
+        doClear(el);
+        el.$input.focus();
+      });
+    }
+
+    // submit → 정규화 + onSubmit 훅 + 이벤트 (성공 시만)
+    el.$form.off('submit' + NS).on('submit' + NS, function (e) {
+      e.preventDefault();
+      var query = normalizeSpaces(el.$input.val());
       if (!query) return;
       var ctx = {
-        $form: $form,
-        $input: $input,
-        $validation: $validation
+        $form: el.$form,
+        $input: el.$input,
+        $validation: el.$validation
       };
       var ok = true;
-
-      // 페이지 로직에서 false를 반환하면 invalid 처리
       if (onSubmit) ok = onSubmit(query, ctx) !== false;
-      setInvalid($input, $validation, !ok);
-
-      // 공통 이벤트(필요 시 다른 레이어에서도 구독 가능)
-      $(document).trigger('ui:input-search-submit', {
-        query: query,
-        form: $form[0],
-        input: $input[0]
-      });
+      setInvalid(el.$input, el.$validation, !ok);
+      if (ok) {
+        syncClearBtn(el);
+        el.$input.trigger('inputSearch:submit', {
+          query: query
+        });
+        $(document).trigger('ui:input-search-submit', {
+          query: query,
+          form: el.$form[0],
+          input: el.$input[0]
+        });
+      }
+      el.$input.focus();
     });
   }
 
-  // 단일 폼에 필요한 요소를 정규화해 반환($validation은 없으면 자동 탐색)
-  function resolveElements(arg) {
-    // 단일형: init({$form,$input,$validation}, opt)
-    if (arg && arg.$form && arg.$input) {
-      return {
-        $form: arg.$form,
-        $input: arg.$input,
-        $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
-      };
-    }
-
-    // 내부용(스캔형): initOne($form, opt)
-    if (arg && arg.$form && !arg.$input) {
-      var $input = arg.$form.find(INPUT).first();
-      return {
-        $form: arg.$form,
-        $input: $input,
-        $validation: $input.length ? findValidation($input) : $()
-      };
-    }
-    return null;
+  // 이벤트 해제
+  function unbindEvents(el) {
+    el.$input.off(NS);
+    el.$form.off(NS);
+    if (el.$clear.length) el.$clear.off(NS);
   }
 
-  // 폼 1개 단위를 초기화
+  // 단일 폼 초기화 — SSR 상태 존중
   function initOne($form, opt) {
-    var el = resolveElements({
-      $form: $form
-    });
-    if (!el || !el.$input || !el.$input.length) return;
+    if ($form.data(DATA_KEY)) return;
+    var el = resolveFromForm($form);
+    if (!el.$input.length) return;
+    bindEvents(el, opt);
+    $form.data(DATA_KEY, el);
+  }
+
+  // 단일 폼 해제
+  function destroyOne($form) {
+    var el = $form.data(DATA_KEY);
+    if (!el) return;
+    unbindEvents(el);
     setInvalid(el.$input, el.$validation, false);
-    bindClearOnInput(el.$input, el.$validation);
-    bindSubmit(el.$form, el.$input, el.$validation, opt);
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    $form.removeData(DATA_KEY);
   }
 
-  // root 범위에서 폼들을 스캔해 초기화
-  function initAll(root, opt) {
+  // root 범위에서 form 순회
+  function eachForm(root, fn) {
     var $scope = root ? $(root) : $(document);
+    if ($scope.is(FORM)) {
+      fn($scope);
+      return;
+    }
     $scope.find(FORM).each(function () {
-      initOne($(this), opt);
+      fn($(this));
     });
   }
-
-  // 검색어 정규화 결과를 반환
   window.UI.inputSearch.normalize = function (str) {
     return normalizeSpaces(str);
   };
-
-  // 특정 input의 validation을 토글(외부 제어용)
   window.UI.inputSearch.setInvalid = function (arg, on) {
     var $input = arg && arg.$input ? arg.$input : $();
     var $validation = arg && arg.$validation ? arg.$validation : $();
     setInvalid($input, $validation, !!on);
   };
 
-  // init 시그니처를 2가지로 지원(스캔형 / 단일형)
+  // validation 메시지 텍스트 변경 + invalid 자동 토글
+  window.UI.inputSearch.setMessage = function (target, message) {
+    var el = getEl(target);
+    if (!el || !el.$validation.length) return;
+    el.$validation.find(MSG_TEXT).text(message || '');
+    setInvalid(el.$input, el.$validation, !!message);
+  };
+
+  // 인풋 값 세팅 + 클리어 동기화 (이벤트 미발생)
+  window.UI.inputSearch.setValue = function (target, value) {
+    var el = getEl(target);
+    if (!el) return;
+    el.$input.val(value);
+    syncClearBtn(el);
+  };
+
+  // 인풋 초기화 + 이벤트 발생
+  window.UI.inputSearch.clear = function (target) {
+    var el = getEl(target);
+    if (el) doClear(el);
+  };
   window.UI.inputSearch.init = function (arg, opt) {
-    // 단일형: init({$form,$input,$validation}, { onSubmit })
-    var el = resolveElements(arg);
-    if (el && el.$form && el.$input && el.$input.length) {
-      setInvalid(el.$input, el.$validation, false);
-      bindClearOnInput(el.$input, el.$validation);
-      bindSubmit(el.$form, el.$input, el.$validation, opt);
+    // 단일형: init({ $form, $input }, { onSubmit })
+    var el = resolveFromArg(arg);
+    if (el) {
+      if (el.$form.data(DATA_KEY)) return;
+      bindEvents(el, opt);
+      el.$form.data(DATA_KEY, el);
       return;
     }
 
-    // 스캔형: init(root) 또는 init()
-    initAll(arg, opt);
+    // 스캔형: init(), init(root), init(opt), init(root, opt)
+    var isRootEl = arg instanceof $ || arg && arg.nodeType || typeof arg === 'string' && $(arg).length;
+    var root = isRootEl ? arg : null;
+    var options = opt || (!isRootEl && arg && typeof arg === 'object' ? arg : null);
+    eachForm(root, function ($form) {
+      initOne($form, options);
+    });
+  };
+  window.UI.inputSearch.destroy = function (root) {
+    eachForm(root, destroyOne);
   };
 })(window.jQuery || window.$, window, document);
 

@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
   />
   <title>반품회수조회 팝업</title>
   <!-- favicon -->
@@ -39312,7 +39312,7 @@
     <div class="vits-inner">
 
       
-      <div class="gnb-panel-head" data-brand-search-scope>
+      <div class="gnb-panel-head">
         <!-- prettier-ignore -->
         
 
@@ -39320,13 +39320,12 @@
 
 
 <div class="vits-input-search vits-validation">
-  <form 
-    class="vits-brand-search-form" 
-    role="search" 
-    action="/brand/search" 
-    method="get" 
+  <form
+    class="vits-brand-search-form"
+    role="search"
+    action="/brand/search"
+    method="get"
     data-search-form
-     data-brand-search
   >
     <label for="bnSearch-searchKeyword" class="sr-only">검색어</label>
 
@@ -39340,9 +39339,16 @@
       placeholder="브랜드명을 검색하세요"
       data-search-input
       data-brand-search-input
-      
-      
+      aria-describedby="bnSearch-searchKeyword-validation"
+      aria-invalid="false"
     />
+
+    
+    <button type="button" class="input-clear-btn" data-search-clear hidden aria-label="검색어 지우기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+    
 
     <button type="submit" class="input-search-btn" aria-label="검색">
       <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
@@ -39351,24 +39357,16 @@
     </button>
   </form>
 
-  <!-- validation 영역(교체) -->
   <div class="input-validation" hidden>
     <p id="bnSearch-searchKeyword-validation" aria-live="polite"></p>
   </div>
 </div>
-
-
-        
-        <div class="vits-chip-button-group" data-brand-chips hidden>
-          <button type="button" class="vits-text-underline-button size-l" data-brand-chips-reset>
-            초기화
-          </button>
-        </div>
       </div>
 
       
       <div class="gnb-panel-body">
         <div class="vits-brand-tab" data-brand-tab data-default-tab="korean">
+
           
           <div class="tab-nav" role="tablist" aria-label="브랜드 정렬">
             <button type="button" role="tab" class="tab-btn is-all"
@@ -39647,6 +39645,7 @@
           
           <div class="tab-panels">
             <div class="tab-panels-inner">
+
               
               <div class="tab-panel" id="brand-panel-all" role="tabpanel" aria-labelledby="brand-tab-all" data-tab-panel="all" hidden>
                 <p class="result-count"><strong data-brand-count>4910</strong>개의 브랜드</p>
@@ -59582,11 +59581,12 @@
               </div>
 
               
-              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" data-tab-panel="empty" hidden>
+              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" aria-label="검색결과 없음" data-tab-panel="empty" hidden>
                 <div class="result-empty">
                   <p>검색결과가 없습니다.</p>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
   />
   <title>취소상세</title>
   <!-- favicon -->
@@ -39320,7 +39320,7 @@
     <div class="vits-inner">
 
       
-      <div class="gnb-panel-head" data-brand-search-scope>
+      <div class="gnb-panel-head">
         <!-- prettier-ignore -->
         
 
@@ -39328,13 +39328,12 @@
 
 
 <div class="vits-input-search vits-validation">
-  <form 
-    class="vits-brand-search-form" 
-    role="search" 
-    action="/brand/search" 
-    method="get" 
+  <form
+    class="vits-brand-search-form"
+    role="search"
+    action="/brand/search"
+    method="get"
     data-search-form
-     data-brand-search
   >
     <label for="bnSearch-searchKeyword" class="sr-only">검색어</label>
 
@@ -39348,9 +39347,16 @@
       placeholder="브랜드명을 검색하세요"
       data-search-input
       data-brand-search-input
-      
-      
+      aria-describedby="bnSearch-searchKeyword-validation"
+      aria-invalid="false"
     />
+
+    
+    <button type="button" class="input-clear-btn" data-search-clear hidden aria-label="검색어 지우기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+    
 
     <button type="submit" class="input-search-btn" aria-label="검색">
       <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
@@ -39359,24 +39365,16 @@
     </button>
   </form>
 
-  <!-- validation 영역(교체) -->
   <div class="input-validation" hidden>
     <p id="bnSearch-searchKeyword-validation" aria-live="polite"></p>
   </div>
 </div>
-
-
-        
-        <div class="vits-chip-button-group" data-brand-chips hidden>
-          <button type="button" class="vits-text-underline-button size-l" data-brand-chips-reset>
-            초기화
-          </button>
-        </div>
       </div>
 
       
       <div class="gnb-panel-body">
         <div class="vits-brand-tab" data-brand-tab data-default-tab="korean">
+
           
           <div class="tab-nav" role="tablist" aria-label="브랜드 정렬">
             <button type="button" role="tab" class="tab-btn is-all"
@@ -39655,6 +39653,7 @@
           
           <div class="tab-panels">
             <div class="tab-panels-inner">
+
               
               <div class="tab-panel" id="brand-panel-all" role="tabpanel" aria-labelledby="brand-tab-all" data-tab-panel="all" hidden>
                 <p class="result-count"><strong data-brand-count>4910</strong>개의 브랜드</p>
@@ -59590,11 +59589,12 @@
               </div>
 
               
-              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" data-tab-panel="empty" hidden>
+              <div class="tab-panel" id="brand-panel-empty" role="tabpanel" aria-label="검색결과 없음" data-tab-panel="empty" hidden>
                 <div class="result-empty">
                   <p>검색결과가 없습니다.</p>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -59766,114 +59766,256 @@
 <!-- prettier-ignore -->
 
 
- 
 
 
 <aside class="vits-grid-side vits-grid-side-left vits-side-mypage">
-  <h2 class="mypage-sidemenu-title">마이페이지</h2>
-  <nav class="mypage-sidemenu" aria-label="마이페이지 메뉴">
-    <ul class="mypage-sidemenu-list">
+  <h2 class="side-left-title">
+    <a href="/mypage">마이페이지</a>
+  </h2>
+  <nav class="side-left-nav" aria-label="마이페이지 메뉴" data-toggle-scope>
+    <a class="side-left-dashboard"
+      href="/html/my-home/PC_MY_01010101.html"
       
-      <li class="mypage-sidemenu-item" data-menu-id="order">
-        <a class="mypage-sidemenu-link" href="/mypage/order">주문관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
+    >
+      마이페이지 대시보드
+    </a>
+    <ul class="side-left-list">
+      
+      <li
+        class="side-left-item has-sub"
+        data-menu-id="order"
+      >
+        
+        <button
+          type="button"
+          class="side-left-link"
+          data-toggle-btn
+          data-toggle-target="order"
+          aria-expanded="true"
+          data-aria-label-base="주문관리"
+        >
+          주문관리
+          <span class="icon"> 
+            <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ 
+          </span>
+        </button>
+         
+        <ul class="side-left-sub-list is-open" data-toggle-box="order">
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-delivery">
-            <a class="mypage-sidemenu-link" href="/mypage/order/delivery">주문/배송조회</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="order-delivery"
+          >
+            <a class="side-left-link" 
+              href="/html/my-orders/PC_MY_02010101.html" >주문/배송조회</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-cancel">
-            <a class="mypage-sidemenu-link" href="/mypage/order/cancel">취소/반품내역</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="order-cancel"
+          >
+            <a class="side-left-link" 
+              href="/html/my-orders/PC_MY_02020101.html" >취소/반품내역</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-frequent">
-            <a class="mypage-sidemenu-link" href="/mypage/order/frequent">자주구매</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="order-frequent"
+          >
+            <a class="side-left-link" 
+              href="/html/my-favorites/PC_MY_02030101.html" >자주구매</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="order-like">
-            <a class="mypage-sidemenu-link" href="/mypage/order/like">좋아요</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="order-like"
+          >
+            <a class="side-left-link" 
+              href="/html/my-favorites/PC_MY_02040101.html" >좋아요</a>
           </li>
           
         </ul>
+        
       </li>
       
-      <li class="mypage-sidemenu-item" data-menu-id="docs">
-        <a class="mypage-sidemenu-link" href="/mypage/docs">서류관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
+      <li
+        class="side-left-item has-sub"
+        data-menu-id="docs"
+      >
+        
+        <button
+          type="button"
+          class="side-left-link"
+          data-toggle-btn
+          data-toggle-target="docs"
+          aria-expanded="true"
+          data-aria-label-base="서류관리"
+        >
+          서류관리
+          <span class="icon"> 
+            <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ 
+          </span>
+        </button>
+         
+        <ul class="side-left-sub-list is-open" data-toggle-box="docs">
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-tax">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/tax">세금계산서 조회</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="docs-tax"
+          >
+            <a class="side-left-link" 
+              href="#!" >세금계산서 조회</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-quote">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/quote">견적서 조회</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="docs-quote"
+          >
+            <a class="side-left-link" 
+              href="#!" >견적서 조회</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="docs-bill">
-            <a class="mypage-sidemenu-link" href="/mypage/docs/bill">청구서 조회</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="docs-bill"
+          >
+            <a class="side-left-link" 
+              href="#!" >청구서 조회</a>
           </li>
           
         </ul>
+        
       </li>
       
-      <li class="mypage-sidemenu-item" data-menu-id="benefit">
-        <a class="mypage-sidemenu-link" href="/mypage/benefit">혜택관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
+      <li
+        class="side-left-item has-sub"
+        data-menu-id="benefit"
+      >
+        
+        <button
+          type="button"
+          class="side-left-link"
+          data-toggle-btn
+          data-toggle-target="benefit"
+          aria-expanded="true"
+          data-aria-label-base="혜택관리"
+        >
+          혜택관리
+          <span class="icon"> 
+            <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ 
+          </span>
+        </button>
+         
+        <ul class="side-left-sub-list is-open" data-toggle-box="benefit">
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="benefit-coupon">
-            <a class="mypage-sidemenu-link" href="/mypage/benefit/coupon">쿠폰함</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="benefit-coupon"
+          >
+            <a class="side-left-link" 
+              href="/html/my-coupon/PC_MY_04010101.html" >쿠폰함</a>
           </li>
           
         </ul>
+        
       </li>
       
-      <li class="mypage-sidemenu-item" data-menu-id="info">
-        <a class="mypage-sidemenu-link" href="/mypage/info">정보관리</a>
-
-        <ul class="mypage-sidemenu-sub-list">
+      <li
+        class="side-left-item has-sub"
+        data-menu-id="info"
+      >
+        
+        <button
+          type="button"
+          class="side-left-link"
+          data-toggle-btn
+          data-toggle-target="info"
+          aria-expanded="true"
+          data-aria-label-base="정보관리"
+        >
+          정보관리
+          <span class="icon"> 
+            <i class="ic ic-arrow-down" aria-hidden="true"></i>
+ 
+          </span>
+        </button>
+         
+        <ul class="side-left-sub-list is-open" data-toggle-box="info">
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-member">
-            <a class="mypage-sidemenu-link" href="/mypage/info/member">회원정보 관리</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-member"
+          >
+            <a class="side-left-link" 
+              href="/html/auth/PC_ME_02010101.html?type=modify" >회원정보 관리</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-address">
-            <a class="mypage-sidemenu-link" href="/mypage/info/address">배송지 관리</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-address"
+          >
+            <a class="side-left-link" 
+              href="/html/my-shipping/PC_MY_05020101.html" >배송지 관리</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-pay">
-            <a class="mypage-sidemenu-link" href="/mypage/info/pay">비츠온페이 관리</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-pay"
+          >
+            <a class="side-left-link" 
+              href="/html/my-pay/PC_MY_05030101.html?type=card" >비츠온페이 관리</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-postpay">
-            <a class="mypage-sidemenu-link" href="/mypage/info/postpay">후불관리</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-postpay"
+          >
+            <a class="side-left-link" 
+              href="/html/my-credit/PC_MY_05040201.html" >후불관리</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-qna">
-            <a class="mypage-sidemenu-link" href="/mypage/info/qna">1:1 문의</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-qna"
+          >
+            <a class="side-left-link" 
+              href="#!" >1:1 문의</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-bulk">
-            <a class="mypage-sidemenu-link" href="/mypage/info/bulk">대량구매문의</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-bulk"
+          >
+            <a class="side-left-link" 
+              href="#!" >대량구매문의</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-account">
-            <a class="mypage-sidemenu-link" href="/mypage/info/account">계정등록</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-account"
+          >
+            <a class="side-left-link" 
+              href="/html/account/PC_MY_05080201.html" >계정등록</a>
           </li>
           
-          <li class="mypage-sidemenu-sub-item" data-menu-id="info-survey">
-            <a class="mypage-sidemenu-link" href="/mypage/info/survey">설문조사</a>
+          <li
+            class="side-left-sub-item"
+            data-menu-id="info-survey"
+          >
+            <a class="side-left-link" 
+              href="#!" >설문조사</a>
           </li>
           
         </ul>
+        
       </li>
       
     </ul>
   </nav>
 </aside>
-
                   <!-- E: vits-grid-side-left -->
 
                   <!-- S: vits-grid-main -->
