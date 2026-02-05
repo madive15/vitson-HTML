@@ -25,15 +25,22 @@ rm -rf "$PUBLIC_DIR"
 
 echo "'public' 폴더 제거 완료."
 
-# --- HTML 및 CSS 파일 내의 경로 수정 ---
-echo "HTML 및 CSS 파일 내의 에셋 경로를 수정 중..."
-# `dist` 디렉토리 내의 모든 `.html` 및 `.css` 파일을 찾습니다.
-# 찾은 각 파일에 대해 반복 작업을 수행합니다.
+echo "HTML 및 CSS 파일 내 경로 및 주석 정리 시작..."
+
+# DIST_DIR 하위의 모든 html, css 파일을 찾는다
 find "$DIST_DIR" \( -name "*.html" -o -name "*.css" \) | while read filename; do
-  # `sed` 명령어를 사용하여 파일 내용을 수정합니다.
-  # - `../public/` 패턴을 `../` 로 변경하고
-  # - `/public/` 패턴을 `/` 로 변경합니다.
-  # 임시 파일을 사용한 후 원본 파일로 이동시켜 교차 플랫폼 호환성을 유지합니다.
-  sed 's#\.\./public/#\.\./#g; s#/public/#/#g' "$filename" > "$filename.tmp" && mv "$filename.tmp" "$filename"
+
+  # sed로 파일 내용을 한번에 치환 / 삭제 처리
+  sed '
+    # ../public/ → ../
+    s#\.\./public/#\.\./#g;
+
+    # /public/ → /
+    s#/public/#/#g;
+
+    # <!-- prettier-ignore --> 제거
+    s#<!--[[:space:]]*prettier-ignore[[:space:]]*-->##g;
+  ' "$filename" > "$filename.tmp" && mv "$filename.tmp" "$filename"
 done
-echo "경로 수정 완료."
+
+echo "모든 경로 및 주석 정리 완료."

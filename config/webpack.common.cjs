@@ -6,7 +6,8 @@ const parser = require('./parser.cjs');
 
 module.exports = (dirPath, {envType, envRoot}) => ({
   entry: {
-    [envRoot]: `./src/${envRoot}.${envType}`
+    [envRoot]: `./src/${envRoot}.${envType}`,
+    [`${envRoot}-mo`]: `./src/${envRoot}-mo.${envType}`
   },
   output: {
     filename: 'public/resources/js/mro/renewal/ui/[name].bundle.js',
