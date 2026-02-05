@@ -4,15 +4,16 @@
 <%
 // 마이페이지 메뉴
 const gnbMenu = [
+  { id: 'home', label: '마이페이지 대시보드', href: '/html/my-home/PC_MY_01010101.html' },
   {
     id: 'order',
     label: '주문관리',
     href: '/mypage/order',
     children: [
-      { id: 'order-delivery', label: '주문/배송조회', href: '/mypage/order/delivery' },
-      { id: 'order-cancel', label: '취소/반품내역', href: '/mypage/order/cancel' },
-      { id: 'order-frequent', label: '자주구매', href: '/mypage/order/frequent' },
-      { id: 'order-like', label: '좋아요', href: '/mypage/order/like' },
+      { id: 'order-delivery', label: '주문/배송조회', href: '/html/my-orders/PC_MY_02010101.html' },
+      { id: 'order-cancel', label: '취소/반품내역', href: '/html/my-orders/PC_MY_02020101.html' },
+      { id: 'order-frequent', label: '자주구매', href: '/html/my-favorites/PC_MY_02030101.html' },
+      { id: 'order-like', label: '좋아요', href: '/html/my-favorites/PC_MY_02040101.html' },
     ],
   },
   {
@@ -20,9 +21,9 @@ const gnbMenu = [
     label: '서류관리',
     href: '/mypage/docs',
     children: [
-      { id: 'docs-tax', label: '세금계산서 조회', href: '/mypage/docs/tax' },
-      { id: 'docs-quote', label: '견적서 조회', href: '/mypage/docs/quote' },
-      { id: 'docs-bill', label: '청구서 조회', href: '/mypage/docs/bill' },
+      { id: 'docs-tax', label: '세금계산서 조회', href: '#!' },
+      { id: 'docs-quote', label: '견적서 조회', href: '#!' },
+      { id: 'docs-bill', label: '청구서 조회', href: '#!' },
     ],
   },
   {
@@ -30,7 +31,7 @@ const gnbMenu = [
     label: '혜택관리',
     href: '/mypage/benefit',
     children: [
-      { id: 'benefit-coupon', label: '쿠폰함', href: '/mypage/benefit/coupon' },
+      { id: 'benefit-coupon', label: '쿠폰함', href: '/html/my-coupon/PC_MY_04010101.html' },
     ],
   },
   {
@@ -38,36 +39,92 @@ const gnbMenu = [
     label: '정보관리',
     href: '/mypage/info',
     children: [
-      { id: 'info-member', label: '회원정보 관리', href: '/mypage/info/member' },
-      { id: 'info-address', label: '배송지 관리', href: '/mypage/info/address' },
-      { id: 'info-pay', label: '비츠온페이 관리', href: '/mypage/info/pay' },
-      { id: 'info-postpay', label: '후불관리', href: '/mypage/info/postpay' },
-      { id: 'info-qna', label: '1:1 문의', href: '/mypage/info/qna' },
-      { id: 'info-bulk', label: '대량구매문의', href: '/mypage/info/bulk' },
-      { id: 'info-account', label: '계정등록', href: '/mypage/info/account' },
-      { id: 'info-survey', label: '설문조사', href: '/mypage/info/survey' },
+      { id: 'info-member', label: '회원정보 관리', href: '/html/auth/PC_ME_02010101.html?type=modify' },
+      { id: 'info-address', label: '배송지 관리', href: '/html/my-shipping/PC_MY_05020101.html' },
+      { id: 'info-pay', label: '비츠온페이 관리', href: '/html/my-pay/PC_MY_05030101.html?type=card' },
+      { id: 'info-postpay', label: '후불관리', href: '/html/my-credit/PC_MY_05040201.html' },
+      { id: 'info-qna', label: '1:1 문의', href: '#!' },
+      { id: 'info-bulk', label: '대량구매문의', href: '#!' },
+      { id: 'info-account', label: '계정등록', href: '/html/account/PC_MY_05080201.html' },
+      { id: 'info-survey', label: '설문조사', href: '#!' },
     ],
   },
 ];
+
+/* 렌더링용 분리 */
+const dashboard = gnbMenu[0];
+const menuGroups = gnbMenu.slice(1);
+
+/* currentMenu key로 조상 id 탐색 */
+const currentMenu = locals.currentMenu || '';
+
+function findAncestorIds(items, targetId, ancestors = []) {
+  for (const item of items) {
+    if (item.id === targetId) return ancestors;
+    if (item.children) {
+      const result = findAncestorIds(item.children, targetId, [...ancestors, item.id]);
+      if (result) return result;
+    }
+  }
+  return null;
+}
+
+const ancestorIds = findAncestorIds(gnbMenu, currentMenu) || [];
 %>
- 
 
 <%# 마이페이지 전용 좌측 메뉴 %>
 <aside class="vits-grid-side vits-grid-side-left vits-side-mypage">
-  <h2 class="mypage-sidemenu-title">마이페이지</h2>
-  <nav class="mypage-sidemenu" aria-label="마이페이지 메뉴">
-    <ul class="mypage-sidemenu-list">
-      <% (gnbMenu || []).forEach((item) => { %>
-      <li class="mypage-sidemenu-item" data-menu-id="<%= item.id %>">
-        <a class="mypage-sidemenu-link" href="<%= item.href %>"><%= item.label %></a>
-
-        <ul class="mypage-sidemenu-sub-list">
-          <% (item.children || []).forEach((sub) => { %>
-          <li class="mypage-sidemenu-sub-item" data-menu-id="<%= sub.id %>">
-            <a class="mypage-sidemenu-link" href="<%= sub.href %>"><%= sub.label %></a>
+  <h2 class="side-left-title">
+    <a href="/mypage">마이페이지</a>
+  </h2>
+  <nav class="side-left-nav" aria-label="마이페이지 메뉴" data-toggle-scope>
+    <a class="side-left-dashboard<%= currentMenu === dashboard.id ? ' is-active' : '' %>"
+      href="<%= dashboard.href %>"
+      <% if (currentMenu === dashboard.id) { %>aria-current="page"<% } %>
+    >
+      <%= dashboard.label %>
+    </a>
+    <ul class="side-left-list">
+      <% menuGroups.forEach((item) => {
+        const hasChildren = item.children && item.children.length;
+        const isSelfActive = currentMenu === item.id;
+      %>
+      <li
+        class="side-left-item<%= hasChildren ? ' has-sub' : '' %><%= (!hasChildren && isSelfActive) ? ' is-active' : '' %>"
+        data-menu-id="<%= item.id %>"
+      >
+        <% if (hasChildren) { %>
+        <button
+          type="button"
+          class="side-left-link"
+          data-toggle-btn
+          data-toggle-target="<%= item.id %>"
+          aria-expanded="true"
+          data-aria-label-base="<%= item.label %>"
+        >
+          <%= item.label %>
+          <span class="icon"> 
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> 
+          </span>
+        </button>
+        <% } else { %>
+        <a class="side-left-link<%= isSelfActive ? ' is-active' : '' %>" 
+            href="<%= item.href %>" <% if (isSelfActive) { %>
+            aria-current="page"<% } %>><%= item.label %></a>
+        <% } %> <% if (hasChildren) { %>
+        <ul class="side-left-sub-list is-open" data-toggle-box="<%= item.id %>">
+          <% item.children.forEach((sub) => { %>
+          <li
+            class="side-left-sub-item<%= currentMenu === sub.id ? ' is-active' : '' %>"
+            data-menu-id="<%= sub.id %>"
+          >
+            <a class="side-left-link<%= currentMenu === sub.id ? ' is-active' : '' %>" 
+              href="<%= sub.href %>" <% if (currentMenu === sub.id) { %>
+              aria-current="page"<% } %>><%= sub.label %></a>
           </li>
           <% }) %>
         </ul>
+        <% } %>
       </li>
       <% }) %>
     </ul>

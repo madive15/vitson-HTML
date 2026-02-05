@@ -25,12 +25,12 @@
               <% const winModal = {
                 id: 'accountRegisterModal',
                 size: '520',
-                title: '계정 등록',
+                title: '계정 수정',
                 opt: { draggable: true },
                 contentPath: `${_src}/views/pages/kendo-window/account/kw-PC_MY_05080201_P.ejs`,
                 buttons: [
                   { text: '취소', variant: 'secondary', action: 'close' },
-                  { text: '등록', variant: 'primary', action: 'close' }
+                  { text: '저장', variant: 'primary', action: 'close' }
                 ]
               }; %>
               <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
@@ -43,5 +43,27 @@
     </section>
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+
+      // type 파라미터가 'account'일 때
+      if (type === 'account') {
+        // data-hide 처리: display none
+        document.querySelectorAll('[data-hide]').forEach(function (el) {
+          el.style.display = 'none';
+        });
+
+        // 모달 타이틀 변경
+        const modalTitle = document.querySelector('#accountRegisterModal .vits-modal-title');
+        if (modalTitle) modalTitle.textContent = '계정 등록';
+
+        // 버튼 텍스트 변경: 저장 -> 등록 (primary 버튼 기준)
+        const primaryBtnText = document.querySelector('#accountRegisterModal .vits-modal-btn-primary .text');
+        if (primaryBtnText) primaryBtnText.textContent = '등록';
+      }
+    </script>
   </body>
 </html>

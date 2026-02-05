@@ -396,3 +396,20 @@
     }
   }
 }
+
+/** footer nodata 저작권 문구 + 배경색상 스타일 */
+.vits-footer-nodata {
+  background: map.get(color.$layout-surf, 'mypage');
+
+  > .vits-inner {
+    justify-content: center;
+    padding: fn.rem(25) 0 fn.rem(49);
+
+    @include mx.border('top', $color: map.get(color.$icon-neutral, 'disabled'));
+
+    .vits-footer-copyright {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      text-align: center;
+    }
+  }
+}

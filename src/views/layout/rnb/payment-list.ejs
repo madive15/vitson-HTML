@@ -157,39 +157,62 @@
           role="tabpanel"
           aria-labelledby="tab-simple-account"
         >
-          <div class="payment-tab-panel-inner">
-            <!-- 안내 메시지 -->
-            <div class="vits-payment-notice">
-              <div class="pay-manage">
-                <a class="vits-text-link" href="!#"
-                  >비츠온페이 관리하기
-                  <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
-                </a>
-              </div>
+          <!-- <div class="payment-tab-panel-inner"></div> -->
+          <!-- 안내 메시지 -->
+          <div class="vits-payment-notice">
+            <div class="pay-manage">
+              <a class="vits-text-link" href="!#"
+                >비츠온페이 관리하기
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </a>
             </div>
+          </div>
 
-            <!-- 계좌 등록 버튼 -->
-            <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, {
+          <!-- 계좌 등록 버튼 -->
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, {
               icon: 'plus',
               label: '계좌 등록하기',
               variant: 'account-empty',
               href: '#'
             }) %>
-            <!--case: 등록된계좌 -->
-            <div class="vits-card-form type-account">
-              <div class="vits-form-row">
-                <div class="vits-form-item">
-                  <span class="vits-form-label">계좌번호 <span class="vits-default-badge">대표</span></span>
-                  <span class="vits-form-value">신한은행(1234)</span>
-                  <span class="vits-form-number">3318 - 12******</span>
-                </div>
+          <!-- 계좌 스와이퍼 -->
+          <div class="vits-card-list swiper-container js-swiper" data-swiper-type="payment" data-desktop="2.5">
+            <div class="swiper-wrapper">
+              <!-- prettier-ignore -->
+              <% const accounts = [ 
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/shinhan@2x.png' , color: '#4a6bc2' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/ibk@2x.png' , color: '#004c9d' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/kb@2x.png' , color: '#ffbc00' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/keb@2x.png' , color: '#f2f9f8' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/woori@2x.png' , color: '#0067AC' },
+              ]; %>
+              <% accounts.forEach((account, index) => { %>
+              <div
+                class="swiper-slide vits-card-item<%= index === 0 ? ' is-selected' : '' %>"
+                style="background-image: url('<%= account.image %>'); background-color: <%= account.color %>"
+              ></div>
+              <% }); %>
+            </div>
+            <div class="vits-swiper-navs">
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            </div>
+          </div>
 
-                <div class="vits-form-item">
-                  <span class="vits-form-label">계좌별칭</span>
-                  <span class="vits-form-value">김비츠 신한</span>
-                </div>
+          <!--case: 등록된계좌 -->
+          <div class="vits-card-form type-account">
+            <div class="vits-form-row">
+              <div class="vits-form-item">
+                <span class="vits-form-label">계좌번호 <span class="vits-default-badge">대표</span></span>
+                <span class="vits-form-value">신한은행(1234)</span>
+                <span class="vits-form-number">3318 - 12******</span>
+              </div>
+
+              <div class="vits-form-item">
+                <span class="vits-form-label">계좌별칭</span>
+                <span class="vits-form-value">김비츠 신한</span>
               </div>
             </div>
           </div>

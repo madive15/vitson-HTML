@@ -1,0 +1,88 @@
+// -----------------------------------------------------------------------------
+// pages/_mypage-support.scss
+// - 마이페이지 하위(잔여) 페이지 전용 스타일 (설문조사, 고객지원 등)
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+/* -----------------------------------
+ * 설문조사 (my-survey)
+ * ----------------------------------- */
+.survey-headline {
+  @include mx.flex($align: flex-end);
+
+  .vits-mypage-content-title {
+    @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+    margin: 0;
+  }
+
+  .vits-mypage-content-desc {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+  }
+}
+
+.vits-mypage-support-toolbar {
+  @include mx.flex($align: center, $justify: space-between);
+  width: 100%;
+
+  .support-toolbar {
+    &-left {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-count {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      b {
+        padding: 0 fn.rem(2) 0 fn.rem(4);
+        font-weight: 700;
+      }
+    }
+
+    &-size {
+      min-width: fn.rem(120);
+    }
+
+    &-actions {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+    }
+  }
+}
+
+.survey-panel {
+  @include mx.flex($direction: column, $justify: space-between);
+  gap: map.get(var.$unit, 20);
+  width: 100%;
+  padding: map.get(var.$unit, 32);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+}
+
+.main-content-survey {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 24);
+
+  /* 조회 필터 영역역 */
+  .mypage-query-fields {
+    @include mx.flex($align: center, $justify: space-between);
+    width: 100%;
+
+    .mypage-query-buttons {
+      // 조회버튼
+      .mypage-search-btn {
+        min-width: fn.rem(120);
+      }
+    }
+  }
+}

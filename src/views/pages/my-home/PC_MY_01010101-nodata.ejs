@@ -1,0 +1,122 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '마이페이지 홈'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-my-home">
+              <div class="vits-inner inner-column">
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, { currentMenu: 'info-address' }) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <!-- S: vits-grid-main -->
+                  <div class="vits-grid-main-content main-content-my-home">
+                    <div class="vits-mypage-panel">
+                      <!-- S: 프로필 -->
+                      <div class="vits-mypage-home-profile">
+                        <p class="profile-greeting">김비츠님, 안녕하세요</p>
+                        <a href="#!" class="profile-coupon">
+                          <span class="coupon-icon">
+                            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'coupon-fill' }) %>
+                          </span>
+                          <span class="coupon-label">나의 쿠폰</span>
+                          <span class="coupon-count">3</span>
+                        </a>
+                        <div class="profile-shortcuts">
+                          <a href="#!" class="vits-btn-lg vits-btn-outline-secondary weight-r">
+                            <span class="icon">
+                              <i class="ic ic-user"></i>
+                            </span>
+                            <span class="text">내 정보</span>
+                          </a>
+
+                          <a href="#!" class="vits-btn-lg vits-btn-outline-secondary weight-r">
+                            <span class="icon">
+                              <i class="ic ic-plus"></i>
+                            </span>
+                            <span class="text">계정 등록</span>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- E: 프로필 -->
+
+                      <!-- S: 주문현황 -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-status.ejs`, { hasOrderData: false }) %>
+                      <!-- E: 주문현황 -->
+
+                      <!-- S: 최근주문 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-orders.ejs`, { 
+                        hasRecentOrder: false 
+                      }) %>
+                      <!-- E: 최근주문 -->
+
+                      <!-- S: 최근 취소/반품 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-claim.ejs`, { 
+                        hasRecentClaim: false 
+                      }) %>
+                      <!-- E: 최근 취소/반품 -->
+
+                      <!-- S: 자주 구매 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-frequent.ejs`, { 
+                        hasFrequentData: false 
+                      }) %>
+                      <!-- E: 자주 구매 -->
+
+                      <!-- S: 여신 & 중요 서류 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-guides.ejs`, {
+                        hasGuidesData: false
+                      }) %>
+                      <!-- E: 여신 & 중요 서류 -->
+
+                      <!-- S: 최근 문의 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-home/my-home-inquiry.ejs`, {
+                        hasRecentInquiry: false
+                      }) %>
+                      <!-- E: 최근 문의 -->
+                    </div>
+                  </div>
+                  <!-- E: vits-grid-main -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

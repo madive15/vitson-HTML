@@ -1,0 +1,131 @@
+<!-- prettier-ignore -->
+<% /**
+  * 테이블 tbody 한 줄 컴포넌트 (type별 row)
+  * @param {string} type - 'account' | 'shipping' | 'survey' (필요 시 추가)
+  * @param {string} [srcPath] - include 경로용
+  * @param {string} [publicPath] - public 경로용
+  * type=account: rowIndex, userId, name, department, position, phone, status, checked 등
+  * type=shipping: isDefault, addrName, recipient, contact, address, cargo, office 등
+  * type=survey: rowIndex, title, startDate, endDate, status (설문 조회)
+  */ %>
+<% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
+<% const _type = typeof type !== 'undefined' ? type : ''; %>
+
+<% if (_type === 'account') { %>
+<!-- prettier-ignore -->
+<%
+  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+  const _userId = typeof userId !== 'undefined' ? userId : '';
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _department = typeof department !== 'undefined' ? department : '';
+  const _position = typeof position !== 'undefined' ? position : '';
+  const _phone = typeof phone !== 'undefined' ? phone : '';
+  const _status = typeof status !== 'undefined' ? status : '미사용';
+%>
+<tr class="account-table-row">
+  <td>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+      datas: [
+        {
+          className: 's',
+          name: 'ckbox1',
+          value: 'checkbox-single-s',
+        }],
+    }) %>
+  </td>
+  <td><span class="account-table-num"><%= _rowIndex %></span></td>
+  <td><span class="account-table-id"><%= _userId || '—' %></span></td>
+  <td><span class="account-table-name"><%= _name || '—' %></span></td>
+  <td><span class="account-table-department"><%= _department || '—' %></span></td>
+  <td><span class="account-table-position"><%= _position || '—' %></span></td>
+  <td><span class="account-table-phone"><%= _phone || '—' %></span></td>
+  <td>
+    <% if (_status === '사용') { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '사용', variant: 'blue' }) %>
+    <% } else { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '미사용', variant: 'gray' }) %>
+    <% } %>
+  </td>
+  <td>
+    <div class="account-table-actions">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-secondary', text: '수정' }) %>
+    </div>
+  </td>
+</tr>
+
+<% } else if (_type === 'shipping') { %>
+<!-- prettier-ignore -->
+<%
+  const _isDefault = typeof isDefault !== 'undefined' ? isDefault : true;
+  const _classify = typeof classify !== 'undefined' ? classify : '';
+  const _addrName = typeof addrName !== 'undefined' ? addrName : '';
+  const _recipient = typeof recipient !== 'undefined' ? recipient : '';
+  const _contact = typeof contact !== 'undefined' ? contact : '';
+  const _address = typeof address !== 'undefined' ? address : '';
+  const _cargo = typeof cargo !== 'undefined' ? cargo : '-';
+  const _office = typeof office !== 'undefined' ? office : '-';
+  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+%>
+<tr>
+  <td>
+    <% if (_isDefault) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지', variant: 'red' }) %>
+    <% } %>
+  </td>
+  <td><span class="shipping-table-name"><%= _addrName || '—' %></span></td>
+  <td><span class="shipping-table-recipient"><%= _recipient %></span></td>
+  <td><span class="shipping-table-contact"><%= _contact %></span></td>
+  <td>
+    <span class="shipping-table-addr"><%- _address || '—' %></span>
+  </td>
+  <td><span class="shipping-table-cargo"><%= _cargo %></span></td>
+  <td><span class="shipping-table-office"><%= _office %></span></td>
+  <td>
+    <div class="shipping-table-actions">
+      <button type="button" class="shipping-table-edit" aria-label="수정">
+        <i class="ic ic-pencil" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="shipping-table-delete" aria-label="삭제">
+        <i class="ic ic-waste-basket" aria-hidden="true"></i>
+      </button>
+    </div>
+  </td>
+</tr>
+
+<% } else if (_type === 'survey') { %>
+<!-- prettier-ignore -->
+<%
+  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+  const _title = typeof title !== 'undefined' ? title : '';
+  const _startDate = typeof startDate !== 'undefined' ? startDate : '';
+  const _endDate = typeof endDate !== 'undefined' ? endDate : '';
+  const _status = typeof status !== 'undefined' ? status : '';
+%>
+<tr class="survey-table-row">
+  <td><span class="survey-table-num"><%= _rowIndex %></span></td>
+  <td><span class="survey-table-title"><%= _title || '—' %></span></td>
+  <td><span class="survey-table-period"><%= _startDate %> ~ <%= _endDate %></span></td>
+  <td>
+    <% if (_status === '진행중') { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'blue' }) %>
+    <% } else if (_status === '종료') { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %>
+    <% } %>
+  </td>
+  <td></td>
+  <td>
+    <div class="survey-table-actions">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName: 'ic-document-paper', iconLeft: true, text: '보기' }) %>
+    </div>
+  </td>
+</tr>
+
+<% } %>

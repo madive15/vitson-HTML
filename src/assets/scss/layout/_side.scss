@@ -13,6 +13,22 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/pages/mypage' as mypage;
 
+$link-height: map.get(var.$unit, 52);
+$link-padding: map.get(var.$unit, 32);
+
+@mixin link-hover {
+  &.is-active {
+    font-weight: 700;
+    color: map.get(color.$text-colors, 'primary');
+  }
+
+  @include mx.common-mouse-event {
+    font-weight: 700;
+    color: map.get(color.$text-colors, 'primary');
+    background: map.get(color.$layout-surf, 'raised');
+  }
+}
+
 /* 커테고리 목록 - 왼쪽 side */
 .vits-side-plp {
   box-sizing: content-box;
@@ -81,25 +97,91 @@
   }
 }
 
-/* 마이페이지 왼쪽 메뉴 */
-.vits-side-mypage {
-  @include mx.flex(flex, column, flex-start, flex-start);
-  flex: 0 0 fn.rem(304);
-  gap: map.get(var.$unit, 20);
+.vits-grid-side-left {
+  button {
+    @include button.btn-reset;
+  }
 
-  .mypage-sidemenu {
-    @include mypage.roundbox-white;
-    width: 100%;
-    box-shadow: map.get(var.$box-shadow, 'elevation_1');
-
+  .side-left {
     &-title {
       @include typo.typography('h1b', $color: #101828);
     }
 
+    &-nav {
+      @include mypage.roundbox-white;
+      width: 100%;
+      padding: map.get(var.$unit, 20) 0;
+    }
+
+    &-dashboard {
+      @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('b1r', $color: map.get(color.$text-colors, 'primary'));
+      height: $link-height;
+      padding: 0 $link-padding;
+
+      @include link-hover;
+    }
+
+    &-item {
+      &.has-sub {
+        @include mx.border('top', $color: map.get(color.$layout-surf, 'sunken'));
+        padding-top: map.get(var.$unit, 12);
+        margin-top: map.get(var.$unit, 12);
+      }
+    }
+
     &-link {
-      @include typo.typography('b2r');
-      display: inline-block;
-      margin-bottom: map.get(var.$unit, 16);
+      @include mx.flex(flex, row, flex-start, center);
+      width: 100%;
+      height: $link-height;
+      padding: 0 $link-padding;
+
+      &:is(button) {
+        @include typo.typography('b1r', $color: map.get(color.$text-colors, 'muted'));
+
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 20));
+          margin-left: auto;
+          color: map.get(color.$icon-neutral, 'tertiary');
+          transition: transform 0.3s;
+          will-change: transform;
+        }
+
+        &[aria-expanded='true'] .icon {
+          transform: rotate(-180deg);
+        }
+      }
+
+      &:is(a) {
+        @include typo.typography('b1r', $color: map.get(color.$text-colors, 'secondary'));
+        padding-left: map.get(var.$unit, 44);
+        transition:
+          color 0.3s,
+          font-weight 0.3s,
+          background 0.35s;
+
+        @include link-hover;
+      }
+    }
+
+    &-sub {
+      &-list {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
     }
   }
+}
+
+/* 마이페이지 왼쪽 메뉴 */
+.vits-side-mypage {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  flex: 1 1 auto;
+  gap: map.get(var.$unit, 20);
+  width: 100%;
+  min-width: fn.rem(200);
+  max-width: fn.rem(304);
 }

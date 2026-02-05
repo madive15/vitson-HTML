@@ -178,7 +178,7 @@ $list-directions: (
       }
 
       .price-sale-row {
-        @include mx.flex(flex, row, flex-start, center);
+        @include mx.flex(flex, row, flex-start, center, wrap);
         gap: map.get(var.$unit, 4);
 
         .price-rate {
@@ -430,8 +430,9 @@ $list-directions: (
       }
 
       &-frequent {
-        @include mx.flex(flex, row, space-between, center);
+        @include mx.flex(flex, row, space-between, center, wrap);
         grid-area: frequent;
+        gap: map.get(var.$unit, 4);
         margin-bottom: map.get(var.$unit, 4);
       }
     }

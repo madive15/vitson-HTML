@@ -56,6 +56,22 @@
 /* 최상위 class: vits-main-cart-order */
 .vits-main-cart-order {
   min-width: 1024px;
+
+  .vits-grid-main-content {
+    max-width: 738px;
+  }
+}
+
+/* aside 영역 초상위 */
+.vits-side-payment {
+  position: sticky;
+  top: 30px;
+  min-width: 0;
+
+  .main-payment-section {
+    min-width: 370px;
+    max-width: 522px;
+  }
 }
 
 /* ===장바구니=== */
@@ -76,6 +92,7 @@
 
   &-toolbar {
     @include mx.flex($align: center, $justify: space-between);
+    flex-wrap: wrap;
     gap: map.get(var.$unit, 16);
     padding: fn.rem(32) fn.rem(32) fn.rem(16);
 
@@ -745,14 +762,6 @@
 }
 
 /* ===결제 정보=== */
-/* aside 영역 초상위 */
-.vits-side-payment {
-  position: sticky;
-  top: 0;
-  min-width: 400px;
-  max-width: 522px;
-}
-
 /* 결제 전체 */
 .vits-payment {
   @include mx.flex($direction: column);
@@ -913,15 +922,16 @@
 /* 간편결제 > 탭 패널 */
 .vits-payment-tab-panel {
   display: none;
+  padding: map.get(var.$unit, 24) 0 map.get(var.$unit, 16);
   margin-top: map.get(var.$unit, 12);
+  border: 1px solid map.get(color.$layout-border, 'quinary');
+  border-radius: map.get(var.$radius, 'md');
 
-  .payment-tab-panel-inner {
-    gap: map.get(var.$unit, 20);
-    padding: map.get(var.$unit, 16) map.get(var.$unit, 36);
-    border: 1px solid map.get(color.$layout-border, 'quinary');
-    border-radius: map.get(var.$radius, 'md');
-
-    @include mx.flex($direction: column);
+  .type-account-empty,
+  .vits-card-form,
+  .vits-tax {
+    margin-right: map.get(var.$unit, 16);
+    margin-left: map.get(var.$unit, 16);
   }
 
   .vits-payment-notice {
@@ -951,9 +961,7 @@
 
   &#panel-simple-account {
     .vits-payment-notice {
-      align-items: center;
       justify-content: flex-end;
-      padding: 0;
 
       &::before {
         content: none;
@@ -1056,9 +1064,9 @@
 
     /* 비츠온페이 카드할부 폼 */
     &-form {
-      @include cart-order-surf-box(map.get(color.$layout-surf, 'raised'));
       padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
-      margin: 0 map.get(var.$unit, 16);
+      border: 1px solid map.get(color.$layout-border, 'secondary');
+      border-radius: map.get(var.$radius, 'md');
 
       .vits-form-row {
         @include mx.flex($align: flex-start, $justify: flex-start);
@@ -1107,14 +1115,6 @@
 
         .vits-select-list {
           width: 100%;
-        }
-      }
-
-      &.type-account {
-        margin: 0;
-
-        .vits-form-row {
-          padding-bottom: 0;
         }
       }
     }
