@@ -132,6 +132,30 @@ module.exports = (dirPath, scssOptions) => ({
           chunks: 'all',
           enforce: true,
           priority: 20
+        },
+        // 모바일 CSS
+        baseMoCss: {
+          test: /[\\/]scss[\\/]base-mo[\\/]/,
+          name: 'base-mo',
+          type: 'css/mini-extract',
+          enforce: true,
+          priority: 45
+        },
+        layoutMoCss: {
+          test: /[\\/]scss[\\/](layout-mo|components-mo)[\\/]/,
+          name: 'layout-mo',
+          type: 'css/mini-extract',
+          chunks: 'all',
+          enforce: true,
+          priority: 35
+        },
+        pagesMoCss: {
+          test: /[\\/]scss[\\/]pages-mo[\\/]/,
+          name: 'pages-mo',
+          type: 'css/mini-extract',
+          chunks: 'all',
+          enforce: true,
+          priority: 25
         }
       }
     }

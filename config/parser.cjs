@@ -10,6 +10,7 @@ const excludeRegExp = /(node_modules|public)/;
 // const buildPath = env.parsed.APP_ENV_URL ? `dist/${env.parsed.APP_ENV_URL}` : 'dist'
 const buildPath = '../dist';
 const pathRegExp = /(views\/pages\/index.ejs)|(views\/pages\/guide\/)/;
+const mobileRegExp = /views\/pages-mo\//;
 
 const stringifyValues = (object) => {
   return Object.entries(object).reduce((acc, curr) => ({...acc, [`${curr[0]}`]: JSON.stringify(curr[1])}), {});
@@ -18,17 +19,27 @@ const getEjsFile = ({dir, type, dirPath}, files_) => {
   files_ = files_ || [];
   fs.readdirSync(dir).forEach((file) => {
     const name = dir + '/' + file;
-    if (/layout\/|components\//.test(name)) {
+    if (/layout\/|components\/|layout-mo\/|components-mo\//.test(name)) {
       return false;
     }
     if (fs.statSync(name).isDirectory()) {
       getEjsFile({dir: name, type, dirPath}, files_);
     } else if (/.ejs$/.test(file)) {
       const parts = name.split('src/');
-      // console.log(parts, appRoot);
+
+      // 청크 결정
+      let chunks;
+      if (pathRegExp.test(parts[1])) {
+        chunks = ['no-style'];
+      } else if (mobileRegExp.test(parts[1])) {
+        chunks = [`${appRoot}-mo`];
+      } else {
+        chunks = [appRoot];
+      }
+
       files_.push(
         new HtmlWebpackPlugin({
-          chunks: [pathRegExp.test(parts[1]) ? 'no-style' : appRoot],
+          chunks,
           filename: `${parts[1].replace('views/pages', 'html').replace('.ejs', '')}.html`,
           minify: false,
           template: htmlWebpackPluginTemplateCustomizer({
