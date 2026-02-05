@@ -1,0 +1,167 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '계정등록'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-account">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'info-account'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-account">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline account-headline">
+                      <h2 class="vits-mypage-content-title">계정 등록</h2>
+                    </div>
+
+                    <!-- case : 목록 있을 때 -->
+                    <div class="vits-mypage-panel account-panel">
+                      <!-- 상단 툴바 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-account/account-toolbar.ejs`) %>
+
+                      <!-- 목록 테이블 -->
+                      <div class="general-table-wrap">
+                        <table class="general-table" summary="계정 목록">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '계정 목록',
+                            columns: [
+                              { width: 50, label: '' },
+                              { width: 80, label: '순번' },
+                              { width: 110, label: '아이디' },
+                              { width: 110, label: '이름' },
+                              { width: 80, label: '담당업무' },
+                              { width: 80, label: '직급' },
+                              { width: 140, label: '휴대폰' },
+                              { width: 100, label: '사용여부' },
+                              { width: 100, label: '관리' }
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              srcPath: _src,
+                              publicPath: _public,
+                              type: 'account',
+                              rowIndex: 1,
+                              checked: true,
+                              userId: 'test123',
+                              name: '홍길동',
+                              department: '총무팀',
+                              position: '사원',
+                              phone: '010-1234-5678'
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              srcPath: _src,
+                              publicPath: _public,
+                              type: 'account',
+                              rowIndex: 2,
+                              checked: true,
+                              userId: 'test123',
+                              name: '홍길동',
+                              department: '총무팀',
+                              position: '사원',
+                              phone: '010-1234-5678',
+                              status: '사용'
+                            }) %>
+                          </tbody>
+                        </table>
+
+                        <!-- case : 목록이 없을 때 -->
+                        <!-- prettier-ignore -->
+                        <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'xl',
+                            variant: 'secondary',
+                            text: '계정 추가하기 ',
+                            iconLeft: true,
+                            iconName: 'ic-plus',
+                            className: 'account-empty-btn'
+                          }) 
+                          %> 
+                          <%- include(`${_src}/views/components/empty-state.ejs`, {
+                            iconName: 'user',
+                            title: '등록된 계정이 없습니다',
+                            buttonHtml
+                          }) %>
+                      </div>
+
+                      <!-- 페이지네이션 -->
+                      <div class="vits-mypage-pagination">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pagination.ejs`, {
+                          type: 'default',
+                          current: 1,
+                          isPrevDisabled: true
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var emptyState = document.querySelector('[data-ui="empty-state"]');
+        var defaultContent = document.querySelector('[data-ui="default-content"]');
+        var accountTbody = document.querySelector('.account-table tbody');
+
+        if (type === 'none') {
+          if (emptyState) emptyState.removeAttribute('hidden');
+          if (defaultContent) defaultContent.hidden = true;
+          if (accountTbody) accountTbody.hidden = true;
+        } else {
+          if (emptyState) emptyState.hidden = true;
+          if (defaultContent) defaultContent.removeAttribute('hidden');
+          if (accountTbody) accountTbody.removeAttribute('hidden');
+        }
+      })();
+    </script>
+  </body>
+</html>

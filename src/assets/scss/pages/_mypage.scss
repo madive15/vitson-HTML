@@ -255,7 +255,7 @@
     }
 
     // 주문현황
-    &-order {
+    &-status {
       @include roundbox-white('myh', $myhY: 32, $myhX: 20);
 
       .order-status {
@@ -310,9 +310,205 @@
       }
     }
 
+    // 최근 주문
+    &-orders {
+      @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+
+      .orders {
+        &-body {
+          padding: map.get(var.$unit, 36) map.get(var.$unit, 44);
+        }
+
+        &-items {
+          @include mx.flex(flex, row, flex-start, center);
+        }
+
+        &-item {
+          @include mx.flex(flex, row, flex-start, stretch);
+
+          &-inner {
+            @include mx.flex(flex, column);
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            max-width: fn.rem(130);
+
+            .product {
+              &-meta {
+                @include mx.flex(flex, column);
+                gap: map.get(var.$unit, 4);
+              }
+
+              &-date {
+                @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+              }
+
+              &-thumb {
+                @include mx.img-fit;
+                width: 100%;
+                aspect-ratio: 1 / 1;
+              }
+
+              &-info {
+                @include mx.flex(flex, column);
+                gap: map.get(var.$unit, 8);
+                margin: map.get(var.$unit, 8) 0;
+              }
+
+              &-code span {
+                @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+                @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+                display: inline-block;
+                padding: 0 map.get(var.$unit, 4);
+              }
+
+              &-name {
+                @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+                @include mx.ellipsis-multi;
+              }
+
+              &-actions {
+                [class*='vits-btn-'] {
+                  width: 100%;
+                }
+              }
+            }
+          }
+
+          &:not(:last-of-type)::after {
+            display: block;
+            flex-shrink: 0;
+            width: 1px;
+            margin: 0 clamp(fn.rem(16), 2vw, fn.rem(33));
+            content: '';
+            background: map.get(color.$layout-surf, 'sunken');
+          }
+        }
+      }
+    }
+
+    // 취소 반품
+    &-claim {
+      @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+
+      .claim {
+        &-body {
+          padding: map.get(var.$unit, 32) map.get(var.$unit, 44);
+
+          > a {
+            display: block;
+            width: 100%;
+          }
+        }
+
+        &-item {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 20);
+
+          &-thumb {
+            flex: 0 0 fn.rem(140);
+            width: fn.rem(140);
+
+            .product-thumb {
+              @include mx.img-fit;
+              width: 100%;
+              aspect-ratio: 1 / 1;
+            }
+          }
+
+          &-status {
+            @include mx.flex(flex, row, flex-start, center);
+            flex: 1 1 auto;
+            min-width: fn.rem(100);
+            text-align: center;
+
+            p {
+              width: 100%;
+              padding: 0 map.get(var.$unit, 20);
+            }
+
+            &::before,
+            &::after {
+              width: 1px;
+              height: fn.rem(140);
+              content: '';
+              background: map.get(color.$layout-surf, 'sunken');
+            }
+          }
+
+          &-info {
+            @include mx.flex(flex, column);
+            flex: 2 1 auto;
+            gap: map.get(var.$unit, 8);
+            min-width: 0;
+            max-width: fn.rem(350);
+
+            .product {
+              &-order {
+                @include mx.divider('p', 1, 8, 8, #d9d9d9);
+
+                p {
+                  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+                }
+              }
+
+              &-title {
+                @include mx.ellipsis-multi;
+              }
+
+              &-code {
+                @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+                @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+                padding: 0 map.get(var.$unit, 4);
+                margin-right: map.get(var.$unit, 4);
+                line-height: 16px;
+              }
+
+              &-name {
+                @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+              }
+
+              &-meta {
+                @include mx.divider('p', 1, 8, 8, #d9d9d9);
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+                flex-wrap: wrap;
+              }
+            }
+          }
+
+          &-pay {
+            flex: 1 1 auto;
+            min-width: fn.rem(150);
+            max-width: fn.rem(200);
+            text-align: right;
+
+            .product-price {
+              @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+        }
+      }
+    }
+
     // 자주구매
     &-frequent {
       @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
+
+      .frequent {
+        &-body {
+          padding: map.get(var.$unit, 36);
+        }
+
+        &-items {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: fn.rem(28);
+        }
+
+        &-item {
+          flex: 0 0 fn.rem(200);
+        }
+      }
 
       &.is-empty {
         .frequent-body {
@@ -1885,10 +2081,17 @@
 
   /* stylelint-disable-next-line no-descending-specificity */
   &-icon {
+    @include mx.flex($align: center, $justify: center);
     @include icon.ic-size(fn.rem(82));
     overflow: hidden;
-    background: #d9d9d9;
+    background: map.get(color.$layout-surf, 'raised');
     border-radius: 50%;
+
+    /* nodata icon 통일 */
+    .ic {
+      @include icon.ic-size(fn.rem(32));
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
   }
 }
 

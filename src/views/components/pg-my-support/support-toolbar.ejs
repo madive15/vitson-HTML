@@ -1,0 +1,54 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _totalCount = typeof totalCount !== 'undefined' ? totalCount : 23;
+  const _pageSizeOptions = [
+    { value: '20', text: '10개씩 보기' },
+    { value: '40', text: '30개씩 보기' },
+    { value: '60', text: '50개씩 보기' }
+  ];
+  const _pageSize = (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '10';
+%>
+
+<div class="vits-mypage-support-toolbar">
+  <div class="support-toolbar-left">
+    <p class="support-toolbar-count">총 <b><%= _totalCount %></b>개</p>
+    <div class="support-toolbar-size">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'support-page-size',
+        name: 'pageSize',
+        placeholder: _pageSizeOptions[0].text,
+        options: _pageSizeOptions,
+        value: _pageSize,
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+    </div>
+  </div>
+  <div class="support-toolbar-actions">
+    <!-- 아직 사용 안함 -->
+    <!-- prettier-ignore -->
+    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'sm',
+      variant: 'outline-tertiary',
+      text: '전체삭제',
+      className: 'support-toolbar-delete'
+    }) %> -->
+    <!-- prettier-ignore -->
+    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'sm',
+      variant: 'outline-primary',
+      text: '신규 문의 등록',
+      iconLeft: true,
+      iconName: 'ic-plus',
+      className: 'support-toolbar-add'
+    }) %> -->
+  </div>
+</div>

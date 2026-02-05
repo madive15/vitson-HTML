@@ -1,25 +1,26 @@
 /**
  * @file scripts/ui/form/input-search.js
- * @purpose input-search 공통: submit 가로채기 + 검색어 정규화 + validation(aria-invalid/메시지) 토글 + submit 훅 제공
- * @scope input-search.ejs 내부 요소만 제어(페이지별 UI 로직은 onSubmit에서 처리)
+ * @description input-search 공통 — submit 정규화 + 클리어 + validation
+ * @scope [data-search-form]
  *
- * @hook
- *  - form: [data-search-form]
- *  - input: [data-search-input]
- *  - validation: .vits-input-search.vits-validation 내부 .input-validation (hidden 토글)
+ * @events (인풋에서 버블링)
+ *  inputSearch:submit { query } — 성공 시만
+ *  inputSearch:clear
  *
- * @contract
- *  - init(root?): 문서/루트 스캔 초기화
- *  - init({$form,$input,$validation}, { onSubmit }): 단일 폼 초기화
- *  - onSubmit(query, ctx) 반환값:
- *    - false => invalid 표시(중복 등)
- *    - 그 외 => invalid 해제(정상)
+ * @events ($(document))
+ *  ui:input-search-submit { query, form, input } — 성공 시만
+ *  ui:input-search-clear  { form, input }
  *
- * @maintenance
- *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
- *  - 빈 값 submit은 무시(에러 표시 없음)하는 정책을 유지
+ * @api
+ *  init(root?, opt?)                    스캔 초기화
+ *  init({$form,$input}, {onSubmit})     단일 폼 초기화
+ *  destroy(root?)                       해제
+ *  setValue(target, value)              값 세팅 (이벤트 미발생)
+ *  clear(target)                        초기화 + 이벤트
+ *  setInvalid(arg, on)                  validation 토글
+ *  setMessage(target, message)          메시지 변경 + invalid 토글
+ *  normalize(str)                       trim + 연속공백 → 1칸
  */
-
 (function ($, window, document) {
   'use strict';
 
@@ -28,149 +29,244 @@
   window.UI = window.UI || {};
   window.UI.inputSearch = window.UI.inputSearch || {};
 
-  var MODULE_KEY = 'inputSearch';
-  var NS = '.' + MODULE_KEY;
+  var NS = '.inputSearch';
+  var DATA_KEY = 'inputSearchInit';
 
   var FORM = '[data-search-form]';
   var INPUT = '[data-search-input]';
+  var CLEAR = '[data-search-clear]';
   var VALID_WRAP = '.vits-input-search.vits-validation';
   var VALID_MSG = '.input-validation';
+  var MSG_TEXT = '[aria-live="polite"]';
 
-  // 문자열 앞뒤 공백 제거
+  // 앞뒤 공백 제거
   function trimText(str) {
     return String(str || '').replace(/^\s+|\s+$/g, '');
   }
 
-  // 연속 공백을 1칸으로 정규화
+  // trim + 연속 공백 → 1칸
   function normalizeSpaces(str) {
     return trimText(str).replace(/\s+/g, ' ');
   }
 
-  // input 기준으로 validation 메시지 엘리먼트를 찾음
+  // input 기준 validation 래퍼 탐색
   function findValidation($input) {
     if (!$input || !$input.length) return $();
     var $wrap = $input.closest(VALID_WRAP);
     return $wrap.length ? $wrap.find(VALID_MSG).first() : $();
   }
 
-  // validation UI를 토글(input aria-invalid + 메시지 hidden)
+  // aria-invalid + validation hidden 토글
   function setInvalid($input, $validation, on) {
-    if ($input && $input.length) $input.attr('aria-invalid', on ? 'true' : null);
-    if ($validation && $validation.length) $validation.prop('hidden', !on);
+    if ($input && $input.length) {
+      $input.attr('aria-invalid', on ? 'true' : 'false');
+    }
+    if ($validation && $validation.length) {
+      if (on) {
+        $validation.removeAttr('hidden');
+      } else {
+        $validation.attr('hidden', '');
+      }
+    }
   }
 
-  // 옵션에서 onSubmit 훅을 안전하게 추출
-  function getOnSubmit(opt) {
-    return opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
+  // $form 기준 내부 요소 수집
+  function resolveFromForm($form) {
+    var $input = $form.find(INPUT).first();
+    return {
+      $form: $form,
+      $input: $input,
+      $clear: $form.find(CLEAR),
+      $validation: $input.length ? findValidation($input) : $()
+    };
   }
 
-  // 입력 중이면 validation을 해제
-  function bindClearOnInput($input, $validation) {
-    if (!$input || !$input.length) return;
+  // 외부 전달 인자에서 요소 정규화
+  function resolveFromArg(arg) {
+    if (!arg || !arg.$form || !arg.$input) return null;
+    return {
+      $form: arg.$form,
+      $input: arg.$input,
+      $clear: arg.$clear && arg.$clear.length ? arg.$clear : arg.$form.find(CLEAR),
+      $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
+    };
+  }
 
-    $input.off('input' + NS).on('input' + NS, function () {
-      setInvalid($input, $validation, false);
+  // target → 저장된 el 객체 반환
+  function getEl(target) {
+    var $t = $(target);
+    var $form = $t.is(FORM) ? $t : $t.closest(FORM);
+    if (!$form.length) $form = $t.find(FORM).first();
+    return $form.data(DATA_KEY) || null;
+  }
+
+  // 클리어 버튼 표시/숨김 동기화
+  function syncClearBtn(el) {
+    if (!el.$clear.length) return;
+    if (trimText(el.$input.val())) {
+      el.$clear.removeAttr('hidden');
+    } else {
+      el.$clear.attr('hidden', '');
+    }
+  }
+
+  // 인풋 초기화 + 이벤트 발생
+  function doClear(el) {
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    setInvalid(el.$input, el.$validation, false);
+
+    el.$input.trigger('inputSearch:clear');
+    $(document).trigger('ui:input-search-clear', {
+      form: el.$form[0],
+      input: el.$input[0]
     });
   }
 
-  // submit 시 query를 정규화하고 onSubmit/이벤트로 전달
-  function bindSubmit($form, $input, $validation, opt) {
-    if (!$form || !$form.length || !$input || !$input.length) return;
+  // 이벤트 바인딩
+  function bindEvents(el, opt) {
+    var onSubmit = opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
 
-    var onSubmit = getOnSubmit(opt);
+    // 입력 → validation 해제 + 클리어 버튼 토글
+    el.$input.off('input' + NS).on('input' + NS, function () {
+      setInvalid(el.$input, el.$validation, false);
+      syncClearBtn(el);
+    });
 
-    $form.off('submit' + NS).on('submit' + NS, function (e) {
+    // 클리어(X) 버튼
+    if (el.$clear.length) {
+      el.$clear.off('click' + NS).on('click' + NS, function () {
+        doClear(el);
+        el.$input.focus();
+      });
+    }
+
+    // submit → 정규화 + onSubmit 훅 + 이벤트 (성공 시만)
+    el.$form.off('submit' + NS).on('submit' + NS, function (e) {
       e.preventDefault();
 
-      var query = normalizeSpaces($input.val());
-
-      // 빈 값은 아무 것도 하지 않음(에러 표시도 하지 않음)
+      var query = normalizeSpaces(el.$input.val());
       if (!query) return;
 
-      var ctx = {$form: $form, $input: $input, $validation: $validation};
+      var ctx = {$form: el.$form, $input: el.$input, $validation: el.$validation};
       var ok = true;
 
-      // 페이지 로직에서 false를 반환하면 invalid 처리
       if (onSubmit) ok = onSubmit(query, ctx) !== false;
+      setInvalid(el.$input, el.$validation, !ok);
 
-      setInvalid($input, $validation, !ok);
+      if (ok) {
+        syncClearBtn(el);
+        el.$input.trigger('inputSearch:submit', {query: query});
+        $(document).trigger('ui:input-search-submit', {
+          query: query,
+          form: el.$form[0],
+          input: el.$input[0]
+        });
+      }
 
-      // 공통 이벤트(필요 시 다른 레이어에서도 구독 가능)
-      $(document).trigger('ui:input-search-submit', {
-        query: query,
-        form: $form[0],
-        input: $input[0]
-      });
+      el.$input.focus();
     });
   }
 
-  // 단일 폼에 필요한 요소를 정규화해 반환($validation은 없으면 자동 탐색)
-  function resolveElements(arg) {
-    // 단일형: init({$form,$input,$validation}, opt)
-    if (arg && arg.$form && arg.$input) {
-      return {
-        $form: arg.$form,
-        $input: arg.$input,
-        $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
-      };
-    }
-
-    // 내부용(스캔형): initOne($form, opt)
-    if (arg && arg.$form && !arg.$input) {
-      var $input = arg.$form.find(INPUT).first();
-      return {
-        $form: arg.$form,
-        $input: $input,
-        $validation: $input.length ? findValidation($input) : $()
-      };
-    }
-
-    return null;
+  // 이벤트 해제
+  function unbindEvents(el) {
+    el.$input.off(NS);
+    el.$form.off(NS);
+    if (el.$clear.length) el.$clear.off(NS);
   }
 
-  // 폼 1개 단위를 초기화
+  // 단일 폼 초기화 — SSR 상태 존중
   function initOne($form, opt) {
-    var el = resolveElements({$form: $form});
-    if (!el || !el.$input || !el.$input.length) return;
+    if ($form.data(DATA_KEY)) return;
 
-    setInvalid(el.$input, el.$validation, false);
-    bindClearOnInput(el.$input, el.$validation);
-    bindSubmit(el.$form, el.$input, el.$validation, opt);
+    var el = resolveFromForm($form);
+    if (!el.$input.length) return;
+
+    bindEvents(el, opt);
+    $form.data(DATA_KEY, el);
   }
 
-  // root 범위에서 폼들을 스캔해 초기화
-  function initAll(root, opt) {
+  // 단일 폼 해제
+  function destroyOne($form) {
+    var el = $form.data(DATA_KEY);
+    if (!el) return;
+
+    unbindEvents(el);
+    setInvalid(el.$input, el.$validation, false);
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    $form.removeData(DATA_KEY);
+  }
+
+  // root 범위에서 form 순회
+  function eachForm(root, fn) {
     var $scope = root ? $(root) : $(document);
 
+    if ($scope.is(FORM)) {
+      fn($scope);
+      return;
+    }
+
     $scope.find(FORM).each(function () {
-      initOne($(this), opt);
+      fn($(this));
     });
   }
 
-  // 검색어 정규화 결과를 반환
   window.UI.inputSearch.normalize = function (str) {
     return normalizeSpaces(str);
   };
 
-  // 특정 input의 validation을 토글(외부 제어용)
   window.UI.inputSearch.setInvalid = function (arg, on) {
     var $input = arg && arg.$input ? arg.$input : $();
     var $validation = arg && arg.$validation ? arg.$validation : $();
     setInvalid($input, $validation, !!on);
   };
 
-  // init 시그니처를 2가지로 지원(스캔형 / 단일형)
+  // validation 메시지 텍스트 변경 + invalid 자동 토글
+  window.UI.inputSearch.setMessage = function (target, message) {
+    var el = getEl(target);
+    if (!el || !el.$validation.length) return;
+
+    el.$validation.find(MSG_TEXT).text(message || '');
+    setInvalid(el.$input, el.$validation, !!message);
+  };
+
+  // 인풋 값 세팅 + 클리어 동기화 (이벤트 미발생)
+  window.UI.inputSearch.setValue = function (target, value) {
+    var el = getEl(target);
+    if (!el) return;
+
+    el.$input.val(value);
+    syncClearBtn(el);
+  };
+
+  // 인풋 초기화 + 이벤트 발생
+  window.UI.inputSearch.clear = function (target) {
+    var el = getEl(target);
+    if (el) doClear(el);
+  };
+
   window.UI.inputSearch.init = function (arg, opt) {
-    // 단일형: init({$form,$input,$validation}, { onSubmit })
-    var el = resolveElements(arg);
-    if (el && el.$form && el.$input && el.$input.length) {
-      setInvalid(el.$input, el.$validation, false);
-      bindClearOnInput(el.$input, el.$validation);
-      bindSubmit(el.$form, el.$input, el.$validation, opt);
+    // 단일형: init({ $form, $input }, { onSubmit })
+    var el = resolveFromArg(arg);
+    if (el) {
+      if (el.$form.data(DATA_KEY)) return;
+      bindEvents(el, opt);
+      el.$form.data(DATA_KEY, el);
       return;
     }
 
-    // 스캔형: init(root) 또는 init()
-    initAll(arg, opt);
+    // 스캔형: init(), init(root), init(opt), init(root, opt)
+    var isRootEl = arg instanceof $ || (arg && arg.nodeType) || (typeof arg === 'string' && $(arg).length);
+    var root = isRootEl ? arg : null;
+    var options = opt || (!isRootEl && arg && typeof arg === 'object' ? arg : null);
+
+    eachForm(root, function ($form) {
+      initOne($form, options);
+    });
+  };
+
+  window.UI.inputSearch.destroy = function (root) {
+    eachForm(root, destroyOne);
   };
 })(window.jQuery || window.$, window, document);

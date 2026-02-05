@@ -1,0 +1,210 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const _hasRecentOrder = (typeof hasRecentOrder !== 'undefined') ? hasRecentOrder : false; %>
+
+<% if (_hasRecentOrder) { %>
+<div class="vits-mypage-home-orders">
+  <div class="orders-head" data-scss="head">
+    <p class="vits-mypage-home-title">최근 주문</p>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+      href: '#!', text: '최근 주문 더보기' 
+    }) %>
+  </div>
+  <div class="orders-body" data-scss="body">
+    <div class="orders-items">
+      <div class="orders-item">
+        <div class="orders-item-inner">
+          <a href="">
+            <div class="product-meta">
+              <p class="product-date">2026.2.15</p>
+
+              <!-- prettier-ignore -->
+              <%#
+                주문상태 type: order
+                  - status="01" [ 주문접수 ]
+                  - status="02" [ 결제완료 ]
+                  - status="03" [ 주문완료 ]
+                  - status="04" [ 주문확정 ]
+                  - status="05" [ 배송준비중 ]
+                  - status="06" [ 배송중 ]
+                  - status="07" [ 배송완료 ]
+               %>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '01' }) %>
+              <p class="product-thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+              </p>
+            </div>
+            <div class="product-info">
+              <p class="product-code"><span>63531</span></p>
+              <p class="product-name">
+                튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면
+                6개입
+              </p>
+            </div>
+          </a>
+          <div class="product-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size:'xs', variant: 'outline-tertiary', text: '주문상세 보기'
+            }) %>
+          </div>
+        </div>
+      </div>
+      <div class="orders-item">
+        <div class="orders-item-inner">
+          <a href="">
+            <div class="product-meta">
+              <p class="product-date">2026.2.15</p>
+
+              <!-- prettier-ignore -->
+              <%#
+                주문상태 type: order
+                  - status="01" [ 주문접수 ]
+                  - status="02" [ 결제완료 ]
+                  - status="03" [ 주문완료 ]
+                  - status="04" [ 주문확정 ]
+                  - status="05" [ 배송준비중 ]
+                  - status="06" [ 배송중 ]
+                  - status="07" [ 배송완료 ]
+               %>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '02' }) %>
+              <p class="product-thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+              </p>
+            </div>
+            <div class="product-info">
+              <p class="product-code"><span>63531</span></p>
+              <p class="product-name">
+                튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면
+                6개입
+              </p>
+            </div>
+          </a>
+          <div class="product-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size:'xs', variant: 'outline-tertiary', text: '주문상세 보기'
+            }) %>
+          </div>
+        </div>
+      </div>
+      <div class="orders-item">
+        <div class="orders-item-inner">
+          <a href="">
+            <div class="product-meta">
+              <p class="product-date">2026.2.15</p>
+
+              <!-- prettier-ignore -->
+              <%#
+                주문상태 type: order
+                  - status="01" [ 주문접수 ]
+                  - status="02" [ 결제완료 ]
+                  - status="03" [ 주문완료 ]
+                  - status="04" [ 주문확정 ]
+                  - status="05" [ 배송준비중 ]
+                  - status="06" [ 배송중 ]
+                  - status="07" [ 배송완료 ]
+               %>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '03' }) %>
+              <p class="product-thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+              </p>
+            </div>
+            <div class="product-info">
+              <p class="product-code"><span>63531</span></p>
+              <p class="product-name">
+                튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면
+                6개입
+              </p>
+            </div>
+          </a>
+          <div class="product-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size:'xs', variant: 'outline-tertiary', text: '주문상세 보기'
+            }) %>
+          </div>
+        </div>
+      </div>
+      <div class="orders-item">
+        <div class="orders-item-inner">
+          <a href="">
+            <div class="product-meta">
+              <p class="product-date">2026.2.15</p>
+
+              <!-- prettier-ignore -->
+              <%#
+                주문상태 type: order
+                  - status="01" [ 주문접수 ]
+                  - status="02" [ 결제완료 ]
+                  - status="03" [ 주문완료 ]
+                  - status="04" [ 주문확정 ]
+                  - status="05" [ 배송준비중 ]
+                  - status="06" [ 배송중 ]
+                  - status="07" [ 배송완료 ]
+               %>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '04' }) %>
+              <p class="product-thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+              </p>
+            </div>
+            <div class="product-info">
+              <p class="product-code"><span>63531</span></p>
+              <p class="product-name">
+                튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면
+                6개입
+              </p>
+            </div>
+          </a>
+          <div class="product-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size:'xs', variant: 'outline-tertiary', text: '주문상세 보기'
+            }) %>
+          </div>
+        </div>
+      </div>
+      <div class="orders-item">
+        <div class="orders-item-inner">
+          <a href="">
+            <div class="product-meta">
+              <p class="product-date">2026.2.15</p>
+
+              <!-- prettier-ignore -->
+              <%#
+                주문상태 type: order
+                  - status="01" [ 주문접수 ]
+                  - status="02" [ 결제완료 ]
+                  - status="03" [ 주문완료 ]
+                  - status="04" [ 주문확정 ]
+                  - status="05" [ 배송준비중 ]
+                  - status="06" [ 배송중 ]
+                  - status="07" [ 배송완료 ]
+               %>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: '05' }) %>
+              <p class="product-thumb">
+                <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+              </p>
+            </div>
+            <div class="product-info">
+              <p class="product-code"><span>63531</span></p>
+              <p class="product-name">
+                튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면 6개입튀김우동 컵라면
+                6개입
+              </p>
+            </div>
+          </a>
+          <div class="product-actions">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+              size:'xs', variant: 'outline-tertiary', text: '주문상세 보기'
+            }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

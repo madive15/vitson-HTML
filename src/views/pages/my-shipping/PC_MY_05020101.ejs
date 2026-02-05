@@ -29,7 +29,7 @@
                 <div class="vits-grid-area">
                   <!-- S: vits-grid-side-left -->
                   <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`) %>
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'info-address'}) %>
                   <!-- E: vits-grid-side-left -->
 
                   <div class="vits-grid-main-content main-content-shipping">
@@ -67,38 +67,28 @@
                       <%- include(`${_src}/views/components/pg-my-shipping/shipping-toolbar.ejs`, { srcPath: _src, publicPath: _public, totalCount: 23, pageSize: '60' }) %>
 
                       <!-- 배송지 목록 테이블 -->
-                      <div class="shipping-table-wrap">
-                        <table class="shipping-table" summary="배송지 목록">
-                          <caption class="sr-only">
-                            배송지 목록
-                          </caption>
-                          <colgroup>
-                            <col width="80" />
-                            <col width="100" />
-                            <col width="80" />
-                            <col width="130" />
-                            <col />
-                            <col width="80" />
-                            <col width="80" />
-                            <col width="100" />
-                          </colgroup>
-                          <thead>
-                            <tr>
-                              <th scope="col">구분</th>
-                              <th scope="col">배송지명</th>
-                              <th scope="col">받는 사람</th>
-                              <th scope="col">연락처</th>
-                              <th scope="col">주소</th>
-                              <th scope="col">화물업체</th>
-                              <th scope="col">영업소</th>
-                              <th scope="col">관리</th>
-                            </tr>
-                          </thead>
+                      <div class="general-table-wrap">
+                        <table class="general-table" summary="배송지 목록">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '배송지 목록',
+                            columns: [
+                              { width: 80, label: '구분' },
+                              { width: 100, label: '배송지명' },
+                              { width: 80, label: '받는 사람' },
+                              { width: 130, label: '연락처' },
+                              { width: 'auto', label: '주소' },
+                              { width: 80, label: '화물업체' },
+                              { width: 80, label: '영업소' },
+                              { width: 100, label: '관리' }
+                            ]
+                          }) %>
                           <tbody>
                             <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
                               srcPath: _src,
                               publicPath: _public,
+                              type: 'shipping',
                               isDefault: true,
                               addrName: '본사',
                               recipient: '김철수',
@@ -108,9 +98,10 @@
                               office: '-'
                             }) %>
                             <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
                               srcPath: _src,
                               publicPath: _public,
+                              type: 'shipping',
                               isDefault: false,
                               classify: '홍길동',
                               addrName: '경동택배 과천 지점',
@@ -121,9 +112,10 @@
                               office: '-'
                             }) %>
                             <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-shipping/shipping-addr-row.ejs`, {
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
                               srcPath: _src,
                               publicPath: _public,
+                              type: 'shipping',
                               isDefault: false,
                               classify: '홍길동',
                               addrName: '한진택배',
@@ -138,7 +130,7 @@
                       </div>
 
                       <!-- 페이지네이션 -->
-                      <div class="shipping-pagination">
+                      <div class="vits-mypage-pagination">
                         <!-- prettier-ignore -->
                         <%- include(`${_src}/views/components/pagination.ejs`, {
                           type: 'default',

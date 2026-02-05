@@ -1,0 +1,73 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const _hasRecentClaim = (typeof hasRecentClaim !== 'undefined') ? hasRecentClaim : false; %>
+
+<% if (_hasRecentClaim) { %>
+<div class="vits-mypage-home-claim">
+  <div class="claim-head" data-scss="head">
+    <p class="vits-mypage-home-title">최근 취소/반품</p>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+      href: '#!', text: '최근 취소/반품 더보기' 
+    }) %>
+  </div>
+  <div class="claim-body" data-scss="body">
+    <a href="#!">
+      <div class="claim-item">
+        <div class="claim-item-thumb">
+          <div class="product-thumb">
+            <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+          </div>
+        </div>
+
+        <div class="claim-item-info">
+          <div class="product-order">
+            <p class="product-order-number">2512198308</p>
+            <p class="product-order-date">2026-04-20</p>
+          </div>
+
+          <p class="product-title">
+            <span class="product-code"><b class="sr-only">상품코드</b>63531</span>
+            <span class="product-name"
+              >더블 OPP 접착테이프 투명 (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착) 더블 OPP 접착테이프 투명
+              (초강력 접착제)더블 OPP 접착테이프 투명 (초강력 접착)</span
+            >
+          </p>
+
+          <div class="product-meta">
+            <p class="product-brand">무선조작/디밍</p>
+            <p class="product-spec"><span class="sr-only">규격</span>무선조작/디밍</p>
+            <p class="product-tax">과세</p>
+            <p class="product-qty">1개</p>
+          </div>
+        </div>
+
+        <div class="claim-item-status">
+          <!-- prettier-ignore -->
+          <%#
+            클라임 상태 type: claim
+              - status="01" [ 취소 ]
+              - status="02" [ 취소신청 ]
+              - status="03" [ 주문취소 ]
+              - status="04" [ 반품 ]
+              - status="05" [ 반품신청 ]
+              - status="06" [ 반품접수 ]
+              - status="07" [ 회수진행중 ]
+              - status="08" [ 회수완료 ]
+              - status="09" [ 반품완료 ]
+              - status="10" [ 반품취소 ]
+              - status="11" [ 반품승인불가 ]
+              - status="12" [ 반품불가 ]
+           %>
+          <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'claim', status: '06' }) %>
+        </div>
+
+        <div class="claim-item-pay">
+          <p class="product-price">999,999,999원</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+<% } %>

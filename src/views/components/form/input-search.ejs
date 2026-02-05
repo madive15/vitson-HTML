@@ -2,37 +2,34 @@
 
 <!-- prettier-ignore -->
 <%
-  const _formClass = (typeof formClass !== 'undefined' && formClass) ? formClass : 'vits-input-search-form';
-  const _id = (typeof idPrefix !== 'undefined' && idPrefix) ? idPrefix : 'plp';
+  const _l = typeof locals !== 'undefined' ? locals : {};
+
+  const _formClass = _l.formClass || 'vits-input-search-form';
+  const _id = _l.idPrefix || 'plp';
   const _inputId = `${_id}-searchKeyword`;
-  const _action = (typeof action !== 'undefined' && action) ? action : '';
-  const _name = (typeof name !== 'undefined' && name) ? name : 'q';
-  const _placeholder = (typeof placeholder !== 'undefined' && placeholder) ? placeholder : '결과 내 재검색';
-
-  // ===== validation 옵션(추가) =====
-  const _message = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
+  const _action = _l.action || '';
+  const _name = _l.name || 'q';
+  const _placeholder = _l.placeholder || '결과 내 재검색';
+  const _message = _l.validationMessage || '';
   const _hasMessage = !!_message;
-
-  const _isInvalidFlag = (typeof isInvalid !== 'undefined') ? (isInvalid === true) : false;
-  const _isInvalid = _isInvalidFlag || _hasMessage;
-
+  const _isInvalid = (_l.isInvalid === true) || _hasMessage;
   const _validationId = _inputId ? `${_inputId}-validation` : '';
-
-  const _addClassNameRaw = (typeof addClassName !== 'undefined' && addClassName) ? addClassName : '';  
+  const _addClassNameRaw = _l.addClassName || '';
   const _addClassName = Array.isArray(_addClassNameRaw) ? _addClassNameRaw.filter(Boolean).join(' ') : String(_addClassNameRaw).trim();
-  const _addBtnText = (typeof addBtnText !== 'undefined' && addBtnText) ? addBtnText : '';
-  const _addDataForm = (typeof addDataForm !== 'undefined' && addDataForm) ? addDataForm : '';
-  const _addDataInput = (typeof addDataInput !== 'undefined' && addDataInput) ? addDataInput : '';
+  const _addBtnText = _l.addBtnText || '';
+  const _addDataForm = _l.addDataForm || '';
+  const _addDataInput = _l.addDataInput || '';
+  const _hasClear = _l.hasClear === true;
 %>
 
 <div class="vits-input-search vits-validation<% if (_addClassName) { %> <%= _addClassName %><% } %>">
-  <form 
-    class="<%= _formClass %>" 
-    role="search" 
-    action="<%= _action %>" 
-    method="get" 
-    data-search-form
-    <% if (_addDataForm) { %> data-<%= _addDataForm %><% } %>
+  <form
+    class="<%= _formClass %>"
+    role="search"
+    action="<%= _action %>"
+    method="get"
+    data-search-form<% if (_addDataForm) { %>
+    data-<%= _addDataForm %><% } %>
   >
     <label for="<%= _inputId %>" class="sr-only">검색어</label>
 
@@ -46,9 +43,15 @@
       placeholder="<%= _placeholder %>"
       data-search-input
       <% if (_addDataInput) { %>data-<%= _addDataInput %><% } %>
-      <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
-      <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+      <% if (_validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
+      aria-invalid="<%= _isInvalid ? 'true' : 'false' %>"
     />
+
+    <% if (_hasClear) { %>
+    <button type="button" class="input-clear-btn" data-search-clear hidden aria-label="검색어 지우기">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+    </button>
+    <% } %>
 
     <button type="submit" class="input-search-btn" aria-label="검색">
       <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
@@ -56,7 +59,6 @@
     </button>
   </form>
 
-  <!-- validation 영역(교체) -->
   <div class="input-validation" <% if (!_hasMessage) { %>hidden<% } %>>
     <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _message %></p>
   </div>

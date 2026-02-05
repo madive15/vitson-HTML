@@ -1,0 +1,35 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<div class="vits-mypage-account-toolbar">
+  <div class="account-toolbar-left">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: 'ckbox-total',
+      value: '선택',
+      checkboxType: 'all',
+      text:'전체 선택',
+      size: 'l'
+    }) %>
+  </div>
+  <div class="account-toolbar-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'lg',
+      variant: 'outline-primary',
+      text: '삭제', 
+      className: 'account-toolbar-delete'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'lg',
+      variant: 'outline-tertiary',
+      text: '계정 추가',
+      iconLeft: true,
+      iconName: 'ic-plus',
+      className: 'account-toolbar-add'
+    }) %>
+  </div>
+</div>

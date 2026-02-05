@@ -1,0 +1,18 @@
+<% const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# nodata 전용 헤더 컴포넌트입니다. 
+- 페이지에서 mockData / category path 등이 없는  케이스(예: 정적 화면, 팝업, 에러/점검 페이지 등)에서 사용합니다. 
+- 의존성을 최소화하기 위해 GNB/검색/유틸/딤 처리 등은 제거하고 로고만 노출합니다. 
+%>
+
+<!-- S: vits-header (nodata) -->
+<header class="vits-header vits-header-nodata">
+  <div class="vits-header-main">
+    <div class="vits-inner">
+      <a href="/" class="header-main-logo" aria-label="홈으로">
+        <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+      </a>
+    </div>
+  </div>
+</header>
+<!-- E: vits-header (nodata) -->

@@ -1230,6 +1230,7 @@ $brand-scroll-common: map.get(var.$unit, 24);
 .vits-brand-search-form {
   @include mx.input-search-reset;
   @include mx.flex(flex, row, flex-start, stretch);
+  position: relative;
   gap: map.get(var.$unit, 12);
   min-height: fn.rem(60);
   padding: map.get(var.$unit, 4) 0;
@@ -1269,6 +1270,17 @@ $brand-scroll-common: map.get(var.$unit, 24);
         @include typo.typography('b2b', $color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default'));
       }
     }
+  }
+
+  .input-clear-btn {
+    @include button.btn-reset;
+    @include mx.position(absolute, 50%, fn.rem(324)); // right : 검색하기 버튼 300 + gap 12 + 12
+    @include icon.ic-size(map.get(var.$unit, 24));
+    padding: map.get(var.$unit, 2);
+    color: color.$color-white;
+    background: map.get(color.$button-fill-tertiary, 'fill-surf-tertiary-default');
+    border-radius: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -1313,7 +1325,7 @@ $brand-scroll-common: map.get(var.$unit, 24);
         }
 
         [data-tab-group='korean']::after {
-          margin: 0 fn.rem(10);
+          margin: 0 fn.rem(20) 0 0;
         }
       }
 
@@ -1465,5 +1477,33 @@ $brand-scroll-common: map.get(var.$unit, 24);
     .tab-panels-inner {
       padding-right: calc($brand-scroll-common + map.get(var.$unit, 8));
     }
+  }
+}
+
+/* header nodata 헤더 높이 + 로고 크기 변경 */
+.vits-header-nodata {
+  border-bottom: none;
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .vits-header-main {
+    height: auto;
+
+    .vits-inner {
+      padding: map.get(var.$unit, 56) 0;
+
+      .header-main-logo {
+        width: auto;
+
+        img {
+          display: block;
+          height: fn.rem(33.3);
+        }
+      }
+    }
+  }
+
+  // nodata 헤더(.vits-header-nodata) 사용 시 메인 영역 배경
+  & ~ .vits-main {
+    background: map.get(color.$layout-surf, 'mypage');
   }
 }

@@ -68,8 +68,6 @@ import '../ui/auth-ui.js';
     if (window.UI.textarea && window.UI.textarea.init) window.UI.textarea.init();
     if (window.UI.checkboxTotal && window.UI.checkboxTotal.init) window.UI.checkboxTotal.init();
     if (window.UI.quantityStepper && window.UI.quantityStepper.init) window.UI.quantityStepper.init();
-    if (window.UI.header && window.UI.header.init) window.UI.header.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
     if (window.UI.initDealGallery && window.UI.initDealGallery.init) window.UI.initDealGallery.init();
     if (window.UI.tabScrollbar && window.UI.tabScrollbar.init) window.UI.tabScrollbar.init();
     if (window.UI.select && window.UI.select.init) window.UI.select.init(document);
@@ -82,6 +80,8 @@ import '../ui/auth-ui.js';
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
     if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
     if (window.UI.authUi && window.UI.authUi.init) window.UI.authUi.init();
+    if (window.UI.header && window.UI.header.init) window.UI.header.init();
+    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
 
   console.log('[core/ui] loaded');

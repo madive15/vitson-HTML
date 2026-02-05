@@ -1,6 +1,6 @@
 /**
- * scripts/ui/kendo/kendo.js
- * @purpose Kendo UI 관련 모듈 통합 관리
+ * scripts/ui/header/header.js
+ * @purpose header UI 관련 모듈 통합 관리
  */
 import './header-gnb.js';
 import './header-rank.js';
@@ -12,15 +12,14 @@ import './header-brand.js';
 
   window.UI = window.UI || {};
 
+  var modules = ['headerRank', 'headerSearch', 'headerGnb', 'Brand'];
+
   window.UI.header = {
     init: function () {
-      if (window.UI.headerRank && window.UI.headerRank.init) window.UI.headerRank.init();
-      if (window.UI.headerSearch && window.UI.headerSearch.init) window.UI.headerSearch.init();
-      if (window.UI.headerGnb && window.UI.headerGnb.init) window.UI.headerGnb.init();
-      if (window.UI.Brand && window.UI.Brand.init) window.UI.Brand.init();
-      console.log('[header] all modules initialized');
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
     }
   };
-
-  console.log('[header] loaded');
 })(window);

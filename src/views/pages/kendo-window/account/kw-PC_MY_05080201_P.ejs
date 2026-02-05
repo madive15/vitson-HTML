@@ -5,13 +5,13 @@
 %>
 <!-- prettier-ignore -->
 <section class="vits-account">
-  <h2 class="sr-only">계정 등록</h2>
+  <h2 class="sr-only">계정 수정</h2>
 
   <form class="vits-account-form" action="" method="post" novalidate>
     <div class="vits-account-body">
-      <div class="vits-account-row">
-        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
-        <div class="vits-account-field">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
             id: 'account-id',
@@ -21,11 +21,43 @@
             required: true,
             rootClass: 'size-large'
           }) %>
+
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            type: 'button',
+            size: 'lg-p',
+            variant: 'primary',
+            text: '중복확인',
+            className: 'vits-account-btn'
+          }) %>
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">비밀번호<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column" data-hide>
+        <span class="vits-account-label">아이디<span class="label-required" aria-hidden="true">*</span></span>
+        <div class="vits-account-field field-btn">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'account-id-chg',
+            name: 'userIdChg',
+            placeholder: '아이디',
+            disabled: true,
+            rootClass: 'size-large'
+          }) %>
+
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            type: 'button',
+            size: 'lg-p',
+            variant: 'secondary',
+            text: '비밀번호 변경',
+            className: 'vits-account-btn'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>비밀번호<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
@@ -38,7 +70,7 @@
             rootClass: 'size-large'
           }) %>
         </div>
-        <div class="vits-account-field">
+        <div class="vits-account-field type-column">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
             id: 'account-pw-confirm',
@@ -53,8 +85,8 @@
         <p class="vits-account-hint">영문/숫자/특수문자 조합 8자 이상</p>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이름<span class="label-required" aria-hidden="true">*</span></span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이름<span class="label-required" aria-hidden="true">*</span></span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
@@ -68,8 +100,8 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">휴대전화번호</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>휴대전화번호</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
@@ -82,9 +114,9 @@
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">이메일</span>
-        <div class="vits-account-field vits-account-field-btn">
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>이메일</span>
+        <div class="vits-account-field field-btn">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
             id: 'account-email',
@@ -99,36 +131,38 @@
             size: 'lg-p',
             variant: 'primary',
             text: '중복확인',
-            className: 'vits-account-btn'
+            className: 'vits-account-btn',
+            disabled: true
           }) %>
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">담당업무</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>담당업무</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/select.ejs`, {
             id: 'account-job',
             name: 'jobRole',
-            placeholder: '선택',
+            placeholder: '담당업무',
             className: 'size-l',
             maxHeight: 240,
             options: [
-              { value: '', text: '선택' },
-              { value: '경영', text: '경영' },
-              { value: '영업', text: '영업' },
+              { value: '', text: '기타' },
+              { value: '회계', text: '회계' },
               { value: '구매', text: '구매' },
+              { value: '물류', text: '물류' },
+              { value: '경영', text: '경영' },
               { value: '기타', text: '기타' }
             ],
-            value: (typeof jobRole !== 'undefined' && jobRole !== null) ? String(jobRole) : '선택',
+            value: (typeof jobRole !== 'undefined' && jobRole !== null) ? String(jobRole) : '담당업무',
             disabled: false
           }) %>
         </div>
       </div>
 
-      <div class="vits-account-row">
-        <span class="vits-account-label">직급</span>
+      <div class="vits-account-row type-column">
+        <span class="vits-account-label" data-hide>직급</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-text.ejs`, {
@@ -142,7 +176,7 @@
       </div>
 
       <div class="vits-account-row">
-        <span class="vits-account-label">사용여부</span>
+        <span class="vits-account-label" data-hide>사용여부</span>
         <div class="vits-account-field">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/components/form/input-radio.ejs`, {

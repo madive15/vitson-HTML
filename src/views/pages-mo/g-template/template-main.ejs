@@ -1,0 +1,48 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '모바일 템플릿'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <!-- <a href="#skipNav" class="skip-nav">본문 바로가기</a> -->
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-template">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <header class="vm-header">헤더 영역</header>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div>x테스트</div>
+            <div style="height: 200px; background-color: greenyellow; position: sticky; top: 0px; z-index: 9999"></div>
+            <!-- <div style="background-color: blueviolet; height: 400px; display: flex">
+              <div style="height: 200px; flex: 0 0 30%; background: yellow">gkgkgk</div>
+              <div style="background: pink; flex-grow: 1; min-width: 0">dd</div> -->
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <footer class="vm-footer">푸터 영역</footer>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <div class="vm-bottom-group">
+          <div class="vm-bottom-bar" data-bottom-bar="nav">바텀 네비게이션</div>
+        </div>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

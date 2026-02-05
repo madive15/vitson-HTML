@@ -1,0 +1,46 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- 쿠폰 조회 필터 -->
+<div class="vits-mypage-query">
+  <div class="mypage-query-fields">
+    <dl class="mypage-query-period">
+      <dt class="mypage-query-label">조회 기간</dt>
+      <dd class="mypage-query-control">
+        <div class="mypage-query-period-buttons" data-ui="period-btn-group" data-group="order">
+          <button type="button" data-ui="period-btn" data-value="1m" class="mypage-query-btn">
+            <span class="text">전월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="current" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">당월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="6m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">6개월</span>
+          </button>
+          <button type="button" data-ui="period-btn" data-value="12m" class="mypage-query-btn" aria-pressed="false">
+            <span class="text">12년</span>
+          </button>
+        </div>
+      </dd>
+      <dd class="mypage-query-control mypage-query-period-range">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+          options: {
+            id: 'testPickerCouponRange',
+            name: 'couponDate',
+            size: 'm',
+            placeholder: '시작일 ~ 종료일'
+          }
+        }) %>
+      </dd>
+    </dl>
+
+    <div class="mypage-query-buttons">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size: 'sm',
+        variant: 'secondary',
+        text: '조회하기',
+        className: 'mypage-search-btn'
+      }) %>
+    </div>
+  </div>
+</div>
