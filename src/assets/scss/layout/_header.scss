@@ -570,13 +570,15 @@ $brand-scroll-common: map.get(var.$unit, 24);
 
       &-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: map.get(var.$unit, 20) map.get(var.$unit, 16);
       }
     }
 
     .search-product {
       &-card {
+        min-width: 0;
+
         /* stylelint-disable-next-line no-descending-specificity */
         a {
           @include mx.flex(flex, column);

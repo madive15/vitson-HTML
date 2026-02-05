@@ -67,94 +67,89 @@
 
                       <div class="vits-mypage-panel-inner">
                         <!--등록된 결제수단이 없을 때 (type=none 일 때만 노출) -->
-                        <div class="pay-panel-empty" hidden>
-                          <!-- prettier-ignore -->
-                          <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
-                            size: 'xl',
-                            variant: 'secondary',
-                            text: '결제수단 등록',
-                            iconLeft: true,
-                            iconName: 'ic-plus',
-                            className: 'pay-reg-btn' }) 
-                          %>
-                          <!-- prettier-ignore -->
-                          <%- include(`${_src}/views/components/empty-state.ejs`, {
-                            iconName: 'document-paper',
-                              title: '등록된 결제수단이 없습니다.',
-                              desc: '결제수단을 등록해주세요',
-                              buttonHtml
-                            }) %>
-                        </div>
+                        <!-- prettier-ignore -->
+                        <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xl',
+                          variant: 'secondary',
+                          text: '결제수단 등록',
+                          iconLeft: true,
+                          iconName: 'ic-plus',
+                          className: 'pay-reg-btn' }) 
+                        %>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'document-paper',
+                          title: '등록된 결제수단이 없습니다.',
+                          desc: '결제수단을 등록해주세요',
+                          buttonHtml
+                        }) %>
 
                         <!-- 결제수단 목록 영역 (type=card | type=bank 일 때 노출) -->
-                        <div class="pay-panel-has-items">
-                          <!-- 결제수단 등록 버튼 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xl',
+                          variant: 'secondary',
+                          text: '결제수단 등록',
+                          iconLeft: true,
+                          iconName: 'ic-plus',
+                          className: 'pay-reg-btn'
+                        }) %>
+
+                        <% const cardItems = [
+                            { itemName: '신한카드 [나만의 카드]', itemNum: '3318 **** **** ****' },
+                            { itemName: 'KB국민카드 [체크]', itemNum: '5521 **** **** ****' },
+                            { itemName: '삼성카드 [신용]', itemNum: '4532 **** **** ****' },
+                            { itemName: '현대카드 [포인트]', itemNum: '1234 **** **** ****' }
+                          ];
+                          const bankItems = [
+                            { itemName: '우리은행 [별칭]', itemNum: '12344145 ******' },
+                            { itemName: '신한은행 [급여]', itemNum: '110-123-******' },
+                            { itemName: '국민은행 [적금]', itemNum: '123-45-******' },
+                            { itemName: '하나은행 [입출금]', itemNum: '123-456-******' },
+                            { itemName: '농협은행 [통장]', itemNum: '123-12-******' },
+                            { itemName: '기업은행 [개인]', itemNum: '123-45678-******' }
+                          ];
+                        %>
+
+                        <!--[D] type=card-->
+                        <div
+                          class="pay-card-list pay-card-list-card"
+                          data-toggle-scope
+                          data-toggle-group="true"
+                          data-pay-type="card"
+                        >
+                          <% cardItems.forEach(function(item, i) { %>
                           <!-- prettier-ignore -->
-                          <%- include(`${_src}/views/components/button/button.ejs`, {
-                            size: 'xl',
-                            variant: 'secondary',
-                            text: '결제수단 등록',
-                            iconLeft: true,
-                            iconName: 'ic-plus',
-                            className: 'pay-reg-btn'
+                          <%- include(`${_src}/views/components/pg-my-paymanage/my-paymanage-items.ejs`, {
+                            type: 'card',
+                            showBadge: i === 0,
+                            badgeText: '대표',
+                            itemName: item.itemName,
+                            itemNum: item.itemNum,
+                            menuIndex: i
                           }) %>
+                        <% }); %>
+                        </div>
 
-                          <% const cardItems = [
-                              { itemName: '신한카드 [나만의 카드]', itemNum: '3318 **** **** ****' },
-                              { itemName: 'KB국민카드 [체크]', itemNum: '5521 **** **** ****' },
-                              { itemName: '삼성카드 [신용]', itemNum: '4532 **** **** ****' },
-                              { itemName: '현대카드 [포인트]', itemNum: '1234 **** **** ****' }
-                            ];
-                            const bankItems = [
-                              { itemName: '우리은행 [별칭]', itemNum: '12344145 ******' },
-                              { itemName: '신한은행 [급여]', itemNum: '110-123-******' },
-                              { itemName: '국민은행 [적금]', itemNum: '123-45-******' },
-                              { itemName: '하나은행 [입출금]', itemNum: '123-456-******' },
-                              { itemName: '농협은행 [통장]', itemNum: '123-12-******' },
-                              { itemName: '기업은행 [개인]', itemNum: '123-45678-******' }
-                            ];
-                          %>
-
-                          <!--[D] type=card-->
-                          <div
-                            class="pay-card-list pay-card-list-card"
-                            data-toggle-scope
-                            data-toggle-group="true"
-                            data-pay-type="card"
-                          >
-                            <% cardItems.forEach(function(item, i) { %>
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-paymanage/my-paymanage-items.ejs`, {
-                              type: 'card',
-                              showBadge: i === 0,
-                              badgeText: '대표',
-                              itemName: item.itemName,
-                              itemNum: item.itemNum,
-                              menuIndex: i
-                            }) %>
-                          <% }); %>
-                          </div>
-
-                          <!-- [D] type=bank-->
-                          <div
-                            class="pay-card-list pay-card-list-bank"
-                            data-toggle-scope
-                            data-toggle-group="true"
-                            data-pay-type="bank"
-                            style="display: none"
-                          >
-                            <% bankItems.forEach(function(item, i) { %>
-                            <!-- prettier-ignore -->
-                            <%- include(`${_src}/views/components/pg-my-paymanage/my-paymanage-items.ejs`, {
-                              type: 'bank',
-                              showBadge: i === 0,
-                              badgeText: '대표',
-                              itemName: item.itemName,
-                              itemNum: item.itemNum,
-                              menuIndex: i + 10
-                            }) %>
-                          <% }); %>
-                          </div>
+                        <!-- [D] type=bank-->
+                        <div
+                          class="pay-card-list pay-card-list-bank"
+                          data-toggle-scope
+                          data-toggle-group="true"
+                          data-pay-type="bank"
+                          style="display: none"
+                        >
+                          <% bankItems.forEach(function(item, i) { %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/pg-my-paymanage/my-paymanage-items.ejs`, {
+                            type: 'bank',
+                            showBadge: i === 0,
+                            badgeText: '대표',
+                            itemName: item.itemName,
+                            itemNum: item.itemNum,
+                            menuIndex: i + 10
+                          }) %>
+                        <% }); %>
                         </div>
                       </div>
                     </div>
@@ -196,17 +191,39 @@
         };
         document.title = titles[type] || titles.card;
 
-        var panelEmpty = document.querySelector('.pay-panel-empty');
-        var panelHasItems = document.querySelector('.pay-panel-has-items');
-        if (panelEmpty && panelHasItems) {
+        var emptyState = document.querySelector('.main-content-paymanage .vits-empty-state');
+        if (emptyState) {
           if (type === 'none') {
-            panelEmpty.removeAttribute('hidden');
-            panelHasItems.setAttribute('hidden', '');
+            emptyState.removeAttribute('hidden');
           } else {
-            panelEmpty.setAttribute('hidden', '');
-            panelHasItems.removeAttribute('hidden');
+            emptyState.setAttribute('hidden', '');
           }
         }
+
+        var panelCard = document.querySelector('.main-content-paymanage [data-pay-type="card"]');
+        if (panelCard) {
+          if (type === 'none') {
+            panelCard.setAttribute('hidden', '');
+          } else {
+            panelCard.removeAttribute('hidden');
+          }
+        }
+
+        var regBtns = document.querySelectorAll('.main-content-paymanage .pay-reg-btn');
+        regBtns.forEach(function (btn) {
+          var isInEmptyAction = btn.closest('.vits-empty-state-action');
+          if (type === 'none') {
+            if (isInEmptyAction) {
+              btn.removeAttribute('hidden');
+            } else {
+              btn.setAttribute('hidden', '');
+            }
+          } else {
+            if (!isInEmptyAction) {
+              btn.removeAttribute('hidden');
+            }
+          }
+        });
 
         var listCard = document.querySelector('.pay-card-list-card');
         var listBank = document.querySelector('.pay-card-list-bank');
