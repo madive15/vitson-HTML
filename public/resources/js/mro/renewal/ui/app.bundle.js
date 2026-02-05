@@ -8317,6 +8317,25 @@ if (document.body?.dataset?.guide === 'true') {
   window.UI.select.destroyAll = function () {
     destroyAll();
   };
+
+  // 동적 옵션 주입 API
+  window.UI.select.setOptions = function ($root, items) {
+    $root = $($root).closest(ROOT);
+    if (!$root.length) return;
+    if (!items || !items.length) {
+      disableAsNoOption($root);
+      return;
+    }
+    resetToPlaceholder($root, true);
+    enableWithOptions($root, items);
+  };
+
+  // 선택 초기화 API
+  window.UI.select.reset = function ($root) {
+    $root = $($root).closest(ROOT);
+    if (!$root.length) return;
+    resetToPlaceholder($root, true);
+  };
 })(window.jQuery, window, document);
 
 /***/ }),
