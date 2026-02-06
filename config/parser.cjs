@@ -52,9 +52,7 @@ const getEjsFile = ({dir, type, dirPath}, files_) => {
               data: {
                 ...env.parsed,
                 srcPath: `${dirPath}/src`,
-                // 26-02-05 [모바일 확인용 추가] 기존 소스 주석
-                // publicPath: type === 'development' ? `http://localhost:${localPort}` : `${dirPath}/public`
-                publicPath: type === 'development' ? '' : `${dirPath}/public`
+                publicPath: type === 'development' ? `http://localhost:${localPort}` : `${dirPath}/public`
               }
             }
           })
