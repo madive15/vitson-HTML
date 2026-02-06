@@ -1,0 +1,80 @@
+// -----------------------------------------------------------------------------
+// layout-mo/_bottom-bar.scss
+// - 하단 고정 바 내부 스타일 (tab-bar, action-bar 등)
+// - ⚠️ 클래스 네이밍: bottom-{타입} (예: bottom-tab-bar, bottom-action-bar)
+// - ⚠️ 타입 추가 시 $mo-bottom-bar 맵에 키 추가 → .vm-wrap 여백 자동 반영
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+.vm-bottom-bar {
+  > [class*='bottom-'] {
+    // padding-bottom: var(--safe-bottom);
+  }
+
+  // 바텀바 타입별 최소 높이 자동 생성 ($mo-bottom-bar 맵 기준)
+  @each $type, $height in var.$mo-bottom-bar {
+    .bottom-#{$type} {
+      min-height: calc(#{$height} + var(--safe-bottom));
+    }
+  }
+
+  // tab-bar
+  .bottom-tab-bar {
+    @include mx.border('top', $color: map.get(color.$neutral-colors, '9'));
+    padding: map.get(var.$unit, 8);
+    background: color.$color-white;
+    box-shadow: map.get(var.$box-shadow, 'mo_menu');
+
+    .tab-bar {
+      &-nav {
+        @include mx.flex(flex, row, center, center);
+        width: 100%;
+      }
+
+      &-items {
+        @include mx.flex(flex, row, center, center);
+        gap: map.get(var.$unit, 16);
+      }
+
+      &-item {
+        flex: 0 0 fn.rem(54);
+
+        .vits-btn-vertical-icon {
+          @include mx.flex(flex, column, flex-start, center);
+          gap: map.get(var.$unit, 4);
+          width: 100%;
+          padding: fn.rem(5) 0;
+
+          .icon {
+            @include icon.ic-size(map.get(var.$unit, 24));
+            color: map.get(color.$neutral-colors, '3');
+          }
+
+          .text {
+            @include typo.font-style(
+              $weight: 500,
+              $size: 10,
+              $line-height: fn.rem(16),
+              $color: map.get(color.$neutral-colors, '3')
+            );
+            white-space: nowrap;
+          }
+        }
+
+        &.is-active .vits-btn-vertical-icon {
+          .icon,
+          .text {
+            color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+      }
+    }
+  }
+}

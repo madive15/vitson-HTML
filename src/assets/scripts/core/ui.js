@@ -38,6 +38,7 @@ import '../ui/filter-expand.js';
 import '../ui/cart-order/cart-order.js';
 import '../ui/kendo/kendo.js';
 import '../ui/auth-ui.js';
+import '../ui/support-ui.js';
 
 (function (window) {
   'use strict';
@@ -80,6 +81,7 @@ import '../ui/auth-ui.js';
     if (window.UI.filterExpand && window.UI.filterExpand.init) window.UI.filterExpand.init();
     if (window.UI.cartOrder && window.UI.cartOrder.init) window.UI.cartOrder.init();
     if (window.UI.authUi && window.UI.authUi.init) window.UI.authUi.init();
+    if (window.UI.mypageSupport && window.UI.mypageSupport.init) window.UI.mypageSupport.init();
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
     if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };

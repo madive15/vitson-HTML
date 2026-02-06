@@ -1,0 +1,11 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<div class="vm-bottom-bar">
+  <% if (type === 'tab-bar') { %>
+    <!-- prettier-ignore -->
+    <%- include('./tab-bar.ejs', { 
+      currentTab: typeof currentTab !== 'undefined' ? currentTab : '' 
+    }) %>
+  <% } %>
+</div>
