@@ -51,7 +51,7 @@ const getEjsFile = ({dir, type, dirPath}, files_) => {
               data: {
                 ...env.parsed,
                 srcPath: `${dirPath}/src`,
-                publicPath: type === 'development' ? '' : '../public'
+                publicPath: type === 'development' ? `http://localhost:${localPort}` : `${dirPath}/public`
               }
             }
           })

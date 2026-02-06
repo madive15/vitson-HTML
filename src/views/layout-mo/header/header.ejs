@@ -1,0 +1,8 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% if (type === 'main') { %>
+  <%- include('./main.ejs') %>
+<% } else if (type === 'nav-bar') { %>
+  <%- include('./nav-bar.ejs', { title: title }) %>
+<% } %>
