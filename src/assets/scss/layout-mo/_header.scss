@@ -1,0 +1,64 @@
+// -----------------------------------------------------------------------------
+// layout-mo/_header.scss
+// - 모바일 헤더 내부 UI 전용
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+@mixin nav-bar-common-btn($tag) {
+  @if $tag == 'button' {
+    @include button.btn-reset;
+  }
+
+  @include icon.ic-size(fn.rem(28));
+  display: block;
+  color: map.get(color.$icon-neutral, 'primary');
+}
+
+.vm-header {
+  @include mx.position(sticky, 0);
+  z-index: map.get(var.$mo-zindex, 'header');
+
+  // nav-bar
+  &.header-nav-bar {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 8);
+    height: map.get(var.$mo-header, 'nav-bar');
+    padding: 0 map.get(var.$unit, 16) 0 fn.rem(7);
+    background: color.$color-white;
+
+    .vm-header {
+      &-back {
+        @include icon.ic-size(fn.rem(28));
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      &-title {
+        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+        margin-left: auto;
+      }
+
+      &-btn {
+        &:is(a) {
+          @include nav-bar-common-btn('a');
+        }
+
+        &:is(button) {
+          @include nav-bar-common-btn('button');
+        }
+      }
+    }
+  }
+}

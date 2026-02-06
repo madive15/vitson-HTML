@@ -10,6 +10,7 @@ module.exports = (dirPath, scssOptions, localPort) => ({
     host: '0.0.0.0',
     port: localPort,
     hot: true,
+    allowedHosts: 'all', // 26-02-05 [모바일 확인용 추가]
     watchFiles: ['src/**/*.ejs', 'src/**/*.scss']
   },
   stats: {

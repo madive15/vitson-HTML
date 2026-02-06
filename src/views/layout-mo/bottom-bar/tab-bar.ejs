@@ -1,0 +1,25 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const current = typeof currentTab !== 'undefined' ? currentTab : ''; %>
+<%
+const tabBarItems = [
+  { id: 'category', icon: 'menu', label: '카테고리', href: '#!' },
+  { id: 'search', icon: 'magnifying-glass', label: '검색', href: '#!' },
+  { id: 'home', icon: 'home2', label: '홈', href: '#!' },
+  { id: 'like', icon: 'heart', label: '좋아요', href: '#!' },
+  { id: 'mypage', icon: 'user', label: '마이페이지', href: '#!' }
+];
+%>
+
+<div class="bottom-tab-bar">
+  <nav class="tab-bar-nav">
+    <ul class="tab-bar-items">
+      <% tabBarItems.forEach(function(item) { %>
+      <li class="tab-bar-item<%= current === item.id ? ' is-active' : '' %>">
+        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item) %>
+      </li>
+      <% }); %>
+    </ul>
+  </nav>
+</div>
