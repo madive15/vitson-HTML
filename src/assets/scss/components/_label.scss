@@ -240,15 +240,15 @@
 // vits-general-label: 공통 상태/카테고리 레이블 (4가지 색상 타입, 개별 사용 가능 )
 // -----------------------------------------------------------------------------
 .vits-general-label {
-  @include typo.typography('b5r');
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: fn.rem(18);
   padding: 0 map.get(var.$unit, 4);
-  line-height: 1.4;
   white-space: nowrap;
   border-radius: map.get(var.$radius, 'sm');
+
+  @include typo.typography('b5r');
 
   &.is-general-blue {
     color: map.get(color.$text-status, 'info');

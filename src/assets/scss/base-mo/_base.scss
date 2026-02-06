@@ -1,38 +1,115 @@
 // -----------------------------------------------------------------------------
 // base-mo/_base.scss
-// - 모바일 전역 기본 스타일 및 공통 유틸(.sr-only 등) 정의
+// - 모바일 레이아웃 기본 구조
+// - full-height, bottom-bar-spacing 믹스인 포함
 // -----------------------------------------------------------------------------
 
-@use 'sass:map';
 @use '@/assets/scss/abstracts/mixins' as mx;
-@use '@/assets/scss/abstracts/variables' as var;
-@use '@/assets/scss/base/typography' as typo;
-@use '@/assets/scss/base/colors' as color;
 
-/* Skip Navigation */
-.skip-nav {
-  @include mx.border('all', $color: map.get(color.$text-colors, 'default'));
-  @include typo.typography('b4m');
-  position: absolute;
-  top: -9999px; /* 기본은 화면 밖 */
+// --- 믹스인 ---
+@mixin full-height {
+  min-height: calc(var(--vh) * 100);
+}
+
+@mixin bottom-bar-spacing($property: padding-bottom) {
+  #{$property}: calc(var(--bottom-bar-h) + var(--safe-bottom));
+}
+
+// --- 변수 ---
+:root {
+  --vh: 1dvh;
+  --safe-top: env(safe-area-inset-top, 0);
+  --safe-bottom: env(safe-area-inset-bottom, 0);
+  --safe-left: env(safe-area-inset-left, 0);
+  --safe-right: env(safe-area-inset-right, 0);
+  --bottom-bar-h: 56px;
+}
+
+html.vm-scope,
+html.vm-scope body {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+// --- 전체 래퍼 (운영 영역, 클래스 추가 불가) ---
+.vm-wrapper {
+  position: relative;
+}
+
+// --- 제어 래퍼 (1depth 스코프, 상태 클래스 대상) ---
+.vm-wrap {
+  @include mx.flex(flex, column);
+  @include full-height;
+}
+
+// 스크롤 잠금
+.vm-wrap.is-locked {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+// 바텀바 있을 때 콘텐츠 가림 방지
+.vm-wrap.has-bottom-bar {
+  @include bottom-bar-spacing;
+}
+
+// --- 콘텐츠 래퍼 (header + main + footer) ---
+.vm-content-wrap {
+  flex: 1 1 auto;
+  padding-top: var(--safe-top);
+  background: skyblue;
+
+  @include mx.flex(flex, column);
+}
+
+// --- 헤더 ---
+.vm-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+  min-height: 56px;
+  background: tomato;
+}
+
+// --- 메인 ---
+.vm-main {
+  flex: 1 1 auto;
+  background: #fff;
+}
+
+// --- 푸터 ---
+.vm-footer {
+  flex-shrink: 0;
+  min-height: 100px;
+  color: #fff;
+  background: #333;
+}
+
+// --- 하단 고정 그룹 ---
+.vm-bottom-group {
+  position: fixed;
+  right: 0;
+  bottom: 0;
   left: 0;
-  z-index: var.$zindex-skipnav;
-  padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
-  background: color.$color-white;
-  outline: 0;
+  z-index: 90;
+  background: gold;
 
-  &:focus,
-  &:focus-visible {
-    top: 0; /* 포커스 시 노출 */
+  &[hidden] {
+    display: none;
   }
 }
 
-// 스크린 리더 전용 숨김 처리
-.sr-only {
-  @include mx.sr-only;
-}
+.vm-bottom-bar {
+  min-height: 56px;
+  padding-bottom: var(--safe-bottom);
+  background: orange;
 
-[hidden],
-.is-hidden {
-  display: none !important;
+  &[hidden] {
+    display: none;
+  }
 }

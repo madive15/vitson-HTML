@@ -1,14 +1,12 @@
 <!-- prettier-ignore -->
 <% /**
   * 테이블 tbody 한 줄 컴포넌트 (type별 row)
-  * @param {string} type - 'account' | 'shipping' | 'survey' | 'survey-ing' | 'bulk' (필요 시 추가)
+  * @param {string} type - 'account' | 'shipping' | 'survey' (필요 시 추가)
   * @param {string} [srcPath] - include 경로용
   * @param {string} [publicPath] - public 경로용
   * type=account: rowIndex, userId, name, department, position, phone, status, checked 등
   * type=shipping: isDefault, addrName, recipient, contact, address, cargo, office 등
-  * type=survey: rowIndex, title, startDate, endDate, status, starScore, starMax (설문 조회)
-  * type=survey-ing: rowIndex, question (설문 참여 중 문항 행, 별점 제외)
-  * type=bulk: rowIndex, productInfo, title, status, date (대량구매문의 목록)
+  * type=survey: rowIndex, title, startDate, endDate, status (설문 조회)
   */ %>
 <% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
 <% const _type = typeof type !== 'undefined' ? type : ''; %>
@@ -107,8 +105,6 @@
   const _startDate = typeof startDate !== 'undefined' ? startDate : '';
   const _endDate = typeof endDate !== 'undefined' ? endDate : '';
   const _status = typeof status !== 'undefined' ? status : '';
-  const _starScore = typeof starScore !== 'undefined' ? starScore : 5;
-  const _starMax = typeof starMax !== 'undefined' ? starMax : 5;
 %>
 <tr class="survey-table-row">
   <td><span class="survey-table-num"><%= _rowIndex %></span></td>
@@ -123,83 +119,13 @@
     <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %>
     <% } %>
   </td>
-  <td>
-    <!-- prettier-ignore -->
-    <div class="star-rating">
-      <div class="star-stars" role="img" aria-label="별점 <%= _starScore %>점 만점 <%= _starMax %>점">
-        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됩니다.-->
-        <div class="star-track">
-          <span class="star-layer star-layer-gray"></span>
-          <span class="star-layer star-layer-fill" style="width: <%= (_starMax > 0 ? (Number(_starScore) / Number(_starMax) * 100).toFixed(2) : '0.00') %>%;"></span>
-          <span class="star-layer star-layer-shape"></span>
-        </div>
-      </div>
-      <span class="star-value">
-        <span class="star-score"><%= _starScore == 0 ? '-' : _starScore %></span>
-        <span class="star-sep">|</span>
-        <span class="star-max"><%= _starMax %></span>
-      </span>
-    </div>
-  </td>
+  <td></td>
   <td>
     <div class="survey-table-actions">
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName: 'ic-document-paper', iconLeft: true, text: '보기' }) %>
     </div>
   </td>
-</tr>
-
-<% } else if (_type === 'survey-ing') { %>
-<!-- prettier-ignore -->
-<%
-  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
-  const _question = typeof question !== 'undefined' ? question : '';
-%>
-<tr class="survey-ing-row">
-  <td><span class="survey-ing-num"><%= _rowIndex %></span></td>
-  <td><span class="survey-ing-question"><%= _question || '—' %></span></td>
-  <td>
-    <!-- [D] 별점 입력: support-ui.js에서 이벤트 처리 -->
-    <div class="star-rating-input" role="group" aria-label="별점 선택">
-      <div class="star-rating-input-stars">
-        <% for (var i = 1; i <= 5; i++) { %>
-        <button type="button" class="star-rating-input-star" data-star-value="<%= i %>" aria-label="<%= i %>점">
-          <i class="ic ic-star" aria-hidden="true"></i>
-        </button>
-        <% } %>
-      </div>
-      <span class="star-value" hidden>
-        <span class="star-score">0</span>
-        <span class="star-sep">|</span>
-        <span class="star-max">5</span>
-      </span>
-    </div>
-  </td>
-</tr>
-
-<% } else if (_type === 'bulk') { %>
-<!-- prettier-ignore -->
-<%
-  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
-  const _productInfo = typeof productInfo !== 'undefined' ? productInfo : '';
-  const _title = typeof title !== 'undefined' ? title : '';
-  const _status = typeof status !== 'undefined' ? status : '답변대기';
-  const _date = typeof date !== 'undefined' ? date : '';
-%>
-<tr class="bulk-table-row">
-  <td><span class="bulk-table-num"><%= _rowIndex %></span></td>
-  <td><span class="bulk-table-product"><%= _productInfo || '—' %></span></td>
-  <td><span class="bulk-table-title"><%= _title || '—' %></span></td>
-  <td>
-    <% if (_status === '답변완료') { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'green' }) %>
-    <% } else { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %>
-    <% } %>
-  </td>
-  <td><span class="bulk-table-date"><%= _date || '—' %></span></td>
 </tr>
 
 <% } %>

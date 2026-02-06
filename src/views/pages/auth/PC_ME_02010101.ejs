@@ -1,6 +1,6 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
-<% const pageType = typeof type !== 'undefined' ? type : 'signup'; %>
+<% const pageType = typeof type !== 'undefined' ? type :'signup'; %>
 <!DOCTYPE html>
 <!--
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -110,6 +110,33 @@
                                   placeholder: '아이디',
                                   required: true,
                                   rootClass: 'size-large'
+                                }) %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/button/button.ejs`, {
+                                  type: 'button',
+                                  size: 'lg-p',
+                                  variant: 'secondary',
+                                  text: '비밀번호 변경',
+                                  className: 'vits-signup-btn',
+                                }) %>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="vits-form-column" data-hide-on-signup>
+                            <div class="vits-form-label">아이디</div>
+
+                            <div class="vits-form-row">
+                              <div class="vits-form-field">
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                  id: 'signup-id',
+                                  name: 'userId',
+                                  label: '아이디',
+                                  placeholder: '아이디',
+                                  required: true,
+                                  rootClass: 'size-large',
+                                  disabled: true
                                 }) %>
                                 <!-- prettier-ignore -->
                                 <%- include(`${_src}/views/components/button/button.ejs`, {
@@ -254,7 +281,6 @@
                                     { value: 'daum.net', text: 'daum.net' },
                                     { value: 'hanmail.net', text: 'hanmail.net' },
                                     { value: 'gmail.com', text: 'gmail.com' },
-                                    { value: 'nate.com', text: 'nate.com' },
                                   ],
                                   isValid: true,
                                   value: 'naver.com',
@@ -351,7 +377,7 @@
                                   class="vits-modify-marketing-btn"
                                   data-toggle-btn
                                   data-toggle-target="marketing-detail"
-                                  aria-expanded="false"
+                                  aria-expanded="true"
                                   aria-label="마케팅 및 광고 알림 설정 펼치기/접기"
                                 >
                                   <span class="vits-modify-marketing-text is-expanded">접기</span>
@@ -361,7 +387,7 @@
                                   </span>
                                 </button>
                               </div>
-                              <div class="vits-modify-marketing-body" data-toggle-box="marketing-detail">
+                              <div class="vits-modify-marketing-body is-open" data-toggle-box="marketing-detail">
                                 <div class="vits-modify-marketing-list">
                                   <div class="vits-modify-marketing-item">
                                     <!-- prettier-ignore -->
@@ -474,6 +500,9 @@
                                 }) %>
                               </div>
                             </div>
+                          </div>
+                          <div class="vits-form-column">
+                            <div class="vits-form-label" data-hide-on-signup>대표정보</div>
                             <div class="vits-form-row">
                               <div class="vits-form-field">
                                 <!-- prettier-ignore -->
@@ -530,7 +559,7 @@
                               class="vits-signup-tax-btn"
                               data-toggle-btn
                               data-toggle-target="tax-detail"
-                              aria-expanded="false"
+                              aria-expanded="true"
                               aria-label="세금계산서 정보 펼치기/접기"
                             >
                               <span class="vits-signup-tax-text is-expanded">접기</span>
@@ -540,7 +569,7 @@
                               </span>
                             </button>
                           </div>
-                          <div class="vits-signup-tax-body" data-toggle-box="tax-detail">
+                          <div class="vits-signup-tax-body is-open" data-toggle-box="tax-detail">
                             <div class="vits-signup-form">
                               <!-- 세금계산서 수령 이메일 -->
                               <div class="vits-form-column">
@@ -637,37 +666,13 @@
                                       name: 'refundBank',
                                       placeholder: '은행선택',
                                       className: 'size-l',
-                                      maxHeight: '250',
                                       options: [
                                         { value: '', text: '은행선택' },
-                                        { value: 'industry', text: '산업은행' },
-                                        { value: 'enterprise', text: '기업은행' },
                                         { value: 'kb', text: '국민은행' },
-                                        { value: 'keb', text: '외환은행' },
-                                        { value: 'suhyup', text: '수협' },
-                                        { value: 'dy', text: '동양증권' },
-                                        { value: 'nh', text: '농협은행' },
-                                        { value: 'woori', text: '우리은행' },
-                                        { value: 'sc', text: 'SC은행' },
-                                        { value: 'citi', text: '한국씨티은행' },
-                                        { value: 'mirae', text: '미래에셋증권' },
-                                        { value: 'daebu', text: '대구은행' },
-                                        { value: 'busan', text: '부산은행' },
-                                        { value: 'gwangju', text: '광주은행' },
-                                        { value: 'jeju', text: '제주은행' },
-                                        { value: 'jeonbuk', text: '전북은행' },
-                                        { value: 'gyeongnam', text: '경남은행' },
-                                        { value: 'samsung', text: '삼성증권' },
-                                        { value: 'korea_investment', text: '한국투자증권' },
-                                        { value: 'saemaeul', text: '새마을금고' },
-                                        { value: 'sinhyup', text: '신협' },
-                                        { value: 'hanwha', text: '한화증권' },
-                                        { value: 'post', text: '우체국' },
-                                        { value: 'shinhan_investment', text: '신한금융투자증권' },
-                                        { value: 'hana', text: '하나은행' },
                                         { value: 'shinhan', text: '신한은행' },
-                                        { value: 'kbank', text: '케이뱅크' },
-                                        { value: 'kakao', text: '카카오뱅크' },
+                                        { value: 'woori', text: '우리은행' },
+                                        { value: 'hana', text: '하나은행' },
+                                        { value: 'nh', text: '농협은행' },
                                       ],
                                       disabled: false,
                                     }) %>
@@ -763,7 +768,7 @@
                     <div class="vits-signup-footer">
                       <ul class="vits-signup-footer-list">
                         <li class="vits-signup-footer-item">
-                          <button class="type-member-delete vits-text-underline-button" type="button">회원 탈퇴</button>
+                          <button class="type-member-delete vits-text-underline-button" type="button">회원탈퇴</button>
                         </li>
                         <li class="vits-signup-footer-item">
                           <button class="type-member-transfer vits-text-underline-button" type="button">
