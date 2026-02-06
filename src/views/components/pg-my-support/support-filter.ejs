@@ -1,5 +1,50 @@
-<% const _src = srcPath; const _public = publicPath; %>
-<!-- 쿠폰 조회 필터 -->
+<!-- prettier-ignore -->
+<% /**
+  * 마이페이지 지원/문의 필터 컴포넌트 (type별)
+  * @param {string} [type] - ''(기본) | 'bulk' (필요 시 추가)
+  * @param {string} [srcPath] - include 경로용
+  * @param {string} [publicPath] - public 경로용
+  * type 없음: 조회기간/연도/조회하기 등 기본 필터
+  * type=bulk: 일괄 처리용 필터 영역
+  */ %>
+<% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
+<% const _type = typeof type !== 'undefined' ? type : ''; %>
+
+<!-- 대량구매문의 필터 -->
+<% if (_type === 'bulk') { %>
+<!-- prettier-ignore -->
+<%
+  const _totalCount = typeof totalCount !== 'undefined' ? totalCount : 23;
+  const _pageSizeOptions = [
+    { value: '20', text: '10개씩 보기' },
+    { value: '40', text: '40개씩 보기' },
+    { value: '60', text: '60개씩 보기' }
+  ];
+  const _pageSize = (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '10';
+%>
+
+<div class="vits-mypage-support-toolbar">
+  <div class="support-toolbar-left">
+    <p class="support-toolbar-count">총 <b><%= _totalCount %></b>개</p>
+    <div class="support-toolbar-size">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'support-page-size',
+        name: 'pageSize',
+        placeholder: _pageSizeOptions[0].text,
+        options: _pageSizeOptions,
+        value: _pageSize,
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+    </div>
+  </div>
+</div>
+
+<% } else { %>
+<!-- #default: type 없음 (설문조사) -->
 <div class="vits-mypage-query">
   <div class="mypage-query-fields">
     <dl class="mypage-query-period">
@@ -23,24 +68,48 @@
       <dd class="mypage-query-control mypage-query-period-range">
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
-          options: {
-            id: 'testPickerCouponRange',
-            name: 'couponDate',
-            size: 'm',
-            placeholder: '시작일 ~ 종료일'
-          }
-        }) %>
+            options: {
+              id: 'testPickerCouponRange',
+              name: 'couponDate',
+              size: 'm',
+              placeholder: '시작일 ~ 종료일'
+            }
+          }) %>
+      </dd>
+      <dd class="mypage-query-control mypage-query-select-year">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'support-year-select',
+            name: 'year',
+            placeholder: '연도 선택',
+            options: [
+              { value: '2025', text: '2025' },
+              { value: '2024', text: '2024' },
+              { value: '2023', text: '2023' },
+              { value: '2022', text: '2022' },
+              { value: '2021', text: '2021' },
+              { value: '2020', text: '2020' },
+              { value: '2019', text: '2019' },
+              { value: '2018', text: '2018' },
+              { value: '2017', text: '2017' },
+              { value: '2016', text: '2016' },
+              { value: '2015', text: '2015' },
+            ],
+            value: (typeof year !== 'undefined' && year !== null) ? String(year) : '연도 선택',
+            disabled: false
+          }) %>
       </dd>
     </dl>
 
     <div class="mypage-query-buttons">
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, {
-        size: 'sm',
-        variant: 'secondary',
-        text: '조회하기',
-        className: 'mypage-search-btn'
-      }) %>
+          size: 'sm',
+          variant: 'secondary',
+          text: '조회하기',
+          className: 'mypage-search-btn'
+        }) %>
     </div>
   </div>
 </div>
+<% } %>
