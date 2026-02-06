@@ -45,8 +45,7 @@ const getEjsFile = ({dir, type, dirPath}, files_) => {
           template: htmlWebpackPluginTemplateCustomizer({
             templatePath: `${dirPath}/src/${parts[1]}`,
             htmlLoaderOption: {
-              minimize: false,
-              sources: false // 26-02-05 [모바일 확인용 추가]
+              minimize: false
             },
             templateEjsLoaderOption: {
               data: {

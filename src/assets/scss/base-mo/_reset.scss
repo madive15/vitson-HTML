@@ -2,3 +2,24 @@
 // base-mo/_reset.scss
 // - 모바일 브라우저 기본 동작 보정
 // -----------------------------------------------------------------------------
+:root {
+  --vh: 1vh;
+  --safe-top: env(safe-area-inset-top, 0);
+  --safe-bottom: env(safe-area-inset-bottom, 0);
+  --safe-left: env(safe-area-inset-left, 0);
+  --safe-right: env(safe-area-inset-right, 0);
+  --bottom-bar-h: 56px;
+}
+
+html.vm-scope,
+.vm-scope body {
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.vm-scope {
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
