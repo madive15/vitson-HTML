@@ -764,6 +764,77 @@
             </li>
           </ul>
         </div>
+
+        <!-- 밑줄 텍스트 버튼 -->
+        <h3 class="vits-guide-subtitle">밑줄 텍스트 버튼</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;!--
+[사용 가능한 파라미터]
+- text: string (필수) - 버튼 텍스트
+- tag: 'button' | 'a' (기본: 'button') - HTML 태그
+- href: string (기본: '#!') - tag가 'a'일 때 링크 URL
+- fs: 'b3' | 'b2' (기본: '') - 폰트 사이즈 variant
+- height: number (기본: '') - 높이값 (예: 18, 19, 21, 24)
+- fc: string (기본: '') - 폰트 색상 (예: 'brand-sub')
+- offset: number (기본: '') - 라인 간격 조정 클래스 (예: 2, 3, 5)
+- className: string (기본: '') - 추가 클래스
+
+[사용 예시]
+&lt;%- include('text-underline-button.ejs', {
+  text: '도움말',
+  fs: 'b3',
+  height: 19
+}) %&gt;
+
+&lt;%- include('text-underline-button.ejs', {
+  text: '자세히 보기',
+  tag: 'a',
+  href: '/help',
+  fs: 'b2',
+  height: 21,
+  fc: 'brand',
+}) %&gt;
+--&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<!-- prettier-ignore -->
+
+
+
+
+
+<button class="vits-text-underline-button fs-b3 height-19" type="button">도움말</button>
+
+
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              
+
+<!-- prettier-ignore -->
+
+
+
+
+
+<a class="vits-text-underline-button fs-b2 height-21 fc-brand-sub" href="/help">자세히 보기</a>
+
+
+            </li>
+          </ul>
+        </div>
       </section>
       <!-- E: vits-guide-wrapper -->
     </main>

@@ -88,6 +88,113 @@
 
 /***/ }),
 
+/***/ 1234:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/category/mo-category-tree-search.js
+ * @description 모바일 필터 팝업 내 카테고리 트리 + 더보기/접기
+ * @scope .vm-filter-popup 내부
+ *
+ * @state is-open(패널 열림)
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var MODULE_KEY = 'CategoryTreeSearch';
+  var EVENT_NS = '.' + MODULE_KEY;
+  var SCOPE = '.vm-filter-popup';
+  var TREE_ROOT = SCOPE + ' .vits-category-tree-list .vits-category-tree';
+  var BTN = '[data-tree-toggle]';
+  var ITEM = '.category-tree-item';
+  var PANEL = '.category-tree-panel';
+  var MORE_BTN = '[data-search-more-btn]';
+  var MORE_SCOPE = '[data-search-more-scope]';
+  var MORE_TOGGLE = '[data-search-more-toggle]';
+  var CLS_OPEN = 'is-open';
+  var TXT_MORE = '더보기';
+  var TXT_LESS = '접기';
+  var IC_PLUS = 'ic-plus';
+  var IC_MINUS = 'ic-minus';
+
+  // 패널 토글
+  function togglePanel($btn) {
+    var $item = $btn.closest(ITEM);
+    var $panel = $item.children(PANEL).first();
+    if (!$panel.length) return;
+    var isOpen = $panel.hasClass(CLS_OPEN);
+    $panel.toggleClass(CLS_OPEN, !isOpen);
+    $btn.attr('aria-expanded', String(!isOpen));
+  }
+
+  // 모든 패널 접힘
+  function collapseAll($tree) {
+    $tree.find(PANEL).removeClass(CLS_OPEN);
+    $tree.find(BTN).attr('aria-expanded', 'false');
+  }
+
+  // 더보기/접기
+  function bindMoreToggle() {
+    $(SCOPE).off('click' + EVENT_NS, MORE_BTN).on('click' + EVENT_NS, MORE_BTN, function () {
+      var $btn = $(this);
+      var $scope = $btn.closest(MORE_SCOPE);
+      if (!$scope.length) return;
+      var $target = $scope.find(MORE_TOGGLE);
+      if (!$target.length) return;
+      var isVisible = $target.is(':visible');
+      $target.toggle(!isVisible);
+      $btn.find('.text').contents().first().replaceWith(isVisible ? TXT_MORE + ' ' : TXT_LESS + ' ');
+      $btn.find('.count').toggle(isVisible);
+      $btn.find('.icon .ic').toggleClass(IC_PLUS, isVisible).toggleClass(IC_MINUS, !isVisible);
+    });
+  }
+  function createInstance($tree) {
+    function bindTree() {
+      $tree.off('click' + EVENT_NS).on('click' + EVENT_NS, BTN, function (e) {
+        e.preventDefault();
+        togglePanel($(this));
+      });
+    }
+    function init() {
+      collapseAll($tree);
+      bindTree();
+    }
+    function destroy() {
+      $tree.off(EVENT_NS);
+    }
+    return {
+      init: init,
+      destroy: destroy
+    };
+  }
+  window.UI.CategoryTreeSearch = {
+    init: function () {
+      bindMoreToggle();
+      $(TREE_ROOT).each(function () {
+        var $tree = $(this);
+        var inst = $tree.data(MODULE_KEY);
+        if (!inst) {
+          inst = createInstance($tree);
+          $tree.data(MODULE_KEY, inst);
+        }
+        inst.init();
+      });
+    },
+    destroy: function () {
+      $(SCOPE).off('click' + EVENT_NS, MORE_BTN);
+      $(TREE_ROOT).each(function () {
+        var inst = $(this).data(MODULE_KEY);
+        if (inst && typeof inst.destroy === 'function') inst.destroy();
+      });
+    }
+  };
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 1781:
 /***/ (function() {
 
@@ -412,20 +519,6 @@
     return html.join('');
   }
 
-  // 브랜드 더보기 초기화
-  function resetBrandMore() {
-    var $brandSection = $(SEL.popup).find('[data-filter-group="ck-brand"]');
-    var $hidden = $brandSection.find('.filter-popup-hidden');
-    if ($hidden.length && !$hidden.hasClass(CLS.hidden)) {
-      $hidden.addClass(CLS.hidden);
-      $brandSection.removeClass(CLS.expanded);
-      if (!$brandSection.find('[data-filter-more]').length) {
-        var count = $hidden.find('input[type="checkbox"]').length;
-        $brandSection.find('.filter-popup-body').append('<button type="button" class="vits-btn-sm vits-btn-outline-tertiary icon-left" data-filter-more>' + '<span class="icon"><i class="ic ic-plus" aria-hidden="true"></i></span>' + '<span class="text">더보기 (' + count + '개)</span>' + '</button>');
-      }
-    }
-  }
-
   // 이벤트 바인딩
   function bindEvents() {
     if (_bound) return;
@@ -501,9 +594,6 @@
       $('input[type="checkbox"]').each(function () {
         if (this.name) $(this).prop('checked', false);
       });
-
-      // 브랜드 더보기 초기화
-      resetBrandMore();
       _categoryChanged = true;
       if (!d4.length) {
         $inlineAttr.hide();
@@ -1017,17 +1107,20 @@ var product_inline_banner = __webpack_require__(905);
 })(window.jQuery, window);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
 var category_sheet = __webpack_require__(6410);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
+var category_tree_search = __webpack_require__(1234);
 ;// ./src/assets/scripts-mo/ui/category/index.js
 /**
  * @file scripts-mo/ui/category/index.js
  * @description 카테고리 UI 관련 모듈 통합 관리
  */
 
+
 (function (window) {
   'use strict';
 
   window.UI = window.UI || {};
-  var modules = ['CategorySheet'];
+  var modules = ['CategorySheet', 'CategoryTreeSearch'];
   window.UI.category = {
     init: function () {
       modules.forEach(function (name) {
