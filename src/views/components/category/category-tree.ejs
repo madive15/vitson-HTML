@@ -1,87 +1,78 @@
 <!-- prettier-ignore -->
-<%# category-tree.ejs: 검색결과 카테고리 트리 (1뎁스 단위 블록 × N개, 기본 접힘) %>
+<%# category-tree.ejs: 좌측 카테고리 트리(1~3뎁스) 렌더링 + depth1Id/2Id/3Id 기준 초기 active/hidden 처리(드릴다운) %>
 <%
   var _tree = Array.isArray(treeData) ? treeData : [];
-  function _validList(list) {
-    if (!Array.isArray(list)) return [];
-    return list.filter(function (n) { return n && n.categoryCode; });
-  }
+  var _d1 = String(depth1Id || '');
+  var _d2 = String(depth2Id || '');
+  var _d3 = String(depth3Id || '');
+
+  function _eq(a, b) { return String(a || '') === String(b || ''); }
+  function _hasChildren(list) { return Array.isArray(list) && list.length > 0; }
 %>
 
-<div class="vits-category-tree-list">
-  <!-- prettier-ignore -->
-  <% _tree.forEach(function (lv1) {
-    if (!lv1 || !lv1.categoryCode) return;
-    var d1Code = String(lv1.categoryCode);
-    var lv2List = _validList(lv1.categoryList);
-    var hasLv2 = lv2List.length > 0;
-  %>
-  <nav class="vits-category-tree" aria-label="<%= lv1.categoryNm || '' %>">
-    <ul class="category-tree-depth1">
-      <li class="category-tree-item">
-        <button
-          type="button"
-          class="category-tree-btn"
-          data-depth="1"
-          data-id="<%= d1Code %>"
-          data-has-children="<%= hasLv2 ? 'true' : 'false' %>"
-          aria-expanded="false"
-        >
-          <span class="category-tree-text"><%= lv1.categoryNm || '' %></span>
-          <% if (hasLv2) { %>
-          <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %></span>
-          <% } %>
-        </button>
+<nav class="vits-category-tree" aria-label="카테고리">
+  <ul class="category-tree-depth1">
+    <% _tree.forEach(function (lv1) { if (!lv1 || !lv1.categoryCode) return; var d1Code = String(lv1.categoryCode); var
+    d1On = _d1 && _eq(d1Code, _d1); var hideD1 = _d1 ? !d1On : false; var lv2List = Array.isArray(lv1.categoryList) ?
+    lv1.categoryList : []; %>
+    <li class="category-tree-item <%= d1On ? 'is-active' : '' %><%= hideD1 ? ' is-hidden' : '' %>">
+      <button
+        type="button"
+        class="category-tree-btn"
+        data-depth="1"
+        data-id="<%= d1Code %>"
+        data-has-children="<%= _hasChildren(lv2List) ? 'true' : 'false' %>"
+        aria-expanded="<%= d1On ? 'true' : 'false' %>"
+      >
+        <span class="category-tree-text"><%= lv1.categoryNm || '' %></span>
+      </button>
 
-        <% if (hasLv2) { %>
-        <div class="category-tree-panel">
-          <ul class="category-tree-depth2">
-            <% lv2List.forEach(function (lv2) { var d2Code = String(lv2.categoryCode); var lv3List =
-            _validList(lv2.categoryList); var hasLv3 = lv3List.length > 0; %>
-            <li class="category-tree-item">
-              <button
-                type="button"
-                class="category-tree-btn"
-                data-depth="2"
-                data-id="<%= d2Code %>"
-                data-has-children="<%= hasLv3 ? 'true' : 'false' %>"
-                aria-expanded="false"
-              >
-                <span class="category-tree-text"><%= lv2.categoryNm || '' %></span>
-                <% if (hasLv3) { %>
-                <span class="icon"
-                  ><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %></span
-                >
-                <% } %>
-              </button>
+      <div class="category-tree-panel <%= d1On ? 'is-open' : '' %>">
+        <% if (lv2List.length) { %>
+        <ul class="category-tree-depth2">
+          <% lv2List.forEach(function (lv2) { if (!lv2 || !lv2.categoryCode) return; var d2Code =
+          String(lv2.categoryCode); var d2On = d1On && _d2 && _eq(d2Code, _d2); var lv3List =
+          Array.isArray(lv2.categoryList) ? lv2.categoryList : []; var hideD2 = _hasChildren(lv3List) ? ((d1On && _d2) ?
+          !d2On : false) : false; %>
+          <li class="category-tree-item <%= d2On ? 'is-active' : '' %><%= hideD2 ? ' is-hidden' : '' %>">
+            <button
+              type="button"
+              class="category-tree-btn"
+              data-depth="2"
+              data-id="<%= d2Code %>"
+              data-has-children="<%= _hasChildren(lv3List) ? 'true' : 'false' %>"
+              aria-expanded="<%= d2On ? 'true' : 'false' %>"
+            >
+              <span class="category-tree-text"><%= lv2.categoryNm || '' %></span>
+            </button>
 
-              <% if (hasLv3) { %>
-              <div class="category-tree-panel">
-                <ul class="category-tree-depth3">
-                  <% lv3List.forEach(function (lv3) { var d3Code = String(lv3.categoryCode); %>
-                  <li class="category-tree-item">
-                    <button
-                      type="button"
-                      class="category-tree-btn"
-                      data-depth="3"
-                      data-id="<%= d3Code %>"
-                      data-has-children="false"
-                      aria-expanded="false"
-                    >
-                      <span class="category-tree-text"><%= lv3.categoryNm || '' %></span>
-                    </button>
-                  </li>
-                  <% }) %>
-                </ul>
-              </div>
+            <div class="category-tree-panel <%= d2On ? 'is-open' : '' %>">
+              <% if (lv3List.length) { %>
+              <ul class="category-tree-depth3">
+                <% lv3List.forEach(function (lv3) { if (!lv3 || !lv3.categoryCode) return; var d3Code =
+                String(lv3.categoryCode); var d3On = d2On && _d3 && _eq(d3Code, _d3); %>
+                <li class="category-tree-item <%= d3On ? 'is-active' : '' %>">
+                  <button
+                    type="button"
+                    class="category-tree-btn"
+                    data-depth="3"
+                    data-id="<%= d3Code %>"
+                    data-has-children="false"
+                    aria-expanded="false"
+                  >
+                    <span class="category-tree-text"><%= lv3.categoryNm || '' %></span>
+                  </button>
+                </li>
+                <% }) %>
+              </ul>
               <% } %>
-            </li>
-            <% }) %>
-          </ul>
-        </div>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
         <% } %>
-      </li>
-    </ul>
-  </nav>
-  <% }) %>
-</div>
+      </div>
+    </li>
+    <% }) %>
+  </ul>
+</nav>
