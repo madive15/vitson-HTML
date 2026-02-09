@@ -156,6 +156,17 @@
       rafId = null;
     });
   });
+
+  // [TODO] iPad Chrome safe-area 초기 렌더링 지연 이슈
+  // 스크롤 시 즉시 정상. 실서비스 확인 후 필요시 아래 코드 활성화
+  // ---
+  // window.addEventListener('pageshow', function () {
+  //   setTimeout(function () {
+  //     window.dispatchEvent(new Event('resize'));
+  //   }, 100);
+  // });
+  // ---
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initScrollEnd);
   } else {

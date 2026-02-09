@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <!--
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -15,7 +14,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
   />
-  <title>FAQ 목록</title>
+  <title>공지사항 목록</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -59760,7 +59759,7 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <!-- S: vits-grid-main -->
-            <div class="vits-grid-main vits-main-support-faq">
+            <div class="vits-grid-main vits-main-support-notice">
               <div class="vits-inner inner-column">
                 <!-- 1280 컨텐츠 -->
                 <div class="vits-grid-area">
@@ -59781,25 +59780,25 @@
     <ul class="side-left-list">
       
       <li
-        class="side-left-item is-active"
+        class="side-left-item"
         data-menu-id="faq"
       >
         
-        <a class="side-left-link is-active"
+        <a class="side-left-link"
           href="/vitson-HTML/html/support/PC_CS_01010101.html"
-          aria-current="page"
+          
         >FAQ</a>
         
       </li>
       
       <li
-        class="side-left-item"
+        class="side-left-item is-active"
         data-menu-id="notice"
       >
         
-        <a class="side-left-link"
-          href="#!"
-          
+        <a class="side-left-link is-active"
+          href="/vitson-HTML/html/support/PC_CS_01010101.html"
+          aria-current="page"
         >공지사항</a>
         
       </li>
@@ -59826,7 +59825,7 @@
           class="side-left-link"
           data-toggle-btn
           data-toggle-target="library"
-          aria-expanded="false"
+          aria-expanded="true"
           data-aria-label-base="자료실"
         >
           자료실
@@ -59835,7 +59834,7 @@
 
           </span>
         </button>
-        <ul class="side-left-sub-list" data-toggle-box="library">
+        <ul class="side-left-sub-list is-open" data-toggle-box="library">
           
           <li
             class="side-left-sub-item"
@@ -59867,240 +59866,743 @@
 
                   <!-- E: vits-grid-side-left -->
 
-                  <div class="vits-grid-main-content main-content-faq">
+                  <div class="vits-grid-main-content main-content-notice">
                     <!-- 메인 컨텐츠 -->
 
                     <!-- 컨텐츠 헤딩 -->
-                    <div class="vits-support-content-headline faq-headline">
-                      <h2 class="vits-support-content-title">FAQ</h2>
+                    <div class="vits-support-content-headline notice-headline">
+                      <h2 class="vits-support-content-title">공지사항</h2>
+                      <p class="vits-support-content-desc">비츠온엠알오의 새로운 소식과 유용한 정보를 확인하세요.</p>
                     </div>
-                    <!-- 검색하기 패널 -->
-                    
+
+                    <div class="vits-support-panel notice-panel">
+                      <!-- 전체/ 가격변동 공지 탭버튼 -->
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-notice-tabs vits-tabs-lg" role="tablist" aria-label="공지사항 탭">
+   
+  <button
+    type="button"
+    class="vits-btn-md notice-tab is-active"
+    aria-selected="true"
+    id="notice-tab-0"
+  >
+    <span class="text">전체</span>
+    
+  </button>
+   
+  <button
+    type="button"
+    class="vits-btn-md notice-tab"
+    aria-selected="false"
+    id="notice-tab-1"
+  >
+    <span class="text">가격변동 공지</span>
+    
+  </button>
+  
+</div>
+
+                      <!-- prettier-ignore -->
+                      
 <!-- prettier-ignore -->
 
 
 
 
 
-<!-- type=justSearch: 검색 입력 + 검색하기 버튼만 (이미지 구조: 입력창 왼쪽 둥근모서리 + 버튼 오른쪽 둥근모서리) -->
-<div class="vits-support-searchbar">
-  <!-- prettier-ignore -->
-  
+<!-- type=support: 총 N개 + 개수 셀렉트 + 제목 검색 + 검색 입력 -->
+<div class="vits-support-toolbar">
+  <div class="support-toolbar-left">
+    <p class="support-toolbar-count">총 <b>23</b>개</p>
+    <div class="support-toolbar-size">
+      <!-- prettier-ignore -->
+      
 
-<div class="vits-input size-xl ">
-  <div class="input-item">
-    <label for="support-searchbar-keyword" class="sr-only"></label>
+
+
+
+<div
+  class="vits-select type-ghost color-secondary"
+  data-vits-select
+   data-select-id="support-page-size" 
+  
+  
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="10개씩 보기"
+    >10개씩 보기</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="10"
+           
+        aria-selected="true"
+        
+      >10개씩 보기</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="20"
+           
+        aria-selected="false"
+        
+      >20개씩 보기</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="50"
+           
+        aria-selected="false"
+        
+      >50개씩 보기</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="pageSize" value="10" data-vits-select-hidden />
+  
+</div>
+
+    </div>
+  </div>
+  <div class="support-toolbar-search">
+    <div class="support-search-category">
+      <!-- prettier-ignore -->
+      
+
+
+
+
+<div
+  class="vits-select type-ghost color-secondary size-sm"
+  data-vits-select
+   data-select-id="support-search-category" 
+  
+  
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="제목"
+    >제목</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="title"
+           
+        aria-selected="true"
+        
+      >제목</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="content"
+           
+        aria-selected="false"
+        
+      >내용</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="writer"
+           
+        aria-selected="false"
+        
+      >작성자</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="searchCategory" value="title" data-vits-select-hidden />
+  
+</div>
+
+    </div>
+    <div class="support-search-input">
+      <!-- prettier-ignore -->
+      
+
+<!-- prettier-ignore -->
+
+
+<div class="vits-input-search vits-validation support-toolbar-search-input">
+  <form
+    class="vits-input-search-form"
+    role="search"
+    action=""
+    method="get"
+    data-search-form
+  >
+    <label for="support-search-searchKeyword" class="sr-only">검색어</label>
 
     <input
-      type="justSearch"
+      type="search"
+      id="support-search-searchKeyword"
+      class="input-search"
       name="q"
-      id="support-searchbar-keyword"
-      placeholder="찾으시는 질문을 검색해보세요"
+      autocomplete="off"
+      enterkeyhint="search"
+      placeholder="검색내용을 입력해주세요."
+      data-search-input
       
-      
-      
-      
-      
-      
-
-      
-      
-      
+      aria-describedby="support-search-searchKeyword-validation"
+      aria-invalid="false"
     />
-    
-  </div>
 
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="support-searchbar-keyword-validation" aria-live="polite"></p>
-  </div>
-</div>
-
-  <div class="support-searchbar-btn">
-    <!-- prettier-ignore -->
     
 
-
-<button
-  type="justSearch"
-  class="vits-btn-xl vits-btn-primary-soft icon-left"
-  
-  >
-  
-    <span class="icon">
+    <button type="submit" class="input-search-btn" aria-label="검색">
       <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
-    </span>
-  
 
-  <span class="text">검색하기</span>
+      
+    </button>
+  </form>
 
-  
-</button>
-
+  <div class="input-validation" hidden>
+    <p id="support-search-searchKeyword-validation" aria-live="polite"></p>
+  </div>
+</div>
+    </div>
   </div>
 </div>
 
 
+                      <!-- 목록 테이블 -->
+                      <div class="general-table-wrap notice-table-wrap">
+                        <table class="general-table" summary="공지사항 목록">
+                          <!-- prettier-ignore -->
+                          <!-- prettier-ignore -->
 
-                    <div class="vits-support-panel faq-panel inner-lg">
-                      <!-- swiper 기능을 가진 탭 버튼 -->
-                      <!-- prettier-ignore -->
-                      
-                      <div class="vits-support-tabs swiper js-swiper" data-swiper-type="faqTab">
-                        <div class="swiper-wrapper">
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab support-tab-active">
-                              전체
-                            </button>
-                          </div>
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab">
-                              회원
-                            </button>
-                          </div>
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab">
-                              상품
-                            </button>
-                          </div>
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab">
-                              주문
-                            </button>
-                          </div>
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab">
-                              결제
-                            </button>
-                          </div>
-                          
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab">
-                              배송/반품/교환
-                            </button>
-                          </div>
-                          
-                        </div>
-                        <div class="vits-swiper-navs">
-                          <div class="swiper-button-prev"></div>
-                          <div class="swiper-button-next"></div>
-                        </div>
+<caption class="sr-only">
+  공지사항 목록
+</caption>
+<colgroup>
+  
+  <col width="80" />
+  
+  <col width="80" />
+  
+  <col width="600" />
+  
+  <col width="120" />
+  
+</colgroup>
+<thead>
+  <tr>
+    
+    
+    <th scope="col">
+      
+        순번
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        구분
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        
+        <span class="text-left">제목</span>
+        
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        작성일
+      
+    </th>
+    
+  </tr>
+</thead>
+
+
+                          <tbody>
+                            <!-- prettier-ignore -->
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-fixed-row">
+  <td>
+    
+    <span class="icon"><i class="ic ic-notice" aria-hidden="true"></i>
+</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-green">공지</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left is-import">[필독] 개인정보 처리방침 변경 안내</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            <!-- prettier-ignore -->
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-fixed-row">
+  <td>
+    
+    <span class="icon"><i class="ic ic-notice" aria-hidden="true"></i>
+</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left is-import">[중요] 2027년 상반기 가격 정책 안내</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+
+                            <!-- prettier-ignore -->
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">20</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            <!-- prettier-ignore -->
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">19</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-green">공지</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">공지사항 게시글 테스트 15 가격변동 공지 abcdefghijklmnopqrstuvwxyz</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                          </tbody>
+                          <!-- [D] 퍼블- ui 보여주기용 개발시 제거 (가격변동 탭 일 경우 ) -->
+                          <tbody hidden show-on-priceChange>
+                            <!-- prettier-ignore -->
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-fixed-row">
+  <td>
+    
+    <span class="icon"><i class="ic ic-notice" aria-hidden="true"></i>
+</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left is-import">[중요] 2027년 상반기 가격 정책 안내</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            <!-- prettier-ignore -->
+                            
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">5</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">4</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">3</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">2</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            
+                            <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="notice-row">
+  <td>
+    
+    <span class="text-cell">1</span>
+    
+  </td>
+  <td>
+    <a href="#!">
+      <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">가격변동</span>
+
+
+    </a>
+  </td>
+  <td>
+    <span class="text-left">가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하</span>
+  </td>
+  <td><span class="text-date">2027-01-01</span></td>
+</tr>
+
+
+
+                            
+                          </tbody>
+                        </table>
                       </div>
+
+                      <!-- 페이지네이션 -->
                       <!-- prettier-ignore -->
-                      
-                      <!-- prettier-ignore -->
-                      <div data-toggle-scope data-toggle-group="true">
-                        <dl class="vits-faq-list">
-                          
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-1" aria-expanded="false" aria-controls="faq-answer-1" id="faq-question-1">
-                                <!-- prettier-ignore -->
+                      <div class="vits-support-pagination">
+                        
+<!-- prettier-ignore -->
 
 
 
-<span class="vits-general-label is-general-sunken">회원</span>
+<nav
+  class="vits-pagination"
+  aria-label="페이지네이션"
+  data-pagination
+  data-pagination-type="default"
+  data-pagination-current="1"
+  data-pagination-total="12"
+>
+  
+  <!-- prettier-ignore -->
+  
+  
+  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
 
+  </span>
+  
 
-                                <span class="faq-question-text">주문이 잘 되었는지 확인하고 싶어요.</span>
-                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
-</span>
-                              </button>
-                            </dt>
-                            <dd id="faq-answer-1" class="faq-answer-wrap"  aria-labelledby="faq-question-1" data-toggle-box="faq-answer-1">
-                              <div class="faq-answer">주문하신 상품은 평균 2~3일 내에 배송됩니다.
- 배송상황은 마이페이지 내에서 확인하실 수 있습니다.</div>
-                            </dd>
-                          </div>
-                          
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-2" aria-expanded="false" aria-controls="faq-answer-2" id="faq-question-2">
-                                <!-- prettier-ignore -->
+  <!-- prettier-ignore -->
+  
+  <ol class="vits-pagination-list">
+    
+    <li class="vits-pagination-item">
+      
+      <span class="vits-pagination-link is-active" data-pagination-page data-page="1" aria-current="page">
+        1
+      </span>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="2">2</a>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="3">3</a>
+      
+    </li>
+    
+  </ol>
 
+  
+  <!-- prettier-ignore -->
+  
+  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
+    <i class="ic ic-arrow-right" aria-hidden="true"></i>
 
+  </a>
+   
+</nav>
 
-<span class="vits-general-label is-general-sunken">결제</span>
-
-
-                                <span class="faq-question-text">교환 금액은 언제 입금되나요?</span>
-                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
-</span>
-                              </button>
-                            </dt>
-                            <dd id="faq-answer-2" class="faq-answer-wrap"  aria-labelledby="faq-question-2" data-toggle-box="faq-answer-2">
-                              <div class="faq-answer">교환 완료 후 영업일 기준 3~5일 내에 입금됩니다.</div>
-                            </dd>
-                          </div>
-                          
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-3" aria-expanded="false" aria-controls="faq-answer-3" id="faq-question-3">
-                                <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-sunken">상품</span>
-
-
-                                <span class="faq-question-text">찾는 상품이 없으면 구매대행 가능한가요?</span>
-                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
-</span>
-                              </button>
-                            </dt>
-                            <dd id="faq-answer-3" class="faq-answer-wrap"  aria-labelledby="faq-question-3" data-toggle-box="faq-answer-3">
-                              <div class="faq-answer">구매대행 문의는 고객센터로 요청해 주시면 안내해 드립니다.</div>
-                            </dd>
-                          </div>
-                          
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-4" aria-expanded="false" aria-controls="faq-answer-4" id="faq-question-4">
-                                <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-sunken">배송/반품/교환</span>
-
-
-                                <span class="faq-question-text">배송 예정일이 언제쯤 되나요?</span>
-                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
-</span>
-                              </button>
-                            </dt>
-                            <dd id="faq-answer-4" class="faq-answer-wrap"  aria-labelledby="faq-question-4" data-toggle-box="faq-answer-4">
-                              <div class="faq-answer">주문하신 상품은 평균 2~3일 내에 배송됩니다.
- 배송상황은 마이페이지 내에서 확인하실 수 있습니다.</div>
-                            </dd>
-                          </div>
-                          
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-5" aria-expanded="false" aria-controls="faq-answer-5" id="faq-question-5">
-                                <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-sunken">배송/반품/교환</span>
-
-
-                                <span class="faq-question-text">반품 신청은 어떻게 해야하나요?</span>
-                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
-</span>
-                              </button>
-                            </dt>
-                            <dd id="faq-answer-5" class="faq-answer-wrap"  aria-labelledby="faq-question-5" data-toggle-box="faq-answer-5">
-                              <div class="faq-answer">마이페이지 &gt; 주문/배송 내역에서 반품 신청을 진행하실 수 있습니다.</div>
-                            </dd>
-                          </div>
-                          
-                        </dl>
                       </div>
                     </div>
                   </div>
@@ -60645,7 +61147,32 @@
 
 
     <script>
-      (function () {})();
+      (function () {
+        // [D] 보여주기용: type=priceChange 일 때 가격변동 공지 탭/목록 표시 (개발 적용 시 제거)
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') !== 'priceChange') return;
+        var table = document.querySelector('.notice-table-wrap .general-table');
+        if (table) {
+          var allBodies = table.querySelectorAll('tbody');
+          var priceChangeTbody = table.querySelector('tbody[show-on-priceChange]');
+          if (priceChangeTbody) {
+            priceChangeTbody.removeAttribute('hidden');
+            priceChangeTbody.removeAttribute('show-on-priceChange');
+          }
+          if (allBodies.length >= 2 && allBodies[0] !== priceChangeTbody) {
+            allBodies[0].setAttribute('hidden', '');
+          }
+        }
+        var tabWrap = document.querySelector('.vits-notice-tabs');
+        if (tabWrap) {
+          var tabs = tabWrap.querySelectorAll('[role="tablist"] button');
+          tabs.forEach(function (btn) {
+            var isPriceChange = btn.querySelector('.text') && btn.querySelector('.text').textContent.trim() === '가격변동 공지';
+            btn.classList.toggle('is-active', isPriceChange);
+            btn.setAttribute('aria-selected', isPriceChange ? 'true' : 'false');
+          });
+        }
+      })();
     </script>
   </body>
 </html>

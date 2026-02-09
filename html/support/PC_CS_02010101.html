@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <!--
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -14,7 +15,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
   />
-  <title>FAQ 없음 &amp; 검색 결과없음</title>
+  <title>FAQ 목록</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -59797,7 +59798,7 @@
       >
         
         <a class="side-left-link"
-          href="#!"
+          href="/vitson-HTML/html/support/PC_CS_01010101.html"
           
         >공지사항</a>
         
@@ -59825,7 +59826,7 @@
           class="side-left-link"
           data-toggle-btn
           data-toggle-target="library"
-          aria-expanded="false"
+          aria-expanded="true"
           data-aria-label-base="자료실"
         >
           자료실
@@ -59834,7 +59835,7 @@
 
           </span>
         </button>
-        <ul class="side-left-sub-list" data-toggle-box="library">
+        <ul class="side-left-sub-list is-open" data-toggle-box="library">
           
           <li
             class="side-left-sub-item"
@@ -59942,27 +59943,165 @@
 
 
 
-                    <div class="vits-support-panel faq-panel">
+                    <div class="vits-support-panel faq-panel inner-lg">
+                      <!-- swiper 기능을 가진 탭 버튼 -->
                       <!-- prettier-ignore -->
                       
+                      <div class="vits-support-tabs swiper js-swiper" data-swiper-type="faqTab">
+                        <div class="swiper-wrapper">
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab support-tab-active">
+                              전체
+                            </button>
+                          </div>
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab">
+                              회원
+                            </button>
+                          </div>
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab">
+                              상품
+                            </button>
+                          </div>
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab">
+                              주문
+                            </button>
+                          </div>
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab">
+                              결제
+                            </button>
+                          </div>
+                          
+                          <div class="swiper-slide">
+                            <button type="button" class="support-tab">
+                              배송/반품/교환
+                            </button>
+                          </div>
+                          
+                        </div>
+                        <div class="vits-swiper-navs">
+                          <div class="swiper-button-prev"></div>
+                          <div class="swiper-button-next"></div>
+                        </div>
+                      </div>
+                      <!-- prettier-ignore -->
+                      
+                      <!-- prettier-ignore -->
+                      <div class="vits-faq-list-wrap" data-toggle-scope data-toggle-group="true">
+                        <dl class="vits-faq-list">
+                          
+                          <div class="faq-item">
+                            <dt class="faq-question-wrap">
+                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-1" aria-expanded="false" aria-controls="faq-answer-1" id="faq-question-1">
+                                <!-- prettier-ignore -->
 
-<!-- prettier-ignore -->
 
 
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">등록된 FAQ가 없습니다</h2>
-      
-    </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-document-paper" aria-hidden="true"></i>
+<span class="vits-general-label is-general-sunken">회원</span>
 
-    </div>
-  </div>
-  
-</section>
 
+                                <span class="faq-question-text">주문이 잘 되었는지 확인하고 싶어요.</span>
+                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
+</span>
+                              </button>
+                            </dt>
+                            <dd id="faq-answer-1" class="faq-answer-wrap"  aria-labelledby="faq-question-1" data-toggle-box="faq-answer-1">
+                              <div class="faq-answer">주문하신 상품은 평균 2~3일 내에 배송됩니다.
+ 배송상황은 마이페이지 내에서 확인하실 수 있습니다.</div>
+                            </dd>
+                          </div>
+                          
+                          <div class="faq-item">
+                            <dt class="faq-question-wrap">
+                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-2" aria-expanded="false" aria-controls="faq-answer-2" id="faq-question-2">
+                                <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-sunken">결제</span>
+
+
+                                <span class="faq-question-text">교환 금액은 언제 입금되나요?</span>
+                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
+</span>
+                              </button>
+                            </dt>
+                            <dd id="faq-answer-2" class="faq-answer-wrap"  aria-labelledby="faq-question-2" data-toggle-box="faq-answer-2">
+                              <div class="faq-answer">교환 완료 후 영업일 기준 3~5일 내에 입금됩니다.</div>
+                            </dd>
+                          </div>
+                          
+                          <div class="faq-item">
+                            <dt class="faq-question-wrap">
+                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-3" aria-expanded="false" aria-controls="faq-answer-3" id="faq-question-3">
+                                <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-sunken">상품</span>
+
+
+                                <span class="faq-question-text">찾는 상품이 없으면 구매대행 가능한가요?</span>
+                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
+</span>
+                              </button>
+                            </dt>
+                            <dd id="faq-answer-3" class="faq-answer-wrap"  aria-labelledby="faq-question-3" data-toggle-box="faq-answer-3">
+                              <div class="faq-answer">구매대행 문의는 고객센터로 요청해 주시면 안내해 드립니다.</div>
+                            </dd>
+                          </div>
+                          
+                          <div class="faq-item">
+                            <dt class="faq-question-wrap">
+                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-4" aria-expanded="false" aria-controls="faq-answer-4" id="faq-question-4">
+                                <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-sunken">배송/반품/교환</span>
+
+
+                                <span class="faq-question-text">배송 예정일이 언제쯤 되나요?</span>
+                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
+</span>
+                              </button>
+                            </dt>
+                            <dd id="faq-answer-4" class="faq-answer-wrap"  aria-labelledby="faq-question-4" data-toggle-box="faq-answer-4">
+                              <div class="faq-answer">주문하신 상품은 평균 2~3일 내에 배송됩니다.
+ 배송상황은 마이페이지 내에서 확인하실 수 있습니다.</div>
+                            </dd>
+                          </div>
+                          
+                          <div class="faq-item">
+                            <dt class="faq-question-wrap">
+                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="faq-answer-5" aria-expanded="false" aria-controls="faq-answer-5" id="faq-question-5">
+                                <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-sunken">배송/반품/교환</span>
+
+
+                                <span class="faq-question-text">반품 신청은 어떻게 해야하나요?</span>
+                                <span class="icon" aria-hidden="true"><i class="ic ic-arrow-down" aria-hidden="true"></i>
+</span>
+                              </button>
+                            </dt>
+                            <dd id="faq-answer-5" class="faq-answer-wrap"  aria-labelledby="faq-question-5" data-toggle-box="faq-answer-5">
+                              <div class="faq-answer">마이페이지 &gt; 주문/배송 내역에서 반품 신청을 진행하실 수 있습니다.</div>
+                            </dd>
+                          </div>
+                          
+                        </dl>
+                      </div>
                     </div>
                   </div>
                 </div>
