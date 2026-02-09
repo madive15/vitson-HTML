@@ -30,8 +30,12 @@
   %>
 <tr class="account-table-row">
   <td>
-    <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, { datas: [ { className: 's', name: 'ckbox1',
-    value: 'checkbox-single-s' } ] }) %>
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: 'ckbox01',
+      value: 'all',
+      checkboxType: 'item',
+      size: 's'
+    }) %>
   </td>
   <td><span class="account-table-num"><%= _rowIndex %></span></td>
   <td><span class="account-table-id"><%= _userId || '—' %></span></td>

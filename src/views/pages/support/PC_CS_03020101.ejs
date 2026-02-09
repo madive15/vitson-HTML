@@ -37,7 +37,7 @@
 
                     <!-- 컨텐츠 헤딩 -->
                     <div class="vits-support-content-headline single-headline">
-                      <h2 class="vits-support-content-title">1:1 문의</h2>
+                      <h2 class="vits-support-content-title">1:1 문의 작성</h2>
                       <p class="vits-support-content-desc">작성해주신 문의는 순차적으로 답변드리고 있습니다.</p>
                     </div>
 
@@ -60,7 +60,6 @@
                                   className: 'size-l',
                                   disabled: false,
                                   options: [
-                                    { text: '선택', value: '' },
                                     { text: '배송', value: 'delivery' },
                                     { text: '상품문의', value: 'product' },
                                     { text: '주문관련', value: 'order' },
@@ -68,7 +67,7 @@
                                     { text: '증빙서류관련', value: 'document' },
                                     { text: '회원정보관련', value: 'member' },
                                     { text: '기타', value: 'etc' }
-                                  ], value: (typeof inquiryType !== 'undefined' && inquiryType !== null) ? String(inquiryType) : '' }) %>
+                                  ], value: (typeof inquiryType !== 'undefined' && inquiryType !== null) ? String(inquiryType) : '', placeholder: '문의유형을 선택해주세요.' }) %>
                               </div>
                             </div>
                             <div class="inquiry-form-cell">
@@ -83,10 +82,9 @@
                                   disabled: false,
                                   className: 'size-l',
                                   options: [
-                                    { text: '선택', value: '' },
-                                    { text: '배송일정', value: '' },
-                                    { text: '송장번호', value: '' }
-                                  ], value: (typeof inquiryDetailType !== 'undefined' && inquiryDetailType !== null) ? String(inquiryDetailType) : ''}) %>
+                                    { text: '배송일정', value: 'delivery-schedule' },
+                                    { text: '송장번호', value: 'invoice-number' }
+                                  ], value: (typeof inquiryDetailType !== 'undefined' && inquiryDetailType !== null) ? String(inquiryDetailType) : '', placeholder: '상세유형을 선택해주세요.'}) %>
                               </div>
                             </div>
                           </div>
@@ -124,7 +122,7 @@
                                 <span class="inquiry-selected-order-img" aria-hidden="true">
                                   <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
                                 </span>
-                                <span class="inquiry-selected-order-text">LED 트리구 96구 연결형(DC24V)</span>
+                                <span class="inquiry-selected-order-text">[주문번호] 대표상품 외 n 건</span>
                                 <button type="button" class="inquiry-selected-order-remove" data-order-remove aria-label="선택 주문 삭제">
                                   <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
                                 </button>

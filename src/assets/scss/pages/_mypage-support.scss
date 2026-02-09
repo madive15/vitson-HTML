@@ -60,7 +60,7 @@
       gap: map.get(var.$unit, 12);
     }
   }
-
+  // stylelint-disable-next-line no-descending-specificity
   .vits-select.is-selected .vits-select-trigger {
     box-shadow: none !important;
   }
@@ -966,9 +966,6 @@
 
     /* 조회버튼 */
     .mypage-query-buttons {
-      // @include mx.flex($justify: end);
-      // flex: 1;
-
       .mypage-search-btn {
         min-width: fn.rem(120);
       }
@@ -987,12 +984,6 @@
     .mypage-query-period-range {
       min-width: fn.rem(180);
     }
-
-    .vits-select,
-    .vits-select-trigger,
-    .vits-select-list {
-      width: 100%;
-    }
   }
 
   /* 페이지네이션 */
@@ -1003,5 +994,17 @@
   /* 안내 문구 */
   .vits-alerts-anatomy {
     margin-top: map.get(var.$unit, 20);
+  }
+}
+
+.mypage-query-fields {
+  .vits-select {
+    width: 100%;
+    /* stylelint-disable-next-line no-descending-specificity */
+    &-trigger,
+    &-list,
+    &-value {
+      width: 100%;
+    }
   }
 }

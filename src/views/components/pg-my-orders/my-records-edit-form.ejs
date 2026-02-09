@@ -1,0 +1,33 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="shipping-edit-form is-hidden">
+  <div class="shipping-edit-textarea">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/textarea.ejs`, {
+      id: 'memoB',
+      name: 'memoB',
+      placeholder: '내용을 입력해주세요. fz 16',
+      count: true,
+      maxLength: 200,
+      rootClass: 'size-default',
+      value:'부재시 경비실에 맡겨주세요'
+    }) %>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, { 
+      size: 'sm', 
+      variant: 'outline-tertiary', 
+      text: '취소',
+      attrs: 'data-btn="shipping-edit-cancel"'
+    }) %>
+
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, { 
+      size: 'sm', 
+      variant: 'secondary', 
+      text: '수정완료' ,
+      attrs: 'data-btn="shipping-edit-submit"'
+    }) %>
+  </div>
+</div>

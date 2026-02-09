@@ -1,0 +1,73 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  const bannerItems = [
+    { id: 'banner-1', bgColor: '#FBE7CF', image: '', href: '#!' },
+    { id: 'banner-2', bgColor: '#F05555', image: '', href: '#!' },
+    { id: 'banner-3', bgColor: '#2279C4', image: '', href: '#!' },
+    { id: 'banner-4', bgColor: '#C9E6B5', image: '', href: '#!' },
+    { id: 'banner-5', bgColor: '#eeeeee', image: '', href: '#!' },
+  ];
+%>
+
+<!-- 메인 배너 -->
+<div class="vits-home-main-banner">
+  <div class="main-banner-container js-home-main-banner-swiper">
+    <div class="swiper-wrapper">
+      <% bannerItems.forEach((item) => { %>
+      <div class="swiper-slide">
+        <div class="main-banner-card" style="background-color: <%= item.bgColor %>">
+          <div class="banner-card-content">
+            <% if (item.image) { %>
+            <div class="banner-card-image">
+              <img src="<%= _public %><%= item.image %>" alt="베너이미지 설명" />
+            </div>
+            <% } %>
+            <a href="<%= item.href %>" class="banner-card-link">
+              <span class="text">자세히 보러가기</span>
+              <span class="icon">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+    <!-- 진행 바, 재생/멈춤, 이전/다음 -->
+    <div class="main-banner-progress">
+      <div class="banner-progress-bar">
+        <div class="banner-progress-fill"></div>
+      </div>
+      <div class="main-banner-navs">
+        <button type="button" class="banner-nav-button banner-nav-prev" aria-label="이전 배너">
+          <span class="sr-only">이전</span>
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+        </button>
+        <button type="button" class="banner-nav-button banner-nav-next" aria-label="다음 배너">
+          <span class="sr-only">다음</span>
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+        </button>
+      </div>
+      <div class="banner-progress-actions">
+        <button
+          type="button"
+          class="banner-progress-btn banner-progress-toggle is-paused"
+          aria-label="재생"
+          aria-pressed="false"
+          title="재생"
+        >
+          <span class="sr-only">재생</span>
+          <span class="banner-progress-icon-play">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'play' }) %>
+          </span>
+          <span class="banner-progress-icon-pause">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'pause' }) %>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
