@@ -37,6 +37,10 @@
   const _rootClass = (typeof rootClass !== 'undefined' && rootClass) ? rootClass : '';
   const _validationId = _id ? `${_id}-validation` : '';
 
+  // 비밀번호 표시/숨김 토글 버튼 (vits-input 내부에 렌더)
+  const _showPasswordToggle = (typeof showPasswordToggle !== 'undefined') ? !!showPasswordToggle : false;
+  const _eyesOpen = (typeof eyesOpen !== 'undefined') ? !!eyesOpen : false;
+
   // ===== 초기 상태 클래스 구성 =====
   // NOTE: 유효성 검사 구현 시
   // - 검사 활성화: .vits-validation 클래스 추가
@@ -76,6 +80,13 @@
       <% if (_isInvalid) { %>aria-invalid="true"<% } %>
       <% if (_isValid) { %>aria-invalid="false"<% } %>
     />
+    <% if (_showPasswordToggle) { %>
+      <div class="vits-btn-eyes">
+        <button type="button" class="<%= _eyesOpen ? 'is-eye-open' : 'is-eye-close' %>" aria-label="<%= _eyesOpen ? '비밀번호 숨기기' : '비밀번호 표시' %>">
+          <span class="ic <%= _eyesOpen ? 'ic-eye-show' : 'ic-eye-hide' %>" aria-hidden="true"></span>
+        </button>
+      </div>
+      <% } %>
   </div>
 
   <!-- Validation 메시지 영역 -->

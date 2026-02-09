@@ -1,0 +1,32 @@
+<!-- prettier-ignore -->
+<% const _src = srcPath; const _public = publicPath; %> 
+<% const isSingle = typeof type !== 'undefined' && type === 'single'; %> 
+<%#<!-- 1:1문의 type = single -->%>
+<div class="inquiry-detail-product">
+  <% if (isSingle) { %>
+  <a href="#" class="inquiry-product-item" target="_blank">
+    <span class="inquiry-product-thumb">
+      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+    </span>
+    <span class="inquiry-product-info">[2601000243] 전산볼트 외 n건</span>
+  </a>
+  <% } else { %>
+  <a href="#" target="_blank">
+    <div class="detail-thumb">
+      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+    </div>
+    <div class="detail-info">
+      <span class="detail-brand">동서식품</span>
+      <span class="detail-code">63531</span>
+      <p class="detail-name">튀김우동 컵라면 6개입</p>
+      <p class="detail-spec">3x2.5sq/600V</p>
+    </div>
+    <div class="detail-price">
+      <span class="detail-origin">32,000원</span>
+      <span class="detail-discount">30%</span>
+      <strong class="detail-final">89,900원</strong>
+      <span class="detail-vat">(VAT 포함)</span>
+    </div>
+  </a>
+  <% } %>
+</div>

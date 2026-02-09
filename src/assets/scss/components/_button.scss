@@ -291,7 +291,7 @@ $fill-button-disabled-colors: (
 $outline-button-border-colors: (
   'primary': map.get(color.$red-shades, '80'),
   'secondary': map.get(color.$gray-shades, '80'),
-  'tertiary': map.get(color.$gray-shades, '50')
+  'tertiary': map.get(color.$gray-shades, '60')
 );
 $outline-button-hover-bg-colors: (
   'primary': map.get(color.$red-shades, '10'),
@@ -314,6 +314,11 @@ $outline-button-disabled-bg-colors: (
     color: $border-color;
     background-color: color.$color-white;
     border: 1px solid $border-color;
+
+    .text {
+      line-height: normal;
+      color: inherit;
+    }
 
     .icon {
       color: $border-color;

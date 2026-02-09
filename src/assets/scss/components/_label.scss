@@ -128,6 +128,42 @@
         background: map.get(color.$layout-surf, 'primary');
       }
     }
+
+    &.size-s {
+      gap: 0;
+      height: fn.rem(28);
+
+      .icon {
+        margin-left: 0;
+      }
+
+      .text {
+        font-size: fn.rem(12);
+      }
+
+      @if $type == 'outline' {
+        .text {
+          color: map.get(color.$text-colors, 'secondary');
+
+          &.category,
+          &.team {
+            flex: 0 0 auto;
+            min-width: 0;
+            font-weight: 400;
+            color: map.get(color.$text-colors, 'tertiary');
+          }
+
+          & + .text {
+            margin-left: map.get(var.$unit, 2);
+          }
+        }
+
+        .icon,
+        .remove {
+          color: map.get(color.$icon-neutral, 'tertiary');
+        }
+      }
+    }
   }
 }
 

@@ -1,15 +1,32 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
+<% /**
+  * 마이페이지 지원 툴바 (type별)
+  * @param {string} [type] - ''(기본) | 'buttons' | 'support' | 'justSearch'
+  * type 없음: 총 N개 + 개수 셀렉트 + 액션 영역
+  * type=buttons: 버튼 위주 툴바 (전체삭제, 신규 문의 등록 등)
+  * type=support: 총 N개 + 개수 셀렉트 + 검색 카테고리 + 검색 입력
+  * type=justSearch: 검색 입력 + 검색하기 버튼만 (질문 검색용)
+  */ %>
+<% const _type = typeof type !== 'undefined' ? type : ''; %>
 <%
   const _totalCount = typeof totalCount !== 'undefined' ? totalCount : 23;
   const _pageSizeOptions = [
-    { value: '20', text: '10개씩 보기' },
-    { value: '40', text: '30개씩 보기' },
-    { value: '60', text: '50개씩 보기' }
+    { value: '10', text: '10개씩 보기' },
+    { value: '20', text: '20개씩 보기' },
+    { value: '50', text: '50개씩 보기' }
   ];
+  const _searchCategoryOptions = [
+    { value: 'title', text: '제목' },
+    { value: 'content', text: '내용' },
+    { value: 'writer', text: '작성자' }
+  ];
+  const _searchCategory = (typeof searchCategory !== 'undefined' && searchCategory !== null) ? String(searchCategory) : 'title';
   const _pageSize = (typeof pageSize !== 'undefined' && pageSize !== null) ? String(pageSize) : '10';
 %>
 
+<% if (_type === 'buttons') { %>
+<!-- type=buttons: 총 N개 + 개수 셀렉트 + 버튼 영역 -->
 <div class="vits-mypage-support-toolbar">
   <div class="support-toolbar-left">
     <p class="support-toolbar-count">총 <b><%= _totalCount %></b>개</p>
@@ -29,26 +46,121 @@
     </div>
   </div>
   <div class="support-toolbar-actions">
-    <!-- 아직 사용 안함 -->
     <!-- prettier-ignore -->
-    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
+    <%- include(`${_src}/views/components/button/button.ejs`, {
       srcPath: _src,
       publicPath: _public,
-      size: 'sm',
-      variant: 'outline-tertiary',
-      text: '전체삭제',
-      className: 'support-toolbar-delete'
-    }) %> -->
-    <!-- prettier-ignore -->
-    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
-      srcPath: _src,
-      publicPath: _public,
-      size: 'sm',
-      variant: 'outline-primary',
-      text: '신규 문의 등록',
+      size: 'lg',
       iconLeft: true,
-      iconName: 'ic-plus',
-      className: 'support-toolbar-add'
-    }) %> -->
+      iconName: 'ic-kakao',
+      variant: 'secondary',
+      text: '카카오톡 문의',
+      className: 'support-toolbar-kakao'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      srcPath: _src,
+      publicPath: _public,
+      size: 'lg',
+      variant: 'primary',
+      text: '작성하기',
+      className: 'support-toolbar-write'
+    }) %>
   </div>
 </div>
+<% } else if (_type === 'justSearch') { %>
+<!-- type=justSearch: 검색 입력 + 검색하기 버튼만 (이미지 구조: 입력창 왼쪽 둥근모서리 + 버튼 오른쪽 둥근모서리) -->
+<div class="vits-support-searchbar">
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components/form/input-text.ejs`, {
+    srcPath: _src,
+    publicPath: _public,
+    id: 'support-searchbar-keyword',
+    name: 'q',
+    placeholder: '찾으시는 질문을 검색해보세요',
+    rootClass: 'size-xl'
+  }) %>
+
+  <div class="support-searchbar-btn">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size: 'xl',
+      variant: 'primary-soft',
+      text: '검색하기',
+      iconLeft: true,
+      iconName: 'ic-magnifying-glass',
+    }) %>
+  </div>
+</div>
+<% } else if (_type === 'support') { %>
+<!-- type=support: 총 N개 + 개수 셀렉트 + 제목 검색 + 검색 입력 -->
+<div class="vits-support-toolbar">
+  <div class="support-toolbar-left">
+    <p class="support-toolbar-count">총 <b><%= _totalCount %></b>개</p>
+    <div class="support-toolbar-size">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'support-page-size',
+        name: 'pageSize',
+        placeholder: _pageSizeOptions[0].text,
+        options: _pageSizeOptions,
+        value: _pageSize,
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+    </div>
+  </div>
+  <div class="support-toolbar-search">
+    <div class="support-search-category">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'support-search-category',
+        name: 'searchCategory',
+        placeholder: _searchCategoryOptions[0].text,
+        options: _searchCategoryOptions,
+        value: 'title',
+        disabled: false,
+        className: 'type-ghost color-secondary size-sm'
+      }) %>
+    </div>
+    <div class="support-search-input">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-search.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        locals: {
+          idPrefix: 'support-search',
+          placeholder: '검색내용을 입력해주세요.',
+          addClassName: 'support-toolbar-search-input'
+        },
+        addClassName: 'size-sm'
+      }) %>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<!-- 기본: 총 N개 + 개수 셀렉트 -->
+<div class="vits-mypage-support-toolbar">
+  <div class="support-toolbar-left">
+    <p class="support-toolbar-count">총 <b><%= _totalCount %></b>개</p>
+    <div class="support-toolbar-size">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        srcPath: _src,
+        publicPath: _public,
+        id: 'support-page-size',
+        name: 'pageSize',
+        placeholder: _pageSizeOptions[0].text,
+        options: _pageSizeOptions,
+        value: _pageSize,
+        disabled: false,
+        className: 'type-ghost color-secondary'
+      }) %>
+    </div>
+  </div>
+</div>
+<% } %>

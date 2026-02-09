@@ -1,0 +1,193 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+/**
+ * @file product-item.ejs
+ * @description 상품 카드 아이템 (Mobile) — 8타입 통합
+ * @scope components-mo/product/
+ * @param {Object} item - 상품 데이터
+ * @param {string} [cardContext='default'] - 카드 맥락: default | leader | frequent | like | compare
+ * @param {string} [memberYn='Y'] - 회원 여부 (세션)
+ *
+ * @mapping 8타입 분기
+ *   default  + 회원 + 판매중  → 회원 판매중
+ *   default  + 회원 + 품절    → 회원 일시품절
+ *   leader   + 회원 + 판매중  → 회원 판매중(조장)
+ *   leader   + 회원 + 품절    → 회원 일시품절(조장)
+ *   default  + 비회원         → 비회원
+ *   frequent                  → 자주구매
+ *   like                      → 좋아요 목록
+ *   compare                   → 비교함 팝업
+ *
+ * @state is-soldout: stockYn === 'N'
+ * @state is-guest: memberYn === 'N'
+ *
+ * @note 가격 노출 규칙 (회원 공통)
+ *   - 기본: 정상가 + 할인율 + 판매가
+ *   - 할인율 ≤ 0.4%: 할인율 비노출
+ *   - 할인율 ≤ 0: 정상가·할인율 비노출, 판매가만
+ */
+
+/* ── 데이터 & 맥락 ── */
+const d = item || {};
+const ctx = (typeof cardContext !== 'undefined') ? cardContext : 'default';
+const isMember = (typeof memberYn !== 'undefined') ? memberYn !== 'N' : true;
+
+/* ── 상태 판별 ── */
+const isSoldout = d.stockYn === 'N';
+const isGuest = !isMember;
+const isLeader = ctx === 'leader';
+const isFrequent = ctx === 'frequent';
+const isLike = ctx === 'like';
+const isCompare = ctx === 'compare';
+
+/* ── 카드 상태 클래스 ── */
+const stateClass = isGuest ? ' is-guest' : isSoldout ? ' is-soldout' : '';
+
+/* ── 피처 플래그 ── */
+const showCheckbox = (typeof _showCheckbox !== 'undefined') ? _showCheckbox : false;
+const showPriceNormal = isMember && !isSoldout && !isCompare;
+const showSoldoutText = isMember && isSoldout && !isCompare;
+const showGuestText = isGuest;
+const showLoginBtn = isGuest;
+
+const _showExtra = (typeof showExtra !== 'undefined') ? showExtra : (isMember && !isCompare);
+const showLike = isMember && !isCompare;
+const showCart = isMember && !isCompare && !isLeader;
+const showCompareBtn = isMember && !isFrequent && !isLike && !isCompare;
+const showPromo = isMember && !isCompare;
+
+/* ── 가격 노출 규칙 ── */
+const rate = Number(d.discountRate) || 0;
+const showRate = rate > 0.4;
+const showOrigin = rate > 0;
+
+/* ── 유틸 ── */
+const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+%>
+
+<li class="vm-product-item" data-ui="product-item">
+  <div class="vm-product-card<%= stateClass %>">
+    <!-- prettier-ignore -->
+    <% if (showCheckbox) { %>
+    <div class="product-check">
+      <label class="vits-checkbox">
+        <input type="checkbox" name="wishlist" value="<%= d.productCode %>" />
+        <span class="sr-only"><%= d.productNm %> 선택</span>
+      </label>
+    </div>
+    <% } %>
+
+    <div class="product-thumb">
+      <a href="#!">
+        <img src="<%= d.imageUrl %>" alt="<%= d.productNm %>" loading="lazy" />
+      </a>
+    </div>
+
+    <div class="product-body">
+      <div class="product-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span><%= d.brandNm %></p>
+        <% if (d.modelNm) { %>
+        <p class="product-model"><span class="sr-only">모델명</span><%= d.modelNm %></p>
+        <% } %>
+      </div>
+
+      <div class="product-info">
+        <a href="#!">
+          <div class="product-summary">
+            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
+            <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
+          </div>
+        </a>
+
+        <!-- prettier-ignore -->
+        <!-- [D] 가격 노출 (회원 & 판매중) => is-normal 클래스 추가 -->
+        <% if (showPriceNormal) { %>
+        <div class="product-price is-normal">
+          <% if (showOrigin) { %>
+          <div class="price-origin-label">
+            <span class="sr-only">표준단가(정상가)</span><%= comma(d.originPrice) %>원
+          </div>
+          <% } %>
+          <div class="price-sale-row">
+            <% if (showRate) { %>
+            <p class="price-rate"><span class="sr-only">할인율</span><%= rate %>%</p>
+            <% } %>
+            <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma(d.salePrice) %>원</p>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- prettier-ignore -->
+        <!-- [D] 일시품절 => is-soldout 클래스 추가 -->
+        <% if (showSoldoutText) { %>
+        <div class="product-price is-soldout">
+          <div class="product-price-alt">일시품절</div>
+        </div>
+        <% } %>
+
+        <!-- prettier-ignore -->
+        <!-- [D] 비회원 가격 => is-guest 클래스 추가 -->
+        <% if (showGuestText) { %>
+        <div class="product-price is-guest">
+          <div class="price-guest-text">
+            <p class="price-guest-text-title">회원 전용 혜택가</p>
+            <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- prettier-ignore -->
+      <% if (_showExtra) { %>
+      <div class="product-extra">
+        <!-- prettier-ignore -->
+        <%
+          const hasToday = d.todayShipYn === 'Y';
+          const hasTomorrow = d.tomorrowShipYn === 'Y';
+          const hasHot = d.hotYn === 'Y';
+          const hasCount = d.purchaseCount > 0;
+        %>
+        <% if (hasToday || hasTomorrow || hasHot || hasCount) { %>
+          <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+            today: hasToday,
+            tomorrow: hasTomorrow,
+            hot: hasHot,
+            count: hasCount ? d.purchaseCount : 0,
+          }) %>
+        <% } %>
+        <div class="product-cta">
+          <!-- prettier-ignore -->
+          <% if (showPromo && d.freeShipYn === 'Y') { %>
+            <%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %>
+          <% } %>
+          <!-- prettier-ignore -->
+          <% if (showLike || showCart || showCompareBtn) { %>
+          <div class="product-actions">
+            <% if (showLike) { %>
+            <button type="button" class="action-btn-like" aria-label="좋아요"></button>
+            <% } %> <% if (showCart) { %>
+            <button type="button" class="action-btn-cart" aria-label="장바구니"></button>
+            <% } %> <% if (showCompareBtn) { %>
+            <button type="button" class="action-btn-compare" aria-label="비교함"></button>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- prettier-ignore -->
+      <% if (showLoginBtn) { %>
+      <div class="product-price is-guest">
+        <div class="price-guest-action">
+          <button class="price-login-button">
+            <span class="icon"><i class="ic ic-lock-close" aria-hidden="true"></i></span>
+            <span class="text">로그인하고 가격 확인</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</li>

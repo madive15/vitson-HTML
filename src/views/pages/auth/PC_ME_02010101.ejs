@@ -136,6 +136,7 @@
                                   placeholder: '비밀번호',
                                   required: true,
                                   rootClass: 'size-large',
+                                  showPasswordToggle: true,
                                 }) %>
                               </div>
                             </div>
@@ -150,6 +151,7 @@
                                   placeholder: '비밀번호 확인',
                                   required: true,
                                   rootClass: 'size-large',
+                                  showPasswordToggle: true,
                                 }) %>
                               </div>
                             </div>
@@ -474,6 +476,9 @@
                                 }) %>
                               </div>
                             </div>
+                          </div>
+                          <div class="vits-form-column">
+                            <label class="vits-form-label" data-hide-on-signup>대표 정보</label>
                             <div class="vits-form-row">
                               <div class="vits-form-field">
                                 <!-- prettier-ignore -->
@@ -708,17 +713,15 @@
                                   <div class="vits-form-field">
                                     <div class="vits-signup-file">
                                       <!-- 파일 첨부 버튼 -->
-                                      <label class="vits-file-btn" for="signup-biz-file">
-                                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'upload' }) %>
-                                        <span class="vits-file-btn-text">파일 첨부하기</span>
-                                        <input
-                                          type="file"
-                                          id="signup-biz-file"
-                                          name="bizCertFile"
-                                          accept=".pdf,.jpg,.jpeg,.png"
-                                          class="sr-only"
-                                        />
-                                      </label>
+                                      <!-- prettier-ignore -->
+                                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                                        type: 'button',
+                                        size: 'sm',
+                                        variant: 'secondary',
+                                        text: '파일 첨부하기',
+                                        iconLeft: true,
+                                        iconName: 'ic-upload'
+                                      }) %>
                                       <p class="vits-form-hint">&#8226; PDF, JPG, PNG 파일 10MB 이하</p>
                                     </div>
                                   </div>

@@ -1,7 +1,9 @@
 // -----------------------------------------------------------------------------
-// pages/_board.scss
-// - 공지사항 , FAQ , 문의, 자료실 등 페이지 전용 스타일
+// components-mo/_form.scss
+// - 모바일 폼 요소(input, select, textarea 등) 공통 UI 스타일 정의.
 // -----------------------------------------------------------------------------
+
+@use 'sass:list';
 @use 'sass:map';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
@@ -10,8 +12,23 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
-@use '@/assets/scss/components/form' as form;
 
-/* -----------------------------------
- * 
- * ----------------------------------- */
+// 텍스트형 체크박스
+.vm-ckbox-text {
+  position: relative;
+
+  input {
+    @include mx.sr-only;
+  }
+
+  .label {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  &:has(input:checked) {
+    .label {
+      font-weight: 700;
+      color: map.get(color.$text-colors, 'default');
+    }
+  }
+}

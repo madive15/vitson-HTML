@@ -1,23 +1,29 @@
 /**
  * @file scripts/ui/form/select.js
- * @purpose 커스텀 셀렉트 공통: 단일/브레드크럼(1~3뎁스) UI + 옵션 렌더링 + 선택값 표시 + 연동 활성화
+ * @description 커스텀 셀렉트 공통: 단일/브레드크럼(1~3뎁스) UI + 옵션 렌더링 + 선택값 표시 + 연동 활성화 + 동적 데이터 바인딩
  * @scope init(root) 컨테이너 범위 내에서만 그룹(브레드크럼) 캐시를 구축하고, 이벤트는 closest(ROOT) 기반으로 동작
  * @rule group(data-root) 유무로 단일/연결(브레드크럼) 분기하며, 단일은 closest만으로 종료
  * @maintenance
  *  - 초기화: core/ui.js에서 UI.select.init(document) 1회 호출
  *  - 부분 렌더링: UI.select.destroy(root) 후 UI.select.init(root)로 재초기화
+ *
+ * @api 동적 셀렉트
+ *  - UI.select.setOptions($root, items)  — 옵션 동적 주입 (빈 배열 시 자동 disabled)
+ *  - UI.select.setValue($root, value)    — 값 세팅
+ *  - UI.select.getValue($root)           — 값 조회
+ *  - UI.select.setDisabled($root, bool)  — 활성/비활성 토글
+ *  - $root 지정: $('[data-select-id="아이디"]')
+ *  - items 형식: [{ value: string, text: string }]
  */
 
 (function ($, window, document) {
   'use strict';
 
-  // jQuery 의존(프로젝트 전제)
   if (!$) {
     console.log('[select] jQuery not found');
     return;
   }
 
-  // 네임스페이스 보장
   window.UI = window.UI || {};
   window.UI.select = window.UI.select || {};
 
@@ -40,7 +46,6 @@
   var CLS_OPT_DISABLED = 'vits-select-option-disabled';
   var CLS_PORTAL_LIST = 'vits-select-list-portal';
 
-  // 이벤트 네임스페이스
   var NS = '.uiSelect';
 
   // dropup 계산 상수
@@ -48,12 +53,12 @@
   var MIN_H = 120;
   var PORTAL_GAP = 4;
 
-  // 컨테이너/루트 키 분리(부분 렌더링 destroy 안정화)
+  // 컨테이너/루트 키
   var DATA_CONTAINER_KEY = 'uiSelectContainerKey';
   var DATA_ROOT_KEY = 'uiSelectRootKey';
   var DATA_PORTAL_ORIGIN = 'uiSelectPortalOrigin';
 
-  // 스코프 저장소(scopeKey -> { $container, groups, openRoot })
+  // 스코프 저장소
   var scopes = {};
   var scopeSeq = 0;
 
@@ -68,7 +73,7 @@
     return md && md.category && Array.isArray(md.category.tree) ? md.category.tree : [];
   }
 
-  // 루트의 group 반환(연결 여부 판단 키)
+  // 루트의 group 반환
   function getGroup($root) {
     return toStr($root.attr('data-root')).trim();
   }
@@ -83,13 +88,13 @@
     return $root.is(PORTAL);
   }
 
-  // 루트의 scopeKey 반환(없으면 0)
+  // 루트의 scopeKey 반환
   function getRootScopeKey($root) {
     var v = $root && $root.length ? $root.data(DATA_ROOT_KEY) : null;
     return v != null ? v : 0;
   }
 
-  // 컨테이너의 scopeKey 반환(없으면 null)
+  // 컨테이너의 scopeKey 반환
   function getContainerScopeKey($container) {
     var v = $container && $container.length ? $container.data(DATA_CONTAINER_KEY) : null;
     return v != null ? v : null;
@@ -123,11 +128,9 @@
 
   // root에 연결된 list 찾기 (portal 모드 대응)
   function findList($root) {
-    // 일반 모드: 자식에서 찾기
     var $list = $root.find(LIST);
     if ($list.length) return $list;
 
-    // portal 모드: body에서 origin 기준으로 찾기
     return $('body')
       .children(LIST)
       .filter(function () {
@@ -165,8 +168,7 @@
   function closeOne($root) {
     if (!$root || !$root.length) return;
 
-    $root.removeClass(CLS_OPEN); // CLS_DROPUP은 유지 → 닫힘 애니메이션 중 위치 점프 방지
-
+    $root.removeClass(CLS_OPEN);
     $root.find(TRIGGER).attr('aria-expanded', 'false');
 
     if (isPortal($root)) {
@@ -187,7 +189,7 @@
     scope.openRoot = null;
   }
 
-  // 전체 스코프의 열린 셀렉트 닫기(전역 ROOT 스캔 없음)
+  // 전체 스코프의 열린 셀렉트 닫기
   function closeAllOpened() {
     Object.keys(scopes).forEach(function (k) {
       closeOpenedInScope(parseInt(k, 10));
@@ -213,7 +215,6 @@
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
 
-    // 이전 방향 초기화 (다음 열림에서 재계산)
     $root.removeClass(CLS_DROPUP);
 
     var $trigger = $root.find(TRIGGER);
@@ -243,7 +244,6 @@
     var calcMaxH = (shouldDropUp ? spaceAbove : spaceBelow) - GUTTER;
     if (calcMaxH < MIN_H) calcMaxH = MIN_H;
 
-    // 커스텀 max-height 적용 (portal과 동일 패턴)
     var customMaxH = $root.attr('data-max-height');
     if (customMaxH && /^\d+$/.test(customMaxH)) customMaxH = customMaxH + 'px';
 
@@ -260,9 +260,8 @@
     if (!$trigger.length || !$list.length) return;
 
     var rect = $trigger[0].getBoundingClientRect();
-    var customMaxH = $root.attr('data-max-height'); // 커스텀 max-height 읽기
+    var customMaxH = $root.attr('data-max-height');
 
-    // 숫자만 있으면 px 붙이기
     if (customMaxH && /^\d+$/.test(customMaxH)) {
       customMaxH = customMaxH + 'px';
     }
@@ -282,28 +281,23 @@
     var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
     var spaceAbove = rect.top - GUTTER;
     var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
-    var maxH;
     var calcMaxH;
-    var topPos;
-    var bottomPos;
+    var maxH;
 
-    // openPortal 함수 수정
     if (shouldDropUp) {
       calcMaxH = Math.max(spaceAbove, MIN_H) + 'px';
-      bottomPos = window.innerHeight - rect.top + PORTAL_GAP;
       maxH = customMaxH || calcMaxH;
       $list.css({
         top: '',
-        bottom: bottomPos + 'px',
+        bottom: window.innerHeight - rect.top + PORTAL_GAP + 'px',
         maxHeight: maxH
       });
       $root.addClass(CLS_DROPUP);
     } else {
       calcMaxH = Math.max(spaceBelow, MIN_H) + 'px';
-      topPos = rect.bottom + PORTAL_GAP;
       maxH = customMaxH || calcMaxH;
       $list.css({
-        top: topPos + 'px',
+        top: rect.bottom + PORTAL_GAP + 'px',
         bottom: '',
         maxHeight: maxH
       });
@@ -349,7 +343,7 @@
     $root.toggleClass(CLS_NO_OPTION, !!on);
   }
 
-  // hidden 값 세팅 + change 트리거(외부 연동 포인트)
+  // hidden 값 세팅 + change 트리거
   function setHiddenVal($root, v) {
     var $hidden = $root.find(HIDDEN);
     if (!$hidden.length) return;
@@ -366,7 +360,7 @@
 
   // placeholder/hidden/선택표시 초기화
   function resetToPlaceholder($root, clearOptions) {
-    $root.removeClass('is-selected'); // 26-02-03 추가
+    $root.removeClass('is-selected');
     var $value = $root.find(VALUE);
     if ($value.length) $value.text($value.attr('data-placeholder') || '');
 
@@ -420,7 +414,7 @@
     setDisabled($root, false);
   }
 
-  // 옵션 선택 처리(표시/hidden/a11y 동기화)
+  // 옵션 선택 처리
   function setSelected($root, $opt) {
     var $list = findList($root);
 
@@ -431,9 +425,9 @@
       $el.attr('aria-selected', sel ? 'true' : 'false');
     });
 
-    $root.addClass('is-selected'); // 26-02-03 추가
+    $root.addClass('is-selected');
     $root.find(VALUE).text($opt.text());
-    setHiddenVal($root, $opt.attr('data-value') || ''); // [2026-01-30 수정] data-value 없으면 빈 값
+    setHiddenVal($root, $opt.attr('data-value') || '');
   }
 
   // hidden 값 기준 선택 복원
@@ -472,7 +466,7 @@
     return out;
   }
 
-  // 브레드크럼 2/3뎁스 옵션/활성 갱신(그룹 캐시 기반)
+  // 브레드크럼 2/3뎁스 옵션/활성 갱신
   function applyBreadcrumb($changedRoot, changedDepth) {
     var cache = getGroupCache($changedRoot);
     if (!cache) return;
@@ -595,7 +589,7 @@
     setTitleFromDepth($title, gCache.byDepth);
   }
 
-  // 스코프 캐시 구축(group 있는 셀렉트만)
+  // 스코프 캐시 구축
   function buildScopeCache(scopeKey, $container) {
     var $rootsAll = $container.find(ROOT);
     var groups = {};
@@ -638,7 +632,7 @@
     delete scopes[scopeKey];
   }
 
-  // 특정 컨테이너 캐시 제거(키 기반)
+  // 특정 컨테이너 캐시 제거
   function destroy(root) {
     if (!root) return;
 
@@ -656,86 +650,10 @@
     });
   }
 
-  // 이벤트 바인딩(1회)
-  function bind() {
-    // 외부 클릭 시 닫기
-    $(document).on('mousedown' + NS, function (e) {
-      var $target = $(e.target);
-      // portal list 클릭도 예외 처리
-      if (!$target.closest(ROOT).length && !$target.closest('.' + CLS_PORTAL_LIST).length) {
-        closeAllOpened();
-      }
-    });
-
-    // 트리거 클릭
-    $(document).on('click' + NS, ROOT + ' ' + TRIGGER, function (e) {
-      e.preventDefault();
-
-      var $root = $(this).closest(ROOT);
-      if ($root.hasClass(CLS_DISABLED)) return;
-
-      var scopeKey = getRootScopeKey($root);
-
-      if ($root.hasClass(CLS_OPEN)) {
-        closeOpenedInScope(scopeKey);
-        return;
-      }
-
-      openOne($root);
-    });
-
-    // 옵션 클릭 (일반 모드)
-    $(document).on('click' + NS, ROOT + ' ' + OPT, function (e) {
-      e.preventDefault();
-      handleOptionClick($(this));
-    });
-
-    // 옵션 클릭 (portal 모드 - body에 붙은 list)
-    $(document).on('click' + NS, '.' + CLS_PORTAL_LIST + ' ' + OPT, function (e) {
-      e.preventDefault();
-      handleOptionClick($(this));
-    });
-
-    // 모든 스크롤 감지 (capture phase)
-    document.addEventListener(
-      'scroll',
-      function (e) {
-        // 셀렉트 리스트 내부 스크롤은 무시
-        var $scrolled = $(e.target);
-        if ($scrolled.closest(LIST).length || $scrolled.hasClass(CLS_PORTAL_LIST)) return;
-
-        Object.keys(scopes).forEach(function (k) {
-          var scope = scopes[k];
-          if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-            // 열린 셀렉트가 특정 영역 안에 있을 때만 닫기
-            if (scope.openRoot.closest('.k-window').length) {
-              closeOpenedInScope(k);
-            } else {
-              // 다른 곳은 기존처럼 위치 따라감
-              updatePortalPosition(scope.openRoot);
-            }
-          }
-        });
-      },
-      true
-    );
-
-    // 리사이즈
-    $(window).on('resize' + NS, function () {
-      Object.keys(scopes).forEach(function (k) {
-        var scope = scopes[k];
-        if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-          updatePortalPosition(scope.openRoot);
-        }
-      });
-    });
-  }
-
   // 옵션 클릭 공통 핸들러
   function handleOptionClick($opt) {
     if ($opt.hasClass(CLS_OPT_DISABLED)) return;
 
-    // portal 모드면 origin에서 root 찾기
     var $list = $opt.closest(LIST);
     var $root = $list.data(DATA_PORTAL_ORIGIN) || $opt.closest(ROOT);
 
@@ -792,17 +710,85 @@
     }
   }
 
-  // 스코프 초기화(컨테이너 단위)
+  // 이벤트 바인딩(1회)
+  function bind() {
+    // 외부 클릭 시 닫기
+    $(document).on('mousedown' + NS, function (e) {
+      var $target = $(e.target);
+      if (!$target.closest(ROOT).length && !$target.closest('.' + CLS_PORTAL_LIST).length) {
+        closeAllOpened();
+      }
+    });
+
+    // 트리거 클릭
+    $(document).on('click' + NS, ROOT + ' ' + TRIGGER, function (e) {
+      e.preventDefault();
+
+      var $root = $(this).closest(ROOT);
+      if ($root.hasClass(CLS_DISABLED)) return;
+
+      var scopeKey = getRootScopeKey($root);
+
+      if ($root.hasClass(CLS_OPEN)) {
+        closeOpenedInScope(scopeKey);
+        return;
+      }
+
+      openOne($root);
+    });
+
+    // 옵션 클릭 (일반 모드)
+    $(document).on('click' + NS, ROOT + ' ' + OPT, function (e) {
+      e.preventDefault();
+      handleOptionClick($(this));
+    });
+
+    // 옵션 클릭 (portal 모드)
+    $(document).on('click' + NS, '.' + CLS_PORTAL_LIST + ' ' + OPT, function (e) {
+      e.preventDefault();
+      handleOptionClick($(this));
+    });
+
+    // 스크롤 감지 (capture phase)
+    document.addEventListener(
+      'scroll',
+      function (e) {
+        var $scrolled = $(e.target);
+        if ($scrolled.closest(LIST).length || $scrolled.hasClass(CLS_PORTAL_LIST)) return;
+
+        Object.keys(scopes).forEach(function (k) {
+          var scope = scopes[k];
+          if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+            if (scope.openRoot.closest('.k-window').length) {
+              closeOpenedInScope(k);
+            } else {
+              updatePortalPosition(scope.openRoot);
+            }
+          }
+        });
+      },
+      true
+    );
+
+    // 리사이즈
+    $(window).on('resize' + NS, function () {
+      Object.keys(scopes).forEach(function (k) {
+        var scope = scopes[k];
+        if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+          updatePortalPosition(scope.openRoot);
+        }
+      });
+    });
+  }
+
+  // 스코프 초기화
   function init(root) {
     var $container = root ? $(root) : $(document);
 
-    // 전역 init은 항상 document 컨테이너로 통일
     if (!root) root = document;
 
-    // 동일 컨테이너 재초기화는 기존 캐시 정리 후 재구축
     destroy(root);
 
-    // 컨테이너 init은 순번 부여(전역도 동일 정책)
     var scopeKey = ++scopeSeq;
 
     $container = $(root);
@@ -834,7 +820,9 @@
     }
   }
 
-  // 외부 init은 여러 번 호출될 수 있으나 이벤트는 1회만 바인딩
+  // ── Public API ──
+
+  // 초기화 (이벤트는 1회만 바인딩)
   window.UI.select.init = function (root) {
     if (!window.UI.select.__bound) {
       bind();
@@ -843,17 +831,17 @@
     init(root);
   };
 
-  // 캐시 정리 API(동적 렌더링/페이지 전환 대응)
+  // 캐시 정리
   window.UI.select.destroy = function (root) {
     destroy(root);
   };
 
-  // 전체 캐시 정리 API(테스트/리셋용)
+  // 전체 캐시 정리
   window.UI.select.destroyAll = function () {
     destroyAll();
   };
 
-  // 동적 옵션 주입 API
+  // 동적 옵션 주입
   window.UI.select.setOptions = function ($root, items) {
     $root = $($root).closest(ROOT);
     if (!$root.length) return;
@@ -867,11 +855,30 @@
     enableWithOptions($root, items);
   };
 
-  // 선택 초기화 API
+  // 선택 초기화
   window.UI.select.reset = function ($root) {
     $root = $($root).closest(ROOT);
     if (!$root.length) return;
 
     resetToPlaceholder($root, true);
+  };
+
+  // 값 세팅
+  window.UI.select.setValue = function ($root, value) {
+    $root = $($root).closest(ROOT);
+    if (!$root.length) return false;
+    return setSelectedByValue($root, value);
+  };
+
+  // 값 조회
+  window.UI.select.getValue = function ($root) {
+    $root = $($root).closest(ROOT);
+    return $root.length ? getHiddenVal($root) : '';
+  };
+
+  // disabled 토글
+  window.UI.select.setDisabled = function ($root, disabled) {
+    $root = $($root).closest(ROOT);
+    if ($root.length) setDisabled($root, disabled);
   };
 })(window.jQuery, window, document);

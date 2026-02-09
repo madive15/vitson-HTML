@@ -2,10 +2,12 @@
 <% /**
   * 테이블 헤더 컴포넌트 (caption + colgroup + thead 한 줄)
   * @param {string} caption - 테이블 캡션 (sr-only)
-  * @param {Array<{ width: number|string, label: string }>} columns - 컬럼 설정
+  * @param {Array<{ width: number|string, label: string, thClass?: string, spanClass?: string, spans?: Array<{ text: string, className?: string }> }>} columns - 컬럼 설정
   *   - width: col 태그의 width 값 (숫자 또는 문자열, 예: 50, '100')
-  *   - label: th 태그에 표시할 텍스트 (빈 문자열 가능)
-  * 갯수와 width, label을 자유롭게 조절하여 사용
+  *   - label: th 태그에 표시할 텍스트 (spans 없을 때 사용)
+  *   - thClass: th 태그에 추가할 class (선택)
+  *   - spanClass: label을 감쌀 span의 class (spans 없을 때만 적용, 선택)
+  *   - spans: [{ text, className }] 배열로 여러 span 출력 (있으면 label 대신 사용)
   */ %>
 <caption class="sr-only">
   <%= caption %>
@@ -18,7 +20,34 @@
 <thead>
   <tr>
     <% (columns || []).forEach(function(column) { %>
-    <th scope="col"><%= column.label %></th>
+    <%
+      const _classValue = function(v) {
+        if (v == null || typeof v !== 'string') return '';
+        let t = String(v).trim();
+        if (t.length >= 2 && t.charAt(0) === '"' && t.charAt(t.length - 1) === '"') t = t.slice(1, -1).trim();
+        return t;
+      };
+      const _hasClass = function(v) { return _classValue(v).length > 0; };
+      const _text = function(v) {
+        if (v == null) return '';
+        const s = String(v).trim();
+        return s === '""' ? '' : (s || '');
+      };
+      const _thClass = _classValue(column && column.thClass);
+      const _spans = Array.isArray(column && column.spans) ? column.spans : null;
+      const _spanClass = _classValue(column && column.spanClass);
+    %>
+    <th scope="col"<%- _thClass ? ' class="' + _thClass + '"' : '' %>>
+      <% if (_spans && _spans.length) { %>
+        <% _spans.forEach(function(s) { %>
+        <span<%- _hasClass(s && s.className) ? ' class="' + _classValue(s.className) + '"' : '' %>><%= _text(s && s.text) %></span>
+        <% }); %>
+      <% } else if (_spanClass) { %>
+        <span<%- ' class="' + _spanClass + '"' %>><%= _text(column.label) %></span>
+      <% } else { %>
+        <%= _text(column.label) %>
+      <% } %>
+    </th>
     <% }); %>
   </tr>
 </thead>

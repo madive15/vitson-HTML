@@ -1,7 +1,7 @@
 <!-- prettier-ignore -->
 <% /**
   * 테이블 tbody 한 줄 컴포넌트 (type별 row)
-  * @param {string} type - 'account' | 'shipping' | 'survey' | 'survey-ing' | 'bulk' (필요 시 추가)
+  * @param {string} type - 'account' | 'shipping' | 'survey' | 'survey-ing' | 'bulk' | 'single' | 'quality' | 'docs' (필요 시 추가)
   * @param {string} [srcPath] - include 경로용
   * @param {string} [publicPath] - public 경로용
   * type=account: rowIndex, userId, name, department, position, phone, status, checked 등
@@ -9,32 +9,28 @@
   * type=survey: rowIndex, title, startDate, endDate, status, starScore, starMax (설문 조회)
   * type=survey-ing: rowIndex, question (설문 참여 중 문항 행, 별점 제외)
   * type=bulk: rowIndex, productInfo, title, status, date (대량구매문의 목록)
+  * type=quality: rowIndex, title, date (품질 문서 목록 - 번호, 문서 아이콘+제목, 날짜)
+  * type=docs: cells[{colspan, tdClass, text, className, spans:[{text, className}], button:{text,variant,...}|false}], rowClass (문서/회계 등 유연한 td 행, 단일 text 셀은 className으로 span 클래스 지정)
   */ %>
 <% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
 <% const _type = typeof type !== 'undefined' ? type : ''; %>
 
+<!-- 계정 목록 행 -->
 <% if (_type === 'account') { %>
 <!-- prettier-ignore -->
 <%
-  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
-  const _userId = typeof userId !== 'undefined' ? userId : '';
-  const _name = typeof name !== 'undefined' ? name : '';
-  const _department = typeof department !== 'undefined' ? department : '';
-  const _position = typeof position !== 'undefined' ? position : '';
-  const _phone = typeof phone !== 'undefined' ? phone : '';
-  const _status = typeof status !== 'undefined' ? status : '미사용';
-%>
+    const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+    const _userId = typeof userId !== 'undefined' ? userId : '';
+    const _name = typeof name !== 'undefined' ? name : '';
+    const _department = typeof department !== 'undefined' ? department : '';
+    const _position = typeof position !== 'undefined' ? position : '';
+    const _phone = typeof phone !== 'undefined' ? phone : '';
+    const _status = typeof status !== 'undefined' ? status : '미사용';
+  %>
 <tr class="account-table-row">
   <td>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
-      datas: [
-        {
-          className: 's',
-          name: 'ckbox1',
-          value: 'checkbox-single-s',
-        }],
-    }) %>
+    <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, { datas: [ { className: 's', name: 'ckbox1',
+    value: 'checkbox-single-s' } ] }) %>
   </td>
   <td><span class="account-table-num"><%= _rowIndex %></span></td>
   <td><span class="account-table-id"><%= _userId || '—' %></span></td>
@@ -43,41 +39,36 @@
   <td><span class="account-table-position"><%= _position || '—' %></span></td>
   <td><span class="account-table-phone"><%= _phone || '—' %></span></td>
   <td>
-    <% if (_status === '사용') { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '사용', variant: 'blue' }) %>
-    <% } else { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '미사용', variant: 'gray' }) %>
-    <% } %>
+    <% if (_status === '사용') { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '사용',
+    variant: 'blue' }) %> <% } else { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text:
+    '미사용', variant: 'gray' }) %> <% } %>
   </td>
   <td>
     <div class="account-table-actions">
-      <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-secondary', text: '수정' }) %>
+      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'outline-secondary', text: '수정'
+      }) %>
     </div>
   </td>
 </tr>
 
+<!-- 배송지 목록 행 -->
 <% } else if (_type === 'shipping') { %>
 <!-- prettier-ignore -->
 <%
-  const _isDefault = typeof isDefault !== 'undefined' ? isDefault : true;
-  const _classify = typeof classify !== 'undefined' ? classify : '';
-  const _addrName = typeof addrName !== 'undefined' ? addrName : '';
-  const _recipient = typeof recipient !== 'undefined' ? recipient : '';
-  const _contact = typeof contact !== 'undefined' ? contact : '';
-  const _address = typeof address !== 'undefined' ? address : '';
-  const _cargo = typeof cargo !== 'undefined' ? cargo : '-';
-  const _office = typeof office !== 'undefined' ? office : '-';
-  const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
-%>
+    const _isDefault = typeof isDefault !== 'undefined' ? isDefault : true;
+    const _classify = typeof classify !== 'undefined' ? classify : '';
+    const _addrName = typeof addrName !== 'undefined' ? addrName : '';
+    const _recipient = typeof recipient !== 'undefined' ? recipient : '';
+    const _contact = typeof contact !== 'undefined' ? contact : '';
+    const _address = typeof address !== 'undefined' ? address : '';
+    const _cargo = typeof cargo !== 'undefined' ? cargo : '-';
+    const _office = typeof office !== 'undefined' ? office : '-';
+    const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+  %>
 <tr>
   <td>
-    <% if (_isDefault) { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지', variant: 'red' }) %>
-    <% } %>
+    <% if (_isDefault) { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지',
+    variant: 'red' }) %> <% } %>
   </td>
   <td><span class="shipping-table-name"><%= _addrName || '—' %></span></td>
   <td><span class="shipping-table-recipient"><%= _recipient %></span></td>
@@ -99,6 +90,7 @@
   </td>
 </tr>
 
+<!-- 설문 조회 목록 행 -->
 <% } else if (_type === 'survey') { %>
 <!-- prettier-ignore -->
 <%
@@ -115,22 +107,20 @@
   <td><span class="survey-table-title"><%= _title || '—' %></span></td>
   <td><span class="survey-table-period"><%= _startDate %> ~ <%= _endDate %></span></td>
   <td>
-    <% if (_status === '진행중') { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'blue' }) %>
-    <% } else if (_status === '종료') { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %>
-    <% } %>
+    <% if (_status === '진행중') { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status,
+    variant: 'blue' }) %> <% } else if (_status === '종료') { %> <%-
+    include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %> <% } %>
   </td>
   <td>
-    <!-- prettier-ignore -->
     <div class="star-rating">
       <div class="star-stars" role="img" aria-label="별점 <%= _starScore %>점 만점 <%= _starMax %>점">
-        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됩니다.-->
+        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됨-->
         <div class="star-track">
           <span class="star-layer star-layer-gray"></span>
-          <span class="star-layer star-layer-fill" style="width: <%= (_starMax > 0 ? (Number(_starScore) / Number(_starMax) * 100).toFixed(2) : '0.00') %>%;"></span>
+          <span
+            class="star-layer star-layer-fill"
+            style="width: <%= (_starMax > 0 ? (Number(_starScore) / Number(_starMax) * 100) .toFixed(2): '0.00') %>%"
+          ></span>
           <span class="star-layer star-layer-shape"></span>
         </div>
       </div>
@@ -143,12 +133,13 @@
   </td>
   <td>
     <div class="survey-table-actions">
-      <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName: 'ic-document-paper', iconLeft: true, text: '보기' }) %>
+      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName:
+      'ic-document-paper', iconLeft: true, text: '보기' }) %>
     </div>
   </td>
 </tr>
 
+<!-- 설문 참여 중 문항 행 -->
 <% } else if (_type === 'survey-ing') { %>
 <!-- prettier-ignore -->
 <%
@@ -177,6 +168,7 @@
   </td>
 </tr>
 
+<!-- 대량문의 목록 행 -->
 <% } else if (_type === 'bulk') { %>
 <!-- prettier-ignore -->
 <%
@@ -189,17 +181,120 @@
 <tr class="bulk-table-row">
   <td><span class="bulk-table-num"><%= _rowIndex %></span></td>
   <td><span class="bulk-table-product"><%= _productInfo || '—' %></span></td>
-  <td><span class="bulk-table-title"><%= _title || '—' %></span></td>
+  <td><a href="#!"><span class="bulk-table-title"><%= _title || '—' %></span></a></td>
   <td>
-    <% if (_status === '답변완료') { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'green' }) %>
-    <% } else { %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status, variant: 'gray' }) %>
-    <% } %>
+    <% if (_status === '답변완료') { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status,
+    variant: 'green' }) %> <% } else { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text:
+    _status, variant: 'gray' }) %> <% } %>
   </td>
   <td><span class="bulk-table-date"><%= _date || '—' %></span></td>
 </tr>
+
+<!-- 1:1 문의 목록 행 -->
+<% } else if (_type === 'single') { %>
+  <!-- prettier-ignore -->
+  <%
+    const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+    const _inquiryType = typeof inquiryType !== 'undefined' ? inquiryType : '';
+    const _detailTypeValue = typeof detailTypeValue !== 'undefined' ? detailTypeValue : '';
+    const _title = typeof title !== 'undefined' ? title : '';
+    const _status = typeof status !== 'undefined' ? status : '답변대기';
+    const _date = typeof date !== 'undefined' ? date : '';
+  %>
+  <tr class="single-table-row">
+    <td><span><%= _rowIndex %></span></td>
+    <td><span class="single-type"><%= _inquiryType || '—' %></span></td>
+    <td><span class="single-detail-type"><%= _detailTypeValue || '—' %></span></td>
+    <td><a href="#!"><span class="single-title"><%= _title || '—' %></span></a></td>
+    <td>
+      <% if (_status === '답변완료') { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text: _status,
+      variant: 'green' }) %> <% } else { %> <%- include(`${_src}/views/components/label/general-label.ejs`, { text:
+      _status, variant: 'gray' }) %> <% } %>
+    </td>
+    <td><span class="single-date"><%= _date || '—' %></span></td>
+  </tr>
+
+<!-- 품질 문서 목록 행 -->
+<% } else if (_type === 'quality') { %>
+  <!-- prettier-ignore -->
+  <%
+    const _rowIndex = typeof rowIndex !== 'undefined' ? rowIndex : 0;
+    const _title = typeof title !== 'undefined' ? title : '';
+    const _date = typeof date !== 'undefined' ? date : '';
+  %>
+  <tr class="quality-table-row">
+    <td><span class="quality-table-num"><%= _rowIndex %></span></td>
+    <td>
+      <a href="#!">
+        <span class="quality-table-title">
+          <i class="ic ic-document-paper" aria-hidden="true"></i>
+          <%= _title || '—' %>
+        </span>
+      </a>
+    </td>
+    <td><span class="quality-table-date"><%= _date || '—' %></span></td>
+  </tr>
+
+<!-- mypage-docs에 사용되는 td 행 (type=docs) -->
+<% } else if (_type === 'docs') { %>
+  <!-- prettier-ignore -->
+  <%
+    const _rowClass = typeof rowClass !== 'undefined' ? rowClass : '';
+    const _cells = Array.isArray(cells) ? cells : [];
+  %>
+  <tr class="docs-table-row<%= _rowClass ? ' ' + _rowClass : '' %>">
+    <% _cells.forEach(function (cell) { %>
+      <%
+        const _classValue = function(v) {
+          if (v == null || typeof v !== 'string') return '';
+          let t = String(v).trim();
+          if (t.length >= 2 && t.charAt(0) === '"' && t.charAt(t.length - 1) === '"') t = t.slice(1, -1).trim();
+          return t;
+        };
+        const _hasClass = function(v) { return _classValue(v).length > 0; };
+        const _cellText = function(v) {
+          if (v == null) return '';
+          const s = String(v).trim();
+          return s === '""' ? '' : (s || '');
+        };
+        const _colspan =
+          cell && typeof cell.colspan === 'number' && cell.colspan > 1
+            ? cell.colspan
+            : 1;
+        const _tdClass = _classValue(cell && cell.tdClass);
+        const _spans = Array.isArray(cell && cell.spans)
+          ? cell.spans
+          : cell && cell.text != null
+            ? [{ text: cell.text, className: cell.className || cell.spanClass || '' }]
+            : [];
+        const _button = cell && cell.button;
+        const _hasButton =
+          _button &&
+          typeof _button === 'object' &&
+          (_button.text != null || _button.iconName);
+      %>
+      <td
+        <%- _colspan > 1 ? ' colspan="' + _colspan + '"' : '' %>
+        <%- _tdClass ? ' class="' + _tdClass + '"' : '' %>
+      >
+        <% _spans.forEach(function (s) { %>
+          <span
+            <%- _hasClass(s && s.className) ? ' class="' + _classValue(s.className) + '"' : '' %>
+          >
+            <%= _cellText(s && s.text) %>
+          </span>
+        <% }); %>
+        <% if (_hasButton) { %>
+          <%- include(
+            `${_src}/views/components/button/button.ejs`,
+            Object.assign(
+              { size: 'xs', variant: 'outline-secondary' },
+              _button
+            )
+          ) %>
+        <% } %>
+      </td>
+    <% }); %>
+  </tr>
 
 <% } %>

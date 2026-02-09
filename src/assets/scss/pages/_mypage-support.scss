@@ -16,7 +16,9 @@
  * 설문조사 (my-survey)
  * ----------------------------------- */
 .survey-headline,
-.bulk-headline {
+.bulk-headline,
+.docs-headline,
+.single-headline {
   @include mx.flex($align: flex-end);
 
   .vits-mypage-content-title {
@@ -61,9 +63,13 @@
 }
 
 .survey-panel,
-.bulk-panel {
-  @include mx.flex($direction: column, $justify: space-between);
+.docs-panel,
+.bulk-panel,
+.bills-panel,
+.quotes-panel,
+.single-panel {
   gap: map.get(var.$unit, 20);
+  align-items: stretch;
   width: 100%;
   padding: map.get(var.$unit, 32);
   background-color: map.get(color.$layout-surf, 'base');
@@ -77,17 +83,110 @@
   }
 }
 
+/* 구매내역 상세 패널 */
+.bills-panel-detail {
+  gap: 0;
+  align-items: stretch;
+  width: 100%;
+  padding: map.get(var.$unit, 32);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .docs-summary {
+    margin-bottom: fn.rem(44);
+  }
+}
+
+/* -----------------------------------
+ * 구매내역서 상세 헤더 (구매내역서)
+ * ----------------------------------- */
+.bills-detail-header {
+  margin-bottom: fn.rem(44);
+
+  .bills-header-info {
+    @include mx.flex($direction: column);
+    position: relative;
+    gap: map.get(var.$unit, 16);
+    padding: map.get(var.$unit, 32) 0;
+    margin: 0;
+
+    &::after,
+    &::before {
+      width: auto;
+      height: 1px;
+      content: '';
+      background-color: map.get(color.$layout-border, 'quinary');
+    }
+
+    &::before {
+      @include mx.position(absolute, $top: 0, $left: -32px, $right: -32px);
+    }
+
+    &::after {
+      @include mx.position(absolute, $bottom: 0, $left: -32px, $right: -32px);
+    }
+
+    > div {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+    }
+
+    dt {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      min-width: fn.rem(92);
+    }
+
+    dd {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    .bills-payment-info {
+      dt {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      strong {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+
+  .bills-header-top ul {
+    @include mx.flex($align: center, $justify: space-between);
+    gap: map.get(var.$unit, 16);
+    padding-bottom: map.get(var.$unit, 32);
+
+    .bills-header-title {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 8);
+
+      h3 {
+        @include typo.typography('h3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      p {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+
+    .bills-header-actions {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 8);
+    }
+  }
+}
+
 /* 설문지 상세 정보 카드 */
 .survey-card {
-  @include mx.flex($align: stretch);
-  padding: fn.rem(28) 0 fn.rem(28) fn.rem(60);
+  @include mx.flex($align: stretch, $justify: space-around);
+  padding: fn.rem(28) 0;
   background-color: map.get(color.$layout-surf, 'base');
   border: 1px solid map.get(color.$icon-neutral, 'disabled');
   border-radius: map.get(var.$radius, 'lg');
 
   &-item {
     @include mx.flex($direction: column, $align: center, $justify: center);
-    flex: 1;
     gap: fn.rem(0);
   }
 
@@ -111,6 +210,7 @@
     @include mx.flex($align: center, $justify: center);
     gap: fn.rem(8);
     min-height: fn.rem(50);
+    text-align: center;
   }
 
   .score {
@@ -207,12 +307,36 @@
   }
 }
 
-/* 대량구매문의 목록 행 */
+/* 대량구매문의 , 1:1 문의 목록 행 */
 .bulk-table-row {
   .bulk-table-product {
     display: block;
     width: 100%;
     text-align: left;
+    transition: font-weight 0.2s ease;
+  }
+
+  @include mx.common-mouse-event {
+    .bulk-table-title {
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}
+
+.single-table-row {
+  .single-title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    transition: font-weight 0.2s ease;
+  }
+
+  @include mx.common-mouse-event {
+    .single-title {
+      font-weight: 600;
+      cursor: pointer;
+    }
   }
 }
 
@@ -274,7 +398,8 @@
  * ----------------------------------- */
 .mypage-button-area {
   &.in-survey,
-  &.in-inquiry {
+  &.in-inquiry,
+  &.in-docs {
     @include mx.flex($align: center, $justify: flex-end);
     gap: map.get(var.$unit, 12);
     padding-top: map.get(var.$unit, 16);
@@ -285,60 +410,28 @@
     }
 
     [class*='vits-btn'] {
-      min-width: fn.rem(200);
+      min-width: fn.rem(160);
     }
-  }
-}
-
-/* 개별 공통 영역은 하단에 위치 */
-.main-content-survey,
-.main-content-bulk {
-  @include mx.flex($direction: column);
-  gap: map.get(var.$unit, 24);
-
-  /* 조회 필터 영역 */
-  .mypage-query-fields {
-    @include mx.flex($align: center, $justify: space-between);
-    width: 100%;
-
-    /* 조회버튼 */
-    .mypage-query-buttons {
-      .mypage-search-btn {
-        min-width: fn.rem(120);
-      }
-    }
-
-    .mypage-query-select-year {
-      min-width: fn.rem(120);
-
-      .vits-select-value {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-      }
-
-      .vits-select,
-      .vits-select-trigger,
-      .vits-select-list {
-        width: 100%;
-      }
-    }
-  }
-
-  /* 페이지네이션 */
-  .vits-mypage-pagination {
-    padding-top: map.get(var.$unit, 20);
   }
 }
 
 /* -----------------------------------
- * 상품 상세 블록 (detail-product, detail-단어)
+ * 상품 상세 블록 (detail-product, detail-{})
  * ----------------------------------- */
 .inquiry-detail-product {
-  @include mx.flex($align: center);
-  gap: map.get(var.$unit, 20);
   padding: map.get(var.$unit, 20);
   background-color: map.get(color.$layout-surf, 'raised');
   border: 1px solid map.get(color.$layout-border, 'quaternary');
   border-radius: map.get(var.$radius, 'lg');
+
+  @include mx.common-mouse-event {
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+  }
+
+  > a {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 20);
+  }
 
   .detail-thumb {
     flex-shrink: 0;
@@ -397,26 +490,76 @@
   }
 
   .detail-origin {
-    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+    @include typo.typography('d3r', $color: map.get(color.$text-colors, 'muted'));
     display: block;
     width: 100%;
     text-decoration: line-through;
   }
 
   .detail-discount {
-    @include typo.typography('b2s', $color: map.get(color.$brand-colors, '90'));
+    @include typo.typography('b1b', $color: map.get(color.$brand-colors, '90'));
     display: block;
     margin-right: map.get(var.$unit, 4);
   }
 
   .detail-final {
-    @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+    @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
     display: block;
   }
 
   .detail-vat {
     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
     width: 100%;
+  }
+
+  /* type = single: 단일 행 상품 요약 */
+  &:has(.inquiry-product-item) {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+  }
+
+  .inquiry-product-item {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+    text-decoration: none;
+    background-color: map.get(color.$layout-surf, 'base');
+    border: 1px solid map.get(color.$layout-border, 'quaternary');
+    border-radius: map.get(var.$radius, 'lg');
+
+    @include mx.common-mouse-event {
+      border-color: map.get(color.$layout-border, 'tertiary');
+
+      .inquiry-product-info {
+        @include typo.typography('b3s');
+      }
+    }
+  }
+
+  .inquiry-product-thumb {
+    flex-shrink: 0;
+    width: fn.rem(32);
+    height: fn.rem(32);
+    overflow: hidden;
+    background-color: map.get(color.$layout-surf, 'sunken');
+    border-radius: map.get(var.$radius, 'sm');
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+  }
+
+  .inquiry-product-info {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    min-width: 0;
+    transition:
+      font-weight 0.2s ease,
+      color 0.2s ease;
   }
 }
 
@@ -425,6 +568,11 @@
  * ----------------------------------- */
 .inquiry-detail {
   @include mx.flex($direction: column);
+
+  .vits-amount-info-card {
+    margin-top: map.get(var.$unit, 24);
+    margin-bottom: map.get(var.$unit, 24);
+  }
 
   &-header {
     @include mx.flex($align: center, $justify: space-between);
@@ -459,6 +607,26 @@
     margin-bottom: map.get(var.$unit, 40);
     background-color: map.get(color.$layout-status, 'info-bg-sub');
     border-radius: map.get(var.$radius, 'lg');
+  }
+
+  &-breadcrumb {
+    @include mx.flex($align: center);
+
+    &::before {
+      display: inline-block;
+      width: 1px;
+      height: map.get(var.$unit, 12);
+      margin-right: fn.rem(10);
+      content: '';
+      background-color: map.get(color.$layout-border, 'tertiary');
+    }
+
+    .inquiry-depth1,
+    .inquiry-depth2,
+    .ic {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      color: map.get(color.$text-colors, 'tertiary');
+    }
   }
 
   /* 답변 블록 */
@@ -516,5 +684,314 @@
       right: fn.rem(20);
       bottom: fn.rem(20);
     }
+  }
+}
+
+/* -----------------------------------
+ * 문의 작성 폼 (inquiry-write-form)
+ * ----------------------------------- */
+.inquiry-write-form {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 24);
+  margin-top: map.get(var.$unit, 32);
+
+  .inquiry-form {
+    &-row {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-label {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      display: block;
+
+      .label-required {
+        padding-left: fn.rem(2);
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+
+    &-field {
+      width: 100%;
+
+      .vits-validation.is-invalid .input-item {
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+      }
+
+      &.inquiry-editor-placeholder {
+        min-height: fn.rem(240);
+      }
+
+      .validation-message {
+        padding-left: fn.rem(16);
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        p {
+          color: map.get(color.$text-status, 'brand-sub');
+        }
+      }
+
+      .vits-chip-file ~ .vits-chip-file {
+        margin-left: fn.rem(12);
+      }
+    }
+
+    &-hint {
+      @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand-sub'));
+      margin: map.get(var.$unit, 8) 0 0;
+    }
+  }
+}
+
+/* -----------------------------------
+ * 전월 이월금액 안내 (amount-info-card)
+ * ----------------------------------- */
+/* stylelint-disable-next-line no-descending-specificity */
+.vits-amount-info-card {
+  @include mx.flex($align: center, $justify: space-between);
+  padding: map.get(var.$unit, 32);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .amount-info-header {
+    @include mx.flex($direction: column, $align: flex-start);
+    gap: map.get(var.$unit, 8);
+
+    .amount-info-title {
+      @include typo.typography('h3s', $color: map.get(color.$text-colors, 'primary'));
+      margin: 0;
+    }
+
+    .amount-info-desc {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      .name {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
+
+  .amount-info-body {
+    @include mx.flex($direction: column, $align: flex-end);
+    gap: map.get(var.$unit, 12);
+
+    .amount-info-price {
+      @include typo.typography('h3s', $color: map.get(color.$text-status, 'brand'));
+      @include mx.flex($flex: inline-flex, $align: center);
+      gap: map.get(var.$unit, 4);
+
+      em {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        font-style: normal;
+      }
+    }
+  }
+}
+
+/* -----------------------------------
+ * 구매내역 상세 (docs-summary, docs-detail)
+ * ----------------------------------- */
+/* stylelint-disable-next-line no-descending-specificity */
+.docs-summary {
+  min-height: auto;
+
+  .main-text {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  .sub-text {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: block;
+  }
+
+  .amount-total {
+    @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand'));
+    display: block;
+  }
+}
+
+.docs-detail {
+  min-height: auto;
+
+  th {
+    padding: fn.rem(20) fn.rem(4);
+  }
+
+  .docs-table-row {
+    td {
+      padding: fn.rem(8) fn.rem(4);
+
+      span {
+        @include typo.typography('b4r');
+      }
+
+      /* 배경색 적용 */
+      &:has(.total-amount) {
+        background-color: map.get(color.$layout-status, 'brand-bg-sub');
+
+        .total-amount {
+          @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
+          display: block;
+          padding-right: fn.rem(8);
+          text-align: right;
+        }
+      }
+    }
+
+    &.order-sell-row {
+      .docs-text {
+        color: map.get(color.$text-colors, 'secondary');
+      }
+    }
+
+    /* 반품색상 */
+    &.order-refund-row {
+      td span {
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+
+    /* 합계 행 */
+    &.docs-total-row {
+      // stylelint-disable-next-line no-descending-specificity
+      td {
+        padding: fn.rem(20) fn.rem(0);
+
+        span {
+          @include typo.typography('b4s');
+        }
+      }
+
+      .docs-total-label {
+        padding-left: map.get(var.$unit, 16);
+        text-align: left;
+
+        span {
+          @include typo.typography('b3s');
+        }
+      }
+    }
+  }
+}
+
+/* -----------------------------------
+ * 세금계산서 목록 (mypage-docs)
+ * ----------------------------------- */
+.docs-table-row {
+  .docs-tax {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: block;
+    text-align: right;
+  }
+
+  .docs-amount {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    display: block;
+    text-align: right;
+  }
+
+  .docs-text {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+  }
+
+  .docs-text-lf {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    display: block;
+    text-align: left;
+  }
+
+  .docs-subtext {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: block;
+  }
+}
+
+/* -----------------------------------
+ * 세금계산서 프레임 (vits-docs-frame)
+ * ----------------------------------- */
+.vits-docs-frame {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 32);
+
+  .vits-docs-header {
+    @include mx.flex($flex: inline-flex, $align: center, $justify: end);
+  }
+
+  .vits-docs-body {
+    padding: map.get(var.$unit, 20);
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+
+    /* 세금계산서 안내문 */
+    .vits-docs-notice {
+      padding: map.get(var.$unit, 20);
+      margin-top: map.get(var.$unit, 20);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+      border-radius: map.get(var.$radius, 'md');
+
+      ul {
+        padding-left: fn.rem(20);
+        margin: 0;
+
+        @include mx.bullet-style(10, 7, 3, 3, map.get(color.$layout-border, 'secondary'), 4);
+      }
+
+      li {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        line-height: 1.55;
+
+        &:not(:last-child) {
+          margin-bottom: map.get(var.$unit, 8);
+        }
+      }
+    }
+  }
+}
+
+/* 개별 공통 영역은 하단에 위치 */
+.main-content-survey,
+.main-content-bulk,
+.main-content-single,
+.main-content-docs {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 24);
+
+  /* 조회 필터 영역 */
+  .mypage-query-fields {
+    @include mx.flex($align: center, $justify: space-between);
+    width: 100%;
+
+    /* 조회버튼 */
+    .mypage-query-buttons {
+      .mypage-search-btn {
+        min-width: fn.rem(120);
+      }
+    }
+
+    .mypage-query-select-year {
+      min-width: fn.rem(120);
+
+      .vits-select-value {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .vits-select,
+      .vits-select-trigger,
+      .vits-select-list {
+        width: 100%;
+      }
+    }
+  }
+
+  /* 페이지네이션 */
+  .vits-mypage-pagination {
+    padding-top: map.get(var.$unit, 20);
+  }
+
+  /* 안내 문구 */
+  .vits-alerts-anatomy {
+    margin-top: map.get(var.$unit, 20);
   }
 }

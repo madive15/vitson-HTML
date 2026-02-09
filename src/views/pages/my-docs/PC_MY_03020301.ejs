@@ -1,0 +1,100 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '견적서-목록없음'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-docs">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'docs-quote'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-docs">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline docs-headline">
+                      <h2 class="vits-mypage-content-title">견적서 조회</h2>
+                      <p class="vits-mypage-content-desc">견적 상세 내역을 조회하고 출력하실 수 있습니다.</p>
+                    </div>
+
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/pg-my-support/support-filter.ejs`, { srcPath: _src, publicPath: _public }) %>
+                    <!-- case : 목록 있을 때 -->
+                    <div class="vits-mypage-panel docs-panel">
+                      <!-- 목록 테이블 -->
+                      <div class="general-table-wrap">
+                        <table class="general-table" summary="견적서 목록">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '견적서 목록',
+                            columns: [
+                              { width: 80, label: '순번' },
+                              { width: 130, label: '작성일시' },
+                              { width: 130, label: '견적번호' },
+                              { width: 205, label: '상품명' },
+                              { width: 205, label: '견적금액' },
+                              { width: 130, label: '견적서' },
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- 조회 결과없을시 빈 영역 -->
+                          </tbody>
+                        </table>
+                        <!-- case : 목록이 없을 때 -->
+                        <!-- prettier-ignore -->
+                        <%-  include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'document-paper',
+                          title: '견적서가 없습니다 or 검색결과 없습니다',
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>

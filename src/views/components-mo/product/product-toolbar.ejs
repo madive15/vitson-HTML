@@ -1,0 +1,41 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- product-toolbar.ejs -->
+
+<div class="vm-product-toolbar" data-ui="sticky">
+  <div class="toolbar-count">
+    <p>총 <span class="count">23</span>개</p>
+  </div>
+  <div class="toolbar-actions">
+    <div class="toolbar-filter">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components-mo/filter/filter-btn.ejs`) %>
+    </div>
+    <div class="toolbar-sort">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        id: 'cate-list',
+        name: 'cate-list',
+        placeholder: '추천순',
+        options: [
+          { value: 'cate-list01', text: '추천순' },
+          { value: 'cate-list02', text: '판매량순' },
+          { value: 'cate-list03', text: '신상품순' },
+          { value: 'cate-list04', text: '높은. 가격순' },
+          { value: 'cate-list05', text: '낮은 가격순' },
+        ],
+        value: '추천순',
+        disabled: false,
+        className: 'size-s'
+      }) %>
+    </div>
+    <div class="toolbar-view">
+      <button
+        type="button"
+        class="toolbar-view-btn view-thumb"
+        data-ui="product-view-toggle"
+        aria-label="리스트형 전환"
+        aria-pressed="false"
+      ></button>
+    </div>
+  </div>
+</div>

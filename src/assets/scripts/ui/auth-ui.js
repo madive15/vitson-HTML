@@ -69,11 +69,46 @@
     });
   };
 
+  const initPasswordToggle = (root = document) => {
+    const eyeButtons = root.querySelectorAll('.vits-btn-eyes button');
+    eyeButtons.forEach((btn) => {
+      if (btn.dataset.passwordToggleBound === 'true') {
+        return;
+      }
+      btn.dataset.passwordToggleBound = 'true';
+      if (!btn.getAttribute('type')) {
+        btn.setAttribute('type', 'button');
+      }
+      btn.addEventListener('click', () => {
+        const iconSpan = btn.querySelector('.ic');
+        if (!iconSpan) return;
+
+        const isOpen = btn.classList.contains('is-eye-open');
+        if (isOpen) {
+          btn.classList.remove('is-eye-open');
+          btn.classList.add('is-eye-close');
+          iconSpan.classList.remove('ic-eye-show');
+          iconSpan.classList.add('ic-eye-hide');
+          btn.setAttribute('aria-label', '비밀번호 표시');
+        } else {
+          btn.classList.remove('is-eye-close');
+          btn.classList.add('is-eye-open');
+          iconSpan.classList.remove('ic-eye-hide');
+          iconSpan.classList.add('ic-eye-show');
+          btn.setAttribute('aria-label', '비밀번호 숨기기');
+        }
+      });
+    });
+  };
+
   initAuthTabs();
+  initPasswordToggle();
 
   window.UI.authUi = {
-    init: function () {
-      console.log('[auth-ui] init');
+    init: function (root) {
+      const el = root && root.nodeType === 1 ? root : document;
+      initAuthTabs(el);
+      initPasswordToggle(el);
     }
   };
 

@@ -543,6 +543,7 @@
           @include roundbox-white('myh', 'detail', $myhY: 0, $myhX: 0);
           @include mx.flex(flex, column);
           flex: 0 0 calc(50% - map.get(var.$unit, 12));
+          max-width: fn.rem(466);
 
           &.guides-docs {
             [data-scss='body'] {
@@ -780,6 +781,7 @@
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 32);
     width: 100%;
+    min-width: 0;
 
     &-actions {
       @include mx.flex(flex, row, flex-end, center);

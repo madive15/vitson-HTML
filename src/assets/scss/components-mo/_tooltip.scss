@@ -1,0 +1,65 @@
+// -----------------------------------------------------------------------------
+// components-mo/_tooltip.scss
+// - 모바일 툴팁(정보/도움말/설명) 컴포넌트 공통 스타일 정의. (트리거/포지션/노출상태 포함)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-tooltip {
+  &-trigger {
+    .text {
+      font-size: fn.rem(12);
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .icon {
+      width: fn.rem(12);
+      height: fn.rem(12);
+
+      i {
+        display: block;
+      }
+    }
+  }
+
+  &-heading {
+    .text {
+      font-size: fn.rem(14);
+    }
+
+    .button {
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+    }
+  }
+
+  &-content {
+    max-width: calc(100vw - (var.$mo-section-gap * 2));
+  }
+
+  &-list {
+    > li {
+      padding-left: fn.rem(10);
+
+      &::before {
+        width: map.get(var.$unit, 2);
+        height: map.get(var.$unit, 2);
+      }
+    }
+  }
+
+  &-item {
+    font-size: fn.rem(12);
+  }
+
+  &-footer {
+    padding-top: map.get(var.$unit, 8);
+  }
+}

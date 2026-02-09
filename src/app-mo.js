@@ -7,7 +7,7 @@ import '@/assets/scss/vendors/index.scss';
 import '@/assets/scss/base/_colors.scss';
 import '@/assets/scss/base/_fonts.scss';
 import '@/assets/scss/base/_typography.scss';
-import '@/assets/scss/components/_icon.scss';
+import '@/assets/scss/components/index.scss';
 
 // 모바일 전용
 import '@/assets/scss/base-mo/index.scss';

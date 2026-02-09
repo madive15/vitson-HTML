@@ -1,0 +1,18 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // amountPrice: 금액 표시 문자열 (예: '975,345,090'). 미전달 시 '0' 사용
+  const amountPriceValue = typeof amountPrice !== 'undefined' ? amountPrice : '0';
+%>
+<!-- 전월 이월금액 안내 -->
+<div class="vits-amount-info-card">
+  <div class="amount-info-header">
+    <h3 class="amount-info-title">전월 이월금액 안내</h3>
+    <p class="amount-info-desc"><span class="name">메가존(주)</span>님의 2026.01.25 현재기준 이월금액</p>
+  </div>
+  <div class="amount-info-body">
+    <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName:
+    'ic-update', iconLeft: true, text: '실시간 업데이트' }) %>
+    <span class="amount-info-price"><%= amountPriceValue %>원 <em>(VAT 포함)</em></span>
+  </div>
+</div>

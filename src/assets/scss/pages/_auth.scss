@@ -488,36 +488,12 @@
     }
 
     /* 파일 첨부 (회원정보입력) */
-    .vits-form-row-file {
-      @include mx.flex($direction: column);
+    .vits-signup-file {
       gap: map.get(var.$unit, 12);
-    }
 
-    .vits-file-btn {
-      @include mx.flex($align: center, $justify: center);
-      @include typo.typography('b2', $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default'));
-      gap: map.get(var.$unit, 8);
-      max-width: fn.rem(132);
-      min-height: fn.rem(32);
-      padding: fn.rem(6) map.get(var.$unit, 12);
-      background-color: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
-      border-radius: map.get(var.$radius, 'sm');
-
-      .ic {
-        width: fn.rem(20);
-        height: fn.rem(20);
-      }
-
-      .vits-file-btn-text {
-        @include typo.typography(
-          'b3r',
-          $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default')
-        );
-        display: inline-block;
-      }
-
-      & + .vits-form-hint {
+      .vits-form-hint {
         @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand-sub'));
+        padding-left: 0;
         margin-top: fn.rem(4);
       }
     }
@@ -686,14 +662,6 @@
           .input-item {
             box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
           }
-        }
-      }
-
-      // input disabled 시 .input-item 스타일
-      &:has(input:disabled) {
-        .input-item {
-          cursor: not-allowed;
-          border: 1px solid map.get(color.$layout-border, 'quaternary');
         }
       }
 

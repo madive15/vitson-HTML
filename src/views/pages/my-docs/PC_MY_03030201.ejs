@@ -1,0 +1,232 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '구매내역-상세보기'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-docs">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'docs-bill'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-docs">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline docs-headline">
+                      <h2 class="vits-mypage-content-title">구매내역서 조회</h2>
+                      <p class="vits-mypage-content-desc">월별로 구매내역서를 확인하실 수 있습니다</p>
+                    </div>
+
+                    <div class="vits-mypage-panel bills-panel-detail">
+                      <!-- 구매내역서 -->
+                      <div class="bills-detail-header">
+                        <div class="bills-header-top">
+                          <ul>
+                            <li class="bills-header-title">
+                              <h3>2025년 12월 구매내역서</h3>
+                              <p>상세 구매 내역을 확인하실 수 있습니다</p>
+                            </li>
+                            <li class="bills-header-actions">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'tertiary', text: '인쇄하기', iconLeft: true, iconName: 'ic-print' }) %>
+                              <%- include(`${_src}/views/components/button/button.ejs`, { size: 'sm', variant: 'tertiary', text: 'PDF 다운로드', iconLeft: true, iconName: 'ic-download-2' }) %>
+                            </li>
+                          </ul>
+                        </div>
+                        <dl class="bills-header-info">
+                          <div class="bills-date-info">
+                            <dt>연월</dt>
+                            <dd>2025년 12월</dd>
+                          </div>
+                          <div class="bills-period-info">
+                            <dt>기간</dt>
+                            <dd>2025.12.01 ~ 2025.12.31</dd>
+                          </div>
+                          <div class="bills-payment-info">
+                            <dt>결제기한</dt>
+                            <dd><strong>2026.01.31</strong></dd>
+                          </div>
+                        </dl>
+                      </div>
+
+                      <h2 class="general-table-title">구매내역 요약</h2>
+                      <div class="general-table-wrap docs-summary">
+                        <table class="general-table" summary="구매내역 요약">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '구매내역 요약',
+                            columns: [
+                              { width: 222, spans:[{text: '당월 납품금액', className: 'main-text'},{text: '(ⓒ당월물품대금)', className: 'sub-text'}]},
+                              { width: 222, spans:[{text: '할인금액', className: 'main-text'},{text: '(쿠폰 사용)', className: 'sub-text'}]},
+                              { width: 222, spans:[{text: '부가세', className: 'main-text'}]},
+                              { width: 222, spans:[{text: '당월 청구금액', className: 'main-text'},{text: '(ⓘ당월청구액)', className: 'sub-text'}]},
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- 조회 결과없을시 빈 영역 -->
+                            <!-- prettier-ignore-->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              cells: [ 
+                                { text: '2,066,699원'},
+                                { text: '0원' },
+                                { text: '206,670원' },
+                                { spans:[{text: '2,773,369원', className: 'amount-total'}]}, 
+                              ]
+                            }) %>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <h2 class="general-table-title">구매내역 상세</h2>
+                      <div class="general-table-wrap docs-detail">
+                        <table class="general-table" summary="구매내역 상세">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '청구서 목록',
+                            columns: [
+                              { width: 50, label: '순번' },
+                              { width: 50, label: '일자' },
+                              { width: 100, label: '주문번호' },
+                              { width: 50, label: '구분' },
+                              { width: 140, label: '상품명(적요)' },
+                              { width: 40, label: '수량' },
+                              { width: 40, label: '단위' },
+                              { width: 80, label: '단가' },
+                              { width: 70, label: '할인금액' },
+                              { width: 80, label: '공급가'},
+                              { width: 70, label: '부가세'},
+                              { width: 120, label: '청구금액'},
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- 조회 결과없을시 빈 영역 -->
+                            <!-- prettier-ignore-->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              rowClass: 'order-sell-row',
+                              cells: [ 
+                                { text: '1' },
+                                { text: '12/03', className: 'docs-text' },
+                                { text: 'ORD230001', className: 'docs-text-lf' },
+                                { text: '매출' , className: 'docs-text' },
+                                { text: '컨커 시리즈 컨셉트고급 무용산 1종(비즈파크) 프리미엄 에디션 특별 한정판 고급 사무용품', className: 'docs-text-lf' },
+                                { text: '20' , className: 'docs-text' },
+                                { text: '개', className: 'docs-text' },
+                                { text: '3,899원', className: 'docs-text' },
+                                { text: '-' , className: 'docs-text' },
+                                { text: '77,980원', className: 'docs-text' },
+                                { text: '7,798원', className: 'docs-text' },
+                                { text: '85,778원', className: 'total-amount'}
+                              ] 
+                            }) %>
+                            <!-- prettier-ignore-->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              rowClass: 'order-refund-row',
+                              cells: [ 
+                                { text: '2' },
+                                { text: '12/03', className: 'docs-text' },
+                                { text: 'ORD230001', className: 'docs-text-lf' },
+                                { text: '반품' , className: 'docs-text' },
+                                { text: '무선 마우스 로지텍 MX Master 3', className: 'docs-text-lf' },
+                                { text: '15' , className: 'docs-text' },
+                                { text: '개', className: 'docs-text' },
+                                { text: '3,899원', className: 'docs-text' },
+                                { text: '-' , className: 'docs-text' },
+                                { text: '77,980원', className: 'docs-text' },
+                                { text: '7,798원', className: 'docs-text' },
+                                { text: '85,778원', className: 'total-amount'}
+                              ] 
+                            }) %>
+                            <!-- 합계 행 -->
+                            <!-- prettier-ignore-->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              rowClass: 'docs-total-row',
+                              cells: [ 
+                                { text: '합계', colspan: 8, tdClass: 'docs-total-label' },
+                                { text: '0원', className: 'docs-text' },
+                                { text: '2,136,541원', className: 'docs-text' },
+                                { text: '213,655원', className: 'docs-text' },
+                                { text: '2,350,196원', tdClass: 'docs-td-amount', className: 'total-amount' }
+                              ] 
+                            }) %>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- 안내 문구 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                        theme: 'blue',
+                        text: '구매내역서 안내',
+                        list: [
+                          '구매내역서는 매월 말일 기준으로 발행됩니다.',
+                          '구매내역서 보기 버튼을 클릭하시면 상세 내역을 확인할 수 있습니다.',
+                          '과거 구매내역서는 최대 3년까지 조회 가능합니다.',
+                          '구매내역서 관련 문의사항은 고객센터로 연락 주시기 바랍니다.',
+                        ]
+                      }) %>
+                    </div>
+
+                    <!-- 버튼영역 -->
+                    <div class="mypage-button-area in-docs">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                        size: 'xl', 
+                        variant: 'outline-secondary', 
+                        iconName: 'ic-arrow-left',
+                        iconLeft: true,
+                        text: '목록으로' }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>

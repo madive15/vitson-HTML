@@ -1,27 +1,32 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
+<%
+/**
+ * @file filter/product.ejs
+ * @description 상품 필터 — 인라인 체크박스 + 필터 바
+ * @param {Array} items - [{label, name, filters: [{text, value}]}]
+ */
+%>
 
-<div class="vm-filter-product">
-  <dl class="filter-product-group">
-    <dt class="filter-product-label">브랜드</dt>
-    <dd class="filter-product-items">
-      <button type="button"></button>
-    </dd>
-    <dt class="filter-product-label">공통</dt>
-    <dd class="filter-product-items">
-      <button type="button"></button>
-    </dd>
-    <dt class="filter-product-label">속성</dt>
-    <dd class="filter-product-items">
-      <button type="button"></button>
-    </dd>
-  </dl>
-  <div>
-    <button type="button">필터 더보기</button>
-    <ul class="filter-select-items">
-      <li>
-        <button type="button">오늘출발</button>
-      </li>
-    </ul>
+<div class="vm-filter-product" data-filter-product>
+  <div class="vm-filter-product-inner">
+    <dl class="filter-product-group">
+      <% items.forEach(function(group) { %>
+      <dt class="filter-product-label"><%= group.label %></dt>
+      <dd class="filter-product-items" data-filter-group="<%= group.name %>">
+        <% group.filters.forEach(function(filter) { %>
+        <label class="vm-ckbox-text">
+          <input type="checkbox" name="<%= group.name %>" value="<%= filter.value || filter.text %>" />
+          <span class="label"><%= filter.text %></span>
+        </label>
+        <% }); %>
+      </dd>
+      <% }); %>
+    </dl>
+
+    <div class="filter-product-bar">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components-mo/filter/filter-btn.ejs`) %>
+    </div>
   </div>
 </div>

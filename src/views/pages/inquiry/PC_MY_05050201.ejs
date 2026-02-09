@@ -1,0 +1,151 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '1:1문의-상세'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-single">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'info-qna'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-single">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline single-headline">
+                      <h2 class="vits-mypage-content-title">1:1 문의</h2>
+                      <p class="vits-mypage-content-desc">1:1 문의해 주신 내역입니다</p>
+                    </div>
+
+                    <!-- prettier-ignore -->
+                    <div class="vits-mypage-panel single-panel inner-lg">
+                      <div class="inquiry-detail">
+                        <div class="inquiry-detail-header">
+                          <h3 class="inquiry-detail-title">당일 출고 문의드립니다.</h3>
+                          <div class="inquiry-detail-meta">
+                            <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '답변완료', variant: 'green' }) %>
+                            <span class="inquiry-detail-date">2027-01-01</span>
+                            <div class="inquiry-detail-breadcrumb">
+                              <span class="inquiry-depth1">배송</span>
+                              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %> 
+                              <span class="inquiry-depth2">배송상담</span>
+                            </div>
+                          </div>
+                        </div>
+                        <%- include(`${_src}/views/components/pg-my-support/inquiry-detail-product.ejs`, {type: 'single'}) %>
+                        <div class="inquiry-detail-body">안녕하세요. 
+                          배송관련 문의 드립니다.
+                          금주 주문 완료 및 입금완료 하였는데, 언제쯤 배송이 될까요?
+                          확인 후 답변 부탁드립니다. 감사합니다.
+                          <!-- 이미지 예시 -->
+                          <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-loopy.png" alt="" />
+                        </div>
+                        <div class="inquiry-detail-reply">
+                          <div class="inquiry-detail-reply-meta">고객센터 <span class="inquiry-detail-reply-date">2027-01-01 16:20:10</span></div>
+                          <div class="inquiry-detail-reply-body">안녕하세요. 고객님 
+                            확인 결과, 해당 상품은 현재 배송 중이며 내일(1월 2일) 오전 중 도착 예정입니다.
+                            추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.
+                            감사합니다.
+                          </div>
+                        </div>
+                        <div class="inquiry-detail-user">
+                          <div class="inquiry-detail-user-meta">김메가 <span class="inquiry-detail-user-date">2027-01-01 16:20:10</span></div>
+                          <div class="inquiry-detail-user-body">답변주셔서 감사합니다</div>
+                        </div>
+                        <div class="inquiry-detail-comment">
+                          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                            id: 'inquiry-detail-comment',
+                            name: 'inquiry-detail-comment',
+                            placeholder: '댓글을 입력해주세요',
+                            maxLength: 200,
+                            rootClass: 'size-large'
+                          }) %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'md',
+                            variant: 'outline-primary',
+                            text: '등록',
+                            className: 'comment-btn'
+                          }) %>
+                        </div>
+                        <br /> <!-- 구분선 : 개발시 삭제 해주세요 -->
+                        <!-- disabled 케이스 -->
+                        <div class="inquiry-detail-comment">
+                          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                            id: 'inquiry-detail-comment',
+                            name: 'inquiry-detail-comment',
+                            placeholder: '댓글을 입력해주세요 (disabled 케이스 입니다.)',
+                            maxLength: 200,
+                            rootClass: 'size-large',
+                            disabled: true
+                          }) %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'md',
+                            variant: 'outline-secondary',
+                            text: '등록',
+                            className: 'comment-btn',
+                            disabled: true
+                          }) %>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 하단,버튼영역 -->
+                    <div class="mypage-button-area in-inquiry">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                        size: 'xl', 
+                        variant: 'outline-secondary', 
+                        iconName: 'ic-arrow-left',
+                        iconLeft: true,
+                        text: '목록으로' }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>
