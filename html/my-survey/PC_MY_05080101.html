@@ -59870,7 +59870,7 @@
             data-menu-id="docs-tax"
           >
             <a class="side-left-link" 
-              href="#!" >세금계산서 조회</a>
+              href="/vitson-HTML/html/my-docs/PC_MY_03010101.html" >세금계산서 조회</a>
           </li>
           
           <li
@@ -59878,7 +59878,7 @@
             data-menu-id="docs-quote"
           >
             <a class="side-left-link" 
-              href="#!" >견적서 조회</a>
+              href="/vitson-HTML/html/my-docs/PC_MY_03020101.html" >견적서 조회</a>
           </li>
           
           <li
@@ -59886,7 +59886,7 @@
             data-menu-id="docs-bill"
           >
             <a class="side-left-link" 
-              href="#!" >청구서 조회</a>
+              href="/vitson-HTML/html/my-docs/PC_MY_03030101.html" >청구서 조회</a>
           </li>
           
         </ul>
@@ -59986,7 +59986,7 @@
             data-menu-id="info-qna"
           >
             <a class="side-left-link" 
-              href="#!" >1:1 문의</a>
+              href="/vitson-HTML/html/inquiry/PC_MY_05050101.html" >1:1 문의</a>
           </li>
           
           <li
@@ -60041,7 +60041,7 @@
 
 <!-- 대량구매문의 필터 -->
 
-<!-- #default: type 없음 (설문조사) -->
+<!-- #default: type 없음 (설문조사, 세금계산서 조회) -->
 <div class="vits-mypage-query">
   <div class="mypage-query-fields">
     <dl class="mypage-query-period">
@@ -60068,7 +60068,7 @@
 
 
 <div class="vits-kendo-range-picker size-md" 
-     id="kendoRangePicker_1770339159869"
+     id="kendoRangePicker_1770595538427"
      data-ui="kendo-range-picker"
      data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
     
@@ -60291,6 +60291,10 @@
 <!-- prettier-ignore -->
 
 
+
+
+
+<!-- 기본: 총 N개 + 개수 셀렉트 -->
 <div class="vits-mypage-support-toolbar">
   <div class="support-toolbar-left">
     <p class="support-toolbar-count">총 <b>3</b>개</p>
@@ -60332,12 +60336,12 @@
   <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
     
       <li
-        class="vits-select-option"
+        class="vits-select-option vits-select-selected"
         role="option"
         tabindex="-1"
-        data-value="20"
+        data-value="10"
            
-        aria-selected="false"
+        aria-selected="true"
         
       >10개씩 보기</li>
     
@@ -60345,17 +60349,17 @@
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="40"
+        data-value="20"
            
         aria-selected="false"
         
-      >30개씩 보기</li>
+      >20개씩 보기</li>
     
       <li
         class="vits-select-option"
         role="option"
         tabindex="-1"
-        data-value="60"
+        data-value="50"
            
         aria-selected="false"
         
@@ -60370,30 +60374,8 @@
 
     </div>
   </div>
-  <div class="support-toolbar-actions">
-    <!-- 아직 사용 안함 -->
-    <!-- prettier-ignore -->
-    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
-      srcPath: _src,
-      publicPath: _public,
-      size: 'sm',
-      variant: 'outline-tertiary',
-      text: '전체삭제',
-      className: 'support-toolbar-delete'
-    })  -->
-    <!-- prettier-ignore -->
-    <!-- < %- include(`${_src}/views/components/button/button.ejs`, {
-      srcPath: _src,
-      publicPath: _public,
-      size: 'sm',
-      variant: 'outline-primary',
-      text: '신규 문의 등록',
-      iconLeft: true,
-      iconName: 'ic-plus',
-      className: 'support-toolbar-add'
-    })  -->
-  </div>
 </div>
+
 
 
                       <!-- 목록 테이블 -->
@@ -60423,17 +60405,47 @@
 <thead>
   <tr>
     
-    <th scope="col">순번</th>
     
-    <th scope="col">설문명</th>
+    <th scope="col">
+      
+        순번
+      
+    </th>
     
-    <th scope="col">설문기간</th>
     
-    <th scope="col">상태</th>
+    <th scope="col">
+      
+        설문명
+      
+    </th>
     
-    <th scope="col">총점</th>
     
-    <th scope="col">설문지 보기</th>
+    <th scope="col">
+      
+        설문기간
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        상태
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        총점
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        설문지 보기
+      
+    </th>
     
   </tr>
 </thead>
@@ -60446,6 +60458,7 @@
 
 
 
+<!-- 계정 목록 행 -->
 
 <!-- prettier-ignore -->
 
@@ -60454,25 +60467,24 @@
   <td><span class="survey-table-title">배송 만족도 조사 2026년 1월</span></td>
   <td><span class="survey-table-period">2026-01-05 ~ 2026-03-05</span></td>
   <td>
-    
-    <!-- prettier-ignore -->
-    <!-- prettier-ignore -->
+     <!-- prettier-ignore -->
 
 
 
 <span class="vits-general-label is-general-blue">진행중</span>
 
-
-    
+ 
   </td>
   <td>
-    <!-- prettier-ignore -->
     <div class="star-rating">
       <div class="star-stars" role="img" aria-label="별점 4.53점 만점 5점">
-        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됩니다.-->
+        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됨-->
         <div class="star-track">
           <span class="star-layer star-layer-gray"></span>
-          <span class="star-layer star-layer-fill" style="width: 90.60%;"></span>
+          <span
+            class="star-layer star-layer-fill"
+            style="width: 90.60%"
+          ></span>
           <span class="star-layer star-layer-shape"></span>
         </div>
       </div>
@@ -60485,7 +60497,6 @@
   </td>
   <td>
     <div class="survey-table-actions">
-      <!-- prettier-ignore -->
       
 
 
@@ -60509,6 +60520,7 @@
   </td>
 </tr>
 
+<!-- 설문 참여 중 문항 행 -->
 
 
                             <!-- prettier-ignore -->
@@ -60517,6 +60529,7 @@
 
 
 
+<!-- 계정 목록 행 -->
 
 <!-- prettier-ignore -->
 
@@ -60525,25 +60538,24 @@
   <td><span class="survey-table-title">배송 만족도 조사 2026년 2월</span></td>
   <td><span class="survey-table-period">2026-01-05 ~ 2026-03-05</span></td>
   <td>
-    
-    <!-- prettier-ignore -->
-    <!-- prettier-ignore -->
+     <!-- prettier-ignore -->
 
 
 
 <span class="vits-general-label is-general-gray">종료</span>
 
-
-    
+ 
   </td>
   <td>
-    <!-- prettier-ignore -->
     <div class="star-rating">
       <div class="star-stars" role="img" aria-label="별점 5점 만점 5점">
-        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됩니다.-->
+        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됨-->
         <div class="star-track">
           <span class="star-layer star-layer-gray"></span>
-          <span class="star-layer star-layer-fill" style="width: 100.00%;"></span>
+          <span
+            class="star-layer star-layer-fill"
+            style="width: 100.00%"
+          ></span>
           <span class="star-layer star-layer-shape"></span>
         </div>
       </div>
@@ -60556,7 +60568,6 @@
   </td>
   <td>
     <div class="survey-table-actions">
-      <!-- prettier-ignore -->
       
 
 
@@ -60580,6 +60591,7 @@
   </td>
 </tr>
 
+<!-- 설문 참여 중 문항 행 -->
 
 
                             <!-- prettier-ignore -->
@@ -60588,6 +60600,7 @@
 
 
 
+<!-- 계정 목록 행 -->
 
 <!-- prettier-ignore -->
 
@@ -60596,25 +60609,24 @@
   <td><span class="survey-table-title">배송 만족도 조사 2026년 3월</span></td>
   <td><span class="survey-table-period">2026-01-05 ~ 2026-03-05</span></td>
   <td>
-    
-    <!-- prettier-ignore -->
-    <!-- prettier-ignore -->
+     <!-- prettier-ignore -->
 
 
 
 <span class="vits-general-label is-general-gray">종료</span>
 
-
-    
+ 
   </td>
   <td>
-    <!-- prettier-ignore -->
     <div class="star-rating">
       <div class="star-stars" role="img" aria-label="별점 0점 만점 5점">
-        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됩니다.-->
+        <!-- [D]별점 채움 영역 - 한세트  star-layer-fill: width n%로 값을 주면 됨-->
         <div class="star-track">
           <span class="star-layer star-layer-gray"></span>
-          <span class="star-layer star-layer-fill" style="width: 0.00%;"></span>
+          <span
+            class="star-layer star-layer-fill"
+            style="width: 0.00%"
+          ></span>
           <span class="star-layer star-layer-shape"></span>
         </div>
       </div>
@@ -60627,7 +60639,6 @@
   </td>
   <td>
     <div class="survey-table-actions">
-      <!-- prettier-ignore -->
       
 
 
@@ -60651,6 +60662,7 @@
   </td>
 </tr>
 
+<!-- 설문 참여 중 문항 행 -->
 
 
                           </tbody>
