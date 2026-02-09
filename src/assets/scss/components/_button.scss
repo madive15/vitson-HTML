@@ -422,27 +422,6 @@ $scoped-button-configs: (
   @include typo.typography('b3r');
 }
 
-/* 필터 더보기 버튼 */
-.filter-more-button {
-  @include btn-reset;
-  @include mx.flex(flex, row, center, center);
-  @include mx.border('all', $color: map.get(color.$button-ghost-tertiary, 'ghost-border-tertiary-default'));
-  width: 100%;
-  height: map.get(var.$unit, 32);
-  border-radius: map.get(var.$radius, 'md');
-
-  .text,
-  .count {
-    @include typo.typography('b3b', $color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default'));
-  }
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  .icon {
-    @include icon.ic-size(map.get(var.$unit, 20));
-    color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
-  }
-}
-
 /* vits-btn-vertical-icon */
 .vits-btn-vertical-icon {
   @include mx.flex(flex, column, flex-start, center);
@@ -809,6 +788,10 @@ $btn-fix-widths: 120, 150, 160, 200;
 
     .text {
       @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+
+      @include mx.common-mouse-event {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
     }
 
     .coupon-badge {

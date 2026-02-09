@@ -1,0 +1,157 @@
+<!-- prettier-ignore -->
+<%# category-tree-search.ejs: 검색결과 카테고리 트리 (체크박스 + 아코디언 토글, 4뎁스까지) %>
+<%
+  var _tree = Array.isArray(treeData) ? treeData : [];
+  function _validList(list) {
+    if (!Array.isArray(list)) return [];
+    return list.filter(function (n) { return n && n.categoryCode; });
+  }
+  function _qty(item) {
+    return (item.categoryQty !== undefined && item.categoryQty !== null) ? String(item.categoryQty) : '';
+  }
+%>
+
+<div class="vits-category-tree-list">
+  <!-- prettier-ignore -->
+  <% _tree.forEach(function (lv1) {
+    if (!lv1 || !lv1.categoryCode) return;
+    var d1Code = String(lv1.categoryCode);
+    var lv2List = _validList(lv1.categoryList);
+    var hasLv2 = lv2List.length > 0;
+  %>
+  <nav class="vits-category-tree" aria-label="<%= lv1.categoryNm || '' %>">
+    <ul class="category-tree-depth1">
+      <li class="category-tree-item">
+        <div class="category-tree-row">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+            name: 'searchCategory',
+            value: d1Code,
+            size: 'm',
+            text: lv1.categoryNm || '',
+            qty: _qty(lv1)
+          }) %>
+          <!-- prettier-ignore -->
+          <% if (hasLv2) { %>
+          <button
+            type="button"
+            class="category-tree-toggle"
+            data-tree-toggle
+            data-depth="1"
+            data-id="<%= d1Code %>"
+            data-has-children="true"
+            aria-expanded="false"
+            aria-label="하위 카테고리 펼치기"
+          ></button>
+          <% } %>
+        </div>
+
+        <!-- prettier-ignore -->
+        <% if (hasLv2) { %>
+        <div class="category-tree-panel">
+          <ul class="category-tree-depth2">
+            <!-- prettier-ignore -->
+            <% lv2List.forEach(function (lv2) {
+              var d2Code = String(lv2.categoryCode);
+              var lv3List = _validList(lv2.categoryList);
+              var hasLv3 = lv3List.length > 0;
+            %>
+            <li class="category-tree-item">
+              <div class="category-tree-row">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                  name: 'searchCategory',
+                  value: d2Code,
+                  size: 'm',
+                  text: lv2.categoryNm || '',
+                  qty: _qty(lv2)
+                }) %>
+                <!-- prettier-ignore -->
+                <% if (hasLv3) { %>
+                <button
+                  type="button"
+                  class="category-tree-toggle"
+                  data-tree-toggle
+                  data-depth="2"
+                  data-id="<%= d2Code %>"
+                  data-has-children="true"
+                  aria-expanded="false"
+                  aria-label="하위 카테고리 펼치기"
+                ></button>
+                <% } %>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% if (hasLv3) { %>
+              <div class="category-tree-panel">
+                <ul class="category-tree-depth3">
+                  <!-- prettier-ignore -->
+                  <% lv3List.forEach(function (lv3) {
+                    var d3Code = String(lv3.categoryCode);
+                    var lv4List = _validList(lv3.categoryList);
+                    var hasLv4 = lv4List.length > 0;
+                  %>
+                  <li class="category-tree-item">
+                    <div class="category-tree-row">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                        name: 'searchCategory',
+                        value: d3Code,
+                        size: 'm',
+                        text: lv3.categoryNm || '',
+                        qty: _qty(lv3)
+                      }) %>
+                      <!-- prettier-ignore -->
+                      <% if (hasLv4) { %>
+                      <button
+                        type="button"
+                        class="category-tree-toggle"
+                        data-tree-toggle
+                        data-depth="3"
+                        data-id="<%= d3Code %>"
+                        data-has-children="true"
+                        aria-expanded="false"
+                        aria-label="하위 카테고리 펼치기"
+                      ></button>
+                      <% } %>
+                    </div>
+
+                    <!-- prettier-ignore -->
+                    <% if (hasLv4) { %>
+                    <div class="category-tree-panel">
+                      <ul class="category-tree-depth4">
+                        <!-- prettier-ignore -->
+                        <% lv4List.forEach(function (lv4) {
+                          var d4Code = String(lv4.categoryCode);
+                        %>
+                        <li class="category-tree-item">
+                          <div class="category-tree-row">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'searchCategory',
+                              value: d4Code,
+                              size: 'm',
+                              text: lv4.categoryNm || '',
+                              qty: _qty(lv4)
+                            }) %>
+                          </div>
+                        </li>
+                        <% }) %>
+                      </ul>
+                    </div>
+                    <% } %>
+                  </li>
+                  <% }) %>
+                </ul>
+              </div>
+              <% } %>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+        <% } %>
+      </li>
+    </ul>
+  </nav>
+  <% }) %>
+</div>

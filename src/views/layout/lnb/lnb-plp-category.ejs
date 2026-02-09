@@ -43,82 +43,41 @@
       <% if (showCommonCategory) { %>
       <!-- prettier-ignore -->
       <%
-        var _commonCategoryList = [
-          { code: 'cat_01', name: '전자제품', count: 245 },
-          { code: 'cat_02', name: '생활용품', count: 183 },
-          { code: 'cat_03', name: '식품', count: 156 },
-          { code: 'cat_04', name: '의류', count: 298 },
-          { code: 'cat_05', name: '스포츠', count: 124 },
-          { code: 'cat_06', name: '뷰티', count: 167 },
-          { code: 'cat_07', name: '문구', count: 89 },
-          { code: 'cat_08', name: '가구', count: 72 },
-          { code: 'cat_09', name: '주방용품', count: 134 },
-          { code: 'cat_10', name: '완구', count: 95 }
-        ];
+        // [D] 실제 데이터: 검색 키워드에 매칭된 카테고리만 전달
+        var searchTreeRaw = (mockData && mockData.category &&
+          Array.isArray(mockData.category.tree)) ? mockData.category.tree : [];
 
-        var _commonCategoryTotal = _commonCategoryList.length;
-        var _commonCategoryVisibleCount = 7;
-        var _commonCategoryVisible = _commonCategoryList.slice(0, _commonCategoryVisibleCount);
-
-        var _commonCategoryDatas = _commonCategoryVisible.map(function (c) {
-          return {
-            text: (c.name || '') + ' (' + (c.count || 0) + ')',
-            value: String(c.code || ''),
-            checked: false,
-            disabled: false,
-            required: false
-          };
+        // [D] 임의 수량 — 실제 연동 시 서버에서 categoryQty 전달
+        var _mockQtyList = [245, 183, 156, 298, 124, 167, 89, 72, 134, 95];
+        var searchTreeData = searchTreeRaw.map(function (item, idx) {
+          var copy = {};
+          for (var k in item) { copy[k] = item[k]; }
+          if (copy.categoryQty === undefined || copy.categoryQty === null) {
+            copy.categoryQty = _mockQtyList[idx % _mockQtyList.length];
+          }
+          return copy;
         });
+
+        var _searchVisibleCount = 6;
+        var _searchVisible = searchTreeData.slice(0, _searchVisibleCount);
+        var _searchHidden = searchTreeData.slice(_searchVisibleCount);
+        var _searchTotal = searchTreeData.length;
       %>
-      <li data-more-scope="commonCategory">
+      <li data-search-more-scope>
         <p class="plp-side-title">카테고리</p>
         <div class="plp-side-filter-items">
-          <div class="plp-side-filter-item">
-            <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
-              variant: 'basic',
-              size: 'm',
-              name: 'plpCommonCategory',
-              list: 'column',
-              gap: 16,
-              datas: _commonCategoryDatas
-            }) %>
+          <%- include(`${_src}/views/components/category/category-tree-search.ejs`, { _src: _src, treeData:
+          _searchVisible }) %> <% if (_searchHidden.length) { %>
+          <div data-search-more-toggle style="display: none">
+            <%- include(`${_src}/views/components/category/category-tree-search.ejs`, { _src: _src, treeData:
+            _searchHidden }) %>
           </div>
 
-          <% if (_commonCategoryTotal > _commonCategoryVisibleCount) { %>
           <div class="filter-more">
-            <button type="button" class="filter-more-button" data-more-btn>
+            <button type="button" class="filter-more-button" data-search-more-btn>
               <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
-              <span class="text">더보기</span>
-              <span class="count">(<%= _commonCategoryTotal %>개)</span>
+              <span class="text">더보기 <em class="count">(<%= _searchTotal %>개)</em></span>
             </button>
-          </div>
-          <% } %>
-          <!-- prettier-ignore -->
-          <%
-            var _commonCategoryHidden = _commonCategoryList.slice(_commonCategoryVisibleCount);
-            var _commonCategoryHiddenDatas = _commonCategoryHidden.map(function (c) {
-              return {
-                text: (c.name || '') + ' (' + (c.count || 0) + ')',
-                value: String(c.code || ''),
-                checked: false,
-                disabled: false,
-                required: false
-              };
-            });
-          %>
-
-          <% if (_commonCategoryHiddenDatas.length) { %>
-          <div class="plp-side-filter-item" data-more-hidden="true">
-            <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
-              variant: 'basic',
-              size: 'm',
-              name: 'plpCommonCategory',
-              list: 'column',
-              gap: 16,
-              datas: _commonCategoryHiddenDatas
-            }) %>
           </div>
           <% } %>
         </div>
@@ -160,8 +119,19 @@
             required: false
           };
         });
+
+        var _brandHidden = _brandList.slice(_brandVisibleCount);
+        var _brandHiddenDatas = _brandHidden.map(function (b) {
+          return {
+            text: (b.name || '') + ' (' + (b.count || 0) + ')',
+            value: String(b.code || ''),
+            checked: false,
+            disabled: false,
+            required: false
+          };
+        });
       %>
-      <li data-more-scope="brand">
+      <li data-search-more-scope>
         <p class="plp-side-title">브랜드</p>
         <div class="plp-side-filter-items">
           <div class="plp-side-filter-item">
@@ -176,40 +146,26 @@
             }) %>
           </div>
 
-          <% if (_brandTotal > _brandVisibleCount) { %>
-          <div class="filter-more">
-            <button type="button" class="filter-more-button" data-more-btn>
-              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
-              <span class="text">더보기</span>
-              <span class="count">(<%= _brandTotal %>개)</span>
-            </button>
-          </div>
-          <% } %> <% /* 더보기로 노출될 나머지 브랜드(숨김) */ %>
-          <!-- prettier-ignore -->
-          <%
-            var _brandHidden = _brandList.slice(_brandVisibleCount);
-            var _brandHiddenDatas = _brandHidden.map(function (b) {
-              return {
-                text: (b.name || '') + ' (' + (b.count || 0) + ')',
-                value: String(b.code || ''),
-                checked: false,
-                disabled: false,
-                required: false
-              };
-            });
-          %>
-
           <% if (_brandHiddenDatas.length) { %>
-          <div class="plp-side-filter-item" data-more-hidden="true">
-            <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
-              variant: 'basic',
-              size: 'm',
-              name: 'plpBrand',
-              list: 'column',
-              gap: 16,
-              datas: _brandHiddenDatas
-            }) %>
+          <div data-search-more-toggle style="display: none">
+            <div class="plp-side-filter-item">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+                variant: 'basic',
+                size: 'm',
+                name: 'plpBrand',
+                list: 'column',
+                gap: 16,
+                datas: _brandHiddenDatas
+              }) %>
+            </div>
+          </div>
+
+          <div class="filter-more">
+            <button type="button" class="filter-more-button" data-search-more-btn>
+              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+              <span class="text">더보기 <em class="count">(<%= _brandTotal %>개)</em></span>
+            </button>
           </div>
           <% } %>
         </div>

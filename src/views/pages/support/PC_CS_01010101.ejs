@@ -1,12 +1,11 @@
 <% const _src = srcPath; const _public = publicPath; %>
-
 <!DOCTYPE html>
 <!--
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
     - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
   -->
 <html lang="ko" class="vits-scope">
-  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: 'FAQ 목록'}) %>
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '공지사항 목록'}) %>
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
     <!-- S: Skip Navigation -->
@@ -24,78 +23,139 @@
           <!-- S: vits-grid -->
           <div class="vits-grid">
             <!-- S: vits-grid-main -->
-            <div class="vits-grid-main vits-main-support-faq">
+            <div class="vits-grid-main vits-main-support-notice">
               <div class="vits-inner inner-column">
                 <!-- 1280 컨텐츠 -->
                 <div class="vits-grid-area">
                   <!-- S: vits-grid-side-left -->
                   <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/layout/lnb/lnb-support.ejs`, {currentMenu: 'faq'}) %>
+                  <%- include(`${_src}/views/layout/lnb/lnb-support.ejs`, {currentMenu: 'notice'}) %>
                   <!-- E: vits-grid-side-left -->
 
-                  <div class="vits-grid-main-content main-content-faq">
+                  <div class="vits-grid-main-content main-content-notice">
                     <!-- 메인 컨텐츠 -->
 
                     <!-- 컨텐츠 헤딩 -->
-                    <div class="vits-support-content-headline faq-headline">
-                      <h2 class="vits-support-content-title">FAQ</h2>
+                    <div class="vits-support-content-headline notice-headline">
+                      <h2 class="vits-support-content-title">공지사항</h2>
+                      <p class="vits-support-content-desc">비츠온엠알오의 새로운 소식과 유용한 정보를 확인하세요.</p>
                     </div>
-                    <!-- 검색하기 패널 -->
-                    <%- include(`${_src}/views/components/pg-my-support/support-toolbar.ejs`, { srcPath: _src,
-                    publicPath: _public, type: 'justSearch' }) %>
 
-                    <div class="vits-support-panel faq-panel inner-lg">
-                      <!-- swiper 기능을 가진 탭 버튼 -->
+                    <div class="vits-support-panel notice-panel">
+                      <!-- 전체/ 가격변동 공지 탭버튼 -->
                       <!-- prettier-ignore -->
-                      <%
-                      const faqTabList = ['전체', '회원', '상품', '주문', '결제', '배송/반품/교환'];
-                      %>
-                      <div class="vits-support-tabs swiper js-swiper" data-swiper-type="faqTab">
-                        <div class="swiper-wrapper">
-                          <% faqTabList.forEach(function(label, index) { %>
-                          <div class="swiper-slide">
-                            <button type="button" class="support-tab<%= index === 0 ? ' support-tab-active' : '' %>">
-                              <%= label %>
-                            </button>
-                          </div>
-                          <% }); %>
-                        </div>
-                        <div class="vits-swiper-navs">
-                          <div class="swiper-button-prev"></div>
-                          <div class="swiper-button-next"></div>
-                        </div>
+                      <%- include(`${_src}/views/components/tabs.ejs`, {
+                        size: 'lg',
+                        className: 'vits-notice-tabs',
+                        tabClassName: 'vits-btn-md notice-tab',
+                        tabs: [
+                          { text: '전체', isActive: true },
+                          { text: '가격변동 공지', isActive: false }
+                        ],
+                        showBadge: false,
+                        ariaLabel: '공지사항 탭',
+                        idPrefix: 'notice-tab'
+                      }) %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/pg-my-support/support-toolbar.ejs`, { type: 'support' }) %>
+                      <!-- 목록 테이블 -->
+                      <div class="general-table-wrap notice-table-wrap">
+                        <table class="general-table" summary="공지사항 목록">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '공지사항 목록',
+                            columns: [
+                              { width: 80, label: '순번' },
+                              { width: 80, label: '구분' },
+                              { width: 600, spans:[{text: '제목', className: 'text-left'}]},
+                              { width: 120, label: '작성일' },
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellType: 'icon',
+                              firstCellIcon: 'notice',
+                              label: '공지',
+                              labelVariant: 'green', //라벨 변수
+                              text: '[필독] 개인정보 처리방침 변경 안내',
+                              textClassName: 'text-left is-import',
+                              date: '2027-01-01',
+                              rowClass: 'notice-fixed-row'
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellType: 'icon',
+                              firstCellIcon: 'notice',
+                              label: '가격변동',
+                              labelVariant: 'red', //라벨 변수 
+                              text: '[중요] 2027년 상반기 가격 정책 안내',
+                              textClassName: 'text-left is-import',
+                              date: '2027-01-01',
+                              rowClass: 'notice-fixed-row '
+                            }) %>
+
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellText: '20',
+                              label: '가격변동',
+                              labelVariant: 'red', 
+                              text: '가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하',
+                              textClassName: 'text-left',
+                              date: '2027-01-01',
+                              rowClass: 'notice-row '
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellText: '19',
+                              label: '공지',
+                              labelVariant: 'green', 
+                              text: '공지사항 게시글 테스트 15 가격변동 공지 abcdefghijklmnopqrstuvwxyz',
+                              textClassName: 'text-left',
+                              date: '2027-01-01',
+                              rowClass: 'notice-row '
+                            }) %>
+                          </tbody>
+                          <!-- [D] 퍼블- ui 보여주기용 개발시 제거 (가격변동 탭 일 경우 ) -->
+                          <tbody hidden show-on-priceChange>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellType: 'icon',
+                              firstCellIcon: 'notice',
+                              label: '가격변동',
+                              labelVariant: 'red', //라벨 변수 
+                              text: '[중요] 2027년 상반기 가격 정책 안내',
+                              textClassName: 'text-left is-import',
+                              date: '2027-01-01',
+                              rowClass: 'notice-fixed-row '
+                            }) %>
+                            <!-- prettier-ignore -->
+                            <% for (let i = 5; i >= 1; i--) { %>
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+                              type: 'noticeFixed',
+                              firstCellText: String(i),
+                              label: '가격변동',
+                              labelVariant: 'red',
+                              text: '가격변동 게시글 테스트 15 가격변동 공지 가나다라마바사아자차카타파하',
+                              textClassName: 'text-left',
+                              date: '2027-01-01',
+                              rowClass: 'notice-row'
+                            }) %>
+                            <% } %>
+                          </tbody>
+                        </table>
                       </div>
+
+                      <!-- 페이지네이션 -->
                       <!-- prettier-ignore -->
-                      <%
-                      const faqList = [
-                        { category: '회원', question: '주문이 잘 되었는지 확인하고 싶어요.', answer: '주문하신 상품은 평균 2~3일 내에 배송됩니다.\n 배송상황은 마이페이지 내에서 확인하실 수 있습니다.' },
-                        { category: '결제', question: '교환 금액은 언제 입금되나요?', answer: '교환 완료 후 영업일 기준 3~5일 내에 입금됩니다.' },
-                        { category: '상품', question: '찾는 상품이 없으면 구매대행 가능한가요?', answer: '구매대행 문의는 고객센터로 요청해 주시면 안내해 드립니다.' },
-                        { category: '배송/반품/교환', question: '배송 예정일이 언제쯤 되나요?', answer: '주문하신 상품은 평균 2~3일 내에 배송됩니다.\n 배송상황은 마이페이지 내에서 확인하실 수 있습니다.' },
-                        { category: '배송/반품/교환', question: '반품 신청은 어떻게 해야하나요?', answer: '마이페이지 &gt; 주문/배송 내역에서 반품 신청을 진행하실 수 있습니다.' }
-                      ];
-                      %>
-                      <!-- prettier-ignore -->
-                      <div data-toggle-scope data-toggle-group="true">
-                        <dl class="vits-faq-list">
-                          <% faqList.forEach(function(item, index) {
-                            const id = 'faq-answer-' + (index + 1);
-                            const questionId = 'faq-question-' + (index + 1);
-                          %>
-                          <div class="faq-item">
-                            <dt class="faq-question-wrap">
-                              <button type="button" class="faq-question" data-toggle-btn data-toggle-target="<%= id %>" aria-expanded="false" aria-controls="<%= id %>" id="<%= questionId %>">
-                                <%- include(`${_src}/views/components/label/general-label.ejs`, { text: item.category, variant: 'sunken' }) %>
-                                <span class="faq-question-text"><%= item.question %></span>
-                                <span class="icon" aria-hidden="true"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %></span>
-                              </button>
-                            </dt>
-                            <dd id="<%= id %>" class="faq-answer-wrap"  aria-labelledby="<%= questionId %>" data-toggle-box="<%= id %>">
-                              <div class="faq-answer"><%- item.answer %></div>
-                            </dd>
-                          </div>
-                          <% }); %>
-                        </dl>
+                      <div class="vits-support-pagination">
+                        <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1, isPrevDisabled: true }) %>
                       </div>
                     </div>
                   </div>
@@ -119,7 +179,32 @@
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
 
     <script>
-      (function () {})();
+      (function () {
+        // [D] 보여주기용: type=priceChange 일 때 가격변동 공지 탭/목록 표시 (개발 적용 시 제거)
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') !== 'priceChange') return;
+        var table = document.querySelector('.notice-table-wrap .general-table');
+        if (table) {
+          var allBodies = table.querySelectorAll('tbody');
+          var priceChangeTbody = table.querySelector('tbody[show-on-priceChange]');
+          if (priceChangeTbody) {
+            priceChangeTbody.removeAttribute('hidden');
+            priceChangeTbody.removeAttribute('show-on-priceChange');
+          }
+          if (allBodies.length >= 2 && allBodies[0] !== priceChangeTbody) {
+            allBodies[0].setAttribute('hidden', '');
+          }
+        }
+        var tabWrap = document.querySelector('.vits-notice-tabs');
+        if (tabWrap) {
+          var tabs = tabWrap.querySelectorAll('[role="tablist"] button');
+          tabs.forEach(function (btn) {
+            var isPriceChange = btn.querySelector('.text') && btn.querySelector('.text').textContent.trim() === '가격변동 공지';
+            btn.classList.toggle('is-active', isPriceChange);
+            btn.setAttribute('aria-selected', isPriceChange ? 'true' : 'false');
+          });
+        }
+      })();
     </script>
   </body>
 </html>

@@ -22,11 +22,15 @@
 
 // --- CSS 변수 (런타임) ---
 :root {
-  --vh: 1dvh;
+  --vh: 1vh;
   --safe-top: env(safe-area-inset-top, 0);
   --safe-bottom: env(safe-area-inset-bottom, 0);
   --safe-left: env(safe-area-inset-left, 0);
   --safe-right: env(safe-area-inset-right, 0);
+
+  @supports (height: 1dvh) {
+    --vh: 1dvh;
+  }
 }
 
 // --- 모바일 스코프 기본 ---
