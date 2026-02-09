@@ -1,0 +1,85 @@
+// -----------------------------------------------------------------------------
+// pages/_home.scss
+// - 메인 홈 페이지 전용 스타일
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+.home-section {
+  margin: 0 auto;
+  opacity: 0.5;
+}
+
+// -----------------------------------------------------------------------------
+// 자주 찾는 메뉴 (vits-home-frequent-menu)
+// -----------------------------------------------------------------------------
+.vits-home-frequent-menu {
+  padding: fn.rem(24) 0 fn.rem(32);
+
+  .frequent-menu-title {
+    padding: 0;
+    margin: 0 0 fn.rem(20);
+
+    @include typo.typography('h2m');
+    color: map.get(color.$text-colors, 'default');
+  }
+
+  .frequent-menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: fn.rem(8) fn.rem(24);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .frequent-menu-item {
+    flex: 0 0 auto;
+  }
+
+  .frequent-menu-link {
+    display: flex;
+    flex-direction: column;
+    gap: fn.rem(8);
+    align-items: center;
+    width: fn.rem(80);
+    color: map.get(color.$text-colors, 'default');
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: map.get(color.$brand-colors, 'primary');
+    }
+  }
+
+  .frequent-menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fn.rem(56);
+    height: fn.rem(56);
+    background-color: map.get(color.$gray-shades, '20');
+    border-radius: 50%;
+
+    img {
+      width: fn.rem(28);
+      height: fn.rem(28);
+      object-fit: contain;
+    }
+  }
+
+  .frequent-menu-label {
+    display: block;
+    line-height: 1.4;
+    text-align: center;
+
+    @include typo.typography('b3r');
+  }
+}

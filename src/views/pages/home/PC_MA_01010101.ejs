@@ -1,0 +1,61 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '메인 홈'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-home">
+              <!-- 메인 홈 컨텐츠 -->
+              <!-- S: 자주 찾는 메뉴 -->
+              <section class="home-section" style="opacity: 1">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-frequent-menu.ejs`, { srcPath: _src, publicPath: _public }) %>
+              </section>
+              <!-- E: 자주 찾는 메뉴 -->
+              <!-- prettier-ignore -->
+              <section class="home-section" style="height: 150px; background: blue">2</section>
+              <section class="home-section" style="height: 230px; background: green">3</section>
+              <section class="home-section" style="height: 400px; background: yellow">4</section>
+              <section class="home-section" style="height: 300px; background: purple">5</section>
+              <section class="home-section" style="height: 350px; background: orange">6</section>
+              <section class="home-section" style="height: 250px; background: brown">7</section>
+              <section class="home-section" style="height: 200px; background: gray">8</section>
+              <section class="home-section" style="height: 150px; background: pink">9</section>
+              <section class="home-section" style="height: 100px; background: lime">10</section>
+              <section class="home-section" style="height: 200px; background: teal">11</section>
+              <section class="home-section" style="height: 100px; background: indigo">12</section>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

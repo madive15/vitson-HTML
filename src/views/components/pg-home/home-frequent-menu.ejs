@@ -1,0 +1,33 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  const menuItems = [
+    { icon: 'ic-home-order-tracking', label: '주문배송조회', href: '#!'},
+    { icon: 'ic-home-quote-request', label: '견적신청', href: '#!'},
+    { icon: 'ic-home-wishlist', label: '좋아요 상품', href: '#!'},
+    { icon: 'ic-home-postpay-manage', label: '후불 관리', href: '#!'},
+    { icon: 'ic-home-pay-manage', label: '비츠온페이 관리', href: '#!'},
+    { icon: 'ic-home-e-catalog', label: 'E카탈로그', href: '#!'},
+    { icon: 'ic-home-frequent-order', label: '자주 주문한 상품', href: '#!'},
+    { icon: 'ic-home-coupon', label: '할인쿠폰', href: '#!'},
+    { icon: 'ic-home-inquiry', label: '1:1 문의', href: '#!'}  
+  ];
+%>
+
+<!-- 자주 찾는 메뉴 -->
+<div class="vits-home-frequent-menu">
+  <h2 class="frequent-menu-title">자주 찾는 메뉴</h2>
+  <ul class="frequent-menu-list">
+    <% menuItems.forEach((item) => { %>
+    <li class="frequent-menu-item">
+      <a href="<%= item.href %>" class="frequent-menu-link">
+        <span class="frequent-menu-icon-wrap">
+          <img src="<%= _public %>/resources/img/mro/renewal/ic/<%= item.icon %>.svg" alt="<%= item.label %>" />
+        </span>
+        <span class="frequent-menu-label"><%= item.label %></span>
+      </a>
+    </li>
+    <% }); %>
+  </ul>
+</div>

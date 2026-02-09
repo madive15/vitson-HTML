@@ -950,28 +950,48 @@
 
   /* 조회 필터 영역 */
   .mypage-query-fields {
-    @include mx.flex($align: center, $justify: space-between);
+    @include mx.flex($align: center, $justify: space-between, $wrap: wrap);
+    gap: map.get(var.$unit, 12);
     width: 100%;
+
+    /* 상태 선택 */
+    .mypage-query-status {
+      @include mx.flex($align: center, $wrap: wrap);
+      gap: map.get(var.$unit, 8);
+
+      .mypage-query-control {
+        min-width: fn.rem(83);
+      }
+    }
 
     /* 조회버튼 */
     .mypage-query-buttons {
+      // @include mx.flex($justify: end);
+      // flex: 1;
+
       .mypage-search-btn {
         min-width: fn.rem(120);
       }
     }
 
+    /* 연도 선택 */
     .mypage-query-select-year {
-      min-width: fn.rem(120);
+      min-width: fn.rem(95);
 
       .vits-select-value {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       }
+    }
 
-      .vits-select,
-      .vits-select-trigger,
-      .vits-select-list {
-        width: 100%;
-      }
+    /* 조회 기간 */
+    .mypage-query-period-range {
+      min-width: fn.rem(180);
+    }
+
+    .vits-select,
+    .vits-select-trigger,
+    .vits-select-list {
+      width: 100%;
     }
   }
 

@@ -1452,17 +1452,23 @@
         .coupon-item-badge {
           position: relative;
           display: block;
-          width: fn.rem(96);
+          width: fn.rem(148);
           height: fn.rem(68);
 
           @include mx.background('ic/ic-coupon-badge.svg');
         }
 
         .coupon-item-badge-value {
-          @include typo.typography('d2b', $color: map.get(color.$blue-shades, '100'));
-          display: block;
-          padding-top: fn.rem(22);
-          text-align: center;
+          @include typo.typography('h1b', $color: map.get(color.$text-status, 'info'));
+          @include mx.flex($direction: column, $justify: center, $align: center);
+          height: 100%;
+          padding-top: fn.rem(3);
+
+          &::before {
+            @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+            display: block;
+            content: '할인';
+          }
         }
       }
 
@@ -1552,7 +1558,16 @@
         border-radius: map.get(var.$radius, 'sm');
 
         @include mx.common-mouse-event {
-          background-color: map.get(color.$layout-surf, 'secondary');
+          background-color: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+          border-color: map.get(color.$button-fill-secondary, 'fill-surf-secondary-hover');
+
+          .text {
+            color: map.get(color.$text-colors, 'inverse');
+          }
+
+          .icon {
+            color: map.get(color.$text-colors, 'inverse');
+          }
         }
       }
     }
