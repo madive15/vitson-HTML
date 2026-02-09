@@ -4,9 +4,6 @@
   var showCategoryTree = locals.showCategoryTree !== false;
   // 공통 카테고리 필터 표시 여부 (기본: false)
   var showCommonCategory = locals.showCommonCategory === true;
-  // [D] 실제 데이터: 검색 키워드에 매칭된 카테고리만 전달
-  var searchTreeData = (mockData && mockData.category &&
-    Array.isArray(mockData.category.tree)) ? mockData.category.tree.slice(0, 3) : [];
 %>
 
 <%# PLP 전용 좌측 메뉴(카테고리/필터) %>
@@ -14,10 +11,9 @@
   <% if (showCategoryTree) { %> <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
   <div class="plp-side-category">
     <p class="plp-side-title">카테고리</p>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/category/category-tree.ejs`, { 
-      treeData: searchTreeData,
-      depth3Id: depth3Id }) %>
+    <%- include(`${_src}/views/components/category/category-tree.ejs`, { treeData: (mockData && mockData.category &&
+    Array.isArray(mockData.category.tree)) ? mockData.category.tree : [], depth1Id: depth1Id, depth2Id: depth2Id,
+    depth3Id: depth3Id }) %>
   </div>
   <% } %>
 
