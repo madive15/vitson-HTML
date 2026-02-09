@@ -23,7 +23,17 @@
               </div>
 
               <!-- prettier-ignore -->
-              <% const winModal = { id: 'likeModal', size: '480', title: '좋아요 담기', subtitle: '선택한 상품을 좋아요 폴더에 추가하세요.', opt: { draggable: true }, contentPath: `${_src}/views/pages/kendo-window/category/kw-PC_CO_10010101_P.ejs`, buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] }; %>
+              <% const winModal = { 
+                id: 'likeModal', 
+                size: '480', 
+                title: '좋아요 담기', 
+                subtitle: '선택한 상품을 좋아요 폴더에 추가하세요.', 
+                opt: { draggable: true }, 
+                contentPath: `${_src}/views/pages/kendo-window/category/kw-PC_CO_10010101_P.ejs`, 
+                buttons: [
+                { text: '취소', variant: 'secondary', action: 'close' }, 
+                { text: '담기', variant: 'primary', action: 'close' }] 
+              }; %>
               <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
             </div>
           </div>

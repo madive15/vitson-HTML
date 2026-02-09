@@ -1,11 +1,12 @@
 <!-- prettier-ignore -->
 <% /**
   * 마이페이지 지원/문의 필터 컴포넌트 (type별)
-  * @param {string} [type] - ''(기본) | 'bulk' (필요 시 추가)
+  * @param {string} [type] - ''(기본) | 'bulk' | 'survey' (필요 시 추가)
   * @param {string} [srcPath] - include 경로용
   * @param {string} [publicPath] - public 경로용
   * type 없음: 조회기간/연도/조회하기 등 기본 필터
   * type=bulk: 일괄 처리용 필터 영역
+  * type=survey: 기본 필터 + 상태 필터 (전체, 진행중, 종료)
   */ %>
 <% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
 <% const _type = typeof type !== 'undefined' ? type : ''; %>
@@ -47,6 +48,28 @@
 <!-- #default: type 없음 (설문조사, 세금계산서 조회) -->
 <div class="vits-mypage-query">
   <div class="mypage-query-fields">
+    <% if (_type === 'survey') { %>
+    <!-- 설문조사 상태 필터 -->
+    <dl class="mypage-query-status">
+      <dt class="mypage-query-label">상태</dt>
+      <dd class="mypage-query-control">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'support-status-select',
+            name: 'status',
+            placeholder: '전체',
+            options: [
+              { value: '', text: '전체' },
+              { value: 'progress', text: '진행중' },
+              { value: 'closed', text: '종료' }
+            ],
+            value: (typeof status !== 'undefined' && status !== null) ? String(status) : '',
+            disabled: false
+          }) %>
+      </dd>
+    </dl>
+    <% } %>
+
     <dl class="mypage-query-period">
       <dt class="mypage-query-label">조회 기간</dt>
       <dd class="mypage-query-control">
