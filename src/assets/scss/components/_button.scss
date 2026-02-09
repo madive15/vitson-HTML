@@ -700,21 +700,48 @@ $scoped-button-configs: (
 }
 
 /* vits-text-underline-button */
+$-underline-btn-sizes: (
+  'default': (
+    'typo': 'b4r',
+    'color': map.get(color.$text-colors, 'secondary')
+  ),
+  'b3': (
+    'typo': 'b3r',
+    'color': map.get(color.$text-colors, 'tertiary')
+  ),
+  'b2': (
+    'typo': 'b2r',
+    'color': map.get(color.$text-colors, 'tertiary')
+  )
+);
+$-underline-btn-heights: (18, 19, 21, 24);
+
 .vits-text-underline-button {
   @include btn-reset;
   @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
-  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-  height: fn.rem(19);
   background: transparent;
 
-  &.size-m {
-    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-    height: fn.rem(21);
+  @each $key, $val in $-underline-btn-sizes {
+    @if $key == 'default' {
+      @include typo.typography(map.get($val, 'typo'), $color: map.get($val, 'color'));
+    }
+    // stylelint-disable-next-line at-rule-empty-line-before
+    @else {
+      &.fs-#{$key} {
+        @include typo.typography(map.get($val, 'typo'), $color: map.get($val, 'color'));
+      }
+    }
   }
 
-  &.size-l {
-    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
-    height: fn.rem(24);
+  @each $h in $-underline-btn-heights {
+    &.height-#{$h} {
+      height: fn.rem($h);
+    }
+  }
+
+  &.fc-brand-sub {
+    color: map.get(color.$text-status, 'brand-sub');
+    border-color: map.get(color.$text-status, 'brand-sub');
   }
 }
 
