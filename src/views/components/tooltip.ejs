@@ -3,12 +3,12 @@
 <%
   // 기본값 설정
   const tooltipData = {
-    triggerText: triggerText || '툴팁제목',
-    heading: heading || '툴팁 타이틀',
-    items: items || ['툴팁 내용 입력'],
-    position: position || 'left',
-    anchor: typeof anchor !== 'undefined' ? anchor : false,
-    footerContent: typeof footerContent !== 'undefined' ? footerContent : null
+    triggerText: (typeof triggerText !== 'undefined' && triggerText !== null) ? triggerText : '툴팁제목',
+    heading: (typeof heading !== 'undefined' && heading !== null) ? heading : '툴팁 타이틀',
+    items: (typeof items !== 'undefined' && items !== null) ? items : ['툴팁 내용 입력'],
+    position: (typeof position !== 'undefined' && position !== null) ? position : 'left',
+    anchor: (typeof anchor !== 'undefined' && anchor !== null) ? anchor : false,
+    footerContent: (typeof footerContent !== 'undefined' && footerContent !== null) ? footerContent : null
   };
 %>
 

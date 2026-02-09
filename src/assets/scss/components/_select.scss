@@ -194,17 +194,18 @@
   }
 
   &.is-selected {
+    // 모바일 동일 컴포넌트 활용으로 우선수위로 important 적용
     .vits-select {
       &-value {
-        color: map.get(color.$text-colors, 'default');
+        color: map.get(color.$text-colors, 'default') !important;
       }
 
       &-icon {
-        color: map.get(color.$icon-neutral, 'primary');
+        color: map.get(color.$icon-neutral, 'primary') !important;
       }
 
       &-trigger {
-        box-shadow: 0 0 0 1px map.get(color.$layout-border, 'primary');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary') !important;
       }
     }
   }

@@ -1,0 +1,445 @@
+// -----------------------------------------------------------------------------
+// components-mo/_product.scss
+// - 모바일 상품 목록/카드 UI 스타일 정의
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components-mo/filter' as filter;
+
+$mo-product-gap: map.get(var.$unit, 8);
+
+@mixin view($type, $parent: null) {
+  @if $parent {
+    @at-root .view-#{$type} > #{$parent} > & {
+      @content;
+    }
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else {
+    @at-root .view-#{$type} & {
+      @content;
+    }
+  }
+}
+
+.vm-product {
+  &-list {
+    padding-top: var.$mo-section-gap;
+    padding-bottom: fn.rem(50);
+    background: color.$color-white;
+  }
+
+  &-toolbar {
+    @include mx.position(sticky, map.get(var.$mo-header, 'nav-bar'));
+    @include mx.flex(flex, row, flex-start, center);
+    z-index: map.get(var.$mo-zindex, 'toolbar');
+    padding: 0 var.$mo-gutter map.get(var.$unit, 12);
+    background: color.$color-white;
+    transition: box-shadow 0.3s;
+
+    .toolbar {
+      &-count {
+        @include mx.flex(flex, row, flex-start, center);
+
+        p {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+
+          .count {
+            margin: 0 map.get(var.$unit, 2) 0 map.get(var.$unit, 4);
+            font-weight: 700;
+          }
+        }
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: $mo-product-gap;
+        margin-left: auto;
+      }
+
+      &-sort {
+        .vits-select-value {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+
+      &-filter {
+        @include filter.filter-btn;
+        display: none;
+
+        [class*='vits-btn-'] {
+          width: fn.rem(69);
+        }
+      }
+
+      &-view {
+        width: fn.rem(28);
+
+        &-btn {
+          @include button.btn-reset;
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          background: transparent;
+          border-radius: map.get(var.$radius, 'sm');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+          &::before {
+            @include mx.position(absolute, 2px, 2px);
+            width: map.get(var.$unit, 24);
+            height: map.get(var.$unit, 24);
+            content: '';
+            background-color: map.get(color.$icon-neutral, 'primary');
+            mask: url('/public/resources/img/mro/renewal/ic/ic-circles-four.svg') no-repeat center / contain;
+          }
+
+          &.view-list::before {
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-list.svg');
+          }
+        }
+      }
+    }
+
+    &.is-sticky {
+      box-shadow: map.get(var.$box-shadow, 'elevation_2');
+
+      .toolbar-filter {
+        display: block;
+      }
+
+      .toolbar-view {
+        display: none;
+      }
+    }
+  }
+
+  &-items {
+    padding: var.$mo-section-gap map.get(var.$unit, 16) 0;
+    box-shadow: inset 0 1px 0 0 map.get(color.$layout-surf, 'secondary');
+
+    // 썸네일형
+    &.view-thumb {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(fn.rem(148), 1fr));
+      gap: map.get(var.$unit, 20) map.get(var.$unit, 32);
+    }
+
+    // 리스트형
+    &.view-list {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 20);
+    }
+  }
+
+  &-item {
+    min-width: 0;
+
+    @include view('list') {
+      width: 100%;
+    }
+
+    // 썸네일형 배너 영역 width 100%
+    @include view('thumb') {
+      &.full-banner {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  &-card {
+    position: relative;
+    gap: $mo-product-gap;
+
+    a {
+      display: block;
+    }
+
+    .product {
+      &-body {
+        width: 100%;
+      }
+
+      &-thumb {
+        @include mx.common-list-thumb;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: map.get(var.$radius, 'sm');
+
+        &,
+        a {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+        }
+      }
+
+      &-meta {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        gap: $mo-product-gap;
+      }
+
+      &-brand {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-model {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'muted'));
+      }
+
+      &-info {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-summary {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 2);
+      }
+
+      &-name {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+        @include mx.ellipsis-multi;
+      }
+
+      &-spec {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-price {
+        @include mx.flex(flex, column, flex-start, flex-start);
+
+        &.is-normal {
+          .price {
+            &-origin-label {
+              @include typo.typography('d4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            &-sale-row {
+              @include mx.flex(flex, row, flex-start, center, wrap);
+              gap: map.get(var.$unit, 4);
+            }
+
+            &-rate {
+              @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+            }
+
+            &-sale {
+              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+            }
+          }
+        }
+
+        &.is-soldout {
+          .product-price-alt {
+            @include typo.typography('b3b', $color: map.get(color.$red-shades, '60'));
+          }
+        }
+
+        &.is-guest {
+          &,
+          .price-guest-action,
+          .price-login-button {
+            width: 100%;
+          }
+
+          .price-guest-text {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 2);
+
+            &-title {
+              @include typo.typography('b5s', $color: map.get(color.$text-status, 'info-sub'));
+            }
+
+            &-desc {
+              @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+            }
+          }
+
+          .price-login-button {
+            @include button.btn-reset;
+            @include mx.flex(flex, row, center, center);
+            gap: map.get(var.$unit, 4);
+            height: map.get(var.$unit, 32);
+            padding: 0 $mo-product-gap;
+            border-radius: map.get(var.$radius, 'sm');
+            box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+            .icon {
+              @include icon.ic-size(map.get(var.$unit, 16));
+              color: map.get(color.$icon-neutral, 'primary');
+            }
+
+            .text {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+      }
+
+      &-extra {
+        width: 100%;
+        padding-top: $mo-product-gap;
+      }
+
+      &-cta {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+      }
+    }
+
+    @include view('thumb') {
+      @include mx.flex(flex, column, flex-start, flex-start);
+
+      .product {
+        &-extra {
+          @include mx.flex(flex, column, flex-start, flex-start, wrap);
+          gap: $mo-product-gap;
+        }
+
+        &-cta {
+          width: 100%;
+        }
+
+        &-actions {
+          @include mx.flex(flex, row, flex-start, center, wrap);
+          gap: $mo-product-gap;
+
+          [class*='action-btn-'] {
+            @include button.btn-reset;
+            width: map.get(var.$unit, 20);
+            height: map.get(var.$unit, 20);
+            color: map.get(color.$icon-neutral, 'tertiary');
+            background-color: currentcolor;
+            mask: no-repeat center / contain;
+          }
+
+          .action-btn-like {
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg');
+
+            &.active {
+              color: map.get(color.$icon-colors, 'primary');
+              mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart-fill.svg');
+            }
+          }
+
+          .action-btn-cart {
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-bag.svg');
+          }
+
+          .action-btn-compare {
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-compare.svg');
+          }
+        }
+      }
+    }
+
+    @include view('list', '.vm-product-item') {
+      @include mx.flex(flex, row, flex-start, flex-start);
+
+      .product {
+        &-thumb {
+          width: fn.rem(92);
+        }
+
+        &-meta {
+          padding-bottom: map.get(var.$unit, 4);
+        }
+
+        &-extra {
+          @include mx.flex(flex, row, flex-start, center, wrap);
+          gap: map.get(var.$unit, 2);
+
+          & + .product-price.is-guest {
+            margin-top: $mo-product-gap;
+          }
+        }
+
+        &-actions {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &-cta {
+    @include mx.flex(flex, column, flex-start, flex-start, wrap);
+    gap: $mo-product-gap;
+  }
+
+  &-promo {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 2);
+    margin-right: auto;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 20));
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
+
+    .text {
+      @include typo.typography('b5s', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+  }
+
+  &-inline-recommend {
+    width: calc(100% + (var.$mo-gutter * 2));
+    padding: $mo-product-gap 0;
+    margin: 0 (var.$mo-gutter * -1);
+    background: map.get(color.$layout-surf, 'sunken');
+
+    .product-recommend {
+      &-inner {
+        width: 100%;
+        background: color.$color-white;
+      }
+
+      &-head {
+        padding: var.$mo-section-gap var.$mo-section-gap 0;
+
+        &-inner {
+          @include mx.flex(flex, row, flex-start, flex-end);
+          gap: $mo-product-gap;
+        }
+      }
+
+      &-title {
+        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+
+        .point-color {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-body {
+        padding-bottom: var.$mo-section-gap;
+      }
+
+      &-list {
+        gap: map.get(var.$unit, 20);
+        padding: map.get(var.$unit, 20) 0 fn.rem(50);
+        overflow: auto hidden;
+        -webkit-overflow-scrolling: touch;
+
+        @include mx.flex;
+
+        > li {
+          flex: 0 0 fn.rem(140);
+
+          &:first-of-type {
+            margin-left: var.$mo-section-gap;
+          }
+
+          &:last-of-type {
+            margin-right: var.$mo-section-gap;
+          }
+        }
+      }
+    }
+  }
+}

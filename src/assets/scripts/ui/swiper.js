@@ -326,6 +326,17 @@ import Swiper from 'swiper/bundle';
         0: {slidesPerView: 2.5, slidesOffsetAfter: 250},
         1024: {slidesPerView: 2.5, slidesOffsetAfter: 250}
       }
+    },
+    faqTab: {
+      slidesPerView: '1',
+      spaceBetween: 10,
+      speed: 400,
+      freeMode: false,
+      centeredSlides: true,
+      centeredSlidesBounds: true,
+      centerInsufficientSlides: true,
+      watchSlidesProgress: true,
+      allowTouchMove: false
     }
   };
 
@@ -428,6 +439,19 @@ import Swiper from 'swiper/bundle';
         slides.forEach(function (slide, index) {
           slide.addEventListener('click', function () {
             // 클릭된 슬라이드의 인덱스로 이동하여 swiper-slide-active 클래스가 자동으로 적용되도록 함
+            swiperInstance.slideTo(index);
+          });
+        });
+      }
+      // tab 타입인 경우 탭 버튼 클릭 시 active 상태 전환
+      if (type === 'faqTab') {
+        const tabs = el.querySelectorAll('.support-tab');
+        tabs.forEach(function (tab, index) {
+          tab.addEventListener('click', function () {
+            tabs.forEach(function (t) {
+              t.classList.remove('support-tab-active');
+            });
+            tab.classList.add('support-tab-active');
             swiperInstance.slideTo(index);
           });
         });

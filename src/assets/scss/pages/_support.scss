@@ -1,0 +1,593 @@
+// -----------------------------------------------------------------------------
+// pages/_board.scss
+// - 공지사항 , FAQ , 문의, 자료실 등 페이지 전용 스타일
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+.vits-main-support-faq {
+  // 204 footer 높이
+  min-height: calc(100vh - (var.$header-height + var.$vits-main-padding-bottom + fn.rem(204)));
+}
+
+/* -----------------------------------
+ * 고객센터 툴바 (type=support)
+ * - 총 N개 + 개수 셀렉트 + 검색 카테고리 + 검색 입력
+ * ----------------------------------- */
+.vits-support-toolbar {
+  @include mx.flex($align: center, $justify: space-between);
+  width: 100%;
+
+  .support-toolbar {
+    &-left {
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-count {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      b {
+        padding: 0 fn.rem(2) 0 fn.rem(4);
+        font-weight: 700;
+      }
+    }
+
+    &-size {
+      min-width: fn.rem(120);
+    }
+  }
+
+  .support-toolbar-search {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+
+    .support-search-category {
+      flex-shrink: 0;
+      width: fn.rem(92);
+      height: map.get(var.$unit, 32);
+
+      .vits-select {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+
+        .vits-select-trigger {
+          width: 100%;
+          height: 100%;
+          padding: 0 map.get(var.$unit, 12);
+          background-color: color.$color-white;
+          border: 1px solid map.get(color.$layout-border, 'tertiary');
+          border-radius: map.get(var.$radius, 'sm');
+        }
+      }
+    }
+
+    .support-search-input {
+      flex: 1 1 auto;
+      min-width: fn.rem(200);
+
+      .vits-input-search {
+        width: 100%;
+      }
+
+      .vits-input-search-form {
+        height: map.get(var.$unit, 32);
+
+        .input-search {
+          padding: 0 map.get(var.$unit, 40) 0 map.get(var.$unit, 12);
+          font-size: fn.rem(14);
+        }
+
+        .input-search-btn {
+          right: map.get(var.$unit, 12);
+
+          @include icon.ic-size(map.get(var.$unit, 20));
+        }
+      }
+    }
+  }
+}
+
+/* -----------------------------------
+ * 고객센터 툴바 (type=justSearch) - FAQ 등 검색 전용
+ * - 상단 중앙 배치, 긴 검색바(입력 왼쪽 둥근모서리 + 버튼 오른쪽 둥근모서리)
+ * ----------------------------------- */
+.vits-support-searchbar {
+  @include mx.flex($align: center, $justify: center);
+  gap: map.get(var.$unit, 12);
+  width: 100%;
+
+  .input-item {
+    min-height: fn.rem(52);
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: none;
+  }
+
+  .support-searchbar-btn {
+    [class*='vits-btn'] {
+      min-width: fn.rem(200);
+    }
+  }
+}
+
+/* 고객센터 페이지 공통 */
+.vits-support {
+  &-pagination {
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
+    margin-top: map.get(var.$unit, 20);
+  }
+
+  &-content {
+    &-headline {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 12);
+      width: 100%;
+    }
+
+    &-title {
+      @include typo.typography('h2b', $color: #101828);
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 24));
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+
+    &-desc {
+      @include typo.typography('b3r', $color: #4a5565);
+    }
+  }
+
+  &-panel {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 32);
+    width: 100%;
+    min-width: 0;
+
+    &-actions {
+      @include mx.flex(flex, row, flex-end, center);
+      width: 100%;
+    }
+  }
+}
+
+/* 내부 컨텐츠 main-content-{} */
+.main-content-quality,
+.main-content-faq {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 24);
+}
+
+/* 품질 문서 목록 행 (type=quality) */
+.quality-table-row {
+  @include mx.common-mouse-event {
+    span {
+      color: map.get(color.$text-colors, 'secondary');
+    }
+  }
+
+  .quality-table-num,
+  .quality-table-date,
+  .quality-table-title {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  .quality-table-title {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 8);
+
+    .ic {
+      @include icon.ic-size(map.get(var.$unit, 20));
+      flex-shrink: 0;
+      color: map.get(color.$icon-neutral, 'secondary');
+    }
+  }
+}
+// stylelint-disable-next-line no-duplicate-selectors
+.vits-support-panel {
+  .vits-empty-state {
+    padding: fn.rem(150) 0;
+  }
+}
+
+/* -----------------------------------
+ * Swiper 탭 버튼 (vits-support-tabs / support-tab)
+ * - 가로 스크롤 가능한 카테고리 탭
+ * ----------------------------------- */
+.vits-support-tabs {
+  width: 100%;
+  min-width: 0;
+
+  .swiper-wrapper {
+    @include mx.flex($align: stretch);
+  }
+
+  .swiper-slide {
+    width: fn.rem(130) !important;
+    height: auto;
+  }
+
+  .vits-swiper-navs {
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      width: fn.rem(200);
+      height: 100%;
+      content: '';
+      background: #fff;
+      background: linear-gradient(
+        90deg,
+        rgb(255 255 255 / 0%) 0%,
+        rgb(255 255 255 / 78%) 50%,
+        rgb(255 255 255 / 100%) 100%
+      );
+    }
+  }
+
+  .swiper-button-disabled {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+.support-tab {
+  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  display: block;
+  min-width: fn.rem(130);
+  padding: fn.rem(10) fn.rem(16);
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: color.$color-white;
+  border: 1px solid map.get(color.$layout-border, 'quinary');
+  border-radius: map.get(var.$radius, 'md');
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    border-color: map.get(color.$layout-border, 'tertiary');
+  }
+
+  &.support-tab-active {
+    font-weight: 600;
+    color: map.get(color.$text-status, 'brand');
+    border: 2px solid map.get(color.$layout-border, 'brand');
+  }
+}
+
+/* vits-support-panel */
+.quality-panel,
+.faq-panel {
+  gap: map.get(var.$unit, 20);
+  align-items: stretch;
+  width: 100%;
+  padding: map.get(var.$unit, 32);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  /* 패널 내부 여백 조정(inner-lg) */
+  &.inner-lg {
+    gap: map.get(var.$unit, 32);
+    padding: map.get(var.$unit, 56);
+  }
+}
+
+/* -----------------------------------
+ * 시국세 상세 보기 (support-detail)
+ * - 제목/날짜, 본문, 첨부파일
+ * ----------------------------------- */
+.support-detail {
+  @include mx.flex($direction: column);
+  width: 100%;
+
+  &-header {
+    @include mx.flex($align: center, $justify: space-between);
+    gap: map.get(var.$unit, 12);
+    padding-bottom: map.get(var.$unit, 24);
+    border-bottom: 1px solid map.get(color.$layout-surf, 'secondary');
+  }
+
+  &-title {
+    @include typo.typography('h2s', $color: map.get(color.$text-colors, 'primary'));
+    margin: 0;
+  }
+
+  &-date {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  &-body {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    padding-top: map.get(var.$unit, 24);
+    line-height: 1.6;
+  }
+
+  &-content {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  &-files {
+    padding-top: map.get(var.$unit, 32);
+    margin-top: map.get(var.$unit, 24);
+  }
+
+  &-files-title {
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+    margin: 0 0 map.get(var.$unit, 16);
+  }
+}
+
+/* 시국세 상세 > 첨부파일 다운로드 (support-file-) */
+.support-file-list {
+  @include mx.flex($align: center);
+  flex-wrap: wrap;
+  gap: map.get(var.$unit, 12);
+}
+
+/* -----------------------------------
+ * 버튼 영역 (support-button-area)
+ * ----------------------------------- */
+.support-button-area {
+  &.in-support {
+    @include mx.flex($align: center, $justify: flex-end);
+    gap: map.get(var.$unit, 12);
+    padding-top: map.get(var.$unit, 16);
+
+    /* 버튼이 2개 이상이면 가운데 정렬 */
+    &:has([class*='vits-btn'] + [class*='vits-btn']) {
+      justify-content: center;
+    }
+
+    [class*='vits-btn'] {
+      min-width: fn.rem(160);
+    }
+  }
+}
+
+/* -----------------------------------
+ * FAQ 목록 (vits-faq-list / faq-item / faq-question / faq-answer)
+ * - 아코디언 형태, 전역 [data-toggle-box] transition(max-height/clip-path/opacity) 활용
+ * ----------------------------------- */
+.vits-faq-list {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  > .faq-item {
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .faq-item {
+    dt,
+    dd {
+      margin: 0;
+    }
+  }
+
+  .faq-question {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+    padding: map.get(var.$unit, 20) 0;
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: 0;
+
+    .vits-general-label {
+      flex-shrink: 0;
+    }
+
+    .faq-question-text {
+      flex: 1 1 auto;
+      min-width: 0;
+
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .icon {
+      flex-shrink: 0;
+
+      @include icon.ic-size(map.get(var.$unit, 20));
+
+      .ic {
+        color: map.get(color.$icon-neutral, 'tertiary');
+        transition: transform 0.3s;
+      }
+    }
+
+    /* 펼침 시 화살표(arrow-down) 180도 회전 */
+    &[aria-expanded='true'] > span:last-child .ic {
+      color: map.get(color.$icon-neutral, 'secondary');
+      transform: rotate(180deg);
+    }
+  }
+
+  .faq-answer {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    padding: map.get(var.$unit, 20);
+    line-height: 1.6;
+    word-break: keep-all;
+    white-space: pre-line;
+    background-color: map.get(color.$layout-status, 'info-bg-sub');
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  .faq-answer-wrap.is-open {
+    padding-bottom: map.get(var.$unit, 20);
+  }
+}
+
+/* -----------------------------------
+ * 1:1 문의 작성 폼 (inquiry-write-form) - support 전용
+ * - 문의유형/상세유형 2단, 주문정보+버튼
+ * ----------------------------------- */
+.single-panel {
+  .inquiry-detail .inquiry-write-form {
+    margin-top: 0;
+  }
+
+  .inquiry-form-field {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+
+    .vits-input {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .inquiry-search-btn {
+      flex-shrink: 0;
+      min-width: fn.rem(130);
+    }
+
+    /* 모든 행 라벨·필드 정렬 통일 */
+    .inquiry-form-row {
+      .inquiry-form-label {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+/* -----------------------------------
+ * 선택된 주문 정보 항목 (inquiry-selected-order-item)
+ * - 밝은 회색 배경, 좌측 아이콘 / 중앙 텍스트 / 우측 닫기 버튼
+ * ----------------------------------- */
+.inquiry-selected-order-item {
+  @include mx.flex($align: center);
+  gap: map.get(var.$unit, 12);
+  width: 100%;
+  min-height: map.get(var.$unit, 44);
+  padding: map.get(var.$unit, 8);
+  padding-left: map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'sunken');
+  border: 1px solid map.get(color.$layout-border, 'secondary');
+  border-radius: map.get(var.$radius, 'sm');
+
+  .inquiry-selected-order-img {
+    flex-shrink: 0;
+
+    img {
+      display: block;
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+    }
+  }
+
+  .inquiry-selected-order-text {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    @include mx.ellipsis-single;
+  }
+
+  .inquiry-selected-order-remove {
+    @include button.btn-reset;
+    @include icon.ic-size(map.get(var.$unit, 24));
+    flex-shrink: 0;
+    color: map.get(color.$icon-neutral, 'secondary');
+
+    @include mx.common-mouse-event {
+      color: map.get(color.$icon-neutral, 'primary');
+    }
+  }
+}
+
+.inquiry-write-form {
+  .inquiry-form-col {
+    @include mx.flex($direction: row, $align: flex-start);
+    gap: map.get(var.$unit, 16);
+
+    .inquiry-form-cell {
+      @include mx.flex($direction: column);
+      flex: 1 1 50%;
+      gap: map.get(var.$unit, 12);
+      min-width: 0;
+    }
+    // stylelint-disable-next-line no-descending-specificity
+    .vits-select {
+      width: 100%;
+      min-width: 0;
+      // stylelint-disable-next-line no-descending-specificity
+      .vits-select-trigger {
+        width: 100%;
+        padding: 0 map.get(var.$unit, 16);
+      }
+
+      .vits-select-list {
+        width: 100%;
+        padding: map.get(var.$unit, 2);
+      }
+    }
+  }
+}
+
+/* -----------------------------------
+ * 주문 조회 팝업 (order-select)
+ * - 안내 문구, 주문 목록 테이블
+ * ----------------------------------- */
+/* stylelint-disable no-descending-specificity */
+.vits-order-select {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 16);
+  width: 100%;
+
+  .order-select-table {
+    max-height: fn.rem(400);
+    overflow-y: auto;
+  }
+
+  .order-select-row {
+    td {
+      padding-left: map.get(var.$unit, 12);
+      text-align: left;
+
+      .order-select-img {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 8);
+
+        img {
+          flex-shrink: 0;
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
+          aspect-ratio: 1 / 1;
+          object-fit: contain;
+        }
+      }
+
+      &:last-child:has([class*='checkbox-single']) {
+        @include mx.flex($align: center, $justify: center);
+      }
+    }
+  }
+
+  .vits-empty-state {
+    padding: fn.rem(80) 0;
+  }
+}
+/* stylelint-enable no-descending-specificity */

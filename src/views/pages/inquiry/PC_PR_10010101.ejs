@@ -43,24 +43,86 @@
                     <!-- prettier-ignore -->
                     <div class="vits-mypage-panel bulk-panel inner-lg">
                       <div class="inquiry-detail">
-                        <div class="inquiry-detail-product">
-                          <div class="detail-thumb">
-                            <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+                        <%- include(`${_src}/views/components/pg-my-support/inquiry-detail-product.ejs`) %>
+                        <!-- S: 문의 작성 폼 -->
+                        <div class="inquiry-write-form">
+                          <!-- S: 제목 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">
+                              제목 <span class="label-required" aria-hidden="true">*</span>
+                            </span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'inquiry-title',
+                                name: 'inquiryTitle',
+                                label: '제목',
+                                placeholder: '제목을 입력해주세요.',
+                                required: true,
+                                isInvalid: true,
+                                validationMessage: '제목을 입력해주세요.',
+                                rootClass: 'size-large'
+                              }) %>
+                            </div>
                           </div>
-                          <div class="detail-info">
-                            <span class="detail-brand">동서식품</span>
-                            <span class="detail-code">63531</span>
-                            <p class="detail-name">튀김우동 컵라면 6개입</p>
-                            <p class="detail-spec">3x2.5sq/600V</p>
+                          <!-- E: 제목 -->
+
+                          <!-- S: 내용 (에디터 영역 placeholder) -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">
+                              내용 <span class="label-required" aria-hidden="true">*</span>
+                            </span>
+                            <div class="inquiry-form-field inquiry-editor-placeholder" style="border:1px solid #ddd;">
+                              에디터 마크업 미적용, 영역만 표시
+                            </div>
                           </div>
-                          <div class="detail-price">
-                            <span class="detail-origin">32,000원</span>
-                            <span class="detail-discount">30%</span>
-                            <strong class="detail-final">89,900원</strong>
-                            <span class="detail-vat">(VAT 포함)</span>
+                          <!-- E: 내용 -->
+
+                          <!-- S: 첨부 파일 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">첨부 파일</span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                type: 'button',
+                                size: 'sm',
+                                variant: 'secondary',
+                                text: '파일 첨부하기',
+                                iconLeft: true,
+                                iconName: 'ic-upload'
+                              }) %>
+                              <p class="inquiry-form-hint">- jpg, png, gif 파일 각 5MB까지 2개 파일 업로드 가능</p>
+                            </div>
                           </div>
+
+                          <!-- [D] case 케이스 참고-->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">첨부 파일 (case. 첨부된 파일)</span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/label/chip-file.ejs`, {filename: '회사 사업자 등록증.PDF'}) %>
+                              <%- include(`${_src}/views/components/label/chip-file.ejs`, {filename: '인증서.PDF'}) %>
+                            </div>
+                          </div>
+                          <!-- E: 첨부 파일 -->
+
+                          <!-- S: 연락받으실 연락처 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">연락받으실 연락처</span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'inquiry-contact',
+                                name: 'inquiryContact',
+                                label: '연락받으실 연락처',
+                                placeholder: '010-1234-5678',
+                                rootClass: 'size-large'
+                              }) %>
+                            </div>
+                          </div>
+                          <!-- E: 연락받으실 연락처 -->
                         </div>
-                        <!-- 여기서 부터 -->
+                        <!-- E: 문의 작성 폼 -->
                       </div>
                     </div>
                     <!-- 하단,버튼영역 -->

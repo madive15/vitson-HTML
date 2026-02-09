@@ -1,0 +1,66 @@
+<!-- prettier-ignore -->
+<% const _src = srcPath; const _public = publicPath; %>
+<%
+  const orderList = [
+    { no: 1, date: '2026-04-20', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 2건', checked: false },
+    { no: 2, date: '2026-03-01', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 5건', checked: true },
+    { no: 3, date: '2026-02-01', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형 최대 글자...', extra: '', checked: false },
+    { no: 4, date: '2026-01-01', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 2건', checked: false },
+    { no: 5, date: '2025-12-20', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '', checked: false },
+    { no: 6, date: '2025-11-15', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 3건', checked: false },
+    { no: 7, date: '2025-10-10', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '', checked: false },
+    { no: 8, date: '2025-09-05', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 1건', checked: false },
+    { no: 9, date: '2025-08-01', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '', checked: false },
+    { no: 10, date: '2025-07-20', orderNo: '2512198308', imgUrl: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', content: 'LED 트리구 96구 연결형(DC24V)', extra: '외 4건', checked: false }
+  ];
+%>
+
+<section class="vits-order-select">
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {theme: 'blue', text: '최근 6개월 주문만 조회됩니다.'}) %>
+
+  <div class="order-select-table vits-scrollbar" data-scroll-check>
+    <div class="general-table-wrap">
+      <table class="general-table">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+          caption: '주문 목록',
+          columns: [
+            { width: 50, label: 'No.' },
+            { width: 110, label: '주문날짜' },
+            { width: 110, label: '주문번호' },
+            { width: 374, label: '주문내용' },
+            { width: 92, label: '선택' }
+          ]
+        }) %>
+        <tbody>
+          <% orderList.forEach(function(item) { %>
+          <tr class="order-select-row">
+            <td><%= item.no %></td>
+            <td><%= item.date %></td>
+            <td><%= item.orderNo %></td>
+            <td>
+              <span class="order-select-img">
+                <img src="<%= item.imgUrl %>" alt="" />
+                <%= item.content %><%= item.extra ? ' ' + item.extra : '' %>
+              </span>
+            </td>
+            <td>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+                datas: [{ className: 's', name: 'orderSelect', value: 'order-' + item.no, checked: item.checked }]
+              }) %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/empty-state.ejs`, {
+      iconName: 'document-paper',
+      title: '최근 6개월간 주문 내역이 없습니다',
+      hidden: true
+    }) %>
+  </div>
+</section>

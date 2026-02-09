@@ -1,0 +1,135 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '구매내역-목록있음'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-my-docs">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-mypage.ejs`, {currentMenu: 'docs-bill'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-docs">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-mypage-content-headline docs-headline">
+                      <h2 class="vits-mypage-content-title">구매내역서 조회</h2>
+                      <p class="vits-mypage-content-desc">월별로 구매내역서를 확인하실 수 있습니다</p>
+                    </div>
+
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/pg-my-support/amount-info-card.ejs`, { amountPrice: '975,345,090' }) %>
+
+                    <!-- 조회 기간 -->
+                    <%- include(`${_src}/views/components/pg-my-support/support-filter.ejs`) %>
+
+                    <div class="vits-mypage-panel bills-panel">
+                      <!-- 목록 테이블 -->
+                      <div class="general-table-wrap">
+                        <table class="general-table" summary="청구서 목록">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/table/thead-row.ejs`, {
+                            caption: '청구서 목록',
+                            columns: [
+                              { width: 80, label: '순번' },
+                              { width: 130, label: '연월' },
+                              { width: 380, label: '구매내역서명' },
+                              { width: 160, label: '청구금액' },
+                              { width: 130, label: '구매내역서' },
+                            ]
+                          }) %>
+
+                          <tbody>
+                            <!-- 조회 결과없을시 빈 영역 -->
+                            <!-- prettier-ignore-->
+                            <% for (let month = 12, idx = 1; month >= 9; month--, idx++) { %>
+                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              cells: [ 
+                                { text: String(idx) },
+                                { text: '2025년 ' + month + '월', className: 'docs-text' },
+                                { text: '2025년 ' + month + '월 구매내역서', className: 'docs-text-lf' },
+                                { spans:[
+                                  {text: '공급가액 : 5,000,000원', className: 'docs-tax'}, 
+                                  {text: '세액 : 500,000원', className: 'docs-tax'}, 
+                                  {text: '합계 : 5,500,000원', className: 'docs-amount'}]
+                                },
+                                { button: { text: '보기', variant: 'outline-secondary', iconName: 'ic-document-paper' , iconLeft: true } }
+                                ] 
+                            }) %>
+                            <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- 페이지네이션 -->
+                      <div class="vits-mypage-pagination">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pagination.ejs`, {
+                          type: 'expanded',
+                          current: 1,
+                          isPrevDisabled: true
+                        }) %>
+                      </div>
+
+                      <!-- 안내 문구 -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                        theme: 'blue',
+                        text: '구매내역서 안내',
+                        list: [
+                          '구매내역서는 매월 말일 기준으로 발행됩니다.',
+                          '구매내역서 보기 버튼을 클릭하시면 상세 내역을 확인할 수 있습니다.',
+                          '과거 구매내역서는 최대 3년까지 조회 가능합니다.',
+                          '구매내역서 관련 문의사항은 고객센터로 연락 주시기 바랍니다.',
+                        ]
+                      }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>

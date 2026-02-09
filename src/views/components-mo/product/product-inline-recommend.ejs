@@ -1,0 +1,43 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<section class="vm-product-inline-recommend">
+  <div class="product-recommend-inner">
+    <div class="product-recommend-head">
+      <div class="product-recommend-head-inner vits-tooltip-anchor">
+        <h2 class="product-recommend-title">
+          함께보면 <span class="point-color">좋아요</span>
+        </h2>
+        <!-- prettier-ignore -->
+        <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+          size: 'sm', 
+          variant: 'primary', 
+          text: '신청하기'
+        }); %>
+        <%- include(`${_src}/views/components/tooltip.ejs`, {
+            _src: _src,
+            triggerText: '광고',
+            heading: 'AD 상품 등록 안내',
+            items: [
+              'special 상품 광고를 구매한 상품으로 입찰가순으로 전시됩니다.',
+              '구매상황에 따라 추천광고를 구매한 상품 중 연관도순으로 정렬됩니다.'
+            ],
+            position: 'left',
+            anchor: true,
+            footerContent: buttonHtml
+          }) %>
+      </div>
+    </div>
+    <div class="product-recommend-body">
+      <ul class="product-recommend-list view-thumb">
+        <% products.forEach(function(item) { %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components-mo/product/product-item.ejs`, {
+          item: item,
+          showExtra: false
+        }) %>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+</section>

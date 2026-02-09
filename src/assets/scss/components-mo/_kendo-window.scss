@@ -1,4 +1,8 @@
-// components-mo/_kendo-window.scss — Kendo Window 모바일 레이어
+// -----------------------------------------------------------------------------
+// components-mo/_kendo-window.scss
+// - 모바일 Kendo Window / 레이어 공통 스타일
+// - 상태 클래스: is-open(display on) / is-active(visible on) / is-closing(leave)
+// -----------------------------------------------------------------------------
 
 @use 'sass:map';
 @use '@/assets/scss/abstracts/variables' as var;
@@ -9,205 +13,218 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
-$mo-duration: 0.3s;
-$mo-easing: cubic-bezier(0.33, 1, 0.68, 1);
-$mo-sheet-easing: cubic-bezier(0.32, 0.72, 0, 1);
-$mo-sheet-leave-ratio: 0.8;
-$mo-alert-enter-ratio: 0.8;
-$mo-alert-leave-ratio: 0.6;
+/* 공통 믹스인 */
 
-.k-window:has(.vm-kwindow) {
-  z-index: var.$zindex-modal;
-  padding: map.get(var.$unit, 16) env(safe-area-inset-right, 0) map.get(var.$unit, 16) env(safe-area-inset-left, 0);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+@mixin layer-hidden {
+  display: none;
+  pointer-events: none;
+  visibility: hidden;
   opacity: 0;
+}
+
+@mixin layer-visible {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+@mixin layer-transition($delay: 0.35s) {
   transition:
-    transform $mo-duration $mo-easing,
-    opacity $mo-duration $mo-easing;
-  transform: scale(0.96);
+    transform $delay ease,
+    opacity $delay ease,
+    visibility 0s $delay;
+}
 
-  @include mx.position(fixed, 0, 0, 0, 0);
-  @include mx.flex(flex, column, center, center);
+@mixin layer-transition-active {
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    visibility 0s 0s;
+}
 
-  .k-window-titlebar {
-    display: none;
+/* 딤 레이어 */
+
+[data-modal-dim] {
+  @include layer-hidden;
+  @include mx.position(absolute, 0, 0, 0, 0);
+  z-index: var.$zindex-modal-dim;
+  background-color: color.$color-dim;
+  transition:
+    opacity 0.35s ease,
+    visibility 0s 0.35s;
+
+  &.is-open {
+    display: block;
   }
 
-  .k-window-content {
-    padding: 0 !important;
-    overflow: visible;
+  &.is-open.is-active {
+    @include layer-visible;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s 0s;
   }
 
-  &.is-active {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  &.is-closing {
-    opacity: 0;
-    transform: scale(0.96);
+  &.is-open.is-closing {
+    @include layer-hidden;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s 0.35s;
   }
 }
 
-.k-window:has(.type-bottom-sheet) {
-  justify-content: flex-end;
-  padding: 0;
-  opacity: 0;
-  transition:
-    transform $mo-duration $mo-sheet-easing,
-    opacity $mo-duration * 0.6 ease;
-  transform: translateY(100%);
+/* 모달 박스 (공통) */
 
-  .k-window-content {
-    height: 100%;
+[data-modal-box] {
+  @include layer-hidden;
+  @include layer-transition;
+
+  &.is-open {
+    display: block;
   }
 
-  &.is-active {
-    opacity: 1;
+  &.is-open.is-active {
+    @include layer-visible;
+    @include layer-transition-active;
+  }
+
+  &.is-open.is-closing {
+    @include layer-hidden;
+    @include layer-transition;
+  }
+}
+
+/* 타입별 스타일 */
+
+// 모달
+[data-modal-box][data-modal-type='modal'] {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: var.$zindex-modal;
+  transform: translateY(8px) scale(0.98);
+
+  &.is-open.is-active {
+    transform: translateY(0) scale(1);
+  }
+
+  &.is-open.is-closing {
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+// 바텀시트
+[data-modal-box][data-modal-type='bottom'] {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: var.$zindex-modal;
+  transform: translateY(16px);
+
+  &.is-open.is-active {
     transform: translateY(0);
   }
 
-  &.is-closing {
-    opacity: 0;
+  &.is-open.is-closing {
+    transform: translateY(16px);
+  }
+}
+
+// 슬라이드 (오른쪽에서 왼쪽으로)
+[data-modal-box][data-modal-type='slide-right'] {
+  [class$='-panel'] {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
     transition:
-      transform $mo-duration * $mo-sheet-leave-ratio $mo-sheet-easing,
-      opacity $mo-duration * 0.5 ease;
-    transform: translateY(100%);
-  }
-}
-
-.type-bottom-sheet {
-  display: flex;
-  flex-direction: column;
-  height: 85vh;
-  max-height: 85vh;
-  overflow: hidden;
-  border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
-
-  &::before {
-    display: block;
-    flex-shrink: 0;
-    width: fn.rem(36);
-    height: fn.rem(4);
-    margin: map.get(var.$unit, 8) auto 0;
-    content: '';
-    background: map.get(color.$text-colors, 'disabled');
-    border-radius: fn.rem(2);
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+    transform: translateX(100%);
+    transform-origin: right center;
   }
 
-  .vm-kwindow-header {
-    flex-shrink: 0;
-  }
+  &.is-open.is-active {
+    [class$='-dim'] {
+      transition: none;
+      transform: none;
+    }
 
-  .vm-kwindow-content {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .vm-kwindow-content:has(.vm-category-sheet) {
-    padding: 0;
-  }
-
-  .vm-kwindow-footer {
-    flex-shrink: 0;
-    padding-bottom: calc(#{map.get(var.$unit, 32)} + env(safe-area-inset-bottom, 0));
-  }
-
-  .vm-kwindow-content.no-footer {
-    padding-bottom: calc(#{map.get(var.$unit, 32)} + env(safe-area-inset-bottom, 0));
-  }
-}
-
-.k-window:has(.type-alert) {
-  padding: map.get(var.$unit, 24);
-  opacity: 0;
-  transition:
-    transform $mo-duration * $mo-alert-enter-ratio $mo-easing,
-    opacity $mo-duration * $mo-alert-leave-ratio ease;
-  transform: scale(0.92);
-
-  &.is-active {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  &.is-closing {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-}
-
-.type-alert {
-  max-width: fn.rem(320);
-  overflow: hidden;
-  border-radius: map.get(var.$radius, 'lg');
-
-  .vm-kwindow-header {
-    justify-content: center;
-    padding: map.get(var.$unit, 32) map.get(var.$unit, 24) map.get(var.$unit, 16);
-
-    &-text {
-      text-align: center;
+    [class$='-panel'] {
+      transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        visibility 0s 0s;
+      transform: translateX(0);
     }
   }
 
-  .vm-kwindow-title {
-    padding-right: 0;
-  }
-
-  .vm-kwindow-close {
-    display: none;
-  }
-
-  .vm-kwindow-content {
-    padding: map.get(var.$unit, 4) map.get(var.$unit, 24);
-    text-align: center;
-  }
-
-  .vm-kwindow-footer {
-    padding: map.get(var.$unit, 24);
+  &.is-open.is-closing {
+    [class$='-panel'] {
+      transform: translateX(100%);
+    }
   }
 }
 
-.vm-kwindow {
-  @include mx.flex(flex, column, flex-start, stretch);
-  width: 100%;
-  background: color.$color-white;
+/* 접근성 */
 
-  &:not([class*='type-']) {
-    max-width: fn.rem(480);
-    max-height: calc(var(--vh, 1vh) * 90);
-    overflow: hidden;
-    border-radius: map.get(var.$radius, 'lg');
+@media (prefers-reduced-motion: reduce) {
+  [data-modal-box],
+  [data-modal-dim] {
+    transition: none;
+  }
+}
+
+/* =============================================================
+  🚫 DO NOT MODIFY ABOVE THIS LINE
+  위 스타일은 전체 레이어 시스템 공통 베이스입니다.
+  개별 레이어 스타일은 이 영역 아래에서만 작성하세요.
+============================================================= */
+
+/* 개별 모달 스타일 영역 */
+
+.vm-modal {
+  &-inner {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    width: 100%;
+    max-height: calc(var(--vh, 1vh) * 95);
+
+    > div[class*='vm-modal-'] {
+      width: 100%;
+    }
   }
 
+  [class*='vm-modal-'][class*='-header'] {
+    flex-shrink: 0;
+  }
+
+  // header
   &-header {
     @include mx.flex(flex, row, space-between, flex-start);
     position: relative;
-    flex-shrink: 0;
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 20) map.get(var.$unit, 16);
+    padding: var.$mo-section-gap var.$mo-gutter;
     background: color.$color-white;
+    box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
 
-    &-text {
+    &-content {
       flex-grow: 1;
       min-width: 0;
+      max-width: fit-content;
       overflow: hidden;
     }
   }
 
-  &-title {
+  &-title,
+  &-subtitle {
     @include mx.ellipsis-single;
+    width: 100%;
+  }
+
+  &-title {
     @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
-    padding-right: map.get(var.$unit, 32);
   }
 
   &-subtitle {
-    @include mx.ellipsis-single;
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
     margin-top: map.get(var.$unit, 4);
+    word-break: keep-all;
   }
 
   &-infotitle {
@@ -217,31 +234,26 @@ $mo-alert-leave-ratio: 0.6;
 
   &-close {
     @include button.btn-reset;
-    @include icon.ic-size(map.get(var.$unit, 28));
-    @include mx.position(absolute, map.get(var.$unit, 20), map.get(var.$unit, 20), auto, auto);
+    @include icon.ic-size(fn.rem(28));
+    flex-shrink: 0;
   }
 
+  // 컨텐츠
   &-content {
     flex: 1 1 auto;
-    min-height: 0;
-    padding: map.get(var.$unit, 4) map.get(var.$unit, 20);
+    min-width: 0;
+    padding: map.get(var.$unit, 4) map.get(var.$unit, 16);
     overflow: hidden auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
     background: color.$color-white;
 
-    &.has-scroll {
-      padding-right: map.get(var.$unit, 16);
-    }
-
     &.no-footer {
-      padding-bottom: map.get(var.$unit, 20);
+      padding-bottom: map.get(var.$unit, 24);
     }
   }
 
+  // footer
   &-footer {
-    flex-shrink: 0;
-    padding: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
     background: color.$color-white;
   }
 
@@ -249,19 +261,19 @@ $mo-alert-leave-ratio: 0.6;
     @include button.btn-reset;
     @include mx.flex(flex, row, center, center);
     height: map.get(var.$unit, 52);
-    padding: map.get(var.$unit, 14) map.get(var.$unit, 12);
+    padding: map.get(var.$unit, 12);
     border-radius: map.get(var.$radius, 'md');
 
-    &.is-primary {
+    &-primary {
       background: map.get(color.$button-fill-primary, 'fill-surf-primary-default');
     }
 
-    &.is-secondary {
+    &-secondary {
       background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
     }
 
     .text {
-      @include typo.typography('h4b', $color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default'));
+      @include typo.typography('b2b', $color: map.get(color.$button-fill-primary, 'fill-on_surf-primary-default'));
     }
   }
 
@@ -270,50 +282,169 @@ $mo-alert-leave-ratio: 0.6;
     gap: map.get(var.$unit, 8);
 
     &.is-single {
-      .vm-kwindow-btn {
+      .vm-modal-btn {
         flex: 1 1 auto;
         min-width: 0;
       }
     }
 
     &.is-double {
-      .vm-kwindow-btn.is-secondary {
+      .vm-modal-btn-secondary {
         flex: 2 1 0;
         min-width: 0;
       }
 
-      .vm-kwindow-btn.is-primary {
+      .vm-modal-btn-primary {
         flex: 3 1 0;
         min-width: 0;
       }
     }
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .k-window:has(.vm-kwindow) {
-    transition: none;
+  &:not(:has(.vm-modal-footer)) {
+    .vm-modal-content {
+      padding-bottom: map.get(var.$unit, 24);
+    }
   }
 }
 
-.vm-bottom-sheet {
-  position: fixed !important;
-  inset: auto 0 0 !important;
-  width: 100% !important;
-  height: 85vh;
-  padding: 0 !important;
-  overflow: hidden;
-  border: 0 !important;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 -4px 20px rgb(0 0 0 / 10%);
+/* =============================================================
+  Kendo UI Window (Mobile)
+  - vm-scope 하위에서만 적용 (운영 사이트 미영향)
+  - 기본: 화면 중앙 모달
+  - is-bottomsheet: 하단 고정 바텀시트 (슬라이드 업)
+  - is-slideright: 오른쪽에서 슬라이드 인 (풀스크린)
+============================================================= */
 
-  .k-window-titlebar {
-    display: none;
+@keyframes vm-slide-up {
+  from {
+    transform: translateY(100%);
   }
 
-  .k-window-content {
-    height: 100%;
-    padding: 0 !important;
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes vm-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vm-slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.vm-scope {
+  // 기본 모달 — 화면 중앙
+  .k-window:has(.vm-modal-header) {
     overflow: hidden;
+    border-radius: map.get(var.$radius, 'lg');
+
+    .k-window-titlebar {
+      display: none;
+    }
+
+    .k-window-content {
+      min-height: 0;
+      max-height: calc(var(--vh, 1vh) * 95);
+      padding: 0 !important;
+      overflow: visible;
+    }
+  }
+
+  // 바텀시트 — 하단 고정
+  .k-window.is-bottomsheet:has(.vm-modal-header) {
+    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+
+    &.is-opening {
+      animation: vm-slide-up 0.35s ease forwards;
+    }
+  }
+
+  // 슬라이드 라이트 — 풀스크린 (오른쪽에서 왼쪽)
+  .k-window.is-slideright:has(.vm-modal-header) {
+    padding-bottom: calc(#{map.get(var.$mo-bottom-bar, 'tab-bar')} + var(--safe-bottom));
+    overflow: hidden;
+    border-radius: 0;
+
+    .vm-modal {
+      &-header {
+        flex-shrink: 0;
+        align-items: center;
+        height: fn.rem(48);
+        padding: 0 var.$mo-gutter;
+      }
+
+      &-inner {
+        max-height: 100vh;
+        max-height: 100dvh;
+      }
+    }
+
+    .k-window-content {
+      max-height: 100%;
+    }
+
+    &.is-opening {
+      animation: vm-slide-in-right 0.35s ease forwards;
+    }
+
+    &.is-closing {
+      animation: vm-slide-out-right 0.3s ease forwards;
+    }
+  }
+
+  // 카테고리 바텀시트 — 탭바 하위 표시 + 노치 안전영역
+  .k-window:has(.modal-category-sheet) {
+    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 1 !important;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vm-modal-inner {
+      max-height: calc(var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom));
+    }
+
+    .vm-modal-content {
+      padding-bottom: calc(#{map.get(var.$mo-bottom-bar, 'tab-bar')} + var(--safe-bottom));
+    }
+  }
+
+  .k-window:has(.modal-category-sheet) ~ .k-overlay {
+    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
+  }
+
+  // 필터 슬라이드 — 탭바 하위 표시
+  .k-window:has(.modal-filter-sheet) {
+    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 1 !important;
+
+    .vm-modal {
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-inner {
+        max-height: calc(var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom));
+      }
+
+      &-content {
+        padding: 0;
+      }
+
+      &-footer {
+        padding-bottom: map.get(var.$unit, 56);
+      }
+    }
+  }
+
+  .k-window:has(.modal-filter-sheet) ~ .k-overlay {
+    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
   }
 }

@@ -1,0 +1,203 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '1:1문의-작성'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-support-single">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-support.ejs`, {currentMenu: 'faq'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-single">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-support-content-headline single-headline">
+                      <h2 class="vits-support-content-title">1:1 문의</h2>
+                      <p class="vits-support-content-desc">작성해주신 문의는 순차적으로 답변드리고 있습니다.</p>
+                    </div>
+
+                    <div class="vits-support-panel single-panel inner-lg">
+                      <div class="inquiry-detail">
+                        <!-- S: 문의 작성 폼 -->
+                        <div class="inquiry-write-form">
+                          <!-- S: 문의유형 / 상세유형 -->
+                          <!-- prettier-ignore -->
+                          <div class="inquiry-form-col">
+                            <div class="inquiry-form-cell">
+                              <span class="inquiry-form-label">
+                                문의유형 <span class="label-required" aria-hidden="true">*</span>
+                              </span>
+                              <div class="inquiry-form-field">
+                                <%- include(`${_src}/views/components/form/select.ejs`, {
+                                  id: 'inquiry-type',
+                                  name: 'inquiryType',
+                                  placeholder: '문의유형을 선택해주세요.',
+                                  className: 'size-l',
+                                  disabled: false,
+                                  options: [
+                                    { text: '선택', value: '' },
+                                    { text: '배송', value: 'delivery' },
+                                    { text: '상품문의', value: 'product' },
+                                    { text: '주문관련', value: 'order' },
+                                    { text: '결제관련', value: 'payment' },
+                                    { text: '증빙서류관련', value: 'document' },
+                                    { text: '회원정보관련', value: 'member' },
+                                    { text: '기타', value: 'etc' }
+                                  ], value: (typeof inquiryType !== 'undefined' && inquiryType !== null) ? String(inquiryType) : '' }) %>
+                              </div>
+                            </div>
+                            <div class="inquiry-form-cell">
+                              <span class="inquiry-form-label">
+                                상세유형 <span class="label-required" aria-hidden="true">*</span>
+                              </span>
+                              <div class="inquiry-form-field">
+                                <%- include(`${_src}/views/components/form/select.ejs`, {
+                                  id: 'inquiry-detail-type',
+                                  name: 'inquiryDetailType',
+                                  placeholder: '상세유형을 선택해주세요.',
+                                  disabled: false,
+                                  className: 'size-l',
+                                  options: [
+                                    { text: '선택', value: '' },
+                                    { text: '배송일정', value: '' },
+                                    { text: '송장번호', value: '' }
+                                  ], value: (typeof inquiryDetailType !== 'undefined' && inquiryDetailType !== null) ? String(inquiryDetailType) : ''}) %>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- E: 문의유형 / 상세유형 -->
+
+                          <!-- S: 주문정보 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">주문정보</span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'inquiry-order',
+                                name: 'inquiryOrder',
+                                label: '주문정보',
+                                placeholder: '문의를 원하시는 주문을 선택해주세요.',
+                                rootClass: 'size-xl'
+                              }) %>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                type: 'button',
+                                size: 'lg-p',
+                                variant: 'tertiary',
+                                text: '주문조회',
+                                className: 'inquiry-search-btn'
+                              }) %>
+                            </div>
+                          </div>
+                          <!-- [D] 선택된 주문 항목 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">주문정보 - 항목 선택된 case </span>
+                            <div class="inquiry-form-field">
+                              <!-- 선택된 주문 정보 항목 -->
+                              <!-- prettier-ignore -->
+                              <div class="inquiry-selected-order-item" data-order-item>
+                                <span class="inquiry-selected-order-img" aria-hidden="true">
+                                  <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="" />
+                                </span>
+                                <span class="inquiry-selected-order-text">LED 트리구 96구 연결형(DC24V)</span>
+                                <button type="button" class="inquiry-selected-order-remove" data-order-remove aria-label="선택 주문 삭제">
+                                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+                                </button>
+                              </div>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                type: 'button',
+                                size: 'lg-p',
+                                variant: 'tertiary',
+                                text: '주문조회',
+                                className: 'inquiry-search-btn'
+                              }) %>
+                            </div>
+                          </div>
+                          <!-- E: 주문정보 -->
+
+                          <!-- S: 제목 -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">
+                              제목 <span class="label-required" aria-hidden="true">*</span>
+                            </span>
+                            <div class="inquiry-form-field">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                                id: 'inquiry-title',
+                                name: 'inquiryTitle',
+                                label: '제목',
+                                placeholder: '제목을 입력해주세요.',
+                                required: true,
+                                isInvalid: true,
+                                validationMessage: '제목을 입력해주세요.',
+                                rootClass: 'size-large'
+                              }) %>
+                            </div>
+                          </div>
+                          <!-- E: 제목 -->
+
+                          <!-- S: 내용 (에디터 영역 placeholder) -->
+                          <div class="inquiry-form-row">
+                            <span class="inquiry-form-label">
+                              내용 <span class="label-required" aria-hidden="true">*</span>
+                            </span>
+                            <div class="inquiry-form-field inquiry-editor-placeholder" style="border: 1px solid #ddd; display: block;">
+                              에디터 마크업 미적용, 영역만 표시
+                            </div>
+                          </div>
+                          <!-- E: 내용 -->
+                          
+                        <!-- E: 문의 작성 폼 -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>

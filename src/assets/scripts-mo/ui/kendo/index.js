@@ -9,13 +9,13 @@ import './kendo-window.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['KendoWindow'];
+  var modules = ['VmKendoWindow'];
 
   window.UI.kendo = {
     init: function () {
       modules.forEach(function (name) {
         var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
+        if (mod && typeof mod.initAll === 'function') mod.initAll();
       });
     }
   };

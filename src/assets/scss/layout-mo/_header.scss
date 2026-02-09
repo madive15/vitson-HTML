@@ -31,7 +31,7 @@
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
     height: map.get(var.$mo-header, 'nav-bar');
-    padding: 0 map.get(var.$unit, 16) 0 fn.rem(7);
+    padding: 0 var.$mo-gutter 0 fn.rem(7);
     background: color.$color-white;
 
     .vm-header {
@@ -42,6 +42,7 @@
 
       &-title {
         @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+        @include mx.ellipsis-single;
       }
 
       &-actions {

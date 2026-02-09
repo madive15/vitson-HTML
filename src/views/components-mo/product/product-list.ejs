@@ -1,0 +1,17 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<ul class="vm-product-items view-thumb" data-ui="product-items">
+  <li class="vm-product-item full-banner" data-ui="product-inline-banner">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
+      products: recommendProducts
+    }) %>
+  </li>
+
+  <% products.forEach(function(item) { %>
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+    item: item 
+  }) %>
+  <% }); %>
+</ul>

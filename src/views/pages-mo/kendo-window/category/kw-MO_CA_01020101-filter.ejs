@@ -1,0 +1,118 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+/**
+ * @file kw-MO_CA_01020101-filter.ejs
+ * @description 필터 슬라이드 팝업 콘텐츠
+ * @param {Array} filterItems - 필터 그룹 [{label, name, filters: [{text, value, qty?}]}]
+ */
+const _items = (typeof filterItems !== 'undefined' && filterItems) ? filterItems : [];
+const _brandVisible = 6;
+%>
+
+<div class="vm-filter-popup" data-filter-popup>
+  <!-- 결과 내 재검색 -->
+  <div class="filter-popup-search">
+    <h3 class="filter-popup-search-title">결과 내 재검색</h3>
+    <div class="filter-popup-search-inner">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-search.ejs`, {
+        idPrefix: 'mo-filter-search',
+        action: '#!',
+        name: 'mo-filter-search',
+        placeholder: '결과 내 재검색',
+        addClassName: 'mo-filter-search'
+      }) %>
+    </div>
+  </div>
+
+  <!-- 필터 그룹 -->
+  <!-- prettier-ignore -->
+  <% _items.forEach(function(group) { %>
+  <%
+    var isBrand = group.name === 'ck-brand';
+    var isAttr = group.name === 'ck-attr';
+    var brandHidden = isBrand ? Math.max(0, group.filters.length - _brandVisible) : 0;
+  %>
+  <div class="filter-popup-section is-collapsible" data-filter-group="<%= group.name %>">
+    <button type="button" class="filter-popup-button" data-filter-toggle aria-expanded="true">
+      <span class="text"><%= group.label %></span>
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+    </button>
+
+    <div class="filter-popup-body">
+      <% if (isBrand) { %>
+      <!-- prettier-ignore -->
+      <%
+        var visibleDatas = group.filters.slice(0, _brandVisible);
+        var hiddenDatas = group.filters.slice(_brandVisible);
+      %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+        variant: 'basic',
+        size: 'm',
+        name: group.name,
+        list: 'column',
+        gap: 16,
+        datas: visibleDatas.map(function(f) {
+          return { text: f.text, value: f.value, qty: f.qty || 0 };
+        })
+      }) %>
+      <!-- prettier-ignore -->
+      <% if (hiddenDatas.length > 0) { %>
+      <div class="filter-popup-hidden is-hidden">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+          variant: 'basic',
+          size: 'm',
+          name: group.name,
+          list: 'column',
+          gap: 16,
+          datas: hiddenDatas.map(function(f) {
+            return { text: f.text, value: f.value, qty: f.qty || 0 };
+          })
+        }) %>
+      </div>
+      <!-- <button type="button" class="filter-popup-more" data-filter-more>
+        <span class="ic">+</span>
+        <span class="text">더보기 (<%= brandHidden %>개)</span>
+      </button> -->
+
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size:'sm', variant: 'outline-tertiary', 
+        text: '더보기 (' + brandHidden + '개)', 
+        iconLeft: true, iconName: 'ic-plus',
+        attrs: 'data-filter-more'
+      }) %>
+
+      <% } %> <% } else if (isAttr) { %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+        variant: 'basic',
+        size: 'm',
+        name: group.name,
+        list: 'column',
+        gap: 16,
+        datas: group.filters.map(function(f) {
+          return { text: f.text, value: f.value, qty: f.qty || 0 };
+        })
+      }) %>
+
+      <% } else { %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+        variant: 'basic',
+        size: 'm',
+        name: group.name,
+        list: 'column',
+        gap: 16,
+        datas: group.filters.map(function(f) {
+          return { text: f.text, value: f.value };
+        })
+      }) %>
+      <% } %>
+    </div>
+  </div>
+  <% }); %>
+</div>

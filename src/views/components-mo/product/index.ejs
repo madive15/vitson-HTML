@@ -1,0 +1,16 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<div 
+  class="vm-product-list
+  <%= typeof viewType !== 'undefined' ? ' ' + viewType : '' %>" 
+  data-ui="product-list">
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components-mo/product/product-toolbar.ejs`) %>
+
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components-mo/product/product-list.ejs`, { 
+    products: products,
+    recommendProducts: recommendProducts
+  }) %>
+</div>

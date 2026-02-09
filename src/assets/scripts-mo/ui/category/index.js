@@ -2,7 +2,6 @@
  * @file scripts-mo/ui/category/index.js
  * @description 카테고리 UI 관련 모듈 통합 관리
  */
-import './category-breadcrumb.js';
 import './category-sheet.js';
 
 (function (window) {
@@ -10,7 +9,7 @@ import './category-sheet.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['CategoryBreadcrumb', 'CategorySheet'];
+  var modules = ['CategorySheet'];
 
   window.UI.category = {
     init: function () {

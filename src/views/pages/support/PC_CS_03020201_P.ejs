@@ -1,0 +1,67 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- prettier-ignore -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '주문조회 팝업'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('orderSearchModal')"
+                >
+                  <span class="text">주문조회 팝업</span>
+                </button>
+              </div>
+
+              <!-- prettier-ignore -->
+              <% const winModal = {
+                id: 'orderSearchModal',
+                size: '800',
+                title: '주문 조회',
+                opt: { draggable: true },
+                contentPath: `${_src}/views/pages/kendo-window/support/kw-PC_CS_03020201_P.ejs`,
+                buttons: [
+                  { text: '취소', variant: 'secondary', action: 'close' },
+                  { text: '선택하기', variant: 'primary', action: 'close' }
+                ]
+              }; %>
+              <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var type = params.get('type');
+        var $tableWrap = document.querySelector('.vits-order-select .general-table-wrap');
+        var $empty = document.querySelector('.vits-order-select .vits-empty-state');
+        
+        $empty.setAttribute('hidden', '');
+
+        if (!$tableWrap || !$empty) return;
+
+        if (type === 'none') {
+          $tableWrap.setAttribute('hidden', '');
+          $empty.removeAttribute('hidden');
+        }
+      })();
+    </script>
+  </body>
+</html>

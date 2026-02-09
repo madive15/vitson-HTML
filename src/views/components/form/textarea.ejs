@@ -10,6 +10,7 @@
   const _rows = typeof rows !== 'undefined' ? parseInt(rows, 10) : 4;
   const _maxLength = typeof maxLength !== 'undefined' ? parseInt(maxLength, 10) : 0;
   const _required = typeof required !== 'undefined' ? !!required : true;
+  const _disabled = typeof disabled !== 'undefined' ? !!disabled : false;
 
   // ===== Validation 관련 =====
   const _errorMessage = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
@@ -55,6 +56,7 @@
         <% if (_name) { %>name="<%= _name %>"<% } %>
         <% if (_placeholder) { %>placeholder="<%= _placeholder %>"<% } %>
         <% if (_required) { %>required<% } %>
+        <% if (_disabled) { %>disabled<% } %>
         <% if (_maxLength) { %>
           maxlength="<%= _maxLength %>"
           data-max-length="<%= _maxLength %>"
