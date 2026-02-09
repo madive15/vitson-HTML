@@ -1,13 +1,9 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-/**
- * @file kw-MO_CA_01020101-filter.ejs
- * @description 필터 슬라이드 팝업 콘텐츠
- * @param {Array} filterItems - 필터 그룹 [{label, name, filters: [{text, value, qty?}]}]
- */
 const _items = (typeof filterItems !== 'undefined' && filterItems) ? filterItems : [];
 const _brandVisible = 6;
+const _categoryVisible = 6;
 %>
 
 <div class="vm-filter-popup" data-filter-popup>
@@ -32,7 +28,7 @@ const _brandVisible = 6;
   <%
     var isBrand = group.name === 'ck-brand';
     var isAttr = group.name === 'ck-attr';
-    var brandHidden = isBrand ? Math.max(0, group.filters.length - _brandVisible) : 0;
+    var isCategory = group.name === 'ck-category';
   %>
   <div class="filter-popup-section is-collapsible" data-filter-group="<%= group.name %>">
     <button type="button" class="filter-popup-button" data-filter-toggle aria-expanded="true">
@@ -41,26 +37,38 @@ const _brandVisible = 6;
     </button>
 
     <div class="filter-popup-body">
-      <% if (isBrand) { %>
-      <!-- prettier-ignore -->
-      <%
-        var visibleDatas = group.filters.slice(0, _brandVisible);
-        var hiddenDatas = group.filters.slice(_brandVisible);
-      %>
-      <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
-        variant: 'basic',
-        size: 'm',
-        name: group.name,
-        list: 'column',
-        gap: 16,
-        datas: visibleDatas.map(function(f) {
-          return { text: f.text, value: f.value, qty: f.qty || 0 };
-        })
-      }) %>
-      <!-- prettier-ignore -->
-      <% if (hiddenDatas.length > 0) { %>
-      <div class="filter-popup-hidden is-hidden">
+      <% if (isCategory) { %>
+      <!-- 카테고리 트리 -->
+      <% var _treeData = group.treeData || []; var _treeVisible = _treeData.slice(0, _categoryVisible); var _treeHidden
+      = _treeData.slice(_categoryVisible); var _treeTotal = _treeData.length; %>
+      <div data-search-more-scope>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/category/category-tree-search.ejs`, {
+          treeData: _treeVisible
+        }) %>
+
+        <% if (_treeHidden.length) { %>
+        <div data-search-more-toggle style="display: none">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/category/category-tree-search.ejs`, {
+            treeData: _treeHidden
+          }) %>
+        </div>
+
+        <div class="filter-more">
+          <button type="button" class="filter-more-button" data-search-more-btn>
+            <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+            <span class="text">더보기 <em class="count">(<%= _treeTotal %>개)</em></span>
+          </button>
+        </div>
+        <% } %>
+      </div>
+
+      <% } else if (isBrand) { %>
+      <!-- 브랜드 -->
+      <% var _brandData = group.filters || []; var _brandVisibleData = _brandData.slice(0, _brandVisible); var
+      _brandHiddenData = _brandData.slice(_brandVisible); var _brandTotal = _brandData.length; %>
+      <div data-search-more-scope>
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
           variant: 'basic',
@@ -68,25 +76,36 @@ const _brandVisible = 6;
           name: group.name,
           list: 'column',
           gap: 16,
-          datas: hiddenDatas.map(function(f) {
+          datas: _brandVisibleData.map(function(f) {
             return { text: f.text, value: f.value, qty: f.qty || 0 };
           })
         }) %>
+
+        <% if (_brandHiddenData.length) { %>
+        <div data-search-more-toggle style="display: none">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+            variant: 'basic',
+            size: 'm',
+            name: group.name,
+            list: 'column',
+            gap: 16,
+            datas: _brandHiddenData.map(function(f) {
+              return { text: f.text, value: f.value, qty: f.qty || 0 };
+            })
+          }) %>
+        </div>
+
+        <div class="filter-more">
+          <button type="button" class="filter-more-button" data-search-more-btn>
+            <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %></span>
+            <span class="text">더보기 <em class="count">(<%= _brandTotal %>개)</em></span>
+          </button>
+        </div>
+        <% } %>
       </div>
-      <!-- <button type="button" class="filter-popup-more" data-filter-more>
-        <span class="ic">+</span>
-        <span class="text">더보기 (<%= brandHidden %>개)</span>
-      </button> -->
 
-      <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/button.ejs`, {
-        size:'sm', variant: 'outline-tertiary', 
-        text: '더보기 (' + brandHidden + '개)', 
-        iconLeft: true, iconName: 'ic-plus',
-        attrs: 'data-filter-more'
-      }) %>
-
-      <% } %> <% } else if (isAttr) { %>
+      <% } else if (isAttr) { %>
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
         variant: 'basic',

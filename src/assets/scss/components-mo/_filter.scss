@@ -23,7 +23,7 @@ $filter-dt-width: fn.rem(98);
     display: block;
     flex-shrink: 0;
     width: fn.rem(13);
-    height: map.get(var.$unit, 16);
+    height: var.$mo-gutter;
     margin-left: auto;
     content: '';
     background: linear-gradient(
@@ -90,6 +90,12 @@ $filter-dt-width: fn.rem(98);
         }
       }
     }
+  }
+}
+
+@mixin tree-depth-row($depth: 1) {
+  .category-tree-depth#{$depth} > .category-tree-item > .category-tree-row {
+    @content;
   }
 }
 
@@ -173,7 +179,16 @@ $filter-dt-width: fn.rem(98);
 // 필터 팝업
 $filter-section-divider: inset 0 -1px 0 0 map.get(color.$layout-surf, 'secondary');
 
+// kendo-window 필터전용 적용
+.vm-scope .k-window.is-slideright:has(.vm-filter-popup) {
+  .vm-modal-footer {
+    box-shadow: map.get(var.$box-shadow, 'mo_menu');
+  }
+}
+
 .vm-filter-popup {
+  padding-bottom: map.get(var.$unit, 20);
+
   // 결과 내 재검색
   .filter-popup-search {
     @include mx.flex(flex, column);
@@ -235,11 +250,184 @@ $filter-section-divider: inset 0 -1px 0 0 map.get(color.$layout-surf, 'secondary
         @include mx.flex(flex, column);
         gap: map.get(var.$unit, 20);
 
-        button[data-filter-more] {
-          .text {
-            color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
+        [data-search-more-scope] {
+          @include mx.flex(flex, column);
+          gap: var.$mo-gutter;
+
+          .filter-more {
+            padding-top: map.get(var.$unit, 4);
+
+            &-button {
+              @include button.btn-reset;
+              @include mx.flex(flex, row, center, center);
+              @include mx.border('all', $color: map.get(color.$button-ghost-tertiary, 'ghost-border-tertiary-default'));
+              gap: map.get(var.$unit, 8);
+              width: 100%;
+              height: map.get(var.$unit, 32);
+              padding: fn.rem(6) map.get(var.$unit, 12);
+              background: map.get(color.$button-ghost-tertiary, 'ghost-surf-tertiary-default');
+              border-radius: map.get(var.$radius, 'sm');
+
+              .text,
+              .count {
+                @include typo.typography(
+                  'b3r',
+                  $color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default')
+                );
+              }
+
+              .count {
+                font-style: normal;
+              }
+
+              .icon {
+                @include icon.ic-size(map.get(var.$unit, 20));
+                color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
+              }
+            }
           }
         }
+      }
+    }
+
+    &:last-of-type {
+      box-shadow: none;
+    }
+  }
+
+  // 모바일 필터 팝업 - 카테고리 트리
+  .vits-category-tree-list {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+
+    & + [data-search-more-toggle] {
+      margin-top: 0;
+    }
+  }
+
+  .category-tree-depth1 {
+    > .category-tree-item {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+    }
+  }
+
+  .category-tree-depth2,
+  .category-tree-depth3,
+  .category-tree-depth4 {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+    padding-left: 0;
+
+    .category-tree-panel {
+      margin-top: var.$mo-gutter;
+    }
+  }
+
+  @include tree-depth-row(1) {
+    padding: 0;
+
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 8);
+    }
+  }
+
+  @include tree-depth-row(2) {
+    padding: 0;
+
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 20);
+
+      .label {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  @include tree-depth-row(3) {
+    padding: 0;
+
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 36);
+
+      .label {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  @include tree-depth-row(4) {
+    padding: 0;
+
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 52);
+
+      .label {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  .category-tree {
+    &-row {
+      @include mx.flex(flex, row, space-between, flex-start);
+      gap: var.$mo-gutter;
+      min-height: 0;
+
+      .vits-checkbox-item {
+        flex-grow: 1;
+        min-width: 0;
+        max-width: fit-content;
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .icon {
+          align-self: flex-start;
+          margin-top: 1px;
+        }
+      }
+
+      &:has(.category-tree-toggle) {
+        .vits-checkbox-item {
+          margin-top: 1px;
+        }
+      }
+    }
+
+    &-toggle {
+      @include button.btn-reset;
+      position: relative;
+      flex-shrink: 0;
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+
+      &::before,
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 13px;
+        height: 1px;
+        content: '';
+        background: map.get(color.$icon-neutral, 'tertiary');
+        border-radius: 2px;
+        transition: transform 0.3s;
+        transform: translate(-50%, -50%);
+      }
+
+      &::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+
+      &[aria-expanded='true']::after {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+    }
+
+    &-panel {
+      display: none;
+
+      &.is-open {
+        display: block;
       }
     }
   }

@@ -1,0 +1,42 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%#
+  텍스트 밑줄 버튼 컴포넌트
+
+  [사용 가능한 파라미터]
+  - text: string (필수) - 버튼 텍스트
+  - tag: 'button' | 'a' (기본: 'button') - HTML 태그
+  - href: string (기본: '#!') - tag가 'a'일 때 링크 URL
+  - fs: 'b3' | 'b2' (기본: '') - 폰트 사이즈 variant
+  - height: number (기본: '') - 높이값 (예: 18, 19, 21, 24)
+  - fc: string (기본: '') - 폰트 색상 (예: 'pink', 'red')
+  - offset: number (기본: '') - 라인 간격 조정 클래스 (예: 2, 3, 5)
+  - className: string (기본: '') - 추가 클래스
+%>
+
+<%
+  const _tag = (typeof tag !== 'undefined' && tag) ? tag : 'button';
+  const _text = (typeof text !== 'undefined' && text) ? text : '';
+  const _href = (typeof href !== 'undefined' && href) ? href : '#!';
+  const _fs = (typeof fs !== 'undefined' && fs) ? `fs-${fs}` : '';
+  const _height = (typeof height !== 'undefined' && height) ? `height-${height}` : '';
+  const _fc = (typeof fc !== 'undefined' && fc) ? `fc-${fc}` : '';
+  const _offset = (typeof offset !== 'undefined' && offset) ? `offset-${offset}` : '';
+  const _className = (typeof className !== 'undefined' && className) ? className : '';
+
+  const classList = [
+    'vits-text-underline-button',
+    _fs,
+    _height,
+    _fc,
+    _offset,
+    _className
+  ].filter(Boolean).join(' ');
+%>
+
+<% if (_tag === 'a') { %>
+<a class="<%= classList %>" href="<%= _href %>"><%= _text %></a>
+<% } else { %>
+<button class="<%= classList %>" type="button"><%= _text %></button>
+<% } %>

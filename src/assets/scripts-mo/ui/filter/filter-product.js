@@ -289,29 +289,6 @@
     return html.join('');
   }
 
-  // 브랜드 더보기 초기화
-  function resetBrandMore() {
-    var $brandSection = $(SEL.popup).find('[data-filter-group="ck-brand"]');
-    var $hidden = $brandSection.find('.filter-popup-hidden');
-    if ($hidden.length && !$hidden.hasClass(CLS.hidden)) {
-      $hidden.addClass(CLS.hidden);
-      $brandSection.removeClass(CLS.expanded);
-      if (!$brandSection.find('[data-filter-more]').length) {
-        var count = $hidden.find('input[type="checkbox"]').length;
-        $brandSection
-          .find('.filter-popup-body')
-          .append(
-            '<button type="button" class="vits-btn-sm vits-btn-outline-tertiary icon-left" data-filter-more>' +
-              '<span class="icon"><i class="ic ic-plus" aria-hidden="true"></i></span>' +
-              '<span class="text">더보기 (' +
-              count +
-              '개)</span>' +
-              '</button>'
-          );
-      }
-    }
-  }
-
   // 이벤트 바인딩
   function bindEvents() {
     if (_bound) return;
@@ -389,8 +366,6 @@
         if (this.name) $(this).prop('checked', false);
       });
 
-      // 브랜드 더보기 초기화
-      resetBrandMore();
       _categoryChanged = true;
 
       if (!d4.length) {
