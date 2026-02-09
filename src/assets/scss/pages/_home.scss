@@ -17,69 +17,295 @@
   opacity: 0.5;
 }
 
-// -----------------------------------------------------------------------------
-// 자주 찾는 메뉴 (vits-home-frequent-menu)
-// -----------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------- */
+/* 자주 찾는 메뉴 (vits-home-frequent-menu) */
+/* ----------------------------------------------------------------------------- */
 .vits-home-frequent-menu {
   padding: fn.rem(24) 0 fn.rem(32);
 
   .frequent-menu-title {
     padding: 0;
     margin: 0 0 fn.rem(20);
-
-    @include typo.typography('h2m');
-    color: map.get(color.$text-colors, 'default');
   }
 
   .frequent-menu-list {
-    display: flex;
+    @include mx.flex(flex, row, center, flex-start);
     flex-wrap: wrap;
-    gap: fn.rem(8) fn.rem(24);
+    gap: fn.rem(50);
     padding: 0;
     margin: 0;
-    list-style: none;
   }
 
   .frequent-menu-item {
     flex: 0 0 auto;
+
+    @include mx.hoverable-only {
+      &:hover {
+        .frequent-menu-icon {
+          transform: scale(0.9);
+        }
+
+        .frequent-menu-link {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
+    }
   }
 
   .frequent-menu-link {
-    display: flex;
-    flex-direction: column;
+    @include mx.flex(flex, column, center, center);
     gap: fn.rem(8);
-    align-items: center;
     width: fn.rem(80);
     color: map.get(color.$text-colors, 'default');
     text-decoration: none;
     transition: color 0.2s ease;
-
-    &:hover {
-      color: map.get(color.$brand-colors, 'primary');
-    }
   }
 
-  .frequent-menu-icon-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: fn.rem(56);
-    height: fn.rem(56);
+  .frequent-menu-icon {
+    @include mx.flex(flex, row, center, center);
+    width: fn.rem(96);
+    height: fn.rem(96);
     background-color: map.get(color.$gray-shades, '20');
     border-radius: 50%;
+    transition: transform 0.2s ease;
 
     img {
-      width: fn.rem(28);
-      height: fn.rem(28);
-      object-fit: contain;
+      @include mx.img-fit(contain);
     }
   }
 
   .frequent-menu-label {
     display: block;
-    line-height: 1.4;
     text-align: center;
 
     @include typo.typography('b3r');
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 메인 배너 (vits-home-main-banner) */
+/* ----------------------------------------------------------------------------- */
+.vits-home-main-banner {
+  position: relative;
+  width: 100%;
+  margin-bottom: fn.rem(32);
+
+  .main-banner-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .swiper-wrapper {
+    display: flex;
+  }
+
+  .swiper-slide {
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+  }
+
+  .main-banner-card {
+    @include mx.flex(flex, row, flex-start, center);
+    position: relative;
+    width: fn.rem(400);
+    min-height: fn.rem(240);
+    padding: fn.rem(32);
+    overflow: hidden;
+    border-radius: fn.rem(12);
+  }
+
+  .banner-card-content {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  .banner-card-title {
+    margin: 0 0 fn.rem(8);
+    font-size: fn.rem(24);
+    font-weight: 700;
+    line-height: 1.4;
+    color: color.$color-white;
+  }
+
+  .banner-card-subtitle {
+    margin: 0 0 fn.rem(8);
+    font-size: fn.rem(20);
+    font-weight: 700;
+    line-height: 1.4;
+    color: #ffd700; // 노란색
+  }
+
+  .banner-card-description {
+    margin: 0 0 fn.rem(20);
+    font-size: fn.rem(14);
+    font-weight: 400;
+    line-height: 1.5;
+    color: color.$color-white;
+  }
+
+  .banner-card-image {
+    @include mx.flex(flex, row, center, center);
+    flex: 1;
+    width: 100%;
+    margin: fn.rem(16) 0;
+
+    img {
+      @include mx.img-fit(contain);
+      max-width: 100%;
+      max-height: fn.rem(120);
+    }
+  }
+
+  .banner-card-link {
+    @include mx.flex(flex, row, center, center);
+    padding: fn.rem(8) fn.rem(16);
+    font-size: fn.rem(14);
+    font-weight: 400;
+    text-decoration: none;
+    background-color: color.$color-white;
+    border: 1px solid;
+    border-radius: fn.rem(4);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  // 진행 바 및 재생/멈춤
+  .main-banner-progress {
+    @include mx.flex(flex, row, center, center);
+    gap: fn.rem(12);
+    width: 100%;
+    padding: 0 fn.rem(40);
+    margin-top: fn.rem(16);
+  }
+
+  .banner-progress-bar {
+    flex: 1;
+    height: fn.rem(4);
+    overflow: hidden;
+    background-color: map.get(color.$gray-shades, '30');
+    border-radius: fn.rem(2);
+  }
+
+  .banner-progress-fill {
+    width: 20%; // Swiper로 동적 조정
+    height: 100%;
+    background-color: map.get(color.$brand-colors, 'primary');
+    border-radius: fn.rem(2);
+    transition: width 0.3s ease;
+  }
+
+  .banner-progress-actions {
+    @include mx.flex(flex, row, center, center);
+    flex-shrink: 0;
+  }
+
+  .banner-progress-btn {
+    @include mx.flex(flex, row, center, center);
+    width: fn.rem(28);
+    height: fn.rem(28);
+    cursor: pointer;
+    border-radius: fn.rem(4);
+    opacity: 1;
+    transition: opacity 0.2s ease;
+
+    @include button.btn-reset;
+
+    @include mx.hoverable-only {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    // 아이콘 스타일
+    .ic {
+      width: fn.rem(16);
+      height: fn.rem(16);
+    }
+
+    // 재생 아이콘 (일시정지 상태일 때 표시)
+
+    &.is-paused {
+      .banner-progress-icon-play {
+        display: block;
+      }
+
+      .banner-progress-icon-pause {
+        display: none;
+      }
+    }
+
+    // 일시정지 아이콘 (재생 상태일 때 표시)
+
+    &.is-playing {
+      .banner-progress-icon-play {
+        display: none;
+      }
+
+      .banner-progress-icon-pause {
+        display: block;
+      }
+    }
+  }
+
+  .banner-progress-icon-play,
+  .banner-progress-icon-pause {
+    @include mx.flex(flex, row, center, center);
+  }
+
+  // 네비게이션 버튼 (진행 바 옆 인라인)
+  .main-banner-navs {
+    @include mx.flex(flex, row, center, center);
+    flex-shrink: 0;
+    gap: fn.rem(4);
+  }
+
+  .banner-nav-button {
+    @include mx.flex(flex, row, center, center);
+    width: fn.rem(32);
+    height: fn.rem(32);
+    cursor: pointer;
+    background-color: rgb(255 255 255 / 90%);
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+    border-radius: 50%;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    @include button.btn-reset;
+
+    // 아이콘 스타일
+    .ic {
+      width: fn.rem(16);
+      height: fn.rem(16);
+      transition: filter 0.2s ease;
+    }
+
+    @include mx.hoverable-only {
+      &:hover {
+        background-color: color.$color-white;
+        border-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
+    &:active {
+      background-color: map.get(color.$brand-colors, 'primary');
+      border-color: map.get(color.$brand-colors, 'primary');
+
+      .ic {
+        filter: brightness(0) invert(1);
+      }
+    }
+
+    &.swiper-button-disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+      opacity: 0.35;
+    }
   }
 }

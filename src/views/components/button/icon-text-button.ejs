@@ -10,7 +10,11 @@ const color = locals.color || ''; // default, primary, secondary 등
 const className = locals.className || '';
 %>
 
-<button type="<%= type %>" class="vits-ictext-button vits-ictext-button-<%= size %> vits-text-<%= color %>">
+<button 
+  type="<%= type %>" 
+  class="vits-ictext-button vits-ictext-button-<%= size %> vits-text-<%= color %>"
+  <% if (locals.onclick) { %>onclick="<%= onclick %>"<% } %>
+>
   <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: iconName}) %> </span>
   <span class="text"><%= text %></span>
 </button>

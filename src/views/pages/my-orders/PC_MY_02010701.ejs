@@ -74,6 +74,19 @@
           <!-- E: vits-grid -->
         </div>
         <!-- E: vits-wrap -->
+
+        <!-- s: 팝업 -->
+        <!-- prettier-ignore -->
+        <%# my-orders/PC_CO_02010101_P.ejs %>
+        <% const winModal = { 
+          id: 'unShippedModal', 
+          size: '560', 
+          title: '배송지 목록', 
+          opt: { draggable: true }, 
+          contentPath: `${_src}/views/pages/kendo-window/my-orders/kw-PC_CO_02010101_P.ejs` 
+        }; %>
+        <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, winModal) %>
+        <!-- e: 팝업 -->
       </main>
       <!-- E: vits-main -->
 

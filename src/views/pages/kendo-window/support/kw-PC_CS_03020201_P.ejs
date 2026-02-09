@@ -47,9 +47,13 @@
             </td>
             <td>
               <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
-                datas: [{ className: 's', name: 'orderSelect', value: 'order-' + item.no, checked: item.checked }]
-              }) %>
+              <span class="order-select-radio">
+                <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+                  name: 'orderSelect',
+                  value: 'order-' + item.no,
+                  checked: item.checked
+                }) %>
+              </span>
             </td>
           </tr>
           <% }); %>

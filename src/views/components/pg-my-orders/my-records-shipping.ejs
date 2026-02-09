@@ -6,7 +6,13 @@
 
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { size:'md', color: 'info', iconName: 'label', text: '배송지 수정'}) %>
+      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { 
+        size:'md', 
+        color: 'info', 
+        iconName: 'label', 
+        text: '배송지 수정',
+        onclick: "VitsKendoWindow.open('unShippedModal')"
+      }) %>
     </div>
   </div>
 
@@ -14,55 +20,83 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>
-              [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 15층&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
-                text: '배송지수정',
-                fs: 'b3',
-                height: '18',
-                fc: 'brand-sub'
-              }) %>
-            </dd>
-            <dt>배송메모</dt>
-            <dd>
-              부재시 경비실에 맡겨주세요&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
-                text: '배송메모 수정',
-                fs: 'b3',
-                height: '18',
-                fc: 'brand-sub'
-              }) %>
-            </dd>
-            <dt>배송방법</dt>
-            <dd>
-              택배 (대납)&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
-                text: '배송방법 수정',
-                fs: 'b3',
-                height: '18',
-                fc: 'brand-sub'
-              }) %>
-            </dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 15층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                  text: '수정',
+                  fs: 'b3',
+                  height: '18',
+                  fc: 'brand-sub',
+                  onclick: "VitsKendoWindow.open('unShippedModal')"
+                }) %>
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                  text: '수정',
+                  fs: 'b3',
+                  height: '18',
+                  fc: 'brand-sub',
+                  attrs: 'data-btn="shipping-edit-open"'
+                }) %>
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-form.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>
+                <div class="shipping-edit-view">
+                  택배 (대납)&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                    text: '수정',
+                    fs: 'b3',
+                    height: '18',
+                    fc: 'brand-sub',
+                    attrs: 'data-btn="shipping-edit-open"'
+                  }) %>
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-select.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -73,10 +107,15 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { size:'md', color: 'info', iconName: 'label', text: '배송지 수정'}) %>
+      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { 
+        size:'md', 
+        color: 'info', 
+        iconName: 'label', 
+        text: '배송지 수정',
+        onclick: "VitsKendoWindow.open('unShippedModal')"
+      }) %>
     </div>
   </div>
 
@@ -84,18 +123,72 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>퀵배송</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <dl class="shipping-info">
+              <dt>받는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                text: '수정',
+                fs: 'b3',
+                height: '18',
+                fc: 'brand-sub',
+                onclick: "VitsKendoWindow.open('unShippedModal')"
+              }) %>
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                    text: '수정',
+                    fs: 'b3',
+                    height: '18',
+                    fc: 'brand-sub',
+                    attrs: 'data-btn="shipping-edit-open"'
+                  }) %>
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-form.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>
+                <div class="shipping-edit-view">
+                  택배 (대납)&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                    text: '수정',
+                    fs: 'b3',
+                    height: '18',
+                    fc: 'brand-sub',
+                    attrs: 'data-btn="shipping-edit-open"'
+                  }) %>
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-select.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>
+                롯데택배가 아닌 경동택배로 배송해 드리겠습니다. <br />
+                양해 부탁드립니다.
+              </dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -106,10 +199,15 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { size:'md', color: 'info', iconName: 'label', text: '배송지 수정'}) %>
+      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { 
+        size:'md', 
+        color: 'info', 
+        iconName: 'label', 
+        text: '배송지 수정',
+        onclick: "VitsKendoWindow.open('unShippedModal')"
+      }) %>
     </div>
   </div>
 
@@ -117,28 +215,68 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>퀵배송</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                  text: '수정',
+                  fs: 'b3',
+                  height: '18',
+                  fc: 'brand-sub',
+                  onclick: "VitsKendoWindow.open('unShippedModal')"
+                }) %>
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                    text: '수정',
+                    fs: 'b3',
+                    height: '18',
+                    fc: 'brand-sub',
+                    attrs: 'data-btn="shipping-edit-open"'
+                  }) %>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-form.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>퀵배송</dd>
+            </dl>
+            
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -149,10 +287,15 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { size:'md', color: 'info', iconName: 'label', text: '배송지 수정'}) %>
+      <%- include(`${_src}/views/components/button/icon-text-button.ejs`, { 
+        size:'md', 
+        color: 'info', 
+        iconName: 'label', 
+        text: '배송지 수정',
+        onclick: "VitsKendoWindow.open('unShippedModal')"
+      }) %>
     </div>
   </div>
 
@@ -160,32 +303,94 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>화물사</dt>
-            <dd>경동화물</dd>
-            <dt>화물지점</dt>
-            <dd>삼성동지점</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>화물 (착불)</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>메가존</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>화물사/지점</dt>
+              <dd>
+                경동화물 / 삼성동지점&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                  text: '수정',
+                  fs: 'b3',
+                  height: '18',
+                  fc: 'brand-sub',
+                  onclick: "VitsKendoWindow.open('unShippedModal')"
+                }) %>
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                    text: '수정',
+                    fs: 'b3',
+                    height: '18',
+                    fc: 'brand-sub',
+                    attrs: 'data-btn="shipping-edit-open"'
+                  }) %>
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            <%- include(`${_src}/views/components/pg-my-orders/my-records-edit-form.ejs`) %>
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>화물 (대납)</dd>
+            </dl>
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('click', function (e) {
+    // 열기
+    var openBtn = e.target.closest('[data-btn="shipping-edit-open"]');
+    if (openBtn) {
+      var dl = openBtn.closest('dl');
+      var form = dl.nextElementSibling;
+      dl.querySelector('.shipping-edit-view').classList.add('is-hidden');
+      form.classList.remove('is-hidden');
+      return;
+    }
+
+    // 닫기 (취소 + 수정완료 동일)
+    var closeBtn = e.target.closest('[data-btn="shipping-edit-cancel"], [data-btn="shipping-edit-submit"]');
+    if (closeBtn) {
+      var form = closeBtn.closest('.shipping-edit-form');
+      var dl = form.previousElementSibling;
+      form.classList.add('is-hidden');
+      dl.querySelector('.shipping-edit-view').classList.remove('is-hidden');
+    }
+  });
+</script>

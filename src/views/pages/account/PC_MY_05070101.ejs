@@ -41,7 +41,7 @@
                     </div>
 
                     <!-- case : 목록 있을 때 -->
-                    <div class="vits-mypage-panel account-panel">
+                    <div class="vits-mypage-panel account-panel" data-checkbox-scope>
                       <!-- 상단 툴바 -->
                       <!-- prettier-ignore -->
                       <%- include(`${_src}/views/components/pg-account/account-toolbar.ejs`) %>
@@ -72,7 +72,6 @@
                               publicPath: _public,
                               type: 'account',
                               rowIndex: 1,
-                              checked: true,
                               userId: 'test123',
                               name: '홍길동',
                               department: '총무팀',
@@ -85,7 +84,6 @@
                               publicPath: _public,
                               type: 'account',
                               rowIndex: 2,
-                              checked: true,
                               userId: 'test123',
                               name: '홍길동',
                               department: '총무팀',
@@ -151,15 +149,18 @@
         var emptyState = document.querySelector('[data-ui="empty-state"]');
         var defaultContent = document.querySelector('[data-ui="default-content"]');
         var accountTbody = document.querySelector('.general-table tbody');
+        var accountEmptyBtn = document.querySelector('.account-toolbar-delete');
 
         if (type === 'none') {
           if (emptyState) emptyState.removeAttribute('hidden');
           if (defaultContent) defaultContent.hidden = true;
           if (accountTbody) accountTbody.hidden = true;
+          if (accountEmptyBtn) accountEmptyBtn.hidden = true;
         } else {
           if (emptyState) emptyState.hidden = true;
           if (defaultContent) defaultContent.removeAttribute('hidden');
           if (accountTbody) accountTbody.removeAttribute('hidden');
+          if (accountEmptyBtn) accountEmptyBtn.removeAttribute('hidden');
         }
       })();
     </script>

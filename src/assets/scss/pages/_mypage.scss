@@ -1159,28 +1159,54 @@
       &-shipping {
         .shipping {
           &-list {
-            @include mx.flex(flex, row, flex-start, flex-start);
-            gap: map.get(var.$unit, 16);
+            @include mx.flex;
+            width: 100%;
           }
 
           &-item {
+            $-divider-gap: map.get(var.$unit, 40);
+            $-divider-width: 1px;
+            $-divider-total: calc(#{$-divider-gap} * 2 + #{$-divider-width});
+
+            @include mx.flex(flex, row, flex-start, flex-start);
+
             &:only-of-type {
               width: 100%;
-              background: color.$color-white;
+
+              .shipping-info {
+                gap: map.get(var.$unit, 16) fn.rem(10);
+              }
             }
 
             &:not(:only-of-type) {
-              @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
-              flex: 0 0 calc((100% - map.get(var.$unit, 16)) / 2);
-              padding: map.get(var.$unit, 16);
-              background: map.get(color.$layout-surf, 'raised');
-              border-radius: map.get(var.$radius, 'md');
+              &:nth-of-type(odd) {
+                flex-basis: calc((100% - #{$-divider-total}) / 2 + #{$-divider-total});
+
+                &::after {
+                  width: $-divider-width;
+                  height: 100%;
+                  margin: 0 $-divider-gap;
+                  content: '';
+                  background: map.get(color.$layout-border, 'quinary');
+                }
+              }
+
+              &:not(:only-of-type):nth-of-type(even) {
+                flex: 0 0 calc((100% - #{$-divider-total}) / 2);
+              }
+            }
+
+            &-inner {
+              @include mx.flex(flex, column);
+              gap: map.get(var.$unit, 20);
+              width: 100%;
             }
           }
 
+          /* stylelint-disable-next-line no-descending-specificity */
           &-info {
             @include mx.flex(flex, row, flex-start, flex-start, wrap);
-            gap: map.get(var.$unit, 16) fn.rem(10);
+            gap: map.get(var.$unit, 20) fn.rem(10);
 
             dt {
               @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
@@ -1193,6 +1219,48 @@
 
               .vits-text-underline-button {
                 transform: translateY((fn.rem(1.5) * -1));
+              }
+            }
+
+            &-title {
+              @include typo.typography('b2s');
+            }
+          }
+
+          // 수정 관련
+          &-edit {
+            &-form {
+              @include mx.flex(flex, column);
+              gap: map.get(var.$unit, 8);
+              margin-top: (map.get(var.$unit, 8) * -1);
+
+              &.type-row {
+                flex-direction: row;
+              }
+            }
+
+            &-buttons {
+              @include mx.flex(flex, row, flex-end, center);
+              gap: fn.rem(10);
+            }
+
+            &-select {
+              flex-grow: 1;
+
+              .vits-select {
+                &,
+                &-trigger {
+                  width: 100%;
+                  height: 100%;
+                }
+
+                &-trigger {
+                  padding: 0 map.get(var.$unit, 12);
+                }
+
+                &-value {
+                  color: map.get(color.$text-colors, 'primary');
+                }
               }
             }
           }
