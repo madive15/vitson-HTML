@@ -1,0 +1,127 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '공지사항 상세'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-support-notice">
+              <div class="vits-inner inner-column">
+                <!-- 1280 컨텐츠 -->
+                <div class="vits-grid-area">
+                  <!-- S: vits-grid-side-left -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/layout/lnb/lnb-support.ejs`, {currentMenu: 'notice'}) %>
+                  <!-- E: vits-grid-side-left -->
+
+                  <div class="vits-grid-main-content main-content-notice">
+                    <!-- 메인 컨텐츠 -->
+
+                    <!-- 컨텐츠 헤딩 -->
+                    <div class="vits-support-content-headline notice-headline">
+                      <h2 class="vits-support-content-title">공지사항</h2>
+                      <p class="vits-support-content-desc">비츠온엠알오의 새로운 소식과 유용한 정보를 확인하세요.</p>
+                    </div>
+
+                    <div class="vits-support-panel notice-panel">
+                      <!-- S: 상세 보기 -->
+                      <!-- prettier-ignore -->
+                      <div class="support-detail">
+                        <div class="support-detail-header">
+                          <h3 class="support-detail-title">설연휴 배송 휴무 안내</h3>
+                          <span class="support-detail-date">
+                            <%- include(`${_src}/views/components/label/general-label.ejs`, { text: '가격변동', variant: 'red' }) %>
+                            2027-01-01</span>
+                        </div>
+                        <div class="support-detail-body">
+                          <p class="support-detail-content">
+                            안녕하세요. 비츠온엠알오입니다.
+                            저희 쇼핑몰을 이용해 주시는 고객님들께 감사드립니다.
+                            배송 관련하여 안내해 드립니다.
+
+                            설 연휴로 인한 택배사 휴무로 배송이 지연될 수 있습니다.
+                            1월 28일 이후 순차적으로 배송 될 예정이며, 주문하신 상품은 입금 확인 후 순차 배송됩니다.
+                            이점 유의하시어 주문에 참고 부탁드립니다.
+                            
+                            게시글 내용이 들어가는 영역입니다.
+                            게시글 내용이 들어가는 영역입니다.
+                            게시글 내용이 들어가는 영역입니다.
+                          </p>
+                        </div>
+                        <div class="support-detail-files">
+                          <p class="support-detail-files-title">첨부파일</p>
+                          <div class="support-file-list">
+                            <a href="#" class="vits-btn-md icon-left vits-btn-outline-tertiary" download>
+                              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-download' }) %></span>
+                              <span class="text">251209_에스엠씨 12월_국세청세서(26.01.01).pdf</span>
+                            </a>
+                            <a href="#" class="vits-btn-md icon-left vits-btn-outline-tertiary" download>
+                              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-download' }) %></span>
+                              <span class="text">251209_에스엠씨 12월_지방세(26.01.01).pdf</span>
+                            </a>
+                            <a href="#" class="vits-btn-md icon-left vits-btn-outline-tertiary" download>
+                              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-download' }) %></span>
+                              <span class="text">01호 인터넷판매불가 안내문.pdf</span>
+                            </a>
+                            <a href="#" class="vits-btn-md icon-left vits-btn-outline-tertiary" download>
+                              <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-download' }) %></span>
+                              <span class="text">배송 관련 안내문.pdf</span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 하단,버튼영역 -->
+                    <div class="support-button-area in-support">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                        size: 'xl', 
+                        variant: 'outline-secondary', 
+                        iconName: 'ic-arrow-left',
+                        iconLeft: true,
+                        text: '목록으로' }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- full wide 컨텐츠 -->
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function () {})();
+    </script>
+  </body>
+</html>

@@ -6,7 +6,7 @@
 // 고객센터 메뉴
 const gnbMenu = [
   { id: 'faq', label: 'FAQ', href: '/html/support/PC_CS_01010101.html' },
-  { id: 'notice', label: '공지사항', href: '#!' },
+  { id: 'notice', label: '공지사항', href: '/html/support/PC_CS_01010101.html' },
   { id: 'inquiry', label: '1:1 문의', href: '/html/support/PC_CS_03020101.html' },
   {
     id: 'library',
@@ -58,7 +58,7 @@ const ancestorIds = findAncestorIds(gnbMenu, currentMenu) || [];
           class="side-left-link"
           data-toggle-btn
           data-toggle-target="<%= item.id %>"
-          aria-expanded="<%= isAncestor || isSelfActive ? 'true' : 'false' %>"
+          aria-expanded="true"
           data-aria-label-base="<%= item.label %>"
         >
           <%= item.label %>
@@ -66,7 +66,7 @@ const ancestorIds = findAncestorIds(gnbMenu, currentMenu) || [];
             <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
           </span>
         </button>
-        <ul class="side-left-sub-list<%= isAncestor || isSelfActive ? ' is-open' : '' %>" data-toggle-box="<%= item.id %>">
+        <ul class="side-left-sub-list is-open" data-toggle-box="<%= item.id %>">
           <% item.children.forEach((sub) => { %>
           <li
             class="side-left-sub-item<%= currentMenu === sub.id ? ' is-active' : '' %>"

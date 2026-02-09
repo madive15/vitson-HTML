@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------------------
 // components/_category-tree.scss
-// - 좌측 카테고리 드릴다운(1~3뎁스) 상태 클래스(is-hidden/is-open/is-active)만 제어
+// - PLP 좌측 카테고리 드릴다운(1~3뎁스)
+// - 검색결과 카테고리 트리(체크박스 + 아코디언, 1~4뎁스)
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
@@ -12,6 +13,7 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
+// PLP 드릴다운 트리
 .vits-category-tree {
   width: 100%;
 
@@ -60,5 +62,122 @@
         color: map.get(color.$text-status, 'brand');
       }
     }
+  }
+}
+
+// 검색결과 카테고리 트리
+@mixin tree-depth-row($depth: 1) {
+  .category-tree-depth#{$depth} > .category-tree-item > .category-tree-row {
+    @content;
+  }
+}
+
+.vits-category-tree-list {
+  display: flex;
+  flex-direction: column;
+  gap: map.get(var.$unit, 8);
+
+  .category-tree-depth3 {
+    padding-left: 0;
+  }
+
+  @include tree-depth-row(1) {
+    padding-left: map.get(var.$unit, 12);
+
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 8);
+    }
+  }
+
+  @include tree-depth-row(2) {
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 20);
+
+      .label {
+        color: map.get(color.$text-colors, 'secondary');
+      }
+    }
+  }
+
+  @include tree-depth-row(3) {
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 32);
+
+      .label {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  @include tree-depth-row(4) {
+    .vits-checkbox-item {
+      gap: map.get(var.$unit, 48);
+
+      .label {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+  }
+
+  .category-tree {
+    &-row {
+      @include mx.flex(flex, row, space-between, flex-start);
+      gap: map.get(var.$unit, 8);
+      min-height: map.get(var.$unit, 32);
+      padding: fn.rem(7) 0 fn.rem(7);
+
+      .vits-checkbox-item {
+        flex-grow: 1;
+        min-width: 0;
+        max-width: fit-content;
+
+        .icon {
+          align-self: flex-start;
+          margin-top: 1px;
+        }
+      }
+
+      &:has(.category-tree-toggle) {
+        .vits-checkbox-item {
+          margin-top: 1px;
+        }
+      }
+    }
+
+    &-toggle {
+      position: relative;
+      flex-shrink: 0;
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+
+      // 가로선
+      &::before,
+      &::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 13px;
+        height: 1px;
+        content: '';
+        background: map.get(color.$icon-neutral, 'tertiary');
+        border-radius: 2px;
+        transition: transform 0.3s;
+        transform: translate(-50%, -50%);
+      }
+
+      // 세로선
+      &::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+
+      // 펼침: 세로선 눕힘 → minus
+      &[aria-expanded='true']::after {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+    }
+  }
+
+  & + [data-search-more-toggle] {
+    margin-top: map.get(var.$unit, 8);
   }
 }

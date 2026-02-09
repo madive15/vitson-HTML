@@ -378,6 +378,7 @@ $checkbox-item: (
 
   .icon {
     position: relative;
+    flex-shrink: 0;
     background: color.$color-white;
     border-radius: map.get(var.$radius, 'sm');
     box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
@@ -419,6 +420,10 @@ $checkbox-item: (
 
       .label {
         @include typo.typography($font-type, $color: map.get(color.$text-colors, 'primary'));
+
+        em {
+          font-style: normal;
+        }
 
         @if $label-mt != 0 {
           margin-top: fn.rem($label-mt);

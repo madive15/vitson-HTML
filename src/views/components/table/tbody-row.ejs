@@ -1,7 +1,7 @@
 <!-- prettier-ignore -->
 <% /**
   * 테이블 tbody 한 줄 컴포넌트 (type별 row)
-  * @param {string} type - 'account' | 'shipping' | 'survey' | 'survey-ing' | 'bulk' | 'single' | 'quality' | 'docs' (필요 시 추가)
+  * @param {string} type - 'account' | 'shipping' | 'survey' | 'survey-ing' | 'bulk' | 'single' | 'quality' | 'docs' | 'noticeFixed' (필요 시 추가)
   * @param {string} [srcPath] - include 경로용
   * @param {string} [publicPath] - public 경로용
   * type=account: rowIndex, userId, name, department, position, phone, status, checked 등
@@ -11,6 +11,7 @@
   * type=bulk: rowIndex, productInfo, title, status, date (대량구매문의 목록)
   * type=quality: rowIndex, title, date (품질 문서 목록 - 번호, 문서 아이콘+제목, 날짜)
   * type=docs: cells[{colspan, tdClass, text, className, spans:[{text, className}], button:{text,variant,...}|false}], rowClass (문서/회계 등 유연한 td 행, 단일 text 셀은 className으로 span 클래스 지정)
+  * type=noticeFixed: rowClass, firstCellType('icon'|'text'), firstCellIcon|firstCellText, label, labelVariant, text, textClassName, date (공지 상단 고정 행)
   */ %>
 <% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
 <% const _type = typeof type !== 'undefined' ? type : ''; %>
@@ -296,5 +297,39 @@
       </td>
     <% }); %>
   </tr>
+
+<!-- 공지 상단 고정 행 (type=noticeFixed) -->
+<% } else if (_type === 'noticeFixed') { %>
+<!-- prettier-ignore -->
+<%
+  const _rowClass = typeof rowClass !== 'undefined' ? String(rowClass).trim() : '';
+  const _firstCellIcon = typeof firstCellIcon !== 'undefined' ? firstCellIcon : 'notice';
+  const _firstCellText = typeof firstCellText !== 'undefined' ? firstCellText : '';
+  const _firstCellTypeExplicit = (typeof firstCellType !== 'undefined' && (firstCellType === 'icon' || firstCellType === 'text')) ? firstCellType : null;
+  const _firstCellType = _firstCellTypeExplicit || (_firstCellText !== '' ? 'text' : 'icon');
+  const _label = typeof label !== 'undefined' ? label : '공지';
+  const _labelVariant = typeof labelVariant !== 'undefined' ? labelVariant : 'green';
+  const _text = typeof text !== 'undefined' ? text : '';
+  const _textClassName = typeof textClassName !== 'undefined' ? String(textClassName).trim() : 'notice-fixed-title';
+  const _date = typeof date !== 'undefined' ? date : '';
+%>
+<tr class="<%= _rowClass || 'notice-fixed-row' %>">
+  <td>
+    <% if (_firstCellType === 'icon') { %>
+    <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: _firstCellIcon }) %></span>
+    <% } else { %>
+    <span class="text-cell"><%= _firstCellText %></span>
+    <% } %>
+  </td>
+  <td>
+    <a href="#!">
+      <% if (_label) { %><%- include(`${_src}/views/components/label/general-label.ejs`, { text: _label, variant: _labelVariant }) %><% } %>
+    </a>
+  </td>
+  <td>
+    <span class="<%= _textClassName %>"><%= _text %></span>
+  </td>
+  <td><span class="text-date"><%= _date %></span></td>
+</tr>
 
 <% } %>

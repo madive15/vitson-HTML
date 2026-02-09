@@ -10,6 +10,7 @@
   const _value = typeof value !== 'undefined' ? value : '';
   const _text = typeof text !== 'undefined' ? text : '';
   const _suffix = typeof suffix !== 'undefined' ? suffix : '';
+  const _qty = typeof qty !== 'undefined' && qty !== null && qty !== '' ? String(qty) : '';
   const _checkboxType = typeof checkboxType !== 'undefined' ? checkboxType : '';
   const _disabled = typeof disabled !== 'undefined' ? disabled : false;
   const _checked = typeof checked !== 'undefined' ? checked : false;
@@ -31,7 +32,7 @@
   <span class="icon" aria-hidden="true"></span>
   <% if (_text || _suffix) { %>
   <span class="label">
-    <% if (_text) { %><%= _text %><% } %><% if (_suffix) { %><span class="label-tag"><%= _suffix %></span><% } %>
+    <% if (_text) { %><%= _text %><% } %><% if (_qty) { %> <em class="label-unit">(<%= _qty %>)</em><% } %><% if (_suffix) { %><span class="label-tag"><%= _suffix %></span><% } %>
   </span>
   <% } %>
 </label>
