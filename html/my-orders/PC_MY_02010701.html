@@ -60067,7 +60067,11 @@
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  
+>
   <span class="icon"> <i class="ic ic-print" aria-hidden="true"></i>
  </span>
   <span class="text">거래명세서출력</span>
@@ -60081,7 +60085,11 @@
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  
+>
   <span class="icon"> <i class="ic ic-textbox2" aria-hidden="true"></i>
  </span>
   <span class="text">주문 문의하기</span>
@@ -60346,7 +60354,11 @@
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+>
   <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
  </span>
   <span class="text">배송지 수정</span>
@@ -60359,70 +60371,265 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>
-              [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 15층&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              
-
-<!-- prettier-ignore -->
-
-
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 15층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                
 
 
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+  >수정</button>
 
-<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button">배송지수정</button>
-
-
-            </dd>
-            <dt>배송메모</dt>
-            <dd>
-              부재시 경비실에 맡겨주세요&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              
-
-<!-- prettier-ignore -->
-
-
-
-
-
-<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button">배송메모 수정</button>
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
 
 
-            </dd>
-            <dt>배송방법</dt>
-            <dd>
-              택배 (대납)&nbsp;&nbsp;
-              <!-- prettier-ignore -->
-              
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
 
-<!-- prettier-ignore -->
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form is-hidden">
+  <div class="shipping-edit-textarea">
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="true">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요. fz 16"
+        required
+        
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      >부재시 경비실에 맡겨주세요</textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-outline-tertiary "
+  
+  
+  data-btn="shipping-edit-cancel"
+    >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>
+                <div class="shipping-edit-view">
+                  택배 (대납)&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
+
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form type-row is-hidden">
+  <div class="shipping-edit-select">
+    <!-- prettier-ignore -->
+    
 
 
 
 
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="shipping-select" 
+  
+   data-vits-select-portal 
+   data-max-height="150" 
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="택배회사"
+    >경동택배</span>
 
-<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button">배송방법 수정</button>
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="true"
+        
+      >경동택배</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="false"
+        
+      >대한통운</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >우체국택배</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="shipping-select" value="0" data-vits-select-hidden />
+  
+</div>
+
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
 
 
-            </dd>
-          </dl>
+<button
+  type="button"
+  class="vits-btn-md vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정 완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -60433,14 +60640,17 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
       
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+>
   <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
  </span>
   <span class="text">배송지 수정</span>
@@ -60453,18 +60663,254 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>퀵배송</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <dl class="shipping-info">
+              <dt>받는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+  >수정</button>
+
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
+
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form is-hidden">
+  <div class="shipping-edit-textarea">
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="true">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요. fz 16"
+        required
+        
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      >부재시 경비실에 맡겨주세요</textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-outline-tertiary "
+  
+  
+  data-btn="shipping-edit-cancel"
+    >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>
+                <div class="shipping-edit-view">
+                  택배 (대납)&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
+
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form type-row is-hidden">
+  <div class="shipping-edit-select">
+    <!-- prettier-ignore -->
+    
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="shipping-select" 
+  
+   data-vits-select-portal 
+   data-max-height="150" 
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="택배회사"
+    >경동택배</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="true"
+        
+      >경동택배</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="false"
+        
+      >대한통운</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >우체국택배</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="shipping-select" value="0" data-vits-select-hidden />
+  
+</div>
+
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-md vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정 완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>
+                롯데택배가 아닌 경동택배로 배송해 드리겠습니다. <br />
+                양해 부탁드립니다.
+              </dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -60475,14 +60921,17 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
       
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+>
   <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
  </span>
   <span class="text">배송지 수정</span>
@@ -60495,28 +60944,151 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>배송 주소</dt>
-            <dd>[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>퀵배송</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>배송 주소</dt>
+              <dd>
+                [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+  >수정</button>
+
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
+
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form is-hidden">
+  <div class="shipping-edit-textarea">
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="true">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요. fz 16"
+        required
+        
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      >부재시 경비실에 맡겨주세요</textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-outline-tertiary "
+  
+  
+  data-btn="shipping-edit-cancel"
+    >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>퀵배송</dd>
+            </dl>
+            
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
@@ -60527,14 +61099,17 @@
 <div class="vits-mypage-detail">
   <div class="mypage-detail-head" data-scss="head">
     <p class="mypage-detail-title">배송정보</p>
-
     <div class="mypage-detail-actions">
       <!-- prettier-ignore -->
       
 <!-- prettier-ignore -->
 
 
-<button type="button" class="vits-ictext-button vits-ictext-button-md vits-text-info">
+<button 
+  type="button" 
+  class="vits-ictext-button vits-ictext-button-md vits-text-info"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+>
   <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
  </span>
   <span class="text">배송지 수정</span>
@@ -60547,36 +61122,180 @@
     <div class="mypage-detail-shipping">
       <ul class="shipping-list">
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>발송처</dt>
-            <dd>메가존</dd>
-            <dt>보내는 사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">발송처</p>
+            <dl class="shipping-info">
+              <dt>발송처</dt>
+              <dd>메가존</dd>
+              <dt>보내는 사람</dt>
+              <dd>김철수</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+            </dl>
+          </div>
         </li>
         <li class="shipping-item">
-          <dl class="shipping-info">
-            <dt>받는사람</dt>
-            <dd>김철수</dd>
-            <dt>연락처</dt>
-            <dd>010-1234-5678</dd>
-            <dt>화물사</dt>
-            <dd>경동화물</dd>
-            <dt>화물지점</dt>
-            <dd>삼성동지점</dd>
-            <dt>배송메모</dt>
-            <dd>부재시 경비실에 맡겨주세요</dd>
-            <dt>배송방법</dt>
-            <dd>화물 (착불)</dd>
-          </dl>
+          <div class="shipping-item-inner">
+            <p class="shipping-info-title">수령처</p>
+            <dl class="shipping-info">
+              <dt>받는사람</dt>
+              <dd>메가존</dd>
+              <dt>연락처</dt>
+              <dd>010-1234-5678</dd>
+              <dt>화물사/지점</dt>
+              <dd>
+                경동화물 / 삼성동지점&nbsp;&nbsp;
+                <!-- prettier-ignore -->
+                
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  onclick="VitsKendoWindow.open(&#39;unShippedModal&#39;)"
+  >수정</button>
+
+              </dd>
+            </dl>
+            <dl class="shipping-info">
+              <dt>배송메모</dt>
+              <dd>
+                <!-- 보기 모드 -->
+                <div class="shipping-edit-view">
+                  부재시 경비실에 맡겨주세요&nbsp;&nbsp;
+                  <!-- prettier-ignore -->
+                  
+
+
+<button class="vits-text-underline-button fs-b3 height-18 fc-brand-sub" type="button"
+  
+  data-btn="shipping-edit-open">수정</button>
+
+                </div>
+              </dd>
+            </dl>
+            <!-- 편집 모드 (기본 숨김) -->
+            
+
+<div class="shipping-edit-form is-hidden">
+  <div class="shipping-edit-textarea">
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="true">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요. fz 16"
+        required
+        
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      >부재시 경비실에 맡겨주세요</textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-outline-tertiary "
+  
+  
+  data-btn="shipping-edit-cancel"
+    >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-sm vits-btn-secondary "
+  
+  
+  data-btn="shipping-edit-submit"
+    >
+  
+
+  <span class="text">수정완료</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+
+            <dl class="shipping-info">
+              <dt>배송방법</dt>
+              <dd>화물 (대납)</dd>
+            </dl>
+
+            <dl class="shipping-info">
+              <dt>관리자 메모</dt>
+              <dd>롯데택배가 아닌 경동택배로 배송해 드리겠습니다.<br />양해 부탁드립니다.</dd>
+            </dl>
+          </div>
         </li>
       </ul>
     </div>
   </div>
 </div>
 
+<script>
+  document.addEventListener('click', function (e) {
+    // 열기
+    var openBtn = e.target.closest('[data-btn="shipping-edit-open"]');
+    if (openBtn) {
+      var dl = openBtn.closest('dl');
+      var form = dl.nextElementSibling;
+      dl.querySelector('.shipping-edit-view').classList.add('is-hidden');
+      form.classList.remove('is-hidden');
+      return;
+    }
+
+    // 닫기 (취소 + 수정완료 동일)
+    var closeBtn = e.target.closest('[data-btn="shipping-edit-cancel"], [data-btn="shipping-edit-submit"]');
+    if (closeBtn) {
+      var form = closeBtn.closest('.shipping-edit-form');
+      var dl = form.previousElementSibling;
+      form.classList.add('is-hidden');
+      dl.querySelector('.shipping-edit-view').classList.remove('is-hidden');
+    }
+  });
+</script>
 
                       <!-- 결제정보 -->
                       
@@ -60821,6 +61540,274 @@
           <!-- E: vits-grid -->
         </div>
         <!-- E: vits-wrap -->
+
+        <!-- s: 팝업 -->
+        <!-- prettier-ignore -->
+        
+        
+        
+
+
+
+<div 
+  id="unShippedModal"
+  class="vits-modal-inner"
+  data-ui="kendo-window"
+  data-opt='{&#34;draggable&#34;:true,&#34;width&#34;:560}'
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="unShippedModal-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vits-modal-header">
+    <div class="vits-modal-header-content">
+      <h2 class="vits-modal-title" id="unShippedModal-title">배송지 목록</h2>
+
+
+    </div>
+    <button type="button" class="vits-modal-close" onclick="VitsKendoWindow.close('unShippedModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vits-modal-content no-footer" data-scroll-check>
+  
+    
+
+<section class="vits-address-select">
+  <h2 class="sr-only">배송지 목록</h2>
+  <div class="vits-address-select-header">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="button"
+  class="vits-btn-lg vits-btn-outline-primary icon-left"
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">신규 배송지 입력</span>
+
+  
+</button>
+
+  </div>
+  <div class="vits-address-select-body">
+    <ul class="address-list">
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">회사</p>
+              <!-- prettier-ignore -->
+              <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-red">대표배송지</span>
+
+
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">받는 사람</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-1" checked />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">집</p>
+              <!-- prettier-ignore -->
+              <!-- < %- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지', variant: 'red' })  -->
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">받는 사람</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-2" />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+      <li class="address-item">
+        <div class="address-card">
+          <div class="address-card-header">
+            <div class="address-card-title">
+              <p class="address-card-name">창고</p>
+              <!-- prettier-ignore -->
+              <!-- < %- include(`${_src}/views/components/label/general-label.ejs`, { text: '대표배송지', variant: 'red' })  -->
+            </div>
+            <div class="address-card-buttons">
+              <!-- prettier-ignore -->
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+              
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+            </div>
+          </div>
+          <div class="address-card-body">
+            <dl class="address-card-info">
+              <dt class="info-dt">받는 사람</dt>
+              <dd class="info-dd">메가존</dd>
+              <dt class="info-dt">주소</dt>
+              <dd class="info-dd">서울특별시 강남구 테헤란로 123 비츠빌딩 10층</dd>
+              <dt class="info-dt">연락처</dt>
+              <dd class="info-dd">010-1234-5678</dd>
+            </dl>
+          </div>
+          <div class="address-card-footer">
+            <label class="address-card-radio">
+              <input type="radio" name="addr-rad01" id="addr-rad01-3" />
+              <span class="icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+              <span class="text">선택</span>
+            </label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+</div>
+        <!-- e: 팝업 -->
       </main>
       <!-- E: vits-main -->
 
@@ -61173,10 +62160,9 @@
       </ul>
     </div>
 
-    <span class="vits-floating-arrow">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </span>
+    <!-- <span class="vits-floating-arrow">
+      < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) 
+    </span> -->
 
     <p class="vits-floating-count">최근 본<br />(<span data-floating-count-num>0</span>)</p>
 
