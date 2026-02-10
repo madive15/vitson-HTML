@@ -36,7 +36,7 @@ $common-size: fn.rem(60);
     @include mx.flex(flex, column, flex-end, center);
     @include floating-panel-border;
     gap: map.get(var.$unit, 4);
-    padding: map.get(var.$unit, 12) map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 8);
     cursor: pointer;
 
     &.is-empty {
@@ -94,12 +94,25 @@ $common-size: fn.rem(60);
   }
 
   &-count {
+    width: calc(100% + (map.get(var.$unit, 8) * 2));
     padding-top: map.get(var.$unit, 4);
+    margin: 0 (map.get(var.$unit, 8) * -1);
 
     &,
     span {
-      @include typo.typography('b4r', $color: map.get(color.$neutral-colors, '4'));
+      @include typo.typography('b5r', $color: map.get(color.$neutral-colors, '4'));
       text-align: center;
+      transition:
+        font-weight 0.3s,
+        color 0.3s;
+    }
+
+    @include mx.common-mouse-event {
+      &,
+      span {
+        font-weight: 600;
+        color: map.get(color.$text-colors, 'primary');
+      }
     }
   }
 
