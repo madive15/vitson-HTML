@@ -937,6 +937,8 @@
       .product-name {
         @include typo.typography('h3b');
         @include mx.ellipsis-multi($line-height: 1.4, $ea: 2);
+        width: 100%;
+        text-align: left;
       }
 
       .product-shipping-tags {
@@ -1093,9 +1095,7 @@
         display: block;
         max-width: 700px;
         height: auto;
-        aspect-ratio: 1 / 1;
         margin: 0 auto;
-        object-fit: cover;
       }
 
       .vits-img-detail {
@@ -1111,11 +1111,12 @@
       // spec 테이블 style
       .vits-product-spec {
         @include mx.flex($align: center);
-        padding-bottom: fn.rem(12);
-        border-top: 1px solid map.get(color.$gray-shades, 'primary');
+        padding-bottom: fn.rem(56);
+        border-top: 1px solid map.get(color.$layout-border, 'quaternary');
 
         .vits-spec-table {
           width: 100%;
+          table-layout: fixed;
 
           th,
           td {
@@ -1405,7 +1406,14 @@
 .video_box_inner.youtube-video-frame iframe {
   min-height: fn.rem(650);
 }
+
+.img_line_desc_first {
+  h3 {
+    @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+  }
+}
 /* stylelint-enable selector-class-pattern */
+// e. as-is
 
 /* ===modal kendo window -쿠폰 다운로드 팝업 === */
 .vits-coupon-download {

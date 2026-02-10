@@ -263,6 +263,21 @@ $vits-datepicker-single-sizes: (
           }
 
           &.k-calendar-monthview {
+            // 2026-02-09 추가 - other-month 셀 숨김 (range picker 전용)
+            td.k-other-month {
+              height: 0;
+              padding: 0;
+              font-size: 0;
+              line-height: 0;
+              pointer-events: none;
+              visibility: hidden;
+            }
+
+            // 2026-02-09 추가 - JS가 부여하는 빈 행 축소 클래스
+            tbody tr.is-empty-row {
+              display: none;
+            }
+
             td {
               &.k-hover,
               &.k-hover:hover,
@@ -330,18 +345,6 @@ $vits-datepicker-single-sizes: (
                   color: map.get(color.$text-status, 'brand') !important;
                   background: transparent !important;
                   box-shadow: none !important;
-                }
-              }
-            }
-
-            &.k-other-month {
-              &.k-range-mid {
-                background: #fee1e2 !important;
-
-                /* stylelint-disable-next-line no-descending-specificity */
-                .k-link {
-                  color: map.get(color.$text-status, 'brand');
-                  opacity: 0.5; // 다른 달은 살짝 연하게
                 }
               }
             }
@@ -633,7 +636,7 @@ $vits-datepicker-single-sizes: (
     padding-left: fn.rem(16);
   }
 
-  /* ===== Other Month ===== */
+  /* ===== Other Month (원본 유지) ===== */
   .k-other-month {
     .k-link {
       color: $calendar-other-month-color;
