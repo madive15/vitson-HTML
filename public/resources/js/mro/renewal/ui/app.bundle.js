@@ -6643,7 +6643,8 @@
       animation: false,
       footer: false,
       month: {
-        header: '#= kendo.toString(data.date, "yyyy.MM") #'
+        header: '#= kendo.toString(data.date, "yyyy.MM") #',
+        empty: '&nbsp;' // 2026-02-10 추가 - 이전/다음 달 셀 빈칸 처리
       },
       start: 'month',
       depth: 'month'
@@ -6679,6 +6680,7 @@
         scheduleNavTitle();
         scheduleDayNames();
         scheduleMonthNames();
+        removeEmptyRows(); // 2026-02-10 추가
       }, 0);
     }
     function updateNavTitle() {
@@ -6732,6 +6734,19 @@
         }
       });
     }
+
+    // 2026-02-10 추가 - other-month 셀만 있는 빈 행 숨김
+    function removeEmptyRows() {
+      $calendarWrap.find('.k-calendar-monthview tbody tr').each(function () {
+        var $tr = $(this);
+        var hasCurrentMonth = $tr.find('td:not(.k-other-month)').length > 0;
+        if (!hasCurrentMonth) {
+          $tr.addClass('is-empty-row');
+        } else {
+          $tr.removeClass('is-empty-row');
+        }
+      });
+    }
     var isUpdatingUI = false; // 2026-01-30 추가
 
     // 2026-01-30 var uiObserver 수정
@@ -6745,6 +6760,8 @@
       updateDayNames();
       updateMonthNames();
       highlightRange();
+      removeEmptyRows(); // 2026-02-10 추가
+
       window.setTimeout(function () {
         uiObserver.observe($calendarWrap[0], {
           childList: true,
@@ -6801,6 +6818,7 @@
         highlightRange();
         updateNavTitle();
         updateDayNames();
+        removeEmptyRows(); // 2026-02-10 추가
       }, 10);
     }
     function highlightRange() {
@@ -6860,6 +6878,7 @@
       $popup.addClass('is-open');
       state.isOpen = true;
       highlightRange();
+      removeEmptyRows(); // 2026-02-10 추가
       applyVitsClassToWrapper($wrap, $popup);
       $el.trigger('rangepicker:open');
     }
@@ -6922,6 +6941,7 @@
         updateDisplay();
         updateHiddenInputs();
         highlightRange();
+        removeEmptyRows(); // 2026-02-10 추가
         updateSelectedState(); // 2026-02-03 추가
 
         if (calendar && state.startDate) {
@@ -6940,6 +6960,7 @@
           calendar.value(null);
         }
         highlightRange();
+        removeEmptyRows(); // 2026-02-10 추가
         updateSelectedState(); // 2026-02-03 추가
         $el.trigger('rangepicker:reset');
       },
@@ -6972,6 +6993,7 @@
     $el.data('vitsKendoRangePicker', instance);
     updateDisplay();
     highlightRange();
+    removeEmptyRows(); // 2026-02-10 추가
     updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
 
     console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
