@@ -1115,11 +1115,16 @@
       }
 
       &-total {
-        @include mx.flex(flex, row, flex-start, flex-end);
+        @include mx.flex(flex, row, flex-start, center);
         gap: map.get(var.$unit, 12);
 
         &-label {
+          @include mx.flex(flex, column, flex-start, flex-end);
           @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+
+          small {
+            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
         }
 
         &-value {
