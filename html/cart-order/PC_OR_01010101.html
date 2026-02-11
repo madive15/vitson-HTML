@@ -23247,6 +23247,95 @@
         </div>
       </div>
 
+      <!-- [D]case: 화물지점 선택 시 노출 (02.11 추가) {true | false}-->
+      <div class="vits-form-row" data-freight-visible="false">
+        <div class="vits-form-row-group">
+          <label class="vits-form-label">화물업체/영업소 선택</label>
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-scoped-info "
+  
+  >
+  
+
+  <span class="text">화물지점 선택</span>
+
+  
+</button>
+
+        </div>
+        <div class="vits-form-row-group">
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="freight-company" class="sr-only">화물사</label>
+
+    <input
+      type="text"
+      name="freightCompany"
+      id="freight-company"
+      placeholder="화물사"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="freight-company-validation" aria-live="polite"></p>
+  </div>
+</div>
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-input size-medium ">
+  <div class="input-item">
+    <label for="freight-office" class="sr-only">영업소명</label>
+
+    <input
+      type="text"
+      name="freightOffice"
+      id="freight-office"
+      placeholder="영업소명"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="freight-office-validation" aria-live="polite"></p>
+  </div>
+</div>
+        </div>
+      </div>
+
       <div class="vits-form-row-group">
         <div class="vits-form-row">
           <label class="vits-form-label">받는 사람</label>
@@ -23321,7 +23410,7 @@
         </div>
       </div>
 
-      <div class="vits-form-row">
+      <div class="vits-form-row" data-freight-hidden="false">
         <div class="vits-form-row-group">
           <label class="vits-form-label">배송지 주소</label>
           <!-- prettier-ignore -->
@@ -23376,8 +23465,8 @@
 </div>
         </div>
       </div>
-
-      <div class="vits-form-row">
+      <!-- [D]case: 화물지점 선택 시 비노출 (02.11 추가) {true | false}-->
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -23414,8 +23503,8 @@
 </div>
         </div>
       </div>
-      <!-- [D]cas: 필수 입력 항목 -->
-      <div class="vits-form-row">
+      <!-- [D]case: 필수 입력 항목 -->
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소 (필수) case</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -23452,7 +23541,7 @@
 </div>
         </div>
       </div>
-      <div class="vits-form-row">
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소 / 비활성화 case</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -23614,7 +23703,8 @@
             </div>
           </div>
 
-          <div class="vits-form-row">
+          <!-- [D]case: 화물지점 선택 시 노출 (02.11 추가) {true | false}-->
+          <div class="vits-form-row" data-freight-visible="false">
             <label class="vits-form-label">운임 선택</label>
             <div class="vits-form-field">
               <!-- prettier-ignore -->
