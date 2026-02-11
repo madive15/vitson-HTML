@@ -3,13 +3,14 @@
  * @description Kendo UI 관련 모듈 통합 관리
  */
 import './kendo-window.js';
+import './kendo-datepicker.js';
 
 (function (window) {
   'use strict';
 
   window.UI = window.UI || {};
 
-  var modules = ['VmKendoWindow'];
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker'];
 
   window.UI.kendo = {
     init: function () {

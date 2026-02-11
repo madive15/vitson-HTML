@@ -1,0 +1,42 @@
+// -----------------------------------------------------------------------------
+// components/_datepicker.scss
+// - 데이트피커 컴포넌트 모바일 전용 스타일 (PC 기준 변형)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+// 기본 사이즈 size-md 기준,
+.vits-kendo-range-picker.size-md {
+  .picker-popup {
+    width: calc(100vw - (var.$mo-gutter * 2));
+    max-width: fn.rem(328);
+
+    .k-calendar {
+      .k-calendar-nav-fast {
+        flex-basis: fn.rem(110) !important;
+        width: fn.rem(110) !important;
+      }
+
+      .k-header {
+        .k-calendar-nav-prev,
+        .k-calendar-nav-next {
+          width: map.get(var.$unit, 24);
+          height: map.get(var.$unit, 24);
+        }
+
+        .k-button.k-rounded-md {
+          .k-button-text {
+            font-size: fn.rem(18);
+          }
+        }
+      }
+    }
+  }
+}

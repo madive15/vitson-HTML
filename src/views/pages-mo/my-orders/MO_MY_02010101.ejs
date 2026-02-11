@@ -1,0 +1,192 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _products = mockData.products;
+
+  // ORDER_MAP 키 전체 목록
+  const orderStatuses = [
+    'A-1', 'A-2', 'B-1', 'B-2',
+    'C-1', 'C-2', 'D-1', 'D-2',
+    'E-1', 'E-2', 'F-1', 'F-2',
+    'G-1', 'G-2',
+    'H', 'I', 'J',
+    'K-1', 'K-2', 'L-1', 'L-2',
+    'M-1', 'M-2', 'N-1', 'N-2',
+    'O', 'P', 'Q-1', 'Q-2'
+  ];
+
+  // 퍼블 확인용: 상태 설명 매핑
+  const STATUS_DESC = {
+    'A-1': '주문접수 — 일반상품',
+    'A-2': '주문접수 — 조장상품',
+    'B-1': '결제완료 — 일반상품',
+    'B-2': '결제완료 — 조장상품',
+    'C-1': '주문완료 — 일반상품',
+    'C-2': '주문완료 — 조장상품',
+    'D-1': '주문확정 — 일반상품',
+    'D-2': '주문확정 — 조장상품',
+    'E-1': '배송준비중 — 반품 가능',
+    'E-2': '배송준비중 — 반품 불가',
+    'F-1': '배송중 — 반품 가능',
+    'F-2': '배송중 — 반품 불가',
+    'G-1': '배송완료 — 반품 가능',
+    'G-2': '배송완료 — 반품 불가',
+    'H': '취소신청',
+    'I': '주문취소',
+    'J': '반품신청',
+    'K-1': '반품접수 — 송장 입력',
+    'K-2': '반품접수 — 송장 미입력',
+    'L-1': '회수진행중 — 송장 입력',
+    'L-2': '회수진행중 — 송장 미입력',
+    'M-1': '회수완료 — 송장 입력',
+    'M-2': '회수완료 — 송장 미입력',
+    'N-1': '반품완료 — 송장 입력',
+    'N-2': '반품완료 — 송장 미입력',
+    'O': '반품취소',
+    'P': '반품승인불가',
+    'Q-1': '반품불가 — 송장 입력',
+    'Q-2': '반품불가 — 송장 미입력'
+  };
+
+  // 상태별 주문 그룹 생성 (퍼블 확인용)
+  // 라운드박스당 1~3개 상품을 다양하게 배치
+  let pIdx = 0;
+  const orders = orderStatuses.map(function(status, idx) {
+    const itemCount = (idx % 3) + 1; // 1개, 2개, 3개 순환
+    const items = [];
+    for (let i = 0; i < itemCount; i++) {
+      const p = _products[pIdx % _products.length];
+      const productName = (STATUS_DESC[status] || '') + ' - ' + p.productNm;
+      items.push({
+        status: status,
+        qty: (i + 1) * 2,
+        product: p,
+        productName: productName
+      });
+      pIdx++;
+    }
+    const totalPrice = items.reduce(function(sum, item) {
+      return sum + (item.product.salePrice * item.qty);
+    }, 0);
+    return {
+      orderNo: 'ORD-2024-' + String(idx + 1).padStart(6, '0'),
+      date: '2024.12.' + String(15 - Math.floor(idx / 3)).padStart(2, '0'),
+      items: items,
+      totalPrice: totalPrice
+    };
+  });
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/배송조회 목록'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문/배송조회' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <!-- 필터 -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
+                type: 'mypage',
+                isDirectInput: true,
+                isFilterFocused: true,
+                hasFilterValue: true
+              }) %>
+
+              <!-- 리스트 -->
+              <div class="vm-mypage-orders-list">
+                <ul class="orders-list">
+                  <% orders.forEach(function(order, orderIdx) { %>
+                  <li>
+                    <div class="vm-mypage-round-box">
+                      <div class="round-head">
+                        <a href="#!">
+                          <p class="round-head-number"><%= order.orderNo %></p>
+                          <p class="round-head-date"><%= order.date %></p>
+                          <span class="round-head-icon">
+                            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                          </span>
+                        </a>
+                      </div>
+                      <div class="round-body">
+                        <ul class="round-body-list">
+                          <% order.items.forEach(function(item, itemIdx) { %>
+                          <li>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components-mo/product/product-mypage-item.ejs`, {
+                              hasCheckbox: false,
+                              hasBadges: true,
+                              hasPriceInfo: true,
+                              hasTax: true,
+                              hasQty: false,
+                              hasReturnQty: false,
+                              hasCart: true,
+                              orderStatus: item.status,
+                              productImg: item.product.imageUrl,
+                              productBrand: item.product.brandNm,
+                              productName: item.productName,
+                              productCode: item.product.productCode,
+                              productSpec: item.product.standard,
+                              productTax: item.product.taxType,
+                              productUnit: item.qty + '개',
+                              productQty: item.qty,
+                              productPrice: (item.product.salePrice * item.qty).toLocaleString() + '원',
+                              purchaseCount: item.product.purchaseCount || (orderIdx + itemIdx) % 5 + 1,
+                              checkboxId: 'ckb-order-' + orderIdx + '-' + itemIdx
+                            }) %>
+                          </li>
+                          <% }); %>
+                        </ul>
+                      </div>
+                      <div class="round-foot">
+                        <p class="round-foot-price-label">
+                          <span class="text">총 결제금액</span><span class="desc">(VAT 포함)</span>
+                        </p>
+                        <p class="round-foot-price-value"><%= order.totalPrice.toLocaleString() %>원</p>
+                      </div>
+                    </div>
+                  </li>
+                  <% }); %>
+                </ul>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

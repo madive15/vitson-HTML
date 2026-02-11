@@ -26,29 +26,68 @@
             <div class="vits-grid-main vits-main-home">
               <!-- 메인 홈 컨텐츠 -->
               <!-- S: 메인 배너 -->
-              <section class="home-section" style="opacity: 1">
-                <!-- prettier-ignore -->
-                <%- include(`${_src}/views/components/pg-home/home-main-banner.ejs`) %>
+              <!-- prettier-ignore -->
+              <section class="home-section">
+                <%-include(`${_src}/views/components/pg-home/home-main-banner.ejs`) %>
               </section>
               <!-- E: 메인 배너 -->
               <!-- S: 자주 찾는 메뉴 -->
-              <section class="home-section" style="opacity: 1">
-                <!-- prettier-ignore -->
+              <section class="home-section">
                 <%- include(`${_src}/views/components/pg-home/home-frequent-menu.ejs`) %>
               </section>
               <!-- E: 자주 찾는 메뉴 -->
-              <!-- prettier-ignore -->
-              <section class="home-section" style="height: 150px; background: blue">2</section>
-              <section class="home-section" style="height: 230px; background: green">3</section>
-              <section class="home-section" style="height: 400px; background: yellow">4</section>
-              <section class="home-section" style="height: 300px; background: purple">5</section>
-              <section class="home-section" style="height: 350px; background: orange">6</section>
-              <section class="home-section" style="height: 250px; background: brown">7</section>
-              <section class="home-section" style="height: 200px; background: gray">8</section>
-              <section class="home-section" style="height: 150px; background: pink">9</section>
-              <section class="home-section" style="height: 100px; background: lime">10</section>
-              <section class="home-section" style="height: 200px; background: teal">11</section>
-              <section class="home-section" style="height: 100px; background: indigo">12</section>
+              <!-- S: 대표 카테고리 메뉴 -->
+              <section class="home-section">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '당신에게 맞는', point: '쇼핑 시작하기', description: '구매 목적에 맞는 카테고리를 선택하세요', type: 'point' }) %>
+                <%- include(`${_src}/views/components/pg-home/home-main-category-menu.ejs`) %>
+              </section>
+              <!-- E: 대표 카테고리 메뉴 -->
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온만의', point:
+                '초특가 제안', description: '지금, 비츠온이 가장 저렴합니다!' }) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '고객님께서', point:
+                '자주 구매한 상품', description: '지금 이 상품이 필요하신가요?' }) %>
+              </section>
+
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '지금 많이 찾으시는',
+                point: '카테고리', description: '인기 카테고리를 확인해보세요' }) %>
+              </section>
+              <section class="home-section">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '우리 ', point: '업종에 꼭 맞는', suffix: '상품 추천', description: '복잡한 비교가 필요 없는 필수 품목 모음' }) %>
+                <%- include(`${_src}/views/components/pg-home/home-event-banner.ejs`) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'line' }) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point:
+                '반짝특가', description: '카테고리별 인기 상품을 특가로 만나보세요' }) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point:
+                '레전드', description: '매월 10만개 + 상품! 믿고 담아보세요' }) %>
+              </section>
+              <section class="home-section">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point: 'Pick 브랜드', description: '비츠온에서 추천하는 기업이에요', showMoreLink: true }) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '카테고리',
+                point:'BEST'}) %>
+              </section>
+
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-product-list.ejs`) %>
+              </section>
+
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'double' }) %>
+              </section>
             </div>
             <!-- E: vits-grid-main -->
           </div>

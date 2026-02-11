@@ -3,34 +3,39 @@
 <!-- prettier-ignore -->
 <%
   const bannerItems = [
-    { id: 'banner-1', bgColor: '#FBE7CF', image: '', href: '#!' },
-    { id: 'banner-2', bgColor: '#F05555', image: '', href: '#!' },
-    { id: 'banner-3', bgColor: '#2279C4', image: '', href: '#!' },
-    { id: 'banner-4', bgColor: '#C9E6B5', image: '', href: '#!' },
-    { id: 'banner-5', bgColor: '#eeeeee', image: '', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-02.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-02.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-02.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-home-banner-02.png', href: '#!' },
   ];
+  const bannerGroups = [];
+  for (let i = 0; i < bannerItems.length; i += 2) {
+    bannerGroups.push(bannerItems.slice(i, i + 2));
+  }
 %>
 
 <!-- 메인 배너 -->
 <div class="vits-home-main-banner">
   <div class="main-banner-container js-home-main-banner-swiper">
     <div class="swiper-wrapper">
-      <% bannerItems.forEach((item) => { %>
+      <% bannerGroups.forEach((group) => { %>
       <div class="swiper-slide">
-        <div class="main-banner-card" style="background-color: <%= item.bgColor %>">
+        <div class="main-banner-card">
+          <% group.forEach((item) => { %>
           <div class="banner-card-content">
-            <% if (item.image) { %>
-            <div class="banner-card-image">
-              <img src="<%= _public %><%= item.image %>" alt="베너이미지 설명" />
-            </div>
-            <% } %>
-            <a href="<%= item.href %>" class="banner-card-link">
-              <span class="text">자세히 보러가기</span>
-              <span class="icon">
-                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
-              </span>
+            <a href="#!">
+              <% if (item.image) { %>
+              <div class="banner-card-image">
+                <img src="<%= _public %><%= item.image %>" alt="베너이미지 설명" />
+              </div>
+              <% } %>
             </a>
           </div>
+          <% }); %>
         </div>
       </div>
       <% }); %>

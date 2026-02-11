@@ -1,0 +1,328 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const mockData = require(`${_src}/../public/resources/mock/products.json`);
+const _products = mockData.products;
+
+const orderItems = [
+  { status: 'F-1', qty: 2, product: _products[0], productName: _products[0].productNm },
+  { status: 'J', qty: 1, product: _products[1], productName: _products[1].productNm },
+  { status: 'I', qty: 3, product: _products[2], productName: _products[2].productNm }
+];
+
+const orders = [
+  {
+    items: orderItems,
+    totalPrice: orderItems.reduce(function(sum, item) { return sum + (item.product.salePrice * item.qty); }, 0)
+  }
+];
+%>
+<!-- prettier-ignore -->
+<%
+const orderDetails = [
+  {
+    payment: {
+      method: '카드결제',
+      detail: '신한카드 (1234)',
+      button: { text: '영수증', icon: 'ic-document-paper' }
+    },
+    delivery: {
+      type: 'basic',
+      editBtn: true,
+      items: [
+        { label: '받는 사람', value: '김철수' },
+        { label: '연락처', value: '010-1234-5678' },
+        { label: '주소', value: '[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층' },
+        { label: '배송메모', value: '부재시 경비실에 맡겨주세요' },
+        { label: '배송방법', value: '택배 (대납)' }
+      ]
+    }
+  },
+  {
+    payment: {
+      method: '실시간계좌이체',
+      detail: '국민은행 (12345)',
+      button: null
+    },
+    delivery: {
+      type: 'basic',
+      editBtn: true,
+      items: [
+        { label: '받는 사람', value: '김철수' },
+        { label: '연락처', value: '010-1234-5678' },
+        { label: '주소', value: '[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층' },
+        { label: '배송메모', value: '부재시 경비실에 맡겨주세요' },
+        { label: '배송방법', value: '택배 (대납)' }
+      ]
+    }
+  },
+  {
+    payment: {
+      method: '무통장입금',
+      detail: null,
+      button: null
+    },
+    delivery: {
+      type: 'basic',
+      editBtn: true,
+      items: [
+        { label: '받는 사람', value: '김철수' },
+        { label: '연락처', value: '010-1234-5678' },
+        { label: '주소', value: '[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층' },
+        { label: '배송메모', value: '부재시 경비실에 맡겨주세요' },
+        { label: '배송방법', value: '택배 (대납)' }
+      ]
+    }
+  },
+  {
+    payment: {
+      method: '여신결제',
+      detail: null,
+      button: { text: '여신 사용 현황', icon: null }
+    },
+    delivery: {
+      type: 'basic',
+      editBtn: true,
+      items: [
+        { label: '받는 사람', value: '김철수' },
+        { label: '연락처', value: '010-1234-5678' },
+        { label: '주소', value: '[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층' },
+        { label: '배송메모', value: '부재시 경비실에 맡겨주세요' },
+        { label: '배송방법', value: '택배 (대납)' }
+      ]
+    }
+  },
+  {
+    payment: {
+      method: '카드결제',
+      detail: '신한카드 (1234)',
+      button: { text: '영수증', icon: 'ic-document-paper' }
+    },
+    delivery: {
+      type: 'pickup',
+      editBtn: true,
+      sender: [
+        { label: '발송처', value: '메가존' },
+        { label: '보내는 사람', value: '홍길동' },
+        { label: '연락처', value: '010-1234-5678' }
+      ],
+      receiver: [
+        { label: '받는 사람', value: '김철수' },
+        { label: '연락처', value: '010-1234-5678' },
+        { label: '주소', value: '[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층' },
+        { label: '배송메모', value: '부재시 경비실에 맡겨주세요' },
+        { label: '배송방법', value: '택배 (대납)' }
+      ]
+    }
+  }
+];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문상세'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문상세' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <div class="vm-mypage-orders-details">
+                <div class="details-header">
+                  <div class="details-order-info">
+                    <p class="details-order-date">2024.12.15 주문</p>
+                    <p class="details-order-number">ORD-2024-001234</p>
+                  </div>
+                  <div class="details-overflow-menu">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/common/overflow-menu.ejs`, {
+                      items: [
+                        { text: '주문 문의하기', href: '#!' },
+                        { text: '거래명세서 다운로드' }
+                      ]
+                    }) %>
+                  </div>
+                </div>
+                <div class="details-address">
+                  <p class="details-address-text">[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</p>
+                </div>
+              </div>
+
+              <div class="vm-mypage-orders-list">
+                <ul class="orders-list">
+                  <% orders.forEach(function(order, orderIdx) { %>
+                  <li>
+                    <div class="vm-mypage-round-box">
+                      <div class="round-head">
+                        <p class="round-head-title">주문상품</p>
+                      </div>
+                      <div class="round-body">
+                        <ul class="round-body-list">
+                          <% order.items.forEach(function(item, itemIdx) { %>
+                          <li>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components-mo/product/product-mypage-item.ejs`, {
+                              hasCheckbox: false,
+                              hasBadges: true,
+                              hasPriceInfo: true,
+                              hasTax: true,
+                              hasQty: false,
+                              hasReturnQty: false,
+                              hasCart: true,
+                              orderStatus: item.status,
+                              productImg: item.product.imageUrl,
+                              productBrand: item.product.brandNm,
+                              productName: item.productName,
+                              productCode: item.product.productCode,
+                              productSpec: item.product.standard,
+                              productTax: item.product.taxType,
+                              productUnit: item.qty + '개',
+                              productQty: item.qty,
+                              productPrice: (item.product.salePrice * item.qty).toLocaleString() + '원',
+                              purchaseCount: item.product.purchaseCount || (orderIdx + itemIdx) % 5 + 1,
+                              checkboxId: 'ckb-order-' + orderIdx + '-' + itemIdx
+                            }) %>
+                          </li>
+                          <% }); %>
+                        </ul>
+                      </div>
+                      <div class="round-foot just-start">
+                        <p class="round-foot-price-label">
+                          <span class="text">최종 결제금액</span>
+                        </p>
+                        <p class="round-foot-price-value"><%= order.totalPrice.toLocaleString() %>원</p>
+                      </div>
+                    </div>
+                  </li>
+                  <% }); %>
+                </ul>
+              </div>
+
+              <div class="vm-order-details-info">
+                <!-- 결제 정보 -->
+                <% orderDetails.forEach(function(order, idx) { %>
+                <div class="vm-mypage-round-box type-toggle" data-toggle-scope>
+                  <div class="round-head type-toggle-head">
+                    <button
+                      type="button"
+                      data-toggle-btn
+                      data-toggle-target="payment-<%= idx %>"
+                      aria-expanded="true"
+                      data-aria-label-base="결제 정보"
+                    >
+                      <span class="round-head-title">결제 정보</span>
+                      <span class="round-head-icon">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="round-body type-toggle-body is-open" data-toggle-box="payment-<%= idx %>">
+                    <dl class="info-list">
+                      <dt>상품금액</dt>
+                      <dd>1,030,000원</dd>
+                      <dt>할인금액</dt>
+                      <dd class="text-discount">-30,000원</dd>
+                      <dt>VAT</dt>
+                      <dd>103,000원</dd>
+                      <dt>배송비</dt>
+                      <dd>5,000원</dd>
+                    </dl>
+                    <dl class="info-list info-list-total">
+                      <dt class="total-label">결제금액</dt>
+                      <dd class="total-amount">1,138,000원</dd>
+                      <dt class="method-label">결제수단</dt>
+                      <dd class="method-value">
+                        <strong class="method-name"><%= order.payment.method %></strong>
+                        <% if (order.payment.detail) { %><span class="method-detail"><%= order.payment.detail %></span
+                        ><% } %>
+                      </dd>
+                    </dl>
+                    <% if (order.payment.button) { %>
+                    <div class="round-body-actions">
+                      <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant:
+                      'outline-tertiary', text: order.payment.button.text, iconLeft: !!order.payment.button.icon,
+                      iconName: order.payment.button.icon || '', className: '' }) %>
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+                <% }); %>
+
+                <!-- 배송 정보 -->
+                <% orderDetails.forEach(function(order, idx) { %>
+                <div class="vm-mypage-round-box">
+                  <div class="round-head">
+                    <span class="round-head-title">배송 정보</span>
+                    <% if (order.delivery.editBtn) { %> <%- include(`${_src}/views/components/button/button.ejs`, {
+                    size: 'xs', variant: 'outline-tertiary', text: '배송지 수정', className: 'round-head-action' }) %>
+                    <% } %>
+                  </div>
+                  <div class="round-body">
+                    <% if (order.delivery.type === 'pickup') { %>
+                    <dl class="info-list info-shipping info-shipping-sender">
+                      <% order.delivery.sender.forEach(function(item) { %>
+                      <dt><%= item.label %></dt>
+                      <dd><%= item.value %></dd>
+                      <% }); %>
+                    </dl>
+                    <dl class="info-list info-shipping info-shipping-receiver">
+                      <% order.delivery.receiver.forEach(function(item) { %>
+                      <dt><%= item.label %></dt>
+                      <dd><%= item.value %></dd>
+                      <% }); %>
+                    </dl>
+                    <% } else { %>
+                    <dl class="info-list info-shipping">
+                      <% order.delivery.items.forEach(function(item) { %>
+                      <dt><%= item.label %></dt>
+                      <dd><%= item.value %></dd>
+                      <% }); %>
+                    </dl>
+                    <% } %>
+                  </div>
+                </div>
+                <% }); %>
+
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, {
+                  size:'xl', variant: 'secondary', text: '전체 상품 다시 담기'
+                }) %>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!-- prettier-ignore -->
+<%
+/**
+ * @file filter/mypage.ejs
+ * @description 마이페이지 주문배송조회 필터
+ * @state
+ *  - is-filter-open   : 필터 확장 (데이트피커 row + 액션 + 딤 노출)
+ *  - has-filter-value  : 기본값 외 값 변경 시 (초기화 버튼 노출)
+ */
+%>
+<% const _src = srcPath; %>
+
+<section class="vm-mypage-filter">
+  <h2 class="sr-only">주문배송조회 검색</h2>
+  <ul class="vm-mypage-filter-list">
+    <li class="vm-mypage-filter-row">
+      <ul class="filter-group">
+        <li class="filter-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'vm-order-period',
+            name: 'vm-order-period',
+            placeholder: '조회 기간',
+            options: [
+              { value: '0', text: '1개월' },
+              { value: '1', text: '3개월' },
+              { value: '2', text: '6개월' },
+              { value: '3', text: '1년' },
+              { value: '4', text: '직접입력' },
+            ],
+            value: '0',
+            disabled: false,
+            portal: true,
+            maxHeight: '50vh'
+          }) %>
+        </li>
+        <li class="filter-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-search.ejs`, {
+            idPrefix: 'vm-order-search',
+            action: '#!',
+            name: 'vm-order-search',
+            placeholder: '상품명,주문번호로 검색',
+            addClassName: 'size-sm'
+          }) %>
+        </li>
+      </ul>
+    </li>
+    <!--
+      [D] 데이트피커 row
+        - 프리셋(1/3/6/12개월) 선택 시: 노출, 날짜 자동 계산
+        - 직접입력 선택 시: 상시 노출, 사용자 직접 선택
+        - 기본 상태: 숨김 (is-filter-open 시 노출)
+    -->
+    <li class="vm-mypage-filter-row filter-date-row">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+        id: 'vm-order-daterange',
+        startName: 'startDate',
+        endName: 'endDate',
+      }) %>
+    </li>
+    <li class="vm-mypage-filter-row">
+      <ul class="filter-group item-half">
+        <li class="filter-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'vm-order-status',
+            name: 'vm-order-status',
+            placeholder: '주문 상태',
+            options: [
+              { value: '0', text: '전체' },
+              { value: '1', text: '주문접수' },
+              { value: '2', text: '결제완료' },
+              { value: '3', text: '주문완료' },
+              { value: '4', text: '주문확정' },
+              { value: '5', text: '배송준비중' },
+              { value: '6', text: '배송중' },
+              { value: '7', text: '배송완료' },
+              { value: '8', text: '취소' },
+              { value: '9', text: '반품' },
+            ],
+            value: '0',
+            disabled: false,
+            portal: true,
+            maxHeight: '50vh'
+          }) %>
+        </li>
+        <li class="filter-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'vm-order-delivery',
+            name: 'vm-order-delivery',
+            placeholder: '배송지',
+            options: [
+              { value: '0', text: '전체' },
+              { value: '1', text: '집' },
+              { value: '2', text: '회사' },
+            ],
+            value: '0',
+            disabled: false,
+            portal: true,
+            maxHeight: '50vh'
+          }) %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <!--
+    [D] 필터 액션 영역
+      - is-filter-open 시 노출
+      - 초기화: 기본값(1개월) 외 값 변경 시 노출 (has-filter-value)
+      - 조회하기: 필터 열림 시 항상 노출
+  -->
+  <div class="filter-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'outline-tertiary',
+      text: '초기화',
+      iconLeft: true,
+      iconName: 'ic-undo',
+      className: 'actions-reset'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'secondary',
+      text: '조회하기',
+      className: 'actions-search'
+    }) %>
+  </div>
+</section>
+<!-- [D] 딤: is-filter-open 시 노출, 조회하기/초기화 버튼으로만 닫힘 -->
+<div class="vm-mypage-filter-dim"></div>

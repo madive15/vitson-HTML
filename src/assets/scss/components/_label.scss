@@ -3,6 +3,7 @@
 // - 라벨 및 선택형 UI 요소(라벨, 클릭 가능한 칩 버튼 등) 공통 스타일 정의.
 // -----------------------------------------------------------------------------
 
+@use 'sass:list';
 @use 'sass:map';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
@@ -231,12 +232,19 @@
 
     &-badge.is-free-ship {
       @include mx.flex(flex, row, flex-start, center);
-      @include typo.typography('b5r');
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
       height: fn.rem(18);
       padding: 0 map.get(var.$unit, 4);
-      color: map.get(color.$text-status, 'info');
-      background: map.get(color.$layout-surf, 'mypage');
-      border-radius: map.get(var.$radius, 'sm');
+
+      &::before {
+        display: inline-block;
+
+        @include icon.ic-size(map.get(var.$unit, 20));
+        margin-right: map.get(var.$unit, 2);
+        content: '';
+        background-color: map.get(color.$icon-neutral, 'tertiary');
+        mask: url('/public/resources/img/mro/renewal/ic/ic-truck.svg') no-repeat center / contain;
+      }
     }
   }
 }
@@ -309,5 +317,163 @@
   &.is-general-sunken {
     color: map.get(color.$text-colors, 'tertiary');
     background-color: map.get(color.$layout-surf, 'sunken');
+  }
+}
+
+/* 상태에 따른 텍스트 색상 */
+
+@mixin common-status {
+  @include mx.flex(inline-flex, row, center, center);
+  height: fn.rem(18);
+  padding: 0 map.get(var.$unit, 4);
+  border-radius: map.get(var.$radius, 'sm');
+}
+
+/* 
+ * 주문상태 
+ * text-order-status data-status="01" 주문접수 
+ * text-order-status data-status="02" 결제완료 
+ * text-order-status data-status="03" 주문완료 
+ * text-order-status data-status="04" 주문확정 
+ * text-order-status data-status="05" 배송준비중 
+ * text-order-status data-status="06" 배송중 
+ * text-order-status data-status="07" 배송완료
+ */
+$order-status-color: (
+  // 주문접수
+  '01': map.get(color.$text-colors, 'tertiary'),
+  // 결제완료
+  '02': map.get(color.$text-status, 'success-sub'),
+  // 주문완료
+  '03': map.get(color.$text-status, 'success-sub'),
+  // 주문확정
+  '04': map.get(color.$text-status, 'info-sub'),
+  // 배송준비중
+  '05': map.get(color.$text-colors, 'tertiary'),
+  // 배송중
+  '06': map.get(color.$text-status, 'info-sub'),
+  // 배송완료
+  '07': map.get(color.$text-status, 'success-sub')
+);
+$order-status-color-mobile: (
+  // 주문접수
+  '01': (map.get(color.$layout-surf, 'sunken'), map.get(color.$text-colors, 'secondary')),
+  // 결제완료
+  '02': (map.get(color.$layout-status, 'success-bg-sub'), map.get(color.$text-status, 'success-sub')),
+  // 주문완료
+  '03': (map.get(color.$layout-status, 'success-bg-sub'), map.get(color.$text-status, 'success-sub')),
+  // 주문확정
+  '04': (map.get(color.$layout-status, 'info-bg-sub'), map.get(color.$text-status, 'info-sub')),
+  // 배송준비중
+  '05': (map.get(color.$layout-surf, 'sunken'), map.get(color.$text-colors, 'secondary')),
+  // 배송중
+  '06': (map.get(color.$layout-status, 'info-bg-sub'), map.get(color.$text-status, 'info-sub')),
+  // 배송완료
+  '07': (map.get(color.$layout-status, 'success-bg-sub'), map.get(color.$text-status, 'success-sub'))
+);
+
+.text-order-status {
+  &-mobile {
+    @include common-status;
+
+    @each $code, $pair in $order-status-color-mobile {
+      &[data-status='#{$code}'] {
+        @include typo.typography('b5r', $color: list.nth($pair, 2));
+        background-color: list.nth($pair, 1);
+      }
+    }
+  }
+
+  @each $code, $color in $order-status-color {
+    &[data-status='#{$code}'] {
+      @include typo.typography('b3s', $color: $color);
+    }
+  }
+}
+
+/* 
+ * 클라임 상태 
+ * text-claim-status data-status="01" 취소 
+ * text-claim-status data-status="02" 취소신청 
+ * text-claim-status data-status="03" 주문취소 
+ * text-claim-status data-status="04" 반품 
+ * text-claim-status data-status="05" 반품신청 
+ * text-claim-status data-status="06" 반품접수 
+ * text-claim-status data-status="07" 회수진행중 
+ * text-claim-status data-status="08" 회수완료 
+ * text-claim-status data-status="09" 반품완료 
+ * text-claim-status data-status="10" 반품취소 
+ * text-claim-status data-status="11" 반품승인불가 
+ * text-claim-status data-status="12" 반품불가
+ */
+$claim-status-color: (
+  // 취소
+  '01': map.get(color.$text-status, 'brand-sub'),
+  // 취소신청
+  '02': map.get(color.$text-status, 'brand-sub'),
+  // 주문취소
+  '03': map.get(color.$text-status, 'brand-sub'),
+  // 반품
+  '04': map.get(color.$text-status, 'brand-sub'),
+  // 반품신청
+  '05': map.get(color.$text-status, 'brand-sub'),
+  // 반품접수
+  '06': map.get(color.$text-colors, 'tertiary'),
+  // 회수진행중
+  '07': map.get(color.$text-status, 'info-sub'),
+  // 회수완료
+  '08': map.get(color.$text-status, 'success-sub'),
+  // 반품완료
+  '09': map.get(color.$text-status, 'success-sub'),
+  // 반품취소
+  '10': map.get(color.$text-status, 'info-sub'),
+  // 반품승인불가
+  '11': map.get(color.$text-status, 'brand-sub'),
+  // 반품불가
+  '12': map.get(color.$text-status, 'brand-sub')
+);
+$claim-status-color-mobile: (
+  // 취소
+  '01': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub')),
+  // 취소신청
+  '02': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub')),
+  // 주문취소
+  '03': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub')),
+  // 반품
+  '04': (map.get(color.$layout-surf, 'sunken'), map.get(color.$text-colors, 'secondary')),
+  // 반품신청
+  '05': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub')),
+  // 반품접수
+  '06': (map.get(color.$layout-surf, 'sunken'), map.get(color.$text-colors, 'secondary')),
+  // 회수진행중
+  '07': (map.get(color.$layout-surf, 'info-bg-sub'), map.get(color.$text-status, 'info-sub')),
+  // 회수완료
+  '08': (map.get(color.$layout-status, 'success-bg-sub'), map.get(color.$text-status, 'success-sub')),
+  // 반품완료
+  '09': (map.get(color.$layout-status, 'success-bg-sub'), map.get(color.$text-status, 'success-sub')),
+  // 반품취소
+  '10': (map.get(color.$layout-surf, 'info-bg-sub'), map.get(color.$text-status, 'info-sub')),
+  // 반품승인불가
+  '11': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub')),
+  // 반품불가
+  '12': (map.get(color.$layout-status, 'brand-bg-sub'), map.get(color.$text-status, 'brand-sub'))
+);
+
+.text-claim-status {
+  &-mobile {
+    @include common-status;
+
+    @each $code, $pair in $claim-status-color-mobile {
+      &[data-status='#{$code}'] {
+        @include typo.typography('b5r', $color: list.nth($pair, 2));
+        background-color: list.nth($pair, 1);
+      }
+    }
+  }
+
+  @each $code, $color in $claim-status-color {
+    &[data-status='#{$code}'] {
+      @include typo.typography('b3s', $color: $color);
+    }
   }
 }
