@@ -230,7 +230,7 @@ const orderDetails = [
                     </button>
                   </div>
                   <div class="round-body type-toggle-body is-open" data-toggle-box="payment-<%= idx %>">
-                    <dl class="info-list">
+                    <dl class="info-list no-ios-detect">
                       <dt>상품금액</dt>
                       <dd>1,030,000원</dd>
                       <dt>할인금액</dt>
@@ -240,7 +240,7 @@ const orderDetails = [
                       <dt>배송비</dt>
                       <dd>5,000원</dd>
                     </dl>
-                    <dl class="info-list info-list-total">
+                    <dl class="info-list info-list-total no-ios-detect">
                       <dt class="total-label">결제금액</dt>
                       <dd class="total-amount">1,138,000원</dd>
                       <dt class="method-label">결제수단</dt>
@@ -272,20 +272,20 @@ const orderDetails = [
                   </div>
                   <div class="round-body">
                     <% if (order.delivery.type === 'pickup') { %>
-                    <dl class="info-list info-shipping info-shipping-sender">
+                    <dl class="info-list info-shipping info-shipping-sender no-ios-detect">
                       <% order.delivery.sender.forEach(function(item) { %>
                       <dt><%= item.label %></dt>
                       <dd><%= item.value %></dd>
                       <% }); %>
                     </dl>
-                    <dl class="info-list info-shipping info-shipping-receiver">
+                    <dl class="info-list info-shipping info-shipping-receiver no-ios-detect">
                       <% order.delivery.receiver.forEach(function(item) { %>
                       <dt><%= item.label %></dt>
                       <dd><%= item.value %></dd>
                       <% }); %>
                     </dl>
                     <% } else { %>
-                    <dl class="info-list info-shipping">
+                    <dl class="info-list info-shipping no-ios-detect">
                       <% order.delivery.items.forEach(function(item) { %>
                       <dt><%= item.label %></dt>
                       <dd><%= item.value %></dd>
