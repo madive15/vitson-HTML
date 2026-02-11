@@ -27,7 +27,7 @@
   z-index: map.get(var.$mo-zindex, 'header');
 
   // nav-bar
-  &.header-nav-bar {
+  &[class*='header-nav-bar'] {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
     height: map.get(var.$mo-header, 'nav-bar');
@@ -58,6 +58,54 @@
 
         &:is(button) {
           @include nav-bar-common-btn('button');
+        }
+      }
+    }
+  }
+
+  &-step {
+    @include mx.flex(flex, row, flex-end, center);
+
+    > li {
+      @include mx.flex(flex, row, flex-start, center);
+
+      &:not(:last-of-type)::after {
+        display: block;
+        width: fn.rem(11);
+        height: fn.rem(2);
+        margin: 0 map.get(var.$unit, 8);
+        content: '';
+        background: map.get(color.$layout-surf, 'secondary');
+      }
+    }
+
+    &-button {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 4);
+
+      .number {
+        @include mx.flex(flex, row, center, center);
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        width: map.get(var.$unit, 20);
+        height: map.get(var.$unit, 20);
+        background: map.get(color.$layout-surf, 'sunken');
+        border-radius: 50%;
+      }
+
+      .text {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+        display: none;
+      }
+
+      &.is-current {
+        .number {
+          color: color.$color-white;
+          background: map.get(color.$layout-surf, 'brand');
+        }
+
+        .text {
+          display: block;
         }
       }
     }

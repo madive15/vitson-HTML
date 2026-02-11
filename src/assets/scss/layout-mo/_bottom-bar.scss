@@ -14,10 +14,6 @@
 @use '@/assets/scss/components/icon' as icon;
 
 .vm-bottom-bar {
-  > [class*='bottom-'] {
-    // padding-bottom: var(--safe-bottom);
-  }
-
   // 바텀바 타입별 최소 높이 자동 생성 ($mo-bottom-bar 맵 기준)
   @each $type, $height in var.$mo-bottom-bar {
     .bottom-#{$type} {
@@ -89,6 +85,41 @@
             color: map.get(color.$brand-colors, 'primary');
           }
         }
+      }
+    }
+  }
+
+  // step-bar
+  .bottom-step-bar {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 32);
+    padding: var.$mo-section-gap var.$mo-gutter 0;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'mo_menu');
+
+    [class*='vits-btn-'] {
+      width: 100%;
+    }
+
+    .step-bar-price {
+      @include mx.flex(flex, row, space-between, center);
+      display: none;
+
+      .label {
+        @include typo.typography('b2s');
+      }
+
+      .value {
+        @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
+      }
+    }
+
+    &.is-price {
+      min-height: map.get(var.$mo-bottom-bar, 'step-bar-price');
+
+      .step-bar-price {
+        display: flex;
       }
     }
   }
