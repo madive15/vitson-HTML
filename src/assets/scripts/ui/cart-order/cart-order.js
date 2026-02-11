@@ -70,6 +70,16 @@
           var isActive = $panel.attr('data-panel') === methodValue;
           $panel.toggleClass('is-active', isActive);
         });
+
+        // freight 선택 시: data-freight-visible true/false, data-freight-hidden true/false
+        $wrap.find('[data-freight-visible]').each(function () {
+          var $el = $(this);
+          $el.attr('data-freight-visible', methodValue === 'freight' ? 'true' : 'false');
+        });
+        $wrap.find('[data-freight-hidden]').each(function () {
+          var $el = $(this);
+          $el.attr('data-freight-hidden', methodValue === 'freight' ? 'true' : 'false');
+        });
       }
 
       function setAddressTypeState($wrap, typeValue, radioId) {

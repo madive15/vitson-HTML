@@ -1,0 +1,74 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '반품신청'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <!-- vm-wrap => data-step scope 부여 -->
+      <div class="vm-wrap wrap-my-orders" data-step>
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar-step', 
+            title: '반품신청',
+            steps: [
+              { label: '상품선택' },
+              { label: '사유입력' },
+              { label: '수거방법' }
+            ]
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <!-- step 1 -->
+              <div class="vm-claim-request step-1" data-step-page="1">
+                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
+                <div class="claim-request-product-list">반품상품 리스트</div>
+              </div>
+
+              <!-- step 2 -->
+              <div class="vm-claim-request step-2" data-step-page="2">
+                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
+                <div class="claim-request-reason">반품사유</div>
+              </div>
+
+              <!-- step 3 -->
+              <div class="vm-claim-request step-3" data-step-page="3">
+                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
+                <div class="claim-request-pickup">수거지 정보</div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'step-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

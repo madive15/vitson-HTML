@@ -188,6 +188,39 @@
         </div>
       </div>
 
+      <!-- [D]case: 화물지점 선택 시 노출 (02.11 추가) {true | false}-->
+      <div class="vits-form-row" data-freight-visible="false">
+        <div class="vits-form-row-group">
+          <label class="vits-form-label">화물업체/영업소 선택</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '화물지점 선택',
+          }) %>
+        </div>
+        <div class="vits-form-row-group">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'freight-company',
+            name: 'freightCompany',
+            label: '화물사',
+            placeholder: '화물사',
+            required: true,
+            rootClass: 'size-medium'
+          }) %>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'freight-office',
+            name: 'freightOffice',
+            label: '영업소명',
+            placeholder: '영업소명',
+            required: true,
+            rootClass: 'size-medium'
+          }) %>
+        </div>
+      </div>
+
       <div class="vits-form-row-group">
         <div class="vits-form-row">
           <label class="vits-form-label">받는 사람</label>
@@ -216,7 +249,7 @@
         </div>
       </div>
 
-      <div class="vits-form-row">
+      <div class="vits-form-row" data-freight-hidden="false">
         <div class="vits-form-row-group">
           <label class="vits-form-label">배송지 주소</label>
           <!-- prettier-ignore -->
@@ -238,8 +271,8 @@
           }) %>
         </div>
       </div>
-
-      <div class="vits-form-row">
+      <!-- [D]case: 화물지점 선택 시 비노출 (02.11 추가) {true | false}-->
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -254,8 +287,8 @@
           }) %>
         </div>
       </div>
-      <!-- [D]cas: 필수 입력 항목 -->
-      <div class="vits-form-row">
+      <!-- [D]case: 필수 입력 항목 -->
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소 (필수) case</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -272,7 +305,7 @@
           }) %>
         </div>
       </div>
-      <div class="vits-form-row">
+      <div class="vits-form-row" data-freight-hidden="false">
         <label class="vits-form-label">상세 주소 / 비활성화 case</label>
         <div class="vits-form-field">
           <!-- prettier-ignore -->
@@ -329,7 +362,8 @@
             </div>
           </div>
 
-          <div class="vits-form-row">
+          <!-- [D]case: 화물지점 선택 시 노출 (02.11 추가) {true | false}-->
+          <div class="vits-form-row" data-freight-visible="false">
             <label class="vits-form-label">운임 선택</label>
             <div class="vits-form-field">
               <!-- prettier-ignore -->

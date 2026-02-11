@@ -1,0 +1,31 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<header class="vm-header header-nav-bar-step">
+  <a href="" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/icon.ejs`, {
+      iconName: 'arrow-left' 
+    }) %>
+  </a>
+
+  <p class="vm-header-title" data-header-title><%= title %></p>
+  <div class="vm-header-actions">
+    <ol class="vm-header-step">
+      <% steps.forEach(function(step, i) { %>
+      <li>
+        <button
+          type="button"
+          class="vm-header-step-button<%= i === 0 ? ' is-current is-visited' : '' %>"
+          data-step-nav="<%= i + 1 %>"
+          aria-label="<%= step.label %>, 단계 <%= i + 1 %>"
+          <%= i === 0 ? 'aria-current="step"' : 'aria-disabled="true"' %>
+        >
+          <span class="number"><%= i + 1 %></span>
+          <span class="text"><%= step.label %></span>
+        </button>
+      </li>
+      <% }) %>
+    </ol>
+  </div>
+</header>

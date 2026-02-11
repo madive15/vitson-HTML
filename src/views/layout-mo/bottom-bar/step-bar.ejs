@@ -1,0 +1,29 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<% const current = typeof currentTab !== 'undefined' ? currentTab : ''; %>
+<%
+const step = [
+  { id: 'category', icon: 'menu', label: '카테고리', href: '#!' },
+  { id: 'search', icon: 'magnifying-glass', label: '검색', href: '#!' },
+  { id: 'home', icon: 'home2', label: '홈', href: '#!' },
+  { id: 'like', icon: 'heart', label: '좋아요', href: '#!' },
+  { id: 'mypage', icon: 'user', label: '마이페이지', href: '#!' }
+];
+%>
+
+<div class="bottom-step-bar">
+  <!-- is-price 있을 경우에만 노출 -->
+  <p class="step-bar-price">
+    <spa class="label">환불예정금액</spa>
+    <spa class="value">1,025,000원</spa>
+  </p>
+
+  <div class="step-bar-actions">
+    <!-- 스텝1, 2 다음 / 스템3 반품신청완료 -->
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'xl', variant: 'primary', text: '반품신청완료'
+    }) %>
+  </div>
+</div>
