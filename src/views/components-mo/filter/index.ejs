@@ -3,13 +3,15 @@
 /**
  * @file filter/index.ejs
  * @description 필터 분기 래퍼
- * @param {string} type - 필터 유형: 'product' (추후 확장)
+ * @param {string} type - 필터 유형: 'product' | 'mypage'
  */
 %>
 
-<% const _src = srcPath; const _public = publicPath; %>
+<% const _src = srcPath; %>
 
 <!-- prettier-ignore -->
 <% if (type === 'product') { %>
   <%- include('./product.ejs', { items: typeof items !== 'undefined' ? items : [] }) %>
+<% } else if (type === 'mypage') { %>
+  <%- include('./mypage.ejs') %>
 <% } %>

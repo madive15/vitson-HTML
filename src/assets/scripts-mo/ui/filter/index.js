@@ -4,6 +4,7 @@
  */
 
 import './filter-product.js';
+import './filter-mapage.js';
 
 (function ($, window) {
   'use strict';
@@ -12,7 +13,7 @@ import './filter-product.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['FilterProduct'];
+  var modules = ['FilterProduct', 'FilterMypage'];
 
   window.UI.filter = {
     init: function () {

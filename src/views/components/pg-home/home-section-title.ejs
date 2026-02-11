@@ -1,0 +1,32 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%# ex. 비츠온 레전드 - 매월 10만개 + 상품! 믿고 담아보세요  %>
+<%# type: 'default' | 'point' - default: title가 메인+point 강조, point: point가 메인+title 강조 %>
+<%
+  const title = locals.title || '홈 섹션 타이틀';
+  const point = locals.point || '홈 섹션 포인트';
+  const suffix = locals.suffix || ''; // 강조 뒤에 올 텍스트 (ex: ' 상품 추천')
+  const description = locals.description || '';
+  const type = locals.type || 'default'; // 'default' | 'point'
+  const showMoreLink = locals.showMoreLink === true; // 전체보기 링크 노출 (default: false)
+%>
+<div class="home-section-title">
+  <div class="title-container">
+    <% if (type === 'point') { %>
+    <h2 class="title-point"><%= title %><span class="title-text"><%= point %></span><%= suffix %></h2>
+    <% } else { %>
+    <h2 class="title-text"><%= title %><span class="title-point"><%= point %></span><%= suffix %></h2>
+    <% } %>
+    <p class="title-description"><%= description %></p>
+  </div>
+  <% if (showMoreLink) { %>
+  <div class="tool-container">
+    <a href="#" class="more-view-link" title="전체보기">
+      <span class="more-view-link-text">전체보기</span>
+      <span class="more-view-link-icon">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+      </span>
+    </a>
+  </div>
+  <% } %>
+</div>

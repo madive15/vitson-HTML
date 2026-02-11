@@ -1,0 +1,57 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // type: 'double' | 'line'
+  const type = locals.type || 'double';
+%>
+
+<% if (type === 'double') { %>
+<div class="home-ad-banner double-banner">
+  <a href="#!" class="home-ad-banner-link">
+    <img src="<%= _public %>/resources/img/mro/renewal/home/banner/home-secondary-banner-01.png" alt="" />
+  </a>
+  <a href="#!" class="home-ad-banner-link">
+    <img src="<%= _public %>/resources/img/mro/renewal/home/banner/home-secondary-banner-02.png" alt="" />
+  </a>
+</div>
+<% } %>
+<!-- prettier-ignore -->
+<% if (type === 'line') { %>
+<%
+  // TODO: 실제 데이터 연동 시 서버에서 전달받은 리스트로 교체
+  const lineAdBanners = [
+    { image: '/resources/img/mro/renewal/temp/temp-line-ad-banner.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-line-ad-banner.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/temp/temp-line-ad-banner.png', href: '#!' }
+  ];
+%>
+<div class="home-ad-banner line-banner">
+  <div class="line-banner-visual">
+    <div class="line-banner-container js-home-ad-banner-swiper">
+      <div class="swiper-wrapper">
+        <% lineAdBanners.forEach(function (item) { %>
+        <div class="swiper-slide line-banner-slide">
+          <a href="<%= item.href %>" class="home-ad-banner-link">
+            <% if (item.image) { %>
+            <img src="<%= _public %><%= item.image %>" alt="" />
+            <% } %>
+          </a>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+
+  <!-- 네비게이션 (Swiper 컨테이너 밖으로 분리) -->
+  <div class="line-banner-navs">
+    <button type="button" class="line-banner-nav line-banner-nav-prev" aria-label="이전 광고 배너">
+      <span class="sr-only">이전</span>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+    </button>
+    <button type="button" class="line-banner-nav line-banner-nav-next" aria-label="다음 광고 배너">
+      <span class="sr-only">다음</span>
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+    </button>
+  </div>
+</div>
+<% } %>

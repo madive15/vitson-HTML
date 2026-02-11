@@ -1,0 +1,48 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  // TODO: 실제 데이터 연동 시 서버에서 전달받은 리스트로 교체
+  const eventBanners = [
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-02.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-03.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-04.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-01.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-02.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-03.png', href: '#!' },
+    { image: '/resources/img/mro/renewal/home/banner/home-event-banner-04.png', href: '#!' }
+  ];
+%>
+
+<!-- 우리 업종에 꼭 맞는 상품 추천 - 기획전 카드 영역 -->
+<div class="vits-home-event-banner">
+  <div class="event-banner-container js-home-event-banner-swiper">
+    <div class="swiper-wrapper">
+      <% eventBanners.forEach(function (item) { %>
+      <div class="swiper-slide event-banner-slide">
+        <a href="<%= item.href %>" class="event-banner-card">
+          <div class="event-banner-image">
+            <% if (item.image) { %>
+            <img src="<%= _public %><%= item.image %>" alt="" />
+            <% } %>
+          </div>
+        </a>
+      </div>
+      <% }); %>
+    </div>
+
+    <!-- 네비게이션 -->
+    <div class="event-banner-navs">
+      <button type="button" class="event-banner-nav event-banner-nav-prev" aria-label="이전 기획전">
+        <span class="sr-only">이전</span>
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+      </button>
+      <button type="button" class="event-banner-nav event-banner-nav-next" aria-label="다음 기획전">
+        <span class="sr-only">다음</span>
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+      </button>
+    </div>
+  </div>
+  <div class="position-block"></div>
+</div>

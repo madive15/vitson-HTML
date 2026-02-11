@@ -1,0 +1,322 @@
+// -----------------------------------------------------------------------------
+// pages/_mypage.scss
+// - 마이페이지 전용 스타일 모듈 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.wrap-my-orders .vm-main {
+  background: map.get(color.$layout-surf, 'mypage');
+
+  &:has(.vits-empty-state-content) {
+    @include mx.flex(flex, column);
+
+    .main-content-my-orders {
+      @include mx.flex(flex, column);
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+
+      .vm-mypage-filter {
+        flex-shrink: 0;
+      }
+
+      .vits-empty-state {
+        flex-grow: 1;
+        min-width: 0;
+        min-height: 0;
+      }
+    }
+  }
+}
+
+.vm-mypage-round-box {
+  overflow: hidden;
+  background: color.$color-white;
+  border-radius: map.get(var.$radius, 'md');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .round {
+    &-head {
+      height: map.get(var.$unit, 52);
+
+      > button:not(.round-head-action) {
+        @include button.btn-reset;
+        width: 100%;
+        height: 100%;
+
+        &[aria-expanded='false'] {
+          .round-head-icon {
+            transform: rotate(90deg);
+          }
+        }
+      }
+
+      > a {
+        width: 100%;
+        height: 100%;
+      }
+
+      &:not(:has(> a, > button:not(.round-head-action))),
+      > a,
+      /* stylelint-disable-next-line no-descending-specificity */
+      > button {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+        padding: 0 map.get(var.$unit, 16);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+      }
+
+      &-title,
+      &-number {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &-date {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        padding-top: map.get(var.$unit, 2);
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-icon {
+        @include icon.ic-size(map.get(var.$unit, 20));
+        margin-left: auto;
+        color: map.get(color.$icon-neutral, 'primary');
+        transition: transform 0.3s;
+      }
+
+      // 배송지 수정
+      .round-head-action {
+        margin-left: auto;
+      }
+
+      &.type-toggle-head > button {
+        padding: 0 var.$mo-gutter;
+      }
+    }
+
+    &-body {
+      &:not(.type-toggle-body) {
+        padding: map.get(var.$unit, 20) var.$mo-gutter;
+      }
+
+      &-list {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 24);
+        width: 100%;
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-end, center);
+        width: 100%;
+        padding: 0 var.$mo-gutter map.get(var.$unit, 32);
+      }
+
+      .info-list {
+        @include mx.flex(flex, row, flex-start, center, wrap);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+
+        dt,
+        dd {
+          @include mx.flex(flex, row, flex-start, center);
+          min-height: map.get(var.$unit, 32);
+        }
+
+        dt {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          flex: 0 0 27.03%;
+        }
+
+        dd {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          flex: 0 0 calc(100% - 27.03% - 8px);
+        }
+
+        &.info-shipping {
+          align-items: stretch;
+
+          dt,
+          dd {
+            padding-top: map.get(var.$unit, 8);
+            padding-bottom: map.get(var.$unit, 8);
+          }
+
+          dt {
+            align-self: flex-start;
+          }
+
+          & + .info-shipping {
+            @include mx.border('top', $color: map.get(color.$layout-border, 'quinary'));
+            padding-top: map.get(var.$unit, 8);
+            margin-top: map.get(var.$unit, 8);
+          }
+        }
+      }
+
+      &.type-toggle-body {
+        .info-list {
+          padding: map.get(var.$unit, 20) var.$mo-gutter;
+
+          dd {
+            justify-content: flex-end;
+            text-align: right;
+
+            &.text-discount {
+              color: map.get(color.$text-status, 'brand');
+            }
+          }
+
+          &.info-list-total {
+            padding-top: var.$mo-section-gap;
+            padding-bottom: var.$mo-section-gap;
+
+            .total {
+              &-label {
+                min-height: 0;
+                font-weight: 600;
+                color: map.get(color.$text-colors, 'secondary');
+              }
+
+              &-amount {
+                min-height: 0;
+                font-size: fn.rem(18);
+                font-weight: 700;
+                color: map.get(color.$text-status, 'info-sub');
+              }
+            }
+
+            .method {
+              &-value {
+                @include mx.flex(flex, row, flex-end, center, wrap);
+                gap: fn.rem(10);
+              }
+
+              &-name {
+                font-weight: 700;
+              }
+
+              &-detail {
+                color: map.get(color.$text-status, 'info');
+              }
+            }
+          }
+
+          & + .info-list {
+            box-shadow: 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+          }
+        }
+
+        &:has(.round-body-actions) {
+          .info-list-total {
+            padding-bottom: map.get(var.$unit, 4);
+          }
+        }
+      }
+    }
+
+    &-foot {
+      @include mx.flex(flex, row, flex-end, center);
+      gap: map.get(var.$unit, 8);
+      height: map.get(var.$unit, 56);
+      padding: 0 map.get(var.$unit, 16);
+      box-shadow: inset 0 1px 0 0 map.get(color.$layout-border, 'quinary');
+
+      &-price-label {
+        @include mx.flex(flex, column, flex-end, flex-end);
+
+        .text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        .desc {
+          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+
+      &-price-value {
+        @include typo.typography('b1b', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &.just-start {
+        justify-content: flex-start;
+
+        .text {
+          font-size: fn.rem(14);
+          font-weight: 600;
+          color: map.get(color.$text-colors, 'secondary');
+        }
+
+        .round-foot-price-value {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}
+
+// 주문배송 리스트
+.vm-mypage-orders-list {
+  padding: map.get(var.$unit, 20) var.$mo-gutter;
+
+  .orders-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 24);
+  }
+}
+
+// 주문상세
+.vm-mypage-orders-details {
+  padding: map.get(var.$unit, 12) var.$mo-gutter var.$mo-section-gap;
+  background: color.$color-white;
+
+  .details {
+    &-header {
+      @include mx.flex(flex, row, flex-start, center);
+      width: 100%;
+    }
+
+    &-order {
+      &-info {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 2);
+      }
+
+      &-date {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &-number {
+        @include typo.typography('b2s');
+      }
+    }
+
+    &-overflow-menu {
+      margin-left: auto;
+    }
+
+    &-address {
+      @include mx.border('top', $color: map.get(color.$layout-border, 'quinary'));
+      padding-top: map.get(var.$unit, 12);
+      margin-top: map.get(var.$unit, 12);
+
+      &-text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
+}
+
+// 주문상세 - 결제/배송정보
+.vm-order-details-info {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+  padding: 0 var.$mo-gutter map.get(var.$unit, 52);
+}

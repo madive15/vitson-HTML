@@ -1,0 +1,341 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _l = typeof locals !== 'undefined' ? locals : {};
+
+  const cardType = typeof _l.cardType !== 'undefined' ? _l.cardType : '1';
+  const hasCheckbox = typeof _l.hasCheckbox !== 'undefined' ? _l.hasCheckbox : true;
+  const hasBadges = typeof _l.hasBadges !== 'undefined' ? _l.hasBadges : true;
+  const hasPriceInfo = typeof _l.hasPriceInfo !== 'undefined' ? _l.hasPriceInfo : true;
+  const hasTax = typeof _l.hasTax !== 'undefined' ? _l.hasTax : true;
+  const hasQty = typeof _l.hasQty !== 'undefined' ? _l.hasQty : true;
+  const hasReturnQty = typeof _l.hasReturnQty !== 'undefined' ? _l.hasReturnQty : true;
+  const hasCart = typeof _l.hasCart !== 'undefined' ? _l.hasCart : true;
+  const orderStatus = typeof _l.orderStatus !== 'undefined' ? String(_l.orderStatus) : '';
+
+  // 상품 데이터
+  const productImg = typeof _l.productImg !== 'undefined' ? _l.productImg : '';
+  const productBrand = typeof _l.productBrand !== 'undefined' ? _l.productBrand : '';
+  const productName = typeof _l.productName !== 'undefined' ? _l.productName : '';
+  const productCode = typeof _l.productCode !== 'undefined' ? String(_l.productCode) : '';
+  const productSpec = typeof _l.productSpec !== 'undefined' ? _l.productSpec : '';
+  const productTax = typeof _l.productTax !== 'undefined' ? _l.productTax : '';
+  const productUnit = typeof _l.productUnit !== 'undefined' ? _l.productUnit : '';
+  const productQty = typeof _l.productQty !== 'undefined' ? Number(_l.productQty) : 0;
+  const productPrice = typeof _l.productPrice !== 'undefined' ? _l.productPrice : '';
+  const purchaseCount = typeof _l.purchaseCount !== 'undefined' ? Number(_l.purchaseCount) : 0;
+  const checkboxId = typeof _l.checkboxId !== 'undefined' ? _l.checkboxId : 'ckb-i1';
+
+  // 상태코드 → 라벨 + 버튼 통합 매핑
+  const ORDER_MAP = {
+    'A-1': { // 주문접수 — 일반상품
+      label: { type: 'order', status: '01' },
+      buttons: [
+        { text: '미발송조회' },
+        { text: '취소신청' }
+      ]
+    },
+    'A-2': { // 주문접수 — 조장상품
+      label: { type: 'order', status: '01' },
+      buttons: [
+        { text: '미발송조회' }
+      ]
+    },
+    'B-1': { // 결제완료 — 일반상품
+      label: { type: 'order', status: '02' },
+      buttons: [
+        { text: '미발송조회' },
+        { text: '취소신청' }
+      ]
+    },
+    'B-2': { // 결제완료 — 조장상품
+      label: { type: 'order', status: '02' },
+      buttons: [
+        { text: '미발송조회' }
+      ]
+    },
+    'C-1': { // 주문완료 — 일반상품
+      label: { type: 'order', status: '03' },
+      buttons: [
+        { text: '미발송조회' },
+        { text: '취소신청' }
+      ]
+    },
+    'C-2': { // 주문완료 — 조장상품
+      label: { type: 'order', status: '03' },
+      buttons: [
+        { text: '미발송조회' }
+      ]
+    },
+    'D-1': { // 주문확정 — 일반상품
+      label: { type: 'order', status: '04' },
+      buttons: [
+        { text: '미발송조회' },
+        { text: '취소신청' }
+      ]
+    },
+    'D-2': { // 주문확정 — 조장상품
+      label: { type: 'order', status: '04' },
+      buttons: [
+        { text: '미발송조회' }
+      ]
+    },
+    'E-1': { // 배송준비중 — 반품 가능 (일반상품 + 30일 이내)
+      label: { type: 'order', status: '05' },
+      buttons: [
+        { text: '배송 조회' },
+        { text: '반품신청' }
+      ]
+    },
+    'E-2': { // 배송준비중 — 반품 불가 (조장상품 또는 조건 미충족)
+      label: { type: 'order', status: '05' },
+      buttons: [
+        { text: '배송 조회' }
+      ]
+    },
+    'F-1': { // 배송중 — 반품 가능
+      label: { type: 'order', status: '06' },
+      buttons: [
+        { text: '배송 조회' },
+        { text: '반품신청' }
+      ]
+    },
+    'F-2': { // 배송중 — 반품 불가
+      label: { type: 'order', status: '06' },
+      buttons: [
+        { text: '배송 조회' }
+      ]
+    },
+    'G-1': { // 배송완료 — 반품 가능
+      label: { type: 'order', status: '07' },
+      buttons: [
+        { text: '배송 조회' },
+        { text: '반품신청' }
+      ]
+    },
+    'G-2': { // 배송완료 — 반품 불가
+      label: { type: 'order', status: '07' },
+      buttons: [
+        { text: '배송 조회' }
+      ]
+    },
+    'H': { // 취소신청
+      label: { type: 'claim', status: '02' },
+      buttons: [
+        { text: '미발송조회' },
+        { text: '취소내역' }
+      ]
+    },
+    'I': { // 주문취소
+      label: { type: 'claim', status: '03' },
+      buttons: [
+        { text: '취소내역' }
+      ]
+    },
+    'J': { // 반품신청
+      label: { type: 'claim', status: '05' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'K-1': { // 반품접수 — 송장 입력
+      label: { type: 'claim', status: '06' },
+      buttons: [
+        { text: '회수조회' },
+        { text: '반품내역' }
+      ]
+    },
+    'K-2': { // 반품접수 — 송장 미입력
+      label: { type: 'claim', status: '06' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'L-1': { // 회수진행중 — 송장 입력
+      label: { type: 'claim', status: '07' },
+      buttons: [
+        { text: '회수조회' },
+        { text: '반품내역' }
+      ]
+    },
+    'L-2': { // 회수진행중 — 송장 미입력
+      label: { type: 'claim', status: '07' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'M-1': { // 회수완료 — 송장 입력
+      label: { type: 'claim', status: '08' },
+      buttons: [
+        { text: '회수조회' },
+        { text: '반품내역' }
+      ]
+    },
+    'M-2': { // 회수완료 — 송장 미입력
+      label: { type: 'claim', status: '08' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'N-1': { // 반품완료 — 송장 입력
+      label: { type: 'claim', status: '09' },
+      buttons: [
+        { text: '회수조회' },
+        { text: '반품내역' }
+      ]
+    },
+    'N-2': { // 반품완료 — 송장 미입력
+      label: { type: 'claim', status: '09' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'O': { // 반품취소
+      label: { type: 'claim', status: '10' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'P': { // 반품승인불가
+      label: { type: 'claim', status: '11' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    },
+    'Q-1': { // 반품불가 — 송장 입력
+      label: { type: 'claim', status: '12' },
+      buttons: [
+        { text: '회수조회' },
+        { text: '반품내역' }
+      ]
+    },
+    'Q-2': { // 반품불가 — 송장 미입력
+      label: { type: 'claim', status: '12' },
+      buttons: [
+        { text: '반품내역' }
+      ]
+    }
+  };
+
+  const _order = ORDER_MAP[orderStatus] || null;
+
+  // 반품 수량 옵션 생성 (0 ~ productQty)
+  const returnQtyOptions = [];
+  for (let i = 0; i <= productQty; i++) {
+    returnQtyOptions.push({ value: String(i), text: String(i) });
+  }
+%>
+
+<div class="vm-product-mypage-card">
+  <% if (hasCheckbox) { %>
+  <div class="card-checkbox">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: checkboxId,
+      value: checkboxId,
+      size: 's'
+    }) %>
+  </div>
+  <% } %>
+  <div class="card-content">
+    <div class="card-thumb">
+      <div class="product-thumb">
+        <img src="<%= productImg %>" alt="" />
+      </div>
+    </div>
+    <div class="card-info">
+      <% if (cardType === '1') { %>
+      <!-- prettier-ignore -->
+      <% if (hasBadges) { %>
+      <div class="card-badges">
+        <!-- prettier-ignore -->
+        <% if (_order && _order.label) { %>
+        <div class="product-status">
+          <%- include(`${_src}/views/components/label/text-status.ejs`, { type: _order.label.type, status:
+          _order.label.status, device: 'mobile' }) %>
+        </div>
+        <% } %>
+        <!-- prettier-ignore -->
+        <% if (purchaseCount > 0) { %>
+        <div class="product-count">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+              textCount: purchaseCount
+            }) %>
+        </div>
+        <% } %>
+        <p class="product-code"><span class="sr-only">상품코드</span><%= productCode %></p>
+      </div>
+      <% } %>
+      <p class="card-name">
+        <span class="product-brand"><span class="sr-only">브랜드</span><%= productBrand %></span>
+        <span class="product-name"><span class="sr-only">상품명</span><%= productName %></span>
+      </p>
+      <p class="product-spec"><%= productSpec %></p>
+      <% } else { %>
+      <div class="card-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span><%= productBrand %></p>
+        <p class="product-code"><span class="sr-only">상품코드</span><%= productCode %></p>
+      </div>
+      <div class="card-title">
+        <p class="product-name"><span class="sr-only">상품명</span><%= productName %></p>
+      </div>
+      <p class="product-spec"><%= productSpec %></p>
+      <% } %>
+      <!-- prettier-ignore -->
+      <% if (hasPriceInfo) { %>
+      <div class="card-price-info">
+        <% if (hasTax) { %>
+        <p class="product-price-tax"><span><%= productTax %></span> / <span><%= productUnit %></span></p>
+        <% } %>
+        <!-- prettier-ignore -->
+        <% if (hasQty) { %>
+        <p class="product-price-qty">
+          <span class="product-price-qty-label">수량</span>
+          <span class="product-price-qty-value"><%= productQty %>개</span>
+        </p>
+        <% } %>
+
+        <p class="product-price-amount"><%= productPrice %></p>
+      </div>
+      <% } %>
+      <!-- prettier-ignore -->
+      <% if (hasReturnQty) { %>
+      <div class="card-return-qty">
+        <p class="product-return-label">반품 신청 수량</p>
+        <div class="product-return-select">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'return-qty-' + checkboxId,
+            name: 'return-qty-' + checkboxId,
+            placeholder: '수량',
+            options: returnQtyOptions,
+            value: '1',
+            disabled: false,
+            portal: true,
+          }) %>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <div class="card-actions">
+    <div class="actions-util">
+      <% if (hasCart) { %>
+      <button type="button" class="btn-cart" aria-label="장바구니">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'bag' }) %>
+      </button>
+      <% } %>
+    </div>
+    <div class="actions-order">
+      <% if (_order && _order.buttons) { _order.buttons.forEach(function(btn) { %>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size: 'xs',
+        variant: btn.variant || 'outline-tertiary',
+        text: btn.text
+      }) %>
+      <% }); } %>
+    </div>
+  </div>
+</div>

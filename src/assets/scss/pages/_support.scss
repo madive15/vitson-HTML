@@ -101,6 +101,20 @@
       }
     }
   }
+
+  /* 검색 입력 > 검색어 지우기 버튼 */
+  .support-toolbar-search-input {
+    .input-clear-btn {
+      @include button.btn-reset;
+      @include mx.position(absolute, 50%, fn.rem(40)); // right : 검색하기 버튼 300 + gap 12 + 12
+      @include icon.ic-size(map.get(var.$unit, 20));
+      padding: map.get(var.$unit, 2);
+      color: color.$color-white;
+      background: map.get(color.$button-fill-tertiary, 'fill-surf-tertiary-default');
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }
 
 /* -----------------------------------

@@ -66,10 +66,28 @@
             <% } %>
           </ul>
           <ul class="vits-guide-list">
+            <% for (let i = 1; i <= 7; i++) { const code = String(i).padStart(2, '0'); %>
+            <li>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'order', status: code, device:
+              'mobile' }) %>
+              <p>type: 'order', status: <%- code %>, device: 'mobile'</p>
+            </li>
+            <% } %>
+          </ul>
+          <ul class="vits-guide-list">
             <% for (let i = 1; i <= 12; i++) { const code = String(i).padStart(2, '0'); %>
             <li>
               <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'claim', status: code }) %>
               <p>type: 'claim', status: <%- code %></p>
+            </li>
+            <% } %>
+          </ul>
+          <ul class="vits-guide-list">
+            <% for (let i = 1; i <= 12; i++) { const code = String(i).padStart(2, '0'); %>
+            <li>
+              <%- include(`${_src}/views/components/label/text-status.ejs`, { type: 'claim', status: code, device:
+              'mobile' }) %>
+              <p>type: 'claim', status: <%- code %>, device: 'mobile'</p>
             </li>
             <% } %>
           </ul>

@@ -1,0 +1,50 @@
+// -----------------------------------------------------------------------------
+// components-mo/_empty-state.scss
+// - 모바일 빈 상태 안내 (검색결과 없음, 데이터 없음 등)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-empty-state {
+  @include mx.flex(flex, column, center, center);
+  gap: map.get(var.$unit, 24);
+  padding: var.$mo-section-gap var.$mo-gutter;
+  text-align: center;
+
+  &-content {
+    @include mx.flex(flex, column-reverse, flex-start, center);
+    gap: map.get(var.$unit, 24);
+
+    [class*='vits-btn-'] {
+      min-width: fn.rem(120);
+    }
+  }
+
+  &-text {
+    @include mx.flex(flex, column, center, center);
+    gap: map.get(var.$unit, 4);
+  }
+
+  &-title {
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-desc {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  &-icon {
+    @include icon.ic-size(fn.rem(70));
+    padding: fn.rem(19);
+    color: map.get(color.$icon-neutral, 'tertiary');
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: 50%;
+  }
+}

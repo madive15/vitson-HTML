@@ -1,0 +1,39 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+/**
+ * @file components-mo/overflow-menu.ejs
+ * @description 오버플로 메뉴 (더보기)
+ * @option {Array} items - 메뉴 항목 [{ text, href?, type?, attrs? }]
+ *   - href 있으면 a 태그, 없으면 button 태그
+ *   - type: 'button' 강제 지정 가능
+ *   - attrs: 추가 속성 객체 { 'data-action': 'download', onclick: 'fn()' }
+ */
+const _items = typeof items !== 'undefined' ? items : [];
+
+function renderAttrs(attrs) {
+  if (!attrs) return '';
+  return Object.keys(attrs).map(function(key) {
+    return ' ' + key + '="' + String(attrs[key]).replace(/"/g, '&quot;') + '"';
+  }).join('');
+}
+%>
+
+<div class="vm-overflow-menu" data-vm-overflow-menu>
+  <button type="button" class="overflow-trigger" data-vm-overflow-trigger aria-expanded="false" aria-label="더보기">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'ellipsis2' }) %>
+  </button>
+  <% if (_items.length) { %>
+  <ul class="overflow-list" data-vm-overflow-list>
+    <% _items.forEach(function(item) { %>
+    <li>
+      <% if (item.href && item.type !== 'button') { %>
+      <a href="<%= item.href %>"<%- renderAttrs(item.attrs) %>><%= item.text %></a>
+      <% } else { %>
+      <button type="button"<%- renderAttrs(item.attrs) %>><%= item.text %></button>
+      <% } %>
+    </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</div>

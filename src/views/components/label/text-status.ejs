@@ -6,12 +6,14 @@
     params:
     - type: 'order' | 'claim' (필수)
     - status: '01'~ (필수)  // 숫자(1)로 와도 내부에서 '01'로 보정
+    - device: 'pc' | 'mobile' (선택, default 'pc')
     - tag: string (선택, default 'p')
     - addClassName: string (선택)
     - text: string (선택) // 있으면 매핑보다 우선(예외 처리용)
   */
 
   const _type = (typeof type !== 'undefined' && type) ? String(type) : '';
+  const _device = (typeof device !== 'undefined' && device) ? String(device) : 'pc';
   const _tag = (typeof tag !== 'undefined' && tag) ? String(tag) : 'p';
   const _add = (typeof addClassName !== 'undefined' && addClassName) ? String(addClassName).trim() : '';
 
@@ -20,10 +22,11 @@
   if (_statusRaw.length === 1) _statusRaw = `0${_statusRaw}`;
   const _status = _statusRaw;
 
+  const _suffix = _device === 'mobile' ? '-mobile' : '';
   const _baseClass = (_type === 'order')
-    ? 'text-order-status'
+    ? `text-order-status${_suffix}`
     : (_type === 'claim')
-      ? 'text-claim-status'
+      ? `text-claim-status${_suffix}`
       : '';
 
   // 코드 → 텍스트 매핑

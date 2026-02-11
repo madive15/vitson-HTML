@@ -5,6 +5,8 @@
 
 import './tooltip.js';
 import './sticky-observer.js';
+import './overflow-menu.js';
+import './toggle.js';
 
 (function ($, window) {
   'use strict';
@@ -13,7 +15,7 @@ import './sticky-observer.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['tooltip', 'stickyObserver'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle'];
 
   window.UI.common = {
     init: function () {

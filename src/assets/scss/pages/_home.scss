@@ -11,29 +11,59 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/form' as form;
+@use '@/assets/scss/layout/list' as list; // 상품 카드 공통 스타일
 
 .home-section {
+  position: relative;
   margin: 0 auto;
-  opacity: 0.5;
+
+  /* 배경색 */
+  &:has(.vits-home-main-category-menu) {
+    padding: fn.rem(100) 0;
+    background-color: #f9e9ea;
+  }
+
+  /* 여백 */
+  &:has(.vits-home-frequent-menu) {
+    padding: fn.rem(30) 0 0;
+  }
+
+  /* 배경색 + 타이틀 */
+  &:has(.vits-home-event-banner) {
+    padding: fn.rem(80) 0;
+    overflow: hidden;
+    background-color: map.get(color.$layout-surf, 'sunken');
+
+    .home-section-title {
+      .title-container {
+        @include mx.flex(flex, column, center, flex-start);
+        gap: fn.rem(10);
+      }
+    }
+  }
 }
 
 /* ----------------------------------------------------------------------------- */
 /* 자주 찾는 메뉴 (vits-home-frequent-menu) */
 /* ----------------------------------------------------------------------------- */
 .vits-home-frequent-menu {
-  padding: fn.rem(24) 0 fn.rem(32);
-
   .frequent-menu-title {
-    padding: 0;
     margin: 0 0 fn.rem(20);
   }
 
   .frequent-menu-list {
-    @include mx.flex(flex, row, center, flex-start);
-    flex-wrap: wrap;
-    gap: fn.rem(50);
-    padding: 0;
-    margin: 0;
+    @include mx.flex(flex, row, space-between, flex-start);
+    max-width: var.$desktop-width;
+    margin: 0 auto;
+
+    @include mx.pc-sm {
+      padding: 0 fn.rem(20);
+
+      .frequent-menu-icon {
+        max-width: fn.rem(80);
+        max-height: fn.rem(80);
+      }
+    }
   }
 
   .frequent-menu-item {
@@ -44,27 +74,21 @@
         .frequent-menu-icon {
           transform: scale(0.9);
         }
-
-        .frequent-menu-link {
-          color: map.get(color.$brand-colors, 'primary');
-        }
       }
     }
   }
 
   .frequent-menu-link {
     @include mx.flex(flex, column, center, center);
-    gap: fn.rem(8);
-    width: fn.rem(80);
-    color: map.get(color.$text-colors, 'default');
-    text-decoration: none;
+    gap: map.get(var.$unit, 12);
     transition: color 0.2s ease;
   }
 
   .frequent-menu-icon {
     @include mx.flex(flex, row, center, center);
-    width: fn.rem(96);
-    height: fn.rem(96);
+    max-width: fn.rem(96);
+    max-height: fn.rem(96);
+    overflow: hidden;
     background-color: map.get(color.$gray-shades, '20');
     border-radius: 50%;
     transition: transform 0.2s ease;
@@ -75,10 +99,100 @@
   }
 
   .frequent-menu-label {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'secondary'));
     display: block;
     text-align: center;
+    white-space: nowrap;
+  }
+}
 
-    @include typo.typography('b3r');
+/* ----------------------------------------------------------------------------- */
+/* 대표 카테고리 메뉴 (vits-home-main-category-menu) */
+/* ----------------------------------------------------------------------------- */
+.vits-home-main-category-menu {
+  .main-category-menu-list {
+    @include mx.flex(flex, row, space-between, stretch);
+    gap: fn.rem(32);
+    max-width: var.$desktop-width;
+    margin: 0 auto;
+
+    @include mx.pc-sm {
+      padding: 0 fn.rem(20);
+    }
+  }
+
+  .main-category-section {
+    flex: 1;
+    min-width: 0;
+    padding: map.get(var.$unit, 48) 0;
+    background-color: #fff;
+    border-radius: map.get(var.$radius, 'lg');
+
+    @include mx.hoverable-only {
+      &:hover {
+        box-shadow: map.get(var.$box-shadow, 'elevation_2');
+      }
+    }
+
+    &-header {
+      @include mx.flex(flex, column, center, center);
+      gap: map.get(var.$unit, 8);
+      margin-bottom: fn.rem(32);
+    }
+
+    &-title {
+      @include typo.typography('h1b', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-desc {
+      @include typo.typography('b1r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+  }
+
+  .main-category-item {
+    flex: 0 0 auto;
+
+    &-list {
+      @include mx.flex(flex, row, center, flex-start);
+      flex-wrap: wrap;
+      gap: fn.rem(24);
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    &-link {
+      @include mx.flex(flex, column, center, center);
+      gap: fn.rem(12);
+      transition: color 0.2s ease;
+    }
+
+    &-icon {
+      @include mx.flex(flex, row, center, center);
+      width: fn.rem(100);
+      height: fn.rem(100);
+      overflow: hidden;
+      background-color: map.get(color.$neutral-colors, '9');
+      border-radius: map.get(var.$unit, 24);
+      transition: transform 0.2s ease;
+
+      img {
+        @include mx.img-fit(contain);
+      }
+
+      @include mx.pc-sm {
+        width: fn.rem(80);
+        height: fn.rem(80);
+        border-radius: map.get(var.$unit, 20);
+      }
+    }
+
+    &-label {
+      @include typo.typography('b1m', $color: map.get(color.$text-colors, 'secondary'));
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+    }
   }
 }
 
@@ -96,96 +210,51 @@
     overflow: hidden;
   }
 
-  .swiper-wrapper {
-    display: flex;
-  }
-
   .swiper-slide {
-    flex-shrink: 0;
-    width: auto;
-    height: auto;
+    transition: opacity 0.5s ease;
+
+    &:not(.swiper-slide-active) {
+      opacity: 0.4;
+    }
   }
 
   .main-banner-card {
     @include mx.flex(flex, row, flex-start, center);
     position: relative;
-    width: fn.rem(400);
-    min-height: fn.rem(240);
-    padding: fn.rem(32);
+    gap: fn.rem(20);
+    width: 100%;
+    min-height: 100%;
     overflow: hidden;
-    border-radius: fn.rem(12);
+    border-radius: map.get(var.$radius, 'lg');
   }
 
   .banner-card-content {
-    @include mx.flex(flex, column, flex-start, flex-start);
     position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-  }
-
-  .banner-card-title {
-    margin: 0 0 fn.rem(8);
-    font-size: fn.rem(24);
-    font-weight: 700;
-    line-height: 1.4;
-    color: color.$color-white;
-  }
-
-  .banner-card-subtitle {
-    margin: 0 0 fn.rem(8);
-    font-size: fn.rem(20);
-    font-weight: 700;
-    line-height: 1.4;
-    color: #ffd700; // 노란색
-  }
-
-  .banner-card-description {
-    margin: 0 0 fn.rem(20);
-    font-size: fn.rem(14);
-    font-weight: 400;
-    line-height: 1.5;
-    color: color.$color-white;
-  }
-
-  .banner-card-image {
-    @include mx.flex(flex, row, center, center);
     flex: 1;
-    width: 100%;
-    margin: fn.rem(16) 0;
 
-    img {
-      @include mx.img-fit(contain);
-      max-width: 100%;
-      max-height: fn.rem(120);
+    a {
+      display: block;
     }
   }
 
-  .banner-card-link {
-    @include mx.flex(flex, row, center, center);
-    padding: fn.rem(8) fn.rem(16);
-    font-size: fn.rem(14);
-    font-weight: 400;
-    text-decoration: none;
-    background-color: color.$color-white;
-    border: 1px solid;
-    border-radius: fn.rem(4);
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
+  .banner-card-image {
+    img {
+      @include mx.img-fit(contain);
+      width: 100%;
+    }
   }
 
   // 진행 바 및 재생/멈춤
   .main-banner-progress {
     @include mx.flex(flex, row, center, center);
-    gap: fn.rem(12);
     width: 100%;
-    padding: 0 fn.rem(40);
-    margin-top: fn.rem(16);
+    max-width: var.$desktop-width;
+    margin: fn.rem(10) auto 0;
   }
 
   .banner-progress-bar {
     flex: 1;
+    min-width: 0;
     height: fn.rem(4);
     overflow: hidden;
     background-color: map.get(color.$gray-shades, '30');
@@ -207,48 +276,36 @@
 
   .banner-progress-btn {
     @include mx.flex(flex, row, center, center);
-    width: fn.rem(28);
-    height: fn.rem(28);
+    width: fn.rem(20);
+    height: fn.rem(20);
     cursor: pointer;
-    border-radius: fn.rem(4);
-    opacity: 1;
-    transition: opacity 0.2s ease;
 
     @include button.btn-reset;
 
-    @include mx.hoverable-only {
-      &:hover {
-        opacity: 0.8;
-      }
+    .ic {
+      @include icon.ic-size(fn.rem(20));
+      color: map.get(color.$icon-neutral, 'tertiary');
     }
 
-    // 아이콘 스타일
-    .ic {
-      width: fn.rem(16);
-      height: fn.rem(16);
+    @include mx.hoverable-only {
+      &:hover {
+        .ic {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
     }
 
     // 재생 아이콘 (일시정지 상태일 때 표시)
-
     &.is-paused {
-      .banner-progress-icon-play {
-        display: block;
-      }
-
       .banner-progress-icon-pause {
         display: none;
       }
     }
 
     // 일시정지 아이콘 (재생 상태일 때 표시)
-
     &.is-playing {
       .banner-progress-icon-play {
         display: none;
-      }
-
-      .banner-progress-icon-pause {
-        display: block;
       }
     }
   }
@@ -262,43 +319,29 @@
   .main-banner-navs {
     @include mx.flex(flex, row, center, center);
     flex-shrink: 0;
-    gap: fn.rem(4);
+    margin-left: fn.rem(20);
   }
 
   .banner-nav-button {
     @include mx.flex(flex, row, center, center);
-    width: fn.rem(32);
-    height: fn.rem(32);
+    width: fn.rem(20);
+    height: fn.rem(20);
     cursor: pointer;
-    background-color: rgb(255 255 255 / 90%);
-    border: 1px solid map.get(color.$layout-border, 'tertiary');
-    border-radius: 50%;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
 
     @include button.btn-reset;
 
     // 아이콘 스타일
     .ic {
-      width: fn.rem(16);
-      height: fn.rem(16);
-      transition: filter 0.2s ease;
+      width: fn.rem(20);
+      height: fn.rem(20);
+      color: map.get(color.$icon-neutral, 'tertiary');
     }
 
     @include mx.hoverable-only {
       &:hover {
-        background-color: color.$color-white;
-        border-color: map.get(color.$brand-colors, 'primary');
-      }
-    }
-
-    &:active {
-      background-color: map.get(color.$brand-colors, 'primary');
-      border-color: map.get(color.$brand-colors, 'primary');
-
-      .ic {
-        filter: brightness(0) invert(1);
+        .ic {
+          color: map.get(color.$brand-colors, 'primary');
+        }
       }
     }
 
@@ -306,6 +349,298 @@
       pointer-events: none;
       cursor: not-allowed;
       opacity: 0.35;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 업종 맞춤 기획전 배너 (vits-home-event-banner) */
+/* ----------------------------------------------------------------------------- */
+.vits-home-event-banner {
+  position: relative;
+  max-width: var.$desktop-width;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  /* position-block */
+  .position-block {
+    position: absolute;
+    inset: fn.rem(-5) calc(100% - fn.rem(228)) 0 auto;
+    z-index: 1;
+    width: 100vw;
+    background-color: map.get(color.$layout-surf, 'sunken');
+  }
+
+  .event-banner-container {
+    position: relative;
+    margin-left: 228px;
+
+    // overflow: hidden;
+  }
+
+  .swiper-wrapper {
+    padding: 0;
+  }
+
+  .event-banner-slide {
+    position: relative;
+    max-width: fn.rem(300);
+    transition:
+      filter 0.3s ease,
+      opacity 0.3s ease;
+
+    &.swiper-slide-active + .event-banner-slide + .event-banner-slide ~ .event-banner-slide {
+      filter: opacity(0.3);
+    }
+
+    &.swiper-slide-active + .event-banner-slide + .event-banner-slide + .event-banner-slide {
+      &::after {
+        position: absolute;
+        inset: 0;
+        content: '';
+        background: linear-gradient(270deg, rgb(243 243 243 / 0%) 62%, #f3f3f3 100%);
+      }
+    }
+  }
+
+  .event-banner-card {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  .event-banner-image {
+    position: relative;
+    max-height: 100%;
+    overflow: hidden;
+
+    img {
+      @include mx.img-fit(cover);
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .event-banner-navs {
+    @include mx.position(absolute, 0, auto, auto, -228px);
+    @include mx.flex(flex, row, center, center);
+    z-index: 2;
+    gap: fn.rem(12);
+  }
+
+  .event-banner-nav {
+    width: fn.rem(32);
+    height: fn.rem(32);
+    cursor: pointer;
+
+    @include button.btn-reset;
+
+    @include mx.hoverable-only {
+      &:hover {
+        .ic {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
+    }
+
+    .ic {
+      @include icon.ic-size(fn.rem(32));
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
+
+    &.swiper-button-disabled {
+      pointer-events: none;
+      opacity: 0.2;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 섹션 타이틀 (home-section-title) */
+/* -------------------------------------------------- --------------------------- */
+.home-section-title {
+  @include mx.flex(flex, row, space-between, flex-end);
+  max-width: var.$desktop-width;
+  padding-bottom: fn.rem(30);
+  margin: 0 auto;
+
+  @include mx.pc-sm {
+    padding: 0 fn.rem(20) fn.rem(30);
+  }
+
+  .title-container {
+    @include mx.flex(flex, row, flex-start, flex-end);
+  }
+
+  .tool-container {
+    @include mx.flex(flex, row, center, center);
+  }
+
+  .more-view-link {
+    @include mx.flex(flex, row, center, center);
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+
+    &-text {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-icon {
+      @include icon.ic-size(fn.rem(20));
+    }
+  }
+
+  h2.title-text {
+    @include mx.flex(flex, row, center, center);
+    @include typo.typography('h1b', $color: map.get(color.$text-colors, 'primary'));
+
+    .title-point {
+      margin: fn.rem(0) fn.rem(10);
+      color: map.get(color.$text-status, 'brand');
+    }
+  }
+
+  h2.title-point {
+    @include mx.flex(flex, row, center, center);
+    @include typo.typography('h1b', $color: map.get(color.$text-status, 'brand'));
+
+    .title-text {
+      margin: fn.rem(0) fn.rem(10);
+      color: map.get(color.$text-colors, 'primary');
+    }
+  }
+
+  .title-description {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 상품 리스트 (home-product-list) */
+/* ----------------------------------------------------------------------------- */
+.home-product-list-item {
+  @include mx.flex(flex, row, flex-start, flex-start, wrap);
+  gap: fn.rem(20);
+  max-width: fn.rem(230);
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 광고 배너 (home-ad-banner) */
+/* ----------------------------------------------------------------------------- */
+.home-ad-banner {
+  max-width: var.$desktop-width;
+  margin: 0 auto;
+
+  @include mx.pc-sm {
+    padding: 0 fn.rem(20);
+  }
+
+  /* 더블광고 배너 */
+  &.double-banner {
+    @include mx.flex(flex, row, space-between, flex-start);
+    gap: fn.rem(32);
+
+    .home-ad-banner-link {
+      display: block;
+      width: calc(100% - fn.rem(16));
+
+      @include mx.img-fit(contain);
+    }
+  }
+
+  /* 라인광고 배너 (스와이프) */
+  &.line-banner {
+    position: relative;
+    max-width: fn.rem(1360);
+    padding: 0 fn.rem(40);
+
+    @include mx.pc-sm {
+      padding: 0 fn.rem(20);
+    }
+
+    .line-banner-visual {
+      position: relative;
+      max-width: fn.rem(1360);
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    .line-banner-container {
+      position: relative;
+    }
+
+    .line-banner-slide {
+      position: relative;
+      height: 100%;
+    }
+
+    .home-ad-banner-link {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'lg');
+
+      img {
+        @include mx.img-fit(cover);
+        width: 100%;
+      }
+    }
+
+    /* 좌우 네비게이션 */
+    .line-banner-navs {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+
+      @include mx.flex(flex, row, space-between, center);
+    }
+
+    .line-banner-nav {
+      width: fn.rem(36);
+      height: fn.rem(36);
+      padding: 0;
+      cursor: pointer;
+      background-color: #fff;
+      border: 1px solid map.get(color.$layout-border, 'tertiary');
+      border-radius: 50%;
+      transition:
+        opacity 0.2s ease,
+        background-color 0.2s ease;
+
+      @include mx.flex(flex, row, center, center);
+      @include button.btn-reset;
+
+      .ic {
+        @include icon.ic-size(fn.rem(20));
+        color: map.get(color.$icon-neutral, 'primary');
+      }
+
+      @include mx.hoverable-only {
+        &:hover {
+          background-color: #fff;
+          border: 1px solid map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            color: map.get(color.$brand-colors, 'primary');
+          }
+        }
+
+        &:active {
+          background-color: map.get(color.$brand-colors, 'primary');
+          border-color: map.get(color.$brand-colors, 'primary');
+
+          .ic {
+            filter: brightness(0) invert(1);
+          }
+        }
+      }
+
+      &.swiper-button-disabled {
+        pointer-events: none;
+        opacity: 0.35;
+      }
     }
   }
 }

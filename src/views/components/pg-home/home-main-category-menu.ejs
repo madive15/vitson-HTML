@@ -1,0 +1,54 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const icBase = _public + '/resources/img/mro/renewal/home/ic';
+  const mainCategorySections = [
+    {
+      title: '사무·생활·탕비용품',
+      description: '일상과 오피스에 필요한 모든 것',
+      items: [
+        { icon: 'ic-category-menu-01', label: '탕비용품', href: '#!' },
+        { icon: 'ic-category-menu-02', label: '사무용품', href: '#!' },
+        { icon: 'ic-category-menu-03', label: '필기도구', href: '#!' },
+        { icon: 'ic-category-menu-04', label: '선물세트', href: '#!' },
+      ],
+    },
+    {
+      title: '전문 장비·설비·기술 자재',
+      description: '전문가를 위한 산업용 제품',
+      items: [
+        { icon: 'ic-category-menu-05', label: '조명', href: '#!' },
+        { icon: 'ic-category-menu-06', label: '전기자재', href: '#!' },
+        { icon: 'ic-category-menu-07', label: '안전용품', href: '#!' },
+        { icon: 'ic-category-menu-08', label: '공구', href: '#!' },
+      ],
+    },
+  ];
+%>
+
+<!-- 대표 카테고리 메뉴 -->
+<div class="vits-home-main-category-menu">
+  <h2 class="sr-only">대표 카테고리 메뉴</h2>
+  <div class="main-category-menu-list">
+    <% mainCategorySections.forEach((section) => { %>
+    <section class="main-category-section">
+      <div class="main-category-section-header">
+        <h3 class="main-category-section-title"><%= section.title %></h3>
+        <p class="main-category-section-desc"><%= section.description %></p>
+      </div>
+      <ul class="main-category-item-list">
+        <% section.items.forEach((item) => { %>
+        <li class="main-category-item">
+          <a href="<%= item.href %>" class="main-category-item-link">
+            <span class="main-category-item-icon">
+              <img src="<%= icBase %>/<%= item.icon %>.png" alt="" />
+            </span>
+            <span class="main-category-item-label"><%= item.label %></span>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+    </section>
+    <% }); %>
+  </div>
+</div>
