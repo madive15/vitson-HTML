@@ -701,6 +701,439 @@
 
 /***/ }),
 
+/***/ 2624:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/filter/filter-mypage.js
+ * @description 마이페이지 필터 모듈 — 셀렉트 ↔ 데이트피커 연동
+ * @scope .vm-mypage-filter
+ *
+ * @state .is-filter-open   — 필터 확장 (데이트피커 row + 액션 + 딤 노출)
+ * @state .has-filter-value  — 기본값 외 값 변경 시 (초기화 버튼 노출)
+ * @state .is-direct-input   — 직접입력 선택 시 (데이트피커 상시 노출)
+ *
+ * @note
+ *  - 기본값: 1개월(value '0') — 변경으로 취급하지 않음
+ *  - 닫기: 조회하기 / 초기화 / 딤 클릭
+ *  - 직접입력: 필터 닫혀도 데이트피커 row 상시 노출 유지
+ *  - 프리셋 상태에서 달력 날짜 직접 선택 시 자동으로 직접입력 전환
+ *  - 인풋 포커스 시 필터 열림, 스크롤 잠금 안 함
+ *  - 셀렉트 변경 시 필터 열림, 스크롤 잠금 적용
+ *  - 페이지 로드 시 기본값(1개월) hidden input에 날짜 세팅
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  var UI = window.UI;
+  if (!UI || !UI.select) return;
+
+  // 상수
+  var NS = '.uiFilterMypage';
+  var SCOPE = '.vm-mypage-filter';
+  var PICKER_INIT_DELAY = 50;
+  var DATE_SEPARATOR = ' ~ ';
+  var CLS = {
+    open: 'is-filter-open',
+    hasValue: 'has-filter-value',
+    directInput: 'is-direct-input'
+  };
+  var SEL = {
+    periodRoot: '[data-select-id="vm-order-period"]',
+    statusRoot: '[data-select-id="vm-order-status"]',
+    deliveryRoot: '[data-select-id="vm-order-delivery"]',
+    datePicker: '#vm-order-daterange',
+    searchInput: '#vm-order-search-searchKeyword',
+    dim: '.vm-mypage-filter-dim',
+    resetBtn: '.actions-reset',
+    searchBtn: '.actions-search'
+  };
+
+  // 기간 프리셋 (월 단위)
+  var PRESET_MONTHS = {
+    0: 1,
+    1: 3,
+    2: 6,
+    3: 12
+  };
+  var DIRECT_INPUT_VALUE = '4';
+  var DEFAULT_PERIOD = '0';
+  var DEFAULT_SELECT = '0';
+
+  // 내부 상태
+  var _$filter = null;
+  var _baseHeight = 0;
+  var _savedScrollY = 0;
+  var _bound = false;
+  var _pickerReady = false;
+  var _scrollLocked = false;
+  var _programmaticChange = false;
+
+  // 날짜 포맷
+  function formatDateStr(date) {
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1).padStart(2, '0');
+    var d = String(date.getDate()).padStart(2, '0');
+    return y + '.' + m + '.' + d;
+  }
+
+  // 데이트피커 인스턴스 조회
+  function getPickerInstance() {
+    var rp = window.VmKendoRangePicker;
+    if (!rp || !rp.getInstance) return null;
+    return rp.getInstance(SEL.datePicker);
+  }
+
+  // 데이트피커 최초 초기화 — display 전환 후 호출
+  function ensurePickerInit(callback) {
+    if (_pickerReady && getPickerInstance()) {
+      if (callback) callback();
+      return;
+    }
+    var rp = window.VmKendoRangePicker;
+    if (rp && rp.initAll) {
+      rp.initAll(_$filter[0]);
+    }
+    setTimeout(function () {
+      _pickerReady = !!getPickerInstance();
+      if (callback) callback();
+    }, PICKER_INIT_DELAY);
+  }
+
+  // 날짜 계산
+  function calcPresetRange(months) {
+    var end = new Date();
+    var start = new Date();
+    start.setMonth(start.getMonth() - months);
+    return {
+      start: start,
+      end: end
+    };
+  }
+
+  // 스크롤 잠금
+  function lockScroll() {
+    if (_scrollLocked) return;
+    _scrollLocked = true;
+    _savedScrollY = window.pageYOffset;
+    document.body.style.position = 'fixed';
+    document.body.style.top = -_savedScrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockScroll() {
+    if (!_scrollLocked) return;
+    _scrollLocked = false;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, _savedScrollY);
+  }
+
+  // 높이 잠금 — 콘텐츠 밀림 방지
+  function lockHeight() {
+    _baseHeight = _$filter.outerHeight();
+    _$filter.css({
+      height: _baseHeight,
+      overflow: 'visible'
+    });
+  }
+  function unlockHeight() {
+    _$filter.css({
+      height: '',
+      overflow: ''
+    });
+  }
+
+  // 필터 확장
+  function openFilter(callback, withScrollLock) {
+    if (_$filter.hasClass(CLS.open)) {
+      if (callback) callback();
+      return;
+    }
+    lockHeight();
+    _$filter.addClass(CLS.open);
+    $(SEL.dim).show();
+    if (withScrollLock !== false) lockScroll();
+    ensurePickerInit(callback);
+  }
+
+  // 필터 축소
+  function closeFilter() {
+    if (!_$filter.hasClass(CLS.open)) return;
+    _$filter.removeClass(CLS.open);
+    $(SEL.dim).hide();
+    unlockHeight();
+    unlockScroll();
+  }
+
+  // hidden input 직접 세팅 — picker 미초기화 상태에서 사용
+  function setHiddenDateValues(start, end) {
+    var $el = $(SEL.datePicker);
+    var startStr = formatDateStr(start);
+    var endStr = formatDateStr(end);
+    $el.find('.js-start-date').val(startStr);
+    $el.find('.js-end-date').val(endStr);
+    $el.find('.js-range-display').val(startStr + DATE_SEPARATOR + endStr);
+  }
+
+  // 데이트피커 값 세팅 — picker 없으면 hidden input 직접 세팅
+  function setDateRange(start, end) {
+    _programmaticChange = true;
+    var picker = getPickerInstance();
+    if (picker) {
+      picker.setValue(start, end);
+    } else {
+      setHiddenDateValues(start, end);
+    }
+    _programmaticChange = false;
+  }
+
+  // 데이트피커 리셋 — picker 없으면 hidden input 직접 클리어
+  function resetDateRange() {
+    var picker = getPickerInstance();
+    if (picker) {
+      picker.reset();
+      return;
+    }
+    var $el = $(SEL.datePicker);
+    $el.find('.js-start-date').val('');
+    $el.find('.js-end-date').val('');
+    $el.find('.js-range-display').val('');
+  }
+
+  // 현재 프리셋 기준으로 필터 열기 + 날짜 세팅
+  function openWithCurrentPreset(withScrollLock) {
+    var value = UI.select.getValue($(SEL.periodRoot));
+    var months = PRESET_MONTHS[value];
+    openFilter(function () {
+      if (months) {
+        var range = calcPresetRange(months);
+        setDateRange(range.start, range.end);
+      }
+    }, withScrollLock);
+  }
+
+  // 필터 값 유무 체크 — 기본값(1개월)은 변경으로 취급하지 않음
+  function updateFilterValueState() {
+    var hasValue = false;
+    var periodVal = UI.select.getValue($(SEL.periodRoot));
+    if (periodVal && periodVal !== DEFAULT_PERIOD) hasValue = true;
+    var statusVal = UI.select.getValue($(SEL.statusRoot));
+    if (statusVal && statusVal !== DEFAULT_SELECT) hasValue = true;
+    var deliveryVal = UI.select.getValue($(SEL.deliveryRoot));
+    if (deliveryVal && deliveryVal !== DEFAULT_SELECT) hasValue = true;
+    _$filter.toggleClass(CLS.hasValue, hasValue);
+  }
+
+  // 조회기간 변경 핸들러
+  function onPeriodChange() {
+    var value = $(this).val();
+    var months = PRESET_MONTHS[value];
+    _$filter.toggleClass(CLS.directInput, value === DIRECT_INPUT_VALUE);
+    if (months) {
+      openFilter(function () {
+        var range = calcPresetRange(months);
+        setDateRange(range.start, range.end);
+      });
+    } else if (value === DIRECT_INPUT_VALUE) {
+      openFilter(function () {
+        resetDateRange();
+      });
+    }
+    updateFilterValueState();
+  }
+
+  // 주문상태/배송상태 변경 핸들러
+  function onSelectChange() {
+    openWithCurrentPreset(true);
+    updateFilterValueState();
+  }
+
+  // 데이트피커 날짜 직접 선택 → 셀렉트를 직접입력으로 변경
+  function onDatePickerChange() {
+    if (_programmaticChange) return;
+    var periodVal = UI.select.getValue($(SEL.periodRoot));
+    if (periodVal === DIRECT_INPUT_VALUE) return;
+    UI.select.setValue($(SEL.periodRoot), DIRECT_INPUT_VALUE);
+    _$filter.addClass(CLS.directInput);
+    updateFilterValueState();
+  }
+
+  // 검색 input 포커스 → 필터 열림, 스크롤 잠금 안 함
+  function onInputFocus() {
+    openWithCurrentPreset(false);
+  }
+
+  // 딤 클릭 → 닫기
+  function onDimClick() {
+    closeFilter();
+  }
+
+  // 초기화 버튼
+  function onResetClick() {
+    _$filter.removeClass(CLS.directInput);
+    UI.select.setValue($(SEL.periodRoot), DEFAULT_PERIOD);
+    UI.select.setValue($(SEL.statusRoot), DEFAULT_SELECT);
+    UI.select.setValue($(SEL.deliveryRoot), DEFAULT_SELECT);
+    var range = calcPresetRange(PRESET_MONTHS[DEFAULT_PERIOD]);
+    setHiddenDateValues(range.start, range.end);
+    resetDateRange();
+    closeFilter();
+    updateFilterValueState();
+  }
+
+  // 조회하기 버튼
+  function onSearchClick() {
+    closeFilter();
+    // TODO: 조회 API 호출
+  }
+
+  // 초기 상태 — hidden input에 기본값(1개월) 날짜 세팅
+  function setInitialState() {
+    var value = UI.select.getValue($(SEL.periodRoot));
+    var months = PRESET_MONTHS[value];
+    if (!months) return;
+    var range = calcPresetRange(months);
+    setHiddenDateValues(range.start, range.end);
+  }
+
+  // 이벤트 바인딩
+  function bindEvents() {
+    if (_bound) return;
+    _bound = true;
+    var $doc = $(document);
+
+    // 스코프 내 모든 셀렉트 change 위임
+    $doc.on('change' + NS, SCOPE + ' [data-vits-select-hidden]', function () {
+      var $root = $(this).closest('[data-vits-select]');
+      var selectId = $root.attr('data-select-id');
+      if (selectId === 'vm-order-period') {
+        onPeriodChange.call(this);
+      } else {
+        onSelectChange();
+      }
+    });
+    $doc.on('rangepicker:change' + NS, SEL.datePicker, onDatePickerChange);
+    $doc.on('focusin' + NS, SEL.searchInput, onInputFocus);
+    $doc.on('click' + NS, SEL.dim, onDimClick);
+    $doc.on('click' + NS, SCOPE + ' ' + SEL.resetBtn, onResetClick);
+    $doc.on('click' + NS, SCOPE + ' ' + SEL.searchBtn, onSearchClick);
+  }
+
+  // 공개 API
+  function init() {
+    _$filter = $(SCOPE);
+    if (!_$filter.length) return;
+    bindEvents();
+    setInitialState();
+  }
+  function destroy() {
+    $(document).off(NS);
+    closeFilter();
+    _$filter = null;
+    _baseHeight = 0;
+    _savedScrollY = 0;
+    _bound = false;
+    _pickerReady = false;
+    _scrollLocked = false;
+    _programmaticChange = false;
+  }
+  window.FilterMypage = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 4305:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/overflow-menu.js
+ * @description 오버플로 메뉴 (더보기 등)
+ * @scope [data-vm-overflow-menu]
+ * @state .is-open — 메뉴 열림
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiOverflowMenu';
+  var ROOT = '[data-vm-overflow-menu]';
+  var TRIGGER = '[data-vm-overflow-trigger]';
+  var LIST = '[data-vm-overflow-list]';
+  var CLS_OPEN = 'is-open';
+  var _bound = false;
+  function close($root) {
+    $root.removeClass(CLS_OPEN);
+    $root.find(TRIGGER).attr('aria-expanded', 'false');
+  }
+  function closeAll() {
+    $(ROOT + '.' + CLS_OPEN).each(function () {
+      close($(this));
+    });
+  }
+  function open($root) {
+    closeAll();
+    $root.addClass(CLS_OPEN);
+    $root.find(TRIGGER).attr('aria-expanded', 'true');
+  }
+  function toggle($root) {
+    if ($root.hasClass(CLS_OPEN)) {
+      close($root);
+    } else {
+      open($root);
+    }
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+    var $doc = $(document);
+
+    // 트리거 클릭
+    $doc.on('click' + NS, TRIGGER, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle($(this).closest(ROOT));
+    });
+
+    // 메뉴 항목 클릭 → 닫기
+    $doc.on('click' + NS, LIST + ' a, ' + LIST + ' button', function () {
+      close($(this).closest(ROOT));
+    });
+
+    // 외부 클릭 → 닫기
+    $doc.on('mousedown' + NS + ' touchstart' + NS, function (e) {
+      if (!$(e.target).closest(ROOT).length) {
+        closeAll();
+      }
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    closeAll();
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.overflowMenu = {
+    init: init,
+    destroy: destroy,
+    close: close,
+    closeAll: closeAll
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 4387:
 /***/ (function() {
 
@@ -1009,17 +1442,20 @@ var utils = __webpack_require__(1781);
 var scroll_lock = __webpack_require__(2066);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
 var kendo_window = __webpack_require__(4387);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
+var kendo_datepicker = __webpack_require__(7713);
 ;// ./src/assets/scripts-mo/ui/kendo/index.js
 /**
  * @file scripts-mo/ui/kendo/index.js
  * @description Kendo UI 관련 모듈 통합 관리
  */
 
+
 (function (window) {
   'use strict';
 
   window.UI = window.UI || {};
-  var modules = ['VmKendoWindow'];
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker'];
   window.UI.kendo = {
     init: function () {
       modules.forEach(function (name) {
@@ -1033,6 +1469,10 @@ var kendo_window = __webpack_require__(4387);
 var tooltip = __webpack_require__(9592);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
 var sticky_observer = __webpack_require__(5723);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
+var overflow_menu = __webpack_require__(4305);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
+var toggle = __webpack_require__(8955);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -1041,12 +1481,14 @@ var sticky_observer = __webpack_require__(5723);
 
 
 
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -1132,6 +1574,8 @@ var category_tree_search = __webpack_require__(1234);
 })(window);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
 var filter_product = __webpack_require__(2014);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
+var filter_mapage = __webpack_require__(2624);
 ;// ./src/assets/scripts-mo/ui/filter/index.js
 /**
  * @file scripts-mo/ui/filter/index.js
@@ -1139,12 +1583,13 @@ var filter_product = __webpack_require__(2014);
  */
 
 
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['FilterProduct'];
+  var modules = ['FilterProduct', 'FilterMypage'];
   window.UI.filter = {
     init: function () {
       modules.forEach(function (name) {
@@ -1704,6 +2149,516 @@ console.log('[mobile/index] entry 실행');
 
 /***/ }),
 
+/***/ 7713:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/kendo/kendo-datepicker.js
+ * @description Kendo Calendar 기반 모바일 Range Picker 모듈
+ * @scope [data-ui="kendo-range-picker"]
+ * @mapping js-range-display(표시), js-calendar-popup(팝업), js-calendar-toggle(토글), js-kendo-calendar(캘린더)
+ * @state is-open: 팝업 열림, is-disabled: 비활성, is-selected: 범위 선택 완료, has-range: 범위 존재
+ * @option format, separator, placeholder, min, max (data-opt JSON)
+ * @a11y Escape 키 닫기
+ * @events rangepicker:change, rangepicker:open, rangepicker:close, rangepicker:reset
+ * @note iOS Safari 스크롤 잠금, touchend 기반 ghost click 차단 포함
+ */
+(function (window) {
+  'use strict';
+
+  var $ = window.jQuery;
+  var DATA_UI = 'kendo-range-picker';
+  var DATA_KEY = 'vmKendoRangePicker';
+  var NS = '.vmRangePicker';
+  var TOUCH_SUPPORTED = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var IS_IOS = TOUCH_SUPPORTED && /iPad|iPhone|iPod/.test(navigator.userAgent) || navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent);
+  var DELAY = {
+    OBSERVER_RECONNECT: 50,
+    NAVIGATE_UI: 10
+  };
+  var Selector = {
+    SCOPE: '[data-ui="' + DATA_UI + '"]',
+    DISPLAY: '.js-range-display',
+    POPUP: '.js-calendar-popup',
+    TOGGLE: '.js-calendar-toggle',
+    CALENDAR: '.js-kendo-calendar',
+    START_INPUT: '.js-start-date',
+    END_INPUT: '.js-end-date'
+  };
+  var ClassName = {
+    OPEN: 'is-open',
+    DISABLED: 'is-disabled',
+    SELECTED: 'is-selected',
+    HAS_RANGE: 'has-range',
+    EMPTY_ROW: 'is-empty-row',
+    RANGE_START: 'k-range-start',
+    RANGE_END: 'k-range-end',
+    RANGE_MID: 'k-range-mid'
+  };
+  var MONTH_MAP = {
+    Jan: '1월',
+    Feb: '2월',
+    Mar: '3월',
+    Apr: '4월',
+    May: '5월',
+    Jun: '6월',
+    Jul: '7월',
+    Aug: '8월',
+    Sep: '9월',
+    Oct: '10월',
+    Nov: '11월',
+    Dec: '12월'
+  };
+  var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // 스크롤 잠금
+  var savedScrollY = 0;
+  var scrollLocked = false;
+  function lockBodyScroll() {
+    if (scrollLocked) return;
+    scrollLocked = true;
+    savedScrollY = window.scrollY || window.pageYOffset;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + savedScrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockBodyScroll() {
+    if (!scrollLocked) return;
+    scrollLocked = false;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, savedScrollY);
+  }
+
+  // 유틸리티
+  function parseJsonSafe(str) {
+    if (!str) return null;
+    var decoded = str.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    try {
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
+  }
+  function ensureKendoAvailable() {
+    return !!($ && window.kendo && $.fn && $.fn.kendoCalendar);
+  }
+  function parseDateValue(val) {
+    if (!val) return null;
+    if (val instanceof Date) return val;
+    try {
+      return new Date(val);
+    } catch {
+      return null;
+    }
+  }
+  function formatDate(date, format) {
+    if (!date) return '';
+    if (window.kendo && window.kendo.toString) {
+      return window.kendo.toString(date, format);
+    }
+    var y = date.getFullYear();
+    var m = String(date.getMonth() + 1).padStart(2, '0');
+    var d = String(date.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
+  function toDateOnly(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  }
+  function applyPrefixClassToWrapper($wrap, $popup) {
+    if (!$wrap || !$wrap.length || !$popup || !$popup.length) return;
+    var classList = ($wrap.attr('class') || '').split(/\s+/).filter(Boolean);
+    for (var i = 0; i < classList.length; i++) {
+      // vits-(PC), vm-(모바일) 모두 대응
+      if (classList[i].indexOf('vits-') === 0 || classList[i].indexOf('vm-') === 0) {
+        $popup.addClass(classList[i]);
+      }
+    }
+  }
+
+  // Range Picker 초기화
+  function initRangePicker(el) {
+    var $el = $(el);
+    if ($el.data(DATA_KEY)) return;
+    var optRaw = $el.attr('data-opt') || '{}';
+    var opts = parseJsonSafe(optRaw) || {};
+    opts.format = opts.format || 'yyyy.MM.dd';
+    opts.separator = opts.separator || ' ~ ';
+    opts.placeholder = opts.placeholder || '시작일 ~ 종료일';
+    if (opts.min) opts.min = parseDateValue(opts.min);
+    if (opts.max) opts.max = parseDateValue(opts.max);
+    var $wrap = $el;
+    var $display = $wrap.find(Selector.DISPLAY);
+    var $popup = $wrap.find(Selector.POPUP);
+    var $toggle = $wrap.find(Selector.TOGGLE);
+    var $calendarWrap = $wrap.find(Selector.CALENDAR);
+    var $startInput = $wrap.find(Selector.START_INPUT);
+    var $endInput = $wrap.find(Selector.END_INPUT);
+    var elId = $el.attr('id') || '';
+    var nsDoc = NS + '_' + elId;
+    var state = {
+      startDate: null,
+      endDate: null,
+      isSelectingEnd: false,
+      isOpen: false
+    };
+    var isHighlighting = false;
+    var isUpdatingUI = false;
+
+    // 초기값 파싱
+    var startVal = $startInput.val();
+    var endVal = $endInput.val();
+    if (startVal) state.startDate = parseDateValue(startVal);
+    if (endVal) state.endDate = parseDateValue(endVal);
+
+    // 캘린더 생성
+    var calendarOpts = {
+      change: onCalendarChange,
+      navigate: onCalendarNavigate,
+      culture: 'en-US',
+      animation: false,
+      footer: false,
+      month: {
+        header: '#= kendo.toString(data.date, "yyyy.MM") #',
+        empty: '&nbsp;'
+      },
+      start: 'month',
+      depth: 'month'
+    };
+    if (opts.min) calendarOpts.min = opts.min;
+    if (opts.max) calendarOpts.max = opts.max;
+    $calendarWrap.kendoCalendar(calendarOpts);
+    var calendar = $calendarWrap.data('kendoCalendar');
+
+    // UI 갱신
+    function updateNavTitle() {
+      var currentDate = calendar.current();
+      var year = currentDate.getFullYear();
+      var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      // html()은 Date 객체 기반 숫자만 삽입하므로 XSS 안전
+      var title = year + '<span class="nav-dot">.</span>' + month;
+      $calendarWrap.find('.k-button-text').html(title);
+    }
+    function updateMonthNames() {
+      $calendarWrap.find('.k-calendar-view td .k-link').each(function () {
+        var $link = $(this);
+        var mapped = MONTH_MAP[$link.text().trim()];
+        if (mapped) $link.text(mapped);
+      });
+    }
+    function updateDayNames() {
+      $calendarWrap.find('th').each(function (index) {
+        var $th = $(this);
+        if ($th.text().trim().length <= 3) {
+          $th.text(DAY_NAMES[index]);
+        }
+      });
+    }
+    function removeEmptyRows() {
+      $calendarWrap.find('.k-calendar-monthview tbody tr').each(function () {
+        var $tr = $(this);
+        var hasCurrentMonth = $tr.find('td:not(.k-other-month)').length > 0;
+        $tr.toggleClass(ClassName.EMPTY_ROW, !hasCurrentMonth);
+      });
+    }
+    function refreshUI() {
+      // navigate 이후 전체 UI 갱신 통합 진입점
+      updateNavTitle();
+      updateDayNames();
+      updateMonthNames();
+      highlightRange();
+      removeEmptyRows();
+    }
+
+    // MutationObserver — DOM 변경 시 UI 동기화
+    var uiObserver = new MutationObserver(function () {
+      if (isHighlighting || isUpdatingUI) return;
+      isUpdatingUI = true;
+      uiObserver.disconnect();
+      refreshUI();
+      window.setTimeout(function () {
+        uiObserver.observe($calendarWrap[0], {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+        isUpdatingUI = false;
+      }, DELAY.OBSERVER_RECONNECT);
+    });
+    uiObserver.observe($calendarWrap[0], {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+
+    // 상태 클래스
+    function updateSelectedState() {
+      $wrap.toggleClass(ClassName.SELECTED, !!(state.startDate && state.endDate));
+    }
+
+    // 이벤트 핸들러
+    function onCalendarChange() {
+      var selectedDate = calendar.value();
+      if (!state.isSelectingEnd) {
+        state.startDate = selectedDate;
+        state.endDate = null;
+        state.isSelectingEnd = true;
+      } else {
+        // 시작일보다 이전 날짜 선택 시 자동 스왑
+        if (selectedDate < state.startDate) {
+          state.endDate = state.startDate;
+          state.startDate = selectedDate;
+        } else {
+          state.endDate = selectedDate;
+        }
+        state.isSelectingEnd = false;
+        closePopup();
+        $el.trigger('rangepicker:change', [getPublicValue()]);
+      }
+      updateDisplay();
+      updateHiddenInputs();
+      highlightRange();
+      updateSelectedState();
+    }
+    function onCalendarNavigate() {
+      window.setTimeout(function () {
+        refreshUI();
+      }, DELAY.NAVIGATE_UI);
+    }
+    function highlightRange() {
+      isHighlighting = true;
+      var $cells = $calendarWrap.find('td');
+      $cells.removeClass(ClassName.RANGE_START + ' ' + ClassName.RANGE_END + ' ' + ClassName.RANGE_MID);
+      $calendarWrap.toggleClass(ClassName.HAS_RANGE, !!(state.startDate && state.endDate));
+      if (!state.startDate) {
+        isHighlighting = false;
+        return;
+      }
+      var startTime = toDateOnly(state.startDate);
+      var endTime = state.endDate ? toDateOnly(state.endDate) : null;
+      $cells.each(function () {
+        var $cell = $(this);
+        var dateValue = $cell.find('.k-link').attr('data-value');
+        if (!dateValue) return;
+        var parts = dateValue.split('/');
+        var cellTime = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10)).getTime();
+        if (cellTime === startTime) $cell.addClass(ClassName.RANGE_START);
+        if (endTime && cellTime === endTime) $cell.addClass(ClassName.RANGE_END);
+        if (endTime && cellTime > startTime && cellTime < endTime) $cell.addClass(ClassName.RANGE_MID);
+      });
+      isHighlighting = false;
+    }
+    function updateDisplay() {
+      var value = '';
+      if (state.startDate && state.endDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator + formatDate(state.endDate, opts.format);
+      } else if (state.startDate) {
+        value = formatDate(state.startDate, opts.format) + opts.separator;
+      }
+      $display.val(value);
+    }
+    function updateHiddenInputs() {
+      $startInput.val(state.startDate ? formatDate(state.startDate, opts.format) : '');
+      $endInput.val(state.endDate ? formatDate(state.endDate, opts.format) : '');
+    }
+    function openPopup() {
+      if ($wrap.hasClass(ClassName.DISABLED)) return;
+      $popup.addClass(ClassName.OPEN);
+      state.isOpen = true;
+      lockBodyScroll();
+      highlightRange();
+      removeEmptyRows();
+      applyPrefixClassToWrapper($wrap, $popup);
+      $el.trigger('rangepicker:open');
+    }
+    function closePopup() {
+      if (!state.isOpen) return;
+      $popup.removeClass(ClassName.OPEN);
+      state.isOpen = false;
+      unlockBodyScroll();
+      $el.trigger('rangepicker:close');
+    }
+    function togglePopup() {
+      if (state.isOpen) {
+        closePopup();
+      } else {
+        openPopup();
+      }
+    }
+    function getPublicValue() {
+      return {
+        start: state.startDate,
+        end: state.endDate,
+        startStr: $startInput.val(),
+        endStr: $endInput.val()
+      };
+    }
+
+    // 이벤트 바인딩 — touchend + preventDefault로 ghost click 차단
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      togglePopup();
+    }
+    var toggleEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
+    $display.on(toggleEvent + NS, handleToggle);
+    $toggle.on(toggleEvent + NS, handleToggle);
+
+    // 팝업 내부 이벤트 전파 차단
+    $popup.on(toggleEvent + NS, function (e) {
+      e.stopPropagation();
+    });
+
+    // iOS 팝업 내부 스크롤 허용
+    if (IS_IOS) {
+      $popup.on('touchmove' + NS, function (e) {
+        e.stopPropagation();
+      });
+    }
+
+    // 외부 터치/클릭 닫기
+    var docCloseEvent = TOUCH_SUPPORTED ? 'touchstart' : 'click';
+    $(document).on(docCloseEvent + nsDoc, function (e) {
+      if (!state.isOpen || state.isSelectingEnd) return;
+      if ($(e.target).closest($wrap).length) return;
+      closePopup();
+    });
+    $(document).on('keydown' + nsDoc, function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closePopup();
+      }
+    });
+
+    // Public API
+    var instance = {
+      getValue: getPublicValue,
+      setValue: function (start, end) {
+        state.startDate = start ? parseDateValue(start) : null;
+        state.endDate = end ? parseDateValue(end) : null;
+        state.isSelectingEnd = false;
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+        updateSelectedState();
+        if (calendar && state.startDate) {
+          calendar.navigate(state.startDate);
+        }
+        $el.trigger('rangepicker:change', [getPublicValue()]);
+      },
+      reset: function () {
+        state.startDate = null;
+        state.endDate = null;
+        state.isSelectingEnd = false;
+        $display.val('');
+        $startInput.val('');
+        $endInput.val('');
+        if (calendar) calendar.value(null);
+        highlightRange();
+        updateSelectedState();
+        $el.trigger('rangepicker:reset');
+      },
+      open: openPopup,
+      close: closePopup,
+      toggle: togglePopup,
+      disable: function () {
+        $wrap.addClass(ClassName.DISABLED);
+        $display.prop('disabled', true);
+        $toggle.prop('disabled', true);
+        closePopup();
+      },
+      enable: function () {
+        $wrap.removeClass(ClassName.DISABLED);
+        $display.prop('disabled', false);
+        $toggle.prop('disabled', false);
+      },
+      destroy: function () {
+        $(document).off(nsDoc);
+        $display.off(NS);
+        $toggle.off(NS);
+        $popup.off(NS);
+        if (state.isOpen) unlockBodyScroll();
+        if (calendar) calendar.destroy();
+        if (uiObserver) uiObserver.disconnect();
+        $el.removeData(DATA_KEY);
+      }
+    };
+    $el.data(DATA_KEY, instance);
+    updateDisplay();
+    highlightRange();
+    removeEmptyRows();
+    updateSelectedState();
+    console.log('[' + DATA_UI + '] initialized:', elId || 'anonymous');
+  }
+
+  // 초기화
+  function initOne(el) {
+    var $el = $(el);
+    if ($el.attr('data-ui') === DATA_UI) {
+      initRangePicker(el);
+    }
+  }
+  function initAll(root) {
+    if (!ensureKendoAvailable()) {
+      console.warn('[' + DATA_UI + '] Kendo UI not available');
+      return;
+    }
+    var $root = root ? $(root) : $(document);
+    $root.find(Selector.SCOPE).each(function () {
+      initOne(this);
+    });
+  }
+  function autoBindStart(container) {
+    if (!window.MutationObserver) return null;
+    var target = container || document.body;
+    initAll(target);
+    var obs = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        for (var j = 0; j < m.addedNodes.length; j++) {
+          var node = m.addedNodes[j];
+          if (!node || node.nodeType !== 1) continue;
+          initAll(node);
+        }
+      }
+    });
+    obs.observe(target, {
+      childList: true,
+      subtree: true
+    });
+    return obs;
+  }
+  function getInstance(selector) {
+    return $(selector).data(DATA_KEY) || null;
+  }
+
+  // 전역 API
+  window.VmKendoRangePicker = {
+    initAll: initAll,
+    initOne: initOne,
+    autoBindStart: autoBindStart,
+    getInstance: getInstance
+  };
+
+  // DOM Ready
+  if ($) {
+    $(function () {
+      autoBindStart();
+    });
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery) autoBindStart();
+    });
+  }
+  console.log('[' + DATA_UI + '] loaded');
+})(window);
+
+/***/ }),
+
 /***/ 8550:
 /***/ (function() {
 
@@ -2235,6 +3190,137 @@ console.log('[mobile/index] entry 실행');
     if ($root.length) setDisabled($root, disabled);
   };
 })(window.jQuery, window, document);
+
+/***/ }),
+
+/***/ 8955:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/toggle.js
+ * @description data-속성 기반 토글/아코디언 공통 (모바일)
+ * @scope [data-toggle-scope]
+ *
+ * @mapping [data-toggle-btn][data-toggle-target] ↔ [data-toggle-box="target"]
+ * @state is-open 클래스 + aria-expanded 값으로 제어
+ *
+ * @option
+ *  - data-toggle-group="true"   : 스코프 내 1개만 오픈 (아코디언)
+ *  - data-toggle-outside="true" : 스코프 외 클릭/터치 시 닫기
+ *  - data-toggle-group-except="true" : 그룹 닫기에서 제외
+ *  - data-aria-label-base="..." : aria-label "열기/닫기" 자동 동기화
+ *
+ * @a11y aria-expanded 제어, aria-label-base 옵션 시 열기/닫기 라벨 동기화
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiToggle';
+  var ACTIVE = 'is-open';
+  var GROUP_EXCEPT_KEY = 'toggleGroupExceptActive';
+  var OUTSIDE_ACTIVE_KEY = 'toggleOutsideActive';
+  var _bound = false;
+
+  // aria-label 동기화
+  function syncAriaLabel($btn) {
+    var base = $btn.attr('data-aria-label-base');
+    if (!base) return;
+    var isExpanded = $btn.attr('aria-expanded') === 'true';
+    $btn.attr('aria-label', base + ' ' + (isExpanded ? '닫기' : '열기'));
+  }
+  function open($btn, $box) {
+    var shouldCloseOnOutside = $btn.data('toggleOutside') === true;
+    var isGroupExcept = $btn.data('toggleGroupExcept') === true;
+    $box.addClass(ACTIVE);
+    $box.data(OUTSIDE_ACTIVE_KEY, shouldCloseOnOutside);
+    $box.data(GROUP_EXCEPT_KEY, isGroupExcept);
+    $btn.attr('aria-expanded', 'true');
+    syncAriaLabel($btn);
+  }
+  function close($btn, $box) {
+    $box.removeClass(ACTIVE);
+    $box.removeData(OUTSIDE_ACTIVE_KEY);
+    $box.removeData(GROUP_EXCEPT_KEY);
+    $btn.attr('aria-expanded', 'false');
+    syncAriaLabel($btn);
+  }
+
+  // 스코프 내 열린 패널 일괄 닫기
+  function closeAll($scope) {
+    $scope.find('[data-toggle-box].' + ACTIVE).each(function () {
+      var $box = $(this);
+      if ($box.data(GROUP_EXCEPT_KEY) === true) return;
+      $box.removeClass(ACTIVE);
+      $box.removeData(OUTSIDE_ACTIVE_KEY);
+      $box.removeData(GROUP_EXCEPT_KEY);
+    });
+    $scope.find('[data-toggle-btn][aria-expanded="true"]').each(function () {
+      var $btn = $(this);
+      var target = $btn.data('toggleTarget');
+      if (!target) return;
+      var $box = $scope.find('[data-toggle-box="' + target + '"]');
+      if ($box.length && $box.hasClass(ACTIVE) && $box.data(GROUP_EXCEPT_KEY) === true) return;
+      $btn.attr('aria-expanded', 'false');
+      syncAriaLabel($btn);
+    });
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+    var $doc = $(document);
+
+    // 버튼 클릭 위임
+    $doc.on('click' + NS, '[data-toggle-btn]', function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $scope = $btn.closest('[data-toggle-scope]');
+      if (!$scope.length) return;
+      var target = $btn.data('toggleTarget');
+      if (!target) return;
+      var $box = $scope.find('[data-toggle-box="' + target + '"]');
+      if (!$box.length) return;
+      var isOpen = $box.hasClass(ACTIVE);
+      var isGroup = $scope.data('toggleGroup') === true;
+      var isGroupExcept = $btn.data('toggleGroupExcept') === true;
+      if (isOpen) {
+        close($btn, $box);
+        return;
+      }
+      if (isGroup && !isGroupExcept) closeAll($scope);
+      open($btn, $box);
+    });
+
+    // 외부 클릭/터치 시 outside=true 패널 닫기
+    $doc.on('mousedown' + NS + ' touchstart' + NS, function (e) {
+      $('[data-toggle-scope]').each(function () {
+        var $scope = $(this);
+        if ($(e.target).closest($scope).length) return;
+        $scope.find('[data-toggle-box].' + ACTIVE).each(function () {
+          var $box = $(this);
+          if ($box.data(OUTSIDE_ACTIVE_KEY) !== true) return;
+          var target = $box.attr('data-toggle-box');
+          var $btn = $scope.find('[data-toggle-btn][data-toggle-target="' + target + '"]').first();
+          if (!$btn.length) return;
+          close($btn, $box);
+        });
+      });
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.toggle = {
+    init: init,
+    destroy: destroy,
+    closeAll: closeAll
+  };
+})(window.jQuery, window);
 
 /***/ }),
 

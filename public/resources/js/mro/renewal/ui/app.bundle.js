@@ -9573,6 +9573,13 @@ var support_ui = __webpack_require__(2064);
 
   // Swiper 인스턴스 저장용 키 (DOM 요소에 저장)
   var SWIPER_INSTANCE_KEY = 'homeMainBannerSwiper';
+  var REAL_SLIDE_COUNT_KEY = 'homeMainBannerRealSlideCount';
+
+  // 업종 맞춤 기획전 배너용 Swiper 키
+  var EVENT_SWIPER_INSTANCE_KEY = 'homeEventBannerSwiper';
+
+  // 홈 광고 라인 배너용 Swiper 키
+  var LINE_AD_SWIPER_INSTANCE_KEY = 'homeLineAdBannerSwiper';
 
   /**
    * 메인 배너 Swiper 초기화
@@ -9609,13 +9616,18 @@ var support_ui = __webpack_require__(2064);
     var nextButton = container.querySelector('.banner-nav-next');
     var toggleButton = container.querySelector('.banner-progress-toggle');
 
-    // Swiper 옵션 설정
+    // Swiper 옵션 설정 (loop: 슬라이드 수가 slidesPerView + loopedSlides 이상이어야 동작)
+    var slideCount = container.querySelectorAll('.swiper-slide').length;
+    container[REAL_SLIDE_COUNT_KEY] = slideCount;
     var swiperOptions = {
-      slidesPerView: 'auto',
-      spaceBetween: 16,
-      // 16px
-      speed: 300,
+      slidesPerView: 1.5,
+      spaceBetween: 20,
+      // 20px
+      speed: 500,
       loop: true,
+      loopAdditionalSlides: 0,
+      centeredSlides: true,
+      // loop + 중앙정렬: 슬라이드 4장 이상 필요 (현재 4그룹)
       watchSlidesProgress: true,
       autoplay: {
         delay: 4000,
@@ -9705,15 +9717,11 @@ var support_ui = __webpack_require__(2064);
       return;
     }
 
-    // loop 모드에서는 realIndex 사용, 일반 모드에서는 activeIndex 사용
-    var currentIndex = swiper.loopedSlides !== undefined ? swiper.realIndex + 1 : swiper.activeIndex + 1;
-    var totalSlides = swiper.slides.length;
-
-    // loop 모드에서는 실제 슬라이드 개수 사용
-    if (swiper.loopedSlides !== undefined) {
-      totalSlides = swiper.slides.length - swiper.loopedSlides * 2;
-    }
-    var progress = currentIndex / totalSlides * 100;
+    // loop 모드: realIndex 사용, 실제 슬라이드 수는 초기화 시 저장한 값(복제 제외)
+    var isLoop = swiper.params && swiper.params.loop;
+    var currentIndex = isLoop ? swiper.realIndex + 1 : swiper.activeIndex + 1;
+    var totalSlides = isLoop && swiper.el && swiper.el[REAL_SLIDE_COUNT_KEY] != null ? swiper.el[REAL_SLIDE_COUNT_KEY] : swiper.slides.length;
+    var progress = totalSlides > 0 ? Math.min(100, currentIndex / totalSlides * 100) : 0;
     progressBar.style.width = progress + '%';
   }
 
@@ -9730,6 +9738,7 @@ var support_ui = __webpack_require__(2064);
     if (swiperInstance && typeof swiperInstance.destroy === 'function') {
       swiperInstance.destroy(true, true);
       delete targetContainer[SWIPER_INSTANCE_KEY];
+      delete targetContainer[REAL_SLIDE_COUNT_KEY];
       console.log('[home-ui] Main banner swiper destroyed');
     }
   }
@@ -9748,6 +9757,126 @@ var support_ui = __webpack_require__(2064);
       }, 100);
     }
   }
+
+  /**
+   * 업종 맞춤 기획전 배너 Swiper 초기화
+   * - 슬라이드가 3개 초과일 때만 Swiper 적용
+   * - 다른 Swiper와 완전히 독립된 옵션/인스턴스로 관리
+   */
+  function initEventBannerSwiper() {
+    var containers = document.querySelectorAll('.js-home-event-banner-swiper');
+    if (!containers.length) {
+      return;
+    }
+    if (!swiper_bundle/* default */.A) {
+      console.error('[home-ui] Swiper is not available for event banner');
+      return;
+    }
+    containers.forEach(function (container) {
+      if (!container) {
+        return;
+      }
+
+      // 슬라이드 개수 확인 (3개 이하면 Swiper 미적용, 정적인 리스트로 사용)
+      var slides = container.querySelectorAll('.swiper-slide');
+      var slideCount = slides.length;
+      if (slideCount <= 3) {
+        return;
+      }
+
+      // 이미 초기화된 경우 중복 실행 방지
+      var existingInstance = container[EVENT_SWIPER_INSTANCE_KEY];
+      if (existingInstance && typeof existingInstance.destroy === 'function') {
+        return;
+      }
+      var prevButton = container.querySelector('.event-banner-nav-prev');
+      var nextButton = container.querySelector('.event-banner-nav-next');
+      var options = {
+        slidesPerView: 'auto',
+        spaceBetween: 24,
+        speed: 500,
+        slidesPerGroup: 1,
+        // 항상 1장씩 이동
+        watchSlidesProgress: true,
+        navigation: {
+          nextEl: nextButton,
+          prevEl: prevButton,
+          disabledClass: 'swiper-button-disabled'
+        }
+      };
+      try {
+        var instance = new swiper_bundle/* default */.A(container, options);
+        container[EVENT_SWIPER_INSTANCE_KEY] = instance;
+        console.log('[home-ui] Event banner swiper initialized');
+      } catch (e) {
+        console.error('[home-ui] Failed to initialize event banner swiper', e);
+      }
+    });
+  }
+
+  /**
+   * 홈 광고 라인 배너 Swiper 초기화
+   * - 슬라이드가 2개 이상일 때만 Swiper 적용
+   * - 항상 한 개씩만 이동
+   */
+  function initLineAdBannerSwiper() {
+    var containers = document.querySelectorAll('.js-home-ad-banner-swiper');
+    if (!containers.length) {
+      return;
+    }
+    if (!swiper_bundle/* default */.A) {
+      console.error('[home-ui] Swiper is not available for line ad banner');
+      return;
+    }
+    containers.forEach(function (container) {
+      if (!container) {
+        return;
+      }
+      var slides = container.querySelectorAll('.swiper-slide');
+      var slideCount = slides.length;
+
+      // 슬라이드가 2개 미만이면 스와이프 미적용
+      if (slideCount < 2) {
+        return;
+      }
+
+      // 이미 초기화된 경우 중복 실행 방지
+      var existingInstance = container[LINE_AD_SWIPER_INSTANCE_KEY];
+      if (existingInstance && typeof existingInstance.destroy === 'function') {
+        return;
+      }
+
+      // 네비게이션 버튼은 Swiper 컨테이너(.js-home-ad-banner-swiper) 밖에 있으므로
+      // 상위 배너 요소에서 찾아 연결한다.
+      var rootBanner = container.closest('.home-ad-banner.line-banner') || container.parentElement;
+      var prevButton = rootBanner ? rootBanner.querySelector('.line-banner-nav-prev') : null;
+      var nextButton = rootBanner ? rootBanner.querySelector('.line-banner-nav-next') : null;
+      var options = {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 500,
+        loop: slideCount > 1,
+        slidesPerGroup: 1,
+        // 항상 1개씩 이동
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false
+        },
+        navigation: {
+          nextEl: nextButton,
+          prevEl: prevButton,
+          disabledClass: 'swiper-button-disabled'
+        }
+      };
+      try {
+        var instance = new swiper_bundle/* default */.A(container, options);
+        container[LINE_AD_SWIPER_INSTANCE_KEY] = instance;
+        console.log('[home-ui] Line ad banner swiper initialized');
+      } catch (e) {
+        console.error('[home-ui] Failed to initialize line ad banner swiper', e);
+      }
+    });
+  }
   window.UI.homeUi = {
     init: function () {
       console.log('[home-ui] init');
@@ -9756,11 +9885,13 @@ var support_ui = __webpack_require__(2064);
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
           initMainBannerSwiper();
+          initEventBannerSwiper();
+          initLineAdBannerSwiper();
         });
-      }
-      // eslint-disable-next-line no-use-before-define
-      else {
+      } else {
         initMainBannerSwiper();
+        initEventBannerSwiper();
+        initLineAdBannerSwiper();
       }
     },
     destroy: function () {
