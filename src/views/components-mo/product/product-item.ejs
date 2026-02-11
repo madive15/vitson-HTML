@@ -52,9 +52,9 @@ const showGuestText = isGuest;
 const showLoginBtn = isGuest;
 
 const _showExtra = (typeof showExtra !== 'undefined') ? showExtra : (isMember && !isCompare);
-const showLike = isMember && !isCompare;
-const showCart = isMember && !isCompare && !isLeader;
-const showCompareBtn = isMember && !isFrequent && !isLike && !isCompare;
+const _showLike = (typeof showLike !== 'undefined') ? showLike : (isMember && !isCompare);
+const _showCart = (typeof showCart !== 'undefined') ? showCart : (isMember && !isCompare && !isLeader);
+const _showCompareBtn = (typeof showCompareBtn !== 'undefined') ? showCompareBtn : (isMember && !isFrequent && !isLike && !isCompare);
 const showPromo = isMember && !isCompare;
 
 /* ── 가격 노출 규칙 ── */
@@ -162,13 +162,13 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             <%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %>
           <% } %>
           <!-- prettier-ignore -->
-          <% if (showLike || showCart || showCompareBtn) { %>
+          <% if (_showLike || _showCart || _showCompareBtn) { %>
           <div class="product-actions">
-            <% if (showLike) { %>
+            <% if (_showLike) { %>
             <button type="button" class="action-btn-like" aria-label="좋아요"></button>
-            <% } %> <% if (showCart) { %>
+            <% } %> <% if (_showCart) { %>
             <button type="button" class="action-btn-cart" aria-label="장바구니"></button>
-            <% } %> <% if (showCompareBtn) { %>
+            <% } %> <% if (_showCompareBtn) { %>
             <button type="button" class="action-btn-compare" aria-label="비교함"></button>
             <% } %>
           </div>
