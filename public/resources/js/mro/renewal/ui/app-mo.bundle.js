@@ -927,11 +927,14 @@
     if (statusVal && statusVal !== DEFAULT_SELECT) hasValue = true;
     var deliveryVal = UI.select.getValue($(SEL.deliveryRoot));
     if (deliveryVal && deliveryVal !== DEFAULT_SELECT) hasValue = true;
+    var searchVal = $(SEL.searchInput).val();
+    if (searchVal && searchVal.trim()) hasValue = true;
     _$filter.toggleClass(CLS.hasValue, hasValue);
   }
 
   // 조회기간 변경 핸들러
   function onPeriodChange() {
+    if (_programmaticChange) return;
     var value = $(this).val();
     var months = PRESET_MONTHS[value];
     _$filter.toggleClass(CLS.directInput, value === DIRECT_INPUT_VALUE);
@@ -959,7 +962,9 @@
     if (_programmaticChange) return;
     var periodVal = UI.select.getValue($(SEL.periodRoot));
     if (periodVal === DIRECT_INPUT_VALUE) return;
+    _programmaticChange = true;
     UI.select.setValue($(SEL.periodRoot), DIRECT_INPUT_VALUE);
+    _programmaticChange = false;
     _$filter.addClass(CLS.directInput);
     updateFilterValueState();
   }
@@ -976,10 +981,13 @@
 
   // 초기화 버튼
   function onResetClick() {
+    _programmaticChange = true;
     _$filter.removeClass(CLS.directInput);
     UI.select.setValue($(SEL.periodRoot), DEFAULT_PERIOD);
     UI.select.setValue($(SEL.statusRoot), DEFAULT_SELECT);
     UI.select.setValue($(SEL.deliveryRoot), DEFAULT_SELECT);
+    $(SEL.searchInput).val('');
+    _programmaticChange = false;
     var range = calcPresetRange(PRESET_MONTHS[DEFAULT_PERIOD]);
     setHiddenDateValues(range.start, range.end);
     resetDateRange();
@@ -1023,6 +1031,7 @@
     $doc.on('click' + NS, SEL.dim, onDimClick);
     $doc.on('click' + NS, SCOPE + ' ' + SEL.resetBtn, onResetClick);
     $doc.on('click' + NS, SCOPE + ' ' + SEL.searchBtn, onSearchClick);
+    $doc.on('input' + NS, SEL.searchInput, updateFilterValueState);
   }
 
   // 공개 API
