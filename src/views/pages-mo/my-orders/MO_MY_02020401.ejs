@@ -1,0 +1,92 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '반품회수조회'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '반품회수조회' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal01')"
+              >
+                <span class="text">반품회수조회 팝업</span>
+              </button>
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal02')"
+                style="margin-top: 10px"
+              >
+                <span class="text">반품회수조회 팝업 - 준비중</span>
+              </button>
+
+              <!-- [REMOVE] 퍼블 확인용 안내 -->
+              <p style="margin-top: 20px; color: #000; font-size: 14px">
+                반품 회수 확인: <strong>my-orders/MO_MY_02020401.html?step=1<b style="color: red">1</b></strong
+                >&nbsp;&nbsp;~&nbsp;&nbsp; <strong>?step=<b style="color: red">3</b></strong> <br />1: 상품수거 / 2:
+                회수중 / 3: 회수완료
+              </p>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal01 = { 
+          id: 'modal01', 
+          title: '반품회수조회', 
+          variant: 'slide-right',
+          className: 'my-shipment-popup',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_02020401.ejs`,
+          contentData: { hasTrackingData: true },
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal01) %>
+        <!-- prettier-ignore -->
+        <% const modal02 = { 
+          id: 'modal02', 
+          title: '반품회수조회', 
+          variant: 'slide-right',
+          className: 'my-shipment-popup',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_02020401.ejs`,
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal02) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

@@ -721,3 +721,318 @@
     }
   }
 }
+
+// 배송조회 & 반품회수조회
+.vm-track-shipment {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  background: map.get(color.$layout-surf, 'mypage');
+
+  &-head {
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
+    padding: map.get(var.$unit, 12) var.$mo-gutter 0;
+    background: color.$color-white;
+
+    .shipment-info {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      flex: 0 0 calc(50% - map.get(var.$unit, 4));
+      gap: map.get(var.$unit, 4);
+
+      &-inner {
+        @include mx.flex(flex, row);
+        @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+        padding-bottom: var.$mo-gutter;
+        margin-bottom: var.$mo-gutter;
+      }
+
+      dt {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      dd,
+      &-number {
+        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      dd {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-number {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      &-copy {
+        @include button.btn-reset;
+        @include icon.ic-size(map.get(var.$unit, 24));
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+  }
+
+  &-body {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 20);
+    width: 100%;
+    padding-bottom: var.$mo-section-gap;
+
+    .shipment-steps {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      width: 100%;
+      padding: 0 var.$mo-gutter var.$mo-section-gap;
+      background: color.$color-white;
+
+      @for $i from 1 through 5 {
+        &[data-current='#{$i}'] li:nth-of-type(#{$i}) {
+          .step-icon {
+            color: map.get(color.$icon-neutral, 'inverse');
+            background: map.get(color.$layout-surf, 'brand');
+          }
+
+          .step-text,
+          .step-title {
+            font-weight: 600;
+            color: map.get(color.$text-status, 'brand');
+          }
+
+          &::after {
+            color: map.get(color.$icon-colors, 'primary');
+          }
+        }
+      }
+
+      .step {
+        &-item {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          flex: 1;
+          width: 100%;
+
+          &:last-of-type {
+            flex: 0;
+          }
+
+          &:not(:last-of-type)::after {
+            display: block; // flex container 안에서 flex item으로 참여
+            flex: 1; // 남은 공간 채움
+            width: 100%;
+            min-width: map.get(var.$unit, 12);
+            min-height: map.get(var.$unit, 12);
+            margin: fn.rem(14) 0;
+            content: ''; // 이게 있으면 가상 요소 생성됨
+            background-color: currentcolor;
+            mask: url('/public/resources/img/mro/renewal/ic/ic-arrow-right.svg') no-repeat center / contain;
+          }
+        }
+
+        &-marker {
+          @include mx.flex(flex, column, flex-start, center);
+          gap: map.get(var.$unit, 8);
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        &-icon {
+          @include mx.flex(flex, row, center, center);
+          @include icon.ic-size(map.get(var.$unit, 36));
+          flex-shrink: 0;
+          padding: fn.rem(6.92);
+          color: map.get(color.$icon-neutral, 'primary');
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: 50%;
+        }
+
+        &-text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          white-space: nowrap;
+        }
+      }
+
+      &.type-column {
+        flex-direction: column;
+        width: fn.rem(331);
+        margin: 0 auto;
+
+        .step {
+          &-item {
+            flex-direction: column;
+
+            &::after {
+              position: static;
+              margin: map.get(var.$unit, 20) 0 map.get(var.$unit, 20) fn.rem(21);
+              transform: rotate(90deg);
+            }
+          }
+
+          &-marker {
+            flex-direction: row;
+            gap: map.get(var.$unit, 24);
+          }
+
+          &-content {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 8);
+          }
+
+          &-title {
+            @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+          }
+
+          &-desc {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+      }
+    }
+
+    .shipment-detail {
+      &:not(.is-empty) {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 20);
+        width: calc(100% - (var.$mo-gutter * 2));
+        padding: 0 0 map.get(var.$unit, 20);
+        margin: 0 auto;
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+      }
+
+      &.is-empty {
+        @include mx.flex(flex, row, center, center);
+      }
+
+      &-title {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        width: 100%;
+        height: map.get(var.$unit, 52);
+        padding: 0 var.$mo-gutter;
+        line-height: map.get(var.$unit, 52);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+      }
+
+      &-list {
+        width: calc(100% - (var.$mo-gutter * 2));
+        min-height: fn.rem(120);
+        max-height: fn.rem(240);
+        padding: map.get(var.$unit, 4);
+        margin: 0 auto;
+        overflow: hidden auto;
+        background: linear-gradient(
+          to right,
+          transparent 20px,
+          map.get(color.$layout-border, 'quaternary') 20px,
+          map.get(color.$layout-border, 'quaternary') 24px,
+          transparent 24px
+        );
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+        &-inner {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 20);
+          height: 100%;
+          padding: map.get(var.$unit, 16) 0;
+        }
+      }
+
+      &-item {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        position: relative;
+        gap: map.get(var.$unit, 4);
+        width: 100%;
+        padding: 0 map.get(var.$unit, 20) 0 fn.rem(60);
+
+        &::before {
+          @include mx.position(absolute, 50%, $left: 10px);
+          width: map.get(var.$unit, 16);
+          height: map.get(var.$unit, 16);
+          content: '';
+          background: map.get(color.$layout-surf, 'base');
+          border-radius: 50%;
+          box-shadow: inset 0 0 0 4px map.get(color.$layout-border, 'brand');
+          transform: translateY(-50%);
+        }
+      }
+
+      &-info {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-location {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-status {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+
+        &[data-status='completed'] {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-date {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  // 반품회수조회
+  &.type-claim {
+    .vm-track-shipment-head {
+      padding-bottom: var.$mo-section-gap;
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      .shipment-info-inner {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border: none;
+      }
+    }
+
+    .vm-track-shipment-body {
+      &:has(.shipment-detail.is-empty) {
+        align-items: center;
+        padding-top: var.$mo-section-gap;
+      }
+
+      &:not(:has(.shipment-detail.is-empty)) {
+        gap: 0;
+
+        .shipment-detail-title {
+          width: calc(100% - (var.$mo-gutter * 2));
+          margin: var.$mo-gutter auto 0;
+          background: color.$color-white;
+          border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+        }
+
+        .shipment-steps.type-column {
+          width: calc(100% - (var.$mo-gutter * 2));
+          padding: map.get(var.$unit, 20) var.$mo-gutter;
+          margin: 0 auto;
+          border-radius: 0 0 map.get(var.$radius, 'md') map.get(var.$radius, 'md');
+          box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+          .step-content {
+            gap: map.get(var.$unit, 2);
+          }
+
+          .step-title,
+          .step-desc {
+            font-size: fn.rem(12);
+          }
+
+          .step-item::after {
+            width: map.get(var.$unit, 4);
+            margin: map.get(var.$unit, 16) fn.rem(10);
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-arrow-down.svg');
+            transform: rotate(0deg);
+          }
+        }
+      }
+    }
+  }
+}
