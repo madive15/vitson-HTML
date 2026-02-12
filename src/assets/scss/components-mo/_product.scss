@@ -449,6 +449,11 @@ $mo-product-gap: map.get(var.$unit, 8);
   position: relative;
 
   .card {
+    &-checkbox {
+      @include mx.position(absolute, 0, $left: 0);
+      z-index: var.$zindex-base;
+    }
+
     &-thumb {
       flex-shrink: 0;
       width: fn.rem(92);
@@ -466,7 +471,7 @@ $mo-product-gap: map.get(var.$unit, 8);
       min-width: 0;
 
       .product-spec {
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
         @include mx.ellipsis-single;
         margin-top: map.get(var.$unit, 2);
       }
@@ -484,7 +489,7 @@ $mo-product-gap: map.get(var.$unit, 8);
 
       .product {
         &-code {
-          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include typo.typography('m2m', $color: map.get(color.$text-colors, 'tertiary'));
           margin-left: auto;
         }
       }
@@ -507,15 +512,24 @@ $mo-product-gap: map.get(var.$unit, 8);
     &-meta {
       @include mx.flex(flex, row, flex-start, center);
       gap: $mo-product-gap;
+      margin-bottom: map.get(var.$unit, 4);
 
       .product {
         &-brand {
-          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+          @include typo.typography('m2r', $color: map.get(color.$text-colors, 'secondary'));
         }
 
         &-code {
-          @include typo.typography('b5s', $color: map.get(color.$text-colors, 'tertiary'));
+          @include typo.typography('m2r', $color: map.get(color.$text-colors, 'tertiary'));
         }
+      }
+    }
+
+    &-title {
+      @include mx.ellipsis-multi;
+
+      .product-name {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
       }
     }
 
@@ -526,7 +540,13 @@ $mo-product-gap: map.get(var.$unit, 8);
 
       .product-price {
         &-tax {
-          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+          span {
+            @include typo.typography('m2m', $color: map.get(color.$text-colors, 'secondary'));
+
+            &.text-accent {
+              color: map.get(color.$text-status, 'brand');
+            }
+          }
         }
 
         &-qty {
@@ -538,7 +558,7 @@ $mo-product-gap: map.get(var.$unit, 8);
           }
 
           &-value {
-            @include typo.typography('b5r', $color: map.get(color.$text-status, 'info-sub'));
+            @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-sub'));
           }
         }
 
@@ -551,6 +571,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     &-return-qty {
       @include mx.flex(flex, row, space-between, center);
       gap: $mo-product-gap;
+      margin-top: map.get(var.$unit, 8);
 
       .product-return {
         &-label {
@@ -609,6 +630,12 @@ $mo-product-gap: map.get(var.$unit, 8);
           }
         }
       }
+    }
+  }
+
+  .status-cancel & {
+    .card-content {
+      align-items: center;
     }
   }
 }

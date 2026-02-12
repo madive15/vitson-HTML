@@ -89,8 +89,8 @@
     }
   }
 
-  // step-bar
-  .bottom-step-bar {
+  // step-bar == .bottom-step-bar
+  [class*='bottom-step-bar'] {
     @include mx.flex(flex, column);
     gap: map.get(var.$unit, 32);
     padding: var.$mo-section-gap var.$mo-gutter 0;
@@ -103,8 +103,10 @@
     }
 
     .step-bar-price {
-      @include mx.flex(flex, row, space-between, center);
-      display: none;
+      &-inner {
+        @include mx.flex(flex, row, space-between, center);
+        width: 100%;
+      }
 
       .label {
         @include typo.typography('b2s');

@@ -1,0 +1,112 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%#
+  브랜드 추천 상품 컴포넌트 (Brand Pick Product)
+  ─────────────────────────────────────────
+  비츠온 Pick 브랜드 섹션에서 사용하는 브랜드별 추천 상품 카드.
+  브랜드 비주얼(배경 이미지 + 로고) + 브랜드 정보(이름 + 설명) + 상품 리스트로 구성.
+  스와이퍼로 여러 브랜드를 표시할 수 있도록 구성됨.
+%>
+<%
+  // 브랜드 데이터 배열
+  const brands = [
+    { name: '3M', desc: '모든 기업의 발전을 도모하는 3M 기술' },
+    { name: '디월트', desc: '프로가 찾는 공구, 현장 필수템 디월트' },
+    { name: '케이텔', desc: '피난유도등부터 비상조명까지, 현장이 선택한 안전조명' },
+    { name: '보쉬', desc: '전문가가 선택하는 고품질 전동공구 브랜드' }
+  ];
+
+  const defaultBgSrc = `${_public}/resources/img/mro/renewal/temp/temp-ex01.jpg`;
+  const defaultLogoSrc = `${_public}/resources/img/mro/renewal/temp/temp-brand-logo.svg`;
+  const productCount = 3;
+%>
+<!-- S: 브랜드 스와이퍼 컨테이너 -->
+<div class="home-brand-swiper-wrapper">
+  <div class="swiper js-home-brand-swiper">
+    <div class="swiper-wrapper">
+      <% brands.forEach((brand) => { %>
+      <div class="swiper-slide">
+        <div class="vits-home-product-brand">
+          <!-- S: 브랜드 비주얼 헤더 -->
+          <div class="brand-header">
+            <div class="brand-visual">
+              <img src="<%= defaultBgSrc %>" alt="<%= brand.name %> 배경 이미지" />
+            </div>
+            <div class="brand-logo">
+              <img src="<%= defaultLogoSrc %>" alt="<%= brand.name %> 로고" />
+            </div>
+          </div>
+          <!-- E: 브랜드 비주얼 헤더 -->
+          <!-- S: 브랜드 정보 -->
+          <div class="brand-info">
+            <h3 class="brand-info-name"><%= brand.name %></h3>
+            <p class="brand-info-desc"><%= brand.desc %></p>
+          </div>
+          <!-- E: 브랜드 정보 -->
+          <!-- S: 브랜드 추천 상품 리스트 -->
+          <ul class="brand-product-list">
+            <% for (let i = 0; i < productCount; i++) { %> <% const isSoldOut = i === 0; const isGuest = i === 2; %>
+            <li class="brand-product-item <%= isSoldOut ? 'is-sold-out' : '' %>">
+              <a href="#!" class="brand-product-link">
+                <div class="brand-product-thumb">
+                  <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-sample-product-02.jpg" alt="" />
+                </div>
+                <div class="brand-product-info">
+                  <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
+                  <div class="product-name"><span class="sr-only">상품명</span>방진 마스크 방진 마스크 방진 마스크</div>
+                  <div class="product-price">
+                    <% if (isSoldOut) { %>
+                    <div class="product-price-alt is-soldout">일시품절</div>
+                    <% } else if (isGuest) { %>
+                    <div class="product-price-alt is-guest">
+                      <div class="price-guest-text">
+                        <p class="price-guest-text-title">회원 전용 혜택가</p>
+                        <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+                      </div>
+                      <div class="price-guest-action">
+                        <button class="price-login-button">
+                          <span class="icon">
+                            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'lock-close' }) %>
+                          </span>
+                          <span class="text">로그인하고 가격 확인</span>
+                        </button>
+                      </div>
+                    </div>
+                    <% } else { %>
+                    <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>32,000원</div>
+                    <div class="price-sale-row">
+                      <div class="price-rate"><span class="sr-only">할인율</span>30%</div>
+                      <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>24,900원</div>
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+              </a>
+              <div class="brand-product-action">
+                <% if (!isSoldOut && !isGuest) { %>
+                <button type="button" class="brand-action-cart" aria-label="장바구니 담기">
+                  <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'bag' }) %> </span>
+                </button>
+                <% } %>
+              </div>
+            </li>
+            <% } %>
+          </ul>
+          <!-- E: 브랜드 추천 상품 리스트 -->
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+  <!-- S: 스와이퍼 컨트롤러 -->
+  <div class="home-brand-nav-wrap">
+    <button type="button" class="home-brand-nav-prev" aria-label="이전 브랜드">
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %> </span>
+    </button>
+    <button type="button" class="home-brand-nav-next" aria-label="다음 브랜드">
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %> </span>
+    </button>
+  </div>
+  <!-- E: 스와이퍼 컨트롤러 -->
+</div>
+<!-- E: 브랜드 스와이퍼 컨테이너 -->

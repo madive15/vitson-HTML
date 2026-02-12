@@ -1,0 +1,94 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _l = typeof locals !== 'undefined' ? locals : {};
+  const claimType = typeof _l.claimType !== 'undefined' ? _l.claimType : 'return';
+  const isCancel = claimType === 'cancel';
+  const hasStep = typeof _l.hasStep !== 'undefined' ? _l.hasStep : true;
+%>
+<div class="vm-claim-request step-1"<% if (hasStep) { %> data-step-page="1"<% } %>>
+  <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`, { claimType: claimType }) %>
+  <!-- prettier-ignore -->
+  <% 
+    const mockData = require(`${_src}/../public/resources/mock/products.json`); 
+    const _products = mockData.products; 
+  %>
+
+  <!-- 단일 상품 -->
+  <div class="claim-request-product-list" data-claim="single">
+    <div class="product-list-body">
+      <ul class="product-list">
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components-mo/product/product-mypage-item.ejs`, {
+              cardType: '2',
+              hasCheckbox: false,
+              hasBadges: false,
+              hasPriceInfo: true,
+              hasTax: false,
+              hasQty: true,
+              hasReturnQty: !isCancel,
+              hasCart: false,
+              orderStatus: '',
+              productImg: _products[0].imageUrl,
+              productBrand: _products[0].brandNm,
+              productName: _products[0].productNm,
+              productCode: _products[0].productCode,
+              productSpec: _products[0].standard,
+              productTax: '',
+              productUnit: '',
+              productQty: 3,
+              productPrice: (_products[0].salePrice * 3).toLocaleString() + '원',
+              purchaseCount: 0,
+              checkboxId: isCancel ? 'ckb-cancel-single' : 'ckb-return-single'
+            }) %>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 다수 상품 -->
+  <div class="claim-request-product-list" data-checkbox-scope data-claim="multi">
+    <div class="product-list-head">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+        name: 'ckbox-total',
+        value: '선택',
+        checkboxType: 'all',
+        text: isCancel ? '취소 신청 상품' : '반품 신청 상품',
+        size: 'm',
+      }) %>
+    </div>
+    <div class="product-list-body">
+      <ul class="product-list">
+        <% [1,2,3].forEach(function(idx) { %>
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components-mo/product/product-mypage-item.ejs`, {
+              cardType: '2',
+              hasCheckbox: true,
+              hasBadges: false,
+              hasPriceInfo: true,
+              hasTax: false,
+              hasQty: true,
+              hasReturnQty: !isCancel,
+              hasCart: false,
+              orderStatus: '',
+              productImg: _products[idx].imageUrl,
+              productBrand: _products[idx].brandNm,
+              productName: _products[idx].productNm,
+              productCode: _products[idx].productCode,
+              productSpec: _products[idx].standard,
+              productTax: '',
+              productUnit: '',
+              productQty: idx + 2,
+              productPrice: (_products[idx].salePrice * (idx + 2)).toLocaleString() + '원',
+              purchaseCount: 0,
+              checkboxId: isCancel ? 'ckb-cancel-' + idx : 'ckb-return-' + idx
+            }) %>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+</div>

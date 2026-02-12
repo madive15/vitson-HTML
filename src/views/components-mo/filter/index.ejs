@@ -13,5 +13,5 @@
 <% if (type === 'product') { %>
   <%- include('./product.ejs', { items: typeof items !== 'undefined' ? items : [] }) %>
 <% } else if (type === 'mypage') { %>
-  <%- include('./mypage.ejs') %>
+  <%- include('./mypage.ejs', { filterType: typeof filterType !== 'undefined' ? filterType : '' }) %>
 <% } %>

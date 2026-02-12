@@ -1,0 +1,69 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<div class="vm-claim-request step-2" data-step-page="2">
+  <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
+  <div class="claim-request-reason">
+    <ul class="reason-product-list" data-step2-list>
+      <li data-step2-tpl>
+        <div class="reason-product">
+          <!-- 여기에 상품 복제 삽입 -->
+        </div>
+    
+        <dl class="reason-write">
+          <dt class="is-required">반품구분</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'return01',
+              name: 'return01',
+              placeholder: '사유 선택',
+              options: [
+                { value: '고객 사유', text: '고객 사유' },
+                { value: '사유 항목2', text: '사유 항목2' },
+                { value: '사유 항목3', text: '사유 항목3' },
+              ],
+              value: '',
+              disabled: false,
+              portal: true,
+            }) %>
+          </dd>
+          <dt class="is-required">반품사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'return02',
+              name: 'return02',
+              placeholder: '상세 사유',
+              options: [
+                { value: '단순 변심', text: '단순 변심' },
+                { value: '반품 사유 항목 1', text: '반품 사유 항목 1' },
+                { value: '반품 사유 항목 2', text: '반품 사유 항목 2' },
+              ],
+              value: '',
+              disabled: false,
+              portal: true,
+            }) %>
+          </dd>
+          <dt>반품상세사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/textarea.ejs`, {
+              id: 'returnMemo',
+              name: 'returnMemo',
+              placeholder: '내용을 입력해주세요.',
+              count: false,
+              rootClass: 'size-default',
+            }) %>
+          </dd>
+          <dt>이미지 첨부</dt>
+          <dd>
+            <div class="claim-request-attach">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-file.ejs`) %>
+            </div>
+          </dd>
+        </dl>
+      </li>
+    </ul>
+  </div>
+</div>

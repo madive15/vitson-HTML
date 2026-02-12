@@ -1,0 +1,63 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<div class="vm-claim-request step-3" data-step-page="3">
+  <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
+  <div class="claim-request-pickup">
+    <div class="claim-request-pickup-inner">
+      <div class="claim-request-pickup-head">
+        <p class="pickup-title">수거지</p>
+        <div class="pickup-button">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, { 
+            size: 'xs', 
+            variant: 'outline-secondary',
+            text: '수거지 변경' 
+          }) %>
+        </div>
+      </div>
+      <div class="claim-request-pickup-body">
+        <div class="pickup-info">
+          <div class="pickup-info-user no-ios-detect">
+            <p class="user-info">
+              김비츠 | 010-8888-6655</p>
+          </div>
+          <p class="user-address">[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</p>
+        </div>
+        <dl class="pickup-info-date">
+          <dt class="is-required">수거 의뢰일</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+              id: 'testPickerSingle1',
+              name: 'singleDate1',
+              placeholder: '날짜를 입력해 주세요',
+            }) %>
+          </dd>
+          <dt>메모</dt>
+          <dd>
+            <div class="pickup-info-memo">
+              <div class="pickup-info-textarea">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                  id: 'memoB',
+                  name: 'memoB',
+                  placeholder: '내용을 입력해주세요.',
+                  count: true,
+                  maxLength: 200,
+                  rootClass: 'size-default',
+                }) %>
+              </div>
+  
+              <ul class="pickup-info-guide">
+                <li>한글 100자, 영문 300자</li>
+                <li>불량 및 수리 사유를 상세히 적어주시면 신속한 처리가 가능합니다.</li>
+              </ul>
+            </div>
+          </dd>
+        </dl>
+        <%- include(`${_src}/views/components-mo/mypage/claim-request-bank.ejs`) %>
+      </div>
+    </div>
+  </div>
+</div>

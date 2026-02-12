@@ -40,3 +40,41 @@
     }
   }
 }
+
+.vm-scope {
+  &:has(.vm-wrap.wrap-my-orders .vm-claim-request.step-3.is-active) {
+    .k-animation-container.vits-datepicker-single-container {
+      width: calc(100vw - 64px) !important;
+      max-width: 328px !important;
+      margin-top: map.get(var.$unit, 2);
+      border-radius: 0;
+
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      > .k-child-animation-container {
+        > .k-calendar-container.k-popup {
+          border: 0;
+        }
+      }
+
+      .k-child-animation-container,
+      .k-popup,
+      .k-calendar {
+        width: 100% !important;
+      }
+
+      @media screen and (max-width: '392px') {
+        right: 32px !important;
+        left: 32px !important;
+      }
+
+      @media screen and (min-width: '393px') {
+        // Kendo 기본 left 오프셋 보정
+        margin-left: -12px;
+      }
+    }
+  }
+}

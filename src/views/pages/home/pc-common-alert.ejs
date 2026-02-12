@@ -1,0 +1,46 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '공통 알림 모달'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('commonAlertModal')"
+                >
+                  <span class="text">공통 알림 모달 </span>
+                </button>
+
+                <!-- prettier-ignore -->
+
+                <% const commonAlertModal = { 
+                  id: 'commonAlertModal', 
+                  size: '480',
+                  title: '비츠온엠알오',                  
+                  contentPath: `${_src}/views/pages/kendo-window/home/kw-pc-common-alert.ejs`,
+                  buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, commonAlertModal) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

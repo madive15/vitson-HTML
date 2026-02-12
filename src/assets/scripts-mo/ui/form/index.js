@@ -2,7 +2,9 @@
  * @file scripts-mo/ui/form/index.js
  * @description 폼 관련 UI 모듈 통합
  */
+
 import './select.js';
+import './checkbox-total.js';
 
 (function ($, window) {
   'use strict';
@@ -11,7 +13,7 @@ import './select.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['select'];
+  var modules = ['select', 'checkboxTotal'];
 
   window.UI.form = {
     init: function () {

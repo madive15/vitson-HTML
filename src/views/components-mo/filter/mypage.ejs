@@ -9,6 +9,8 @@
  */
 %>
 <% const _src = srcPath; %>
+<!-- prettier-ignore -->
+<% const _filterType = typeof filterType !== 'undefined' ? filterType : ''; %>
 
 <section class="vm-mypage-filter">
   <h2 class="sr-only">주문배송조회 검색</h2>
@@ -61,6 +63,29 @@
       }) %>
     </li>
     <li class="vm-mypage-filter-row">
+      <% if (_filterType === 'cancel') { %>
+      <!-- 취소/반품내역 -->
+      <ul class="filter-group">
+        <li class="filter-item">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'vm-cancel-status',
+            name: 'vm-cancel-status',
+            placeholder: '취소/반품 선택',
+            options: [
+              { value: '0', text: '전체' },
+              { value: '1', text: '취소' },
+              { value: '2', text: '반품' },
+            ],
+            value: '0',
+            disabled: false,
+            portal: true,
+            maxHeight: '50vh'
+          }) %>
+        </li>
+      </ul>
+      <% } else { %>
+      <!-- 주문/배송내역 -->
       <ul class="filter-group item-half">
         <li class="filter-item">
           <!-- prettier-ignore -->
@@ -104,6 +129,7 @@
           }) %>
         </li>
       </ul>
+      <% } %>
     </li>
   </ul>
   <!--

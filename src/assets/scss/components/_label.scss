@@ -180,6 +180,7 @@
     flex-shrink: 0;
     height: fn.rem(18);
     padding: 0 map.get(var.$unit, 4);
+    line-height: normal;
     border-radius: map.get(var.$radius, 'sm');
 
     // modifier별 토큰 맵
@@ -224,7 +225,7 @@
 
   &-flags {
     @include mx.flex(flex, row, flex-start, center);
-    gap: map.get(var.$unit, 2);
+    gap: map.get(var.$unit, 4);
   }
 
   &-promo {
@@ -235,6 +236,7 @@
       @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
       height: fn.rem(18);
       padding: 0 map.get(var.$unit, 4);
+      line-height: normal;
 
       &::before {
         display: inline-block;

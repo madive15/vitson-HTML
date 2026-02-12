@@ -1,0 +1,35 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%#
+  상품 스와이퍼 컴포넌트 (Product Swiper Component)
+  ─────────────────────────────────────────
+  @param {number}  dataDesktop - 데스크톱에서 보여질 슬라이드 개수 (4 또는 5, 기본: 4)
+  @param {array}   products - 상품 데이터 배열 (각 항목은 home-product-units.ejs 파라미터)
+  
+  [사용 예시]
+  const swiperData = { dataDesktop: 4, products: [...] };
+  include('home-product-swiper.ejs', swiperData)
+%>
+<%
+  // locals 또는 직접 전달된 변수에서 읽기
+  const dataDesktop = (typeof locals !== 'undefined' && typeof locals.dataDesktop !== 'undefined') ? locals.dataDesktop : 4;
+  const products = (typeof locals !== 'undefined' && typeof locals.products !== 'undefined') ? locals.products : [];
+%>
+<div class="home-product-swiper-wrapper">
+  <div class="home-product-swiper-nav-wrap">
+    <button type="button" class="home-product-swiper-nav home-product-swiper-nav-prev" aria-label="이전">
+      <i class="ic ic-arrow-left"></i>
+    </button>
+    <button type="button" class="home-product-swiper-nav home-product-swiper-nav-next" aria-label="다음">
+      <i class="ic ic-arrow-right"></i>
+    </button>
+  </div>
+
+  <div class="swiper js-home-product-swiper" data-desktop="<%= dataDesktop %>">
+    <div class="swiper-wrapper">
+      <% products.forEach(function(product) { %>
+      <div class="swiper-slide"><%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, product) %></div>
+      <% }); %>
+    </div>
+  </div>
+</div>

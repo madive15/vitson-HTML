@@ -220,7 +220,7 @@ $list-directions: (
             @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
             gap: fn.rem(10);
             width: 100%;
-            height: map.get(var.$unit, 32);
+            height: fn.rem(34);
             padding: 0 map.get(var.$unit, 8);
             border-radius: map.get(var.$radius, 'sm');
 
@@ -231,6 +231,18 @@ $list-directions: (
 
             .text {
               @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            // 마우스 오버시 추가 02.11
+            @include mx.hoverable-only {
+              &:hover {
+                background-color: map.get(color.$layout-surf, 'sunken');
+                border-color: map.get(color.$layout-border, 'primary');
+
+                .text {
+                  color: map.get(color.$layout-border, 'primary');
+                }
+              }
             }
           }
         }

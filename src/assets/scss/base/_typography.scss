@@ -103,6 +103,16 @@ $typo-body: (
     1.3
   )
 );
+$typo-mobile: (
+  m1: (
+    fn.rem(13),
+    1.3
+  ),
+  m2: (
+    fn.rem(11),
+    1.3
+  )
+);
 $typo-weight: (
   r: 400,
   m: 500,
@@ -143,6 +153,10 @@ $typo-weight: (
     @if $key == 'd3' {
       $family: 'PretendardGOV';
     }
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $group == 'm' {
+    $style: map.get($typo-mobile, $key);
   }
 
   @if not $style {

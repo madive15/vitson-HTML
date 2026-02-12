@@ -4,12 +4,8 @@
   const mockData = require(`${_src}/../public/resources/mock/products.json`);
   const _products = mockData.products;
 
-  // ORDER_MAP 키 전체 목록
+  // ORDER_MAP 키 전체 목록 — 클레임만
   const orderStatuses = [
-    'A-1', 'A-2', 'B-1', 'B-2',
-    'C-1', 'C-2', 'D-1', 'D-2',
-    'E-1', 'E-2', 'F-1', 'F-2',
-    'G-1', 'G-2',
     'H', 'I', 'J',
     'K-1', 'K-2', 'L-1', 'L-2',
     'M-1', 'M-2', 'N-1', 'N-2',
@@ -18,20 +14,6 @@
 
   // 퍼블 확인용: 상태 설명 매핑
   const STATUS_DESC = {
-    'A-1': '주문접수 — 일반상품',
-    'A-2': '주문접수 — 조장상품',
-    'B-1': '결제완료 — 일반상품',
-    'B-2': '결제완료 — 조장상품',
-    'C-1': '주문완료 — 일반상품',
-    'C-2': '주문완료 — 조장상품',
-    'D-1': '주문확정 — 일반상품',
-    'D-2': '주문확정 — 조장상품',
-    'E-1': '배송준비중 — 반품 가능',
-    'E-2': '배송준비중 — 반품 불가',
-    'F-1': '배송중 — 반품 가능',
-    'F-2': '배송중 — 반품 불가',
-    'G-1': '배송완료 — 반품 가능',
-    'G-2': '배송완료 — 반품 불가',
     'H': '취소신청',
     'I': '주문취소',
     'J': '반품신청',
@@ -80,7 +62,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/배송조회 목록'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '취소/반품내역 목록'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -94,7 +76,7 @@
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'nav-bar', title: '주문/배송조회' 
+            type: 'nav-bar', title: '취소/반품내역' 
           }) %>
 
           <!-- S: vm-main -->
@@ -106,7 +88,8 @@
                 type: 'mypage',
                 isDirectInput: true,
                 isFilterFocused: true,
-                hasFilterValue: true
+                hasFilterValue: true,
+                filterType: 'cancel'
               }) %>
 
               <!-- 리스트 -->
@@ -117,8 +100,8 @@
                     <div class="vm-mypage-round-box">
                       <div class="round-head">
                         <a href="#!">
-                          <p class="round-head-tit"><%= order.orderNo %></p>
-                          <p class="round-head-txt"><%= order.date %></p>
+                          <p class="round-head-tit"><%= order.date %></p>
+                          <p class="round-head-txt"><%= order.orderNo %></p>
                           <span class="round-head-icon">
                             <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
                           </span>
@@ -153,12 +136,6 @@
                           </li>
                           <% }); %>
                         </ul>
-                      </div>
-                      <div class="round-foot">
-                        <p class="round-foot-price-label">
-                          <span class="text">총 결제금액</span><span class="desc">(VAT 포함)</span>
-                        </p>
-                        <p class="round-foot-price-value"><%= order.totalPrice.toLocaleString() %>원</p>
                       </div>
                     </div>
                   </li>

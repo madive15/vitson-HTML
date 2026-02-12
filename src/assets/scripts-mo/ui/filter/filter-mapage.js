@@ -40,6 +40,7 @@
     periodRoot: '[data-select-id="vm-order-period"]',
     statusRoot: '[data-select-id="vm-order-status"]',
     deliveryRoot: '[data-select-id="vm-order-delivery"]',
+    cancelStatusRoot: '[data-select-id="vm-cancel-status"]',
     datePicker: '#vm-order-daterange',
     searchInput: '#vm-order-search-searchKeyword',
     dim: '.vm-mypage-filter-dim',
@@ -220,6 +221,12 @@
     var deliveryVal = UI.select.getValue($(SEL.deliveryRoot));
     if (deliveryVal && deliveryVal !== DEFAULT_SELECT) hasValue = true;
 
+    var $cancelStatus = $(SEL.cancelStatusRoot);
+    if ($cancelStatus.length) {
+      var cancelVal = UI.select.getValue($cancelStatus);
+      if (cancelVal && cancelVal !== DEFAULT_SELECT) hasValue = true;
+    }
+
     var searchVal = $(SEL.searchInput).val();
     if (searchVal && searchVal.trim()) hasValue = true;
 
@@ -288,6 +295,10 @@
     UI.select.setValue($(SEL.periodRoot), DEFAULT_PERIOD);
     UI.select.setValue($(SEL.statusRoot), DEFAULT_SELECT);
     UI.select.setValue($(SEL.deliveryRoot), DEFAULT_SELECT);
+    var $cancelStatus = $(SEL.cancelStatusRoot);
+    if ($cancelStatus.length) {
+      UI.select.setValue($cancelStatus, DEFAULT_SELECT);
+    }
     $(SEL.searchInput).val('');
 
     _programmaticChange = false;

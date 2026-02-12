@@ -1,0 +1,182 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const mockData = require(`${_src}/../public/resources/mock/products.json`);
+const _products = mockData.products;
+
+const orderItems = [
+  { status: 'H', qty: 2, product: _products[0], productName: _products[0].productNm },
+  { status: 'I', qty: 1, product: _products[1], productName: _products[1].productNm },
+  { status: 'I', qty: 3, product: _products[2], productName: _products[2].productNm }
+];
+
+const orders = [
+  {
+    items: orderItems,
+    totalPrice: orderItems.reduce(function(sum, item) { return sum + (item.product.salePrice * item.qty); }, 0)
+  }
+];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '취소 내역'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '취소 내역' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <div class="vm-mypage-orders-details">
+                <div class="details-header">
+                  <div class="details-order-info">
+                    <p class="details-order-label">주문 번호</p>
+                    <p class="details-order-number">ORD-2024-001234</p>
+                  </div>
+                </div>
+                <div class="details-body">
+                  <dl class="details-date-info">
+                    <dt>취소 신청일</dt>
+                    <dd>2024.12.15</dd>
+                  </dl>
+                  <dl class="details-date-info">
+                    <dt>취소 완료일</dt>
+                    <dd>2024.12.26</dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="vm-mypage-orders-list type-shadow">
+                <ul class="orders-list">
+                  <% orders.forEach(function(order, orderIdx) { %>
+                  <li>
+                    <div class="vm-mypage-round-box">
+                      <div class="round-head">
+                        <p class="round-head-title">취소 상품 정보</p>
+                      </div>
+                      <div class="round-body">
+                        <ul class="round-body-list">
+                          <% order.items.forEach(function(item, itemIdx) { %>
+                          <li>
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components-mo/product/product-mypage-item.ejs`, {
+                              hasCheckbox: false,
+                              hasBadges: true,
+                              hasPriceInfo: true,
+                              hasTax: true,
+                              hasQty: false,
+                              hasReturnQty: false,
+                              hasCart: false,
+                              unitAccent: true,
+                              orderStatus: item.status,
+                              productImg: item.product.imageUrl,
+                              productBrand: item.product.brandNm,
+                              productName: item.productName,
+                              productCode: item.product.productCode,
+                              productSpec: item.product.standard,
+                              productTax: item.product.taxType,
+                              productUnit: item.qty + '개',
+                              productQty: item.qty,
+                              productPrice: (item.product.salePrice * item.qty).toLocaleString() + '원',
+                              purchaseCount: item.product.purchaseCount || (orderIdx + itemIdx) % 5 + 1,
+                              checkboxId: 'ckb-order-' + orderIdx + '-' + itemIdx
+                            }) %>
+                          </li>
+                          <% }); %>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                  <% }); %>
+                </ul>
+              </div>
+
+              <div class="vm-order-details-info">
+                <!-- 환불 정보 -->
+                <div class="vm-mypage-round-box">
+                  <div class="round-head">
+                    <span class="round-head-title">환불 정보</span>
+                  </div>
+                  <div class="round-body">
+                    <dl class="info-list type-claim no-ios-detect">
+                      <dt>환불 수단</dt>
+                      <dd>후불결제 취소</dd>
+                      <dt>환불 상태</dt>
+                      <dd>환불진행중</dd>
+                      <dt>환불 예정 금액</dt>
+                      <dd class="point-color">180,000원</dd>
+                    </dl>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                      theme: 'blue', text: '상품 회수 완료 후 영업일 기준 최대 7일 이내 환불 처리됩니다.'
+                    }) %>
+                  </div>
+                </div>
+
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/button/button.ejs`, {
+                  size:'xl', variant: 'outline-secondary', text: '목록으로',
+                  iconLeft: true, iconName: 'ic-arrow-left'
+                }) %>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- 첨부파일 1 -->
+        <!-- prettier-ignore -->
+        <% const winAuto01 = { 
+          id: 'tempModal01', 
+          title: '첨부 이미지', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_02020301.ejs`,
+          imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-ex01.jpg`,
+          buttons: [{ text: '닫기', variant: 'secondary', action: 'close' }] 
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, winAuto01) %>
+
+        <!-- 첨부파일 2 -->
+        <!-- prettier-ignore -->
+        <% const winAuto02 = { 
+          id: 'tempModal02', 
+          title: '첨부 이미지', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_02020301.ejs`,
+          imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-ex02.jpg`,
+          buttons: [{ text: '닫기', variant: 'secondary', action: 'close' }]  
+          };
+        %>
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, winAuto02) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

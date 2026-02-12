@@ -27,6 +27,12 @@ import Swiper from 'swiper/bundle';
   // 홈 광고 라인 배너용 Swiper 키
   var LINE_AD_SWIPER_INSTANCE_KEY = 'homeLineAdBannerSwiper';
 
+  // 브랜드 Pick 스와이퍼용 Swiper 키
+  var BRAND_SWIPER_INSTANCE_KEY = 'homeBrandSwiper';
+
+  // 상품 스와이퍼용 Swiper 키
+  var PRODUCT_SWIPER_INSTANCE_KEY = 'homeProductSwiper';
+
   /**
    * 메인 배너 Swiper 초기화
    * 다른 공통 JS와 독립적으로 동작하도록 별도 인스턴스로 관리
@@ -77,6 +83,7 @@ import Swiper from 'swiper/bundle';
         delay: 4000,
         disableOnInteraction: false
       },
+      a11y: false,
       navigation: {
         nextEl: nextButton,
         prevEl: prevButton,
@@ -254,6 +261,11 @@ import Swiper from 'swiper/bundle';
         speed: 500,
         slidesPerGroup: 1, // 항상 1장씩 이동
         watchSlidesProgress: true,
+        a11y: false,
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false
+        },
         navigation: {
           nextEl: nextButton,
           prevEl: prevButton,
@@ -267,6 +279,152 @@ import Swiper from 'swiper/bundle';
         console.log('[home-ui] Event banner swiper initialized');
       } catch (e) {
         console.error('[home-ui] Failed to initialize event banner swiper', e);
+      }
+    });
+  }
+
+  /**
+   * 브랜드 Pick Swiper 초기화
+   * - 브랜드가 3개 초과일 때만 Swiper 적용
+   * - 브랜드 섹션을 가로로 스와이프할 수 있도록 구성
+   */
+  function initBrandSwiper() {
+    var containers = document.querySelectorAll('.js-home-brand-swiper');
+    if (!containers.length) {
+      return;
+    }
+
+    if (!Swiper) {
+      console.error('[home-ui] Swiper is not available for brand swiper');
+      return;
+    }
+
+    containers.forEach(function (container) {
+      if (!container) {
+        return;
+      }
+
+      // 브랜드 슬라이드 개수 확인 (3개 이하면 Swiper 미적용)
+      var slides = container.querySelectorAll('.swiper-slide');
+      var slideCount = slides.length;
+      if (slideCount <= 3) {
+        return;
+      }
+
+      // 이미 초기화된 경우 중복 실행 방지
+      var existingInstance = container[BRAND_SWIPER_INSTANCE_KEY];
+      if (existingInstance && typeof existingInstance.destroy === 'function') {
+        return;
+      }
+
+      // 컨트롤러는 컨테이너 밖에 있으므로 상위 요소에서 찾기
+      var wrapper = container.closest('.home-brand-swiper-wrapper');
+      var prevButton = wrapper ? wrapper.querySelector('.home-brand-nav-prev') : null;
+      var nextButton = wrapper ? wrapper.querySelector('.home-brand-nav-next') : null;
+
+      var options = {
+        slidesPerView: 3,
+        spaceBetween: 24,
+        speed: 500,
+        slidesPerGroup: 1,
+        watchSlidesProgress: true,
+        a11y: false,
+        navigation: {
+          nextEl: nextButton,
+          prevEl: prevButton,
+          disabledClass: 'swiper-button-disabled'
+        }
+      };
+
+      try {
+        var instance = new Swiper(container, options);
+        container[BRAND_SWIPER_INSTANCE_KEY] = instance;
+        console.log('[home-ui] Brand swiper initialized');
+      } catch (e) {
+        console.error('[home-ui] Failed to initialize brand swiper', e);
+      }
+    });
+  }
+
+  /**
+   * 상품 스와이퍼 초기화
+   * - data-desktop 속성으로 데스크톱에서 보여질 슬라이드 수 설정 (4 또는 5)
+   * - 모바일에서는 1개씩 표시
+   */
+  function initProductSwiper() {
+    var containers = document.querySelectorAll('.js-home-product-swiper');
+    if (!containers.length) {
+      return;
+    }
+
+    if (!Swiper) {
+      console.error('[home-ui] Swiper is not available for product swiper');
+      return;
+    }
+
+    containers.forEach(function (container) {
+      if (!container) {
+        return;
+      }
+
+      // 슬라이드 개수 확인
+      var slides = container.querySelectorAll('.swiper-slide');
+      var slideCount = slides.length;
+
+      // 슬라이드가 1개 이하면 Swiper 미적용
+      if (slideCount <= 1) {
+        return;
+      }
+
+      // 이미 초기화된 경우 중복 실행 방지
+      var existingInstance = container[PRODUCT_SWIPER_INSTANCE_KEY];
+      if (existingInstance && typeof existingInstance.destroy === 'function') {
+        return;
+      }
+
+      // data-desktop 속성에서 데스크톱 슬라이드 수 읽기 (기본값: 4)
+      var desktopSlides = parseInt(container.getAttribute('data-desktop'), 10) || 4;
+      desktopSlides = Math.min(Math.max(desktopSlides, 1), 5); // 1~5 사이로 제한
+
+      // 네비게이션 버튼 찾기 (상위 wrapper에서)
+      var wrapper = container.closest('.home-product-swiper-wrapper');
+      var prevButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-prev') : null;
+      var nextButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-next') : null;
+
+      var options = {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        speed: 500,
+        slidesPerGroup: 1,
+        watchSlidesProgress: true,
+        a11y: false,
+        breakpoints: {
+          0: {
+            slidesPerView: 4,
+            spaceBetween: 16
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 20
+          },
+          1280: {
+            slidesPerView: desktopSlides,
+            spaceBetween: 24
+          }
+        },
+        navigation: {
+          nextEl: nextButton,
+          prevEl: prevButton,
+          disabledClass: 'swiper-button-disabled'
+        }
+      };
+
+      try {
+        var instance = new Swiper(container, options);
+        container[PRODUCT_SWIPER_INSTANCE_KEY] = instance;
+        console.log('[home-ui] Product swiper initialized with desktop slides:', desktopSlides);
+      } catch (e) {
+        console.error('[home-ui] Failed to initialize product swiper', e);
       }
     });
   }
@@ -318,6 +476,7 @@ import Swiper from 'swiper/bundle';
         speed: 500,
         loop: slideCount > 1,
         slidesPerGroup: 1, // 항상 1개씩 이동
+        a11y: false,
         autoplay: {
           delay: 4000,
           disableOnInteraction: false
@@ -349,11 +508,15 @@ import Swiper from 'swiper/bundle';
           initMainBannerSwiper();
           initEventBannerSwiper();
           initLineAdBannerSwiper();
+          initBrandSwiper();
+          initProductSwiper();
         });
       } else {
         initMainBannerSwiper();
         initEventBannerSwiper();
         initLineAdBannerSwiper();
+        initBrandSwiper();
+        initProductSwiper();
       }
     },
 
