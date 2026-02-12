@@ -1,0 +1,12 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<!-- 비츠온 레전드 - 가장 많이 판매된 상품 TOP 10 -->
+<div class="vits-home-product-legend">
+  <ul class="product-legend-list">
+    <% for (let i = 0; i < 10; i++) { %>
+    <li class="product-legend-item">
+      <%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, { type: 'default' }) %>
+    </li>
+    <% } %>
+  </ul>
+</div>

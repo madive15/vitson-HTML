@@ -1,0 +1,38 @@
+// -----------------------------------------------------------------------------
+// components-mo/_step-flow.scss
+// - 다단계 스텝 UI (페이지 전환, 헤더 네비게이션, 하단 바 가격 토글)
+// -----------------------------------------------------------------------------
+
+// 페이지: 기본 숨김, is-active만 노출
+[data-step-page] {
+  display: none;
+}
+
+@for $i from 1 through 4 {
+  [data-step='#{$i}'] [data-step-page='#{$i}'] {
+    display: block;
+  }
+}
+
+// 헤더 스텝 버튼
+.vm-header-step-button {
+  pointer-events: none;
+
+  &.is-visited {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  &.is-current {
+    pointer-events: none;
+  }
+}
+
+// UI 요소 — 하단 가격 영역
+[data-step-price] {
+  display: none;
+}
+
+[data-step-bar].is-price [data-step-price] {
+  display: block;
+}

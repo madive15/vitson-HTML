@@ -448,3 +448,42 @@
     z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
   }
 }
+
+// 모달
+.vm-scope .k-window:not(.is-bottomsheet, .is-slideright) {
+  .vm-modal {
+    &-inner {
+      max-width: min(90vw, 600px);
+    }
+
+    &-header {
+      padding: var.$mo-section-gap map.get(var.$unit, 20) map.get(var.$unit, 20);
+      box-shadow: none;
+    }
+
+    &-title {
+      padding-top: map.get(var.$unit, 4);
+      font-size: fn.rem(20);
+    }
+
+    &-subtitle {
+      width: auto;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    &-close {
+      width: map.get(var.$unit, 32);
+      height: map.get(var.$unit, 32);
+    }
+
+    &-content {
+      padding: map.get(var.$unit, 4) map.get(var.$unit, 20) map.get(var.$unit, 12);
+    }
+
+    &-footer {
+      padding: var.$mo-section-gap map.get(var.$unit, 20);
+    }
+  }
+}

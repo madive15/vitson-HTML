@@ -518,7 +518,10 @@
         Object.keys(scopes).forEach(function (k) {
           var scope = scopes[k];
           if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-            if (scope.openRoot.closest('.k-window').length) {
+            if (
+              scope.openRoot.closest('.k-window').length ||
+              scope.openRoot.closest('[data-scroll-auto-hidden]').length
+            ) {
               closeOpenedInScope(k);
             } else {
               updatePortalPosition(scope.openRoot);

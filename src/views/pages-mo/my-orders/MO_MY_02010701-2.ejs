@@ -1,0 +1,94 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '취소신청'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', 
+            title: '취소신청'
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders status-cancel" data-scroll-auto-hidden>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components-mo/mypage/claim-request-step1.ejs`, { 
+                claimType: 'cancel', 
+                hasStep: false 
+              }) %>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'cancel-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+        var type = params.get('type') || 'multi';
+        var root = document.querySelector('.wrap-my-orders');
+        if (!root) return;
+
+        // ?type=single / ?type=multi 분기
+        root.querySelectorAll('[data-claim]').forEach(function (el) {
+          el.style.display = el.dataset.claim === type ? '' : 'none';
+        });
+
+        // multi일 때만: 체크박스 ↔ 버튼 활성화
+        if (type === 'multi') {
+          var ITEM_CB = '.card-checkbox input[type="checkbox"]';
+          var ACTION = '.btn-submit';
+
+          function updateAction() {
+            var checked = root.querySelectorAll(ITEM_CB + ':checked').length;
+            var btn = root.querySelector(ACTION);
+            if (!btn) return;
+            btn.classList.toggle('is-disabled', checked === 0);
+            btn.disabled = checked === 0;
+          }
+
+          updateAction();
+
+          root.addEventListener('change', function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) return;
+            updateAction();
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

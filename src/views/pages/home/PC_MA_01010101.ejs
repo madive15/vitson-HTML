@@ -36,6 +36,22 @@
                 <%- include(`${_src}/views/components/pg-home/home-frequent-menu.ejs`) %>
               </section>
               <!-- E: 자주 찾는 메뉴 -->
+              <!-- S: 비츠온만의 초특가 제안 -->
+              <section class="home-section">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온만의', point: '초특가 제안', description: '지금, 비츠온이 가장 저렴합니다!', showMoreLink: true }) %>
+                <%- include(`${_src}/views/components/pg-home/home-product-swiper.ejs`, {
+                  dataDesktop: 4,
+                  products: [
+                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: true},
+                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: true},
+                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-03.png`, showHoverActions: true},
+                    {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: true},
+                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: true},
+                  ]
+                }) %>
+              </section>
+              <!-- E: 비츠온만의 초특가 제안 -->
               <!-- S: 대표 카테고리 메뉴 -->
               <section class="home-section">
                 <!-- prettier-ignore -->
@@ -43,14 +59,23 @@
                 <%- include(`${_src}/views/components/pg-home/home-main-category-menu.ejs`) %>
               </section>
               <!-- E: 대표 카테고리 메뉴 -->
+              <!-- S: 고객님께서 자주 구매한 상품 -->
               <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온만의', point:
-                '초특가 제안', description: '지금, 비츠온이 가장 저렴합니다!' }) %>
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '고객님께서', point: '자주 구매한 상품', description: '지금 이 상품이 필요하신가요?', showMoreLink: true }) %>
+                <%- include(`${_src}/views/components/pg-home/home-product-swiper.ejs`, {
+                  dataDesktop: 5,
+                  products: [
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-01.jpg`, showFrequentBadge: true, frequentCount: 38}, 
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-02.jpg`, showFrequentBadge: true, frequentCount: 25},
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-03.jpg`, showFrequentBadge: true, frequentCount: 15},
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-02.jpg`, showFrequentBadge: true, frequentCount: 12},
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-03.jpg`, showFrequentBadge: true, frequentCount: 8},
+                    {type: 'cart', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-sample-product-03.jpg`, showFrequentBadge: true, frequentCount: 10},
+                  ]
+                }) %>
               </section>
-              <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '고객님께서', point:
-                '자주 구매한 상품', description: '지금 이 상품이 필요하신가요?' }) %>
-              </section>
+              <!-- E: 고객님께서 자주 구매한 상품 -->
 
               <section class="home-section">
                 <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '지금 많이 찾으시는',
@@ -62,31 +87,28 @@
                 <%- include(`${_src}/views/components/pg-home/home-event-banner.ejs`) %>
               </section>
               <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'line' }) %>
-              </section>
-              <section class="home-section">
                 <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point:
                 '반짝특가', description: '카테고리별 인기 상품을 특가로 만나보세요' }) %>
               </section>
               <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point:
-                '레전드', description: '매월 10만개 + 상품! 믿고 담아보세요' }) %>
+                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'line' }) %>
+              </section>
+              <section class="home-section">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point: '레전드', description: '매월 10만개 + 상품! 믿고 담아보세요' }) %>
+                <%- include(`${_src}/views/components/pg-home/home-product-legend.ejs`) %>
               </section>
               <section class="home-section">
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '비츠온', point: 'Pick 브랜드', description: '비츠온에서 추천하는 기업이에요', showMoreLink: true }) %>
+                <%- include(`${_src}/views/components/pg-home/home-product-brand.ejs`) %>
+              </section>
+              <section class="home-section">
+                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'double' }) %>
               </section>
               <section class="home-section">
                 <%- include(`${_src}/views/components/pg-home/home-section-title.ejs`, { title: '카테고리',
                 point:'BEST'}) %>
-              </section>
-
-              <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-product-list.ejs`) %>
-              </section>
-
-              <section class="home-section">
-                <%- include(`${_src}/views/components/pg-home/home-ad-banner.ejs`, { type: 'double' }) %>
               </section>
             </div>
             <!-- E: vits-grid-main -->

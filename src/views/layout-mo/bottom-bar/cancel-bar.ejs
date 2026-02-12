@@ -1,21 +1,21 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 
-<div class="bottom-step-bar" data-step-bar>
-  <div class="step-bar-price" data-step-price>
+<div class="bottom-step-bar-price is-price">
+  <div class="step-bar-price">
     <div class="step-bar-price-inner">
-      <spa class="label">환불예정금액</spa>
-      <spa class="value">1,025,000원</spa>
+      <span class="label">환불예정금액</span>
+      <span class="value">1,025,000원</span>
     </div>
   </div>
 
   <div class="step-bar-actions">
     <!-- prettier-ignore -->
     <%- include(`${_src}/views/components/button/button.ejs`, {
-      size:'xl', 
+      size: 'xl', 
       variant: 'primary', 
-      text: '다음',
-      attrs: 'data-step-action'
+      text: '취소신청 완료',
+      attrs: 'data-cancel-submit'
     }) %>
   </div>
 </div>

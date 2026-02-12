@@ -2400,8 +2400,13 @@
     width: 100%;
 
     &:has(.vits-claim-request-reason) {
-      min-height: fn.rem(320);
+      min-height: fn.rem(210);
       max-height: fn.rem(240);
+
+      &:has(.vits-checkbox-item) {
+        min-height: fn.rem(320);
+        max-height: fn.rem(320);
+      }
     }
 
     &:has(.vits-claim-request-chekbox) {
@@ -2444,6 +2449,7 @@
 
   &-section {
     @include mx.flex(flex, column, flex-start, flex-start);
+    padding-top: 1px;
 
     &:not(:has(.vits-claim-request-pickup)) {
       gap: map.get(var.$unit, 16);

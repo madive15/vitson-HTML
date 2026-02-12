@@ -12,6 +12,7 @@
   const hasReturnQty = typeof _l.hasReturnQty !== 'undefined' ? _l.hasReturnQty : true;
   const hasCart = typeof _l.hasCart !== 'undefined' ? _l.hasCart : true;
   const orderStatus = typeof _l.orderStatus !== 'undefined' ? String(_l.orderStatus) : '';
+  const unitAccent = typeof _l.unitAccent !== 'undefined' ? _l.unitAccent : false;
 
   // 상품 데이터
   const productImg = typeof _l.productImg !== 'undefined' ? _l.productImg : '';
@@ -218,6 +219,7 @@
   };
 
   const _order = ORDER_MAP[orderStatus] || null;
+  const hasActions = hasCart || (_order && _order.buttons && _order.buttons.length > 0);
 
   // 반품 수량 옵션 생성 (0 ~ productQty)
   const returnQtyOptions = [];
@@ -233,6 +235,7 @@
     <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
       name: checkboxId,
       value: checkboxId,
+      checkboxType: 'item',
       size: 's'
     }) %>
   </div>
@@ -286,7 +289,9 @@
       <% if (hasPriceInfo) { %>
       <div class="card-price-info">
         <% if (hasTax) { %>
-        <p class="product-price-tax"><span><%= productTax %></span> / <span><%= productUnit %></span></p>
+        <p class="product-price-tax">
+          <span><%= productTax %></span> / <span<% if (unitAccent) { %> class="text-accent"<% } %>><%= productUnit %></span>
+        </p>
         <% } %>
         <!-- prettier-ignore -->
         <% if (hasQty) { %>
@@ -319,6 +324,8 @@
       <% } %>
     </div>
   </div>
+
+  <% if (hasActions) { %>
   <div class="card-actions">
     <div class="actions-util">
       <% if (hasCart) { %>
@@ -331,11 +338,12 @@
       <% if (_order && _order.buttons) { _order.buttons.forEach(function(btn) { %>
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/button/button.ejs`, {
-        size: 'xs',
-        variant: btn.variant || 'outline-tertiary',
-        text: btn.text
-      }) %>
-      <% }); } %>
+      size: 'xs',
+      variant: btn.variant || 'outline-tertiary',
+      text: btn.text
+    }) %>
+    <% }); } %>
     </div>
   </div>
+  <% } %>
 </div>

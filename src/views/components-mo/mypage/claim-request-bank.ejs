@@ -1,0 +1,94 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<dl class="pickup-info-date" data-scope="claim-refund-bank">
+  <dt class="is-required">환불 계좌</dt>
+  <dd>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+      id: 'select-bank',
+      name: 'select-bank',
+      placeholder: '계좌선택',
+      options: [
+        { value: 'bank1', text: '신규 계좌' },
+        { value: 'bank2', text: '내 계좌' },
+      ],
+      value: '계좌선택',
+      disabled: false,
+      portal: true,
+    }) %>
+  </dd>
+
+  <!-- S: 신규 계좌 선택 시 -->
+  <dt class="is-required" data-bank-type="bank1" hidden>은행</dt>
+  <dd data-bank-type="bank1" hidden>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'sel-bank',
+            name: 'sel-bank',
+            placeholder: '은행명',
+            options: [
+              { value: 'shinhan', text: '신한은행' },
+              { value: 'kb', text: '국민은행' },
+              { value: 'woori', text: '우리은행' },
+              { value: 'hana', text: '하나은행' },
+              { value: 'nh', text: 'NH농협은행' },
+              { value: 'ibk', text: 'IBK기업은행' },
+              { value: 'sc', text: 'SC제일은행' },
+            ],
+            value: '은행명',
+            disabled: false,
+            portal: true,
+            maxHeight: 150,
+          }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'bank-user',
+            name: 'bank-user',
+            label: '예금주',
+            placeholder: '예금주',
+            required: true,
+            rootClass: 'size-m'
+          }) %>
+  </dd>
+  <dt class="is-required has-gap" data-bank-type="bank1" hidden>계좌번호</dt>
+  <dd data-bank-type="bank1" hidden>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'bank-number',
+            name: 'bank-number',
+            label: '계좌번호',
+            placeholder: '계좌번호',
+            required: true,
+            rootClass: 'size-m'
+          }) %>
+  </dd>
+  <!-- E: 신규 계좌 선택 시 -->
+
+  <!-- S: 내 계좌 선택 시 -->
+  <dt class="is-required" data-bank-type="bank2" hidden>계좌번호</dt>
+  <dd data-bank-type="bank2" hidden>국민은행 100-545-54152454</dd>
+  <!-- E: 내 계좌 선택 시 -->
+</dl>
+
+<script>
+  // 환불계좌 셀렉트 → 영역 토글 (포탈 셀렉트 대응)
+  document.addEventListener('click', function (e) {
+    var option = e.target.closest('.vits-select-option');
+    if (!option) return;
+
+    var openSelect = document.querySelector('[data-select-id="select-bank"].vits-select-open');
+    if (!openSelect) return;
+
+    var val = option.dataset.value;
+    var scope = document.querySelector('[data-scope="claim-refund-bank"]');
+    if (!scope) return;
+
+    scope.querySelectorAll('[data-bank-type]').forEach(function (el) {
+      if (el.dataset.bankType === val) {
+        el.removeAttribute('hidden');
+      } else {
+        el.setAttribute('hidden', '');
+      }
+    });
+  });
+</script>

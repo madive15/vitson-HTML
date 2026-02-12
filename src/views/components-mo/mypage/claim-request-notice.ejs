@@ -1,4 +1,23 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
+<%
+  const _l = typeof locals !== 'undefined' ? locals : {};
+  const claimType = typeof _l.claimType !== 'undefined' ? _l.claimType : 'return';
+%>
+<!-- prettier-ignore -->
 
-<div class="claim-request-notice"></div>
+<div class="claim-request-notice">
+  <div class="claim-request-notice-inner">
+    <ul class="claim-request-notice-list">
+      <% if (claimType === 'cancel') { %>
+      <li>취소 상품을 선택하여 취소 신청하실 수 있습니다.</li>
+      <li>배송이 이미 준비된 경우에는 관리자 승인 처리가 필요할 수 있습니다. 취소 신청 후 마이페이지에서 처리 상태를 확인해주세요.</li>
+      <li>취소 처리가 완료된 후에도 결제 수단에 따라 환불까지는 시간이 소요될 수 있습니다.</li>
+      <% } else { %>
+      <li>반품 사유, 수거 정보 등을 입력하여 반품을 신청할 수 있습니다.</li>
+      <li>단, 고객 귀책으로 인한 반품일 경우 반품배송비는 고객에게 부과되며 환불 금액에서 차감됩니다.</li>
+      <li>반품 검수 후 반품이 반려될 수 있습니다.</li>
+       <% } %>
+    </ul>
+  </div>
+</div>

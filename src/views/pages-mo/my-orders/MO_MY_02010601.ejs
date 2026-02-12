@@ -13,7 +13,12 @@
     <section class="vm-wrapper">
       <!-- S: vm-wrap -->
       <!-- vm-wrap => data-step scope 부여 -->
-      <div class="vm-wrap wrap-my-orders" data-step>
+      <!-- prettier-ignore -->
+      <div class="vm-wrap wrap-my-orders"
+        data-step="1" 
+        data-step-prices="3" 
+        data-step-done="반품신청 완료"
+      >
         <!-- S: vm-content-wrap -->
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
@@ -29,24 +34,17 @@
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
-            <div class="vm-main-content main-content-my-orders">
+            <!-- [D] data-scroll-auto-hidden => 스크롤 시, 셀렉트박스 자동 닫힘. -->
+            <div class="vm-main-content main-content-my-orders" data-scroll-auto-hidden>
               <!-- step 1 -->
-              <div class="vm-claim-request step-1" data-step-page="1">
-                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
-                <div class="claim-request-product-list">반품상품 리스트</div>
-              </div>
-
+              <%- include(`${_src}/views/components-mo/mypage/claim-request-step1.ejs`, { claimType: 'return' }) %>
+              
               <!-- step 2 -->
-              <div class="vm-claim-request step-2" data-step-page="2">
-                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
-                <div class="claim-request-reason">반품사유</div>
-              </div>
+              <%- include(`${_src}/views/components-mo/mypage/claim-request-step2.ejs`) %>
+              
 
               <!-- step 3 -->
-              <div class="vm-claim-request step-3" data-step-page="3">
-                <%- include(`${_src}/views/components-mo/mypage/claim-request-notice.ejs`) %>
-                <div class="claim-request-pickup">수거지 정보</div>
-              </div>
+              <%- include(`${_src}/views/components-mo/mypage/claim-request-step3.ejs`) %>
             </div>
           </main>
           <!-- E: vm-main -->
@@ -70,5 +68,142 @@
     <!-- E: vm-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+        var type = params.get('type') || 'multi';
+        var root = document.querySelector('[data-step]');
+        if (!root) return;
+
+        var startStep = params.get('step');
+        if (startStep) {
+          root.setAttribute('data-step', startStep);
+        }
+
+        // ?type=single / ?type=multi 분기
+        root.querySelectorAll('[data-claim]').forEach(function (el) {
+          el.style.display = el.dataset.claim === type ? '' : 'none';
+        });
+
+        // tpl을 DOM에서 미리 분리 → 전역 UI.select.init 영향 방지
+        var tpl = root.querySelector('[data-step2-tpl]');
+        if (tpl) tpl.parentNode.removeChild(tpl);
+
+        // 스텝2 상품 복제
+        var HIDE_IN_STEP2 = '.card-checkbox, .card-return-qty, .card-actions, .card-price-info';
+
+        function copyToStep2() {
+          var list = root.querySelector('[data-step2-list]');
+          if (!list || !tpl) return;
+
+          // 기존 복제 항목 제거
+          list.querySelectorAll('li').forEach(function (el) {
+            el.remove();
+          });
+
+          var isSingle = type === 'single';
+          var items;
+
+          if (isSingle) {
+            items = root.querySelectorAll('[data-claim="single"] .product-item');
+          } else {
+            items = root.querySelectorAll('[data-claim="multi"] .product-item');
+          }
+
+          var idx = 0;
+
+          items.forEach(function (item) {
+            if (!isSingle) {
+              var cb = item.querySelector('.card-checkbox input[type="checkbox"]');
+              if (!cb || !cb.checked) return;
+            }
+
+            var card = item.querySelector('.vm-product-mypage-card');
+            if (!card) return;
+
+            // tpl은 DOM에서 분리된 상태 → 순수 마크업 복제
+            var li = tpl.cloneNode(true);
+            li.removeAttribute('data-step2-tpl');
+            li.style.display = '';
+
+            var cardClone = card.cloneNode(true);
+            cardClone.querySelectorAll(HIDE_IN_STEP2).forEach(function (el) {
+              el.remove();
+            });
+
+            li.querySelector('.reason-product').appendChild(cardClone);
+
+            li.querySelectorAll('[id]').forEach(function (el) {
+              el.id = el.id + '-' + idx;
+            });
+            li.querySelectorAll('[name]').forEach(function (el) {
+              el.name = el.name + '-' + idx;
+            });
+
+            list.appendChild(li);
+
+            // 복제된 li에 대해 init만 호출 (destroy 불필요 — 초기화된 적 없음)
+            if (window.UI && UI.select) {
+              UI.select.init(li);
+            }
+
+            idx++;
+          });
+        }
+
+        // stepFlow onChange 연결
+        root.querySelector('[data-step-action]').addEventListener('click', function () {
+          var current = Number(root.getAttribute('data-step'));
+          setTimeout(function () {
+            var next = Number(root.getAttribute('data-step'));
+            if (next === 2 && current === 1) copyToStep2();
+          }, 0);
+        });
+
+        // multi일 때만: 체크박스 ↔ 반품수량 연동, 버튼 활성화
+        if (type === 'multi') {
+          var CARD = '.vm-product-mypage-card';
+          var RETURN_QTY = '.card-return-qty';
+          var ACTION = '[data-step-action]';
+          var ITEM_CB = '.card-checkbox input[type="checkbox"]';
+
+          root.querySelectorAll(CARD).forEach(function (card) {
+            var cb = card.querySelector(ITEM_CB);
+            if (!cb) return;
+            var qty = card.querySelector(RETURN_QTY);
+            if (qty) qty.classList.add('is-hidden');
+          });
+
+          function updateAction() {
+            var checked = root.querySelectorAll(ITEM_CB + ':checked').length;
+            var btn = root.querySelector(ACTION);
+            if (!btn) return;
+            btn.classList.toggle('is-disabled', checked === 0);
+            btn.disabled = checked === 0;
+          }
+
+          function syncReturnQty() {
+            root.querySelectorAll(CARD).forEach(function (card) {
+              var cb = card.querySelector(ITEM_CB);
+              if (!cb) return;
+              var qty = card.querySelector(RETURN_QTY);
+              if (qty) qty.classList.toggle('is-hidden', !cb.checked);
+            });
+          }
+
+          updateAction();
+
+          root.addEventListener('change', function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) return;
+            syncReturnQty();
+            updateAction();
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

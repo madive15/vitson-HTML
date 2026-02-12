@@ -13,6 +13,99 @@
 @use '@/assets/scss/components/form' as form;
 @use '@/assets/scss/layout/list' as list; // 상품 카드 공통 스타일
 
+/* ----------------------------------------------------------------------------- */
+/* 공통 알림 모달 (vits-common-alert-modal) */
+/* ----------------------------------------------------------------------------- */
+.vits-common-alert-modal {
+  .common-alert-modal-content,
+  & * {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'secondary'));
+    line-height: 1.5;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * slider-nav: 슬라이더/배너 좌우 네비게이션 버튼 공통 스타일
+ * - 원형 prev/next 버튼의 기본 + hover/active + disabled 상태 일괄 적용
+ * - 사용 예시:
+ *     .my-navs { @include slider-nav-wrap; }
+ *     .my-nav  { @include slider-nav; }
+ *     .my-nav-lg { @include slider-nav($size: 48, $icon-size: 24); }
+ * ------------------------------------------------------------------------- */
+@mixin slider-nav-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  @include mx.flex(flex, row, space-between, center);
+}
+
+@mixin slider-nav(
+  $size: 36,
+  $icon-size: 20,
+  $bg: #fff,
+  $border-color: map.get(color.$layout-border, 'tertiary'),
+  $icon-color: map.get(color.$icon-neutral, 'primary'),
+  $active-color: map.get(color.$brand-colors, 'primary'),
+  $disabled-opacity: 0
+) {
+  // Box Model
+  width: fn.rem($size);
+  height: fn.rem($size);
+  padding: 0;
+
+  // Visual
+  pointer-events: auto;
+  cursor: pointer;
+  background-color: $bg;
+  border: 1px solid $border-color;
+  border-radius: 50%;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+
+  // Layout
+  @include mx.flex(flex, row, center, center);
+
+  // Icon
+  .icon,
+  .ic {
+    @include icon.ic-size(fn.rem($icon-size));
+    color: $icon-color;
+  }
+
+  // Interaction States
+  @include mx.hoverable-only {
+    &:hover {
+      background-color: $bg;
+      border-color: $active-color;
+
+      .ic {
+        color: $active-color;
+      }
+    }
+
+    &:active {
+      background-color: $active-color;
+      border-color: $active-color;
+
+      .ic {
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+
+  // Disabled (swiper 등)
+  &.swiper-button-disabled {
+    pointer-events: none;
+    opacity: $disabled-opacity;
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 섹션 (home-section) */
+/* ----------------------------------------------------------------------------- */
 .home-section {
   position: relative;
   margin: 0 auto;
@@ -23,7 +116,7 @@
     background-color: #f9e9ea;
   }
 
-  /* 여백 */
+  /* 상.하 간격 */
   &:has(.vits-home-frequent-menu) {
     padding: fn.rem(30) 0 0;
   }
@@ -40,6 +133,19 @@
         gap: fn.rem(10);
       }
     }
+  }
+
+  /* 상.하 간격 */
+  &:has(.vits-home-product-legend) {
+    padding: fn.rem(100) 0;
+  }
+
+  &:has(.home-brand-swiper-wrapper) {
+    padding: 0 0 fn.rem(80);
+  }
+
+  &:has(.home-product-swiper-wrapper) {
+    padding: fn.rem(80) 0;
   }
 }
 
@@ -517,15 +623,6 @@
 }
 
 /* ----------------------------------------------------------------------------- */
-/* 홈 상품 리스트 (home-product-list) */
-/* ----------------------------------------------------------------------------- */
-.home-product-list-item {
-  @include mx.flex(flex, row, flex-start, flex-start, wrap);
-  gap: fn.rem(20);
-  max-width: fn.rem(230);
-}
-
-/* ----------------------------------------------------------------------------- */
 /* 홈 광고 배너 (home-ad-banner) */
 /* ----------------------------------------------------------------------------- */
 .home-ad-banner {
@@ -552,16 +649,17 @@
   /* 라인광고 배너 (스와이프) */
   &.line-banner {
     position: relative;
-    max-width: fn.rem(1360);
+    max-width: fn.rem(1430); // 스와이프 좌.우 버튼 영역 고려
     padding: 0 fn.rem(40);
 
     @include mx.pc-sm {
-      padding: 0 fn.rem(20);
+      padding: 0 fn.rem(52);
     }
 
     .line-banner-visual {
       position: relative;
-      max-width: fn.rem(1360);
+      max-width: fn.rem(1280);
+      margin: 0 auto;
       overflow: hidden;
       border-radius: map.get(var.$radius, 'lg');
     }
@@ -590,56 +688,554 @@
 
     /* 좌우 네비게이션 */
     .line-banner-navs {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-
-      @include mx.flex(flex, row, space-between, center);
+      @include slider-nav-wrap;
     }
 
     .line-banner-nav {
-      width: fn.rem(36);
-      height: fn.rem(36);
-      padding: 0;
-      cursor: pointer;
-      background-color: #fff;
-      border: 1px solid map.get(color.$layout-border, 'tertiary');
-      border-radius: 50%;
-      transition:
-        opacity 0.2s ease,
-        background-color 0.2s ease;
+      @include slider-nav;
+    }
+  }
+}
 
+/* ----------------------------------------------------------------------------- */
+/* 비츠온 레전드 - 가장 많이 판매된 상품 TOP 10 (vits-home-product-legend) */
+/* ----------------------------------------------------------------------------- */
+.vits-home-product-legend {
+  max-width: var.$desktop-width;
+  margin: 0 auto;
+
+  @include mx.pc-sm {
+    padding: 0 fn.rem(20);
+  }
+
+  .product-legend-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: fn.rem(24) fn.rem(16);
+  }
+
+  .product-legend-item {
+    @include mx.border('all', 2px, solid, color.$color-white);
+    min-width: 0;
+
+    @include mx.common-mouse-event {
+      @include mx.border(all, 2px, solid, map.get(color.$brand-colors, 'primary'));
+      border-radius: map.get(var.$radius, 'lg');
+      box-shadow: map.get(var.$box-shadow, 'elevation_2');
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 비츠온 Pick 브랜드 - 추천 상품 (vits-home-product-brand) */
+/* ----------------------------------------------------------------------------- */
+// 브랜드 스와이퍼 컨테이너
+.home-brand-swiper-wrapper {
+  position: relative;
+  max-width: fn.rem(1430);
+  padding: 0 fn.rem(76); // 컨트롤러 공간 확보
+  margin: 0 auto;
+
+  @include mx.pc-sm {
+    padding: 0 fn.rem(20);
+  }
+}
+
+.home-brand-nav-wrap {
+  @include slider-nav-wrap;
+}
+
+.home-brand-nav-prev,
+.home-brand-nav-next {
+  @include slider-nav;
+}
+
+// Swiper 컨테이너
+.vits-home-product-brand {
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  background-color: color.$color-white;
+  border-radius: map.get(var.$radius, 'lg');
+
+  .brand-header {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'lg');
+  }
+
+  .brand-visual {
+    width: 100%;
+    height: 100%;
+
+    img {
+      display: block;
+
+      @include mx.img-fit(cover);
+      filter: brightness(0.4);
+    }
+  }
+
+  .brand-logo {
+    @include mx.position(absolute, 50%, $left: 50%);
+    @include mx.flex(flex, row, center, center);
+    width: fn.rem(162);
+    height: fn.rem(68);
+    transform: translate(-50%, -50%);
+
+    img {
+      display: block;
+
+      @include mx.img-fit(contain);
+    }
+  }
+
+  .brand-info {
+    @include mx.flex(flex, column, center, center);
+    position: relative;
+    gap: map.get(var.$unit, 8);
+    min-height: fn.rem(110);
+    padding: fn.rem(20);
+    margin: -17% fn.rem(24) 0;
+    text-align: center;
+    background-color: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+
+    &-name {
+      @include typo.typography('h2b', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-desc {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+      word-break: keep-all;
+
+      @include mx.ellipsis-multi(1.4, 2);
+    }
+  }
+
+  .brand-product-list {
+    @include mx.flex(flex, column);
+  }
+
+  .brand-product-item {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: fn.rem(16);
+    padding: fn.rem(16) fn.rem(8);
+    margin-top: fn.rem(12);
+    border: 2px solid transparent;
+    border-radius: map.get(var.$radius, 'md');
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    @include mx.pc-sm {
+      gap: 0;
+    }
+
+    @include mx.hoverable-only {
+      &:hover:not(.is-sold-out) {
+        border-color: map.get(color.$brand-colors, 'primary');
+        box-shadow: map.get(var.$box-shadow, 'elevation_2');
+      }
+
+      &:active:not(.is-sold-out) {
+        background-color: map.get(color.$layout-status, 'brand-bg-sub');
+        border-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
+    // 일시품절 상태 – 썸네일만 흐리게
+    &.is-sold-out .brand-product-thumb img {
+      opacity: 0.5;
+    }
+  }
+
+  .brand-product-link {
+    @include mx.flex(flex, row, flex-start, center);
+    flex: 1;
+    gap: fn.rem(16);
+    min-width: 0;
+    text-decoration: none;
+  }
+
+  .brand-product-thumb {
+    flex: 0 0 fn.rem(80);
+    width: fn.rem(80);
+    height: fn.rem(80);
+    overflow: hidden;
+    background-color: map.get(color.$gray-shades, '20');
+    border-radius: map.get(var.$radius, 'md');
+
+    img {
+      display: block;
+
+      @include mx.img-fit(contain);
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  .brand-product-info {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    flex: 1;
+    gap: map.get(var.$unit, 4);
+    min-width: 0;
+
+    .product-brand {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .product-name {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.ellipsis-multi(1.4, 1);
+    }
+  }
+
+  .product-price {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 4);
+    margin-top: map.get(var.$unit, 12);
+
+    .price-origin-label {
+      @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+      text-decoration: line-through;
+    }
+
+    .price-sale-row {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 4);
+    }
+
+    .price-rate {
+      @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+    }
+
+    .price-sale {
+      @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  .product-price-alt.is-soldout {
+    @include typo.typography('b2b', $color: map.get(color.$label-shipping, 'today'));
+  }
+
+  .product-price-alt.is-guest {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 12);
+  }
+
+  .price-guest-text {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 2);
+
+    &-title {
+      @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-sub'));
+    }
+
+    &-desc {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
+
+  .price-guest-action {
+    width: 100%;
+  }
+
+  .price-login-button {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+    gap: fn.rem(10);
+    width: 100%;
+    height: fn.rem(34);
+    padding: 0 map.get(var.$unit, 8);
+    background-color: color.$color-white;
+    border-radius: map.get(var.$radius, 'sm');
+
+    .icon {
+      @include icon.ic-size(map.get(var.$unit, 16));
+      color: map.get(color.$icon-neutral, 'primary');
+    }
+
+    .text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    @include mx.hoverable-only {
+      &:hover {
+        background-color: map.get(color.$layout-surf, 'sunken');
+        border-color: map.get(color.$layout-border, 'primary');
+
+        .text {
+          color: map.get(color.$layout-border, 'primary');
+        }
+      }
+    }
+  }
+
+  .brand-product-action {
+    flex: 0 0 auto;
+  }
+
+  .brand-action-cart {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, center, center);
+    width: fn.rem(36);
+    height: fn.rem(36);
+    cursor: pointer;
+    background-color: color.$color-white;
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+    border-radius: 50%;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    .icon {
+      @include icon.ic-size(fn.rem(20));
+      color: map.get(color.$icon-neutral, 'tertiary');
+    }
+
+    @include mx.hoverable-only {
+      &:hover {
+        border-color: map.get(color.$brand-colors, 'primary');
+
+        .icon {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
+    }
+
+    &:active {
+      background-color: map.get(color.$brand-colors, 'primary');
+      border-color: map.get(color.$brand-colors, 'primary');
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'inverse');
+      }
+    }
+
+    &:disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+      border-color: map.get(color.$gray-shades, '30');
+
+      .icon {
+        color: map.get(color.$gray-shades, '30');
+      }
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 상품 스와이퍼 (home-product-swiper) */
+/* ----------------------------------------------------------------------------- */
+.home-product-swiper-wrapper {
+  position: relative;
+  max-width: fn.rem(1430);
+  padding: 0 fn.rem(76); // 컨트롤러 공간 확보
+  margin: 0 auto;
+
+  @include mx.pc-sm {
+    padding: 0 fn.rem(52);
+  }
+}
+
+.home-product-swiper-nav-wrap {
+  @include slider-nav-wrap;
+}
+
+.home-product-swiper-nav-prev,
+.home-product-swiper-nav-next {
+  @include slider-nav;
+}
+
+.js-home-product-swiper {
+  width: 100%;
+  overflow: hidden;
+
+  .swiper-wrapper {
+    padding: 0;
+  }
+  // stylelint-disable-next-line no-descending-specificity
+  .swiper-slide {
+    height: auto;
+
+    .home-product-item {
+      transition: box-shadow 0.2s ease;
+
+      @include mx.border('all', 2px, solid, color.$color-white);
+
+      @include mx.common-mouse-event {
+        &:hover {
+          border-color: map.get(color.$brand-colors, 'primary');
+          border-radius: map.get(var.$radius, 'lg');
+          box-shadow: map.get(var.$box-shadow, 'elevation_2');
+        }
+      }
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* 홈 상품 유닛 (home-product-list) */
+/* ----------------------------------------------------------------------------- */
+// stylelint-disable-next-line no-descending-specificity
+.home-product-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: fn.rem(200);
+
+  @include list.common-product-card-info;
+
+  // 썸네일 – overflow hidden으로 슬라이드 영역 클리핑
+  .product-thumb {
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'lg');
+    // stylelint-disable-next-line no-descending-specificity
+    img {
+      transition: filter 0.3s ease;
+
+      @include mx.img-fit(contain);
+    }
+  }
+
+  // 호버 오버레이 – 기본: 아래에 숨김
+  .product-actions-hover {
+    @include mx.position(absolute, auto, 0, 0, 0);
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: rgb(255 255 255 / 80%);
+    border-radius: map.get(var.$radius, 'md');
+    opacity: 0;
+    transition:
+      transform 0.35s ease,
+      opacity 0.35s ease,
+      visibility 0.35s ease;
+    transform: translateY(100%);
+  }
+
+  // hover 시 이미지 블러 + 액션 영역 슬라이드 업
+  &:has(.product-actions-hover):hover {
+    .product-thumb img {
+      filter: blur(5px);
+    }
+
+    .product-actions-hover {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // 액션 버튼 그룹
+  .product-actions-hover .product-actions {
+    @include mx.flex(flex, row, center, center);
+    gap: map.get(var.$unit, 20);
+  }
+
+  // 액션 버튼 공통 (좋아요, 장바구니 등)
+  .product-actions-hover [class*='product-action-'] {
+    @include mx.flex(flex, column, center, center);
+    gap: map.get(var.$unit, 8);
+
+    @include mx.common-mouse-event {
+      .icon {
+        color: map.get(color.$brand-colors, 'primary');
+        border-color: map.get(color.$brand-colors, 'primary');
+      }
+
+      &:active .icon {
+        color: map.get(color.$icon-neutral, 'inverse');
+        background-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
+    .icon {
+      @include icon.ic-size(fn.rem(52));
       @include mx.flex(flex, row, center, center);
-      @include button.btn-reset;
+      color: map.get(color.$layout-border, 'secondary');
+      background-color: color.$color-white;
+      border: 1px solid map.get(color.$layout-border, 'secondary');
+      border-radius: 50%;
 
       .ic {
-        @include icon.ic-size(fn.rem(20));
-        color: map.get(color.$icon-neutral, 'primary');
+        @include icon.ic-size(fn.rem(32));
       }
 
-      @include mx.hoverable-only {
-        &:hover {
-          background-color: #fff;
-          border: 1px solid map.get(color.$brand-colors, 'primary');
+      &.active {
+        color: map.get(color.$icon-neutral, 'inverse');
+        background-color: map.get(color.$brand-colors, 'primary');
+        border-color: map.get(color.$brand-colors, 'primary');
+      }
+    }
 
-          .ic {
+    .text {
+      @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  // 좋아요 버튼 전용 – focus·active 시 하트 아이콘 전환 (상품 유닛과 다름)
+  .product-actions-hover .product-action-like .icon .ic {
+    &:active {
+      mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg') !important;
+    }
+  }
+
+  .product {
+    &-body {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 8);
+      padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 16);
+
+      .product-price {
+        width: 100%;
+      }
+    }
+
+    &-meta {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 4);
+    }
+
+    &-action-cart {
+      width: 100%;
+      margin-top: map.get(var.$unit, 20);
+
+      .product-cart-button {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, center, center);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+        min-height: fn.rem(40);
+
+        @include typo.typography('b2r', $color: map.get(color.$text-colors, 'secondary'));
+        border: 1px solid map.get(color.$layout-border, 'secondary');
+        border-radius: map.get(var.$radius, 'sm');
+
+        .icon {
+          @include icon.ic-size(fn.rem(24));
+        }
+
+        @include mx.hoverable-only {
+          &:hover {
             color: map.get(color.$brand-colors, 'primary');
+            background-color: map.get(color.$layout-status, 'brand-bg-sub');
+            border-color: map.get(color.$brand-colors, 'primary');
           }
         }
 
-        &:active {
+        @include mx.focus-active {
+          color: map.get(color.$icon-neutral, 'inverse');
           background-color: map.get(color.$brand-colors, 'primary');
           border-color: map.get(color.$brand-colors, 'primary');
-
-          .ic {
-            filter: brightness(0) invert(1);
-          }
         }
-      }
-
-      &.swiper-button-disabled {
-        pointer-events: none;
-        opacity: 0.35;
       }
     }
   }

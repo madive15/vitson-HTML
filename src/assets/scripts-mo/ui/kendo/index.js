@@ -4,13 +4,14 @@
  */
 import './kendo-window.js';
 import './kendo-datepicker.js';
+import './kendo-datepicker-single.js';
 
 (function (window) {
   'use strict';
 
   window.UI = window.UI || {};
 
-  var modules = ['VmKendoWindow', 'VmKendoRangePicker'];
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
 
   window.UI.kendo = {
     init: function () {
