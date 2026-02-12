@@ -423,29 +423,45 @@
   .k-window:has(.modal-category-sheet) ~ .k-overlay {
     z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
   }
+}
 
-  // 필터 슬라이드 — 탭바 하위 표시
-  .k-window:has(.modal-filter-sheet) {
-    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 1 !important;
+// 슬라이드 팝업 — 탭바 하위 맨위 표시
+$tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
 
-    .vm-modal {
-      /* stylelint-disable-next-line no-descending-specificity */
-      &-inner {
-        max-height: calc(var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom));
-      }
+@each $target in $tabbar-under-window-has {
+  .vm-scope {
+    .k-window:has(#{$target}) {
+      z-index: map.get(var.$mo-zindex, 'bottom-bar') - 1 !important;
 
-      &-content {
-        padding: 0;
-      }
+      .vm-modal {
+        /* stylelint-disable-next-line no-descending-specificity */
+        &-inner {
+          max-height: calc(var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom));
+        }
 
-      &-footer {
-        padding-bottom: map.get(var.$unit, 56);
+        @if $target == '.my-shipment-popup' {
+          &-header {
+            height: map.get(var.$unit, 52) !important;
+          }
+        }
+
+        &-content {
+          padding: 0;
+
+          @if $target == '.my-shipment-popup' {
+            background: map.get(color.$layout-surf, 'mypage');
+          }
+        }
+
+        &-footer {
+          padding-bottom: map.get(var.$unit, 56);
+        }
       }
     }
-  }
 
-  .k-window:has(.modal-filter-sheet) ~ .k-overlay {
-    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
+    .k-window:has(#{$target}) ~ .k-overlay {
+      z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
+    }
   }
 }
 

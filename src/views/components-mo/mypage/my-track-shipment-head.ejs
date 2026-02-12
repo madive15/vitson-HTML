@@ -1,0 +1,122 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="vm-track-shipment-head" data-track-shipment>
+  <div class="shipment-info-inner">
+    <dl class="shipment-info">
+      <dt>택배사</dt>
+      <dd>CJ대한통운</dd>
+    </dl>
+    <dl class="shipment-info">
+      <dt>송장번호</dt>
+      <dd>
+        <span class="shipment-info-number" data-copy-target>123456789012</span>
+        <button type="button" class="shipment-info-copy" data-copy aria-label="송장번호 복사하기">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %>
+        </button>
+        <span class="sr-only" role="status" aria-live="polite" data-copy-feedback></span>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<script>
+  /**
+   * @file 배송조회 - 송장번호 복사
+   * @scope [data-track-shipment]
+   * @mapping [data-copy] - 복사 버튼
+   * @mapping [data-copy-target] - 복사 대상 텍스트
+   * @mapping [data-copy-feedback] - 스크린 리더 피드백 (aria-live)
+   * @state is-copied - 복사 성공 피드백 (버튼)
+   * @state is-failed - 복사 실패 피드백 (버튼)
+   * @a11y 복사 성공/실패 시 aria-live 영역으로 스크린 리더에 전달
+   * @note fallbackCopy 내부에서 deprecated된 execCommand 사용 (구형 브라우저 폴백)
+   * @note destroy - scope 요소의 _copyDestroy에 바인딩
+   */
+  (function () {
+    var FEEDBACK_DURATION = 2000;
+    var COPIED_LABEL = '복사됨';
+    var COPY_FAIL_LABEL = '복사 실패';
+
+    var scope = document.querySelector('[data-track-shipment]');
+    if (!scope) return;
+
+    var copyBtn = scope.querySelector('[data-copy]');
+    if (!copyBtn) return;
+
+    var target = scope.querySelector('[data-copy-target]');
+    var defaultLabel = copyBtn.getAttribute('aria-label');
+    var feedback = scope.querySelector('[data-copy-feedback]');
+    var feedbackTimer = null;
+
+    function handleCopy() {
+      if (!target) return;
+
+      var text = target.textContent.trim();
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      var el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(el);
+      el.select();
+
+      try {
+        document.execCommand('copy') ? onSuccess() : onFail();
+      } catch (e) {
+        onFail();
+      } finally {
+        document.body.removeChild(el);
+      }
+    }
+
+    function onSuccess() {
+      showFeedback(COPIED_LABEL, true);
+    }
+
+    function onFail() {
+      showFeedback(COPY_FAIL_LABEL, false);
+    }
+
+    function showFeedback(label, isCopied) {
+      if (feedbackTimer) clearTimeout(feedbackTimer);
+
+      copyBtn.classList.toggle('is-copied', isCopied);
+      copyBtn.classList.toggle('is-failed', !isCopied);
+      copyBtn.setAttribute('aria-label', label);
+      if (feedback) feedback.textContent = label;
+
+      feedbackTimer = setTimeout(function () {
+        copyBtn.classList.remove('is-copied', 'is-failed');
+        if (defaultLabel) copyBtn.setAttribute('aria-label', defaultLabel);
+        if (feedback) feedback.textContent = '';
+        feedbackTimer = null;
+      }, FEEDBACK_DURATION);
+    }
+
+    function init() {
+      copyBtn.addEventListener('click', handleCopy);
+    }
+
+    function destroy() {
+      copyBtn.removeEventListener('click', handleCopy);
+      if (feedbackTimer) {
+        clearTimeout(feedbackTimer);
+        feedbackTimer = null;
+      }
+      copyBtn.classList.remove('is-copied', 'is-failed');
+      if (defaultLabel) copyBtn.setAttribute('aria-label', defaultLabel);
+      if (feedback) feedback.textContent = '';
+    }
+
+    init();
+    scope._copyDestroy = destroy;
+  })();
+</script>
