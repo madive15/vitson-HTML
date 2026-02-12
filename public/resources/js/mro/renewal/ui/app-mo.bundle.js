@@ -1,6 +1,93 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 548:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/form/checkbox-total.js
+ * @description data-속성 기반 체크박스 전체선택/해제
+ * @scope [data-checkbox-scope]
+ * @mapping data-checkbox-all: 전체선택, data-checkbox-item: 개별항목
+ * @state is-checked - 체크 상태 시각적 반영
+ * @note disabled 항목은 전체선택/해제 대상에서 제외
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[checkbox-total] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var CHECKED = 'is-checked';
+  var NS = '.checkboxTotal';
+  var BOUND_FLAG = 'checkboxTotalBound';
+
+  // 활성(disabled 아닌) 아이템만 조회
+  function getActiveItems($scope) {
+    return $scope.find('[data-checkbox-item]').not(':disabled');
+  }
+  function syncClass($el) {
+    $el.toggleClass(CHECKED, $el.is(':checked'));
+  }
+  function updateCheckAllState($scope) {
+    var $allCheckbox = $scope.find('[data-checkbox-all]');
+    if (!$allCheckbox.length) return;
+    var $items = getActiveItems($scope);
+    var totalCount = $items.length;
+    var checkedCount = $items.filter(':checked').length;
+    var isAllChecked = totalCount > 0 && totalCount === checkedCount;
+    $allCheckbox.prop('checked', isAllChecked);
+    syncClass($allCheckbox);
+  }
+  function bindScope($scope) {
+    if ($scope.data(BOUND_FLAG)) return;
+    $scope.on('change' + NS, '[data-checkbox-all]', function () {
+      var $allCheckbox = $(this);
+      var isChecked = $allCheckbox.is(':checked');
+      var $items = getActiveItems($scope);
+      $items.prop('checked', isChecked);
+      $items.each(function () {
+        syncClass($(this));
+      });
+      syncClass($allCheckbox);
+    });
+    $scope.on('change' + NS, '[data-checkbox-item]', function () {
+      syncClass($(this));
+      updateCheckAllState($scope);
+    });
+    $scope.data(BOUND_FLAG, true);
+  }
+  function unbindScope($scope) {
+    $scope.off(NS);
+    $scope.removeData(BOUND_FLAG);
+  }
+  window.UI.checkboxTotal = {
+    init: function () {
+      $('[data-checkbox-scope]').each(function () {
+        bindScope($(this));
+      });
+      console.log('[checkbox-total] init');
+    },
+    destroy: function () {
+      $('[data-checkbox-scope]').each(function () {
+        unbindScope($(this));
+      });
+      console.log('[checkbox-total] destroy');
+    },
+    // 동적 콘텐츠 변경 후 전체선택 상태 재계산
+    refresh: function ($scope) {
+      if (!$scope || !$scope.length) return;
+      updateCheckAllState($scope);
+    }
+  };
+  console.log('[checkbox-total] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 905:
 /***/ (function() {
 
@@ -85,6 +172,442 @@
     }
   };
 })(window.jQuery, window);
+
+/***/ }),
+
+/***/ 1014:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/kendo/kendo-datepicker-single.js
+ * @description 단일 DatePicker 초기화 모듈 (모바일 최적화)
+ * @scope .vits-datepicker-single [data-ui="kendo-datepicker"]
+ * @mapping js-kendo-datepicker(입력), vits-datepicker-single(래퍼)
+ * @state is-selected: 날짜 선택 완료
+ * @option format, culture, min, max, open, popupAlign (data-opt JSON, data-open)
+ * @a11y k-state-disabled + aria-disabled로 이전 달 네비게이션 차단
+ * @note iOS Safari rAF 타이밍 이슈로 debounce 기반 스케줄링 사용
+ */
+(function (window) {
+  'use strict';
+
+  var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var YEARVIEW_MONTH_NAMES = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+
+  // 모바일 브라우저 렌더링 지연 대응 상수
+  var DEBOUNCE_DELAY = 16;
+  var MOBILE_TIMEOUT_DELAY = 50;
+  var MAX_RETRY_COUNT = 3;
+  function parseJsonSafe(str) {
+    if (!str) return null;
+    try {
+      return JSON.parse(str.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+    } catch {
+      return null;
+    }
+  }
+  function parseBool(val) {
+    if (val === undefined || val === null) return null;
+    if (typeof val === 'boolean') return val;
+    var v = String(val).toLowerCase().trim();
+    if (v === 'true' || v === '1') return true;
+    if (v === 'false' || v === '0') return false;
+    return null;
+  }
+  function ensureKendoAvailable() {
+    return !!(window.jQuery && window.kendo && window.jQuery.fn && window.jQuery.fn.kendoDatePicker);
+  }
+  function debounce(func, delay) {
+    var timeoutId = null;
+    return function () {
+      var args = arguments;
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(function () {
+        timeoutId = null;
+        func.apply(null, args);
+      }, delay);
+    };
+  }
+
+  // 모바일에서 DOM 렌더 타이밍이 불안정할 때 재시도
+  function retryDomOperation(operation, maxRetries) {
+    maxRetries = maxRetries || MAX_RETRY_COUNT;
+    var attempt = 0;
+    function tryOperation() {
+      if (attempt >= maxRetries) return;
+      try {
+        if (operation()) return;
+      } catch {
+        // 실패 시 재시도
+      }
+      attempt++;
+      setTimeout(tryOperation, MOBILE_TIMEOUT_DELAY);
+    }
+    tryOperation();
+  }
+  function initDatePicker(el) {
+    var $el = window.jQuery(el);
+    if ($el.data('kendoDatePicker')) return;
+    var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
+    var $calendarWrap = null;
+    var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]');
+
+    // 타임아웃·옵저버 일괄 정리용
+    var cleanup = {
+      timeouts: [],
+      observers: []
+    };
+    function addTimeout(id) {
+      cleanup.timeouts.push(id);
+      return id;
+    }
+    function destroyCleanup() {
+      cleanup.timeouts.forEach(function (id) {
+        clearTimeout(id);
+      });
+      cleanup.timeouts.length = 0;
+      cleanup.observers.forEach(function (observer) {
+        if (observer && observer.disconnect) {
+          observer.disconnect();
+        }
+      });
+      cleanup.observers.length = 0;
+    }
+    function getCalendar() {
+      var inst = $el.data('kendoDatePicker');
+      return inst && inst.dateView && inst.dateView.calendar;
+    }
+    function resolveCalendarWrap() {
+      if ($calendarWrap && $calendarWrap.length) return $calendarWrap;
+      var cal = getCalendar();
+      if (cal) $calendarWrap = cal.element;
+      return $calendarWrap;
+    }
+    function applyCalendarClasses() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      var $outer = $el.closest('.vits-datepicker-single');
+      if (!$outer.length) return;
+      var classes = ($outer.attr('class') || '').split(/\s+/);
+      classes.forEach(function (cls) {
+        if (cls.indexOf('vits-') === 0) $wrap.addClass(cls);
+      });
+    }
+    function pad2(num) {
+      return num < 10 ? '0' + num : String(num);
+    }
+    function formatHeaderMonthParts(date) {
+      if (!date) return null;
+      return {
+        year: String(date.getFullYear()),
+        month: pad2(date.getMonth() + 1)
+      };
+    }
+    function applyDayNamesImmediate() {
+      return retryDomOperation(function () {
+        var $wrap = resolveCalendarWrap();
+        if (!$wrap) return false;
+        var $headers = $wrap.find('th');
+        if (!$headers.length) return false;
+        $headers.each(function (i) {
+          if (i >= DAY_NAMES.length) return;
+          var $th = window.jQuery(this);
+          var $link = $th.find('.k-link');
+          var nextText = DAY_NAMES[i];
+          if ($link.length) {
+            if ($link.text() !== nextText) $link.text(nextText);
+          } else if ($th.text() !== nextText) {
+            $th.text(nextText);
+          }
+        });
+        applyCalendarClasses();
+        return true;
+      });
+    }
+    function applyHeaderMonthImmediate() {
+      return retryDomOperation(function () {
+        var $wrap = resolveCalendarWrap();
+        if (!$wrap) return false;
+        var cal = getCalendar();
+        var current = cal && typeof cal.current === 'function' ? cal.current() : null;
+        var parts = formatHeaderMonthParts(current);
+        if (!parts) return false;
+        var nextText = parts.year + '.' + parts.month;
+        var $header = $wrap.find('.k-header, .k-calendar-header').first();
+        var $headerLink = $wrap.find('.k-nav-fast, .k-calendar-header .k-link, .k-header .k-link, .k-calendar-header .k-title, .k-header .k-title').first();
+        if (!$headerLink.length && $header.length) $headerLink = $header;
+        if (!$headerLink.length) return false;
+        var $buttonText = $headerLink.find('.k-button-text').first();
+        var useDot = $header.hasClass('k-hstack');
+        // html()은 Date 객체 기반 숫자만 삽입하므로 XSS 안전
+        var nextHtml = parts.year + '<span class="nav-dot">.</span>' + parts.month;
+        if ($buttonText.length) {
+          if (useDot) {
+            if ($buttonText.html() !== nextHtml) $buttonText.html(nextHtml);
+          } else if ($buttonText.text() !== nextText) {
+            $buttonText.text(nextText);
+          }
+        } else if (useDot) {
+          if ($headerLink.html() !== nextHtml) $headerLink.html(nextHtml);
+        } else if ($headerLink.text() !== nextText) {
+          $headerLink.text(nextText);
+        }
+        return true;
+      });
+    }
+    function applyYearViewMonthNamesImmediate() {
+      return retryDomOperation(function () {
+        var $wrap = resolveCalendarWrap();
+        if (!$wrap) return false;
+        var $yearView = $wrap.find('.k-calendar-yearview').first();
+        if (!$yearView.length) return false;
+        var $monthLinks = $yearView.find('td .k-link');
+        if (!$monthLinks.length) return false;
+        $monthLinks.each(function (i) {
+          var nextText = YEARVIEW_MONTH_NAMES[i];
+          if (!nextText) return;
+          var $link = window.jQuery(this);
+          if ($link.text() !== nextText) $link.text(nextText);
+        });
+        return true;
+      });
+    }
+
+    // 디바운싱된 적용 함수 — iOS Safari에서 rAF 타이밍이 불안정하여 debounce 사용
+    var debouncedApplyDayNames = debounce(applyDayNamesImmediate, DEBOUNCE_DELAY);
+    var debouncedApplyHeaderMonth = debounce(applyHeaderMonthImmediate, DEBOUNCE_DELAY);
+    var debouncedApplyYearViewMonths = debounce(applyYearViewMonthNamesImmediate, DEBOUNCE_DELAY);
+    function forceApplyDayNames() {
+      debouncedApplyDayNames();
+      addTimeout(setTimeout(debouncedApplyDayNames, MOBILE_TIMEOUT_DELAY));
+    }
+    function forceApplyHeaderMonth() {
+      debouncedApplyHeaderMonth();
+      addTimeout(setTimeout(debouncedApplyHeaderMonth, MOBILE_TIMEOUT_DELAY));
+    }
+    function forceApplyYearViewMonthNames() {
+      debouncedApplyYearViewMonths();
+      addTimeout(setTimeout(debouncedApplyYearViewMonths, MOBILE_TIMEOUT_DELAY));
+    }
+    function ensureDayNameObserver() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap || !window.MutationObserver) return;
+      var target = $wrap[0];
+      var isUpdatingUI = false;
+
+      // 기존 옵저버 정리 후 재생성
+      cleanup.observers.forEach(function (observer) {
+        if (observer && observer.disconnect) {
+          observer.disconnect();
+        }
+      });
+      cleanup.observers.length = 0;
+      var observer = new window.MutationObserver(function () {
+        if (isUpdatingUI) return;
+        isUpdatingUI = true;
+        observer.disconnect();
+
+        // schedule 대신 직접 호출 — 깜빡임 방지
+        applyDayNamesImmediate();
+        applyHeaderMonthImmediate();
+        applyYearViewMonthNamesImmediate();
+        addTimeout(setTimeout(function () {
+          observer.observe(target, {
+            childList: true,
+            subtree: true,
+            characterData: true
+          });
+          isUpdatingUI = false;
+        }, MOBILE_TIMEOUT_DELAY));
+      });
+      observer.observe(target, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+      cleanup.observers.push(observer);
+    }
+    function disableCalendarAnimation() {
+      var cal = getCalendar();
+      if (!cal) return;
+      try {
+        cal.setOptions({
+          animation: false
+        });
+      } catch {
+        cal.options.animation = false;
+      }
+    }
+    function updatePrevNavState() {
+      var cal = getCalendar();
+      var $wrap = resolveCalendarWrap();
+      if (!cal || !$wrap) return;
+      var minDate = opts.min instanceof Date ? opts.min : null;
+      if (!minDate) return;
+      var current = typeof cal.current === 'function' ? cal.current() : null;
+      if (!current) return;
+      var currentMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+      var minMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+      var isPrevBlocked = currentMonth <= minMonth;
+      var $prev = $wrap.find('.k-nav-prev').first();
+      if (!$prev.length) return;
+      if (isPrevBlocked) {
+        $prev.addClass('k-state-disabled').attr('aria-disabled', 'true');
+      } else {
+        $prev.removeClass('k-state-disabled').removeAttr('aria-disabled');
+      }
+    }
+    function updateSelectedState() {
+      if (!$wrapper.length) return;
+      var inst = $el.data('kendoDatePicker');
+      $wrapper.toggleClass('is-selected', !!(inst && inst.value()));
+    }
+
+    // 팝업 위치·너비 보정
+    function adjustPopupBounds() {
+      var $wrap = resolveCalendarWrap();
+      if (!$wrap) return;
+      $wrap.closest('.k-animation-container').addClass('vits-datepicker-single-container');
+    }
+
+    // 옵션 설정
+    opts.format = opts.format || 'yyyy.MM.dd';
+    opts.culture = opts.culture || 'ko-KR';
+    opts.footer = false;
+    opts.parseFormats = ['yyyy.MM.dd', 'yyyyMMdd', 'yyyy-MM-dd'];
+    opts.animation = false;
+    opts.calendar = opts.calendar || {};
+    opts.calendar.culture = opts.calendar.culture || 'en-US';
+    opts.calendar.animation = false;
+    opts.calendar.navigate = function () {
+      disableCalendarAnimation();
+      forceApplyDayNames();
+      forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
+      updatePrevNavState();
+    };
+    opts.calendar.change = function () {
+      forceApplyDayNames();
+      forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
+      updatePrevNavState();
+    };
+    if (!opts.min) {
+      var today = new Date();
+      opts.min = new Date(today.getFullYear(), today.getMonth(), 1);
+    }
+    $el.kendoDatePicker(opts);
+    var inst = $el.data('kendoDatePicker');
+    if (inst) {
+      disableCalendarAnimation();
+      ensureDayNameObserver();
+      forceApplyHeaderMonth();
+      forceApplyYearViewMonthNames();
+      updatePrevNavState();
+      if (inst.popup && inst.popup.setOptions) {
+        try {
+          inst.popup.setOptions({
+            animation: false
+          });
+        } catch {
+          // no-op
+        }
+      }
+      inst.bind('open', function () {
+        disableCalendarAnimation();
+
+        // 팝업 렌더링 전 숨김 — 위치·텍스트 보정 중 깜빡임 방지
+        var $wrap = resolveCalendarWrap();
+        var $container = $wrap ? $wrap.closest('.k-animation-container') : null;
+        if ($container && $container.length) {
+          $container[0].style.setProperty('visibility', 'hidden');
+        }
+        addTimeout(setTimeout(function () {
+          adjustPopupBounds();
+          ensureDayNameObserver();
+          applyDayNamesImmediate();
+          applyHeaderMonthImmediate();
+          applyYearViewMonthNamesImmediate();
+          updatePrevNavState();
+
+          // 모든 DOM 조작 완료 후 보이기
+          if ($container && $container.length) {
+            $container[0].style.removeProperty('visibility');
+          }
+        }, MOBILE_TIMEOUT_DELAY));
+      });
+      inst.bind('change', function () {
+        updateSelectedState();
+      });
+      inst.bind('destroy', function () {
+        destroyCleanup();
+      });
+      updateSelectedState();
+    }
+
+    // 모바일에서 자동 열기 — 렌더링 안정화 후 실행
+    if (parseBool($el.attr('data-open')) && inst) {
+      addTimeout(setTimeout(function () {
+        inst.open();
+      }, MOBILE_TIMEOUT_DELAY));
+    }
+
+    // 외부 정리 접근 경로
+    $el.data('vits-datepicker-cleanup', destroyCleanup);
+  }
+  function initAll() {
+    if (!ensureKendoAvailable()) return;
+    var targets = document.querySelectorAll('.vits-datepicker-single [data-ui="kendo-datepicker"]');
+    for (var i = 0; i < targets.length; i++) {
+      initDatePicker(targets[i]);
+    }
+  }
+
+  // 페이지 이탈 시 타임아웃·옵저버 누수 방지
+  window.addEventListener('beforeunload', function () {
+    var targets = document.querySelectorAll('.vits-datepicker-single [data-ui="kendo-datepicker"]');
+    for (var i = 0; i < targets.length; i++) {
+      var cleanupFn = window.jQuery(targets[i]).data('vits-datepicker-cleanup');
+      if (cleanupFn) cleanupFn();
+    }
+  });
+
+  // 전역 API
+  window.VmKendoDatePickerSingle = {
+    initAll: initAll,
+    initOne: function (el) {
+      if (ensureKendoAvailable()) initDatePicker(el);
+    },
+    autoBindStart: function (container) {
+      if (!window.MutationObserver) return null;
+      var target = container || document.body;
+      initAll();
+      var obs = new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var added = mutations[i].addedNodes;
+          for (var j = 0; j < added.length; j++) {
+            var node = added[j];
+            if (!node || node.nodeType !== 1) continue;
+            var els = node.querySelectorAll ? node.querySelectorAll('.vits-datepicker-single [data-ui="kendo-datepicker"]') : [];
+            for (var k = 0; k < els.length; k++) {
+              initDatePicker(els[k]);
+            }
+          }
+        }
+      });
+      obs.observe(target, {
+        childList: true,
+        subtree: true
+      });
+      return obs;
+    },
+    getInstance: function (selector) {
+      return window.jQuery(selector).data('kendoDatePicker') || null;
+    }
+  };
+})(window);
 
 /***/ }),
 
@@ -743,6 +1266,7 @@
     periodRoot: '[data-select-id="vm-order-period"]',
     statusRoot: '[data-select-id="vm-order-status"]',
     deliveryRoot: '[data-select-id="vm-order-delivery"]',
+    cancelStatusRoot: '[data-select-id="vm-cancel-status"]',
     datePicker: '#vm-order-daterange',
     searchInput: '#vm-order-search-searchKeyword',
     dim: '.vm-mypage-filter-dim',
@@ -927,6 +1451,11 @@
     if (statusVal && statusVal !== DEFAULT_SELECT) hasValue = true;
     var deliveryVal = UI.select.getValue($(SEL.deliveryRoot));
     if (deliveryVal && deliveryVal !== DEFAULT_SELECT) hasValue = true;
+    var $cancelStatus = $(SEL.cancelStatusRoot);
+    if ($cancelStatus.length) {
+      var cancelVal = UI.select.getValue($cancelStatus);
+      if (cancelVal && cancelVal !== DEFAULT_SELECT) hasValue = true;
+    }
     var searchVal = $(SEL.searchInput).val();
     if (searchVal && searchVal.trim()) hasValue = true;
     _$filter.toggleClass(CLS.hasValue, hasValue);
@@ -986,6 +1515,10 @@
     UI.select.setValue($(SEL.periodRoot), DEFAULT_PERIOD);
     UI.select.setValue($(SEL.statusRoot), DEFAULT_SELECT);
     UI.select.setValue($(SEL.deliveryRoot), DEFAULT_SELECT);
+    var $cancelStatus = $(SEL.cancelStatusRoot);
+    if ($cancelStatus.length) {
+      UI.select.setValue($cancelStatus, DEFAULT_SELECT);
+    }
     $(SEL.searchInput).val('');
     _programmaticChange = false;
     var range = calcPresetRange(PRESET_MONTHS[DEFAULT_PERIOD]);
@@ -1453,6 +1986,8 @@ var scroll_lock = __webpack_require__(2066);
 var kendo_window = __webpack_require__(4387);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
 var kendo_datepicker = __webpack_require__(7713);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
+var kendo_datepicker_single = __webpack_require__(1014);
 ;// ./src/assets/scripts-mo/ui/kendo/index.js
 /**
  * @file scripts-mo/ui/kendo/index.js
@@ -1460,11 +1995,12 @@ var kendo_datepicker = __webpack_require__(7713);
  */
 
 
+
 (function (window) {
   'use strict';
 
   window.UI = window.UI || {};
-  var modules = ['VmKendoWindow', 'VmKendoRangePicker'];
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
   window.UI.kendo = {
     init: function () {
       modules.forEach(function (name) {
@@ -1482,6 +2018,8 @@ var sticky_observer = __webpack_require__(5723);
 var overflow_menu = __webpack_require__(4305);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
 var toggle = __webpack_require__(8955);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
+var step_flow = __webpack_require__(8486);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -1492,12 +2030,13 @@ var toggle = __webpack_require__(8955);
 
 
 
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -1509,18 +2048,22 @@ var toggle = __webpack_require__(8955);
 })(window.jQuery, window);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
 var form_select = __webpack_require__(8550);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
+var checkbox_total = __webpack_require__(548);
 ;// ./src/assets/scripts-mo/ui/form/index.js
 /**
  * @file scripts-mo/ui/form/index.js
  * @description 폼 관련 UI 모듈 통합
  */
 
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['select'];
+  var modules = ['select', 'checkboxTotal'];
   window.UI.form = {
     init: function () {
       modules.forEach(function (name) {
@@ -2668,6 +3211,167 @@ console.log('[mobile/index] entry 실행');
 
 /***/ }),
 
+/***/ 8486:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/step-flow.js
+ * @description 다단계 스텝 화면 이동·상태 관리
+ * @scope [data-step]
+ * @mapping data-step-nav 헤더 버튼, data-step-page 콘텐츠, data-step-bar 하단 바, data-step-action 액션 버튼
+ * @state .is-active — 현재 콘텐츠 페이지
+ * @state .is-current — 현재 스텝 버튼
+ * @state .is-visited — 방문한 스텝 버튼
+ * @state .is-price — 하단 바 가격 노출
+ * @option data-step-price {string} 가격 노출 스텝 번호 (쉼표 구분, 예: "3" 또는 "2,3")
+ * @option data-step-next {string} 다음 버튼 텍스트
+ * @option data-step-done {string} 완료 버튼 텍스트
+ * @a11y aria-current="step" 현재 스텝, aria-disabled 미방문 스텝
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiStepFlow';
+  var DATA_KEY = 'stepFlow';
+  var ROOT = '[data-step]';
+  var NAV = '[data-step-nav]';
+  var PAGE = '[data-step-page]';
+  var BAR = '[data-step-bar]';
+  var ACTION = '[data-step-action]';
+  var CLS = {
+    active: 'is-active',
+    current: 'is-current',
+    visited: 'is-visited',
+    price: 'is-price'
+  };
+  var DEFAULTS = {
+    startStep: 1,
+    priceSteps: [],
+    nextText: '다음',
+    doneText: '완료',
+    onBeforeChange: null,
+    onChange: null,
+    onComplete: null
+  };
+
+  // 마크업 data 속성에서 옵션 파싱
+  function parseOptions($root) {
+    var parsed = {};
+    var start = Number($root.attr('data-step'));
+    if (start > 0) parsed.startStep = start;
+    var price = $root.attr('data-step-prices');
+    if (price) {
+      parsed.priceSteps = price.split(',').map(Number);
+    }
+    var next = $root.attr('data-step-next');
+    if (next) parsed.nextText = next;
+    var done = $root.attr('data-step-done');
+    if (done) parsed.doneText = done;
+    return parsed;
+  }
+  function goTo($root, step) {
+    var state = $root.data(DATA_KEY);
+    if (!state || step < 1 || step > state.total) return;
+    var prev = state.current;
+    var opt = state.opt;
+    if (typeof opt.onBeforeChange === 'function') {
+      if (opt.onBeforeChange(step, prev) === false) return;
+    }
+    state.current = step;
+    $root.attr('data-step', step);
+
+    // 페이지 전환
+    $root.find(PAGE).removeClass(CLS.active).filter('[data-step-page="' + step + '"]').addClass(CLS.active);
+
+    // 네비게이션 상태
+    $root.find(NAV).each(function () {
+      var $btn = $(this);
+      var n = Number($btn.data('step-nav'));
+      $btn.removeClass(CLS.current).removeAttr('aria-current');
+      if (n <= step) {
+        $btn.addClass(CLS.visited).attr('aria-disabled', 'false');
+      } else {
+        $btn.removeClass(CLS.visited).attr('aria-disabled', 'true');
+      }
+      if (n === step) {
+        $btn.addClass(CLS.current).attr('aria-current', 'step');
+      }
+    });
+
+    // 하단 가격 토글
+    var hasPrice = opt.priceSteps.indexOf(step) > -1;
+    $root.find(BAR).toggleClass(CLS.price, hasPrice);
+
+    // 액션 버튼 텍스트
+    var isLast = step >= state.total;
+    $root.find(ACTION).find('.text').text(isLast ? opt.doneText : opt.nextText);
+    if (typeof opt.onChange === 'function') {
+      opt.onChange(step, prev);
+    }
+  }
+  function bind($root) {
+    // 헤더 스텝 클릭 — 이전 단계만 허용
+    $root.on('click' + NS, NAV, function () {
+      var state = $root.data(DATA_KEY);
+      var target = Number($(this).data('step-nav'));
+      if (target >= state.current) return;
+      goTo($root, target);
+    });
+
+    // 하단 액션 버튼
+    $root.on('click' + NS, ACTION, function () {
+      var state = $root.data(DATA_KEY);
+      if (state.current >= state.total) {
+        if (typeof state.opt.onComplete === 'function') {
+          state.opt.onComplete(state.current);
+        }
+        return;
+      }
+      goTo($root, state.current + 1);
+    });
+  }
+  function init(scope, options) {
+    var $root = $(scope || ROOT);
+    if ($root.data(DATA_KEY)) return;
+
+    // data 속성 → options 인자 → DEFAULTS 순 병합
+    var opt = $.extend({}, DEFAULTS, parseOptions($root), options);
+    var total = $root.find(PAGE).length;
+    if (total < 2) return;
+    $root.data(DATA_KEY, {
+      opt: opt,
+      total: total,
+      current: 0
+    });
+    bind($root);
+    goTo($root, opt.startStep);
+  }
+  function destroy(scope) {
+    var $root = $(scope || ROOT);
+    var state = $root.data(DATA_KEY);
+    if (!state) return;
+    $root.off(NS).removeData(DATA_KEY).removeAttr('data-step');
+    $root.find(NAV).removeClass(CLS.current + ' ' + CLS.visited);
+    $root.find(PAGE).removeClass(CLS.active);
+    $root.find(BAR).removeClass(CLS.price);
+  }
+  window.UI.stepFlow = {
+    init: init,
+    destroy: destroy,
+    goTo: function (scope, step) {
+      goTo($(scope || ROOT), step);
+    },
+    getCurrent: function (scope) {
+      var state = $(scope || ROOT).data(DATA_KEY);
+      return state ? state.current : null;
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 8550:
 /***/ (function() {
 
@@ -3111,7 +3815,7 @@ console.log('[mobile/index] entry 실행');
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-          if (scope.openRoot.closest('.k-window').length) {
+          if (scope.openRoot.closest('.k-window').length || scope.openRoot.closest('[data-scroll-auto-hidden]').length) {
             closeOpenedInScope(k);
           } else {
             updatePortalPosition(scope.openRoot);

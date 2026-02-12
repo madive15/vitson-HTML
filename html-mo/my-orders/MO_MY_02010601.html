@@ -44,7 +44,12 @@
     <section class="vm-wrapper">
       <!-- S: vm-wrap -->
       <!-- vm-wrap => data-step scope 부여 -->
-      <div class="vm-wrap wrap-my-orders" data-step>
+      <!-- prettier-ignore -->
+      <div class="vm-wrap wrap-my-orders"
+        data-step="1" 
+        data-step-prices="3" 
+        data-step-done="반품신청 완료"
+      >
         <!-- S: vm-content-wrap -->
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
@@ -114,36 +119,1390 @@
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
-            <div class="vm-main-content main-content-my-orders">
+            <!-- [D] data-scroll-auto-hidden => 스크롤 시, 셀렉트박스 자동 닫힘. -->
+            <div class="vm-main-content main-content-my-orders" data-scroll-auto-hidden>
               <!-- step 1 -->
-              <div class="vm-claim-request step-1" data-step-page="1">
-                
+              
 <!-- prettier-ignore -->
 
-<div class="claim-request-notice"></div>
+<div class="vm-claim-request step-1" data-step-page="1">
+  
+<!-- prettier-ignore -->
 
-                <div class="claim-request-product-list">반품상품 리스트</div>
-              </div>
+<!-- prettier-ignore -->
 
+<div class="claim-request-notice">
+  <div class="claim-request-notice-inner">
+    <ul class="claim-request-notice-list">
+      
+      <li>반품 사유, 수거 정보 등을 입력하여 반품을 신청할 수 있습니다.</li>
+      <li>단, 고객 귀책으로 인한 반품일 경우 반품배송비는 고객에게 부과되며 환불 금액에서 차감됩니다.</li>
+      <li>반품 검수 후 반품이 반려될 수 있습니다.</li>
+       
+    </ul>
+  </div>
+</div>
+
+  <!-- prettier-ignore -->
+  
+
+  <!-- 단일 상품 -->
+  <div class="claim-request-product-list" data-claim="single">
+    <div class="product-list-body">
+      <ul class="product-list">
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          
+<!-- prettier-ignore -->
+
+
+<div class="vm-product-mypage-card">
+  
+  <div class="card-content">
+    <div class="card-thumb">
+      <div class="product-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/535/535665.png" alt="" />
+      </div>
+    </div>
+    <div class="card-info">
+      
+      <div class="card-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span>비츠온</p>
+        <p class="product-code"><span class="sr-only">상품코드</span>535665</p>
+      </div>
+      <div class="card-title">
+        <p class="product-name"><span class="sr-only">상품명</span>레일부속_NEW</p>
+      </div>
+      <p class="product-spec">전원+마감 화이트 KC(봉=5EA)</p>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-price-info">
+        
+        <!-- prettier-ignore -->
+        
+        <p class="product-price-qty">
+          <span class="product-price-qty-label">수량</span>
+          <span class="product-price-qty-value">3개</span>
+        </p>
+        
+
+        <p class="product-price-amount">70,944원</p>
+      </div>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-return-qty">
+        <p class="product-return-label">반품 신청 수량</p>
+        <div class="product-return-select">
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return-qty-ckb-return-single" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="수량"
+    >1</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="false"
+        
+      >0</li>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="true"
+        
+      >1</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >2</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >3</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return-qty-ckb-return-single" value="1" data-vits-select-hidden />
+  
+</div>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  
+</div>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 다수 상품 -->
+  <div class="claim-request-product-list" data-checkbox-scope data-claim="multi">
+    <div class="product-list-head">
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="ckbox-total"
+    value="선택"
+    data-checkbox-all
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    반품 신청 상품
+  </span>
+  
+</label>
+    </div>
+    <div class="product-list-body">
+      <ul class="product-list">
+        
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          
+<!-- prettier-ignore -->
+
+
+<div class="vm-product-mypage-card">
+  
+  <div class="card-checkbox">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckb-return-1"
+    value="ckb-return-1"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+  </div>
+  
+  <div class="card-content">
+    <div class="card-thumb">
+      <div class="product-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/448/448771[1].jpg" alt="" />
+      </div>
+    </div>
+    <div class="card-info">
+      
+      <div class="card-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span>예도</p>
+        <p class="product-code"><span class="sr-only">상품코드</span>448771</p>
+      </div>
+      <div class="card-title">
+        <p class="product-name"><span class="sr-only">상품명</span>TS라인 LED 레일등 1200MM 고효율 프리미엄 플리커프리 조광형 천장 직부 매입겸용 레일조명 화이트바디 주광색 6500K 사무실 매장 카페 인테리어 조명 KC인증 KS인증 에너지소비효율 1등급 삼성LED칩 적용 고연색성 RA90이상 눈부심방지 확산커버 포함</p>
+      </div>
+      <p class="product-spec">1200MM 30W 화이트 ★주광★ KC 플리커프리</p>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-price-info">
+        
+        <!-- prettier-ignore -->
+        
+        <p class="product-price-qty">
+          <span class="product-price-qty-label">수량</span>
+          <span class="product-price-qty-value">3개</span>
+        </p>
+        
+
+        <p class="product-price-amount">45,864,573원</p>
+      </div>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-return-qty">
+        <p class="product-return-label">반품 신청 수량</p>
+        <div class="product-return-select">
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return-qty-ckb-return-1" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="수량"
+    >1</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="false"
+        
+      >0</li>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="true"
+        
+      >1</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >2</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >3</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return-qty-ckb-return-1" value="1" data-vits-select-hidden />
+  
+</div>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  
+</div>
+
+        </li>
+        
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          
+<!-- prettier-ignore -->
+
+
+<div class="vm-product-mypage-card">
+  
+  <div class="card-checkbox">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckb-return-2"
+    value="ckb-return-2"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+  </div>
+  
+  <div class="card-content">
+    <div class="card-thumb">
+      <div class="product-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/535/535661.png" alt="" />
+      </div>
+    </div>
+    <div class="card-info">
+      
+      <div class="card-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span>비츠온</p>
+        <p class="product-code"><span class="sr-only">상품코드</span>535661</p>
+      </div>
+      <div class="card-title">
+        <p class="product-name"><span class="sr-only">상품명</span>레일부속_NEW</p>
+      </div>
+      <p class="product-spec">-자 화이트 KC(봉=5EA)</p>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-price-info">
+        
+        <!-- prettier-ignore -->
+        
+        <p class="product-price-qty">
+          <span class="product-price-qty-label">수량</span>
+          <span class="product-price-qty-value">4개</span>
+        </p>
+        
+
+        <p class="product-price-amount">141,612,048원</p>
+      </div>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-return-qty">
+        <p class="product-return-label">반품 신청 수량</p>
+        <div class="product-return-select">
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return-qty-ckb-return-2" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="수량"
+    >1</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="false"
+        
+      >0</li>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="true"
+        
+      >1</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >2</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >3</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="4"
+           
+        aria-selected="false"
+        
+      >4</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return-qty-ckb-return-2" value="1" data-vits-select-hidden />
+  
+</div>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  
+</div>
+
+        </li>
+        
+        <li class="product-item">
+          <!-- prettier-ignore -->
+          
+<!-- prettier-ignore -->
+
+
+<div class="vm-product-mypage-card">
+  
+  <div class="card-checkbox">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckb-return-3"
+    value="ckb-return-3"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+  </div>
+  
+  <div class="card-content">
+    <div class="card-thumb">
+      <div class="product-thumb">
+        <img src="https://vitsonimg.co.kr/images/productsNew/535/535649 복사.png" alt="" />
+      </div>
+    </div>
+    <div class="card-info">
+      
+      <div class="card-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span>비츠온</p>
+        <p class="product-code"><span class="sr-only">상품코드</span>535653</p>
+      </div>
+      <div class="card-title">
+        <p class="product-name"><span class="sr-only">상품명</span>레일_NEW</p>
+      </div>
+      <p class="product-spec">3M 화이트 KC</p>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-price-info">
+        
+        <!-- prettier-ignore -->
+        
+        <p class="product-price-qty">
+          <span class="product-price-qty-label">수량</span>
+          <span class="product-price-qty-value">5개</span>
+        </p>
+        
+
+        <p class="product-price-amount">280,045원</p>
+      </div>
+      
+      <!-- prettier-ignore -->
+      
+      <div class="card-return-qty">
+        <p class="product-return-label">반품 신청 수량</p>
+        <div class="product-return-select">
+          <!-- prettier-ignore -->
+          
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return-qty-ckb-return-3" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="수량"
+    >1</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="false"
+        
+      >0</li>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="true"
+        
+      >1</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >2</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >3</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="4"
+           
+        aria-selected="false"
+        
+      >4</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="5"
+           
+        aria-selected="false"
+        
+      >5</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return-qty-ckb-return-3" value="1" data-vits-select-hidden />
+  
+</div>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  
+</div>
+
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+              
               <!-- step 2 -->
-              <div class="vm-claim-request step-2" data-step-page="2">
-                
+              
+<!-- prettier-ignore -->
+<div class="vm-claim-request step-2" data-step-page="2">
+  
 <!-- prettier-ignore -->
 
-<div class="claim-request-notice"></div>
+<!-- prettier-ignore -->
 
-                <div class="claim-request-reason">반품사유</div>
-              </div>
+<div class="claim-request-notice">
+  <div class="claim-request-notice-inner">
+    <ul class="claim-request-notice-list">
+      
+      <li>반품 사유, 수거 정보 등을 입력하여 반품을 신청할 수 있습니다.</li>
+      <li>단, 고객 귀책으로 인한 반품일 경우 반품배송비는 고객에게 부과되며 환불 금액에서 차감됩니다.</li>
+      <li>반품 검수 후 반품이 반려될 수 있습니다.</li>
+       
+    </ul>
+  </div>
+</div>
+
+  <div class="claim-request-reason">
+    <ul class="reason-product-list" data-step2-list>
+      <li data-step2-tpl>
+        <div class="reason-product">
+          <!-- 여기에 상품 복제 삽입 -->
+        </div>
+    
+        <dl class="reason-write">
+          <dt class="is-required">반품구분</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return01" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="사유 선택"
+    >사유 선택</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="고객 사유"
+           
+        aria-selected="false"
+        
+      >고객 사유</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="사유 항목2"
+           
+        aria-selected="false"
+        
+      >사유 항목2</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="사유 항목3"
+           
+        aria-selected="false"
+        
+      >사유 항목3</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return01" value="" data-vits-select-hidden />
+  
+</div>
+
+          </dd>
+          <dt class="is-required">반품사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="return02" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="상세 사유"
+    >상세 사유</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="단순 변심"
+           
+        aria-selected="false"
+        
+      >단순 변심</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="반품 사유 항목 1"
+           
+        aria-selected="false"
+        
+      >반품 사유 항목 1</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="반품 사유 항목 2"
+           
+        aria-selected="false"
+        
+      >반품 사유 항목 2</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="return02" value="" data-vits-select-hidden />
+  
+</div>
+
+          </dd>
+          <dt>반품상세사유</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="false">
+    <div class="textarea-box">
+      <label for="returnMemo" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="returnMemo"
+        name="returnMemo"
+        placeholder="내용을 입력해주세요."
+        required
+        
+        
+        
+        
+        
+      ></textarea>
+    </div>
+  
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="returnMemo-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </dd>
+          <dt>이미지 첨부</dt>
+          <dd>
+            <div class="claim-request-attach">
+              <!-- prettier-ignore -->
+              
+
+<div class="vits-input-attach">
+  <div class="attach-preview-list">
+    <div class="attach-preview-item">
+      <img src="https://vitsonimg.co.kr/images/productsNew/56/56290.png" alt="첨부 이미지" />
+      <button type="button" class="btn-attach-remove">
+        <i class="ic ic-x" aria-hidden="true"></i>
+
+      </button>
+    </div>
+    <label class="btn-attach-add">
+      <input type="file" name="file" id="file" accept="image/*" />
+      <span class="icon"><i class="ic ic-plus" aria-hidden="true"></i>
+</span>
+      <span class="sr-only">이미지 첨부</span>
+    </label>
+  </div>
+</div>
+
+            </div>
+          </dd>
+        </dl>
+      </li>
+    </ul>
+  </div>
+</div>
+
+              
 
               <!-- step 3 -->
-              <div class="vm-claim-request step-3" data-step-page="3">
-                
+              
 <!-- prettier-ignore -->
 
-<div class="claim-request-notice"></div>
+<div class="vm-claim-request step-3" data-step-page="3">
+  
+<!-- prettier-ignore -->
 
-                <div class="claim-request-pickup">수거지 정보</div>
+<!-- prettier-ignore -->
+
+<div class="claim-request-notice">
+  <div class="claim-request-notice-inner">
+    <ul class="claim-request-notice-list">
+      
+      <li>반품 사유, 수거 정보 등을 입력하여 반품을 신청할 수 있습니다.</li>
+      <li>단, 고객 귀책으로 인한 반품일 경우 반품배송비는 고객에게 부과되며 환불 금액에서 차감됩니다.</li>
+      <li>반품 검수 후 반품이 반려될 수 있습니다.</li>
+       
+    </ul>
+  </div>
+</div>
+
+  <div class="claim-request-pickup">
+    <div class="claim-request-pickup-inner">
+      <div class="claim-request-pickup-head">
+        <p class="pickup-title">수거지</p>
+        <div class="pickup-button">
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  class="vits-btn-xs vits-btn-outline-secondary "
+  
+  >
+  
+
+  <span class="text">수거지 변경</span>
+
+  
+</button>
+
+        </div>
+      </div>
+      <div class="claim-request-pickup-body">
+        <div class="pickup-info">
+          <div class="pickup-info-user no-ios-detect">
+            <p class="user-info">
+              김비츠 | 010-8888-6655</p>
+          </div>
+          <p class="user-address">[06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층</p>
+        </div>
+        <dl class="pickup-info-date">
+          <dt class="is-required">수거 의뢰일</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-datepicker-single size-m" data-ui="kendo-datepicker-single">
+  <input
+    class="datepicker-single"
+    type="text"
+    id="testPickerSingle1"
+    name="singleDate1"
+    data-ui="kendo-datepicker"
+    data-opt="{}"
+    
+    placeholder="날짜를 입력해 주세요"
+    
+  />
+</div>
+          </dd>
+          <dt>메모</dt>
+          <dd>
+            <div class="pickup-info-memo">
+              <div class="pickup-info-textarea">
+                <!-- prettier-ignore -->
+                
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="true">
+    <div class="textarea-box">
+      <label for="memoB" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="memoB"
+        name="memoB"
+        placeholder="내용을 입력해주세요."
+        required
+        
+        
+          maxlength="200"
+          data-max-length="200"
+        
+        
+        
+        
+      ></textarea>
+    </div>
+  
+    
+      <p class="textarea-meta">
+        <span class="textarea-count" data-ui-textarea-count>0</span>
+        <span class="textarea-max" data-ui-textarea-max>200</span>
+      </p>
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="memoB-validation" aria-live="polite"></p>
+  </div>
+</div>
               </div>
+  
+              <ul class="pickup-info-guide">
+                <li>한글 100자, 영문 300자</li>
+                <li>불량 및 수리 사유를 상세히 적어주시면 신속한 처리가 가능합니다.</li>
+              </ul>
+            </div>
+          </dd>
+        </dl>
+        
+
+<dl class="pickup-info-date" data-scope="claim-refund-bank">
+  <dt class="is-required">환불 계좌</dt>
+  <dd>
+    <!-- prettier-ignore -->
+    
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="select-bank" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="계좌선택"
+    >계좌선택</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="bank1"
+           
+        aria-selected="false"
+        
+      >신규 계좌</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="bank2"
+           
+        aria-selected="false"
+        
+      >내 계좌</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="select-bank" value="계좌선택" data-vits-select-hidden />
+  
+</div>
+
+  </dd>
+
+  <!-- S: 신규 계좌 선택 시 -->
+  <dt class="is-required" data-bank-type="bank1" hidden>은행</dt>
+  <dd data-bank-type="bank1" hidden>
+    <!-- prettier-ignore -->
+    
+
+
+
+
+<div
+  class="vits-select"
+  data-vits-select
+   data-select-id="sel-bank" 
+  
+   data-vits-select-portal 
+   data-max-height="150" 
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="은행명"
+    >은행명</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="shinhan"
+           
+        aria-selected="false"
+        
+      >신한은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="kb"
+           
+        aria-selected="false"
+        
+      >국민은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="woori"
+           
+        aria-selected="false"
+        
+      >우리은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="hana"
+           
+        aria-selected="false"
+        
+      >하나은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="nh"
+           
+        aria-selected="false"
+        
+      >NH농협은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="ibk"
+           
+        aria-selected="false"
+        
+      >IBK기업은행</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="sc"
+           
+        aria-selected="false"
+        
+      >SC제일은행</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="sel-bank" value="은행명" data-vits-select-hidden />
+  
+</div>
+
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="bank-user" class="sr-only">예금주</label>
+
+    <input
+      type="text"
+      name="bank-user"
+      id="bank-user"
+      placeholder="예금주"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="bank-user-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </dd>
+  <dt class="is-required has-gap" data-bank-type="bank1" hidden>계좌번호</dt>
+  <dd data-bank-type="bank1" hidden>
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="bank-number" class="sr-only">계좌번호</label>
+
+    <input
+      type="text"
+      name="bank-number"
+      id="bank-number"
+      placeholder="계좌번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="bank-number-validation" aria-live="polite"></p>
+  </div>
+</div>
+  </dd>
+  <!-- E: 신규 계좌 선택 시 -->
+
+  <!-- S: 내 계좌 선택 시 -->
+  <dt class="is-required" data-bank-type="bank2" hidden>계좌번호</dt>
+  <dd data-bank-type="bank2" hidden>국민은행 100-545-54152454</dd>
+  <!-- E: 내 계좌 선택 시 -->
+</dl>
+
+<script>
+  // 환불계좌 셀렉트 → 영역 토글 (포탈 셀렉트 대응)
+  document.addEventListener('click', function (e) {
+    var option = e.target.closest('.vits-select-option');
+    if (!option) return;
+
+    var openSelect = document.querySelector('[data-select-id="select-bank"].vits-select-open');
+    if (!openSelect) return;
+
+    var val = option.dataset.value;
+    var scope = document.querySelector('[data-scope="claim-refund-bank"]');
+    if (!scope) return;
+
+    scope.querySelectorAll('[data-bank-type]').forEach(function (el) {
+      if (el.dataset.bankType === val) {
+        el.removeAttribute('hidden');
+      } else {
+        el.setAttribute('hidden', '');
+      }
+    });
+  });
+</script>
+
+      </div>
+    </div>
+  </div>
+</div>
+
             </div>
           </main>
           <!-- E: vm-main -->
@@ -169,20 +1528,17 @@
 <div class="vm-bottom-bar">
   
     
-
 <!-- prettier-ignore -->
 
-
-
-<div class="bottom-step-bar">
-  <!-- is-price 있을 경우에만 노출 -->
-  <p class="step-bar-price">
-    <spa class="label">환불예정금액</spa>
-    <spa class="value">1,025,000원</spa>
-  </p>
+<div class="bottom-step-bar" data-step-bar>
+  <div class="step-bar-price" data-step-price>
+    <div class="step-bar-price-inner">
+      <spa class="label">환불예정금액</spa>
+      <spa class="value">1,025,000원</spa>
+    </div>
+  </div>
 
   <div class="step-bar-actions">
-    <!-- 스텝1, 2 다음 / 스템3 반품신청완료 -->
     <!-- prettier-ignore -->
     
 
@@ -191,10 +1547,12 @@
   type="step-bar"
   class="vits-btn-xl vits-btn-primary "
   
-  >
+  
+  data-step-action
+    >
   
 
-  <span class="text">반품신청완료</span>
+  <span class="text">다음</span>
 
   
 </button>
@@ -229,5 +1587,142 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+        var type = params.get('type') || 'multi';
+        var root = document.querySelector('[data-step]');
+        if (!root) return;
+
+        var startStep = params.get('step');
+        if (startStep) {
+          root.setAttribute('data-step', startStep);
+        }
+
+        // ?type=single / ?type=multi 분기
+        root.querySelectorAll('[data-claim]').forEach(function (el) {
+          el.style.display = el.dataset.claim === type ? '' : 'none';
+        });
+
+        // tpl을 DOM에서 미리 분리 → 전역 UI.select.init 영향 방지
+        var tpl = root.querySelector('[data-step2-tpl]');
+        if (tpl) tpl.parentNode.removeChild(tpl);
+
+        // 스텝2 상품 복제
+        var HIDE_IN_STEP2 = '.card-checkbox, .card-return-qty, .card-actions, .card-price-info';
+
+        function copyToStep2() {
+          var list = root.querySelector('[data-step2-list]');
+          if (!list || !tpl) return;
+
+          // 기존 복제 항목 제거
+          list.querySelectorAll('li').forEach(function (el) {
+            el.remove();
+          });
+
+          var isSingle = type === 'single';
+          var items;
+
+          if (isSingle) {
+            items = root.querySelectorAll('[data-claim="single"] .product-item');
+          } else {
+            items = root.querySelectorAll('[data-claim="multi"] .product-item');
+          }
+
+          var idx = 0;
+
+          items.forEach(function (item) {
+            if (!isSingle) {
+              var cb = item.querySelector('.card-checkbox input[type="checkbox"]');
+              if (!cb || !cb.checked) return;
+            }
+
+            var card = item.querySelector('.vm-product-mypage-card');
+            if (!card) return;
+
+            // tpl은 DOM에서 분리된 상태 → 순수 마크업 복제
+            var li = tpl.cloneNode(true);
+            li.removeAttribute('data-step2-tpl');
+            li.style.display = '';
+
+            var cardClone = card.cloneNode(true);
+            cardClone.querySelectorAll(HIDE_IN_STEP2).forEach(function (el) {
+              el.remove();
+            });
+
+            li.querySelector('.reason-product').appendChild(cardClone);
+
+            li.querySelectorAll('[id]').forEach(function (el) {
+              el.id = el.id + '-' + idx;
+            });
+            li.querySelectorAll('[name]').forEach(function (el) {
+              el.name = el.name + '-' + idx;
+            });
+
+            list.appendChild(li);
+
+            // 복제된 li에 대해 init만 호출 (destroy 불필요 — 초기화된 적 없음)
+            if (window.UI && UI.select) {
+              UI.select.init(li);
+            }
+
+            idx++;
+          });
+        }
+
+        // stepFlow onChange 연결
+        root.querySelector('[data-step-action]').addEventListener('click', function () {
+          var current = Number(root.getAttribute('data-step'));
+          setTimeout(function () {
+            var next = Number(root.getAttribute('data-step'));
+            if (next === 2 && current === 1) copyToStep2();
+          }, 0);
+        });
+
+        // multi일 때만: 체크박스 ↔ 반품수량 연동, 버튼 활성화
+        if (type === 'multi') {
+          var CARD = '.vm-product-mypage-card';
+          var RETURN_QTY = '.card-return-qty';
+          var ACTION = '[data-step-action]';
+          var ITEM_CB = '.card-checkbox input[type="checkbox"]';
+
+          root.querySelectorAll(CARD).forEach(function (card) {
+            var cb = card.querySelector(ITEM_CB);
+            if (!cb) return;
+            var qty = card.querySelector(RETURN_QTY);
+            if (qty) qty.classList.add('is-hidden');
+          });
+
+          function updateAction() {
+            var checked = root.querySelectorAll(ITEM_CB + ':checked').length;
+            var btn = root.querySelector(ACTION);
+            if (!btn) return;
+            btn.classList.toggle('is-disabled', checked === 0);
+            btn.disabled = checked === 0;
+          }
+
+          function syncReturnQty() {
+            root.querySelectorAll(CARD).forEach(function (card) {
+              var cb = card.querySelector(ITEM_CB);
+              if (!cb) return;
+              var qty = card.querySelector(RETURN_QTY);
+              if (qty) qty.classList.toggle('is-hidden', !cb.checked);
+            });
+          }
+
+          updateAction();
+
+          root.addEventListener('change', function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) return;
+            syncReturnQty();
+            updateAction();
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
