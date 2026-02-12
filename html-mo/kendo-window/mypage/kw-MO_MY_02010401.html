@@ -1,0 +1,233 @@
+<head><script defer src="../../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+
+<section class="vm-track-shipment" data-track-shipment>
+  <h2 class="sr-only">배송조회</h2>
+
+  <!-- head -->
+  
+
+<div class="vm-track-shipment-head" data-track-shipment>
+  <div class="shipment-info-inner">
+    <dl class="shipment-info">
+      <dt>택배사</dt>
+      <dd>CJ대한통운</dd>
+    </dl>
+    <dl class="shipment-info">
+      <dt>송장번호</dt>
+      <dd>
+        <span class="shipment-info-number" data-copy-target>123456789012</span>
+        <button type="button" class="shipment-info-copy" data-copy aria-label="송장번호 복사하기">
+          <i class="ic ic-copy" aria-hidden="true"></i>
+
+        </button>
+        <span class="sr-only" role="status" aria-live="polite" data-copy-feedback></span>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<script>
+  /**
+   * @file 배송조회 - 송장번호 복사
+   * @scope [data-track-shipment]
+   * @mapping [data-copy] - 복사 버튼
+   * @mapping [data-copy-target] - 복사 대상 텍스트
+   * @mapping [data-copy-feedback] - 스크린 리더 피드백 (aria-live)
+   * @state is-copied - 복사 성공 피드백 (버튼)
+   * @state is-failed - 복사 실패 피드백 (버튼)
+   * @a11y 복사 성공/실패 시 aria-live 영역으로 스크린 리더에 전달
+   * @note fallbackCopy 내부에서 deprecated된 execCommand 사용 (구형 브라우저 폴백)
+   * @note destroy - scope 요소의 _copyDestroy에 바인딩
+   */
+  (function () {
+    var FEEDBACK_DURATION = 2000;
+    var COPIED_LABEL = '복사됨';
+    var COPY_FAIL_LABEL = '복사 실패';
+
+    var scope = document.querySelector('[data-track-shipment]');
+    if (!scope) return;
+
+    var copyBtn = scope.querySelector('[data-copy]');
+    if (!copyBtn) return;
+
+    var target = scope.querySelector('[data-copy-target]');
+    var defaultLabel = copyBtn.getAttribute('aria-label');
+    var feedback = scope.querySelector('[data-copy-feedback]');
+    var feedbackTimer = null;
+
+    function handleCopy() {
+      if (!target) return;
+
+      var text = target.textContent.trim();
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onSuccess).catch(onFail);
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      var el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(el);
+      el.select();
+
+      try {
+        document.execCommand('copy') ? onSuccess() : onFail();
+      } catch (e) {
+        onFail();
+      } finally {
+        document.body.removeChild(el);
+      }
+    }
+
+    function onSuccess() {
+      showFeedback(COPIED_LABEL, true);
+    }
+
+    function onFail() {
+      showFeedback(COPY_FAIL_LABEL, false);
+    }
+
+    function showFeedback(label, isCopied) {
+      if (feedbackTimer) clearTimeout(feedbackTimer);
+
+      copyBtn.classList.toggle('is-copied', isCopied);
+      copyBtn.classList.toggle('is-failed', !isCopied);
+      copyBtn.setAttribute('aria-label', label);
+      if (feedback) feedback.textContent = label;
+
+      feedbackTimer = setTimeout(function () {
+        copyBtn.classList.remove('is-copied', 'is-failed');
+        if (defaultLabel) copyBtn.setAttribute('aria-label', defaultLabel);
+        if (feedback) feedback.textContent = '';
+        feedbackTimer = null;
+      }, FEEDBACK_DURATION);
+    }
+
+    function init() {
+      copyBtn.addEventListener('click', handleCopy);
+    }
+
+    function destroy() {
+      copyBtn.removeEventListener('click', handleCopy);
+      if (feedbackTimer) {
+        clearTimeout(feedbackTimer);
+        feedbackTimer = null;
+      }
+      copyBtn.classList.remove('is-copied', 'is-failed');
+      if (defaultLabel) copyBtn.setAttribute('aria-label', defaultLabel);
+      if (feedback) feedback.textContent = '';
+    }
+
+    init();
+    scope._copyDestroy = destroy;
+  })();
+</script>
+
+
+  <div class="vm-track-shipment-body">
+    <!-- [D] 현재 단계 숫자 표시 :: 1 ~ 5 -->
+    <ul class="shipment-steps" data-current="1">
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <i class="ic ic-box" aria-hidden="true"></i>
+ </span>
+          <span class="step-text">상품인수</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon">
+            <i class="ic ic-speed-truck" aria-hidden="true"></i>
+
+          </span>
+          <span class="step-text">상품이동중</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <i class="ic ic-pin" aria-hidden="true"></i>
+ </span>
+          <span class="step-text">배송지도착</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <i class="ic ic-home" aria-hidden="true"></i>
+ </span>
+          <span class="step-text">배송출발</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-marker">
+          <span class="step-icon"> <i class="ic ic-check" aria-hidden="true"></i>
+ </span>
+          <span class="step-text">배송완료</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="shipment-detail">
+      <p class="shipment-detail-title">배송 상세 내역</p>
+      <div class="shipment-detail-list">
+        <div class="shipment-detail-list-inner">
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <!-- [D] 배송완료만 data-status='completed' 표시 요청  -->
+              <span class="shipment-detail-status" data-status="completed">배달완료</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주서라벌(대)</span>
+              <span class="shipment-detail-status">배달전</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+          <div class="shipment-detail-item">
+            <p class="shipment-detail-info">
+              <span class="shipment-detail-location">경주집배센터</span>
+              <span class="shipment-detail-status">세류도착</span>
+            </p>
+            <p class="shipment-detail-date">2025-12-31 10:30:11</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var $ = window.jQuery;
+
+    // ?step=1~5 : 배송 단계 확인
+    var step = params.get('step');
+    if (step) {
+      var steps = document.querySelector('[data-current]');
+      if (steps) steps.setAttribute('data-current', step);
+    }
+  })();
+</script>
