@@ -21,6 +21,16 @@
                   <span class="text">공통 알림 모달 </span>
                 </button>
 
+                <br />
+
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('commonAlertModal-2')"
+                >
+                  <span class="text">공통 알림 모달 (버튼 한개만) </span>
+                </button>
+
                 <!-- prettier-ignore -->
 
                 <% const commonAlertModal = { 
@@ -32,6 +42,17 @@
                   }; 
                 %> 
                 <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, commonAlertModal) %>
+
+
+                <% const commonAlertModal2 = { 
+                  id: 'commonAlertModal-2', 
+                  size: '480',
+                  title: '비츠온엠알오',                  
+                  contentPath: `${_src}/views/pages/kendo-window/home/kw-pc-common-alert.ejs`,
+                  buttons: [{ text: '확인', variant: 'primary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, commonAlertModal2) %>
               </div>
             </div>
           </div>

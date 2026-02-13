@@ -24,6 +24,13 @@
   }
 }
 
+/* ----------------------------------------------------------------------------- */
+/* 메인 홈에서만 헤더 border-bottom 제거 */
+/* ----------------------------------------------------------------------------- */
+.vits-wrapper:has(.vits-main-home) .vits-header {
+  border-bottom: none;
+}
+
 /* ---------------------------------------------------------------------------
  * slider-nav: 슬라이더/배너 좌우 네비게이션 버튼 공통 스타일
  * - 원형 prev/next 버튼의 기본 + hover/active + disabled 상태 일괄 적용
@@ -1155,11 +1162,12 @@
   }
 
   &-product-group {
-    @include mx.flex(flex, row, flex-start, stretch);
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
+
+    @include mx.flex(flex, row, flex-start, stretch);
     gap: fn.rem(24);
     pointer-events: none;
     opacity: 0;
@@ -1208,18 +1216,19 @@
 
   &-item-num {
     flex-shrink: 0;
+    margin-right: fn.rem(12);
 
     @include typo.typography('h4m', $color: map.get(color.$text-colors, 'muted'));
-    margin-right: fn.rem(12);
   }
 
   &-item-name {
-    @include typo.typography('h4m', $color: inherit);
-    @include mx.ellipsis-multi(1.4, 2);
     flex: 1;
     min-width: 0;
     max-height: fit-content;
     padding-right: fn.rem(50);
+
+    @include typo.typography('h4m', $color: inherit);
+    @include mx.ellipsis-multi(1.4, 2);
   }
 
   &-item-arrow {
@@ -1247,12 +1256,10 @@
       vertical-align: middle;
     }
 
-    &:hover {
-      .dept-name,
-      .home-rank-item-num,
-      [class*='ic-'] {
-        color: map.get(color.$brand-colors, 'primary');
-      }
+    &:hover .dept-name,
+    &:hover .home-rank-item-num,
+    &:hover [class*='ic-'] {
+      color: map.get(color.$brand-colors, 'primary');
     }
 
     &.is-active {
@@ -1292,6 +1299,7 @@
   @include mx.pc-sm {
     padding: 0 fn.rem(52);
   }
+
   // stylelint-disable-next-line no-descending-specificity
   .swiper-slide {
     transition: border-radius 0.5s ease;
@@ -1325,6 +1333,7 @@
   .swiper-wrapper {
     padding: 0;
   }
+
   // stylelint-disable-next-line no-descending-specificity
   .swiper-slide {
     height: auto;
@@ -1373,6 +1382,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: map.get(var.$unit, 20);
   }
+
   // stylelint-disable-next-line no-descending-specificity
   .home-product-item {
     transition: box-shadow 0.2s ease;
@@ -1410,6 +1420,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: map.get(var.$unit, 20);
   }
+
   // stylelint-disable-next-line no-descending-specificity
   .home-product-item {
     transition: box-shadow 0.2s ease;
@@ -1434,7 +1445,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: fn.rem(12);
   min-width: fn.rem(200);
 
   @include list.common-product-card-info;
@@ -1567,8 +1578,8 @@
     }
 
     .icon {
-      @include icon.ic-size(fn.rem(52));
       @include mx.flex(flex, row, center, center);
+      @include icon.ic-size(fn.rem(52));
       color: map.get(color.$layout-border, 'secondary');
       background-color: color.$color-white;
       border: 1px solid map.get(color.$layout-border, 'secondary');
