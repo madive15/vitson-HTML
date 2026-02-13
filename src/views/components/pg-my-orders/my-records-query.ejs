@@ -37,6 +37,21 @@
           }
         }) %>
       </dd>
+      <!-- 26-02-13 상세조회 위치 이동 -->
+      <dd class="mypage-query-control">
+        <button
+          type="button"
+          type="button"
+          class="mypage-query-toggle"
+          data-toggle-btn
+          data-toggle-target="mypageQueryAdvanced"
+          aria-expanded="false"
+          data-aria-label-base="상세조회"
+        >
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'filter-2' }) %> </span>
+          <span class="text">상세조회</span>
+        </button>
+      </dd>
     </dl>
 
     <div class="mypage-query-advanced" data-toggle-box="mypageQueryAdvanced">
@@ -135,17 +150,10 @@
 
   <!-- 상세조회 & 조회하기 버튼 -->
   <div class="mypage-query-actions">
-    <button
-      type="button"
-      type="button"
-      class="mypage-query-toggle"
-      data-toggle-btn
-      data-toggle-target="mypageQueryAdvanced"
-      aria-expanded="false"
-      data-aria-label-base="상세조회"
-    >
-      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'filter-2' }) %> </span>
-      <span class="text">상세조회</span>
+    <!-- 26-02-13 상세조회 -> 초기화 변경 -->
+    <button type="button" type="button" class="mypage-query-reset">
+      <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'undo' }) %> </span>
+      <span class="text">초기화</span>
     </button>
     <%- include(`${_src}/views/components/button/button.ejs`, {size:'sm', variant: 'secondary', text: '조회하기',
     disabled: true, className: 'btn-fix-w120'}) %>
@@ -295,6 +303,7 @@
           }
         }) %>
       </dd>
+      <dd class="mypage-query-control"></dd>
     </dl>
 
     <div class="mypage-query-advanced">

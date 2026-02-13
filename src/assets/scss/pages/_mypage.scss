@@ -922,6 +922,29 @@
         }
       }
 
+      &-reset {
+        @include button.btn-reset;
+        @include mx.flex(flex, row, flex-start, flex-start);
+        position: relative;
+        flex-shrink: 0;
+        gap: map.get(var.$unit, 8);
+        height: fn.rem(21);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'brand');
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 16));
+          margin-top: 1px;
+          color: map.get(color.$label-step, 'processing');
+          transition: color 0.25s;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .text {
+          @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+        }
+      }
+
       &-actions {
         @include mx.flex(flex, row, space-between, center);
         gap: map.get(var.$unit, 16);
