@@ -65,14 +65,19 @@
       min-width: 0;
     }
 
+    &-name,
+    &-desc {
+      @include mx.flex;
+      @include mx.ellipsis-multi;
+      width: 100%;
+    }
+
     &-name {
       @include typo.typography('b3s');
-      @include mx.ellipsis-single;
     }
 
     &-desc {
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-      @include mx.ellipsis-single;
       margin-top: map.get(var.$unit, 2);
     }
 
