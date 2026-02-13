@@ -1036,3 +1036,23 @@
     }
   }
 }
+
+// 좋아요 폴더 만들기
+.vm-like-folder {
+  .vm-form-dl {
+    @include mx.flex(flex, column);
+
+    dt {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      & ~ dt {
+        margin-top: var.$mo-gutter;
+      }
+    }
+
+    dd {
+      margin-top: map.get(var.$unit, 8);
+    }
+  }
+}

@@ -243,20 +243,18 @@
 
       /* stylelint-disable-next-line no-descending-specificity */
       .checkbox-icon {
-        @include icon.ic-size(map.get(var.$unit, 32));
-        display: none;
+        @include icon.ic-size(fn.rem(28));
         flex-shrink: 0;
         margin-left: auto;
-        color: color.$color-white;
-        background: map.get(color.$brand-colors, 'primary');
-        border-radius: map.get(var.$radius, 'md');
+        color: map.get(color.$icon-neutral, 'disabled');
+        background: color.$color-white;
       }
 
       &:has(input:checked) {
         box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
 
         .checkbox-icon {
-          display: block;
+          color: map.get(color.$icon-colors, 'primary');
         }
       }
 

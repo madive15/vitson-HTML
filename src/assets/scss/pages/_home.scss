@@ -130,7 +130,7 @@
   height: fn.rem(28);
   cursor: pointer;
 
-  @include typo.typography('b2b', $color: $color);
+  @include typo.typography('b4s', $color: $color);
   background-color: color.$color-white;
   border: 1px solid $border-color;
   border-radius: 50%;
@@ -291,7 +291,7 @@
     flex: 1;
     min-width: 0;
     padding: map.get(var.$unit, 48) 0;
-    background-color: #fff;
+    background-color: color.$color-white;
     border-radius: map.get(var.$radius, 'lg');
 
     @include mx.hoverable-only {
@@ -342,13 +342,13 @@
       border-radius: map.get(var.$unit, 24);
       transition: transform 0.2s ease;
 
+      @include mx.img-fit(contain);
+
       @include mx.pc-sm {
         width: fn.rem(80);
         height: fn.rem(80);
         border-radius: map.get(var.$unit, 20);
       }
-
-      @include mx.img-fit(contain);
     }
 
     &-label {
@@ -449,25 +449,19 @@
     }
 
     @include mx.hoverable-only {
-      &:hover {
-        .ic {
-          color: map.get(color.$brand-colors, 'primary');
-        }
+      &:hover .ic {
+        color: map.get(color.$brand-colors, 'primary');
       }
     }
 
     // 재생 아이콘 (일시정지 상태일 때 표시)
-    &.is-paused {
-      .banner-progress-icon-pause {
-        display: none;
-      }
+    &.is-paused .banner-progress-icon-pause {
+      display: none;
     }
 
     // 일시정지 아이콘 (재생 상태일 때 표시)
-    &.is-playing {
-      .banner-progress-icon-play {
-        display: none;
-      }
+    &.is-playing .banner-progress-icon-play {
+      display: none;
     }
   }
 
@@ -491,18 +485,14 @@
 
     @include button.btn-reset;
 
-    // 아이콘 스타일
     .ic {
-      width: fn.rem(20);
-      height: fn.rem(20);
+      @include icon.ic-size(fn.rem(20));
       color: map.get(color.$icon-neutral, 'tertiary');
     }
 
     @include mx.hoverable-only {
-      &:hover {
-        .ic {
-          color: map.get(color.$brand-colors, 'primary');
-        }
+      &:hover .ic {
+        color: map.get(color.$brand-colors, 'primary');
       }
     }
 
@@ -591,21 +581,20 @@
 
     @include button.btn-reset;
 
-    @include mx.hoverable-only {
-      &:hover {
-        .ic {
-          color: map.get(color.$brand-colors, 'primary');
-        }
-      }
-    }
-
     .ic {
       @include icon.ic-size(fn.rem(32));
       color: map.get(color.$icon-neutral, 'tertiary');
     }
 
+    @include mx.hoverable-only {
+      &:hover .ic {
+        color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
     &.swiper-button-disabled {
       pointer-events: none;
+      cursor: not-allowed;
       opacity: 0.2;
     }
   }
@@ -613,7 +602,7 @@
 
 /* ----------------------------------------------------------------------------- */
 /* 홈 섹션 타이틀 (home-section-title) */
-/* -------------------------------------------------- --------------------------- */
+/* ----------------------------------------------------------------------------- */
 .home-section-title {
   @include mx.flex(flex, row, space-between, flex-end);
   max-width: var.$desktop-width;
@@ -657,7 +646,7 @@
     color: map.get(color.$text-colors, 'primary');
 
     .title-point {
-      margin: fn.rem(0) fn.rem(10);
+      margin: 0 fn.rem(10);
       color: map.get(color.$text-status, 'brand');
     }
   }
@@ -666,7 +655,7 @@
     color: map.get(color.$text-status, 'brand');
 
     .title-text {
-      margin: fn.rem(0) fn.rem(10);
+      margin: 0 fn.rem(10);
       color: map.get(color.$text-colors, 'primary');
     }
   }
@@ -715,7 +704,7 @@
 
     .line-banner-visual {
       position: relative;
-      max-width: fn.rem(1280);
+      max-width: var.$desktop-width;
       margin: 0 auto;
       overflow: hidden;
       border-radius: map.get(var.$radius, 'lg');
@@ -864,12 +853,12 @@
     transform: translate(-50%, -50%);
 
     @include mx.img-fit(contain);
-    // stylelint-disable-next-line no-descending-specificity
   }
 
   .brand-info {
-    @include mx.flex(flex, column, center, center);
     position: relative;
+
+    @include mx.flex(flex, column, center, center);
     gap: map.get(var.$unit, 8);
     min-height: fn.rem(110);
     padding: fn.rem(20);
@@ -1061,10 +1050,10 @@
       &:hover {
         background-color: map.get(color.$layout-surf, 'sunken');
         border-color: map.get(color.$layout-border, 'primary');
+      }
 
-        .text {
-          color: map.get(color.$layout-border, 'primary');
-        }
+      &:hover .text {
+        color: map.get(color.$layout-border, 'primary');
       }
     }
   }
@@ -1095,30 +1084,30 @@
     @include mx.hoverable-only {
       &:hover {
         border-color: map.get(color.$brand-colors, 'primary');
+      }
 
-        .icon {
-          color: map.get(color.$brand-colors, 'primary');
-        }
+      &:hover .icon {
+        color: map.get(color.$brand-colors, 'primary');
       }
     }
 
     &:active {
       background-color: map.get(color.$brand-colors, 'primary');
       border-color: map.get(color.$brand-colors, 'primary');
+    }
 
-      .icon {
-        color: map.get(color.$icon-neutral, 'inverse');
-      }
+    &:active .icon {
+      color: map.get(color.$icon-neutral, 'inverse');
     }
 
     &:disabled {
       pointer-events: none;
       cursor: not-allowed;
       border-color: map.get(color.$gray-shades, '30');
+    }
 
-      .icon {
-        color: map.get(color.$gray-shades, '30');
-      }
+    &:disabled .icon {
+      color: map.get(color.$gray-shades, '30');
     }
   }
 }
@@ -1148,7 +1137,7 @@
 
   &-body {
     @include mx.flex(flex, row, flex-start, stretch);
-    gap: fn.rem(70);
+    gap: fn.rem(50);
 
     @include mx.pc-sm {
       gap: fn.rem(35);
@@ -1162,15 +1151,25 @@
 
   &-product-inner {
     position: relative;
+    min-height: fn.rem(240); // 그룹이 absolute로 겹칠 때 영역 확보
   }
 
   &-product-group {
     @include mx.flex(flex, row, flex-start, stretch);
-    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
     gap: fn.rem(24);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
 
     &.is-active {
-      display: flex;
+      position: relative; // 활성 그룹만 레이아웃 높이 기여
+      z-index: 1;
+      pointer-events: auto;
+      opacity: 1;
     }
 
     .home-product-item {
@@ -1198,20 +1197,20 @@
   }
 
   .js-home-rank-swiper {
-    max-height: fn.rem(400);
-    padding-bottom: fn.rem(16);
+    box-sizing: content-box;
+    padding-bottom: fn.rem(24);
     overflow: hidden;
   }
 
   .home-rank-slide {
-    height: auto;
+    height: auto !important;
   }
 
   &-item-num {
     flex-shrink: 0;
 
     @include typo.typography('h4m', $color: map.get(color.$text-colors, 'muted'));
-    margin-right: fn.rem(8);
+    margin-right: fn.rem(12);
   }
 
   &-item-name {
@@ -1219,13 +1218,14 @@
     @include mx.ellipsis-multi(1.4, 2);
     flex: 1;
     min-width: 0;
+    max-height: fit-content;
+    padding-right: fn.rem(50);
   }
 
   &-item-arrow {
     flex-shrink: 0;
 
     @include icon.ic-size(fn.rem(28));
-    color: inherit;
   }
 
   &-item {
@@ -1238,13 +1238,23 @@
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: map.get(var.$radius, 'md');
-    transition:
-      width 0.2s ease,
-      min-height 0.2s ease;
+    transition: min-height 0.25s ease;
 
-    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+    @include typo.typography('h4m', $color: map.get(color.$text-colors, 'tertiary'));
 
-    &:hover,
+    [class*='ic-'] {
+      color: map.get(color.$icon-neutral, 'tertiary');
+      vertical-align: middle;
+    }
+
+    &:hover {
+      .dept-name,
+      .home-rank-item-num,
+      [class*='ic-'] {
+        color: map.get(color.$brand-colors, 'primary');
+      }
+    }
+
     &.is-active {
       width: 100%;
       min-height: fn.rem(72);
@@ -1252,14 +1262,15 @@
       border-color: map.get(color.$brand-colors, 'primary');
       box-shadow: map.get(var.$box-shadow, 'elevation_2');
 
-      .home-rank-item-name,
+      .dept-name,
       .home-rank-item-num {
         @include typo.typography('h2s', $color: map.get(color.$brand-colors, 'primary'));
       }
 
-      .home-rank-item-arrow {
+      [class*='ic-'] {
         @include icon.ic-size(fn.rem(28));
         color: map.get(color.$brand-colors, 'primary');
+        vertical-align: sub;
       }
 
       @include mx.pc-sm {
@@ -1438,6 +1449,7 @@
   // 썸네일
   .product-thumb {
     overflow: hidden;
+    background-color: color.$color-white;
     border-radius: map.get(var.$radius, 'lg');
 
     @include mx.img-fit(contain);

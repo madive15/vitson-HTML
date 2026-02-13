@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '미발송내역'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '좋아요 담기'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -16,7 +16,11 @@
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'nav-bar', title: '주문/배송조회' 
+            type: 'nav-bar', 
+            title: '총무관리 123팀 폴더',
+            actions: [ 
+            { iconName: 'bell', href: '#!', label: '알림', active: true }, 
+            { iconName: 'bag', href: '#!',label: '장바구니' }, ], 
           }) %>
 
           <!-- S: vm-main -->
@@ -27,7 +31,7 @@
                 class="vits-btn-md vits-btn-outline-secondary"
                 onclick="VmKendoWindow.open('modal')"
               >
-                <span class="text">미발송조회 팝업</span>
+                <span class="text">좋아요 담기 팝업</span>
               </button>
             </div>
           </main>
@@ -48,12 +52,13 @@
         <!-- prettier-ignore -->
         <% const modal = { 
           id: 'modal', 
-          title: '미발송내역', 
-          subtitle: '상품의 미발송 사유 및 입고 예정 정보를 확인하실 수 있습니다.',
-          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_02010301_M.ejs`,
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet',
+          title: '좋아요 담기', 
+          subtitle: '선택한 상품을 다른 좋아요 폴더에 추가하세요.',
+          contentPath: `${_src}/views/pages-mo/kendo-window/category/kw-MO_CA_01040201_P.ejs`,
           buttons: [
-            { text: '닫기', variant: 'secondary', action: 'close' },
-            { text: '문의하기', variant: 'primary', action: 'close' },
+            { text: '담기', variant: 'primary', action: 'close' },
           ]}; 
         %> 
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>

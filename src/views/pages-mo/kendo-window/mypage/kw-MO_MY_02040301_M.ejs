@@ -1,0 +1,36 @@
+<!-- prettier-ignore -->
+<% 
+  const _src = srcPath; 
+  const _public = publicPath;
+%>
+
+<section class="vm-like-folder">
+  <h2 class="sr-only">좋아요 폴더 만들기</h2>
+  <dl class="vm-form-dl">
+    <dt class="is-required">폴더명</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-text.ejs`, {
+        id: 'like-folder-text',
+        name: 'like-folder-text',
+        label: '폴더명',
+        placeholder: '폴더명',
+        maxLength: 30,
+        required: true,
+        rootClass: 'size-l',
+      }) %>
+    </dd>
+    <dt>상세내용</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/textarea.ejs`, {
+        id: 'like-folder-memo',
+        name: 'like-folder-memo',
+        placeholder: '최대 30자 입력',
+        count: true,
+        maxLength: 30,
+        rootClass: 'size-default',
+      }) %>
+    </dd>
+  </dl>
+</section>
