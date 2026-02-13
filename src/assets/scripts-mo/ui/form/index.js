@@ -5,6 +5,7 @@
 
 import './select.js';
 import './checkbox-total.js';
+import './textarea.js';
 
 (function ($, window) {
   'use strict';
@@ -13,7 +14,7 @@ import './checkbox-total.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['select', 'checkboxTotal'];
+  var modules = ['select', 'checkboxTotal', 'textarea'];
 
   window.UI.form = {
     init: function () {
