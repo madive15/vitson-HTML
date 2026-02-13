@@ -73,7 +73,7 @@
         var $scope = $('[data-checkbox-scope]');
         var $countArea = $scope.find('.toolbar-item.is-hidden');
         var $buttons = $scope.find('.toolbar-actions button');
-        var $deleteBtn = $buttons.first();
+        var $deleteBtn = $scope.find('[data-toolbar-delete]');
         var $qtyDisplay = $scope.find('[data-checkbox-all]').closest('label').find('.label-unit');
 
         // 선택 개수 변경 시 UI 업데이트
@@ -82,10 +82,10 @@
 
           if (count > 0) {
             $countArea.removeClass('is-hidden');
-            $buttons.prop('disabled', false);
+            $deleteBtn.prop('disabled', false);
           } else {
             $countArea.addClass('is-hidden');
-            $buttons.prop('disabled', true);
+            $deleteBtn.prop('disabled', true);
           }
         });
 
