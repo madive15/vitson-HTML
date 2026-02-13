@@ -30,9 +30,13 @@
   &[class*='header-nav-bar'] {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
-    height: map.get(var.$mo-header, 'nav-bar');
-    padding: 0 var.$mo-gutter 0 fn.rem(7);
+    min-height: map.get(var.$mo-header, 'nav-bar');
+    padding: map.get(var.$unit, 12) var.$mo-gutter map.get(var.$unit, 12) fn.rem(7);
     background: color.$color-white;
+
+    &.header-rule {
+      @include mx.border('bottom', $width: 8px, $color: map.get(color.$layout-surf, 'sunken'));
+    }
 
     .vm-header {
       &-back {
@@ -43,6 +47,23 @@
       &-title {
         @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
         @include mx.ellipsis-single;
+
+        .vits-tooltip {
+          &-trigger .icon {
+            width: fn.rem(14);
+            height: fn.rem(14);
+          }
+
+          &-content {
+            top: fn.rem(38); // 아이콘 28 + 여백 10 (header 총 높이 48)
+            left: var.$mo-gutter;
+          }
+        }
+      }
+
+      &-desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        padding-top: map.get(var.$unit, 4);
       }
 
       &-actions {
@@ -52,12 +73,25 @@
       }
 
       &-btn {
+        position: relative;
+
         &:is(a) {
           @include nav-bar-common-btn('a');
         }
 
         &:is(button) {
           @include nav-bar-common-btn('button');
+        }
+
+        &.is-active::after {
+          @include mx.position(absolute, 0, 0);
+          z-index: var.$zindex-base;
+          width: map.get(var.$unit, 8);
+          height: map.get(var.$unit, 8);
+          content: '';
+          background: map.get(color.$icon-colors, 'primary');
+          border-radius: 50%;
+          box-shadow: inset 0 0 0 1px color.$color-white;
         }
       }
     }
@@ -108,6 +142,12 @@
           display: block;
         }
       }
+    }
+  }
+
+  &:has(.vm-header-desc) {
+    .vm-header-actions {
+      align-self: flex-start;
     }
   }
 }

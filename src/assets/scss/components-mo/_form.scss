@@ -32,3 +32,73 @@
     }
   }
 }
+
+// 폴더 체크박스
+.vm-ckbox-folder {
+  @include mx.flex;
+  position: relative;
+  gap: map.get(var.$unit, 12);
+  width: 100%;
+  padding: map.get(var.$unit, 12) var.$mo-gutter;
+  cursor: pointer;
+  user-select: none;
+  background: color.$color-white;
+  border-radius: map.get(var.$radius, 'lg');
+
+  .ckbox-folder {
+    &-icon {
+      position: relative;
+      display: block;
+      flex-shrink: 0;
+      width: var.$mo-gutter;
+      height: var.$mo-gutter;
+      margin-top: fn.rem(0.5);
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'sm');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+    }
+
+    &-body {
+      @include mx.flex(flex, column);
+      flex-grow: 1;
+      gap: map.get(var.$unit, 8);
+      min-width: 0;
+    }
+
+    &-name {
+      @include typo.typography('b3s');
+      @include mx.ellipsis-single;
+    }
+
+    &-desc {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      @include mx.ellipsis-single;
+      margin-top: map.get(var.$unit, 2);
+    }
+
+    &-meta {
+      @include mx.flex(flex, row);
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-ea {
+      @include typo.typography('b4s', $color: map.get(color.$text-status, 'info-soft'));
+    }
+
+    &-date {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+  }
+
+  &:has(input:checked) {
+    .ckbox-folder-icon {
+      &::before {
+        @include mx.position(absolute, 0, 0, 0, 0);
+        z-index: var.$zindex-base;
+        content: '';
+        background: url('/public/resources/img/mro/renewal/ic/ic-check-on.svg') no-repeat center / contain;
+        box-shadow: inset 0 0 0 0 map.get(color.$layout-surf, 'brand');
+      }
+    }
+  }
+}

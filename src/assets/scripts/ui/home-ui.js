@@ -33,6 +33,12 @@ import Swiper from 'swiper/bundle';
   // 상품 스와이퍼용 Swiper 키
   var PRODUCT_SWIPER_INSTANCE_KEY = 'homeProductSwiper';
 
+  // 레전드 상품 스와이퍼용 Swiper 키
+  var LEGEND_SWIPER_INSTANCE_KEY = 'homeLegendSwiper';
+
+  // 인기 카테고리 수직 순위용 Swiper 키
+  var VERTICAL_RANK_SWIPER_INSTANCE_KEY = 'homeVerticalRankSwiper';
+
   /**
    * 메인 배너 Swiper 초기화
    * 다른 공통 JS와 독립적으로 동작하도록 별도 인스턴스로 관리
@@ -239,6 +245,12 @@ import Swiper from 'swiper/bundle';
         return;
       }
 
+      // nav 버튼은 event-banner-container 밖에 있으므로 부모(.vits-home-event-banner)에서 탐색
+      var section = container.closest('.vits-home-event-banner');
+      if (!section) {
+        return;
+      }
+
       // 슬라이드 개수 확인 (3개 이하면 Swiper 미적용, 정적인 리스트로 사용)
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
@@ -252,8 +264,8 @@ import Swiper from 'swiper/bundle';
         return;
       }
 
-      var prevButton = container.querySelector('.event-banner-nav-prev');
-      var nextButton = container.querySelector('.event-banner-nav-next');
+      var prevButton = section.querySelector('.event-banner-nav-prev');
+      var nextButton = section.querySelector('.event-banner-nav-next');
 
       var options = {
         slidesPerView: 'auto',
@@ -262,10 +274,6 @@ import Swiper from 'swiper/bundle';
         slidesPerGroup: 1, // 항상 1장씩 이동
         watchSlidesProgress: true,
         a11y: false,
-        autoplay: {
-          delay: 4000,
-          disableOnInteraction: false
-        },
         navigation: {
           nextEl: nextButton,
           prevEl: prevButton,
@@ -430,6 +438,187 @@ import Swiper from 'swiper/bundle';
   }
 
   /**
+   * 레전드 상품 Swiper 초기화 (Grid 모드)
+   */
+  function initLegendSwiper() {
+    var containers = document.querySelectorAll('.js-home-product-legend-swiper');
+    if (!containers.length) {
+      return;
+    }
+
+    if (!Swiper) {
+      console.error('[home-ui] Swiper is not available for legend swiper');
+      return;
+    }
+
+    containers.forEach(function (container) {
+      if (!container) {
+        return;
+      }
+
+      // 슬라이드 개수 확인
+      var slides = container.querySelectorAll('.swiper-slide');
+      var slideCount = slides.length;
+
+      // 슬라이드가 1개 이하면 Swiper 미적용
+      if (slideCount <= 1) {
+        return;
+      }
+
+      // 이미 초기화된 경우 중복 실행 방지
+      var existingInstance = container[LEGEND_SWIPER_INSTANCE_KEY];
+      if (existingInstance && typeof existingInstance.destroy === 'function') {
+        return;
+      }
+
+      // 네비게이션 버튼 찾기 (상위 wrapper에서)
+      var wrapper = container.closest('.legend-wrapper');
+      var prevButton = wrapper ? wrapper.querySelector('.legend-nav-prev') : null;
+      var nextButton = wrapper ? wrapper.querySelector('.legend-nav-next') : null;
+
+      var options = {
+        slidesPerView: 4,
+        spaceBetween: 16,
+        speed: 500,
+        slidesPerGroup: 1,
+        grid: {
+          rows: 2,
+          fill: 'row'
+        },
+        watchSlidesProgress: true,
+        a11y: false,
+        breakpoints: {
+          0: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            slidesPerGroup: 4,
+            grid: {
+              rows: 2,
+              fill: 'row'
+            }
+          },
+          1280: {
+            slidesPerView: 4,
+            spaceBetween: 24,
+            slidesPerGroup: 8,
+            grid: {
+              rows: 2,
+              fill: 'row'
+            }
+          }
+        },
+        navigation: {
+          nextEl: nextButton,
+          prevEl: prevButton,
+          disabledClass: 'swiper-button-disabled'
+        }
+      };
+
+      try {
+        var instance = new Swiper(container, options);
+        container[LEGEND_SWIPER_INSTANCE_KEY] = instance;
+        console.log('[home-ui] Legend swiper initialized with grid');
+      } catch (e) {
+        console.error('[home-ui] Failed to initialize legend swiper', e);
+      }
+    });
+  }
+
+  /**
+   * 인기 카테고리 수직 순위 Swiper 초기화
+   * - vertical 방향, 5개씩 표시
+   * - autoplay, 6번(인덱스5) 이상일 때 ② 활성화
+   * - 순위 클릭/슬라이드 시 좌측 상품 노출
+   */
+  function initVerticalRankSwiper() {
+    var container = document.querySelector('.js-home-rank-swiper');
+    if (!container) {
+      return;
+    }
+
+    if (!Swiper) {
+      console.error('[home-ui] Swiper is not available for vertical rank');
+      return;
+    }
+
+    var existingInstance = container[VERTICAL_RANK_SWIPER_INSTANCE_KEY];
+    if (existingInstance && typeof existingInstance.destroy === 'function') {
+      return;
+    }
+
+    var block = container.closest('.home-rank');
+    var productGroups = block ? block.querySelectorAll('.home-rank-product-group') : [];
+    var rankItems = block ? block.querySelectorAll('.home-rank-item') : [];
+    var pageBtns = block ? block.querySelectorAll('.home-rank-page-btn') : [];
+
+    var initialIndex = parseInt(container.getAttribute('data-initial-index'), 10) || 0;
+
+    function setActiveRank(index) {
+      productGroups.forEach(function (grp, i) {
+        var isActive = i === index;
+        grp.classList.toggle('is-active', isActive);
+        grp.setAttribute('aria-hidden', !isActive);
+      });
+      rankItems.forEach(function (btn, i) {
+        btn.classList.toggle('is-active', i === index);
+      });
+      // 6번(인덱스5) 이상일 때 ② 활성화
+      var pageIndex = index >= 5 ? 1 : 0;
+      pageBtns.forEach(function (btn, i) {
+        var isActive = i === pageIndex;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-selected', isActive);
+      });
+    }
+
+    var options = {
+      direction: 'vertical',
+      slidesPerView: 5,
+      spaceBetween: 12,
+      speed: 400,
+      centeredSlides: true,
+      centeredSlidesBounds: true,
+      initialSlide: initialIndex,
+      a11y: false,
+      on: {
+        init: function (swiper) {
+          setActiveRank(swiper.activeIndex);
+        },
+        slideChange: function (swiper) {
+          setActiveRank(swiper.activeIndex);
+        }
+      }
+    };
+
+    try {
+      var instance = new Swiper(container, options);
+      container[VERTICAL_RANK_SWIPER_INSTANCE_KEY] = instance;
+
+      // ① ② 버튼 클릭: 해당 그룹으로 이동
+      pageBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var page = parseInt(btn.getAttribute('data-page'), 10);
+          var targetIndex = page === 0 ? 0 : 5;
+          instance.slideTo(targetIndex);
+        });
+      });
+
+      // 순위 항목 클릭: 해당 슬라이드로 이동 + active 적용
+      rankItems.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var idx = parseInt(btn.getAttribute('data-rank-index'), 10);
+          setActiveRank(idx);
+          instance.slideTo(idx);
+        });
+      });
+
+      console.log('[home-ui] Vertical rank swiper initialized');
+    } catch (e) {
+      console.error('[home-ui] Failed to initialize vertical rank swiper', e);
+    }
+  }
+
+  /**
    * 홈 광고 라인 배너 Swiper 초기화
    * - 슬라이드가 2개 이상일 때만 Swiper 적용
    * - 항상 한 개씩만 이동
@@ -510,6 +699,8 @@ import Swiper from 'swiper/bundle';
           initLineAdBannerSwiper();
           initBrandSwiper();
           initProductSwiper();
+          initLegendSwiper();
+          initVerticalRankSwiper();
         });
       } else {
         initMainBannerSwiper();
@@ -517,6 +708,8 @@ import Swiper from 'swiper/bundle';
         initLineAdBannerSwiper();
         initBrandSwiper();
         initProductSwiper();
+        initLegendSwiper();
+        initVerticalRankSwiper();
       }
     },
 

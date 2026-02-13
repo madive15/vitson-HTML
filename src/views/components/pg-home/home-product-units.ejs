@@ -17,6 +17,8 @@
     default → true / soldout → false / guest → false / cart → false
   @param {boolean} showFrequentBadge - 빈번 구매 배지 노출 여부 (default: false)
   @param {number}  frequentCount - 빈번 구매 횟수 (default: 0, showFrequentBadge가 true일 때만 사용)
+  @param {boolean} showRankBadge - 순위 배지 노출 여부 (default: false)
+  @param {number}  rankCount - 순위 횟수 (default: 0, showRankBadge가 true일 때만 사용)
 %>
 <%
   const type = locals.type || 'default';
@@ -39,6 +41,10 @@
   // 빈번 구매 배지 옵션
   const showFrequentBadge = typeof locals.showFrequentBadge !== 'undefined' ? locals.showFrequentBadge : false;
   const frequentCount = typeof locals.frequentCount !== 'undefined' ? locals.frequentCount : 0;
+
+  // 순위 배지 옵션
+  const showRankBadge = typeof locals.showRankBadge !== 'undefined' ? locals.showRankBadge : false;
+  const rankCount = typeof locals.rankCount !== 'undefined' ? locals.rankCount : 0;
 %>
 <article class="home-product-item">
   <div class="product-thumb">
@@ -64,6 +70,13 @@
           <span class="text">장바구니</span>
         </button>
       </div>
+    </div>
+    <% } %>
+
+    <!-- 순위 배지 (이미지 위에 표시) -->
+    <% if (showRankBadge && rankCount > 0) { %>
+    <div class="product-rank-badge">
+      <div class="product-rank-count"><%= rankCount %></div>
     </div>
     <% } %>
   </div>

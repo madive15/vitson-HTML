@@ -1,0 +1,104 @@
+<% const _src = srcPath; const _public = publicPath; %> <%# 인기 카테고리 수직 순위 컴포넌트 (Vertical Rank - 지금 많이
+찾으시는 카테고리) ───────────────────────────────────────── - 인기 카테고리 10개를 5개씩 ①/② 로 나누어 전시 (1~5=①,
+6~10=②) - 각 순위마다 상품 3개 표시 (좌측) - 순위 선택시 해당 카테고리 상품 3개 표시 - vertical swiper + autoplay - 6번
+선택시 ② 색상 활성화 %>
+<!-- prettier-ignore -->
+<%
+  const IMG_BASE = `${_public}/resources/img/mro/renewal/temp`;
+  const categories = [
+    { rank: 1, name: '가전/전산용품/컴퓨터 > 겨울용품', products: [
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg` }
+    ]},
+    { rank: 2, name: '간접/라인조명 > 벽등 > LED', products: [
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg` }
+    ]},
+    { rank: 3, name: '사무용품 > 문구 > 테이프', products: [
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg` },
+      { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg` }
+    ]},
+    { rank: 4, name: '생활용품 > 위생용품', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true }
+    ]},
+    { rank: 5, name: '전선/케이블 > 전원케이블', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true }
+    ]},
+    { rank: 6, name: '공구 > 수공구', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true }
+    ]},
+    { rank: 7, name: '안전용품 > 안전화', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true }
+    ]},
+    { rank: 8, name: '산업자재 > 절연재료', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true }
+    ]},
+    { rank: 9, name: '조명 > LED조명', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true }
+    ]},
+    { rank: 10, name: '패키징 > 포장자재', products: [
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+      { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true }
+    ]}
+  ];
+
+  const defaultIndex = 1;
+%>
+<!-- prettier-ignore -->
+<div class="home-rank" data-vertical-rank>
+  <div class="home-rank-pagination" role="tablist" aria-label="인기 카테고리 그룹">
+    <button type="button" class="home-rank-page-btn is-active" data-page="0" role="tab" aria-selected="true" aria-label="1~5위">1</button>
+    <button type="button" class="home-rank-page-btn" data-page="1" role="tab" aria-selected="false" aria-label="6~10위">2</button>
+  </div>
+
+  <!-- 본문: 좌측 상품 3개 + 우측 카테고리 목록 (vertical swiper) -->
+  <div class="home-rank-body">
+    <!-- 좌측: 상품 3개 (순위별 그룹) -->
+    <div class="home-rank-products">
+      <div class="home-rank-product-inner">
+        <% categories.forEach(function(cat, idx) { %>
+        <div class="home-rank-product-group<%= idx === defaultIndex ? ' is-active' : '' %>" data-product-group="<%= idx %>">
+          <% cat.products.forEach(function(product) { %>
+          <%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, product) %>
+          <% }); %>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <!-- 우측: 카테고리 순위 목록 (vertical swiper) -->
+    <div class="home-rank-categories">
+      <div class="swiper js-home-rank-swiper" data-initial-index="<%= defaultIndex %>">
+        <div class="swiper-wrapper">
+          <% categories.forEach(function(cat, idx) { %>
+          <div class="swiper-slide home-rank-slide" data-rank-index="<%= idx %>" data-category-rank="<%= cat.rank %>">
+            <button type="button" class="home-rank-item<%= idx === defaultIndex ? ' is-active' : '' %>" data-rank-index="<%= idx %>">
+              <span class="home-rank-item-num"><%= cat.rank %></span>
+              <span class="home-rank-item-name"><%= cat.name %></span>
+              <span class="home-rank-item-arrow">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </span>
+            </button>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,130 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _all = mockData.products.slice();
+
+  const _frequentProducts = _all.slice(0, 10).map((item, i) => ({
+    ...item,
+    purchaseCount: [22, 15, 12, 10, 8, 7, 5, 4, 3, 3][i],
+    lastPurchaseDate: ['26-02-01', '26-01-28', '25-12-23', '25-12-10', '26-01-15', '26-02-05', '25-10-20', '26-01-03', '25-11-08', '25-09-15'][i],
+    soldout: i === 5 || i === 8,
+  }));
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, { meta_title: '좋아요 상품목록' }) %>
+  <body class="vm-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vm-wrapper">
+      <div class="vm-wrap wrap-mypage">
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, {
+            type: 'nav-bar',
+            title: '총무관리 123팀 폴더',
+            desc: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십',
+            actions: [
+              { iconName: 'bell', href: '#!', label: '알림', active: true },
+              { iconName: 'bag', href: '#!', label: '장바구니' },
+            ],
+            rootClass: 'header-rule'
+          }) %>
+
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders" data-checkbox-scope>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components-mo/product/product-list-toolbar.ejs`, { 
+                toolbarType: 'checkbox',
+                listType: 'product'
+              }) %>
+
+              <ul class="vm-product-list-default">
+                <% _frequentProducts.forEach((item) => { %>
+                <li>
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                    name: 'likeProduct',
+                    value: item.productCode,
+                    checkboxType: 'item',
+                    size: 's'
+                  }) %>
+
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/product-frequent-item.ejs`, { 
+                    product: item,
+                    showFrequent: false,
+                    showExtra: false,
+                  }) %>
+                </li>
+                <% }); %>
+              </ul>
+            </div>
+          </main>
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { type: 'tab-bar', currentTab: 'mypage' }) %>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      (function ($) {
+        var $scope = $('[data-checkbox-scope]');
+        var $countArea = $scope.find('.toolbar-item.is-hidden');
+        var $buttons = $scope.find('.toolbar-actions button');
+        var $deleteBtn = $buttons.first();
+        var $qtyDisplay = $scope.find('[data-checkbox-all]').closest('label').find('.label-unit');
+
+        // 선택 개수 변경 시 UI 업데이트
+        $scope.on('checkbox-change', function (e, count) {
+          $qtyDisplay.text('(' + count + ')');
+
+          if (count > 0) {
+            $countArea.removeClass('is-hidden');
+            $buttons.prop('disabled', false);
+          } else {
+            $countArea.addClass('is-hidden');
+            $buttons.prop('disabled', true);
+          }
+        });
+
+        // 폴더 삭제
+        $deleteBtn.on('click', function () {
+          var $checkedItems = $scope.find('[data-checkbox-item]:checked');
+          $checkedItems.closest('li').remove();
+          alert('삭제되었습니다.');
+          $scope.trigger('checkbox-change', [0]);
+        });
+      })(window.jQuery || window.$);
+
+      (function ($) {
+        var ATTR = 'data-vits-toolbar';
+        var $toolbar = $('[' + ATTR + ']');
+        if (!$toolbar.length) return;
+
+        function setStickyTop() {
+          var $header = $('[data-vits-header]');
+          if (!$header.length) return;
+
+          // sticky header는 항상 뷰포트 상단에 붙어있으므로 height가 곧 sticky top
+          var stickyTop = $header[0].getBoundingClientRect().height;
+
+          $toolbar.css({
+            position: 'sticky',
+            top: stickyTop + 'px',
+            zIndex: 10
+          });
+        }
+
+        // 폰트·이미지 로드 완료 후 정확한 높이 계산
+        $(window).on('load', setStickyTop);
+      })(window.jQuery || window.$);
+    </script>
+  </body>
+</html>

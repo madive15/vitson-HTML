@@ -1,10 +1,10 @@
 /**
  * @file scripts-mo/ui/form/checkbox-total.js
- * @description data-속성 기반 체크박스 전체선택/해제
+ * @description data-속성 기반 체크박스 전체선택/해제 + 선택 개수 실시간 감지
  * @scope [data-checkbox-scope]
- * @mapping data-checkbox-all: 전체선택, data-checkbox-item: 개별항목
+ * @mapping data-checkbox-all: 전체선택, data-checkbox-item: 개별항목, data-checked-count: 개수 표시
  * @state is-checked - 체크 상태 시각적 반영
- * @note disabled 항목은 전체선택/해제 대상에서 제외
+ * @note disabled 항목 제외
  */
 
 (function ($, window) {
@@ -21,7 +21,6 @@
   var NS = '.checkboxTotal';
   var BOUND_FLAG = 'checkboxTotalBound';
 
-  // 활성(disabled 아닌) 아이템만 조회
   function getActiveItems($scope) {
     return $scope.find('[data-checkbox-item]').not(':disabled');
   }
@@ -43,6 +42,21 @@
     syncClass($allCheckbox);
   }
 
+  function updateCount($scope) {
+    var $countTarget = $scope.find('[data-checked-count]');
+    if (!$countTarget.length) return;
+
+    var count = $scope.find('[data-checkbox-item]:checked').length;
+    $countTarget.text(count);
+
+    var callback = $scope.data('checkbox-callback');
+    if (typeof callback === 'function') {
+      callback(count);
+    }
+
+    $scope.trigger('checkbox-change', [count]);
+  }
+
   function bindScope($scope) {
     if ($scope.data(BOUND_FLAG)) return;
 
@@ -56,11 +70,14 @@
         syncClass($(this));
       });
       syncClass($allCheckbox);
+
+      updateCount($scope);
     });
 
     $scope.on('change' + NS, '[data-checkbox-item]', function () {
       syncClass($(this));
       updateCheckAllState($scope);
+      updateCount($scope);
     });
 
     $scope.data(BOUND_FLAG, true);
@@ -86,10 +103,15 @@
       console.log('[checkbox-total] destroy');
     },
 
-    // 동적 콘텐츠 변경 후 전체선택 상태 재계산
     refresh: function ($scope) {
       if (!$scope || !$scope.length) return;
       updateCheckAllState($scope);
+      updateCount($scope);
+    },
+
+    setCallback: function ($scope, callback) {
+      if (!$scope || !$scope.length) return;
+      $scope.data('checkbox-callback', callback);
     }
   };
 

@@ -1,0 +1,137 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+/**
+ * @file product-frequent-item.ejs
+ * @description 자주구매 / 좋아요 전용 카드 (Mobile) — 3컬럼 레이아웃
+ * @scope components-mo/product/
+ * @param {Object} product - 상품 데이터
+ * @param {boolean} [showFrequent=false] - 구매횟수·최근구매일 노출 여부
+ *
+ * @state is-soldout: product.soldout === true
+ *
+ * @note 가격 노출 규칙 (product-item.ejs 공통)
+ *   - 기본: 정상가 + 할인율 + 판매가
+ *   - 할인율 ≤ 0.4%: 할인율 비노출
+ *   - 할인율 ≤ 0: 정상가·할인율 비노출, 판매가만
+ *   - 품절: "일시품절" 텍스트, 장바구니 미노출
+ */
+
+const d = product || {};
+const _showFrequent = (typeof showFrequent !== 'undefined') ? showFrequent : false;
+const _showExtra = (typeof showExtra !== 'undefined') ? showExtra : true;
+
+// 상태
+const isSoldout = d.soldout === true;
+const stateClass = isSoldout ? ' is-soldout' : '';
+
+// 가격 규칙
+const rate = Number(d.discountRate) || 0;
+const showRate = rate > 0.4;
+const showOrigin = rate > 0;
+
+// 배송·인기 라벨
+const hasToday = d.todayShipYn === 'Y';
+const hasTomorrow = d.tomorrowShipYn === 'Y';
+const hasHot = d.hotYn === 'Y';
+const hasCount = d.purchaseCount > 0;
+const showFlags = hasToday || hasTomorrow || hasHot || hasCount;
+
+const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+%>
+
+<div class="vm-product-frequent-card<%= stateClass %>" data-ui="product-frequent-card">
+  <ul class="frequent-card-item">
+    <li class="frequent-card-layout-left">
+      <div class="frequent-card-overview">
+        <div class="product-thumb">
+          <a href="#!">
+            <img src="<%= d.imageUrl %>" alt="<%= d.productNm %>" loading="lazy" />
+          </a>
+        </div>
+        <% if (_showFrequent && (d.purchaseCount || d.lastPurchaseDate)) { %>
+        <div class="product-frequent">
+          <% if (d.purchaseCount) { %>
+          <p class="text-count"><%= d.purchaseCount %>회 구매</p>
+          <% } %> <% if (d.lastPurchaseDate) { %>
+          <p class="text-date"><%= d.lastPurchaseDate %> 최근구매</p>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+    </li>
+
+    <li class="frequent-card-layout-center">
+      <div class="frequent-card-info">
+        <div class="product-meta">
+          <p class="product-brand"><span class="sr-only">브랜드</span><%= d.brandNm %></p>
+          <% if (d.modelNm) { %>
+          <p class="product-model"><span class="sr-only">모델명</span><%= d.modelNm %></p>
+          <% } %>
+        </div>
+        <a href="#!">
+          <div class="product-summary">
+            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
+            <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
+          </div>
+        </a>
+
+        <!-- prettier-ignore -->
+        <% if (!isSoldout) { %>
+        <div class="product-price is-normal">
+          <% if (showOrigin) { %>
+          <div class="price-origin-label">
+            <span class="sr-only">표준단가(정상가)</span><%= comma(d.originPrice) %>원
+          </div>
+          <% } %>
+          <div class="price-sale-row">
+            <% if (showRate) { %>
+            <p class="price-rate"><span class="sr-only">할인율</span><%= rate %>%</p>
+            <% } %>
+            <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma(d.salePrice) %>원</p>
+          </div>
+        </div>
+        <% } else { %>
+        <div class="product-price is-soldout">
+          <div class="product-price-alt">일시품절</div>
+        </div>
+        <% } %>
+
+        <!-- prettier-ignore -->
+        <% if (_showExtra) { %>
+        <div class="product-extra<%= isSoldout ? ' is-soldout' : ' is-normal' %>">
+          <!-- prettier-ignore -->
+          <% if (showFlags) { %>
+            <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+              today: hasToday,
+              tomorrow: hasTomorrow,
+              hot: hasHot,
+              count: hasCount ? d.purchaseCount : 0,
+            }) %>
+          <% } %>
+          <!-- prettier-ignore -->
+          <% if (d.freeShipYn === 'Y') { %>
+          <div class="product-cta">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+    </li>
+
+    <% if (!(_showFrequent && isSoldout)) { %>
+    <li class="frequent-card-layout-right">
+      <div class="frequent-card-actions">
+        <div class="product-actions">
+          <button type="button" class="action-btn-like active" aria-label="좋아요"></button>
+          <% if (!isSoldout) { %>
+          <button type="button" class="action-btn-cart" aria-label="장바구니"></button>
+          <% } %>
+        </div>
+      </div>
+    </li>
+    <% } %>
+  </ul>
+</div>

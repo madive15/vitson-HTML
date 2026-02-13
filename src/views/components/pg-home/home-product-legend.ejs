@@ -1,12 +1,42 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<!-- 비츠온 레전드 - 가장 많이 판매된 상품 TOP 14 -->
 <!-- prettier-ignore -->
-<!-- 비츠온 레전드 - 가장 많이 판매된 상품 TOP 10 -->
-<div class="vits-home-product-legend">
-  <ul class="product-legend-list">
-    <% for (let i = 0; i < 10; i++) { %>
-    <li class="product-legend-item">
-      <%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, { type: 'default' }) %>
-    </li>
-    <% } %>
-  </ul>
+<%
+  const IMG_BASE = `${_public}/resources/img/mro/renewal/temp`;
+  const products = [
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
+    { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true },
+    
+  ];
+%>
+<div class="legend-wrapper">
+  <div class="legend-nav-wrap">
+    <button type="button" class="legend-nav legend-nav-prev" aria-label="이전">
+      <i class="ic ic-arrow-left"></i>
+    </button>
+    <button type="button" class="legend-nav legend-nav-next" aria-label="다음">
+      <i class="ic ic-arrow-right"></i>
+    </button>
+  </div>
+
+  <div class="vits-home-product-legend">
+    <div class="swiper js-home-product-legend-swiper">
+      <div class="swiper-wrapper">
+        <% products.forEach(function(product) { %>
+        <div class="swiper-slide">
+          <div class="product-legend-item">
+            <%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, product) %>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,25 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _folderName = typeof folderName !== 'undefined' ? folderName : '';
+  const _owner = typeof owner !== 'undefined' ? owner : '';
+  const _itemCount = typeof itemCount !== 'undefined' ? itemCount : '';
+  const _date = typeof date !== 'undefined' ? date : '';
+%>
+
+<label class="vm-ckbox-folder">
+  <input type="checkbox" name="likeFolder" value="<%= _folderName %>" class="sr-only" data-checkbox-item />
+  <div class="ckbox-folder-icon"></div>
+
+  <div class="ckbox-folder-body">
+    <div class="ckbox-folder-title">
+      <p class="ckbox-folder-name"><%= _folderName %></p>
+      <p class="ckbox-folder-desc"><%= _owner %></p>
+    </div>
+
+    <p class="ckbox-folder-meta">
+      <span class="ckbox-folder-ea"><%= _itemCount %>개</span>
+      <span class="ckbox-folder-date"><%= _date %></span>
+    </p>
+  </div>
+</label>

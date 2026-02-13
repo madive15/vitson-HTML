@@ -1,39 +1,64 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-const headerActions = [
+const defaultActions = [
   { iconName: 'magnifying-glass', href: '#!', label: '검색' },
   { iconName: 'bag', href: '#!', label: '장바구니' },
   { iconName: 'menu', data: { popupTarget: '#gnb-menu' }, label: '메뉴' },
 ];
+
+const headerActions = typeof actions !== 'undefined' ? actions : defaultActions;
+const hasDesc = typeof desc !== 'undefined' && desc;
+const hasTitleTooltip = typeof titleTooltip !== 'undefined' && titleTooltip;
+const headerRootClass = typeof rootClass !== 'undefined' ? rootClass : '';
 %>
 
-<header class="vm-header header-nav-bar">
-  <a href="" class="vm-header-back" aria-label="이전 페이지">
+<!-- prettier-ignore -->
+<header class="vm-header header-nav-bar<%= headerRootClass ? ' ' + headerRootClass : '' %>" 
+  data-vits-header>
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
     <!-- prettier-ignore -->
     <%- include(`${_src}/views/components/icon.ejs`, {
       iconName: 'arrow-left' 
     }) %>
   </a>
-
+  
+ <% if (hasTitleTooltip) { %>
+  <div class="vm-header-title" data-header-title>
+    <%= title %>
+    <%- include(`${_src}/views/components/tooltip.ejs`, {
+      triggerText: titleTooltip.triggerText || '',
+      heading: titleTooltip.heading || '',
+      items: titleTooltip.items || [],
+      anchor: true
+    }) %>
+  </div>
+<% } else if (hasDesc) { %>
+  <div class="vm-header-inner">
+    <p class="vm-header-title" data-header-title><%= title %></p>
+    <p class="vm-header-desc"><%= desc %></p>
+  </div>
+<% } else { %>
   <p class="vm-header-title" data-header-title><%= title %></p>
+<% } %>
+
   <div class="vm-header-actions">
     <% headerActions.forEach((item) => { %>
       <% if (item.href) { %>
-        <!-- prettier-ignore -->
-        <a href="<%= item.href %>" 
-          class="vm-header-btn" aria-label="<%= item.label %>">
+        <a href="<%= item.href %>"
+          class="vm-header-btn<%= item.active ? ' is-active' : '' %>"
+          aria-label="<%= item.label %>">
           <%- include(`${_src}/views/components/icon.ejs`, { iconName: item.iconName }) %>
         </a>
       <% } else { %>
-        <!-- prettier-ignore -->
-        <button type="button" 
-          class="vm-header-btn" aria-label="<%= item.label %>"
-          <%= item.data 
-            ? Object.entries(item.data).map(([k, v]) => 
-              ` data-${k.replace(/([A-Z])/g, '-$1').toLowerCase()}="${v}"`).join('') 
+        <button type="button"
+          class="vm-header-btn<%= item.active ? ' is-active' : '' %>"
+          aria-label="<%= item.label %>"
+          <%= item.data
+            ? Object.entries(item.data).map(([k, v]) =>
+              ` data-${k.replace(/([A-Z])/g, '-$1').toLowerCase()}="${v}"`).join('')
             : '' %>>
-            <%- include(`${_src}/views/components/icon.ejs`, { iconName: item.iconName }) %>
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: item.iconName }) %>
         </button>
       <% } %>
     <% }); %>
