@@ -468,10 +468,13 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
 // 모달
 .vm-scope .k-window:not(.is-bottomsheet, .is-slideright) {
   .vm-modal {
+    /* stylelint-disable-next-line no-descending-specificity */
     &-inner {
-      max-width: min(90vw, 600px);
+      width: 90vw;
+      max-width: fn.rem(600);
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     &-header {
       padding: var.$mo-section-gap map.get(var.$unit, 20) map.get(var.$unit, 20);
       box-shadow: none;
@@ -500,6 +503,34 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
 
     &-footer {
       padding: var.$mo-section-gap map.get(var.$unit, 20);
+    }
+  }
+}
+
+// botomsheet - modal-bottom-sheet
+.vm-scope .k-window.is-bottomsheet .modal-bottom-sheet {
+  .vm-modal {
+    &-header {
+      box-shadow: none;
+    }
+
+    &-title {
+      margin-top: map.get(var.$unit, 4);
+      font-size: fn.rem(20);
+    }
+
+    &-close {
+      width: map.get(var.$unit, 32);
+      height: map.get(var.$unit, 32);
+    }
+
+    &-content {
+      padding-top: map.get(var.$unit, 8);
+      padding-bottom: map.get(var.$unit, 8);
+    }
+
+    &-footer {
+      padding-bottom: map.get(var.$unit, 40);
     }
   }
 }

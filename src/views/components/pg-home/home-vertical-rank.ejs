@@ -21,7 +21,7 @@
       { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg` },
       { type: 'guest', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg` }
     ]},
-    { rank: 4, name: '생활용품 > 위생용품', products: [
+    { rank: 4, name: '사무용품/사무기기/제도용품 > 화일/바인더류 > 기능성화일 > 도면화일', products: [
       { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true },
       { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true },
       { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true }
@@ -58,7 +58,7 @@
     ]}
   ];
 
-  const defaultIndex = 1;
+  const defaultIndex = 0;
 %>
 <!-- prettier-ignore -->
 <div class="home-rank" data-vertical-rank>
@@ -90,7 +90,14 @@
           <div class="swiper-slide home-rank-slide" data-rank-index="<%= idx %>" data-category-rank="<%= cat.rank %>">
             <button type="button" class="home-rank-item<%= idx === defaultIndex ? ' is-active' : '' %>" data-rank-index="<%= idx %>">
               <span class="home-rank-item-num"><%= cat.rank %></span>
-              <span class="home-rank-item-name"><%= cat.name %></span>
+              <span class="home-rank-item-name">
+                <% const deptNames = (cat.name || '').split(/\s*>\s*/); %>
+                <% deptNames.forEach(function(dept, i) { %>
+                <span class="dept-name"><%= dept %></span><% if (i < deptNames.length - 1) { %>
+                  <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+                <% } %>
+                <% }); %>
+              </span>
               <span class="home-rank-item-arrow">
                 <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
               </span>

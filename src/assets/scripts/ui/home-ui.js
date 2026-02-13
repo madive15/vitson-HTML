@@ -571,18 +571,41 @@ import Swiper from 'swiper/bundle';
       });
     }
 
+    var RANK_SPACE_BETWEEN = 24;
+
+    // groupIndex: 0 = 1~5번, 1 = 6~10번 — 해당 그룹 높이로만 컨테이너 높이 설정
+    function setRankSwiperHeight(groupIndex) {
+      var slides = container.querySelectorAll('.swiper-slide');
+      if (!slides.length) {
+        return;
+      }
+      function groupHeight(startIndex, count) {
+        var sum = 0;
+        for (var i = 0; i < count && startIndex + i < slides.length; i++) {
+          sum += slides[startIndex + i].offsetHeight;
+        }
+        return sum + (count - 1) * RANK_SPACE_BETWEEN;
+      }
+      var start = groupIndex === 0 ? 0 : 5;
+      var count = groupIndex === 0 ? 5 : Math.min(5, slides.length - 5);
+      var height = count > 0 ? groupHeight(start, count) : groupHeight(0, 5);
+      container.style.height = height + 'px';
+    }
+
     var options = {
       direction: 'vertical',
       slidesPerView: 5,
-      spaceBetween: 12,
+      spaceBetween: RANK_SPACE_BETWEEN,
       speed: 400,
-      centeredSlides: true,
-      centeredSlidesBounds: true,
       initialSlide: initialIndex,
       a11y: false,
+      allowTouchMove: false,
       on: {
         init: function (swiper) {
           setActiveRank(swiper.activeIndex);
+          requestAnimationFrame(function () {
+            setRankSwiperHeight(swiper.activeIndex >= 5 ? 1 : 0);
+          });
         },
         slideChange: function (swiper) {
           setActiveRank(swiper.activeIndex);
@@ -594,22 +617,65 @@ import Swiper from 'swiper/bundle';
       var instance = new Swiper(container, options);
       container[VERTICAL_RANK_SWIPER_INSTANCE_KEY] = instance;
 
-      // ① ② 버튼 클릭: 해당 그룹으로 이동
+      // 1→2→…→10→1 순으로 active 순환, 5→6 / 10→1 구간에서만 스와이퍼 그룹 전환
+      var currentActiveIndex = initialIndex;
+      var RANK_AUTOPLAY_DELAY = 3000;
+      var rankAutoplayTimer;
+      var totalRanks = 10;
+
+      var getNextRankIndex = function () {
+        return (currentActiveIndex + 1) % totalRanks;
+      };
+
+      var startRankAutoplay = function () {
+        clearInterval(rankAutoplayTimer);
+        rankAutoplayTimer = setInterval(function () {
+          var next = getNextRankIndex();
+          currentActiveIndex = next;
+          setActiveRank(next);
+          // 6번(인덱스5)으로 넘어갈 때 ② 구간으로, 1번(인덱스0)으로 넘어갈 때 ① 구간으로 스와이퍼 이동 + 높이 재계산
+          if (next === 0) {
+            instance.slideTo(0);
+            setRankSwiperHeight(0);
+          } else if (next === 5) {
+            instance.slideTo(5);
+            setRankSwiperHeight(1);
+          }
+        }, RANK_AUTOPLAY_DELAY);
+      };
+
+      startRankAutoplay();
+
+      // ① ② 버튼 클릭: 해당 그룹으로 이동, 그룹 높이 재계산, 그룹 첫 번째부터 active 순환
       pageBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
           var page = parseInt(btn.getAttribute('data-page'), 10);
           var targetIndex = page === 0 ? 0 : 5;
           instance.slideTo(targetIndex);
+          setRankSwiperHeight(page);
+          currentActiveIndex = targetIndex;
+          setActiveRank(targetIndex);
+          startRankAutoplay();
         });
       });
 
-      // 순위 항목 클릭: 해당 슬라이드로 이동 + active 적용
+      // 순위 항목 클릭: active만 변경, 해당 그룹 안에서 순환 재개
       rankItems.forEach(function (btn) {
         btn.addEventListener('click', function () {
           var idx = parseInt(btn.getAttribute('data-rank-index'), 10);
+          currentActiveIndex = idx;
           setActiveRank(idx);
-          instance.slideTo(idx);
+          startRankAutoplay();
         });
+      });
+
+      // 리사이즈 시 현재 보고 있는 그룹(1~5 / 6~10) 기준으로 높이 재계산
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          setRankSwiperHeight(instance.activeIndex >= 5 ? 1 : 0);
+        }, 100);
       });
 
       console.log('[home-ui] Vertical rank swiper initialized');
