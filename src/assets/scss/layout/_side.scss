@@ -122,6 +122,14 @@ $link-padding: map.get(var.$unit, 32);
       }
     }
   }
+
+  // 26-02-12 개발 서버 대응
+  &.vits-side-plp:not(:has(> div.plp-side-category)) {
+    .plp-side-filter-list > li:first-of-type {
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
 }
 
 .vits-grid-side-left {

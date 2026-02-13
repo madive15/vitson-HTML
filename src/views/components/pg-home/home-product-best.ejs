@@ -1,0 +1,75 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+const tabId = 'category-best';
+const activeId = 'office';
+const IMG_BASE = `${_public}/resources/img/mro/renewal/temp`;
+
+// 탭 카테고리
+const tabItems = [
+  { id: 'office', label: '사무용품' },
+  { id: 'life', label: '생활용품' },
+  { id: 'light', label: '조명' },
+  { id: 'cable', label: '전선/케이블' },
+  { id: 'tool', label: '공구' },
+];
+
+// 탭 패널당 상품 10개 (순위 배지 1~10)
+const tabProducts = [
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 1 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 2 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 3 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 4 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 5 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 6 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 7 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-02.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 8 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-03.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 9 },
+  { type: 'default', imgSrc: `${IMG_BASE}/temp-sample-product-01.jpg`, showHoverActions: true, showRankBadge: true, rankCount: 10 }
+];
+%>
+
+<div class="vits-home-category-best">
+  <div class="vits-promo-products-tab" data-vits-tab="category-best-tab">
+    <ul class="promo-products-tab-nav" data-tab-nav role="tablist" aria-label="카테고리 Best 카테고리">
+      <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+      <li>
+        <button
+          type="button"
+          id="tab-<%= tabId %>-<%= item.id %>"
+          class="tab-btn<%= isActive ? ' is-active' : '' %>"
+          data-tab-id="<%= item.id %>"
+          role="tab"
+          aria-selected="<%= isActive %>"
+          aria-controls="panel-<%= tabId %>-<%= item.id %>"
+          tabindex="<%= isActive ? '0' : '-1' %>"
+        >
+          <span class="tab-btn-text"><%= item.label %></span>
+        </button>
+      </li>
+      <% }) %>
+    </ul>
+
+    <div class="promo-products-tab-content" data-tab-content>
+      <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+      <div
+        class="tab-panel<%= isActive ? ' is-active' : '' %>"
+        data-tab-panel="<%= item.id %>"
+        id="panel-<%= tabId %>-<%= item.id %>"
+        role="tabpanel"
+        aria-labelledby="tab-<%= tabId %>-<%= item.id %>"
+        aria-hidden="<%= !isActive %>"
+      >
+        <!-- 상품 목록 영역 (그리드 레이아웃: 5열, 10개 고정) -->
+        <div class="home-product-best-list">
+          <% tabProducts.forEach(function(product) { %>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/pg-home/home-product-units.ejs`, product) %>
+          <% }); %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</div>

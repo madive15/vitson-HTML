@@ -1,0 +1,72 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<% if (toolbarType === 'checkbox') { %>
+<div class="vm-product-list-toolbar toolbar-checkbox" data-vits-toolbar>
+  <div class="toolbar-item">
+    <div class="toolabr-total-checkbox">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: 'ckbox-total',
+      value: 'all',
+      checkboxType: 'all',
+      text: "전체 선택",
+      size: 'm',
+      qty:'0',
+    }) %>
+    </div>
+    <div class="toolbar-actions">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size: 'xs',
+        variant: 'outline-primary',
+        text: '삭제',
+        disabled: true
+      }) %>
+
+      <% if (listType === 'product') { %>
+        <%- include(`${_src}/views/components/button/button.ejs`, {
+          size: 'xs',
+          variant: 'outline-tertiary',
+          text: '좋아요 담기',
+          disabled: true
+        }) %>
+      <% } else if (listType === 'folder') { %>
+        <%- include(`${_src}/views/components/button/button.ejs`, {
+          size: 'xs',
+          variant: 'outline-tertiary',
+          text: '폴더 추가하기',
+          iconLeft: true,
+          iconName: 'ic-plus',
+          disabled: true
+        }) %>
+      <% } %>
+    </div>
+  </div>
+  <div class="toolbar-item is-hidden">
+    <p class="toolbar-checked-count"><span data-checked-count>0</span>개 선택</p>
+  </div>
+</div>
+<% } else { %>
+<div class="vm-product-list-toolbar">
+  <div class="toolbar-total-count">
+    <p>총<span class="total"><%= totalCount %></span>개</p>
+  </div>
+  <div class="toolbar-select">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+      id: 'frequentSort',
+      name: 'frequentSort',
+      placeholder: '자주 구매순',
+      options: [
+        { value: 'frequent', text: '자주 구매순' },
+        { value: 'recent', text: '최근 구매순' },
+      ],
+      value: 'frequent',
+      disabled: false,
+      className: 'sort-frequent',
+      portal: true,
+    }) %>
+  </div>
+</div>
+<% } %>

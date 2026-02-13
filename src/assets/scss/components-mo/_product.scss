@@ -29,6 +29,181 @@ $mo-product-gap: map.get(var.$unit, 8);
   }
 }
 
+@mixin common-product-info {
+  .product {
+    &-body {
+      width: 100%;
+    }
+
+    &-thumb {
+      @include mx.common-list-thumb;
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'sm');
+
+      &,
+      a {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      }
+    }
+
+    &-meta {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+      gap: $mo-product-gap;
+    }
+
+    &-brand {
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-model {
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'muted'));
+    }
+
+    &-info {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 4);
+    }
+
+    &-summary {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 2);
+    }
+
+    &-name {
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.ellipsis-multi;
+    }
+
+    &-spec {
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-price {
+      @include mx.flex(flex, column, flex-start, flex-start);
+
+      &.is-normal {
+        .price {
+          &-origin-label {
+            @include typo.typography('d4r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          &-sale-row {
+            @include mx.flex(flex, row, flex-start, center, wrap);
+            gap: map.get(var.$unit, 4);
+          }
+
+          &-rate {
+            @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+          }
+
+          &-sale {
+            @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+      }
+
+      &.is-soldout {
+        .product-price-alt {
+          @include typo.typography('b3b', $color: map.get(color.$red-shades, '60'));
+        }
+      }
+
+      &.is-guest {
+        &,
+        .price-guest-action,
+        .price-login-button {
+          width: 100%;
+        }
+
+        .price-guest-text {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 2);
+
+          &-title {
+            @include typo.typography('b5s', $color: map.get(color.$text-status, 'info-sub'));
+          }
+
+          &-desc {
+            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+          }
+        }
+
+        .price-login-button {
+          @include button.btn-reset;
+          @include mx.flex(flex, row, center, center);
+          gap: map.get(var.$unit, 4);
+          height: map.get(var.$unit, 32);
+          padding: 0 $mo-product-gap;
+          border-radius: map.get(var.$radius, 'sm');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+          .icon {
+            @include icon.ic-size(map.get(var.$unit, 16));
+            color: map.get(color.$icon-neutral, 'primary');
+          }
+
+          .text {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+      }
+    }
+
+    &-extra {
+      width: 100%;
+      padding-top: $mo-product-gap;
+    }
+
+    &-cta {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+    }
+  }
+}
+
+@mixin common-action-btn($size, $color) {
+  [class*='action-btn-'] {
+    @include button.btn-reset;
+    position: relative;
+    width: fn.rem($size);
+    height: fn.rem($size);
+
+    &::after {
+      @include mx.position(absolute, 0, 0, 0, 0);
+      width: 100%;
+      height: 100%;
+      color: $color;
+      content: '';
+      background-color: currentcolor;
+      mask: no-repeat center / contain;
+    }
+  }
+
+  .action-btn-like {
+    &::after {
+      mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg');
+    }
+
+    &.active::after {
+      color: map.get(color.$icon-colors, 'primary');
+      mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart-fill.svg');
+    }
+  }
+
+  .action-btn-cart {
+    &::after {
+      mask-image: url('/public/resources/img/mro/renewal/ic/ic-bag.svg');
+    }
+  }
+
+  .action-btn-compare {
+    &::after {
+      mask-image: url('/public/resources/img/mro/renewal/ic/ic-compare.svg');
+    }
+  }
+}
+
 .vm-product {
   &-list {
     padding-top: var.$mo-section-gap;
@@ -154,142 +329,12 @@ $mo-product-gap: map.get(var.$unit, 8);
   }
 
   &-card {
+    @include common-product-info;
     position: relative;
     gap: $mo-product-gap;
 
     a {
       display: block;
-    }
-
-    .product {
-      &-body {
-        width: 100%;
-      }
-
-      &-thumb {
-        @include mx.common-list-thumb;
-        flex-shrink: 0;
-        overflow: hidden;
-        border-radius: map.get(var.$radius, 'sm');
-
-        &,
-        a {
-          width: 100%;
-          aspect-ratio: 1 / 1;
-        }
-      }
-
-      &-meta {
-        @include mx.flex(flex, row, flex-start, center, wrap);
-        gap: $mo-product-gap;
-      }
-
-      &-brand {
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
-      }
-
-      &-model {
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'muted'));
-      }
-
-      &-info {
-        @include mx.flex(flex, column, flex-start, flex-start);
-        gap: map.get(var.$unit, 4);
-      }
-
-      &-summary {
-        @include mx.flex(flex, column, flex-start, flex-start);
-        gap: map.get(var.$unit, 2);
-      }
-
-      &-name {
-        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
-        @include mx.ellipsis-multi;
-      }
-
-      &-spec {
-        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
-      }
-
-      &-price {
-        @include mx.flex(flex, column, flex-start, flex-start);
-
-        &.is-normal {
-          .price {
-            &-origin-label {
-              @include typo.typography('d4r', $color: map.get(color.$text-colors, 'tertiary'));
-            }
-
-            &-sale-row {
-              @include mx.flex(flex, row, flex-start, center, wrap);
-              gap: map.get(var.$unit, 4);
-            }
-
-            &-rate {
-              @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
-            }
-
-            &-sale {
-              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
-            }
-          }
-        }
-
-        &.is-soldout {
-          .product-price-alt {
-            @include typo.typography('b3b', $color: map.get(color.$red-shades, '60'));
-          }
-        }
-
-        &.is-guest {
-          &,
-          .price-guest-action,
-          .price-login-button {
-            width: 100%;
-          }
-
-          .price-guest-text {
-            @include mx.flex(flex, column, flex-start, flex-start);
-            gap: map.get(var.$unit, 2);
-
-            &-title {
-              @include typo.typography('b5s', $color: map.get(color.$text-status, 'info-sub'));
-            }
-
-            &-desc {
-              @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
-            }
-          }
-
-          .price-login-button {
-            @include button.btn-reset;
-            @include mx.flex(flex, row, center, center);
-            gap: map.get(var.$unit, 4);
-            height: map.get(var.$unit, 32);
-            padding: 0 $mo-product-gap;
-            border-radius: map.get(var.$radius, 'sm');
-            box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
-
-            .icon {
-              @include icon.ic-size(map.get(var.$unit, 16));
-              color: map.get(color.$icon-neutral, 'primary');
-            }
-
-            .text {
-              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-            }
-          }
-        }
-      }
-
-      &-extra {
-        width: 100%;
-        padding-top: $mo-product-gap;
-      }
-
-      &-cta {
-        @include mx.flex(flex, row, flex-start, center, wrap);
-      }
     }
 
     @include view('thumb') {
@@ -306,34 +351,9 @@ $mo-product-gap: map.get(var.$unit, 8);
         }
 
         &-actions {
+          @include common-action-btn(20, map.get(color.$icon-neutral, 'tertiary'));
           @include mx.flex(flex, row, flex-start, center, wrap);
           gap: $mo-product-gap;
-
-          [class*='action-btn-'] {
-            @include button.btn-reset;
-            width: map.get(var.$unit, 20);
-            height: map.get(var.$unit, 20);
-            color: map.get(color.$icon-neutral, 'tertiary');
-            background-color: currentcolor;
-            mask: no-repeat center / contain;
-          }
-
-          .action-btn-like {
-            mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg');
-
-            &.active {
-              color: map.get(color.$icon-colors, 'primary');
-              mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart-fill.svg');
-            }
-          }
-
-          .action-btn-cart {
-            mask-image: url('/public/resources/img/mro/renewal/ic/ic-bag.svg');
-          }
-
-          .action-btn-compare {
-            mask-image: url('/public/resources/img/mro/renewal/ic/ic-compare.svg');
-          }
         }
       }
     }
@@ -638,4 +658,186 @@ $mo-product-gap: map.get(var.$unit, 8);
       align-items: center;
     }
   }
+}
+
+// 자주구매 상품 카드
+.vm-product-frequent-card {
+  @include common-product-info;
+  background: color.$color-white;
+
+  .frequent-card {
+    &-item {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-layout {
+      &-left {
+        flex: 0 0 fn.rem(92);
+      }
+
+      &-center {
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      &-right {
+        flex: 0 0 fn.rem(64);
+        align-self: center;
+      }
+    }
+
+    &-overview {
+      &,
+      .product-frequent {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 4);
+        width: 100%;
+      }
+
+      .product-frequent {
+        text-align: center;
+
+        .text-count {
+          @include mx.flex(flex, row, center, center);
+          @include typo.typography('b5s', $color: map.get(color.$text-status, 'info'));
+          height: map.get(var.$unit, 20);
+          background: map.get(color.$layout-status, 'info-bg-sub');
+          border-radius: map.get(var.$radius, 4);
+        }
+
+        .text-date {
+          @include typo.typography('b5r', $color: map.get(color.$text-status, 'info-sub'));
+        }
+      }
+    }
+
+    &-info {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 4);
+      padding-top: map.get(var.$unit, 4);
+    }
+  }
+
+  .product {
+    &-price,
+    &-extra {
+      padding-top: map.get(var.$unit, 4);
+    }
+
+    &-extra {
+      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      gap: map.get(var.$unit, 2);
+
+      &.is-normal {
+        flex-direction: column;
+        gap: map.get(var.$unit, 1);
+      }
+    }
+
+    &-actions {
+      @include common-action-btn(28, map.get(color.$icon-neutral, 'secondary'));
+      @include mx.flex(flex, row, flex-end, center);
+      gap: map.get(var.$unit, 8);
+
+      [class*='action-btn-'] {
+        position: relative;
+        border-radius: map.get(var.$radius, 'sm');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quinary');
+
+        &::after {
+          width: calc(100% - (map.get(var.$unit, 4) * 2));
+          height: calc(100% - (map.get(var.$unit, 4) * 2));
+          margin: auto;
+        }
+      }
+    }
+  }
+}
+
+// 리스트 툴바
+.vm-product-list-toolbar {
+  @include mx.position(sticky);
+  z-index: var.$zindex-base;
+  background: color.$color-white;
+  box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+
+  .toolbar {
+    &-item {
+      @include mx.flex(flex, row, space-between, center);
+      padding: map.get(var.$unit, 12) var.$mo-gutter;
+    }
+
+    &-total-count {
+      p {
+        @include mx.flex(flex, row, flex-start, center);
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+
+        .total {
+          margin-left: map.get(var.$unit, 4);
+          font-weight: 700;
+        }
+      }
+    }
+
+    &-actions {
+      @include mx.flex(flex, row, flex-end, center);
+      gap: map.get(var.$unit, 12);
+    }
+  }
+
+  &:not(.toolbar-checkbox) {
+    @include mx.flex(flex, row, space-between, center);
+    padding: map.get(var.$unit, 12) var.$mo-gutter;
+  }
+
+  &.toolbar-checkbox {
+    @include mx.flex(flex, column);
+
+    .toolbar-checked-count {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      width: 100%;
+      text-align: center;
+
+      span {
+        font-weight: 700;
+        color: map.get(color.$text-status, 'brand');
+      }
+    }
+  }
+}
+
+// 리스트
+.vm-product-list-default {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+  padding: var.$mo-section-gap 0;
+  background: color.$color-white;
+
+  > li {
+    width: 100%;
+    padding: 0 var.$mo-gutter;
+
+    &:has(.vits-checkbox-item) {
+      @include mx.flex(flex, row);
+      gap: map.get(var.$unit, 8);
+
+      .vits-checkbox-item {
+        flex-shrink: 0;
+      }
+
+      .vm-product-frequent-card {
+        flex-grow: 1;
+        min-width: 0;
+      }
+    }
+  }
+}
+
+// 폴더 리스트
+.vm-product-list-folder {
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 12);
+  padding: map.get(var.$unit, 20) var.$mo-gutter;
+  box-shadow: map.get(var.$box-shadow, 'elevation_-1');
 }

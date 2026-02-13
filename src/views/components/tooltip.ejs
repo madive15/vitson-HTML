@@ -16,7 +16,9 @@
   data-tooltip="<%= tooltipData.position %>" 
   <% if (tooltipData.anchor) { %> data-anchor="true"<% } %>>
   <button type="button" class="vits-tooltip-trigger" aria-label="광고 안내">
-    <span class="text"><%= tooltipData.triggerText %></span>
+    <% if (tooltipData.triggerText) { %>
+      <span class="text"><%= tooltipData.triggerText %></span>
+    <% } %>
     <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'tip-info' }) %> </span>
   </button>
   <div class="vits-tooltip-content" role="tooltip" aria-hidden="true">
@@ -28,7 +30,7 @@
     </div>
     <ul class="vits-tooltip-list">
       <% tooltipData.items.forEach(function(item) { %>
-      <li class="vits-tooltip-item"><%- item %></li>
+      <li class="vits-tooltip-item"><%- item.replace(/\n/g, '<br>') %></li>
       <% }); %>
     </ul>
 

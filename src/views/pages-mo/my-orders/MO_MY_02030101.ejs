@@ -1,0 +1,91 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 퍼블 확인용 mock 데이터
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _all = mockData.products.slice();
+
+  // 자주구매 상품 목록 (기존 mock 데이터 + 자주구매 전용 필드)
+  const _frequentProducts = _all.slice(0, 10).map((item, i) => ({
+    ...item,
+    purchaseCount: [22, 15, 12, 10, 8, 7, 5, 4, 3, 3][i],
+    lastPurchaseDate: ['26-02-01', '26-01-28', '25-12-23', '25-12-10', '26-01-15', '26-02-05', '25-10-20', '26-01-03', '25-11-08', '25-09-15'][i],
+    soldout: i === 5 || i === 8,
+  }));
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, { meta_title: '자주구매' }) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-mypage">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, {
+            type: 'nav-bar',
+            title: '자주구매',
+            titleTooltip: {
+              triggerText: '',
+              heading: '자주 구매 안내',
+              items: [
+                '최근 12개월간 2회 이상 주문하신 상품에 대한 \n목록입니다.',
+                '각 상품은 현재 판매되고 있는 가격입니다.'
+              ]
+            },
+            actions: [
+              { iconName: 'bell', href: '#!', label: '알림', active: true },
+              { iconName: 'bag', href: '#!', label: '장바구니' },
+            ]
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <!-- S: list toolbar -->
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components-mo/product/product-list-toolbar.ejs`, { 
+                toolbarType: 'base',
+                totalCount: _frequentProducts.length
+               }) %>
+              <!-- E: list toolbar -->
+
+              <!-- S: list -->
+              <ul class="vm-product-list-default">
+                <% _frequentProducts.forEach((item) => { %>
+                <li>
+                  <%- include(`${_src}/views/components-mo/product/product-frequent-item.ejs`, { product: item,
+                  showFrequent: true }) %>
+                </li>
+                <% }); %>
+              </ul>
+              <!-- E: list -->
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, {
+          type: 'tab-bar', currentTab: 'mypage'
+        }) %>
+        <!-- E: vm-bottom-group -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>
