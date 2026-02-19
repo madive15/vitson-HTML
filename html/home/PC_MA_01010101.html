@@ -60075,25 +60075,6 @@
     </a>
 
     
-    <!-- [D] 상품호버시 노출 영역 (좋아요, 장바구니)-->
-    <div class="product-actions-hover">
-      <div class="product-actions">
-        <button type="button" class="product-action-like" aria-label="좋아요">
-          <span class="icon">
-            <i class="ic"></i>
-          </span>
-          <span class="text">좋아요</span>
-        </button>
-
-        <button type="button" class="product-action-cart" aria-label="장바구니">
-          <span class="icon">
-            <i class="ic"></i>
-          </span>
-          <span class="text">장바구니</span>
-        </button>
-      </div>
-    </div>
-    
 
     <!-- 순위 배지 (이미지 위에 표시) -->
     
@@ -60113,32 +60094,23 @@
 
     <div class="product-price">
       
-      <!-- 가격 노출 (회원 & 판매중) : default, cart 등 -->
-      <div class="vits-price-box is-normal">
-        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
-        <div class="price-sale-row">
-          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
-          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+      <!-- 비회원 가격 (로그인 유도) -->
+      <div class="is-guest product-price-alt">
+        <div class="price-guest-text">
+          <p class="price-guest-text-title">회원 전용 혜택가</p>
+          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+        </div>
+        <div class="price-guest-action">
+          <button class="price-login-button">
+            <span class="icon"> <i class="ic ic-lock-close" aria-hidden="true"></i>
+ </span>
+            <span class="text">로그인하고 가격 확인</span>
+          </button>
         </div>
       </div>
       
     </div>
 
-    
-    <!-- 배지 영역 (회원만) -->
-    <div class="product-extra">
-      <div class="vits-product-flags">
-        <span class="vits-product-flag is-today">
-          <span class="icon"><i class="ic ic-lightning" aria-hidden="true"></i></span>
-          오늘출발
-        </span>
-        <span class="vits-product-flag is-tomorrow">내일출발</span>
-        <span class="vits-product-flag is-hot">특가</span>
-      </div>
-      <div class="vits-product-promo">
-        <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-      </div>
-    </div>
      
     <!-- 빈번 구매 배지 -->
     
@@ -60157,25 +60129,6 @@
     </a>
 
     
-    <!-- [D] 상품호버시 노출 영역 (좋아요, 장바구니)-->
-    <div class="product-actions-hover">
-      <div class="product-actions">
-        <button type="button" class="product-action-like" aria-label="좋아요">
-          <span class="icon">
-            <i class="ic"></i>
-          </span>
-          <span class="text">좋아요</span>
-        </button>
-
-        <button type="button" class="product-action-cart" aria-label="장바구니">
-          <span class="icon">
-            <i class="ic"></i>
-          </span>
-          <span class="text">장바구니</span>
-        </button>
-      </div>
-    </div>
-    
 
     <!-- 순위 배지 (이미지 위에 표시) -->
     
@@ -60195,32 +60148,23 @@
 
     <div class="product-price">
       
-      <!-- 가격 노출 (회원 & 판매중) : default, cart 등 -->
-      <div class="vits-price-box is-normal">
-        <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
-        <div class="price-sale-row">
-          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
-          <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
+      <!-- 비회원 가격 (로그인 유도) -->
+      <div class="is-guest product-price-alt">
+        <div class="price-guest-text">
+          <p class="price-guest-text-title">회원 전용 혜택가</p>
+          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+        </div>
+        <div class="price-guest-action">
+          <button class="price-login-button">
+            <span class="icon"> <i class="ic ic-lock-close" aria-hidden="true"></i>
+ </span>
+            <span class="text">로그인하고 가격 확인</span>
+          </button>
         </div>
       </div>
       
     </div>
 
-    
-    <!-- 배지 영역 (회원만) -->
-    <div class="product-extra">
-      <div class="vits-product-flags">
-        <span class="vits-product-flag is-today">
-          <span class="icon"><i class="ic ic-lightning" aria-hidden="true"></i></span>
-          오늘출발
-        </span>
-        <span class="vits-product-flag is-tomorrow">내일출발</span>
-        <span class="vits-product-flag is-hot">특가</span>
-      </div>
-      <div class="vits-product-promo">
-        <span class="vits-product-promo-badge is-free-ship">무료배송</span>
-      </div>
-    </div>
      
     <!-- 빈번 구매 배지 -->
     
@@ -73593,5 +73537,14 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+    <!-- 퍼블 확인용 임시 코드 - 좋아요 , 장바구니 버튼클릭 시 active 클라스 추가 -->
+    <script>
+      (function () {
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('[class*="product-action-"]');
+          if (btn) btn.classList.toggle('active');
+        });
+      })();
+    </script>
   </body>
 </html>
