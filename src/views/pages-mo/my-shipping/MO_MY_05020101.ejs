@@ -40,7 +40,7 @@ const addressList = [
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '배송지 목록'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '배송지관리'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -62,24 +62,7 @@ const addressList = [
             <div class="vm-main-content main-content-cart-order">
               <section class="vits-address-select">
                 <h2 class="sr-only">배송지 목록</h2>
-                <div class="vits-address-select-header">
-                  <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/components/button/button.ejs`, { 
-                    size: 'xl', 
-                    variant: 'outline-primary', 
-                    text: '신규 배송지 입력', 
-                    iconLeft: true, 
-                    iconName: 'ic-plus' 
-                  }) %>
-                </div>
-                <div class="vits-address-select-body">
-                  <ul class="address-list">
-                    <!-- prettier-ignore -->
-                    <% addressList.forEach((item) => { %>
-                      <%- include(`${_src}/views/components-mo/mypage/address-item.ejs`, item) %>
-                    <% }); %>
-                  </ul>
-                </div>
+                11
               </section>
             </div>
           </main>
