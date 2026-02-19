@@ -1,42 +1,5 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
-<%
-// 배송지 목록 데이터
-const addressList = [
-  {
-    name: '회사',
-    isDefault: true,
-    recipient: '메가존',
-    phone: '010-1234-5678',
-    address: '(02345)서울특별시 강남구 테헤란로 123 비츠빌딩 10층',
-    cargoAddress: '경동화물 서울강남대치913',
-  },
-  {
-    name: '배송지명',
-    isDefault: false,
-    recipient: '받는 사람',
-    phone: '010-1234-5678',
-    address: '(02345)서울특별시 강남구 테헤란로 123 비츠빌딩 10층',
-    cargoAddress: '화물소주소',
-  },
-  {
-    name: '영업소',
-    isDefault: false,
-    recipient: '김비츠',
-    phone: '010-1234-5678',
-    address: '(13840) 경기 과천시 과천대로7길 74 3층',
-    cargoAddress: '경동화물 서울강남대치913',
-  },
-  {
-    name: '영업소',
-    isDefault: false,
-    recipient: '김비츠',
-    phone: '010-1234-5678',
-    address: '(13840) 경기 과천시 과천대로7길 74 3층',
-    cargoAddress: '',
-  },
-];
-%>
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
@@ -60,26 +23,8 @@ const addressList = [
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-cart-order">
-              <section class="vits-address-select">
+              <section class="vm-address-select">
                 <h2 class="sr-only">배송지 목록</h2>
-                <div class="vits-address-select-header">
-                  <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/components/button/button.ejs`, { 
-                    size: 'xl', 
-                    variant: 'outline-primary', 
-                    text: '신규 배송지 입력', 
-                    iconLeft: true, 
-                    iconName: 'ic-plus' 
-                  }) %>
-                </div>
-                <div class="vits-address-select-body">
-                  <ul class="address-list">
-                    <!-- prettier-ignore -->
-                    <% addressList.forEach((item) => { %>
-                      <%- include(`${_src}/views/components-mo/mypage/address-item.ejs`, item) %>
-                    <% }); %>
-                  </ul>
-                </div>
               </section>
             </div>
           </main>
