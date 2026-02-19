@@ -1186,6 +1186,136 @@
   }
 }
 
+// 배송지 목록
+// 배송지 목록
+.vm-address-select {
+  @include mx.flex(flex, column);
+  position: relative;
+  gap: map.get(var.$unit, 20);
+  padding: map.get(var.$unit, 32) var.$mo-gutter map.get(var.$unit, 52);
+
+  &-header {
+    flex-shrink: 0;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    [class*='vits-btn-'] {
+      width: 100%;
+    }
+  }
+
+  &-body {
+    flex: 1;
+    min-height: 0;
+
+    .address {
+      &-list {
+        @include mx.flex(flex, column);
+        gap: fn.rem(10);
+      }
+
+      &-card {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 12);
+        padding: map.get(var.$unit, 20) var.$mo-gutter;
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        > div[class*='address-card-'] {
+          width: 100%;
+        }
+
+        &-header {
+          @include mx.flex(flex, row, space-between, center);
+          gap: map.get(var.$unit, 16);
+        }
+
+        &-title {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 4);
+        }
+
+        &-name {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-buttons {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 8);
+        }
+
+        &-info {
+          @include mx.flex(flex, row, flex-start, flex-start, wrap);
+          position: relative;
+          gap: map.get(var.$unit, 4) 0;
+          padding: 0;
+          margin: 0;
+
+          .info-dt {
+            @include mx.sr-only;
+          }
+
+          .info-dd {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            flex: 1 1 auto;
+            width: 100%;
+            min-width: 0;
+
+            // 받는 사람
+            &.info-recipient {
+              font-weight: 600;
+            }
+
+            // 화물
+            &.info-cargo {
+              padding-top: map.get(var.$unit, 4);
+              font-weight: 600;
+            }
+          }
+        }
+
+        &-footer {
+          .address-card-radio {
+            @include mx.flex(flex, row, center, center);
+            position: relative;
+            gap: map.get(var.$unit, 8);
+            width: 100%;
+            height: map.get(var.$unit, 36);
+            cursor: pointer;
+            background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-disable');
+            border-radius: map.get(var.$radius, 'md');
+
+            input {
+              @include mx.sr-only;
+            }
+
+            .icon {
+              @include icon.ic-size(map.get(var.$unit, 20));
+              color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable');
+            }
+
+            .text {
+              @include typo.typography(
+                'b2s',
+                $color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable')
+              );
+            }
+
+            &:has(input:checked) {
+              background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+
+              .icon,
+              .text {
+                color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 /* ================================================
 ======================= 팝업 =======================
 ================================================ */
