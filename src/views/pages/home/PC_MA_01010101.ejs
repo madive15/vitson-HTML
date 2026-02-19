@@ -43,8 +43,8 @@
                 <%- include(`${_src}/views/components/pg-home/home-product-swiper.ejs`, {
                   dataDesktop: 4,
                   products: [
-                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: true},
-                    {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: true},
+                    {type: 'guest', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: false},
+                    {type: 'guest', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: false},
                     {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-03.png`, showHoverActions: true},
                     {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: true},
                     {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: true},
@@ -128,5 +128,14 @@
     <!-- E: vits-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+    <!-- 퍼블 확인용 임시 코드 - 좋아요 , 장바구니 버튼클릭 시 active 클라스 추가 -->
+    <script>
+      (function () {
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('[class*="product-action-"]');
+          if (btn) btn.classList.toggle('active');
+        });
+      })();
+    </script>
   </body>
 </html>

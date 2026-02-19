@@ -139,11 +139,11 @@
 ) {
   @include button.btn-reset;
   @include mx.flex(flex, row, center, center);
+  @include typo.typography('b4s', $color: $color);
   width: fn.rem($width);
   height: fn.rem($height);
+  line-height: normal;
   cursor: pointer;
-
-  @include typo.typography('b4s', $color: $color);
   background-color: $bg-color;
   border: 1px solid $border-color;
   border-radius: 50%;
@@ -1614,10 +1614,34 @@
     .text {
       @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
     }
+
+    // 클릭 active 시 버튼 색상 전환 상태
+    &.active {
+      .icon {
+        color: map.get(color.$icon-neutral, 'inverse');
+        background-color: map.get(color.$brand-colors, 'primary');
+        border-color: map.get(color.$brand-colors, 'primary');
+
+        .ic {
+          color: map.get(color.$icon-neutral, 'inverse');
+        }
+      }
+
+      .text {
+        color: map.get(color.$brand-colors, 'primary');
+      }
+    }
   }
 
-  // 좋아요 버튼 전용 – focus·active 시 하트 아이콘 전환 (상품 유닛과 다름)
+  // 좋아요 버튼 전용 – focus·active 시 하트 아이콘 전환 (목록 상품 유닛과 다름)
+  .product-actions-hover .product-action-like.active .icon {
+    color: map.get(color.$icon-neutral, 'inverse') !important;
+  }
+  // stylelint-disable-next-line no-descending-specificity
   .product-actions-hover .product-action-like .icon .ic {
+    color: inherit !important;
+    mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg') !important;
+
     &:active {
       mask-image: url('/public/resources/img/mro/renewal/ic/ic-heart.svg') !important;
     }
