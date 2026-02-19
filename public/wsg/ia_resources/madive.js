@@ -62,6 +62,12 @@ var ia = {
         );
         $('.ia-total-legend .c-done-new .value').text($('.ia-tbl-wrap').find('.row-done-new').length);
         $('.ia-total-legend .c-done-update .value').text($('.ia-tbl-wrap').find('.row-done-update').length);
+        $('.ia-total-legend .c-del .value').text($('.ia-tbl-wrap').find('tr.row-del').length);
+
+        var totalAll = $('.ia-tbl-wrap').find('tbody > tr').length;
+        var doneAll = $('.ia-tbl-wrap').find('tr.row-done, tr.row-done-new, tr.row-done-update').length;
+        var delAll = $('.ia-tbl-wrap').find('tr.row-del').length;
+        $('.ia-total-legend .c-remain .value').text(totalAll - doneAll - delAll);
 
         applyPopupLabelText(); // 팝업 유형 텍스트 주입
 
@@ -113,7 +119,7 @@ var ia = {
 
     //계산
     var cal_total = $(obj).find('.ia-tbl-wrap tbody > tr').length; //총페이지갯수
-    var cal_complete = $(obj).find('.row-done , .row-done-update, .row-done-new, .row-del').length; //완료페이지
+    var cal_complete = $(obj).find('tr.row-done, tr.row-done-update, tr.row-done-new, tr.row-del').length; //완료페이지
     var cal_process = Math.round((cal_complete / cal_total) * 100);
 
     var new_len = $(obj).find('.row-done-new').length;
@@ -199,14 +205,17 @@ function numReturnToZero(a) {
 function findLastUpdateDate(obj) {
   var maxdd = 0;
   var lastdate = 0;
-  $('td.col-date').each(function (n) {
-    var completedd = $(this).text().split('-').join('').trim();
-    completedd = completedd.replace(/ /gi, '');
-    lastdate = completedd.indexOf('/') == -1 ? Number(completedd) : Number(completedd.toString().split('/')[1]);
-    lastdate = lastdate.toString().length > 6 ? Number(lastdate.toString().substring(6, 6)) : lastdate; //20200313 case add
-    maxdd = Math.max(lastdate, maxdd);
-    //console.log ("---------------", lastdate, completedd, maxdd);
-  });
+  $(obj)
+    .find('td.col-date')
+    .each(function (n) {
+      // obj 스코프로 제한
+      var completedd = $(this).text().split('-').join('').trim();
+      completedd = completedd.replace(/ /gi, '');
+      lastdate = completedd.indexOf('/') == -1 ? Number(completedd) : Number(completedd.toString().split('/')[1]);
+      lastdate = lastdate.toString().length > 6 ? Number(lastdate.toString().substring(6, 6)) : lastdate; //20200313 case add
+      maxdd = Math.max(lastdate, maxdd);
+      //console.log ("---------------", lastdate, completedd, maxdd);
+    });
   //console.log ( "--------------------recent----",  maxdd );
   return maxdd;
 }
