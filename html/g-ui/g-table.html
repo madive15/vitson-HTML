@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용
+  -->
+<html lang="ko" class="vits-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
+  />
+  <title>가이드 - 테이블</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
+  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+
+  <!-- [D] vits-scope 적용(상단 주석 참고) || 가이드 페이지 식별: data-guide="true" -->
+  <body class="vits-scope" data-guide="true">
+    <main>
+      <!-- S: vits-guide-wrapper -->
+      <section class="vits-guide-wrapper" aria-labelledby="guide-table-title">
+        <h2 class="vits-guide-title" id="guide-table-title">테이블</h2>
+
+        <h3 class="vits-guide-subtitle">기본 구조</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;div class="general-table-wrap"&gt;
+  &lt;table class="general-table" summary="..."&gt;
+    &lt;!-- thead-row.ejs: caption + colgroup + thead 한 줄 --&gt;
+    &lt;%- include('.../table/thead-row.ejs', { caption, columns }) %&gt;
+    &lt;tbody&gt;
+      &lt;!-- tbody-row.ejs: type별 한 줄씩 반복 --&gt;
+      &lt;%- include('.../table/tbody-row.ejs', { srcPath, publicPath, type, ... }) %&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <h3 class="vits-guide-subtitle">thead-row.ejs 사용법</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+@param {string} caption - 테이블 캡션(sr-only)
+@param {Array} columns  - [{ width, label, thClass?, spanClass?, spans? }]
+  - width: col 너비(숫자 또는 문자열)
+  - label: th 텍스트(spans 없을 때)
+  - thClass, spanClass: 선택
+  - spans: [{ text, className }] 있으면 label 대신 사용
+
+&lt;%- include(`${_src}/views/components/table/thead-row.ejs`, {
+  caption: '계정 목록',
+  columns: [
+    { width: 50, label: '' },
+    { width: 80, label: '순번' },
+    { width: 110, label: '아이디' },
+    { width: 110, label: '이름' },
+    { width: 100, label: '사용여부' },
+    { width: 100, label: '관리' }
+  ]
+}) %&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <h3 class="vits-guide-subtitle">tbody-row.ejs 사용법</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+@param {string} type      - 'account'|'shipping'|'survey'|'survey-ing'|'bulk'|'single'|'quality'|'docs'|'noticeFixed'|'consent'
+@param {string} [srcPath] - include 경로용(하위 컴포넌트 참조 시 필요)
+@param {string} [publicPath]
+type별 필드: tbody-row.ejs 상단 JSDoc 참고
+  - account: rowIndex, userId, name, department, position, phone, status
+  - shipping: isDefault, addrName, recipient, contact, address, cargo, office
+  - single: rowIndex, inquiryType, detailTypeValue, title, status, date
+  - docs: cells[], rowClass
+  - 기타 type은 tbody-row.ejs 주석 참고
+
+&lt;%- include(`${_src}/views/components/table/tbody-row.ejs`, {
+  srcPath: _src,
+  publicPath: _public,
+  type: 'account',
+  rowIndex: 1,
+  userId: 'test123',
+  name: '홍길동',
+  department: '총무팀',
+  position: '사원',
+  phone: '010-1234-5678',
+  status: '사용'
+}) %&gt;
+</pre
+            >
+          </code>
+        </div>
+
+        <h3 class="vits-guide-subtitle">전체 사용 예시</h3>
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+&lt;div class="general-table-wrap"&gt;
+  &lt;table class="general-table" summary="계정 목록"&gt;
+    &lt;%- include(`${_src}/views/components/table/thead-row.ejs`, {
+      caption: '계정 목록',
+      columns: [
+        { width: 50, label: '' },
+        { width: 80, label: '순번' },
+        { width: 110, label: '아이디' },
+        { width: 110, label: '이름' },
+        { width: 80, label: '담당업무' },
+        { width: 80, label: '직급' },
+        { width: 140, label: '휴대폰' },
+        { width: 100, label: '사용여부' },
+        { width: 100, label: '관리' }
+      ]
+    }) %&gt;
+    &lt;tbody&gt;
+      &lt;%- include(`${_src}/views/components/table/tbody-row.ejs`, { srcPath: _src, publicPath: _public, type: 'account', rowIndex: 1, userId: 'test123', name: '홍길동', ... }) %&gt;
+      &lt;!-- 행 추가 시 tbody-row.ejs 반복 --&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+</pre
+            >
+          </code>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list full">
+            <li>
+              <h4 class="vits-guide-subtitle">계정 목록 예시</h4>
+              <div class="general-table-wrap">
+                <table class="general-table" summary="계정 목록">
+                  <!-- prettier-ignore -->
+
+<caption class="sr-only">
+  계정 목록
+</caption>
+<colgroup>
+  
+  <col width="50" />
+  
+  <col width="80" />
+  
+  <col width="110" />
+  
+  <col width="110" />
+  
+  <col width="80" />
+  
+  <col width="80" />
+  
+  <col width="140" />
+  
+  <col width="100" />
+  
+  <col width="100" />
+  
+</colgroup>
+<thead>
+  <tr>
+    
+    
+    <th scope="col">
+      
+        
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        순번
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        아이디
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        이름
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        담당업무
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        직급
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        휴대폰
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        사용여부
+      
+    </th>
+    
+    
+    <th scope="col">
+      
+        관리
+      
+    </th>
+    
+  </tr>
+</thead>
+
+                  <tbody>
+                    <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="account-table-row">
+  <td>
+    
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckbox01"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+  </td>
+  <td><span class="account-table-num">1</span></td>
+  <td><span class="account-table-id">test123</span></td>
+  <td><span class="account-table-name">홍길동</span></td>
+  <td><span class="account-table-department">총무팀</span></td>
+  <td><span class="account-table-position">사원</span></td>
+  <td><span class="account-table-phone">010-1234-5678</span></td>
+  <td>
+     <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-blue">사용</span>
+
+ 
+  </td>
+  <td>
+    <div class="account-table-actions">
+      
+
+
+<button
+  type="account"
+  class="vits-btn-sm vits-btn-outline-secondary "
+  
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+    </div>
+  </td>
+</tr>
+
+<!-- 배송지 목록 행 -->
+
+
+                    <!-- prettier-ignore -->
+
+
+
+
+<!-- 계정 목록 행 -->
+
+<!-- prettier-ignore -->
+
+<tr class="account-table-row">
+  <td>
+    
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckbox01"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+  </td>
+  <td><span class="account-table-num">2</span></td>
+  <td><span class="account-table-id">user02</span></td>
+  <td><span class="account-table-name">김철수</span></td>
+  <td><span class="account-table-department">영업팀</span></td>
+  <td><span class="account-table-position">대리</span></td>
+  <td><span class="account-table-phone">010-9876-5432</span></td>
+  <td>
+     <!-- prettier-ignore -->
+
+
+
+<span class="vits-general-label is-general-gray">미사용</span>
+
+ 
+  </td>
+  <td>
+    <div class="account-table-actions">
+      
+
+
+<button
+  type="account"
+  class="vits-btn-sm vits-btn-outline-secondary "
+  
+  
+  >
+  
+
+  <span class="text">수정</span>
+
+  
+</button>
+
+    </div>
+  </td>
+</tr>
+
+<!-- 배송지 목록 행 -->
+
+
+                  </tbody>
+                </table>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- E: vits-guide-wrapper -->
+    </main>
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

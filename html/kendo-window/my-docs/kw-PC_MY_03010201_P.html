@@ -3,12 +3,13 @@
 <section class="vits-docs-frame">
   <div class="vits-docs-header">
     <!-- pdf 버튼 -->
-     
+    
 
 
 <button
   type="button"
   class="vits-btn-md vits-btn-tertiary icon-left"
+  
   
   >
   
@@ -23,9 +24,227 @@
 </button>
 
   </div>
-  <div class="vits-docs-body" style="min-height: 800px;">
-    <div class="vits-docs-body-content">
-      전자세금계산서
+  <div class="vits-docs-body">
+    <div class="bill-approval-number">
+      국세청승인번호 :<span class="number-value"></span>
+    </div>
+    <div class="vits-docs-body-content bill-invoice">
+      <div class="bill-invoice-inner">
+        <!-- 상단 헤더 -->
+        <table class="bill-invoice-header">
+          <colgroup>
+            <col class="bill-header-col-title">
+            <col class="bill-header-col-meta">
+          </colgroup>
+          <tr>
+            <td class="bill-header-title">
+              <span class="bill-title">전자세금계산서</span>
+            </td>
+            <td class="bill-header-meta">
+              <div class="bill-header-wrap">
+                <div class="bill-badge">
+                  <span>공급자</span>
+                  <span>(보관용)</span>
+                </div>
+                <div class="bill-info">
+                  <div class="bill-row">
+                    <span class="bill-label">책번호 :</span>
+                    <span class="bill-value">1권</span>
+                    <span class="bill-value">1호</span>
+                  </div>
+                  <div class="bill-row">
+                    <span class="bill-label">일련번호 :</span>
+                    <span class="bill-value"></span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+    
+        <!-- 공급자 / 공급받는자 -->
+        <table class="bill-invoice-parties">
+          <colgroup>
+            <col class="bill-party-col">
+            <col class="bill-label-col">
+            <col class="bill-value-col">
+            <col class="bill-label-col">
+            <col class="bill-value-col">
+            <col class="bill-party-col">
+            <col class="bill-label-col">
+            <col class="bill-value-col">
+            <col class="bill-label-col">
+            <col class="bill-value-col">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td class="bill-party-label" rowspan="5">공급자</td>
+              <td class="bill-label">등록번호</td>
+              <td class="bill-value">123-45-67890</td>
+              <td class="bill-label">종사업장</td>
+              <td class="bill-value"></td>
+              <td class="bill-party-label" rowspan="5">공급받는자</td>
+              <td class="bill-label">등록번호</td>
+              <td class="bill-value"></td>
+              <td class="bill-label">종사업장</td>
+              <td class="bill-value"></td>
+            </tr>
+            <tr>
+              <td class="bill-label">상호</td>
+              <td class="bill-value">(주)일신비츠온</td>
+              <td class="bill-label">성명</td>
+              <td class="bill-value"></td>
+              <td class="bill-label">상호</td>
+              <td class="bill-value"></td>
+              <td class="bill-label">성명</td>
+              <td class="bill-value"></td>
+            </tr>
+            <tr>
+              <td class="bill-label">주소</td>
+              <td class="bill-value" colspan="3">서울특별시 강남구 테헤란로 123</td>
+              <td class="bill-label">주소</td>
+              <td class="bill-value" colspan="3"></td>
+            </tr>
+            <tr>
+              <td class="bill-label">업태</td>
+              <td class="bill-value">도매, 도소매</td>
+              <td class="bill-label">종목</td>
+              <td class="bill-value">LED, 전선, 전기자재 외</td>
+              <td class="bill-label">업태</td>
+              <td class="bill-value">제조업 건설업 도소매</td>
+              <td class="bill-label">종목</td>
+              <td class="bill-value"></td>
+            </tr>
+            <tr>
+              <td class="bill-label">이메일</td>
+              <td class="bill-value" colspan="3">ac@vitson.co.kr</td>
+              <td class="bill-label">이메일</td>
+              <td class="bill-value" colspan="3"></td>
+            </tr>
+          </tbody>
+        </table>
+    
+        <!-- 작성일자 / 금액 / 비고 -->
+        <table class="bill-invoice-summary">
+          <colgroup>
+            <col class="bill-summary-col-date">
+            <col class="bill-summary-col-amount">
+            <col class="bill-summary-col-amount">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td class="bill-summary-label">작성일자</td>
+              <td class="bill-summary-label">공급가액</td>
+              <td class="bill-summary-label">세액</td>
+            </tr>
+            <tr>
+              <td class="bill-summary-value">2025.12.25</td>
+              <td class="bill-summary-value bill-num">22,222,222</td>
+              <td class="bill-summary-value bill-num">22,222,222</td>
+            </tr>
+            <tr>
+              <td class="bill-summary-label">비고1</td>
+              <td class="bill-summary-text" colspan="2">
+                거래원장이 9월부터 엑셀 파일로 첨부되지 않으며, 
+                <b>VITSONMRO.CO.KR &gt; 마이페이지</b> 에서 다운로드 및 출력이 가능합니다.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    
+        <!-- 품목 -->
+        <table class="bill-invoice-items">
+          <colgroup>
+            <col class="bill-item-col-m">
+            <col class="bill-item-col-m">
+            <col class="bill-item-col-name">
+            <col class="bill-item-col-s">
+            <col class="bill-item-col-s">
+            <col class="bill-item-col-num">
+            <col class="bill-item-col-num">
+            <col class="bill-item-col-num">
+            <col class="bill-item-col-s">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>월</th>
+              <th>일</th>
+              <th>품목</th>
+              <th>규격</th>
+              <th>수량</th>
+              <th>단가</th>
+              <th>공급가액</th>
+              <th>세액</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bill-invoice-cell-c">12</td>
+              <td class="bill-invoice-cell-c">29</td>
+              <td class="bill-invoice-cell-l">화물비(매출용)出</td>
+              <td class="bill-invoice-cell-c">EA</td>
+              <td class="bill-invoice-cell-r">2</td>
+              <td class="bill-invoice-cell-r">999,999,999</td>
+              <td class="bill-invoice-cell-r">99,999,999</td>
+              <td class="bill-invoice-cell-r">9,999,999</td>
+              <td class="bill-invoice-cell-c">-</td>
+            </tr>
+            <tr>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-l"></td>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-c"></td>
+            </tr>
+            <tr>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-l"></td>
+              <td class="bill-invoice-cell-c"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-r"></td>
+              <td class="bill-invoice-cell-c"></td>
+            </tr>
+          </tbody>
+        </table>
+    
+        <!-- 하단 합계 -->
+        <table class="bill-invoice-footer">
+          <colgroup>
+            <col class="bill-footer-col">
+            <col class="bill-footer-col">
+            <col class="bill-footer-col">
+            <col class="bill-footer-col">
+            <col class="bill-footer-col">
+            <col class="bill-footer-col">
+          </colgroup>
+          <tbody>
+            <tr>
+              <td class="bill-footer-label">합계금액</td>
+              <td class="bill-footer-label">현금</td>
+              <td class="bill-footer-label">수표</td>
+              <td class="bill-footer-label">어음</td>
+              <td class="bill-footer-label">외상미수금</td>
+              <td class="bill-footer-label">합계</td>
+            </tr>
+            <tr>
+              <td class="bill-footer-value">999,999,999</td>
+              <td class="bill-footer-value">999,999,999</td>
+              <td class="bill-footer-value">-</td>
+              <td class="bill-footer-value">1,999,999,999</td>
+              <td class="bill-footer-value">18,999,999</td>
+              <td class="bill-footer-claim">이 금액을 [청구]함</td>
+            </tr>
+          </tbody>
+        </table>    
+      </div>
     </div>
     <!-- 세금계산서 안내문 -->
     <div class="vits-docs-notice">
@@ -36,4 +255,4 @@
     </div>
   </div>
     
- </section>
+</section>

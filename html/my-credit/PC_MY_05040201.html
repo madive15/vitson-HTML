@@ -60100,6 +60100,7 @@
   type="button"
   class="vits-btn-lg vits-btn-primary "
   
+  
   >
   
 
@@ -60168,6 +60169,7 @@
   type="button"
   class="vits-btn-sm vits-btn-primary-soft  disabled"
   disabled
+  
   >
   
 
@@ -60197,6 +60199,7 @@
 <button
   type="button"
   class="vits-btn-sm vits-btn-primary-soft "
+  
   
   >
   
@@ -60231,6 +60234,7 @@
   type="button"
   class="vits-btn-sm vits-btn-primary-soft "
   
+  
   >
   
 
@@ -60263,6 +60267,7 @@
   type="button"
   class="vits-btn-lg vits-btn-primary  disabled"
   disabled
+  
   >
   
 
@@ -60369,6 +60374,7 @@
 <button
   type="button"
   class="vits-btn-sm vits-btn-primary-soft  btn-fix-w150"
+  
   
   >
   
@@ -60968,5 +60974,33 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <!-- type=signed: step2 노출, 비활성 제외 버튼 → secondary + 문서확인 -->
+    <script>
+      (function () {
+        if (new URLSearchParams(location.search).get('type') !== 'signed') return;
+        var s = document.querySelector('[data-step-scope="orderStep"]');
+        if (!s) return;
+        s.querySelectorAll('.vits-step-tab-item').forEach(function (el) {
+          var n = parseInt(el.getAttribute('data-step-tab'), 10);
+          el.classList.remove('is-active', 'is-done', 'is-disabled');
+          el.classList.add(n < 2 ? 'is-done' : n === 2 ? 'is-active' : 'is-disabled');
+        });
+        s.querySelectorAll('.vits-step-tab-panel').forEach(function (el) {
+          el.classList.toggle('is-active', parseInt(el.getAttribute('data-step-panel'), 10) === 2);
+        });
+        s.querySelectorAll('.credit-sign-item .vits-btn-primary-soft:not([disabled])').forEach(function (btn) {
+          btn.classList.replace('vits-btn-primary-soft', 'vits-btn-secondary');
+          var t = btn.querySelector('.text');
+          if (t) t.textContent = '문서확인';
+        });
+        var submitBtn = s.querySelector('[data-step-panel="2"] .vits-btn-primary.vits-btn-lg');
+        if (submitBtn) {
+          submitBtn.removeAttribute('disabled');
+          var submitT = submitBtn.querySelector('.text');
+          if (submitT) submitT.textContent = '서명 완료';
+        }
+      })();
+    </script>
   </body>
 </html>

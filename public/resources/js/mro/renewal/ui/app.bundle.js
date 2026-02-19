@@ -6654,13 +6654,17 @@
       footer: false,
       month: {
         header: '#= kendo.toString(data.date, "yyyy.MM") #',
-        empty: '&nbsp;' // 2026-02-10 추가 - 이전/다음 달 셀 빈칸 처리
+        empty: '&nbsp;',
+        // 2026-02-10 추가 - 이전/다음 달 셀 빈칸 처리
+        // 2026-02-13 추가 - max 비활성화를 DOM 후처리로 전환하기 위해 단일 템플릿 사용
+        content: '<span tabindex="-1" class="k-link" data-href="\\#" data-value="#= data.dateString #">#= data.value #</span>'
       },
       start: 'month',
       depth: 'month'
     };
     if (opts.min) calendarOpts.min = opts.min;
-    if (opts.max) calendarOpts.max = opts.max;
+    // 2026-02-13 수정 - max는 Kendo에 넘기지 않음, disableMaxDates()에서 DOM 후처리로 비활성화
+
     $calendarWrap.kendoCalendar(calendarOpts);
     var calendar = $calendarWrap.data('kendoCalendar');
     var navTitleScheduled = false;
@@ -6757,6 +6761,25 @@
         }
       });
     }
+
+    // 2026-02-13 추가 - max 이후 날짜 비활성화 (opts.max 설정 시에만 동작)
+    function disableMaxDates() {
+      if (!opts.max) return;
+      var maxTime = new Date(opts.max.getFullYear(), opts.max.getMonth(), opts.max.getDate()).getTime();
+      $calendarWrap.find('.k-calendar-monthview td').each(function () {
+        var $cell = $(this);
+        if ($cell.hasClass('k-other-month')) return;
+        var $link = $cell.find('.k-link');
+        var dateValue = $link.attr('data-value');
+        if (!dateValue) return;
+        var parts = dateValue.split('/');
+        var cellTime = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10)).getTime();
+        if (cellTime > maxTime) {
+          $cell.addClass('k-state-disabled');
+          $link.removeAttr('tabindex').css('pointer-events', 'none');
+        }
+      });
+    }
     var isUpdatingUI = false; // 2026-01-30 추가
 
     // 2026-01-30 var uiObserver 수정
@@ -6769,6 +6792,7 @@
       updateNavTitle();
       updateDayNames();
       updateMonthNames();
+      disableMaxDates(); // 2026-02-13 추가
       highlightRange();
       removeEmptyRows(); // 2026-02-10 추가
 
@@ -6802,6 +6826,16 @@
 
     function onCalendarChange() {
       var selectedDate = calendar.value();
+
+      // 2026-02-13 추가 - max 초과 날짜 선택 방어
+      if (opts.max && selectedDate) {
+        var maxTime = new Date(opts.max.getFullYear(), opts.max.getMonth(), opts.max.getDate()).getTime();
+        var selTime = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()).getTime();
+        if (selTime > maxTime) {
+          calendar.value(state.startDate || null);
+          return;
+        }
+      }
       if (!state.isSelectingEnd) {
         state.startDate = selectedDate;
         state.endDate = null;
@@ -6823,8 +6857,11 @@
       updateSelectedState(); // 2026-02-03 추가
     }
     function onCalendarNavigate() {
+      // 2026-02-13 추가 - calendar 초기화 완료 전 방어
+      if (!calendar) return;
       forceUpdateUI();
       window.setTimeout(function () {
+        disableMaxDates(); // 2026-02-13 추가
         highlightRange();
         updateNavTitle();
         updateDayNames();
@@ -6851,6 +6888,15 @@
       // 2026-01-30 추가 - 시간 제거한 순수 날짜로 비교
       var startTime = new Date(state.startDate.getFullYear(), state.startDate.getMonth(), state.startDate.getDate()).getTime();
       var endTime = state.endDate ? new Date(state.endDate.getFullYear(), state.endDate.getMonth(), state.endDate.getDate()).getTime() : null;
+
+      // 2026-02-13 추가 - yearview에서는 월 단위로 비교 (셀 data-value가 1일 기준)
+      var isYearView = $calendarWrap.find('.k-calendar-yearview').length > 0;
+      if (isYearView) {
+        startTime = new Date(state.startDate.getFullYear(), state.startDate.getMonth(), 1).getTime();
+        if (state.endDate) {
+          endTime = new Date(state.endDate.getFullYear(), state.endDate.getMonth(), 1).getTime();
+        }
+      }
       $cells.each(function () {
         var $cell = $(this);
         var $link = $cell.find('.k-link');
@@ -6885,14 +6931,28 @@
     }
     function openPopup() {
       if ($wrap.hasClass('is-disabled')) return;
+
+      // 2026-02-13 추가 - 선택된 날짜 기준으로 캘린더 이동, 없으면 오늘
+      var targetDate = state.startDate || new Date();
+      calendar.navigate(targetDate, 'month');
       $popup.addClass('is-open');
       state.isOpen = true;
       highlightRange();
+      disableMaxDates(); // 2026-02-13 추가
       removeEmptyRows(); // 2026-02-10 추가
       applyVitsClassToWrapper($wrap, $popup);
       $el.trigger('rangepicker:open');
     }
     function closePopup() {
+      // 2026-02-13 추가 - 미완료 선택 상태 초기화 (시작일만 선택하고 닫은 경우)
+      if (state.isSelectingEnd) {
+        state.startDate = null;
+        state.isSelectingEnd = false;
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+        updateSelectedState(); // 2026-02-03 추가
+      }
       $popup.removeClass('is-open');
       state.isOpen = false;
       $el.trigger('rangepicker:close');
@@ -6997,12 +7057,18 @@
         if (calendar) {
           calendar.destroy();
         }
+
+        // 2026-02-13 추가 - MutationObserver 정리
+        if (uiObserver) {
+          uiObserver.disconnect();
+        }
         $el.removeData('vitsKendoRangePicker');
       }
     };
     $el.data('vitsKendoRangePicker', instance);
     updateDisplay();
     highlightRange();
+    disableMaxDates(); // 2026-02-13 추가
     removeEmptyRows(); // 2026-02-10 추가
     updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
 

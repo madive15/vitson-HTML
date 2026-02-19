@@ -1608,6 +1608,138 @@
 
 /***/ }),
 
+/***/ 3474:
+/***/ (function() {
+
+(function (window) {
+  'use strict';
+
+  var $ = window.jQuery;
+  var DATA_KEY = 'scrollButtons';
+  var TOUCH_SUPPORTED = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var clickEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
+  var Selector = {
+    SCOPE: '[data-scroll-buttons]',
+    BTN: 'button',
+    SKIP: '[data-range-picker-toggle]'
+  };
+  var ClassName = {
+    ACTIVE: 'is-active'
+  };
+  function init(el) {
+    var $scope = $(el);
+    if ($scope.data(DATA_KEY)) return;
+    var peek = parseInt($scope.attr('data-peek') || 40, 10);
+    var $btns = $scope.find(Selector.BTN);
+    var handlers = [];
+    function scrollToBtn($btn) {
+      var wrap = $scope[0];
+      var btn = $btn[0];
+      var btnLeft = btn.offsetLeft;
+      var btnRight = btnLeft + btn.offsetWidth;
+      var wrapLeft = wrap.scrollLeft;
+      var wrapRight = wrapLeft + wrap.offsetWidth;
+      if (btn === $btns.last()[0]) {
+        // 마지막 버튼은 끝까지
+        $scope.animate({
+          scrollLeft: wrap.scrollWidth
+        }, 200);
+      } else if (btn === $btns.first()[0]) {
+        // 첫 번째 버튼은 처음으로
+        $scope.animate({
+          scrollLeft: 0
+        }, 200);
+      } else if (btnLeft < wrapLeft) {
+        // 왼쪽으로 잘린 경우만 이동
+        $scope.animate({
+          scrollLeft: btnLeft - peek
+        }, 200);
+      } else if (btnRight > wrapRight) {
+        // 오른쪽으로 잘린 경우만 이동
+        $scope.animate({
+          scrollLeft: btnRight - wrap.offsetWidth + peek
+        }, 200);
+      }
+    }
+    function setActive($btn) {
+      $btns.removeClass(ClassName.ACTIVE);
+      $btn.addClass(ClassName.ACTIVE);
+      scrollToBtn($btn);
+      $scope.trigger('scrollbuttons:change', [{
+        $btn: $btn
+      }]);
+    }
+    function createHandler(btn) {
+      var isSkip = $(btn).is(Selector.SKIP);
+      var touchStartX = 0;
+      var moved = false;
+      btn.addEventListener('touchstart', function (e) {
+        touchStartX = e.touches[0].clientX;
+        moved = false;
+      }, {
+        passive: true
+      });
+      btn.addEventListener('touchmove', function (e) {
+        if (Math.abs(e.touches[0].clientX - touchStartX) > 5) {
+          moved = true;
+        }
+      }, {
+        passive: true
+      });
+      return function (e) {
+        // 수평 스크롤 중 touchend 무시
+        if (moved) return;
+        if (!isSkip) {
+          e.preventDefault();
+        }
+        setActive($(btn));
+      };
+    }
+
+    // 모든 버튼 바인딩 — datepicker 토글 버튼은 preventDefault 제외
+    $btns.each(function () {
+      var handler = createHandler(this);
+      this.addEventListener(clickEvent, handler, {
+        passive: false
+      });
+      handlers.push({
+        el: this,
+        handler: handler
+      });
+    });
+    var instance = {
+      setActive: setActive,
+      destroy: function () {
+        handlers.forEach(function (item) {
+          item.el.removeEventListener(clickEvent, item.handler);
+        });
+        handlers = [];
+        $scope.removeData(DATA_KEY);
+      }
+    };
+    $scope.data(DATA_KEY, instance);
+  }
+  function initAll(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find(Selector.SCOPE).each(function () {
+      init(this);
+    });
+  }
+  function getInstance(selector) {
+    return $(selector).data(DATA_KEY) || null;
+  }
+  window.scrollButtons = {
+    init: init,
+    initAll: initAll,
+    getInstance: getInstance
+  };
+  $(function () {
+    initAll();
+  });
+})(window);
+
+/***/ }),
+
 /***/ 4305:
 /***/ (function() {
 
@@ -1933,6 +2065,132 @@
 
 /***/ }),
 
+/***/ 5332:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/tab.js
+ * @description data-속성 기반 탭 공통 (모바일)
+ * @scope [data-tab-scope]
+ *
+ * @mapping [data-tab-btn][data-tab-target] ↔ [data-tab-panel="target"]
+ * @state is-active 클래스 + aria-selected 값으로 제어
+ *
+ * @a11y role="tablist", role="tab", role="tabpanel", aria-selected 제어
+ * @note URL 파라미터 딥링크 지원 — ?tab={data-tab-target 값}으로 특정 탭 직접 활성화
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiTab';
+  var SCOPE = '[data-tab-scope]';
+  var BTN = '[data-tab-btn]';
+  var PANEL = '[data-tab-panel]';
+  var ACTIVE = 'is-active';
+  var _bound = false;
+
+  // 탭 전환
+  function activate($scope, target) {
+    // 모든 버튼 비활성
+    $scope.find(BTN).each(function () {
+      var $btn = $(this);
+      $btn.removeClass(ACTIVE);
+      $btn.attr('aria-selected', 'false');
+      $btn.attr('tabindex', '-1');
+    });
+
+    // 모든 패널 비활성
+    $scope.find(PANEL).each(function () {
+      $(this).removeClass(ACTIVE).attr('hidden', '');
+    });
+
+    // 대상 버튼 활성
+    var $activeBtn = $scope.find(BTN + '[data-tab-target="' + target + '"]');
+    $activeBtn.addClass(ACTIVE);
+    $activeBtn.attr('aria-selected', 'true');
+    $activeBtn.attr('tabindex', '0');
+
+    // 대상 패널 활성
+    var $activePanel = $scope.find(PANEL + '[data-tab-panel="' + target + '"]');
+    $activePanel.addClass(ACTIVE).removeAttr('hidden');
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 탭 클릭
+    $(document).on('click' + NS, BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var target = $btn.data('tabTarget');
+      if (!target) return;
+      activate($scope, target);
+    });
+
+    // 키보드 좌우 화살표 이동
+    $(document).on('keydown' + NS, BTN, function (e) {
+      var key = e.keyCode;
+      if (key !== 37 && key !== 39) return;
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var $tabs = $scope.find(BTN);
+      var idx = $tabs.index($btn);
+      var len = $tabs.length;
+
+      // 좌: 이전, 우: 다음 (순환)
+      var nextIdx = key === 37 ? (idx - 1 + len) % len : (idx + 1) % len;
+      var $next = $tabs.eq(nextIdx);
+      $next.focus();
+      $next.trigger('click');
+    });
+  }
+  function init() {
+    bind();
+
+    // URL 파라미터 기반 탭 딥링크 (?tab=tab2)
+    var urlTab = new URLSearchParams(window.location.search).get('tab');
+
+    // 초기 활성 탭 설정 (is-active 있는 버튼 기준)
+    $(SCOPE).each(function () {
+      var $scope = $(this);
+      var $activeBtn;
+
+      // URL 파라미터 우선
+      if (urlTab) {
+        $activeBtn = $scope.find(BTN + '[data-tab-target="' + urlTab + '"]');
+      }
+
+      // URL 매칭 없으면 is-active 기준
+      if (!$activeBtn || !$activeBtn.length) {
+        $activeBtn = $scope.find(BTN + '.' + ACTIVE);
+      }
+
+      // 그것도 없으면 첫 번째 자동 활성
+      if (!$activeBtn.length) {
+        $activeBtn = $scope.find(BTN).first();
+      }
+      var target = $activeBtn.data('tabTarget');
+      if (target) activate($scope, target);
+    });
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.tab = {
+    init: init,
+    destroy: destroy,
+    activate: activate
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 5487:
 /***/ (function() {
 
@@ -2035,6 +2293,12 @@ var overflow_menu = __webpack_require__(4305);
 var toggle = __webpack_require__(8955);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
 var step_flow = __webpack_require__(8486);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
+var expand = __webpack_require__(8839);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
+var tab = __webpack_require__(5332);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
+var scroll_buttons = __webpack_require__(3474);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -2046,12 +2310,15 @@ var step_flow = __webpack_require__(8486);
 
 
 
+
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -3114,6 +3381,7 @@ console.log('[mobile/index] entry 실행');
  * @a11y Escape 키 닫기
  * @events rangepicker:change, rangepicker:open, rangepicker:close, rangepicker:reset
  * @note iOS Safari 스크롤 잠금, touchend 기반 ghost click 차단 포함
+ * @note 외부 트리거 버튼(data-range-picker-toggle) 텍스트 갱신 포함
  */
 (function (window) {
   'use strict';
@@ -3253,6 +3521,9 @@ console.log('[mobile/index] entry 실행');
     var $endInput = $wrap.find(Selector.END_INPUT);
     var elId = $el.attr('id') || '';
     var nsDoc = NS + '_' + elId;
+
+    // 외부 트리거 버튼 셀렉터
+    var extSelector = '[data-range-picker-toggle="' + elId + '"]';
     var state = {
       startDate: null,
       endDate: null,
@@ -3277,13 +3548,15 @@ console.log('[mobile/index] entry 실행');
       footer: false,
       month: {
         header: '#= kendo.toString(data.date, "yyyy.MM") #',
-        empty: '&nbsp;'
+        empty: '&nbsp;',
+        content: '<span tabindex="-1" class="k-link" data-href="\\#" data-value="#= data.dateString #">#= data.value #</span>'
       },
       start: 'month',
       depth: 'month'
     };
     if (opts.min) calendarOpts.min = opts.min;
-    if (opts.max) calendarOpts.max = opts.max;
+    // max는 Kendo에 넘기지 않음 — disableMaxDates()에서 DOM 후처리로 비활성화
+
     $calendarWrap.kendoCalendar(calendarOpts);
     var calendar = $calendarWrap.data('kendoCalendar');
 
@@ -3318,11 +3591,31 @@ console.log('[mobile/index] entry 실행');
         $tr.toggleClass(ClassName.EMPTY_ROW, !hasCurrentMonth);
       });
     }
+
+    // max 이후 날짜 비활성화 — opts.max 설정 시에만 동작
+    function disableMaxDates() {
+      if (!opts.max) return;
+      var maxTime = toDateOnly(opts.max);
+      $calendarWrap.find('.k-calendar-monthview td').each(function () {
+        var $cell = $(this);
+        if ($cell.hasClass('k-other-month')) return;
+        var $link = $cell.find('.k-link');
+        var dateValue = $link.attr('data-value');
+        if (!dateValue) return;
+        var parts = dateValue.split('/');
+        var cellTime = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10)).getTime();
+        if (cellTime > maxTime) {
+          $cell.addClass('k-state-disabled');
+          $link.removeAttr('tabindex').css('pointer-events', 'none');
+        }
+      });
+    }
     function refreshUI() {
       // navigate 이후 전체 UI 갱신 통합 진입점
       updateNavTitle();
       updateDayNames();
       updateMonthNames();
+      disableMaxDates();
       highlightRange();
       removeEmptyRows();
     }
@@ -3356,6 +3649,13 @@ console.log('[mobile/index] entry 실행');
     // 이벤트 핸들러
     function onCalendarChange() {
       var selectedDate = calendar.value();
+
+      // max 초과 날짜 선택 방어 — opts.max 설정 시에만
+      if (opts.max && selectedDate && toDateOnly(selectedDate) > toDateOnly(opts.max)) {
+        var restoreDate = state.startDate || null;
+        calendar.value(restoreDate);
+        return;
+      }
       if (!state.isSelectingEnd) {
         state.startDate = selectedDate;
         state.endDate = null;
@@ -3370,6 +3670,19 @@ console.log('[mobile/index] entry 실행');
         }
         state.isSelectingEnd = false;
         closePopup();
+
+        // 외부 트리거 버튼 텍스트 갱신 + scroll-buttons 연동
+        var $extBtn = $(extSelector);
+        if ($extBtn.length) {
+          $extBtn.find('.text').text(formatDate(state.startDate, opts.format) + opts.separator + formatDate(state.endDate, opts.format));
+          if (window.scrollButtons) {
+            var $scrollScope = $extBtn.closest('[data-scroll-buttons]');
+            if ($scrollScope.length) {
+              var sbInstance = window.scrollButtons.getInstance($scrollScope[0]);
+              if (sbInstance) sbInstance.setActive($extBtn);
+            }
+          }
+        }
         $el.trigger('rangepicker:change', [getPublicValue()]);
       }
       updateDisplay();
@@ -3378,6 +3691,10 @@ console.log('[mobile/index] entry 실행');
       updateSelectedState();
     }
     function onCalendarNavigate() {
+      // calendar 초기화 완료 전 방어
+      if (!calendar) return;
+
+      // 네비게이션은 항상 허용 — refreshUI에서 disableMaxDates가 해당 월 날짜를 비활성화
       window.setTimeout(function () {
         refreshUI();
       }, DELAY.NAVIGATE_UI);
@@ -3393,6 +3710,15 @@ console.log('[mobile/index] entry 실행');
       }
       var startTime = toDateOnly(state.startDate);
       var endTime = state.endDate ? toDateOnly(state.endDate) : null;
+
+      // yearview에서는 월 단위로 비교 (셀 data-value가 1일 기준)
+      var isYearView = $calendarWrap.find('.k-calendar-yearview').length > 0;
+      if (isYearView) {
+        startTime = new Date(state.startDate.getFullYear(), state.startDate.getMonth(), 1).getTime();
+        if (state.endDate) {
+          endTime = new Date(state.endDate.getFullYear(), state.endDate.getMonth(), 1).getTime();
+        }
+      }
       $cells.each(function () {
         var $cell = $(this);
         var dateValue = $cell.find('.k-link').attr('data-value');
@@ -3420,16 +3746,31 @@ console.log('[mobile/index] entry 실행');
     }
     function openPopup() {
       if ($wrap.hasClass(ClassName.DISABLED)) return;
+
+      // 항상 monthview(날짜)로 이동
+      var targetDate = state.startDate || new Date();
+      calendar.navigate(targetDate, 'month');
       $popup.addClass(ClassName.OPEN);
       state.isOpen = true;
       lockBodyScroll();
       highlightRange();
+      disableMaxDates();
       removeEmptyRows();
       applyPrefixClassToWrapper($wrap, $popup);
       $el.trigger('rangepicker:open');
     }
     function closePopup() {
       if (!state.isOpen) return;
+
+      // 미완료 선택 상태 초기화 (시작일만 선택하고 닫은 경우)
+      if (state.isSelectingEnd) {
+        state.startDate = null;
+        state.isSelectingEnd = false;
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+        updateSelectedState();
+      }
       $popup.removeClass(ClassName.OPEN);
       state.isOpen = false;
       unlockBodyScroll();
@@ -3452,14 +3793,31 @@ console.log('[mobile/index] entry 실행');
     }
 
     // 이벤트 바인딩 — touchend + preventDefault로 ghost click 차단
+    var toggleEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
+    var extMoved = false;
+    var extTouchStartX = 0;
     function handleToggle(e) {
       e.preventDefault();
       e.stopPropagation();
       togglePopup();
     }
-    var toggleEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
     $display.on(toggleEvent + NS, handleToggle);
     $toggle.on(toggleEvent + NS, handleToggle);
+
+    // 외부 트리거 버튼 — 수평 스크롤 중 touchend 무시
+    $(document).on('touchstart' + NS + '_ext_' + elId, extSelector, function (e) {
+      extTouchStartX = e.touches[0].clientX;
+      extMoved = false;
+    });
+    $(document).on('touchmove' + NS + '_ext_' + elId, extSelector, function (e) {
+      if (Math.abs(e.touches[0].clientX - extTouchStartX) > 5) {
+        extMoved = true;
+      }
+    });
+    $(document).on(toggleEvent + NS + '_ext_' + elId, extSelector, function (e) {
+      if (extMoved) return;
+      handleToggle(e);
+    });
 
     // 팝업 내부 이벤트 전파 차단
     $popup.on(toggleEvent + NS, function (e) {
@@ -3478,6 +3836,8 @@ console.log('[mobile/index] entry 실행');
     $(document).on(docCloseEvent + nsDoc, function (e) {
       if (!state.isOpen || state.isSelectingEnd) return;
       if ($(e.target).closest($wrap).length) return;
+      // 외부 트리거 버튼 클릭은 제외
+      if ($(e.target).closest(extSelector).length) return;
       closePopup();
     });
     $(document).on('keydown' + nsDoc, function (e) {
@@ -3530,6 +3890,7 @@ console.log('[mobile/index] entry 실행');
       },
       destroy: function () {
         $(document).off(nsDoc);
+        $(document).off(NS + '_ext_' + elId);
         $display.off(NS);
         $toggle.off(NS);
         $popup.off(NS);
@@ -3542,6 +3903,7 @@ console.log('[mobile/index] entry 실행');
     $el.data(DATA_KEY, instance);
     updateDisplay();
     highlightRange();
+    disableMaxDates();
     removeEmptyRows();
     updateSelectedState();
     console.log('[' + DATA_UI + '] initialized:', elId || 'anonymous');
@@ -4303,6 +4665,99 @@ console.log('[mobile/index] entry 실행');
     if ($root.length) setDisabled($root, disabled);
   };
 })(window.jQuery, window, document);
+
+/***/ }),
+
+/***/ 8839:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/expand.js
+ * @description data-속성 기반 텍스트 더보기(expand/collapse) (모바일)
+ * @scope [data-expand]
+ *
+ * @mapping [data-expand-btn] ↔ [data-expand-text]
+ * @state is-open 클래스 + aria-expanded 값으로 제어
+ *
+ * @note
+ *  - 텍스트가 넘치지 않으면 버튼 자동 숨김 (hidden)
+ *  - ResizeObserver로 레이아웃 변경 시 넘침 여부 자동 재판별
+ *
+ * @a11y aria-expanded 제어
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiExpand';
+  var ROOT = '[data-expand]';
+  var TEXT = '[data-expand-text]';
+  var BTN = '[data-expand-btn]';
+  var ACTIVE = 'is-open';
+  var _bound = false;
+  var _observers = []; // destroy 시 해제용
+
+  // 텍스트 넘침 여부 체크 → 버튼 노출 제어
+  function checkOverflow($root) {
+    var $text = $root.find(TEXT);
+    var $btn = $root.find(BTN);
+    if (!$text.length || !$btn.length) return;
+
+    // 펼친 상태면 체크 생략
+    if ($root.hasClass(ACTIVE)) return;
+    var sw = $text[0].scrollWidth;
+    var cw = $text[0].clientWidth;
+
+    // 레이아웃 미계산 상태면 건너뜀
+    if (sw === 0 && cw === 0) return;
+    $btn.prop('hidden', sw <= cw);
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 버튼 클릭
+    $(document).on('click' + NS, BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $root = $btn.closest(ROOT);
+      if (!$root.length) return;
+      var isOpen = $root.hasClass(ACTIVE);
+      $root.toggleClass(ACTIVE);
+      $btn.attr('aria-expanded', !isOpen);
+    });
+  }
+  function init() {
+    bind();
+
+    // ResizeObserver로 요소가 실제 크기를 갖는 시점에 넘침 체크
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $text = $root.find(TEXT);
+      if (!$text.length) return;
+      var observer = new ResizeObserver(function () {
+        checkOverflow($root);
+      });
+      observer.observe($text[0]);
+      _observers.push(observer);
+    });
+  }
+  function destroy() {
+    $(document).off(NS);
+
+    // ResizeObserver 해제
+    _observers.forEach(function (observer) {
+      observer.disconnect();
+    });
+    _observers = [];
+    _bound = false;
+  }
+  window.UI.expand = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
 
 /***/ }),
 

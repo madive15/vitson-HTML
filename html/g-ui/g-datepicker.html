@@ -51,7 +51,23 @@
   id: 'testPicker1',
   startName: 'startDate',
   endName: 'endDate',
-  size: 'sm' // sm ? md(기본 - 사이즈 지정 X) ? lg
+  size: 'sm', // sm ? md(기본 - 사이즈 지정 X) ? lg
+  opt: {
+    max: new Date() // 오늘 이후 날짜 비활성화 (미지정 시 제한 없음)
+  }
+}) %&gt;
+
+// 또는 options 래퍼 사용
+&lt;%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+  options: {
+    id: 'testPicker1',
+    startName: 'startDate',
+    endName: 'endDate',
+    size: 'sm',
+    opt: {
+      max: new Date()
+    }
+  }
 }) %&gt;              
             </pre>
           </code>
@@ -112,7 +128,7 @@
 <div class="vits-kendo-range-picker size-md" 
      id="testPicker2"
      data-ui="kendo-range-picker"
-     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+     data-opt="{&amp;quot;max&amp;quot;:&amp;quot;2026-02-19T00:01:59.458Z&amp;quot;,&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
     
     <input type="hidden" 
            class="js-start-date" 
@@ -145,7 +161,7 @@
         <div class="js-kendo-calendar"></div>
     </div>
 </div>
-              <p>height 32px / 기본 (사이즈 지정 X)</p>
+              <p>height 32px / 기본 (사이즈 지정 X) / 오늘날짜 이후 비활성</p>
             </li>
             <li>
               <!-- 단일 날짜 -->
