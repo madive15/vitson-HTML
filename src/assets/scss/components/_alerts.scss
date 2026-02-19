@@ -32,22 +32,6 @@
   background: $bg-color;
   border-radius: map.get(var.$radius, 'md');
 
-  &:not(:has(.alerts-anatomy-list)) {
-    padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
-
-    .vits-alerts-anatomy-inner {
-      gap: map.get(var.$unit, 4);
-    }
-  }
-
-  &:has(.alerts-anatomy-list) {
-    padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
-
-    .vits-alerts-anatomy-inner {
-      gap: map.get(var.$unit, 12);
-    }
-  }
-
   .vits-alerts-anatomy {
     &-inner {
       @include mx.flex(flex, row, flex-start, flex-start);
@@ -77,6 +61,26 @@
           }
         }
       }
+    }
+  }
+
+  &:not(:has(.alerts-anatomy-list)) {
+    padding: map.get(var.$unit, 8) map.get(var.$unit, 12);
+
+    .vits-alerts-anatomy-inner {
+      gap: map.get(var.$unit, 4);
+    }
+  }
+
+  &:has(.alerts-anatomy-list) {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 16);
+
+    .vits-alerts-anatomy-inner {
+      gap: map.get(var.$unit, 12);
+    }
+
+    .alerts-anatomy-text {
+      font-weight: 600;
     }
   }
 }

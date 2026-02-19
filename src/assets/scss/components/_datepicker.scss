@@ -283,8 +283,13 @@ $vits-datepicker-single-sizes: (
               &.k-hover,
               &.k-hover:hover,
               &:hover {
-                pointer-events: none;
+                // pointer-events: none;
                 background: transparent;
+              }
+
+              // td hover 시 내부 k-link에 스타일 적용 (깜박임 방지)
+              &:hover .k-link {
+                background: map.get(color.$layout-surf, 'sunken');
               }
 
               .k-link {
@@ -295,13 +300,14 @@ $vits-datepicker-single-sizes: (
                 padding: 0;
                 margin: 0 auto;
                 line-height: 32px;
-                pointer-events: auto;
+
+                // pointer-events: auto;
                 border-radius: 50%;
                 box-shadow: none;
 
-                &:hover {
-                  background: map.get(color.$layout-surf, 'sunken');
-                }
+                // &:hover {
+                //   background: map.get(color.$layout-surf, 'sunken');
+                // }
               }
 
               &.k-today .k-link {
@@ -323,10 +329,18 @@ $vits-datepicker-single-sizes: (
                 color: color.$color-white;
                 background: map.get(color.$brand-colors, 'hover');
 
-                &:hover {
-                  color: color.$color-white;
-                  background: map.get(color.$brand-colors, 'hover') !important;
-                }
+                // &:hover {
+                //   color: color.$color-white;
+                //   background: map.get(color.$brand-colors, 'hover') !important;
+                // }
+              }
+
+              // 선택 상태 hover (td 기준으로 통일)
+              &.k-selected:hover .k-link,
+              &.k-range-start:hover .k-link,
+              &.k-range-end:hover .k-link {
+                color: color.$color-white;
+                background: map.get(color.$brand-colors, 'hover') !important;
               }
 
               &.k-range-mid {
@@ -341,11 +355,30 @@ $vits-datepicker-single-sizes: (
                   color: map.get(color.$text-status, 'brand');
                 }
 
-                &:hover .k-link,
-                .k-link:hover {
+                // &:hover .k-link,
+                // .k-link:hover {
+                //   color: map.get(color.$text-status, 'brand') !important;
+                //   background: transparent !important;
+                //   box-shadow: none !important;
+                // }
+
+                // td hover 기준으로 통일
+                &:hover .k-link {
                   color: map.get(color.$text-status, 'brand') !important;
                   background: transparent !important;
                   box-shadow: none !important;
+                }
+              }
+
+              // max 이후 날짜 비활성화 (JS가 k-state-disabled 부여)
+              &.k-state-disabled {
+                pointer-events: none;
+                background: transparent !important;
+
+                .k-link {
+                  color: map.get(color.$text-colors, 'muted');
+                  cursor: default;
+                  background: none !important;
                 }
               }
             }
@@ -361,6 +394,25 @@ $vits-datepicker-single-sizes: (
             /* stylelint-disable-next-line no-descending-specificity */
             .k-link {
               padding: 0 map.get(var.$unit, 16);
+            }
+
+            .k-calendar-table .k-range-start,
+            .k-calendar-table .k-range-mid,
+            .k-calendar-table .k-range-end {
+              background: color.$color-white;
+              border-radius: 0;
+
+              /* stylelint-disable-next-line no-descending-specificity */
+              .k-link {
+                background: map.get(color.$layout-border, 'quinary');
+                border-radius: map.get(var.$unit, 4);
+
+                &:hover,
+                &:focus,
+                &:active {
+                  color: #3d3d3d;
+                }
+              }
             }
           }
         }

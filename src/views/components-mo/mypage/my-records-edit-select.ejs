@@ -1,0 +1,30 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="shipping-edit-form type-row is-hidden">
+  <div class="shipping-edit-select">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/select.ejs`, {
+      id: 'shipping-select',
+      name: 'shipping-select',
+      placeholder: '택배회사',
+      options: [
+        { value: '0', text: '경동택배' },
+        { value: '1', text: '대한통운' },
+        { value: '2', text: '우체국택배' },
+      ],
+      value: '0',
+      disabled: false,
+      portal: true,
+      maxHeight: 150,
+    }) %>
+  </div>
+  <div class="shipping-edit-buttons">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, { 
+      size: 'md', 
+      variant: 'secondary', 
+      text: '수정 완료' ,
+      attrs: 'data-btn="shipping-edit-submit"'
+    }) %>
+  </div>
+</div>

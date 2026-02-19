@@ -1,0 +1,179 @@
+// -----------------------------------------------------------------------------
+// components-mo/_coupon.scss
+// - 쿠폰 카드·티켓 UI 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+// 쿠폰 아이템
+.vm-coupon {
+  &-item {
+    @include mx.flex(flex, column, flex-start, center);
+    gap: var.$mo-gutter;
+    padding: map.get(var.$unit, 20);
+    text-align: center;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+
+    .coupon {
+      &-ticket {
+        position: relative;
+        width: 100%;
+        max-width: fn.rem(180);
+
+        img {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        &-info {
+          @include mx.position(absolute, 0, 0, 0, 0);
+          @include mx.flex(flex, column, center, center);
+          z-index: var.$zindex-base;
+        }
+
+        &-price {
+          @include typo.typography('h2b', $color: map.get(color.$text-status, 'info'));
+        }
+
+        &-desc {
+          @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+        }
+      }
+
+      &-info {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 2);
+        width: 100%;
+      }
+
+      &-title {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &-period,
+      &-condition {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-scope {
+        @include mx.flex(flex, row, center, flex-start);
+        gap: map.get(var.$unit, 4);
+        width: 100%;
+
+        &-text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include mx.ellipsis-single;
+          max-width: fn.rem(172);
+          text-align: left;
+        }
+
+        &-toggle {
+          @include button.btn-reset;
+          @include icon.ic-size(map.get(var.$unit, 16));
+          flex-shrink: 0;
+          color: map.get(color.$icon-neutral, 'secondary');
+          transition: transform 0.3s;
+
+          &[aria-expanded='true'] {
+            transform: rotate(180deg);
+          }
+        }
+
+        &.is-open {
+          .coupon-scope-text {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+          }
+        }
+      }
+
+      &-action {
+        &,
+        [class*='vits-btn-'] {
+          width: 100%;
+        }
+      }
+    }
+
+    &.coupon {
+      &-type01 {
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+      }
+
+      &-type02 {
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+      }
+    }
+
+    &.is-completed {
+      .coupon-ticket,
+      .coupon-info {
+        opacity: 0.3;
+      }
+    }
+  }
+
+  &-items {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+  }
+
+  &-download {
+    &-list {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+    }
+
+    &-product {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+      padding: var.$mo-gutter;
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+      .download-product {
+        &-title {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-price {
+          @include mx.flex(flex, row, flex-start, flex-start, wrap);
+          gap: map.get(var.$unit, 12) 0;
+          padding: var.$mo-gutter;
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: map.get(var.$radius, 'md');
+
+          dt {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            flex: 0 0 45%;
+
+            &.price-total {
+              font-weight: 600;
+              color: map.get(color.$text-colors, 'primary');
+            }
+          }
+
+          dd {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            flex: 0 0 55%;
+            text-align: right;
+
+            &.price-total {
+              font-weight: 700;
+              color: map.get(color.$text-status, 'brand');
+            }
+          }
+        }
+      }
+    }
+  }
+}

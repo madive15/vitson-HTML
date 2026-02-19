@@ -1,0 +1,115 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const creditUsage = [
+  { label: '여신한도액', value: '999,999,999' },
+  { label: '사용액', value: '999,999,999', pointColor: 'used', sub: { text: '출하대기', value: '9,999' } },
+  { label: '미수금', value: '999,999,999', pointColor: 'due' },
+  { label: '잔액', value: '99,999,999' },
+];
+%>
+
+<!-- S: 데이터 있을 때 -->
+<div class="vm-mypage-home-guides guides-credit">
+  <div class="home-credit-head" data-mypage-layout="head" data-head-link="type01">
+    <a href="#!" class="inner">
+      <p class="title">여신 관리 한눈에!</p>
+      <span class="icon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { 
+        iconName: 'arrow-right' 
+      }) %>
+      </span>
+    </a>
+  </div>
+  <div class="home-credit-body" data-mypage-layout="body">
+    <div class="home-credit-usage">
+      <% creditUsage.forEach((item) => { %>
+      <dl class="home-credit-usage-item">
+        <dt class="home-credit-usage-label"><%= item.label %></dt>
+        <dd class="home-credit-usage-value">
+          <p<% if (item.pointColor) { %> class="point-<%= item.pointColor %>"<% } %>>
+            <span><%= item.value %>원</span>
+          </p>
+          <% if (item.sub) { %>
+          <p class="home-credit-usage-sub">
+            <span class="text"><%= item.sub.text %></span>
+            <span class="value">+ <%= item.sub.value %>원</span>
+          </p>
+          <% } %>
+        </dd>
+      </dl>
+      <% }); %>
+    </div>
+  </div>
+</div>
+<!-- E: 데이터 있을 때 -->
+
+<!-- S: 후불 미신청~신청중 상태일 때 -->
+<div class="vm-mypage-home-guides guides-credit">
+  <div class="home-credit-head" data-mypage-layout="head" data-head-link="type01">
+    <a href="#!" class="inner">
+      <p class="title">여신 관리 한눈에!</p>
+      <span class="icon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { 
+          iconName: 'arrow-right' 
+        }) %>
+      </span>
+    </a>
+  </div>
+  <div class="home-credit-body" data-mypage-layout="body">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/mypage/my-home-empty.ejs`, { 
+      desc: '비츠온엠알오의 편리한 후불 결제를 이용해 보세요',
+      buttonText: '후불 신청 관리'
+    }) %>
+  </div>
+</div>
+<!-- E: 후불 미신청~신청중 상태일 때 -->
+
+<!-- S: 후불 심사접수~심사중 상태일 때 -->
+<div class="vm-mypage-home-guides guides-credit">
+  <div class="home-credit-head" data-mypage-layout="head" data-head-link="type01">
+    <a href="#!" class="inner">
+      <p class="title">여신 관리 한눈에!</p>
+      <span class="icon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { 
+          iconName: 'arrow-right' 
+        }) %>
+      </span>
+    </a>
+  </div>
+  <div class="home-credit-body" data-mypage-layout="body">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/mypage/my-home-empty.ejs`, { 
+      title: '심사접수되었습니다.',
+      desc: '신청 내용을 검토하고 심사를 진행합니다.',
+      buttonText: '후불 신청 관리'
+    }) %>
+  </div>
+</div>
+
+<div class="vm-mypage-home-guides guides-credit">
+  <div class="home-credit-head" data-mypage-layout="head" data-head-link="type01">
+    <a href="#!" class="inner">
+      <p class="title">여신 관리 한눈에!</p>
+      <span class="icon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { 
+          iconName: 'arrow-right' 
+        }) %>
+      </span>
+    </a>
+  </div>
+  <div class="home-credit-body" data-mypage-layout="body">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/mypage/my-home-empty.ejs`, { 
+      title: '심사중입니다.',
+      desc: '신청 내용을 검토하고 심사를 진행합니다.',
+      buttonText: '후불 신청 관리'
+    }) %>
+  </div>
+</div>
+<!-- E: 후불 심사접수~심사중 상태일 때 -->

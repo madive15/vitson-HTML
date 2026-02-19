@@ -1,0 +1,147 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '마이페이지'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-home">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '마이페이지' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-home">
+              <!-- 프로필 타입 1 -->
+              <div class="vm-mypage-home-profile profile-type01">
+                <div class="profile-inner">
+                  <a href="#!" class="profile-user-link">
+                    <span class="profile-user-name">김비츠 님</span>
+                    <span class="icon">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/icon.ejs`, { 
+                        iconName: 'arrow-right' 
+                      }) %>
+                    </span>
+                  </a>
+                  <a href="#!" class="profile-coupon-link">
+                    <p class="profile-coupon-title">
+                      <span class="icon">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/icon.ejs`, { 
+                          iconName: 'coupon-fill' 
+                        }) %>
+                      </span>
+                      <span class="text">나의 쿠폰</span>
+                    </p>
+                    <p class="profile-coupon-total">3</p>
+                  </a>
+                </div>
+              </div>
+
+              <!-- 프로필 타입 2 -->
+              <div class="vm-mypage-home-profile profile-type02 is-hidden">
+                <div class="profile-inner">
+                  <div class="profile-user">
+                    <p class="profile-user-name">김비츠 님</p>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+                      href: '#!', 
+                      text: '내 정보',
+                      size: 'sm' 
+                    }) %>
+                  </div>
+                  <a href="#!" class="profile-coupon-link">
+                    <p class="profile-coupon-title">
+                      <span class="icon">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/icon.ejs`, { 
+                          iconName: 'coupon-fill' 
+                        }) %>
+                      </span>
+                      <span class="text">나의 쿠폰</span>
+                    </p>
+                    <p class="profile-coupon-total">3</p>
+                  </a>
+                </div>
+              </div>
+
+              <div class="vm-mypage-home-sections">
+                <!-- 주문 현황 -->
+                <%- include(`${_src}/views/components-mo/mypage/my-home-status.ejs`) %>
+
+                <!-- 메뉴 -->
+                <%- include(`${_src}/views/components-mo/mypage/my-home-menus.ejs`) %>
+
+                <!-- 메뉴 - 고객센터 -->
+                <div class="vm-mypage-home-menus menus-cscenter">
+                  <div class="home-status-head" data-mypage-layout="head" data-head-link="type01">
+                    <a href="#!" class="inner">
+                      <p class="title">고객지원센터</p>
+                      <span class="icon">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/icon.ejs`, { 
+                        iconName: 'arrow-right' 
+                      }) %>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- 여신 관리 -->
+                <%- include(`${_src}/views/components-mo/mypage/my-home-credit.ejs`) %>
+
+                <!-- 중요 서류 -->
+                <%- include(`${_src}/views/components-mo/mypage/my-home-docs.ejs`) %>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+
+        // ?type02 : 프로필 타입2 전환
+        if (params.has('type02')) {
+          var type01 = document.querySelector('.profile-type01');
+          var type02 = document.querySelector('.profile-type02');
+          if (type01) type01.classList.add('is-hidden');
+          if (type02) type02.classList.remove('is-hidden');
+        }
+      })();
+    </script>
+  </body>
+</html>

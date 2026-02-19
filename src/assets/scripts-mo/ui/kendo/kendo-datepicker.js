@@ -8,6 +8,7 @@
  * @a11y Escape 키 닫기
  * @events rangepicker:change, rangepicker:open, rangepicker:close, rangepicker:reset
  * @note iOS Safari 스크롤 잠금, touchend 기반 ghost click 차단 포함
+ * @note 외부 트리거 버튼(data-range-picker-toggle) 텍스트 갱신 포함
  */
 (function (window) {
   'use strict';
@@ -177,6 +178,9 @@
     var elId = $el.attr('id') || '';
     var nsDoc = NS + '_' + elId;
 
+    // 외부 트리거 버튼 셀렉터
+    var extSelector = '[data-range-picker-toggle="' + elId + '"]';
+
     var state = {
       startDate: null,
       endDate: null,
@@ -202,14 +206,16 @@
       footer: false,
       month: {
         header: '#= kendo.toString(data.date, "yyyy.MM") #',
-        empty: '&nbsp;'
+        empty: '&nbsp;',
+        content:
+          '<span tabindex="-1" class="k-link" data-href="\\#" data-value="#= data.dateString #">#= data.value #</span>'
       },
       start: 'month',
       depth: 'month'
     };
 
     if (opts.min) calendarOpts.min = opts.min;
-    if (opts.max) calendarOpts.max = opts.max;
+    // max는 Kendo에 넘기지 않음 — disableMaxDates()에서 DOM 후처리로 비활성화
 
     $calendarWrap.kendoCalendar(calendarOpts);
     var calendar = $calendarWrap.data('kendoCalendar');
@@ -249,11 +255,36 @@
       });
     }
 
+    // max 이후 날짜 비활성화 — opts.max 설정 시에만 동작
+    function disableMaxDates() {
+      if (!opts.max) return;
+
+      var maxTime = toDateOnly(opts.max);
+
+      $calendarWrap.find('.k-calendar-monthview td').each(function () {
+        var $cell = $(this);
+        if ($cell.hasClass('k-other-month')) return;
+
+        var $link = $cell.find('.k-link');
+        var dateValue = $link.attr('data-value');
+        if (!dateValue) return;
+
+        var parts = dateValue.split('/');
+        var cellTime = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10)).getTime();
+
+        if (cellTime > maxTime) {
+          $cell.addClass('k-state-disabled');
+          $link.removeAttr('tabindex').css('pointer-events', 'none');
+        }
+      });
+    }
+
     function refreshUI() {
       // navigate 이후 전체 UI 갱신 통합 진입점
       updateNavTitle();
       updateDayNames();
       updateMonthNames();
+      disableMaxDates();
       highlightRange();
       removeEmptyRows();
     }
@@ -283,6 +314,13 @@
     function onCalendarChange() {
       var selectedDate = calendar.value();
 
+      // max 초과 날짜 선택 방어 — opts.max 설정 시에만
+      if (opts.max && selectedDate && toDateOnly(selectedDate) > toDateOnly(opts.max)) {
+        var restoreDate = state.startDate || null;
+        calendar.value(restoreDate);
+        return;
+      }
+
       if (!state.isSelectingEnd) {
         state.startDate = selectedDate;
         state.endDate = null;
@@ -298,6 +336,23 @@
 
         state.isSelectingEnd = false;
         closePopup();
+
+        // 외부 트리거 버튼 텍스트 갱신 + scroll-buttons 연동
+        var $extBtn = $(extSelector);
+        if ($extBtn.length) {
+          $extBtn
+            .find('.text')
+            .text(formatDate(state.startDate, opts.format) + opts.separator + formatDate(state.endDate, opts.format));
+
+          if (window.scrollButtons) {
+            var $scrollScope = $extBtn.closest('[data-scroll-buttons]');
+            if ($scrollScope.length) {
+              var sbInstance = window.scrollButtons.getInstance($scrollScope[0]);
+              if (sbInstance) sbInstance.setActive($extBtn);
+            }
+          }
+        }
+
         $el.trigger('rangepicker:change', [getPublicValue()]);
       }
 
@@ -308,6 +363,10 @@
     }
 
     function onCalendarNavigate() {
+      // calendar 초기화 완료 전 방어
+      if (!calendar) return;
+
+      // 네비게이션은 항상 허용 — refreshUI에서 disableMaxDates가 해당 월 날짜를 비활성화
       window.setTimeout(function () {
         refreshUI();
       }, DELAY.NAVIGATE_UI);
@@ -328,6 +387,15 @@
 
       var startTime = toDateOnly(state.startDate);
       var endTime = state.endDate ? toDateOnly(state.endDate) : null;
+
+      // yearview에서는 월 단위로 비교 (셀 data-value가 1일 기준)
+      var isYearView = $calendarWrap.find('.k-calendar-yearview').length > 0;
+      if (isYearView) {
+        startTime = new Date(state.startDate.getFullYear(), state.startDate.getMonth(), 1).getTime();
+        if (state.endDate) {
+          endTime = new Date(state.endDate.getFullYear(), state.endDate.getMonth(), 1).getTime();
+        }
+      }
 
       $cells.each(function () {
         var $cell = $(this);
@@ -365,10 +433,15 @@
     function openPopup() {
       if ($wrap.hasClass(ClassName.DISABLED)) return;
 
+      // 항상 monthview(날짜)로 이동
+      var targetDate = state.startDate || new Date();
+      calendar.navigate(targetDate, 'month');
+
       $popup.addClass(ClassName.OPEN);
       state.isOpen = true;
       lockBodyScroll();
       highlightRange();
+      disableMaxDates();
       removeEmptyRows();
       applyPrefixClassToWrapper($wrap, $popup);
 
@@ -377,6 +450,16 @@
 
     function closePopup() {
       if (!state.isOpen) return;
+
+      // 미완료 선택 상태 초기화 (시작일만 선택하고 닫은 경우)
+      if (state.isSelectingEnd) {
+        state.startDate = null;
+        state.isSelectingEnd = false;
+        updateDisplay();
+        updateHiddenInputs();
+        highlightRange();
+        updateSelectedState();
+      }
 
       $popup.removeClass(ClassName.OPEN);
       state.isOpen = false;
@@ -403,16 +486,35 @@
     }
 
     // 이벤트 바인딩 — touchend + preventDefault로 ghost click 차단
+    var toggleEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
+    var extMoved = false;
+    var extTouchStartX = 0;
+
     function handleToggle(e) {
       e.preventDefault();
       e.stopPropagation();
       togglePopup();
     }
 
-    var toggleEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
-
     $display.on(toggleEvent + NS, handleToggle);
     $toggle.on(toggleEvent + NS, handleToggle);
+
+    // 외부 트리거 버튼 — 수평 스크롤 중 touchend 무시
+    $(document).on('touchstart' + NS + '_ext_' + elId, extSelector, function (e) {
+      extTouchStartX = e.touches[0].clientX;
+      extMoved = false;
+    });
+
+    $(document).on('touchmove' + NS + '_ext_' + elId, extSelector, function (e) {
+      if (Math.abs(e.touches[0].clientX - extTouchStartX) > 5) {
+        extMoved = true;
+      }
+    });
+
+    $(document).on(toggleEvent + NS + '_ext_' + elId, extSelector, function (e) {
+      if (extMoved) return;
+      handleToggle(e);
+    });
 
     // 팝업 내부 이벤트 전파 차단
     $popup.on(toggleEvent + NS, function (e) {
@@ -432,6 +534,8 @@
     $(document).on(docCloseEvent + nsDoc, function (e) {
       if (!state.isOpen || state.isSelectingEnd) return;
       if ($(e.target).closest($wrap).length) return;
+      // 외부 트리거 버튼 클릭은 제외
+      if ($(e.target).closest(extSelector).length) return;
       closePopup();
     });
 
@@ -497,6 +601,7 @@
 
       destroy: function () {
         $(document).off(nsDoc);
+        $(document).off(NS + '_ext_' + elId);
         $display.off(NS);
         $toggle.off(NS);
         $popup.off(NS);
@@ -513,6 +618,7 @@
 
     updateDisplay();
     highlightRange();
+    disableMaxDates();
     removeEmptyRows();
     updateSelectedState();
 

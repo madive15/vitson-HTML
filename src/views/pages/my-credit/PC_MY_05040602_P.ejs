@@ -1,0 +1,92 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '후불결제전자서명-가이드(도움말)'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('guideModal01')"
+                >
+                  <span class="text">후불결제전자서명 &gt; 거래약정서 도움말 </span>
+                </button>
+
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('guideModal02')"
+                >
+                  <span class="text">후불결제전자서명 &gt; 개인 신용정보 제공 동의서 도움말 </span>
+                </button>
+
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('guideModal03')"
+                >
+                  <span class="text">계좌이체 CMS 동의서 도움말</span>
+                </button>
+                <!-- prettier-ignore -->
+
+                <% const guideModal01 = { 
+                  id: 'guideModal01', 
+                  size: '800',
+                  title: '거래약정서 도움말',                  
+                  contentPath: `${_src}/views/pages/kendo-window/my-credit/kw-PC_MY_05040602_P.ejs`,
+                  imageSrc: `${_public}/resources/img/mro/renewal/help/helps-guide-01.jpg`,
+                  buttons: [{ text: '확인', variant: 'tertiary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, guideModal01) %>
+
+                <% const guideModal02 = { 
+                  id: 'guideModal02', 
+                  size: '800',
+                  title: '개인 신용정보 제공 도움말',                  
+                  contentPath: `${_src}/views/pages/kendo-window/my-credit/kw-PC_MY_05040602_P.ejs`,
+                  imageSrc: `${_public}/resources/img/mro/renewal/help/helps-guide-02.jpg`,
+                  buttons: [{ text: '확인', variant: 'tertiary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, guideModal02) %>
+
+                <% const guideModal03 = { 
+                  id: 'guideModal03', 
+                  size: '800',
+                  title: '계좌이체 CMS 동의서 도움말',                  
+                  contentPath: `${_src}/views/pages/kendo-window/my-credit/kw-PC_MY_05040602_P.ejs`,
+                  imageSrc: `${_public}/resources/img/mro/renewal/help/helps-guide-03.jpg`,
+                  buttons: [{ text: '확인', variant: 'tertiary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, guideModal03) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 script - -->
+    <script>
+      (function () {})();
+    </script>
+    <!-- E: [REMOVE] 확인용 script - -->
+  </body>
+</html>

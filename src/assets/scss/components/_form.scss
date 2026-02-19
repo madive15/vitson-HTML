@@ -277,6 +277,7 @@
 
   &::before {
     display: inline-block;
+    flex-shrink: 0;
     content: '';
     background: color.$color-white;
     border-radius: 4px;
@@ -748,10 +749,11 @@ $textarea-size: (
 
   // 성공
   &.is-valid {
-    .input-item,
-    .vits-textarea {
-      box-shadow: inset 0 0 0 1px map.get(color.$text-status, 'success');
-    }
+    // 테두리 색상 주석 처리
+    // .input-item,
+    // .vits-textarea {
+    //   box-shadow: inset 0 0 0 1px map.get(color.$text-status, 'success');
+    // }
 
     .validation-message p {
       @include typo.typography('b3r', $color: map.get(color.$text-status, 'success'));
@@ -760,10 +762,11 @@ $textarea-size: (
 
   // 실패
   &.is-invalid {
-    .input-item,
-    .vits-textarea {
-      box-shadow: inset 0 0 0 1px map.get(color.$text-status, 'brand');
-    }
+    // 테두리 색상 주석 처리
+    // .input-item,
+    // .vits-textarea {
+    //   box-shadow: inset 0 0 0 1px map.get(color.$text-status, 'brand');
+    // }
 
     .vits-textarea textarea {
       color: map.get(color.$text-status, 'brand');
@@ -776,6 +779,14 @@ $textarea-size: (
 
     .validation-message p {
       @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand'));
+    }
+  }
+
+  @each $size in 4, 8, 12 {
+    &[data-indent='#{$size}'] {
+      .validation-message {
+        padding-left: fn.rem($size);
+      }
     }
   }
 }

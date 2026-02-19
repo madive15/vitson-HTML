@@ -1,0 +1,15 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<div class="home-guides-empty">
+  <% if (typeof title !== 'undefined' && title) { %>
+  <p class="home-guides-empty-title"><%= title %></p>
+  <% } %>
+  <p class="home-guides-empty-desc"><%- desc.replace(/\n/g, '<br>') %></p>
+  <%- include(`${_src}/views/components/button/button.ejs`, {
+    size: 'lg',
+    variant: 'secondary',
+    text: buttonText,
+    className: 'weight-m'
+  }) %>
+</div>

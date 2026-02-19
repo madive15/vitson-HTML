@@ -559,3 +559,57 @@ $filter-section-divider: inset 0 -1px 0 0 map.get(color.$layout-surf, 'secondary
     }
   }
 }
+
+// 필터 - 날짜 버튼 그룹
+.vm-filter-period-group {
+  position: relative;
+
+  .filter-period {
+    &-buttons {
+      @include mx.flex;
+      gap: map.get(var.$unit, 8);
+      overflow: auto hidden;
+      -webkit-overflow-scrolling: touch;
+
+      > [class*='-button'] {
+        &:first-of-type {
+          margin-left: var.$mo-gutter;
+        }
+
+        &:last-of-type {
+          margin-right: var.$mo-gutter;
+        }
+      }
+    }
+
+    &-button {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      flex-shrink: 0;
+      height: fn.rem(42);
+      padding: 0 map.get(var.$unit, 32);
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+      .text {
+        @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      &.is-active {
+        box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
+
+        .text {
+          font-weight: 700;
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+    }
+  }
+
+  // 달력 위치
+  .vits-kendo-range-picker.picker-popup {
+    right: var.$mo-gutter;
+    left: unset;
+  }
+}

@@ -41,6 +41,8 @@
   const _showPasswordToggle = (typeof showPasswordToggle !== 'undefined') ? !!showPasswordToggle : false;
   const _eyesOpen = (typeof eyesOpen !== 'undefined') ? !!eyesOpen : false;
 
+  const _indent = (typeof indent !== 'undefined' && indent) ? indent : '';
+
   // ===== 초기 상태 클래스 구성 =====
   // NOTE: 유효성 검사 구현 시
   // - 검사 활성화: .vits-validation 클래스 추가
@@ -60,7 +62,7 @@
   const _stateClass = _stateClasses.join(' ');
 %>
 
-<div class="vits-input <%= _rootClass %> <%= _stateClass %>">
+<div class="vits-input <%= _rootClass %> <%= _stateClass %>"<% if (_indent) { %> data-indent="<%= _indent %>"<% } %>>
   <div class="input-item">
     <label for="<%= _id %>" class="sr-only"><%= _label %></label>
 

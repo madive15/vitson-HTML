@@ -10,10 +10,10 @@ html.vm-scope body {
   }
 
   /* s: iOS 크롬 Data Detector 스타일(밑줄/색) 제거 - scoped */
-  .no-ios-detect,
-  .no-ios-detect * {
+  .no-ios-detect :not(.ios-detect-off, .ios-detect-off *) :where([x-apple-data-detectors], [x-apple-data-detectors] *) {
     color: inherit !important;
     text-decoration: none !important;
+    -webkit-text-fill-color: currentcolor !important;
   }
 
   /* e: iOS 크롬 Data Detector 스타일 제거 */

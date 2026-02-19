@@ -1,0 +1,18 @@
+<!-- prettier-ignore -->
+<%
+  const _src = srcPath;
+  const _public = publicPath;
+  const _imageSrc = typeof imageSrc !== 'undefined' ? imageSrc : `${_public}/resources/img/mro/renewal/help/helps-guide-01.jpg`;
+%>
+<!-- prettier-ignore -->
+<section class="vits-guide-popup">
+  <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+    theme: 'blue',
+    text: '꼭 확인하세요!',
+    list: [
+      '모든 항목은 필수 입력 정보입니다. 정확한 정보를 입력해주세요.',
+      '마지막 [저장하기] 버튼을 누르셔야 서명이 반영됩니다.'
+    ]
+  }) %>
+  <img src="<%= _imageSrc %>" alt="" />
+</section>

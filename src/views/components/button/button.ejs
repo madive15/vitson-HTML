@@ -11,6 +11,7 @@
   const _type = typeof type !== 'undefined' ? type : 'button';
   const _className = typeof className !== 'undefined' ? className : '';
   const _attrs = typeof attrs !== 'undefined' ? attrs : '';
+  const _onclick = typeof onclick !== 'undefined' ? onclick : '';
   
   // attrs 문자열을 파싱하여 속성 배열로 변환
   var _attrsArray = [];
@@ -34,6 +35,7 @@
   type="<%= _type || 'button' %>"
   class="vits-btn-<%= _size %> vits-btn-<%= _variant %> <%= _iconLeft ? 'icon-left' : '' %><%= _iconRight ? 'icon-right' : '' %><%= _disabled ? ' disabled' : '' %><%= _className ? ' ' + _className : '' %>"
   <%= _disabled ? 'disabled' : '' %>
+  <% if (_onclick) { %>onclick="<%- _onclick %>"<% } %>
   <% _attrsArray.forEach(function(attr) { 
     if (attr.value === null) { %>
   <%= attr.key %>

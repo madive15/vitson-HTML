@@ -1,0 +1,60 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 필수
+  const _type = (typeof type !== 'undefined') ? type : 1;
+  const _price = (typeof price !== 'undefined') ? price : '';
+  const _desc = (typeof desc !== 'undefined') ? desc : '';
+  const _title = (typeof title !== 'undefined') ? title : '';
+  const _period = (typeof period !== 'undefined') ? period : '';
+  const _maxDiscount = (typeof maxDiscount !== 'undefined') ? maxDiscount : '';
+  const _scope = (typeof scope !== 'undefined') ? scope : '';
+  const _buttonText = (typeof buttonText !== 'undefined') ? buttonText : '쿠폰 받기';
+  const _iconName = (typeof iconName !== 'undefined') ? iconName : 'ic-line-download';
+
+  // 선택
+  const _minOrder = (typeof minOrder !== 'undefined') ? minOrder : '';
+  const _showButton = (typeof showButton !== 'undefined') ? showButton : true;
+  const _isCompleted = (typeof isCompleted !== 'undefined') ? isCompleted : false;
+%>
+
+<div class="vm-coupon-item coupon-type0<%= _type %><%= _isCompleted ? ' is-completed' : '' %>">
+  <div class="coupon-ticket">
+    <img src="<%= _public %>/resources/img/mro/renewal/coupon/bg-coupon.svg" alt="" />
+    <div class="coupon-ticket-info">
+      <p class="coupon-ticket-price"><%= _price %></p>
+      <p class="coupon-ticket-desc"><%= _desc %></p>
+    </div>
+  </div>
+
+  <div class="coupon-info">
+    <p class="coupon-title"><%= _title %></p>
+    <p class="coupon-period"><%= _period %></p>
+    <% if (_minOrder) { %>
+    <p class="coupon-condition">최소주문금액 : <%= _minOrder %></p>
+    <% } %>
+    <p class="coupon-condition">최대할인금액 : <%= _maxDiscount %></p>
+    <% if (_scope) { %>
+    <div class="coupon-scope" data-expand>
+      <p class="coupon-scope-text" data-expand-text>적용대상 : <%= _scope %></p>
+      <button type="button" class="coupon-scope-toggle" data-expand-btn aria-expanded="false" hidden>
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+    </div>
+    <% } %>
+  </div>
+
+  <% if (_showButton) { %>
+  <div class="coupon-action">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size: 'lg',
+      variant: 'outline-primary',
+      text: _buttonText,
+      iconLeft: true,
+      iconName: _iconName,
+      disabled: _isCompleted
+    }) %>
+  </div>
+  <% } %>
+</div>

@@ -1,0 +1,61 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const couponProducts = [
+  {
+    img: 'https://vitsonimg.co.kr/images/productsNew/535/535665.png',
+    alt: '레일부속_NEW',
+    code: '535665',
+    name: '레일부속_NEW',
+    qty: 1,
+    selectId: 'coupon-select-1',
+    options: [],
+    price: '23,648',
+    discount: '3,547',
+    total: '20,101',
+  },
+  {
+    img: 'https://vitsonimg.co.kr/images/productsNew/448/448771[1].jpg',
+    alt: 'TS라인 LED 레일등 1200MM',
+    code: '448771',
+    name: 'TS라인 LED 레일등 1200MM 고효율 프리미엄 플리커프리 조광형 천장 직부 매입겸용 레일조명',
+    qty: 1,
+    selectId: 'coupon-select-2',
+    options: [],
+    price: '15,288,191',
+    discount: '0',
+    total: '15,288,191',
+  },
+];
+%>
+
+<div class="vm-product-coupon-cards">
+  <!-- prettier-ignore -->
+  <% couponProducts.forEach((item) => { %> 
+    <%- include(`${_src}/views/components-mo/product/product-coupon-item.ejs`, item) %>
+  <% }); %>
+</div>
+
+<!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+<!-- 
+  [참고] 쿠폰 셀렉트 동적 바인딩
+  - EJS에서 options: [] 빈 배열로 렌더 (disabled 상태)
+  - UI.select.setOptions()로 옵션 주입
+  - 첫 번째 옵션 자동 선택 시 UI.select.setValue() 호출
+  - 옵션 없으면 setOptions에 빈 배열 전달 → 자동 disabled + "적용 가능한 상품 쿠폰이 없습니다"
+-->
+<script>
+  window.addEventListener('load', function () {
+    var $select = $('[data-select-id="coupon-select-1"]');
+
+    // UI.select.setOptions()로 옵션 주입
+    UI.select.setOptions($select, [
+      {value: '메리 크리스마스 특별 쿠폰 전상품 15% 할인', text: '메리 크리스마스 특별 쿠폰 전상품 15% 할인'},
+      {value: '새해 특별 쿠폰 전상품 만원 할인', text: '새해 특별 쿠폰 전상품 만원 할인'},
+      {value: '연말 특별 쿠폰 전상품 50% 할인', text: '연말 특별 쿠폰 전상품 50% 할인'}
+    ]);
+
+    // 첫 번째 옵션 자동 선택 시 UI.select.setValue() 호출
+    UI.select.setValue($select, '메리 크리스마스 특별 쿠폰 전상품 15% 할인');
+  });
+</script>

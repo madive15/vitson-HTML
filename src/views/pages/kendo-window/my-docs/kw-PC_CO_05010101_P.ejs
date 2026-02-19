@@ -1,0 +1,192 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<section class="vits-docs-frame">
+  <div class="vits-docs-header">
+    <!-- pdf 버튼 -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      text: 'PDF 다운로드',
+      variant: 'tertiary',
+      size: 'md',
+      iconName: 'ic-download-2',
+      iconLeft: true,
+    }) %>
+  </div>
+  <div class="vits-docs-body">
+    <div class="vits-docs-body-content estimate">
+      <div class="estimate-inner">
+        <!-- 견적서 헤더: 제목 + 견적정보 -->
+        <div class="estimate-head">
+          <h2 class="estimate-title">견적서</h2>
+          <table class="estimate-info-table">
+            <tbody>
+              <tr>
+                <td class="estimate-label">견적서명</td>
+                <td class="estimate-value">LED트리구 지네 400 외 41건</td>
+                <td class="estimate-label">작성일</td>
+                <td class="estimate-value">2026-12-15</td>
+              </tr>
+              <tr>
+                <td class="estimate-label">견적번호</td>
+                <td class="estimate-value">QT-20241215-001</td>
+                <td class="estimate-label">유효기간</td>
+                <td class="estimate-value">2026-12-15</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 공급받는자 / 공급자 -->
+        <div class="estimate-parties">
+          <div class="estimate-party">
+            <div class="estimate-party-title">공급받는자</div>
+            <table class="estimate-party-table">
+              <tbody>
+                <tr>
+                  <td class="estimate-label">사업자번호</td>
+                  <td class="estimate-value">123-45-67890</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">상호</td>
+                  <td class="estimate-value">(주)개미지옥</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">대표</td>
+                  <td class="estimate-value">김철수</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">주소</td>
+                  <td class="estimate-value">서울특별시 강남구 테헤란로 123</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">업태</td>
+                  <td class="estimate-value">도소매</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">종목</td>
+                  <td class="estimate-value">전자제품</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="estimate-party">
+            <div class="estimate-party-title">공급자</div>
+            <table class="estimate-party-table">
+              <tbody>
+                <tr>
+                  <td class="estimate-label">사업자번호</td>
+                  <td class="estimate-value" colspan="3">987-65-43210</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">상호</td>
+                  <td class="estimate-value" colspan="3">(주)일신비츠온</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">대표</td>
+                  <td class="estimate-value" colspan="3">진미애</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">주소</td>
+                  <td class="estimate-value" colspan="3">경기도 남양주시 진접읍 팔야산단로12번길 55</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">전화</td>
+                  <td class="estimate-value">031-510-7237</td>
+                  <td class="estimate-label">FAX</td>
+                  <td class="estimate-value">031-951-1375</td>
+                </tr>
+                <tr>
+                  <td class="estimate-label">계좌</td>
+                  <td class="estimate-value" colspan="3">기업은행 / 222-333-5678901 / 예금주 : 진미애</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 품목 테이블 -->
+        <table class="estimate-items">
+          <colgroup>
+            <col class="estimate-item-col-no">
+            <col class="estimate-item-col-name">
+            <col class="estimate-item-col-narrow">
+            <col class="estimate-item-col-narrow">
+            <col class="estimate-item-col-num">
+            <col class="estimate-item-col-num">
+            <col class="estimate-item-col-num">
+            <col class="estimate-item-col-tax">
+            <col class="estimate-item-col-num">
+            <col class="estimate-item-col-narrow">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>순번</th>
+              <th>품명 및 규격</th>
+              <th>수량</th>
+              <th>단위</th>
+              <th>단가</th>
+              <th>할인</th>
+              <th>공급가액</th>
+              <th>세액</th>
+              <th>합계</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="estimate-cell-c">1</td>
+              <td class="estimate-cell-l estimate-cell-spec">
+                <span class="estimate-code">(P-001234)</span>
+                <span class="estimate-name">OPP테이프 OPP테이프상품명 2줄 이상일 경우, 아래로 줄바꿈. 상품규격 영역, 1줄 이상일 경우 아래로 줄바꿈되어 보여짐</span>
+                <span class="estimate-spec">6(150mm) 15W ★주광★ 6.5K</span>
+              </td>
+              <td class="estimate-cell-r">25</td>
+              <td class="estimate-cell-r">조</td>
+              <td class="estimate-cell-r">999,999,999</td>
+              <td class="estimate-cell-r">50,000</td>
+              <td class="estimate-cell-r">99,999,999</td>
+              <td class="estimate-cell-r">9,999,999</td>
+              <td class="estimate-cell-r">22,222,222</td>
+              <td class="estimate-cell-r">-</td>
+            </tr>
+            <tr>
+              <td class="estimate-cell-c">2</td>
+              <td class="estimate-cell-l estimate-cell-spec">
+                <span class="estimate-code">(P-001234)</span>
+                <span class="estimate-name">다운라이트 LED 슬림 (방습형)</span>
+                <span class="estimate-spec">W 6(150mm) 15W ★주광★ 6.5K</span>
+              </td>
+              <td class="estimate-cell-r">25</td>
+              <td class="estimate-cell-r">조</td>
+              <td class="estimate-cell-r">999,999,999</td>
+              <td class="estimate-cell-r">-</td>
+              <td class="estimate-cell-r">999,999,999</td>
+              <td class="estimate-cell-r">9,999,999</td>
+              <td class="estimate-cell-r">222,222,222</td>
+              <td class="estimate-cell-r">-</td>
+            </tr>
+            <tr class="estimate-items-total">
+              <td class="estimate-cell-c">합계</td>
+              <td class="estimate-cell-l">-</td>
+              <td class="estimate-cell-r">-</td>
+              <td class="estimate-cell-r">-</td>
+              <td class="estimate-cell-r">999,999,999</td>
+              <td class="estimate-cell-r">-</td>
+              <td class="estimate-cell-r">999,999,999</td>
+              <td class="estimate-cell-r">9,999,999</td>
+              <td class="estimate-cell-r">222,222,222</td>
+              <td class="estimate-cell-r">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- 견적서 안내문 -->
+    <div class="vits-docs-notice">
+      <ul>
+        <li>본 견적서는 고객이 직접 출력한 참고용 견적서입니다. <br/>
+          주문 확정 전까지는 최종 확정된 내용이 아니며, 상품에 따라 운임 등 추가 비용이 별도로 청구될 수 있습니다.</li>
+      </ul>
+    </div>
+  </div>
+    
+</section>

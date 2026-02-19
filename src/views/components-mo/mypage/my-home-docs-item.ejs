@@ -1,0 +1,24 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _text = (typeof text !== 'undefined') ? text : '';
+  const _price = (typeof price !== 'undefined') ? price : '';
+  const _buttonText = (typeof buttonText !== 'undefined') ? buttonText : '';
+%>
+
+<div class="home-docs-item">
+  <div class="home-docs-item-info">
+    <div class="home-docs-text">
+      <p><%= _text %></p>
+    </div>
+    <div class="home-docs-price"><p><%= _price %>원</p></div>
+  </div>
+  <div class="home-docs-button">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+        size:'xs',
+        variant: 'tertiary', 
+        text: _buttonText 
+      }) %>
+  </div>
+</div>

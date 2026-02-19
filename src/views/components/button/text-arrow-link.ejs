@@ -9,9 +9,10 @@
   const _rel = (_target === '_blank') ? 'noopener noreferrer' : null;
   const _iconName = typeof iconName !== 'undefined' ? iconName : 'arrow-right';
   const _size = typeof size !== 'undefined' ? size : '';
+  const _rootClass = typeof rootClass !== 'undefined' ? rootClass : '';
 %>
 
-<a class="vits-text-arrow-link<%= _size === 'sm' ? ' size-sm' : '' %>"
+<a class="vits-text-arrow-link<%= _size === 'sm' ? ' size-sm' : '' %><%= _rootClass ? ' ' + _rootClass : '' %>"
    href="<%= _href %>"
    <% if (_target) { %> target="<%= _target %>"<% } %>
    <% if (_rel) { %> rel="<%= _rel %>"<% } %>>

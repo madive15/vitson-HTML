@@ -20,19 +20,57 @@
                 >
                   <span class="text">세금계산서 (공통-PDF 버튼 있는 프레임 )</span>
                 </button>
+                <br />
+                <!-- prettier-ignore -->
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('estimateModal')"
+                >
+                  <span class="text">견적서</span>
+                </button>
+                <br />
+                <!-- prettier-ignore -->
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('tradeStatementModal')"
+                >
+                  <span class="text">거래명세서</span>
+                </button>
 
                 <!-- prettier-ignore -->
-
                 <% const taxInvoiceModal = { 
                   id: 'taxInvoiceModal', 
                   title: '세금계산서',
                   size: '858', 
                   contentPath: `${_src}/views/pages/kendo-window/my-docs/kw-PC_MY_03010201_P.ejs`,
-                  // imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-a4-file.png`,
                   buttons: [{ text: '확인', variant: 'secondary', action: 'close' }, { text: '인쇄', variant: 'primary', action: 'close' }] 
                   }; 
                 %> 
                 <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, taxInvoiceModal) %>
+
+                <!-- prettier-ignore -->
+                <% const estimateModal = { 
+                  id: 'estimateModal', 
+                  title: '견적서', 
+                  size: '858', 
+                  contentPath: `${_src}/views/pages/kendo-window/my-docs/kw-PC_CO_05010101_P.ejs`, 
+                  buttons: [{ text: '확인', variant: 'secondary', action: 'close' }, { text: '인쇄', variant: 'primary', action: 'close' }] 
+                }; 
+                %>
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, estimateModal) %>
+
+                <!-- prettier-ignore -->
+                <% const tradeStatementModal = { 
+                  id: 'tradeStatementModal', 
+                  title: '거래명세서', 
+                  size: '858', 
+                  contentPath: `${_src}/views/pages/kendo-window/my-docs/kw-PC_MY_02010201_P.ejs`,
+                  buttons: [{ text: '확인', variant: 'secondary', action: 'close' }, { text: '인쇄', variant: 'primary', action: 'close' }] 
+                }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, tradeStatementModal) %>
               </div>
             </div>
           </div>

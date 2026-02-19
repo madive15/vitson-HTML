@@ -107,3 +107,76 @@
     }
   }
 }
+
+/* ================================================
+======================= 팝업 =======================
+================================================ */
+// AD 신청하기 form
+.vm-form {
+  &-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 12);
+  }
+
+  &-item {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 8);
+    width: 100%;
+
+    &-label {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      flex-shrink: 0;
+
+      &[class*='label-'] {
+        &[class*='weight-400'] {
+          font-weight: 400;
+        }
+
+        &[class*='color-tertiary'] {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+    }
+  }
+
+  &-agree {
+    height: fn.rem(240);
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 4) map.get(var.$unit, 8) map.get(var.$unit, 12);
+    margin-top: map.get(var.$unit, 12);
+    overflow: hidden;
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
+
+    p {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    &-inner {
+      width: 100%;
+      height: 100%;
+      padding-right: map.get(var.$unit, 4);
+      overflow: hidden auto;
+
+      > div + div {
+        margin-top: fn.rem(16);
+      }
+    }
+  }
+
+  &-actions {
+    @include mx.flex(flex, row, center, center);
+    padding-top: var.$mo-gutter;
+
+    [class*='checkbox-single-'] {
+      &::before {
+        align-self: flex-start;
+        margin-top: fn.rem(1);
+      }
+
+      .agree-text {
+        font-size: fn.rem(14);
+        color: map.get(color.$text-colors, 'primary');
+      }
+    }
+  }
+}

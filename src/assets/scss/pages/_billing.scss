@@ -1,0 +1,574 @@
+// -----------------------------------------------------------------------------
+// pages/_billing.scss
+// - 전자세금계산서 등 청구/세금계산서 관련 스타일 (table 구조)
+// - 클래스: (bill-invoice / estimate / print)
+// -----------------------------------------------------------------------------
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+
+/* -----------------------------------
+ * 전자세금계산서 (bill-invoice) - table 구조
+ * ----------------------------------- */
+$bill-color: map.get(color.$text-status, 'brand');
+
+.bill-approval-number {
+  @include mx.flex(flex, center, flex-end);
+  @include typo.typography('b4s', $color: $bill-color);
+  padding: fn.rem(4);
+  text-align: right;
+
+  .number-value {
+    display: inline-block;
+    min-width: fn.rem(200);
+    padding-left: fn.rem(4);
+    text-align: left;
+  }
+}
+
+.bill-invoice {
+  width: 100%;
+
+  // max-width: fn.rem(800);
+  margin: 0 auto;
+
+  &-inner {
+    background: #fff;
+    border: 1px solid $bill-color;
+  }
+
+  /* =========================
+    공통 테이블
+   ========================= */
+  &-table {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    th,
+    td {
+      padding: fn.rem(4);
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+    }
+  }
+
+  /* =========================
+    상단 헤더
+   ========================= */
+  &-header {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    td {
+      padding: fn.rem(9) fn.rem(25);
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+
+      &.bill-header-title {
+        border-right: none;
+
+        .bill-title {
+          @include typo.typography('h2b', $color: $bill-color);
+          display: block;
+          text-align: center;
+        }
+      }
+
+      &.bill-header-meta {
+        padding-left: 0;
+        border-left: none;
+      }
+
+      .bill-row {
+        @include mx.flex(flex, row, space-between, flex-start);
+        width: 100%;
+
+        .bill-label {
+          width: fn.rem(57);
+          margin-right: fn.rem(20);
+          text-align: right;
+        }
+
+        .bill-value {
+          flex: 1;
+          font-weight: 400;
+          color: map.get(color.$text-colors, 'primary');
+        }
+      }
+    }
+
+    .bill-header-wrap {
+      @include mx.flex(flex, row, space-around, flex-start);
+
+      .bill-badge {
+        @include mx.flex(flex, column, center, center);
+        @include typo.typography('b4s', $color: $bill-color);
+        flex: 1;
+        gap: fn.rem(4);
+      }
+
+      .bill-info {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        @include typo.typography('b4s', $color: $bill-color);
+        flex: 1;
+        gap: fn.rem(4);
+      }
+    }
+  }
+
+  &-header-col-title {
+    width: fn.rem(323);
+  }
+
+  &-header-col-meta {
+    width: auto;
+  }
+
+  /* =========================
+    공급자 / 공급받는자
+   ========================= */
+  &-parties {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    // 첫 번째 행의 첫 번째 열의 라벨 왼쪽 테두리 제거
+    tr:first-child {
+      .bill-party-label:first-child {
+        border-left-width: 1px;
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+    }
+
+    .bill-party-col {
+      width: fn.rem(26);
+    }
+
+    .bill-label-col {
+      width: fn.rem(60);
+    }
+
+    .bill-value-col {
+      width: auto;
+    }
+    // stylelint-disable-next-line no-descending-specificity
+    .bill-party-label {
+      font-size: fn.rem(14);
+      text-align: center;
+      letter-spacing: fn.rem(2);
+      border-left-width: map.get(var.$unit, 2);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+
+      @include typo.typography('b3s', $color: $bill-color);
+    }
+
+    // stylelint-disable-next-line no-descending-specificity
+    .bill-label {
+      @include typo.typography('b4s', $color: $bill-color);
+      padding: fn.rem(4);
+    }
+    // stylelint-disable-next-line no-descending-specificity
+    .bill-value {
+      padding: fn.rem(4);
+      text-align: left;
+      word-break: break-all;
+
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  /* =========================
+    작성일자 / 금액 / 비고
+    ========================= */
+  &-summary {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    td {
+      padding: fn.rem(4);
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+    }
+
+    .bill-summary-col-date {
+      width: fn.rem(120);
+    }
+
+    .bill-summary-col-amount {
+      width: auto;
+    }
+
+    .bill-summary-label {
+      text-align: center;
+      background: map.get(color.$layout-surf, 'raised');
+
+      @include typo.typography('b4s', $color: $bill-color);
+    }
+
+    .bill-summary-value {
+      text-align: center;
+
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+      &.bill-num {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+      }
+    }
+
+    .bill-summary-text {
+      text-align: center;
+
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  /* =========================
+    품목 테이블
+   ========================= */
+  &-items {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    th,
+    td {
+      padding: fn.rem(4);
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+    }
+
+    th {
+      font-weight: 600;
+      text-align: center;
+      background: map.get(color.$layout-surf, 'raised');
+
+      @include typo.typography('b4r', $color: $bill-color);
+    }
+
+    td {
+      height: fn.rem(24);
+    }
+
+    .bill-item-col-m {
+      width: fn.rem(24);
+    }
+
+    .bill-item-col-name {
+      width: auto;
+    }
+
+    .bill-item-col-s {
+      width: fn.rem(60);
+    }
+
+    .bill-item-col-num {
+      width: fn.rem(100);
+    }
+
+    .bill-invoice-cell-l {
+      text-align: left;
+    }
+
+    .bill-invoice-cell-c {
+      text-align: center;
+    }
+
+    .bill-invoice-cell-r {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+  }
+
+  /* =========================
+    하단 합계
+   ========================= */
+  &-footer {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+    td {
+      padding: fn.rem(4);
+      white-space: nowrap;
+      vertical-align: middle;
+      border: 1px solid $bill-color;
+    }
+
+    .bill-footer-col {
+      width: auto;
+    }
+
+    .bill-footer-label {
+      text-align: center;
+      background: map.get(color.$layout-surf, 'raised');
+
+      @include typo.typography('b4r', $color: $bill-color);
+    }
+
+    .bill-footer-value {
+      height: fn.rem(42);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    .bill-footer-claim {
+      height: fn.rem(42);
+      text-align: center;
+
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+}
+
+/* -----------------------------------
+ * 견적서, 거래명세서 (estimate)
+ * ----------------------------------- */
+.estimate {
+  &-inner {
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: fn.rem(24);
+  }
+
+  &-head {
+    .estimate-title {
+      margin: 0 0 fn.rem(24);
+      text-align: center;
+
+      @include typo.typography('h3s', $color: map.get(color.$text-colors, 'default'));
+    }
+
+    .estimate-info-line {
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      padding: fn.rem(12) fn.rem(16);
+      background: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'lg');
+
+      > span {
+        &::before {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+          content: '| ';
+        }
+      }
+    }
+  }
+
+  .estimate-info-table {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    td {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+      padding: fn.rem(4) fn.rem(6);
+      vertical-align: middle;
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+    }
+
+    .estimate-label {
+      width: fn.rem(65);
+      background: map.get(color.$layout-surf, 'sunken');
+    }
+  }
+
+  &-parties {
+    @include mx.flex(flex, row, space-between, stretch);
+    gap: fn.rem(12);
+
+    .estimate-party {
+      flex: 1;
+      max-width: 50%;
+    }
+
+    .estimate-party-title {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+      padding: 0 0 fn.rem(12);
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .estimate-party-table {
+      width: 100%;
+      border-spacing: 0;
+      border-collapse: collapse;
+
+      td {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+        padding: fn.rem(4) fn.rem(6);
+        vertical-align: middle;
+        border: 1px solid map.get(color.$layout-border, 'quaternary');
+      }
+
+      .estimate-label {
+        width: fn.rem(65);
+        background: map.get(color.$layout-surf, 'sunken');
+      }
+    }
+  }
+
+  /* 품목 테이블 */
+  &-items {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+
+    /* stylelint-disable no-descending-specificity */
+    td {
+      height: fn.rem(42);
+      padding: fn.rem(4);
+      vertical-align: middle;
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+    }
+
+    th {
+      padding: fn.rem(4);
+      text-align: center;
+      vertical-align: middle;
+      background: map.get(color.$layout-surf, 'sunken');
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+    }
+
+    .estimate-item-col {
+      &-no,
+      &-narrow {
+        width: fn.rem(40);
+      }
+
+      &-name {
+        width: fn.rem(162);
+      }
+
+      &-num,
+      &-tax {
+        width: auto;
+      }
+    }
+
+    .estimate-cell-l {
+      text-align: left;
+    }
+
+    .estimate-cell-c {
+      text-align: center;
+      background: map.get(color.$layout-surf, 'sunken');
+    }
+
+    .estimate-cell-r {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .estimate-cell-spec {
+      text-align: left;
+      word-break: break-word;
+      white-space: normal;
+
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+
+      span {
+        display: block;
+
+        &.estimate-code,
+        &.estimate-spec {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        &.estimate-name {
+          padding: fn.rem(2) 0;
+        }
+      }
+    }
+
+    .estimate-items-total td {
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'default'));
+    }
+  }
+}
+
+/* ---------------------------------  
+  프린트 프레임
+ --------------------------------- */
+.vits-scope.print {
+  min-width: auto;
+}
+
+.vits-print-frame {
+  width: 100%;
+  height: 100vh;
+  padding: fn.rem(52) fn.rem(24) fn.rem(32);
+
+  &-inner {
+    @include mx.flex(flex, column, space-between, stretch);
+    height: 100%;
+  }
+
+  &-watermark {
+    @include mx.flex(flex, column, flex-end, stretch);
+    padding: fn.rem(20) 0;
+
+    img {
+      height: fn.rem(24);
+    }
+  }
+
+  // 프린트 영역일때 본문 영역 스타일
+
+  .vits-docs-body {
+    padding: 0;
+    border: none;
+  }
+
+  .vits-docs-header,
+  .vits-docs-notice {
+    display: none;
+  }
+
+  @media print {
+    .vits-docs-body {
+      padding: 0;
+      border: none;
+    }
+
+    .vits-docs-header,
+    .vits-docs-notice {
+      display: none;
+    }
+  }
+}
