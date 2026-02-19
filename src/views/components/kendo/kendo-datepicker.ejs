@@ -9,19 +9,22 @@
  * @param {string} size - 'sm' | 'md' | 'lg' (기본: 'md')
  */
 
-var _id = typeof id !== 'undefined' ? id : 'kendoRangePicker_' + Date.now();
-var _startName = typeof startName !== 'undefined' ? startName : 'startDate';
-var _endName = typeof endName !== 'undefined' ? endName : 'endDate';
-var _startValue = typeof startValue !== 'undefined' ? startValue : '';
-var _endValue = typeof endValue !== 'undefined' ? endValue : '';
-var _disabled = typeof disabled !== 'undefined' ? disabled : false;
-var _addClass = typeof addClass !== 'undefined' ? addClass : '';
-var _size = typeof size !== 'undefined' ? size : 'md';
+var opts = typeof options !== 'undefined' ? options : {};
 
-var _opt = typeof opt !== 'undefined' ? opt : {};
+var _id = opts.id || (typeof id !== 'undefined' ? id : 'kendoRangePicker_' + Date.now());
+var _startName = opts.startName || (typeof startName !== 'undefined' ? startName : 'startDate');
+var _endName = opts.endName || (typeof endName !== 'undefined' ? endName : 'endDate');
+var _startValue = opts.startValue || (typeof startValue !== 'undefined' ? startValue : '');
+var _endValue = opts.endValue || (typeof endValue !== 'undefined' ? endValue : '');
+var _disabled = opts.disabled || (typeof disabled !== 'undefined' ? disabled : false);
+var _addClass = opts.addClass || (typeof addClass !== 'undefined' ? addClass : '');
+var _size = opts.size || (typeof size !== 'undefined' ? size : 'md');
+var _hideInput = opts.hideInput || (typeof hideInput !== 'undefined' ? !!hideInput : false);
+
+var _opt = opts.opt || (typeof opt !== 'undefined' ? opt : {});
 _opt.format = _opt.format || 'yyyy.MM.dd';
 _opt.separator = _opt.separator || ' ~ ';
-_opt.placeholder = _opt.placeholder || '시작일 ~ 종료일';
+_opt.placeholder = opts.placeholder || _opt.placeholder || '시작일 ~ 종료일';
 
 var wrapClass = 'vits-kendo-range-picker';
 wrapClass += ' size-' + _size;
@@ -44,7 +47,7 @@ if (_addClass) wrapClass += ' ' + _addClass;
            name="<%= _endName %>" 
            value="<%= _endValue %>">
     
-    <span class="picker-input k-picker k-datepicker">
+    <span class="picker-input k-picker k-datepicker<%= _hideInput ? ' sr-only' : '' %>">
         <input type="text" 
                class="picker-display k-input-inner js-range-display" 
                placeholder="<%= _opt.placeholder %>" 

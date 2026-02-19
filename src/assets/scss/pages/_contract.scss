@@ -1,0 +1,285 @@
+// -----------------------------------------------------------------------------
+// pages/_contract.scss
+// - 전자서명 계약서, 동의서 전용 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+
+/* -----------------------------------------------------------------------------
+  vits-credit-contract (거래약정서 섹션)
+   ----------------------------------------------------------------------------- */
+.vits-credit-contract {
+  padding: map.get(var.$unit, 24) 0;
+  line-height: 1.6;
+
+  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+}
+
+.vits-credit-contract p {
+  margin: 0 0 map.get(var.$unit, 8);
+}
+
+.vits-credit-contract p:last-child {
+  margin-bottom: 0;
+}
+
+/* 조항 목록 */
+.contract-articles {
+  margin-bottom: map.get(var.$unit, 24);
+}
+
+.contract-article {
+  margin-bottom: map.get(var.$unit, 24);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-head {
+    margin: 0 0 map.get(var.$unit, 8);
+    font-weight: 600;
+
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &-body {
+    padding-left: 0;
+    margin: 0;
+
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    p {
+      margin-bottom: map.get(var.$unit, 8);
+      word-break: keep-all;
+    }
+
+    /* 제8조 계약 일자 - 날짜 입력 행 */
+    .contract-date-row {
+      gap: fn.rem(8);
+      margin-bottom: map.get(var.$unit, 2);
+
+      @include mx.flex($align: center, $wrap: wrap);
+
+      .signed-date {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+}
+
+/* 입력 필드 공통 */
+.contract-input {
+  display: inline-block;
+  min-width: fn.rem(50);
+  padding: fn.rem(4) fn.rem(8);
+  background-color: map.get(color.$layout-surf, 'base');
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'sm');
+
+  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+  &::placeholder {
+    color: map.get(color.$text-colors, 'quaternary');
+  }
+
+  &.contract-input-year {
+    width: fn.rem(50);
+    text-align: center;
+  }
+
+  &.contract-input-month,
+  &.contract-input-day {
+    width: fn.rem(50);
+    text-align: center;
+  }
+
+  &.contract-input-full {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  contract-box (공급자/공급받는자/보증인 영역)
+   ----------------------------------------------------------------------------- */
+.contract-box {
+  margin-bottom: map.get(var.$unit, 20);
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'md');
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-title {
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 32);
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+  }
+
+  &-desc {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: block;
+    padding: map.get(var.$unit, 4) 0;
+  }
+
+  /* 2단 배치: 왼쪽 열(상호·주소·대표자) / 오른쪽 열(사업자번호·연락처) */
+  .contract-info-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: map.get(var.$unit, 16) map.get(var.$unit, 40);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+  }
+
+  .contract-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: map.get(var.$unit, 16);
+    margin: 0;
+  }
+
+  .contract-info-list {
+    display: grid;
+    gap: map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+  }
+
+  /* contract-info-cols 내 전체 폭 행(거주지 주소) */
+  .contract-info-row-full {
+    grid-column: 1 / -1;
+  }
+
+  .contract-info-row {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr;
+    gap: map.get(var.$unit, 4) 0;
+    align-items: start;
+
+    dt {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    dd {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.flex($align: center, $justify: space-between);
+      gap: map.get(var.$unit, 8);
+      min-height: fn.rem(40);
+
+      .contract-input {
+        width: 100%;
+        min-height: fn.rem(32);
+      }
+    }
+  }
+
+  .contract-info-value {
+    margin-right: map.get(var.$unit, 8);
+  }
+
+  /* (인) 서명 영역 */
+  .contract-sign-area {
+    display: inline-block;
+    min-width: fn.rem(46);
+    min-height: fn.rem(24);
+    padding: fn.rem(2) 0;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+  }
+
+  .contract-info-row-full:has(.contract-sign-area) {
+    dd {
+      width: calc(50% - #{fn.rem(20)});
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  vits-credit-consent (개인신용 정보 수집·조회·이용 및 제공 동의서)
+   ----------------------------------------------------------------------------- */
+.vits-credit-consent {
+  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+
+  .contract-box {
+    margin-bottom: map.get(var.$unit, 20);
+
+    &:last-of-type {
+      margin-bottom: map.get(var.$unit, 24);
+    }
+  }
+}
+
+.consent-intro {
+  margin: 0 0 map.get(var.$unit, 20);
+
+  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+}
+
+/* pc_MY_05040701_P */
+.vits-credit-consent .contract-article {
+  &-body {
+    p {
+      position: relative;
+      padding-left: map.get(var.$unit, 8);
+
+      &::before {
+        @include mx.position(absolute, $top: 0, $left: 0);
+        width: fn.rem(2);
+        height: fn.rem(2);
+        color: map.get(color.$text-colors, 'tertiary');
+        content: '·';
+      }
+    }
+  }
+}
+
+.consent-required {
+  margin-bottom: map.get(var.$unit, 24);
+
+  .general-table-wrap {
+    min-height: fit-content;
+  }
+}
+
+.consent-required-question {
+  margin: 0 0 map.get(var.$unit, 12);
+
+  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+}
+
+.consent-required-badge {
+  font-weight: 600;
+}
+
+.vits-credit-consent .contract-date-row {
+  gap: fn.rem(8);
+  margin: 0 auto;
+
+  @include mx.flex($align: center, $wrap: wrap, $justify: center);
+  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+
+  .signed-date {
+    @include typo.typography('b3s');
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  vits-guide-popup (가이드/도움말 팝업)
+   ----------------------------------------------------------------------------- */
+.vits-guide-popup {
+  .vits-alerts-anatomy {
+    margin-bottom: map.get(var.$unit, 32);
+  }
+
+  @include mx.img-fit;
+}

@@ -12,7 +12,72 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
+@mixin my-home-layout {
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  [data-mypage-layout='head'] {
+    @include mx.flex(flex, row, flex-start, center);
+    height: map.get(var.$unit, 52);
+    background: color.$color-white;
+    box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+
+    .inner {
+      @include mx.flex(flex, row, space-between, center);
+      gap: map.get(var.$unit, 8);
+      width: 100%;
+      height: 100%;
+    }
+
+    .title {
+      @include typo.typography('b3s');
+      @include mx.ellipsis-single;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .icon {
+      @include icon.ic-size(var.$mo-gutter);
+      flex-shrink: 0;
+    }
+
+    &:not([data-head-link]) {
+      .inner {
+        padding: 0 map.get(var.$unit, 20);
+      }
+    }
+
+    &[data-head-link='type01'] {
+      .inner {
+        padding: 0 var.$mo-section-gap;
+      }
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'tertiary');
+      }
+    }
+
+    &[data-head-link='type02'] {
+      .inner {
+        padding: 0 var.$mo-gutter;
+      }
+
+      .icon {
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+  }
+
+  [data-mypage-layout='body'] {
+    background: color.$color-white;
+  }
+}
+
 .vm-wrap {
+  &.wrap-my-home .vm-content-wrap,
+  &.wrap-my-coupon .vm-content-wrap {
+    background: map.get(color.$layout-surf, 'mypage');
+  }
+
   &:has(.vm-claim-request.step-1.is-active) {
     background: map.get(color.$layout-surf, 'sunken');
   }
@@ -162,6 +227,57 @@
         dd {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
           flex: 0 0 calc(100% - 27.03% - 8px);
+
+          // 배송 준비중일 떄 - 수정 관련
+          .shipping {
+            &-edit {
+              &-view {
+                @include mx.flex(flex, row, flex-start, center);
+                gap: map.get(var.$unit, 8);
+                max-width: 100%;
+
+                .vits-text-underline-button {
+                  flex-shrink: 0;
+                }
+              }
+
+              &-form {
+                @include mx.flex(flex, column);
+                gap: map.get(var.$unit, 8);
+                width: 100%;
+                margin-top: (map.get(var.$unit, 8) * -1);
+
+                &.type-row {
+                  flex-direction: row;
+                }
+              }
+
+              &-buttons {
+                @include mx.flex(flex, row, flex-end, center);
+                gap: fn.rem(10);
+              }
+
+              &-select {
+                flex-grow: 1;
+
+                .vits-select {
+                  &,
+                  &-trigger {
+                    width: 100%;
+                    height: 100%;
+                  }
+
+                  &-trigger {
+                    padding: 0 map.get(var.$unit, 12);
+                  }
+
+                  &-value {
+                    color: map.get(color.$text-colors, 'primary');
+                  }
+                }
+              }
+            }
+          }
         }
 
         &.info-shipping,
@@ -308,6 +424,362 @@
 
         .round-foot-price-value {
           margin-left: auto;
+        }
+      }
+    }
+  }
+}
+
+// 마이페이지 홈 (대시보드)
+.vm-mypage-home {
+  &-profile {
+    padding: var.$mo-gutter;
+    background: color.$color-white;
+
+    .profile {
+      &-inner {
+        padding: map.get(var.$unit, 20);
+        background: map.get(color.$layout-status, 'info-bg-sub');
+        border-radius: map.get(var.$radius, 'lg');
+      }
+
+      &-user-name {
+        @include typo.typography('h3s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &-coupon {
+        &-link {
+          @include mx.flex(flex, row, flex-start, center);
+          flex-shrink: 0;
+          gap: map.get(var.$unit, 8);
+          height: map.get(var.$unit, 32);
+          padding: map.get(var.$unit, 4) var.$mo-gutter;
+          background: color.$color-white;
+        }
+
+        &-title {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 4);
+
+          .icon {
+            @include icon.ic-size(fn.rem(14));
+            flex-shrink: 0;
+            color: #2f4f9e;
+          }
+
+          .text {
+            @include typo.typography('m1s', $color: map.get(color.$text-status, 'info-sub'));
+          }
+        }
+
+        &-total {
+          @include typo.typography('m1s', $color: map.get(color.$text-status, 'info-sub'));
+        }
+      }
+    }
+
+    // type01
+    &.profile-type01 {
+      .profile {
+        &-inner {
+          @include mx.flex(flex, row, flex-start, flex-end, wrap);
+          gap: var.$mo-gutter;
+        }
+
+        &-user {
+          &-link {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: fn.rem(10);
+            padding: 0 map.get(var.$unit, 4);
+            margin-right: auto;
+
+            .icon {
+              @include icon.ic-size(map.get(var.$unit, 20));
+              flex-shrink: 0;
+              color: map.get(color.$icon-neutral, 'primary');
+            }
+          }
+        }
+
+        &-coupon-link {
+          border-radius: map.get(var.$unit, 32);
+        }
+      }
+    }
+
+    // type02
+    &.profile-type02 {
+      .profile {
+        &-inner {
+          @include mx.flex(flex, column);
+          gap: var.$mo-gutter;
+
+          > [class*='profile-'] {
+            width: 100%;
+          }
+        }
+
+        &-user {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: fn.rem(10);
+          padding-left: map.get(var.$unit, 4);
+
+          .vits-text-arrow-link .icon {
+            color: map.get(color.$icon-neutral, 'tertiary');
+          }
+        }
+
+        &-coupon {
+          &-link {
+            border-radius: map.get(var.$radius, 'md');
+          }
+
+          &-total {
+            margin-left: auto;
+          }
+        }
+      }
+    }
+  }
+
+  &-sections {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 8);
+  }
+
+  // 주문 현황
+  &-status {
+    @include my-home-layout;
+
+    .home-status {
+      &-body {
+        padding: var.$mo-section-gap var.$mo-gutter;
+      }
+
+      &-list {
+        @include mx.flex(flex, row, space-between);
+        gap: clamp(#{map.get(var.$unit, 2)}, 3.33vw, #{map.get(var.$unit, 12)});
+      }
+
+      &-item {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      &-link {
+        @include mx.flex(flex, column, flex-start, center);
+        width: 100%;
+        text-align: center;
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 40));
+          padding: map.get(var.$unit, 8);
+          color: map.get(color.$icon-neutral, 'primary');
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: 50%;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+          padding-top: map.get(var.$unit, 4);
+          white-space: nowrap;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .count {
+          @include typo.typography('b3b', $color: map.get(color.$text-status, 'info-sub'));
+          padding-top: var.$mo-gutter;
+        }
+      }
+    }
+  }
+
+  // 메뉴
+  &-menus {
+    @include my-home-layout;
+
+    // 마이페이지 메뉴
+    &.menus-mypage {
+      .home-menus {
+        &-body {
+          padding: map.get(var.$unit, 12) map.get(var.$unit, 32);
+        }
+
+        &-group {
+          &-title {
+            @include mx.flex(flex, row, flex-start, center);
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            height: fn.rem(30);
+          }
+
+          &:not(:first-of-type) {
+            padding-top: map.get(var.$unit, 12);
+          }
+
+          &:not(:last-of-type) {
+            @include mx.border('bottom', $color: map.get(color.$layout-surf, 'sunken'));
+            padding-bottom: map.get(var.$unit, 8);
+            margin-bottom: map.get(var.$unit, 8);
+          }
+        }
+
+        &-link {
+          @include mx.flex(flex, row, flex-start, center);
+          height: fn.rem(42);
+
+          .text {
+            @include typo.typography('b3s');
+            flex-grow: 1;
+            min-width: 0;
+          }
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          .icon {
+            @include icon.ic-size(var.$mo-gutter);
+            flex-shrink: 0;
+            color: map.get(color.$icon-neutral, 'tertiary');
+          }
+        }
+      }
+    }
+  }
+
+  &-guides {
+    @include my-home-layout;
+
+    // 데이터 없을 때
+    .home-guides-empty {
+      @include mx.flex(flex, column, flex-start, center);
+      gap: map.get(var.$unit, 4);
+      padding: var.$mo-section-gap 0 map.get(var.$unit, 20);
+
+      &-title {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-desc {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        padding-bottom: map.get(var.$unit, 8);
+      }
+
+      [class*='vits-btn-'] {
+        min-width: fn.rem(115);
+      }
+    }
+
+    [class*='home-'][class*='-body'] {
+      padding-top: map.get(var.$unit, 20);
+      padding-bottom: map.get(var.$unit, 32);
+    }
+
+    // 여신 관리
+    &.guides-credit {
+      .home-credit {
+        &-body {
+          padding-right: var.$mo-section-gap;
+          padding-left: var.$mo-section-gap;
+        }
+
+        &-usage {
+          @include mx.flex(flex, row, flex-start, stretch, wrap);
+          gap: map.get(var.$unit, 12);
+
+          &-item {
+            @include mx.flex(flex, column);
+            flex: 1 1 calc(50% - fn.rem(6));
+            gap: map.get(var.$unit, 2);
+            min-width: 0;
+            padding: map.get(var.$unit, 12);
+            background: map.get(color.$layout-surf, 'raised');
+            border-radius: map.get(var.$radius, 'sm');
+          }
+
+          &-label {
+            @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          &-value {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 2);
+
+            p {
+              @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+
+              &.point-used {
+                color: map.get(color.$text-status, 'info-sub');
+              }
+
+              &.point-due {
+                color: map.get(color.$text-status, 'brand-sub');
+              }
+            }
+          }
+
+          &-sub {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: map.get(var.$unit, 2);
+            padding: map.get(var.$unit, 2) map.get(var.$unit, 4);
+            background: map.get(color.$layout-surf, 'sunken');
+            border-radius: map.get(var.$radius, 'sm');
+
+            .text {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            .value {
+              @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+      }
+    }
+
+    // 중요 서류
+    &.guides-docs {
+      .home-docs {
+        &-body {
+          padding-right: var.$mo-gutter;
+          padding-left: var.$mo-gutter;
+        }
+
+        &-items {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 12);
+        }
+
+        &-item {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: var.$mo-gutter;
+          padding: var.$mo-gutter;
+          background: map.get(color.$layout-surf, 'raised');
+          border-radius: map.get(var.$radius, 'sm');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+          &-info {
+            @include mx.flex(flex, column);
+            flex-grow: 1;
+            gap: map.get(var.$unit, 8);
+            min-width: 0;
+          }
+        }
+
+        &-text p {
+          @include typo.typography('m1r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include mx.ellipsis-single;
+        }
+
+        &-price p {
+          @include typo.typography('m1s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-button {
+          flex-shrink: 0;
+
+          [class*='vits-btn-'] {
+            width: fn.rem(70);
+          }
         }
       }
     }
@@ -635,6 +1107,88 @@
   }
 }
 
+// 쿠폰함 관리
+.vm-mypage-coupon {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+
+  &-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 32);
+    padding-right: var.$mo-gutter;
+    padding-left: var.$mo-gutter;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vits-alerts-anatomy {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'info-soft');
+    }
+  }
+
+  &-download {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 12);
+    width: calc(100% - (var.$mo-gutter * 2));
+    padding: map.get(var.$unit, 20);
+    margin: 0 auto;
+    text-align: center;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .coupon-download {
+      &-head {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-title {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+
+        .point-color {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-button {
+        padding: 0 map.get(var.$unit, 12);
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        [class*='vits-btn-'] {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &-title {
+    @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+    padding-right: var.$mo-gutter;
+    padding-left: var.$mo-gutter;
+  }
+
+  &-group {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+
+    /* stylelint-disable no-descending-specificity */
+    .vits-empty-state {
+      padding: map.get(var.$unit, 36) 0;
+    }
+
+    // 보유 쿠폰
+    &.coupon-owned {
+      .vits-empty-state {
+        min-height: fn.rem(300);
+      }
+    }
+    /* stylelint-enable no-descending-specificity */
+  }
+}
+
 /* ================================================
 ======================= 팝업 =======================
 ================================================ */
@@ -697,6 +1251,7 @@
   .info-list {
     @include mx.flex(flex, row, flex-start, flex-start, wrap);
 
+    /* stylelint-disable no-descending-specificity */
     dt,
     dd {
       padding-top: fn.rem(7);
@@ -719,6 +1274,7 @@
         border-radius: map.get(var.$unit, 4);
       }
     }
+    /* stylelint-enable no-descending-specificity */
   }
 }
 

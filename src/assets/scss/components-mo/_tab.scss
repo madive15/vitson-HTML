@@ -1,0 +1,70 @@
+// -----------------------------------------------------------------------------
+// components-mo/_tab.scss
+// - 모바일 탭 UI 공통 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+// tab
+.vm-tab-section {
+  .vm-tab {
+    &-menus {
+      @include mx.flex;
+    }
+
+    &-menu {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &-btn {
+      @include button.btn-reset;
+      width: 100%;
+    }
+
+    &-panel {
+      padding: map.get(var.$unit, 20) 0 map.get(var.$unit, 52);
+      box-shadow: map.get(var.$box-shadow, 'elevation_-1');
+    }
+  }
+
+  &[class*='-underline'] {
+    .vm-tab-btn {
+      height: map.get(var.$unit, 48);
+      background: color.$color-white;
+      box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+
+      &.is-active {
+        box-shadow: inset 0 -2px 0 0 map.get(color.$layout-border, 'primary');
+      }
+    }
+  }
+
+  &[class*='-label'] {
+    .vm-tab-btn {
+      @include mx.flex(flex, row, center, center);
+      gap: map.get(var.$unit, 4);
+
+      .text {
+        @include typo.typography('b2s');
+      }
+
+      .label {
+        @include mx.flex(flex, row, center, center);
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand-sub'));
+        min-width: fn.rem(22);
+        height: fn.rem(22);
+        padding: 0 fn.rem(3);
+        background: map.get(color.$layout-status, 'brand-bg-sub');
+        border-radius: fn.rem(22);
+      }
+    }
+  }
+}

@@ -362,6 +362,52 @@
             </li>
           </ul>
         </div>
+
+        <!-- 텍스트 화살표 버튼 -->
+        <h3 class="vits-guide-subtitle">텍스트 화살표 버튼</h3>
+
+        <div class="vits-guide-code">
+          <code>
+            <pre>
+[사용 가능한 파라미터]
+- text: string (필수)       - 버튼 텍스트
+- href: string (필수)       - 링크 URL
+- size: string (선택)       - 기본 14px, sm (font-size 12px)
+- rootClass                - 컬러값, 굵기 등 추후 변경 시, 사용
+                             ㄴ 예시 weight-?? color-?? 
+
+* 기본 스타일: 컬러 #767676 / 굵기 400
+
+[사용 예시]
+&lt;%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+  href: '#!', 
+  text: '내 정보',
+  size: 'sm'
+}) %&gt;
+          </pre
+            >
+          </code>
+        </div>
+
+        <div class="vits-guide-wrap">
+          <ul class="vits-guide-list flex-start">
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+                href: '#!', 
+                text: '폰트 크기 14px',
+              }) %>
+            </li>
+            <li>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, { 
+                href: '#!', 
+                text: '폰트 크기 12px',
+                size: 'sm'
+              }) %>
+            </li>
+          </ul>
+        </div>
       </section>
       <!-- E: vits-guide-wrapper -->
     </main>

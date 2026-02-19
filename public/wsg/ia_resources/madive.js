@@ -63,6 +63,8 @@ var ia = {
         $('.ia-total-legend .c-done-new .value').text($('.ia-tbl-wrap').find('.row-done-new').length);
         $('.ia-total-legend .c-done-update .value').text($('.ia-tbl-wrap').find('.row-done-update').length);
 
+        applyPopupLabelText(); // 팝업 유형 텍스트 주입
+
         $('.ia-section-header').on('click', function () {
           $(this).parents('.ia-section').toggleClass('is-hide');
         });
@@ -211,4 +213,29 @@ function findLastUpdateDate(obj) {
 
 function trim(x) {
   return x.replace(/^\s+|\s+$/gm, '');
+}
+
+// [D] col-popup 표시 텍스트를 DOM에 실제로 주입(검색/복사용)
+// - CSS ::after(content)는 화면 표기만 되고 텍스트 검색에 안 잡힐 수 있음
+// - data-popup 값 기준으로 셀 텍스트를 넣어 검색 가능하게 처리
+function applyPopupLabelText() {
+  var POPUP_LABEL = {
+    b: 'bottom sheet',
+    sr: 'side slide (right)',
+    sl: 'side slide (left)',
+    m: 'center modal',
+    f: 'full'
+  };
+
+  $('.ia-tbl-wrap table td.col-popup').each(function () {
+    var $cell = $(this);
+    var key = String($cell.data('popup') || '').trim();
+    if (!key || !POPUP_LABEL[key]) return;
+
+    // 기존 텍스트가 이미 있으면 덮어쓰지 않음(수동 입력 보호)
+    var current = $cell.text().trim();
+    if (current) return;
+
+    $cell.text(POPUP_LABEL[key]);
+  });
 }

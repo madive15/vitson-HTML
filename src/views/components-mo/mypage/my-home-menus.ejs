@@ -1,0 +1,73 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+// 마이페이지 메뉴 데이터
+const mypageMenus = [
+  {
+    title: '주문관리',
+    items: [
+      { text: '주문/배송조회', href: '#!' },
+      { text: '취소/반품내역', href: '#!' },
+      { text: '자주구매', href: '#!' },
+      { text: '좋아요', href: '#!' },
+    ],
+  },
+  {
+    title: '서류 관리',
+    items: [
+      { text: '세금계산서 조회', href: '#!' },
+      { text: '견적서 조회', href: '#!' },
+      { text: '구매내역서 조회', href: '#!' },
+    ],
+  },
+  {
+    title: '혜택 관리',
+    items: [
+      { text: '쿠폰함', href: '#!' },
+    ],
+  },
+  {
+    title: '정보 관리',
+    items: [
+      { text: '회원정보', href: '#!' },
+      { text: '배송지 관리', href: '#!' },
+      { text: '비츠온페이 관리', href: '#!' },
+      { text: '후불관리', href: '#!' },
+      { text: '1:1 문의', href: '#!' },
+      { text: '대량구매문의', href: '#!' },
+      { text: '계정등록', href: '#!' },
+      { text: '설문조사', href: '#!' },
+    ],
+  },
+];
+%>
+
+<div class="vm-mypage-home-menus menus-mypage">
+  <div class="home-menus-head" data-mypage-layout="head">
+    <div class="inner">
+      <p class="title">마이페이지</p>
+    </div>
+  </div>
+  <div class="home-menus-body" data-mypage-layout="body">
+    <!-- 마이페이지 메뉴 -->
+    <nav class="home-menus-nav" aria-label="마이페이지 메뉴">
+      <% mypageMenus.forEach((group) => { %>
+      <div class="home-menus-group">
+        <p class="home-menus-group-title"><%= group.title %></p>
+        <ul class="home-menus-group-list">
+          <% group.items.forEach((item) => { %>
+          <li>
+            <a href="<%= item.href %>" class="home-menus-link">
+              <span class="text"><%= item.text %></span>
+              <span class="icon">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+              </span>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+      <% }); %>
+    </nav>
+  </div>
+</div>

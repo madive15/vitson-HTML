@@ -1,0 +1,58 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _img = (typeof img !== 'undefined') ? img : '';
+  const _alt = (typeof alt !== 'undefined') ? alt : '';
+  const _code = (typeof code !== 'undefined') ? code : '';
+  const _name = (typeof name !== 'undefined') ? name : '';
+  const _qty = (typeof qty !== 'undefined') ? qty : 0;
+  const _options = (typeof options !== 'undefined') ? options : [];
+  const _price = (typeof price !== 'undefined') ? price : '';
+  const _discount = (typeof discount !== 'undefined') ? discount : '';
+  const _total = (typeof total !== 'undefined') ? total : '';
+  const _selectId = (typeof selectId !== 'undefined') ? selectId : 'coupon-select';
+
+  // 쿠폰 옵션 0개면 disabled + 안내 문구
+  const _isDisabled = _options.length === 0;
+  const _placeholder = _isDisabled ? '적용 가능한 상품 쿠폰이 없습니다' : '쿠폰 선택';
+  const _value = !_isDisabled && _options.length > 0 ? String(_options[0].value) : '';
+%>
+
+<div class="vm-product-coupon-card">
+  <div class="coupon-card-product">
+    <div class="coupon-card-thumb">
+      <div class="product-thumb">
+        <img src="<%= _img %>" alt="<%= _alt %>" />
+      </div>
+    </div>
+    <div class="coupon-card-info">
+      <p class="product-code"><span class="sr-only">상품코드</span><%= _code %></p>
+      <p class="product-name"><span class="sr-only">상품명</span><%= _name %></p>
+      <p class="product-qty"><%= _qty %>개</p>
+    </div>
+  </div>
+
+  <div class="coupon-card-select-group">
+    <p class="coupon-card-select-label">쿠폰 선택</p>
+    <div class="coupon-card-select">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        id: _selectId,
+        name: _selectId,
+        placeholder: _placeholder,
+        options: _options,
+        value: _value,
+        disabled: _isDisabled,
+      }) %>
+    </div>
+  </div>
+
+  <dl class="coupon-card-price">
+    <dt>상품금액</dt>
+    <dd><%= _price %>원</dd>
+    <dt>쿠폰할인금액</dt>
+    <dd class="price-discount">-<%= _discount %>원</dd>
+    <dt class="price-total">최대혜택가</dt>
+    <dd class="price-total"><%= _total %>원</dd>
+  </dl>
+</div>

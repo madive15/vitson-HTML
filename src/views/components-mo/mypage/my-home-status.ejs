@@ -1,0 +1,39 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+// 주문 현황 데이터
+const orderStatus = [
+  { text: '주문접수', icon: 'order', count: 3 },
+  { text: '결제완료', icon: 'money-bag', count: 5 },
+  { text: '주문완료', icon: 'compare', count: 5 },
+  { text: '배송준비중', icon: 'box', count: 4 },
+  { text: '배송중', icon: 'speed-truck', count: 2 },
+];
+%>
+
+<div class="vm-mypage-home-status">
+  <div class="home-status-head" data-mypage-layout="head">
+    <div class="inner">
+      <p class="title">주문/배송조회</p>
+    </div>
+  </div>
+  <div class="home-status-body" data-mypage-layout="body">
+    <ul class="home-status-list">
+      <% orderStatus.forEach((item) => { %>
+      <li class="home-status-item">
+        <a href="#!" class="home-status-link">
+          <span class="icon">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/icon.ejs`, { 
+              iconName: item.icon 
+            }) %>
+          </span>
+          <span class="text"><%= item.text %></span>
+          <span class="count"><%= item.count %></span>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</div>

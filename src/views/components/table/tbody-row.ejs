@@ -12,6 +12,7 @@
   * type=quality: rowIndex, title, date (품질 문서 목록 - 번호, 문서 아이콘+제목, 날짜)
   * type=docs: cells[{colspan, tdClass, text, className, spans:[{text, className}], button:{text,variant,...}|false}], rowClass (문서/회계 등 유연한 td 행, 단일 text 셀은 className으로 span 클래스 지정)
   * type=noticeFixed: rowClass, firstCellType('icon'|'text'), firstCellIcon|firstCellText, label, labelVariant, text, textClassName, date (공지 상단 고정 행)
+  * type=consent: label, id, name, value (개인신용정보 동의 테이블 행 - 레이블 셀 + 체크박스 셀)
   */ %>
 <% const _src = typeof srcPath !== 'undefined' ? srcPath : ''; const _public = typeof publicPath !== 'undefined' ? publicPath : ''; %>
 <% const _type = typeof type !== 'undefined' ? type : ''; %>
@@ -334,6 +335,29 @@
     <span class="<%= _textClassName %>"><%= _text %></span>
   </td>
   <td><span class="text-date"><%= _date %></span></td>
+</tr>
+
+<!-- 개인신용정보 동의 테이블 행 (type=consent) -->
+<% } else if (_type === 'consent') { %>
+<!-- prettier-ignore -->
+<%
+  const _consentLabel = typeof label !== 'undefined' ? label : '';
+  const _consentId = typeof id !== 'undefined' ? id : '';
+  const _consentName = typeof name !== 'undefined' ? name : 'consent-credit';
+  const _consentValue = typeof value !== 'undefined' ? value : '';
+%>
+<tr>
+  <td><%= _consentLabel %></td>
+  <td>
+    <span class="sr-only">동의</span>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: _consentName,
+      value: _consentValue,
+      size: 'm',
+      checkboxType: 'item'
+    }) %>
+  </td>
 </tr>
 
 <% } %>

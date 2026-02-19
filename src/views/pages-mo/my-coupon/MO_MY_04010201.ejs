@@ -1,0 +1,192 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '보유쿠폰 탭 (쿠폰함 관리)'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-coupon">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '쿠폰함 관리' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-coupon">
+              <div class="vm-tab-section tab-underline-label" data-tab-scope>
+                <ul class="vm-tab-menus" role="tablist">
+                  <li class="vm-tab-menu">
+                    <!-- prettier-ignore -->
+                    <button 
+                      type="button" 
+                      data-tab-btn 
+                      data-tab-target="tab1" 
+                      role="tab" 
+                      class="vm-tab-btn is-active">
+                      <span class="text">보유 쿠폰</span>
+                      <span class="label">22</span>
+                    </button>
+                  </li>
+                  <li class="vm-tab-menu">
+                    <!-- prettier-ignore -->
+                    <button 
+                      type="button" 
+                      data-tab-btn 
+                      data-tab-target="tab2" 
+                      role="tab" 
+                      class="vm-tab-btn">
+                      <span class="text">쿠폰 받기</span>
+                      <span class="label">N</span>
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="vm-tab-panel" data-tab-panel="tab1" role="tabpanel">
+                  <div class="vm-mypage-coupon">
+                    <!-- 기간 필터 -->
+                    <div class="vm-filter-period-group">
+                      <div class="filter-period-buttons" data-scroll-buttons>
+                        <button type="button" class="filter-period-button is-active">
+                          <span class="text">전체</span>
+                        </button>
+                        <button type="button" class="filter-period-button">
+                          <span class="text">당월</span>
+                        </button>
+                        <button type="button" class="filter-period-button">
+                          <span class="text">전월</span>
+                        </button>
+                        <button type="button" class="filter-period-button">
+                          <span class="text">6개월</span>
+                        </button>
+                        <button type="button" class="filter-period-button">
+                          <span class="text">1년</span>
+                        </button>
+                        <button
+                          type="button"
+                          class="filter-period-button"
+                          data-range-picker-toggle="testPickerCouponRange"
+                        >
+                          <span class="text">직접입력</span>
+                        </button>
+                      </div>
+
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+                      options: {
+                        id: 'testPickerCouponRange',
+                        startName: 'couponStartDate',
+                        endName: 'couponEndDate',
+                        hideInput: true,
+                        opt: {
+                          max: new Date()
+                        }
+                      }
+                    }) %>
+                    </div>
+
+                    <!-- 쿠폰 리스트 -->
+                    <div class="vm-mypage-coupon-group coupon-owned">
+                      <div class="vm-mypage-coupon-list">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                          iconName: 'document-paper', 
+                          title: '보유한 쿠폰이 없습니다',
+                        }) %>
+
+                        <div class="vm-coupon-alerts">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                          theme: 'blue', 
+                          text: '유의 사항', 
+                          list:[
+                            '쿠폰은 주문 결제 시 사용할 수 있으며, 유효기간 내에만 사용 가능합니다.',
+                            '일부 특가 상품이나 기획전 상품에는 쿠폰 적용이 제한될 수 있습니다.'
+                          ]
+                        }) %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vm-tab-panel" data-tab-panel="tab2" role="tabpanel" hidden>
+                  <div class="vm-mypage-coupon">
+                    <div class="vm-mypage-coupon-download">
+                      <div class="coupon-download-head">
+                        <p class="coupon-download-title">
+                          <span class="point-color">프로모션 코드</span>가 있으신가요?
+                        </p>
+                        <p class="coupon-download-desc">쿠폰 번호를 입력하고 숨겨진 혜택을 받아보세요.</p>
+                      </div>
+                      <div class="coupon-download-button">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size:'xl', 
+                          variant: 'outline-secondary', 
+                          text: '등록하기', 
+                          iconLeft: true, 
+                          iconName: 'ic-plus'
+                        }) %>
+                      </div>
+                    </div>
+
+                    <!-- 쿠폰 리스트 -->
+                    <div class="vm-mypage-coupon-group coupon-get">
+                      <div class="vm-mypage-coupon-list">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                          iconName: 'document-paper', 
+                          title: '다운로드할 수 있는 쿠폰이 없습니다',
+                        }) %>
+
+                        <div class="vm-coupon-alerts">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                            theme: 'blue', 
+                            text: '유의 사항', 
+                            list:[
+                              '쿠폰은 주문 결제 시 사용할 수 있으며, 유효기간 내에만 사용 가능합니다.',
+                              '일부 특가 상품이나 기획전 상품에는 쿠폰 적용이 제한될 수 있습니다.'
+                            ]
+                          }) %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

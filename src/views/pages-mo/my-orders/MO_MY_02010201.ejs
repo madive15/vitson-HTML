@@ -1,5 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
+<% const _base = srcPath.includes('vitson-HTML') ? '/vitson-HTML' : ''; %>
+<!-- prettier-ignore -->
 <%
 const mockData = require(`${_src}/../public/resources/mock/products.json`);
 const _products = mockData.products;
@@ -212,8 +214,9 @@ const orderDetails = [
               </div>
 
               <div class="vm-order-details-info">
-                <!-- 결제 정보 -->
+                <!-- 결제 정보 + 배송 정보 한 세트 -->
                 <% orderDetails.forEach(function(order, idx) { %>
+                <!-- 결제 정보 -->
                 <div class="vm-mypage-round-box type-toggle" data-toggle-scope>
                   <div class="round-head type-toggle-head">
                     <button
@@ -259,15 +262,20 @@ const orderDetails = [
                     <% } %>
                   </div>
                 </div>
-                <% }); %>
 
                 <!-- 배송 정보 -->
-                <% orderDetails.forEach(function(order, idx) { %>
                 <div class="vm-mypage-round-box">
                   <div class="round-head">
                     <span class="round-head-title">배송 정보</span>
-                    <% if (order.delivery.editBtn) { %> <%- include(`${_src}/views/components/button/button.ejs`, {
-                    size: 'xs', variant: 'outline-tertiary', text: '배송지 수정', className: 'round-head-action' }) %>
+                    <% if (order.delivery.editBtn) { %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size: 'xs', 
+                      variant: 'outline-tertiary', 
+                      text: '배송지 수정', 
+                      className: 'round-head-action',
+                      onclick: "location.href='/html-mo/cart-order/MO_OR_03010301.html'"
+                    }) %>
                     <% } %>
                   </div>
                   <div class="round-body">
@@ -295,6 +303,93 @@ const orderDetails = [
                   </div>
                 </div>
                 <% }); %>
+
+                <!-- 배송 준비중일 때 -->
+                <div class="vm-mypage-round-box">
+                  <div class="round-head">
+                    <span class="round-head-title">배송 정보</span>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size: 'xs', 
+                      variant: 'outline-tertiary', 
+                      text: '배송지 수정', 
+                      className: 'round-head-action',
+                      onclick: "location.href='/html-mo/cart-order/MO_OR_03010301.html'"
+                    }) %>
+                  </div>
+                  <div class="round-body">
+                    <dl class="info-list info-shipping info-shipping-sender no-ios-detect">
+                      <dt>발송처</dt>
+                      <dd>메가존</dd>
+
+                      <dt>보내는 사람</dt>
+                      <dd>홍길동</dd>
+
+                      <dt>연락처</dt>
+                      <dd>010-1234-5678</dd>
+                    </dl>
+                    <dl class="info-list info-shipping info-shipping-receiver no-ios-detect">
+                      <dt>받는 사람</dt>
+                      <dd>김철수</dd>
+
+                      <dt>연락처</dt>
+                      <dd>010-1234-5678</dd>
+
+                      <dt>주소</dt>
+                      <dd>
+                        <!-- 보기 모드 -->
+                        <div class="shipping-edit-view ios-detect-off">
+                          [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                            tag: 'a',
+                            text: '수정',
+                            fs: 'b3',
+                            height: '18',
+                            fc: 'brand-sub',
+                            href:"/html-mo/cart-order/MO_OR_03010301.html"
+                          }) %>
+                        </div>
+                      </dd>
+
+                      <dt>배송메모</dt>
+                      <dd>
+                        <!-- 보기 모드 -->
+                        <div class="shipping-edit-view ios-detect-off">
+                          부재시 경비실에 맡겨주세요
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                          text: '수정',
+                          fs: 'b3',
+                          height: '18',
+                          fc: 'brand-sub',
+                          attrs: 'data-btn="shipping-edit-open"',
+                        }) %>
+                        </div>
+                        <!-- 편집 모드 (기본 숨김) -->
+                        <%- include(`${_src}/views/components-mo/mypage/my-records-edit-form.ejs`) %>
+                      </dd>
+
+                      <dt>배송방법</dt>
+                      <dd>
+                        <!-- 보기 모드 -->
+                        <div class="shipping-edit-view ios-detect-off">
+                          택배 (대납)
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                          text: '수정',
+                          fs: 'b3',
+                          height: '18',
+                          fc: 'brand-sub',
+                          attrs: 'data-btn="shipping-edit-open"',
+                        }) %>
+                        </div>
+                        <!-- 편집 모드 (기본 숨김) -->
+                        <%- include(`${_src}/views/components-mo/mypage/my-records-edit-select.ejs`) %>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
 
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components/button/button.ejs`, {
@@ -326,3 +421,34 @@ const orderDetails = [
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
   </body>
 </html>
+
+<script>
+  document.addEventListener('click', function (e) {
+    // 열기
+    var openBtn = e.target.closest('[data-btn="shipping-edit-open"]');
+    if (openBtn) {
+      var view = openBtn.closest('.shipping-edit-view');
+      if (!view) return;
+      var dd = view.parentElement;
+      if (!dd) return;
+      var form = dd.querySelector('.shipping-edit-form');
+      if (!form) return;
+      view.classList.add('is-hidden');
+      form.classList.remove('is-hidden');
+      return;
+    }
+
+    // 닫기 (취소 + 수정완료 동일)
+    var closeBtn = e.target.closest('[data-btn="shipping-edit-cancel"], [data-btn="shipping-edit-submit"]');
+    if (closeBtn) {
+      var form = closeBtn.closest('.shipping-edit-form');
+      if (!form) return;
+      var dd = form.parentElement;
+      if (!dd) return;
+      var view = dd.querySelector('.shipping-edit-view');
+      if (!view) return;
+      form.classList.add('is-hidden');
+      view.classList.remove('is-hidden');
+    }
+  });
+</script>

@@ -8,6 +8,9 @@ import './sticky-observer.js';
 import './overflow-menu.js';
 import './toggle.js';
 import './step-flow.js';
+import './expand.js';
+import './tab.js';
+import './scroll-buttons.js';
 
 (function ($, window) {
   'use strict';
@@ -16,7 +19,7 @@ import './step-flow.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
 
   window.UI.common = {
     init: function () {

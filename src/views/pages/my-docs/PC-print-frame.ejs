@@ -1,0 +1,22 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<!-- [D] vits-scope: 프린트 프레임 페이지 식별: print -->
+<html lang="ko" class="vits-scope print">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '프린트 프레임'}) %>
+  <body class="vits-scope print">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-print-frame">
+      <div class="vits-print-frame-inner">
+        <!-- 본문 영역 -->
+        <%- include(`${_src}/views/pages/kendo-window/my-docs/kw-PC_MY_02010201_P.ejs`) %>
+        <!-- 하단 로고영역 -->
+        <div class="vits-print-frame-watermark">
+          <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="로고" />
+        </div>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

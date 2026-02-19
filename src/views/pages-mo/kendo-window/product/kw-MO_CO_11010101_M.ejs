@@ -1,0 +1,44 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const couponItems = [
+  {
+    type: 1,
+    price: '5,000원',
+    desc: '최대 5천원 할인',
+    title: '크리스마스 특별 쿠폰 15% 할인 크리스마스 두줄 이상일 경우 아래로 줄바꿈',
+    period: '2026-12-01 ~ 2026-12-31',
+    minOrder: '제한없음',
+    maxDiscount: '5천원',
+    scope: '적용대상 : 에어컨부자재/공구, 팬던트/램프용홈조명, 산업램프/등기구/안정기, 배관몰딩/케이블접속자재, 각종함/공구함/보관함/작업대',
+  },
+  {
+    type: 1,
+    price: '15%',
+    desc: '최대 10만원 할인',
+    title: '12월 정기 세일 쿠폰',
+    period: '2026-12-01 ~ 2026-12-31',
+    minOrder: '제한없음',
+    maxDiscount: '100,000원',
+    scope: '적용대상 : 전 상품',
+  },
+];
+%>
+
+<div class="vm-coupon-download-list">
+  <div class="vm-coupon-items">
+    <!-- prettier-ignore -->
+    <% couponItems.forEach((item) => { %>
+      <%- include(`${_src}/views/components-mo/coupon/coupon-item.ejs`, item) %>
+    <% }); %>
+  </div>
+  <div class="vm-coupon-download-product">
+    <p class="download-product-title">맥심 화이트골드 커피믹스</p>
+    <dl class="download-product-price">
+      <dt>상품금액(VAT별도)</dt>
+      <dd>14,500원</dd>
+      <dt class="price-total">최대혜택가</dt>
+      <dd class="price-total">12,325원</dd>
+    </dl>
+  </div>
+</div>

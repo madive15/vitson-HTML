@@ -116,29 +116,35 @@
  * - 활성: 빨간 배경 + 흰 텍스트
  * @param {Color} $border-color - 기본 테두리 색상
  * @param {Color} $color - 기본 텍스트 색상
+ * @param {Color} $bg-color - 기본 배경 색상
  * @param {Color} $hover-border-color - 호버 테두리 색상
  * @param {Color} $hover-color - 호버 텍스트 색상
  * @param {Color} $active-border-color - 활성 테두리 색상
  * @param {Color} $active-bg-color - 활성 배경 색상
  * @param {Color} $active-color - 활성 텍스트 색상
+ * @param {Number} $width - 너비 (기본값: 28)
+ * @param {Number} $height - 높이 (기본값: 28)
  * ------------------------------------------------------------------------- */
 @mixin rank-num-circle(
-  $border-color: map.get(color.$layout-border, 'tertiary'),
-  $color: map.get(color.$text-colors, 'tertiary'),
+  $border-color: map.get(color.$brand-colors, 'primary'),
+  $color: map.get(color.$brand-colors, 'primary'),
+  $bg-color: color.$color-white,
   $hover-border-color: map.get(color.$brand-colors, 'primary'),
   $hover-color: map.get(color.$brand-colors, 'primary'),
   $active-border-color: map.get(color.$brand-colors, 'primary'),
   $active-bg-color: map.get(color.$brand-colors, 'primary'),
-  $active-color: color.$color-white
+  $active-color: map.get(color.$icon-neutral, 'inverse'),
+  $width: 28,
+  $height: 28
 ) {
   @include button.btn-reset;
   @include mx.flex(flex, row, center, center);
-  width: fn.rem(28);
-  height: fn.rem(28);
+  width: fn.rem($width);
+  height: fn.rem($height);
   cursor: pointer;
 
   @include typo.typography('b4s', $color: $color);
-  background-color: color.$color-white;
+  background-color: $bg-color;
   border: 1px solid $border-color;
   border-radius: 50%;
   transition:
@@ -409,6 +415,10 @@
   }
 
   .banner-card-image {
+    max-height: fn.rem(384);
+    overflow: hidden;
+    border-radius: map.get(var.$radius, 'lg');
+
     @include mx.img-fit(contain);
   }
 
@@ -1202,6 +1212,11 @@
     flex-shrink: 0;
     min-width: fn.rem(400);
     max-width: fn.rem(500);
+
+    @include mx.pc-sm {
+      min-width: fn.rem(300);
+      max-width: fn.rem(400);
+    }
   }
 
   .js-home-rank-swiper {
@@ -1222,13 +1237,12 @@
   }
 
   &-item-name {
+    @include mx.ellipsis-multi(1.4, 2);
+    @include typo.typography('h4m', $color: inherit);
     flex: 1;
     min-width: 0;
     max-height: fit-content;
     padding-right: fn.rem(50);
-
-    @include typo.typography('h4m', $color: inherit);
-    @include mx.ellipsis-multi(1.4, 2);
   }
 
   &-item-arrow {
@@ -1328,6 +1342,7 @@
 
 .js-home-product-swiper {
   width: 100%;
+  padding-bottom: fn.rem(16);
   overflow: hidden;
 
   .swiper-wrapper {
@@ -1632,8 +1647,10 @@
     &-count {
       // stylelint-disable-next-line no-descending-specificity
       @include rank-num-circle(
-        $border-color: map.get(color.$brand-colors, 'primary'),
-        $color: map.get(color.$brand-colors, 'primary')
+        $width: 22,
+        $height: 22,
+        $bg-color: map.get(color.$brand-colors, 'primary'),
+        $color: map.get(color.$icon-neutral, 'inverse')
       );
     }
   }

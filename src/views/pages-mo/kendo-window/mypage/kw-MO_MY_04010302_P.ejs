@@ -1,0 +1,57 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<form class="vm-form">
+  <div class="vm-form-group">
+    <ul class="vm-form-list">
+      <li class="vm-form-item">
+        <p class="vm-form-item-label label-weight-400-color-tertiary" aria-hidden="true">쿠폰 번호</p>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+          id: 'coupon-number',
+          name: 'coupon-number',
+          label: '쿠폰 번호',
+          placeholder: '대소문자 구분 없이 입력',
+          required: true,
+          rootClass: 'size-l',
+          indent: '12'
+        }) %>
+      </li>
+    </ul>
+  </div>
+</form>
+
+<!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+<!--
+  [참고] 쿠폰 등록 유효성 검사
+  - ?error=type1 : 쿠폰번호가 존재하지 않을 때
+  - ?error=type2 : 기등록된 쿠폰번호일 때
+-->
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var errorType = params.get('error');
+    if (!errorType) return;
+
+    var messages = {
+      type1: '존재하지 않는 쿠폰번호 입니다.',
+      type2: '이미 등록된 쿠폰번호 입니다.'
+    };
+
+    var msg = messages[errorType];
+    if (!msg) return;
+
+    var $input = document.querySelector('#coupon-number');
+    if (!$input) return;
+
+    var $root = $input.closest('.vits-input');
+    $root.classList.add('vits-validation', 'is-invalid');
+    $input.setAttribute('aria-invalid', 'true');
+
+    var $message = $root.querySelector('.validation-message');
+    if ($message) {
+      $message.removeAttribute('hidden');
+      $message.querySelector('p').textContent = msg;
+    }
+  })();
+</script>
