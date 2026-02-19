@@ -77,6 +77,10 @@ $brand-scroll-common: map.get(var.$unit, 24);
       &-right {
         @include mx.divider($h: 8);
 
+        .vits-text-link {
+          color: map.get(color.$gray-shades, '50');
+        }
+
         &-spacer {
           a + a {
             margin-left: map.get(var.$unit, 24);
@@ -273,12 +277,19 @@ $brand-scroll-common: map.get(var.$unit, 24);
         @include mx.flex;
         gap: map.get(var.$unit, 24);
 
-        .vits-btn-vertical-icon .badge {
-          right: unset;
-          left: map.get(var.$unit, 20);
-          width: auto;
-          min-width: fn.rem(15);
-          padding: 0 map.get(var.$unit, 4);
+        .vits-btn-vertical-icon {
+          .text {
+            font-size: fn.rem(13);
+          }
+
+          .badge {
+            top: fn.rem(3);
+            right: unset;
+            left: map.get(var.$unit, 20);
+            width: auto;
+            min-width: fn.rem(15);
+            padding: fn.rem(1) map.get(var.$unit, 4) 0;
+          }
         }
       }
     }
@@ -639,7 +650,7 @@ $brand-scroll-common: map.get(var.$unit, 24);
 
       &-link {
         @include mx.flex(flex, row, flex-start, center);
-        @include typo.typography('b2s');
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
         flex-shrink: 0;
         height: var.$header-gnb-height;
         padding: 0 map.get(var.$unit, 24);
@@ -771,11 +782,11 @@ $brand-scroll-common: map.get(var.$unit, 24);
         }
 
         .text {
-          @include typo.typography('h4s', $color: map.get(color.$neutral-colors, '1'));
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
         }
 
         &.category .icon.left {
-          @include icon.ic-size(fn.rem(28));
+          @include icon.ic-size(fn.rem(18));
         }
 
         &[aria-expanded='true'] {
