@@ -194,7 +194,7 @@
     }
   }
 
-  &.is-selected {
+  &.is-selected:not(.type-ghost, .type-dark) {
     // 모바일 동일 컴포넌트 활용으로 우선수위로 important 적용
     .vits-select {
       &-value {
@@ -217,6 +217,7 @@
   width: 100%;
 
   .vits-select {
+    /* stylelint-disable no-descending-specificity */
     &-trigger {
       justify-content: space-between;
       width: 100%;
@@ -230,12 +231,13 @@
       color: map.get(color.$text-colors, 'tertiary');
     }
 
-    /* stylelint-disable-next-line no-descending-specificity */
     &-list {
       width: 100% !important;
       max-width: 100% !important;
       padding: 0;
+      transition: none;
     }
+    /* stylelint-enable no-descending-specificity */
 
     &-option {
       height: fn.rem(42);
