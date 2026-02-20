@@ -1,0 +1,856 @@
+
+<!-- prettier-ignore -->
+
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover, interactive-widget=resizes-content"
+  />
+
+  <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+
+  <title>신규 배송지 등록</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/mobile/reset.css" />
+  <!-- <link rel="stylesheet" href="/home/runner/work/vitson-HTML/vitson-HTML/public/resources/css/mro/mobile/sub_layout.css" /> -->
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-shipping">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          
+
+<!-- prettier-ignore -->
+
+  
+<!-- prettier-ignore -->
+
+
+<!-- prettier-ignore -->
+<header class="vm-header header-nav-bar" 
+  data-vits-header>
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </a>
+  
+ 
+  <p class="vm-header-title" data-header-title>신규 배송지 등록</p>
+
+
+  <div class="vm-header-actions">
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="검색">
+          <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="장바구니">
+          <i class="ic ic-bag" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <button type="button"
+          class="vm-header-btn"
+          aria-label="메뉴"
+           data-popup-target=&#34;#gnb-menu&#34;>
+          <i class="ic ic-menu" aria-hidden="true"></i>
+
+        </button>
+      
+    
+  </div>
+</header>
+
+
+
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-shipping">
+              <div class="vm-tab-section tab-radio" data-tab-scope>
+                <div class="tab-radio-group">
+                  <ul class="vm-tab-menus" role="tablist">
+                    <li class="vm-tab-menu">
+                      <!-- prettier-ignore -->
+                      <button 
+                        type="button" 
+                        data-tab-btn 
+                        data-tab-target="tab1" 
+                        role="tab" 
+                        class="vm-tab-btn is-active">
+                        <span class="text">일반 배송 (택배/퀵)</span>
+                      </button>
+                    </li>
+                    <li class="vm-tab-menu">
+                      <!-- prettier-ignore -->
+                      <button 
+                        type="button" 
+                        data-tab-btn 
+                        data-tab-target="tab2" 
+                        role="tab" 
+                        class="vm-tab-btn">
+                        <span class="text">화물 배송 (지점 수령)</span>
+                      </button>
+                    </li>
+                  </ul>
+
+                  <div class="vm-tab-panel" data-tab-panel="tab1" role="tabpanel">
+                    <div class="vm-add-shipping-address">
+                      <form id="formDeliveryNormal" class="add-shipping-address-form">
+                        <dl class="add-shipping-address-dl">
+                          <!-- prettier-ignore -->
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">배송지명</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-normal01" class="sr-only">배송지명</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal01"
+      id="ipt-delivery-normal01"
+      placeholder="예: 집, 회사"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal01-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">받는 사람</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-normal02" class="sr-only">받는 사람</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal02"
+      id="ipt-delivery-normal02"
+      placeholder="이름을 입력해주세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal02-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">휴대전화</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-normal03" class="sr-only">휴대전화</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal03"
+      id="ipt-delivery-normal03"
+      placeholder="010-0000-0000"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal03-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+
+                          <dt class="is-required dt-address">주소</dt>
+                          <dd class="dd-code">
+                            <!-- prettier-ignore -->
+                            
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-normal-zip" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal-zip"
+      id="ipt-delivery-normal-zip"
+      placeholder="우편번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal-zip-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+                            <!-- prettier-ignore -->
+                            
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-scoped-info "
+  
+  
+  >
+  
+
+  <span class="text">주소 검색</span>
+
+  
+</button>
+
+                          </dd>
+                          <dd class="dd-address">
+                            <!-- prettier-ignore -->
+                            
+
+<div class="vits-input size-m is-filled">
+  <div class="input-item">
+    <label for="ipt-delivery-normal-addr" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal-addr"
+      id="ipt-delivery-normal-addr"
+      placeholder="기본 주소"
+      value="(54366) 서울특별시 강남구 테헤란로 123"
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal-addr-validation" aria-live="polite"></p>
+  </div>
+</div>
+                          </dd>
+                          <dd class="dd-address">
+                            <!-- prettier-ignore -->
+                            
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-normal-detail" class="sr-only">주소</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-normal-detail"
+      id="ipt-delivery-normal-detail"
+      placeholder="상세 주소를 입력해주세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-normal-detail-validation" aria-live="polite"></p>
+  </div>
+</div>
+                          </dd>
+                          <dd class="dd-checkbox">
+                            <!-- prettier-ignore -->
+                            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="ckb-normal"
+    value="ckb-normal"
+    
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    대표 배송지로 설정
+  </span>
+  
+</label>
+                          </dd>
+                        </dl>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="vm-tab-panel" data-tab-panel="tab2" role="tabpanel" hidden>
+                    <div class="vm-add-shipping-address">
+                      <form id="formDeliveryFreight" class="add-shipping-address-form form-freight">
+                        <dl class="add-shipping-address-dl dl-freight01">
+                          <!-- prettier-ignore -->
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt>화물업체</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-freight01" class="sr-only">화물업체</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-freight01"
+      id="ipt-delivery-freight01"
+      placeholder="화물 영업소 조회 시 자동입력"
+      
+      
+      
+      
+      
+      readonly
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-freight01-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt>영업소명</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-freight02" class="sr-only">영업소명</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-freight02"
+      id="ipt-delivery-freight02"
+      placeholder="화물 영업소 조회 시 자동입력"
+      
+      
+      
+      
+      
+      readonly
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-freight02-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                          <dd class="dd-freight01">
+                            <p class="asterisk-text">화물 배송은 영업소 정보가 필요합니다.</p>
+                            <!-- prettier-ignore -->
+                            
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-scoped-info "
+  
+  
+  >
+  
+
+  <span class="text">영업소 조회</span>
+
+  
+</button>
+
+                          </dd>
+                        </dl>
+                        <dl class="add-shipping-address-dl dl-freight02">
+                          <!-- prettier-ignore -->
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">배송지명</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-freight03" class="sr-only">배송지명</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-freight03"
+      id="ipt-delivery-freight03"
+      placeholder="예: 집, 회사"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-freight03-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">받는 사람</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-freight04" class="sr-only">받는 사람</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-freight04"
+      id="ipt-delivery-freight04"
+      placeholder="이름을 입력해주세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-freight04-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                            
+<!-- prettier-ignore -->
+ 
+
+
+<dt class="is-required">휴대전화</dt>
+<dd>
+  
+
+<div class="vits-input size-m ">
+  <div class="input-item">
+    <label for="ipt-delivery-freight05" class="sr-only">휴대전화</label>
+
+    <input
+      type="text"
+      name="ipt-delivery-freight05"
+      id="ipt-delivery-freight05"
+      placeholder="010-0000-0000"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-delivery-freight05-validation" aria-live="polite"></p>
+  </div>
+</div>
+</dd>
+                          
+                          <dd class="dd-checkbox">
+                            <!-- prettier-ignore -->
+                            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="ckb-freight"
+    value="ckb-freight"
+    
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    대표 배송지로 설정
+  </span>
+  
+</label>
+                          </dd>
+                        </dl>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [D] NOTE: 탭 전환 시 form 속성을 활성 폼 id로 변경 필요 -->
+                <!-- formDeliveryNormal (일반 배송) | formDeliveryFreight (화물 배송) -->
+                <div class="tab-radio-buttons">
+                  <!-- prettier-ignore -->
+                  
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xl vits-btn-secondary "
+  
+  
+  >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+                  <!-- prettier-ignore -->
+                  
+
+
+<button
+  type="submit"
+  form="formDeliveryNormal"
+  class="vits-btn-xl vits-btn-primary "
+  
+  
+  >
+  
+
+  <span class="text">등록</span>
+
+  
+</button>
+
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          
+
+<!-- prettier-ignore -->
+
+<!-- < % if (type === 'main') { 
+  < %- include('./main.ejs') 
+< % } else if (type === 'nav-bar') { 
+  < %- include('./nav-bar.ejs', { title: title }) 
+< % }  -->
+
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        
+
+<!-- prettier-ignore -->
+<div class="vm-bottom-bar">
+  
+    <!-- prettier-ignore -->
+    
+
+<!-- prettier-ignore -->
+
+
+
+<div class="bottom-tab-bar">
+  <nav class="tab-bar-nav">
+    <ul class="tab-bar-items">
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-category"></span>
+          <span class="text">카테고리</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-search"></span>
+          <span class="text">검색</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-home"></span>
+          <span class="text">홈</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-recently"></span>
+          <span class="text">최근 본 상품</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item is-active">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-mypage"></span>
+          <span class="text">마이</span>
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+</div>
+
+  
+</div>
+
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+
+    <script>
+      // [D] 탭 전환 시 등록 버튼의 form 연결 변경
+      var formMap = {
+        tab1: 'formDeliveryNormal',
+        tab2: 'formDeliveryFreight'
+      };
+
+      $('[data-tab-scope]').on('click', '[data-tab-btn]', function () {
+        var target = $(this).data('tab-target');
+        var formId = formMap[target];
+
+        if (formId) {
+          $('.tab-radio-buttons [type="submit"]').attr('form', formId);
+        }
+      });
+
+      // [D] form 연결 테스트
+      $('#formDeliveryNormal').on('submit', function (e) {
+        e.preventDefault();
+        console.log('[submit] 일반 배송 폼 →', this.id);
+      });
+
+      $('#formDeliveryFreight').on('submit', function (e) {
+        e.preventDefault();
+        console.log('[submit] 화물 배송 폼 →', this.id);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,654 @@
+
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover, interactive-widget=resizes-content"
+  />
+
+  <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+
+  <title>화물영업소조회</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/mobile/reset.css" />
+  <!-- <link rel="stylesheet" href="/home/runner/work/vitson-HTML/vitson-HTML/public/resources/css/mro/mobile/sub_layout.css" /> -->
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-shipping">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          
+
+<!-- prettier-ignore -->
+
+  
+<!-- prettier-ignore -->
+
+
+<!-- prettier-ignore -->
+<header class="vm-header header-nav-bar" 
+  data-vits-header>
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </a>
+  
+ 
+  <p class="vm-header-title" data-header-title>검색</p>
+
+
+  <div class="vm-header-actions">
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="검색">
+          <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="장바구니">
+          <i class="ic ic-bag" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <button type="button"
+          class="vm-header-btn"
+          aria-label="메뉴"
+           data-popup-target=&#34;#gnb-menu&#34;>
+          <i class="ic ic-menu" aria-hidden="true"></i>
+
+        </button>
+      
+    
+  </div>
+</header>
+
+
+
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-shipping">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal')"
+              >
+                <span class="text">화물영업소조회 팝업</span>
+              </button>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          
+
+<!-- prettier-ignore -->
+
+<!-- < % if (type === 'main') { 
+  < %- include('./main.ejs') 
+< % } else if (type === 'nav-bar') { 
+  < %- include('./nav-bar.ejs', { title: title }) 
+< % }  -->
+
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        
+
+<!-- prettier-ignore -->
+<div class="vm-bottom-bar">
+  
+    <!-- prettier-ignore -->
+    
+
+<!-- prettier-ignore -->
+
+
+
+<div class="bottom-tab-bar">
+  <nav class="tab-bar-nav">
+    <ul class="tab-bar-items">
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-category"></span>
+          <span class="text">카테고리</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-search"></span>
+          <span class="text">검색</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-home"></span>
+          <span class="text">홈</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-recently"></span>
+          <span class="text">최근 본 상품</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item is-active">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-mypage"></span>
+          <span class="text">마이</span>
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+</div>
+
+  
+</div>
+
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        
+        
+        
+
+
+
+<div
+  id="modal"
+  class="vm-modal-inner modal-freight-search"
+  data-ui="kendo-window"
+  
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vm-modal-header">
+    <div class="vm-modal-header-content">
+      <h2 class="vm-modal-title" id="modal-title">화물 영업소 조회</h2>
+
+
+    </div>
+    <button type="button" class="vm-modal-close" onclick="VmKendoWindow.close('modal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vm-modal-content" data-scroll-check>
+  
+      
+
+<!-- prettier-ignore -->
+
+
+<div class="vm-freight-search">
+  <div class="vm-freight-search-group">
+    <form class="vm-form">
+      <div class="vm-form-group">
+        <ul class="vm-form-list">
+          <li class="vm-form-item">
+            <p class="vm-form-item-label" aria-hidden="true">화물사 구분</p>
+            <!-- prettier-ignore -->
+            
+
+
+
+
+<div
+  class="vits-select modal-freight-search"
+  data-vits-select
+   data-select-id="carrier-type" 
+  
+   data-vits-select-portal 
+  
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="전체"
+    >전체</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="carrier01"
+           
+        aria-selected="false"
+        
+      >대신화물</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="carrier02"
+           
+        aria-selected="false"
+        
+      >경동화물</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="carrier-type" value="" data-vits-select-hidden />
+  
+</div>
+
+          </li>
+
+          <li class="vm-form-item">
+            <p class="vm-form-item-label" aria-hidden="true">화물지점</p>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-l ">
+  <div class="input-item">
+    <label for="ipt-cargo-branch" class="sr-only">화물지점</label>
+
+    <input
+      type="text"
+      name="ipt-cargo-branch"
+      id="ipt-cargo-branch"
+      placeholder="지점명을 입력하세요"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="ipt-cargo-branch-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </li>
+
+          <li class="vm-form-item">
+            <!-- prettier-ignore -->
+            
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xl vits-btn-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">조회하기</span>
+
+  
+</button>
+
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+  <div class="vm-freight-search-list">
+    <ul class="freight-branch-list">
+      <!-- prettier-ignore -->
+      
+        
+<!-- prettier-ignore -->
+
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company">경동택배</p>
+      <p class="freight-branch-name">과천지점</p>
+    </div>
+    <p class="freight-branch-address">경기 과천시 갈현동 123-45</p>
+    <p class="freight-branch-phone">010-1234-5678</p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+    </div>
+  </div>
+</li>
+
+      
+        
+<!-- prettier-ignore -->
+
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company">경동택배</p>
+      <p class="freight-branch-name">강남지점</p>
+    </div>
+    <p class="freight-branch-address">서울 강남구 역삼동 678-90</p>
+    <p class="freight-branch-phone">010-2345-6789</p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+    </div>
+  </div>
+</li>
+
+      
+        
+<!-- prettier-ignore -->
+
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company">경동택배</p>
+      <p class="freight-branch-name">수원지점</p>
+    </div>
+    <p class="freight-branch-address">경기 수원시 팔달구 인계동 34-12</p>
+    <p class="freight-branch-phone">010-3456-7890</p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+    </div>
+  </div>
+</li>
+
+      
+        
+<!-- prettier-ignore -->
+
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company">경동택배</p>
+      <p class="freight-branch-name">인천지점</p>
+    </div>
+    <p class="freight-branch-address">인천 남동구 구월동 456-78</p>
+    <p class="freight-branch-phone">010-4567-8901</p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+    </div>
+  </div>
+</li>
+
+      
+        
+<!-- prettier-ignore -->
+
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company">경동택배</p>
+      <p class="freight-branch-name">분당지점</p>
+    </div>
+    <p class="freight-branch-address">경기 성남시 분당구 정자동 12-34</p>
+    <p class="freight-branch-phone">010-5678-9012</p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  modal-freight-search"
+  
+  
+  >
+  
+
+  <span class="text">선택</span>
+
+  
+</button>
+
+    </div>
+  </div>
+</li>
+
+      
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vm-modal-footer">
+
+    
+<!-- prettier-ignore -->
+
+
+
+<nav
+  class="vits-pagination"
+  aria-label="페이지네이션"
+  data-pagination
+  data-pagination-type="default"
+  data-pagination-current="1"
+  data-pagination-total="12"
+>
+  
+  <!-- prettier-ignore -->
+  
+  
+  <span class="vits-pagination-btn is-prev is-disabled" data-pagination-prev aria-disabled="true" aria-label="이전">
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </span>
+  
+
+  <!-- prettier-ignore -->
+  
+  <ol class="vits-pagination-list">
+    
+    <li class="vits-pagination-item">
+      
+      <span class="vits-pagination-link is-active" data-pagination-page data-page="1" aria-current="page">
+        1
+      </span>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="2">2</a>
+      
+    </li>
+    
+    <li class="vits-pagination-item">
+      
+      <a href="#" class="vits-pagination-link" data-pagination-page data-page="3">3</a>
+      
+    </li>
+    
+  </ol>
+
+  
+  <!-- prettier-ignore -->
+  
+  <a href="#" class="vits-pagination-btn is-next" data-pagination-next aria-label="다음">
+    <i class="ic ic-arrow-right" aria-hidden="true"></i>
+
+  </a>
+   
+</nav>
+
+
+  </div>
+
+</div>
+
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>

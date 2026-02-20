@@ -9649,7 +9649,6 @@ var support_ui = __webpack_require__(2064);
 
   // Swiper 인스턴스 저장용 키 (DOM 요소에 저장)
   var SWIPER_INSTANCE_KEY = 'homeMainBannerSwiper';
-  var REAL_SLIDE_COUNT_KEY = 'homeMainBannerRealSlideCount';
 
   // 업종 맞춤 기획전 배너용 Swiper 키
   var EVENT_SWIPER_INSTANCE_KEY = 'homeEventBannerSwiper';
@@ -9697,31 +9696,34 @@ var support_ui = __webpack_require__(2064);
       console.error('[home-ui] Swiper is not available');
       return;
     }
-
-    // 컨테이너 내부에서만 요소를 찾아 다른 Swiper와 충돌 방지
-    var progressBar = container.querySelector('.banner-progress-fill');
     var prevButton = container.querySelector('.banner-nav-prev');
     var nextButton = container.querySelector('.banner-nav-next');
     var toggleButton = container.querySelector('.banner-progress-toggle');
-
-    // Swiper 옵션 설정 (loop: 슬라이드 수가 slidesPerView + loopedSlides 이상이어야 동작)
-    var slideCount = container.querySelectorAll('.swiper-slide').length;
-    container[REAL_SLIDE_COUNT_KEY] = slideCount;
     var swiperOptions = {
-      slidesPerView: 1.5,
+      slidesPerView: 'auto',
       spaceBetween: 20,
-      // 20px
       speed: 500,
       loop: true,
-      loopAdditionalSlides: 0,
-      centeredSlides: true,
-      // loop + 중앙정렬: 슬라이드 4장 이상 필요 (현재 4그룹)
+      loopPreventsSliding: true,
+      // 전환 중에는 다음/이전 입력 무시 → 건너뛰기 방지
+      loopAdditionalSlides: 2,
+      // 루프 시 복제 슬라이드 수 → 끝에서 끊기지 않고 이어지도록
+      roundLengths: true,
+      // 슬라이드 위치를 정수로 맞춰 루프 시 끊김/건너뛰기 완화
+      initialSlide: 1,
+      // 두 번째 슬라이드(인덱스 1)부터 시작
       watchSlidesProgress: true,
       autoplay: {
         delay: 4000,
-        disableOnInteraction: false
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
       },
-      a11y: false,
+      // a11y: false,
+      pagination: {
+        el: container.querySelector('.banner-pagination-bar'),
+        clickable: true,
+        type: 'bullets'
+      },
       navigation: {
         nextEl: nextButton,
         prevEl: prevButton,
@@ -9729,15 +9731,7 @@ var support_ui = __webpack_require__(2064);
       },
       on: {
         init: function (swiper) {
-          if (progressBar) {
-            updateProgressBar(swiper, progressBar);
-          }
           updatePlayPauseState(swiper, toggleButton);
-        },
-        slideChange: function (swiper) {
-          if (progressBar) {
-            updateProgressBar(swiper, progressBar);
-          }
         }
       }
     };
@@ -9797,24 +9791,6 @@ var support_ui = __webpack_require__(2064);
   }
 
   /**
-   * 진행 바 업데이트
-   * @param {Object} swiper - Swiper 인스턴스
-   * @param {HTMLElement} progressBar - 진행 바 요소
-   */
-  function updateProgressBar(swiper, progressBar) {
-    if (!progressBar || !swiper) {
-      return;
-    }
-
-    // loop 모드: realIndex 사용, 실제 슬라이드 수는 초기화 시 저장한 값(복제 제외)
-    var isLoop = swiper.params && swiper.params.loop;
-    var currentIndex = isLoop ? swiper.realIndex + 1 : swiper.activeIndex + 1;
-    var totalSlides = isLoop && swiper.el && swiper.el[REAL_SLIDE_COUNT_KEY] != null ? swiper.el[REAL_SLIDE_COUNT_KEY] : swiper.slides.length;
-    var progress = totalSlides > 0 ? Math.min(100, currentIndex / totalSlides * 100) : 0;
-    progressBar.style.width = progress + '%';
-  }
-
-  /**
    * 메인 배너 Swiper 파괴
    * @param {HTMLElement} container - Swiper 컨테이너 요소 (선택사항)
    */
@@ -9827,7 +9803,6 @@ var support_ui = __webpack_require__(2064);
     if (swiperInstance && typeof swiperInstance.destroy === 'function') {
       swiperInstance.destroy(true, true);
       delete targetContainer[SWIPER_INSTANCE_KEY];
-      delete targetContainer[REAL_SLIDE_COUNT_KEY];
       console.log('[home-ui] Main banner swiper destroyed');
     }
   }

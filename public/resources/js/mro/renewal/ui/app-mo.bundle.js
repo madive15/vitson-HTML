@@ -1608,6 +1608,123 @@
 
 /***/ }),
 
+/***/ 3064:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/form/input.js
+ * @description input 공통: 값 유무에 따른 상태 클래스 토글
+ * @scope .vits-input 컴포넌트 내부 input만 적용(전역 영향 없음)
+ *
+ * @state
+ *  - root.is-filled: input에 값이 있을 때 토글
+ *
+ * @maintenance
+ *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
+ *  - compositionend 직후 input 중복 발생 방지(debounce flag)
+ *
+ * @note 모바일 대응
+ *  - compositionend 직후 input 중복 발생 방지(삼성키보드 등)
+ *  - 브라우저 자동완성(autofill) 시 input/change 미발생 대응(CSS animation 트리거)
+ *  - 자동완성 감지용 CSS 필요:
+ *    @keyframes onAutoFillStart { from { opacity: 1; } to { opacity: 1; } }
+ *    input:-webkit-autofill { animation-name: onAutoFillStart; }
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.input = window.UI.input || {};
+  var MODULE_KEY = 'input';
+  var NS = '.' + MODULE_KEY;
+  var ROOT = '.vits-input';
+  var INPUT = ROOT + ' input';
+
+  // compositionend 직후 input 무시 간격(ms)
+  var COMPOSE_DEBOUNCE = 50;
+
+  // is-filled 토글
+  function syncFilled($root, $input) {
+    $root.toggleClass('is-filled', $input.val().length > 0);
+  }
+
+  // 단일 input 초기 동기화
+  function initOne($input) {
+    if (!$input || !$input.length) return;
+    var $root = $input.closest(ROOT);
+    if (!$root.length) return;
+    syncFilled($root, $input);
+  }
+
+  // 이벤트 바인딩(위임 1회, init 재호출 대비)
+  function bindOnce() {
+    $(document).off(NS);
+
+    // IME 조합 시작
+    $(document).on('compositionstart' + NS, INPUT, function () {
+      $(this).data('isComposing', true);
+    });
+
+    // IME 조합 완료
+    $(document).on('compositionend' + NS, INPUT, function () {
+      var $input = $(this);
+      $input.data('isComposing', false);
+      $input.data('compEndAt', Date.now());
+      initOne($input);
+    });
+
+    // 입력 이벤트
+    $(document).on('input' + NS, INPUT, function () {
+      var $input = $(this);
+
+      // compositionend 직후 중복 input 무시
+      var compEndAt = $input.data('compEndAt') || 0;
+      if (compEndAt && Date.now() - compEndAt < COMPOSE_DEBOUNCE) return;
+      if ($input.data('isComposing')) return;
+      var $root = $input.closest(ROOT);
+      if (!$root.length) return;
+      syncFilled($root, $input);
+    });
+
+    // JS 값 변경, 자동완성 후 동기화
+    $(document).on('change' + NS, INPUT, function () {
+      initOne($(this));
+    });
+
+    // 자동완성 감지 — autofill 시 input/change가 안 발생하는 브라우저 대응
+    $(document).on('animationstart' + NS, INPUT, function (e) {
+      if (e.originalEvent.animationName === 'onAutoFillStart') {
+        initOne($(this));
+      }
+    });
+  }
+
+  // root 범위 초기화(부분 렌더 지원)
+  function initAll(root) {
+    var $scope = root ? $(root) : $(document);
+    $scope.find(INPUT).each(function () {
+      initOne($(this));
+    });
+  }
+  window.UI.input = {
+    init: function (root) {
+      if (!window.UI.input.__bound) {
+        bindOnce();
+        window.UI.input.__bound = true;
+      }
+      initAll(root);
+    },
+    destroy: function () {
+      $(document).off(NS);
+      window.UI.input.__bound = false;
+    }
+  };
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
 /***/ 3474:
 /***/ (function() {
 
@@ -2246,262 +2363,6 @@
 
 /***/ }),
 
-/***/ 5672:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
-var utils = __webpack_require__(1781);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
-var scroll_lock = __webpack_require__(2066);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
-var kendo_window = __webpack_require__(4387);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
-var kendo_datepicker = __webpack_require__(7713);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
-var kendo_datepicker_single = __webpack_require__(1014);
-;// ./src/assets/scripts-mo/ui/kendo/index.js
-/**
- * @file scripts-mo/ui/kendo/index.js
- * @description Kendo UI 관련 모듈 통합 관리
- */
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
-  window.UI.kendo = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.initAll === 'function') mod.initAll();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
-var tooltip = __webpack_require__(9592);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
-var sticky_observer = __webpack_require__(5723);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
-var overflow_menu = __webpack_require__(4305);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
-var toggle = __webpack_require__(8955);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
-var step_flow = __webpack_require__(8486);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
-var expand = __webpack_require__(8839);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
-var tab = __webpack_require__(5332);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
-var scroll_buttons = __webpack_require__(3474);
-;// ./src/assets/scripts-mo/ui/common/index.js
-/**
- * @file scripts-mo/ui/common/index.js
- * @description 공통 UI 모듈 통합
- */
-
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
-  window.UI.common = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
-var form_select = __webpack_require__(8550);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
-var checkbox_total = __webpack_require__(548);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
-var form_textarea = __webpack_require__(5912);
-;// ./src/assets/scripts-mo/ui/form/index.js
-/**
- * @file scripts-mo/ui/form/index.js
- * @description 폼 관련 UI 모듈 통합
- */
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['select', 'checkboxTotal', 'textarea'];
-  window.UI.form = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
-var product_view_toggle = __webpack_require__(5487);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
-var product_inline_banner = __webpack_require__(905);
-;// ./src/assets/scripts-mo/ui/product/index.js
-/**
- * @file scripts-mo/ui/product/index.js
- * @description 상품 관련 UI 모듈 통합
- */
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['productViewToggle', 'productInlineBanner'];
-  window.UI.product = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
-var category_sheet = __webpack_require__(6410);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
-var category_tree_search = __webpack_require__(1234);
-;// ./src/assets/scripts-mo/ui/category/index.js
-/**
- * @file scripts-mo/ui/category/index.js
- * @description 카테고리 UI 관련 모듈 통합 관리
- */
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['CategorySheet', 'CategoryTreeSearch'];
-  window.UI.category = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
-var filter_product = __webpack_require__(2014);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
-var filter_mapage = __webpack_require__(2624);
-;// ./src/assets/scripts-mo/ui/filter/index.js
-/**
- * @file scripts-mo/ui/filter/index.js
- * @description 필터 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['FilterProduct', 'FilterMypage'];
-  window.UI.filter = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-;// ./src/assets/scripts-mo/core/ui.js
-/**
- * @file scripts-mo/core/ui.js
- * @description 모바일 UI 모듈 진입점
- * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter'];
-  window.UI.init = function () {
-    modules.forEach(function (name) {
-      var mod = window.UI[name];
-      if (mod && typeof mod.init === 'function') mod.init();
-    });
-  };
-
-  // DOM 준비 후 자동 초기화
-  $(document).ready(function () {
-    window.UI.init();
-  });
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
-var common = __webpack_require__(6023);
-;// ./src/assets/scripts-mo/index.js
-/**
- * @file mobile/index.js
- * @description 모바일 번들 엔트리(진입점)
- * @note
- *  - core 모듈은 utils → ui → common 순서로 포함
- *  - index.js는 짧게 유지(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서 관리
- */
-
-
-
-console.log('[mobile/index] entry 실행');
-;// ./src/app-mo.js
-// 모바일 전용
-
-
-// 공통 (PC와 동일)
-
-
-
-
-
-
-
-// 모바일 전용
-
-
-
-
-
-/***/ }),
-
 /***/ 5723:
 /***/ (function() {
 
@@ -2954,6 +2815,291 @@ console.log('[mobile/index] entry 실행');
     });
   });
 })(window.jQuery, window);
+
+/***/ }),
+
+/***/ 6025:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
+var utils = __webpack_require__(1781);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
+var scroll_lock = __webpack_require__(2066);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
+var kendo_window = __webpack_require__(4387);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
+var kendo_datepicker = __webpack_require__(7713);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
+var kendo_datepicker_single = __webpack_require__(1014);
+;// ./src/assets/scripts-mo/ui/kendo/index.js
+/**
+ * @file scripts-mo/ui/kendo/index.js
+ * @description Kendo UI 관련 모듈 통합 관리
+ */
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
+  window.UI.kendo = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.initAll === 'function') mod.initAll();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
+var tooltip = __webpack_require__(9592);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
+var sticky_observer = __webpack_require__(5723);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
+var overflow_menu = __webpack_require__(4305);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
+var toggle = __webpack_require__(8955);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
+var step_flow = __webpack_require__(8486);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
+var expand = __webpack_require__(8839);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
+var tab = __webpack_require__(5332);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
+var scroll_buttons = __webpack_require__(3474);
+;// ./src/assets/scripts-mo/ui/common/index.js
+/**
+ * @file scripts-mo/ui/common/index.js
+ * @description 공통 UI 모듈 통합
+ */
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
+  window.UI.common = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
+var form_select = __webpack_require__(8550);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
+var checkbox_total = __webpack_require__(548);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
+var form_textarea = __webpack_require__(5912);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input.js
+var input = __webpack_require__(3064);
+;// ./src/assets/scripts-mo/ui/form/index.js
+/**
+ * @file scripts-mo/ui/form/index.js
+ * @description 폼 관련 UI 모듈 통합
+ */
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['select', 'checkboxTotal', 'textarea', 'input'];
+  window.UI.form = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
+var product_view_toggle = __webpack_require__(5487);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
+var product_inline_banner = __webpack_require__(905);
+;// ./src/assets/scripts-mo/ui/product/index.js
+/**
+ * @file scripts-mo/ui/product/index.js
+ * @description 상품 관련 UI 모듈 통합
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['productViewToggle', 'productInlineBanner'];
+  window.UI.product = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
+var category_sheet = __webpack_require__(6410);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
+var category_tree_search = __webpack_require__(1234);
+;// ./src/assets/scripts-mo/ui/category/index.js
+/**
+ * @file scripts-mo/ui/category/index.js
+ * @description 카테고리 UI 관련 모듈 통합 관리
+ */
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['CategorySheet', 'CategoryTreeSearch'];
+  window.UI.category = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
+var filter_product = __webpack_require__(2014);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
+var filter_mapage = __webpack_require__(2624);
+;// ./src/assets/scripts-mo/ui/filter/index.js
+/**
+ * @file scripts-mo/ui/filter/index.js
+ * @description 필터 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['FilterProduct', 'FilterMypage'];
+  window.UI.filter = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
+var cart = __webpack_require__(9459);
+;// ./src/assets/scripts-mo/ui/cart-order/index.js
+/**
+ * @file scripts-mo/ui/cart-order/index.js
+ * @description 장바구니/주문 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['cart', 'order'];
+  window.UI.cartOrder = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+;// ./src/assets/scripts-mo/core/ui.js
+/**
+ * @file scripts-mo/core/ui.js
+ * @description 모바일 UI 모듈 진입점
+ * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order'];
+  window.UI.init = function () {
+    modules.forEach(function (name) {
+      var mod = window.UI[name];
+      if (mod && typeof mod.init === 'function') mod.init();
+    });
+  };
+
+  // DOM 준비 후 자동 초기화
+  $(document).ready(function () {
+    window.UI.init();
+  });
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
+var common = __webpack_require__(6023);
+;// ./src/assets/scripts-mo/index.js
+/**
+ * @file mobile/index.js
+ * @description 모바일 번들 엔트리(진입점)
+ * @note
+ *  - core 모듈은 utils → ui → common 순서로 포함
+ *  - index.js는 짧게 유지(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서 관리
+ */
+
+
+
+console.log('[mobile/index] entry 실행');
+;// ./src/app-mo.js
+// 모바일 전용
+
+
+// 공통 (PC와 동일)
+
+
+
+
+
+
+
+// 모바일 전용
+
+
+
+
 
 /***/ }),
 
@@ -4892,6 +5038,155 @@ console.log('[mobile/index] entry 실행');
 
 /***/ }),
 
+/***/ 9459:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/cart-order/cart.js
+ * @description 장바구니 관련 UI 기능
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[cart] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var EVENT_NS = '.uiCartQuantityStepper';
+  var ROOT_SEL = '.quantity-control';
+  var INPUT_SEL = '.quantity-input';
+  var MEASURE_SEL = '.quantity-input-measure';
+  var BTN_MINUS_SEL = '.btn-step.vits-minus-icon';
+  var BTN_PLUS_SEL = '.btn-step.vits-plus-icon';
+  var INIT_KEY = 'uiCartQuantityStepperInit';
+  function toNumber(v, fallback) {
+    var n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function onlyDigits(str) {
+    return String(str || '').replace(/\D+/g, '');
+  }
+  function clamp(n, min, max) {
+    if (n < min) n = min;
+    if (n > max) n = max;
+    return n;
+  }
+  function getOptions($input) {
+    return {
+      step: toNumber($input.data('step'), 1),
+      min: toNumber($input.data('min'), 1),
+      max: toNumber($input.data('max'), Infinity),
+      minW: 40
+    };
+  }
+  function syncMeasureFont($input, $measure) {
+    if (!$measure || !$measure.length) return;
+    var font = $input.css('font');
+    $measure.css({
+      font: font,
+      letterSpacing: $input.css('letter-spacing')
+    });
+  }
+  function resizeInput($input, $measure, minW) {
+    if (!$measure || !$measure.length) return;
+    var v = $input.val();
+    var text = v && String(v).length ? String(v) : '0';
+    $measure.text(text);
+
+    // 커서 여유
+    var extra = 16;
+    var w = $measure[0].offsetWidth + extra;
+    if (w < minW) w = minW;
+    $input.css('width', w + 'px');
+  }
+  function getValue($input, min, max) {
+    var digits = onlyDigits($input.val());
+    if ($input.val() !== digits) $input.val(digits);
+    var n = digits === '' ? 0 : toNumber(digits, 0);
+    return clamp(n, min, max);
+  }
+  function setValue($input, n, min, max) {
+    $input.val(String(clamp(n, min, max)));
+  }
+  function syncDisabled($root, v, step, min, max, isDisabled) {
+    var disabled = !!isDisabled;
+    $root.find(BTN_MINUS_SEL).prop('disabled', disabled || v - step < min);
+    $root.find(BTN_PLUS_SEL).prop('disabled', disabled || v + step > max);
+  }
+  function refresh($root) {
+    var $input = $root.find(INPUT_SEL);
+    var $measure = $root.find(MEASURE_SEL);
+    if (!$input.length) return;
+    var opts = getOptions($input);
+    var v = getValue($input, opts.min, opts.max);
+    setValue($input, v, opts.min, opts.max);
+    resizeInput($input, $measure, opts.minW);
+    syncDisabled($root, v, opts.step, opts.min, opts.max, $input.prop('disabled'));
+  }
+  function bindRoot($root) {
+    // 이미 초기화되었거나 다른 스크립트(quantity-stepper)로 초기화된 경우 건너뛰기
+    if ($root.data(INIT_KEY) || $root.data('uiQuantityStepperInit')) return;
+    $root.data(INIT_KEY, true);
+    var $input = $root.find(INPUT_SEL);
+    var $measure = $root.find(MEASURE_SEL);
+    if (!$input.length) return;
+    syncMeasureFont($input, $measure);
+    $root.off('click' + EVENT_NS, BTN_MINUS_SEL);
+    $root.off('click' + EVENT_NS, BTN_PLUS_SEL);
+    $root.off('input' + EVENT_NS, INPUT_SEL);
+    $root.on('click' + EVENT_NS, BTN_MINUS_SEL, function () {
+      var opts = getOptions($input);
+      var v = getValue($input, opts.min, opts.max);
+      setValue($input, v - opts.step, opts.min, opts.max);
+      refresh($root);
+    });
+    $root.on('click' + EVENT_NS, BTN_PLUS_SEL, function () {
+      var opts = getOptions($input);
+      var v = getValue($input, opts.min, opts.max);
+      setValue($input, v + opts.step, opts.min, opts.max);
+      refresh($root);
+    });
+    $root.on('input' + EVENT_NS, INPUT_SEL, function () {
+      refresh($root);
+    });
+    refresh($root);
+  }
+  function bindResize() {
+    $(window).off('resize' + EVENT_NS);
+    $(window).on('resize' + EVENT_NS, function () {
+      $(ROOT_SEL).each(function () {
+        var $root = $(this);
+        // 이 스크립트로 초기화된 요소만 처리
+        if (!$root.data(INIT_KEY)) return;
+        var $input = $root.find(INPUT_SEL);
+        var $measure = $root.find(MEASURE_SEL);
+        if (!$input.length) return;
+        syncMeasureFont($input, $measure);
+        resizeInput($input, $measure, getOptions($input).minW);
+      });
+    });
+  }
+  window.UI.cart = {
+    init: function (root) {
+      var $scope = root ? $(root) : $(document);
+      $scope.find(ROOT_SEL).each(function () {
+        var $root = $(this);
+        // 기존 quantity-stepper로 초기화되지 않은 요소만 처리
+        if (!$root.data('uiQuantityStepperInit')) {
+          bindRoot($root);
+        }
+      });
+      bindResize();
+      console.log('[cart] quantity stepper initialized');
+    }
+  };
+  console.log('[cart] module loaded');
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 9592:
 /***/ (function() {
 
@@ -5139,7 +5434,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766], function() { return __webpack_require__(5672); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766], function() { return __webpack_require__(6025); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

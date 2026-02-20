@@ -1,0 +1,1144 @@
+
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover, interactive-widget=resizes-content"
+  />
+
+  <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+
+  <title>주문/결제</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/mobile/reset.css" />
+  <!-- <link rel="stylesheet" href="/home/runner/work/vitson-HTML/vitson-HTML/public/resources/css/mro/mobile/sub_layout.css" /> -->
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-cart-order">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          
+
+<!-- prettier-ignore -->
+
+  
+<!-- prettier-ignore -->
+
+
+<!-- prettier-ignore -->
+<header class="vm-header header-nav-bar" 
+  data-vits-header>
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </a>
+  
+ 
+  <p class="vm-header-title" data-header-title>주문/결제</p>
+
+
+  <div class="vm-header-actions">
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="검색">
+          <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <a href="#!"
+          class="vm-header-btn"
+          aria-label="장바구니">
+          <i class="ic ic-bag" aria-hidden="true"></i>
+
+        </a>
+      
+    
+      
+        <button type="button"
+          class="vm-header-btn"
+          aria-label="메뉴"
+           data-popup-target=&#34;#gnb-menu&#34;>
+          <i class="ic ic-menu" aria-hidden="true"></i>
+
+        </button>
+      
+    
+  </div>
+</header>
+
+
+
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-cart-order">
+              <section class="vm-cart-order" data-checkbox-scope>
+                <h2 class="sr-only">주문/결제</h2>
+                <!-- S: vm-cart-order-sticky -->
+                <div class="vm-cart-order-sticky">
+                  <ul class="cart-toolbar">
+                    <li class="cart-toolbar-left">
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-m">
+  <input
+    type="checkbox"
+    name="cart-all-checkbox"
+    value="all"
+    data-checkbox-all
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    전체선택
+  </span>
+  
+</label>
+                      <!-- prettier-ignore -->
+                      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-motext "
+  
+  
+  >
+  
+
+  <span class="text">삭제</span>
+
+  
+</button>
+
+                    </li>
+                    <li class="cart-toolbar-right">
+                      <!-- prettier-ignore -->
+                      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-motext "
+  
+  
+  >
+  
+
+  <span class="text">견적서 생성</span>
+
+  
+</button>
+
+                    </li>
+                  </ul>
+                </div>
+                <!-- E: vm-cart-order-sticky -->
+                <!-- S: vm-cart-order-body -->
+                <div class="vm-cart-order-body">
+                  <div class="cart-order-util">
+                    <!-- prettier-ignore -->
+                    
+
+
+<!-- DEBUG: size=m -->
+<div class="checkbox-wrapper type-basic size-m">
+  <ul class="checkbox-item-area">
+    
+      <li class="checkbox-item-box">
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            name="vits-cart-checkbox"
+            value="shipping-today"
+            
+            
+            
+          />
+
+          
+          <!-- basic -->
+          <span class="checkbox-icon" aria-hidden="true"></span>
+          <span class="label-name">
+            오늘출발
+            
+          </span>
+          
+        </label>
+      </li>
+    
+  </ul>
+</div>
+
+                  </div>
+                  <!-- S: 장바구니 item -->
+                  <!-- prettier-ignore -->
+                  
+                  
+                  <div class="vm-cart-item">
+                    <div class="cart-item-action">
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="cart-order-checkbox"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+                      <button class="vits-btn-delete" aria-label="주문리스트삭제">
+                        <span class="sr-only">삭제</span>
+                        <i class="ic ic-x"></i>
+                      </button>
+                    </div>
+                    <!-- S: 상품 정보 -->
+                    <div class="cart-item-product">
+                      <div class="product-thumb">
+                        <a href="#!">
+                          <img
+                            src="../../public/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+                            alt="더블에이 a4용지"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+
+                      <div class="product-body">
+                        <div class="product-meta">
+                          <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+                        </div>
+
+                        <div class="product-info">
+                          <a href="#!">
+                            <div class="product-summary">
+                              <p class="product-name">
+                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+                                늘어납니다.
+                              </p>
+                              <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+                            </div>
+                          </a>
+                        </div>
+
+                        <div class="product-extra">
+                          <!-- prettier-ignore -->
+                          
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                          <!-- prettier-ignore -->
+                          <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 상품 정보 -->
+
+                    <!-- S: 수량 및 가격 -->
+                    <div class="cart-item-price">
+                      <div class="cart-item-qty">
+                        
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary icon-right"
+  
+  
+  >
+  
+
+  <span class="text">55 갑</span>
+
+  
+    <span class="icon">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+    </span>
+  
+</button>
+
+                        
+                      </div>
+                      <div class="cart-item-price-info">
+                        <div class="price-group">
+                          
+                          <div class="price-origin-taxfree">비과세</div>
+                           
+                          <div class="price-sale">
+                            
+                            <span class="rate"></span>
+                            
+                            <strong class="price"
+                              >1,224,900원</strong
+                            >
+                            
+                            <span class="vat"></span>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 수량 및 가격 -->
+
+                    
+                    <!-- S: 쿠폰 적용 -->
+                    <div class="cart-item-coupon">
+                      <p class="coupon-desc">쿠폰 적용시 최대 <strong>2,000원</strong> 할인</p>
+                      <!-- prettier-ignore -->
+                      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  
+  >
+  
+
+  <span class="text">쿠폰적용</span>
+
+  
+</button>
+
+                    </div>
+                    <!-- E: 쿠폰 적용 -->
+
+                    <!-- S: 주문 금액 요약 -->
+                    <div class="cart-summary">
+                      <dl class="summary-list">
+                        <div class="summary-item">
+                          <dt>상품금액</dt>
+                          <dd>1,030,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>할인금액</dt>
+                          <dd class="text-discount">-30,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>배송비</dt>
+                          <dd>103,000원</dd>
+                        </div>
+                        <div class="summary-item summary-total">
+                          <dt>주문금액</dt>
+                          <dd>1,138,000원</dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <!-- E: 주문 금액 요약 -->
+                    
+                  </div>
+                  
+                  <div class="vm-cart-item">
+                    <div class="cart-item-action">
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="cart-order-checkbox"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+                      <button class="vits-btn-delete" aria-label="주문리스트삭제">
+                        <span class="sr-only">삭제</span>
+                        <i class="ic ic-x"></i>
+                      </button>
+                    </div>
+                    <!-- S: 상품 정보 -->
+                    <div class="cart-item-product">
+                      <div class="product-thumb">
+                        <a href="#!">
+                          <img
+                            src="../../public/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+                            alt="더블에이 a4용지"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+
+                      <div class="product-body">
+                        <div class="product-meta">
+                          <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+                        </div>
+
+                        <div class="product-info">
+                          <a href="#!">
+                            <div class="product-summary">
+                              <p class="product-name">
+                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+                                늘어납니다.
+                              </p>
+                              <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+                            </div>
+                          </a>
+                        </div>
+
+                        <div class="product-extra">
+                          <!-- prettier-ignore -->
+                          
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                          <!-- prettier-ignore -->
+                          <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 상품 정보 -->
+
+                    <!-- S: 수량 및 가격 -->
+                    <div class="cart-item-price">
+                      <div class="cart-item-qty">
+                        
+                        <!-- prettier-ignore -->
+                        
+
+
+
+  <div class="quantity-control type-horiz vm-cart-quantity">
+    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
+      <i class="ic ic-minus" aria-hidden="true"></i>
+
+    </button>
+
+    <input
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      class="quantity-input"
+      name="quantity"
+      value="1"
+      data-min="1"
+      data-max="10"
+      data-step="1"
+      aria-label="개수"
+      
+      
+    />
+    <span class="quantity-input-measure" aria-hidden="true"></span>
+
+    
+
+    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
+      <i class="ic ic-plus" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+
+                        
+                      </div>
+                      <div class="cart-item-price-info">
+                        <div class="price-group">
+                           
+                          <div class="price-origin">32,000원</div>
+                          
+                          <div class="price-sale">
+                            
+                            <span class="rate">30%</span>
+                            
+                            <strong class="price"
+                              >1,224,900원</strong
+                            >
+                            
+                            <span class="vat">(VAT별도)</span>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 수량 및 가격 -->
+
+                    
+                    <!-- S: 쿠폰 적용 -->
+                    <div class="cart-item-coupon">
+                      <p class="coupon-desc">쿠폰 적용시 최대 <strong>2,000원</strong> 할인</p>
+                      <!-- prettier-ignore -->
+                      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  
+  >
+  
+
+  <span class="text">쿠폰적용</span>
+
+  
+</button>
+
+                    </div>
+                    <!-- E: 쿠폰 적용 -->
+
+                    <!-- S: 주문 금액 요약 -->
+                    <div class="cart-summary">
+                      <dl class="summary-list">
+                        <div class="summary-item">
+                          <dt>상품금액</dt>
+                          <dd>1,030,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>할인금액</dt>
+                          <dd class="text-discount">-30,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>배송비</dt>
+                          <dd>103,000원</dd>
+                        </div>
+                        <div class="summary-item summary-total">
+                          <dt>주문금액</dt>
+                          <dd>1,138,000원</dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <!-- E: 주문 금액 요약 -->
+                    
+                  </div>
+                  
+                  <div class="vm-cart-item">
+                    <div class="cart-item-action">
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="cart-order-checkbox"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+                      <button class="vits-btn-delete" aria-label="주문리스트삭제">
+                        <span class="sr-only">삭제</span>
+                        <i class="ic ic-x"></i>
+                      </button>
+                    </div>
+                    <!-- S: 상품 정보 -->
+                    <div class="cart-item-product">
+                      <div class="product-thumb">
+                        <a href="#!">
+                          <img
+                            src="../../public/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+                            alt="더블에이 a4용지"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+
+                      <div class="product-body">
+                        <div class="product-meta">
+                          <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+                        </div>
+
+                        <div class="product-info">
+                          <a href="#!">
+                            <div class="product-summary">
+                              <p class="product-name">
+                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+                                늘어납니다.
+                              </p>
+                              <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+                            </div>
+                          </a>
+                        </div>
+
+                        <div class="product-extra">
+                          <!-- prettier-ignore -->
+                          
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                          <!-- prettier-ignore -->
+                          <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 상품 정보 -->
+
+                    <!-- S: 수량 및 가격 -->
+                    <div class="cart-item-price">
+                      <div class="cart-item-qty">
+                        
+                          
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary "
+  
+  
+  >
+  
+
+  <span class="text">상품추가</span>
+
+  
+</button>
+
+                          
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary icon-right"
+  
+  
+  >
+  
+
+  <span class="text">2M / 3EA</span>
+
+  
+    <span class="icon">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+    </span>
+  
+</button>
+
+                          
+                        
+                      </div>
+                      <div class="cart-item-price-info">
+                        <div class="price-group">
+                          
+                          <div class="price-origin-taxfree">비과세</div>
+                           
+                          <div class="price-sale">
+                            
+                            <span class="rate"></span>
+                            
+                            <strong class="price"
+                              >1,224,900원</strong
+                            >
+                            
+                            <span class="vat"></span>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 수량 및 가격 -->
+
+                    
+                    <!-- S: 쿠폰 적용 -->
+                    <div class="cart-item-coupon">
+                      <p class="coupon-desc">쿠폰 적용시 최대 <strong>2,000원</strong> 할인</p>
+                      <!-- prettier-ignore -->
+                      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-primary "
+  
+  
+  >
+  
+
+  <span class="text">쿠폰적용</span>
+
+  
+</button>
+
+                    </div>
+                    <!-- E: 쿠폰 적용 -->
+
+                    <!-- S: 주문 금액 요약 -->
+                    <div class="cart-summary">
+                      <dl class="summary-list">
+                        <div class="summary-item">
+                          <dt>상품금액</dt>
+                          <dd>1,030,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>할인금액</dt>
+                          <dd class="text-discount">-30,000원</dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>배송비</dt>
+                          <dd>103,000원</dd>
+                        </div>
+                        <div class="summary-item summary-total">
+                          <dt>주문금액</dt>
+                          <dd>1,138,000원</dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <!-- E: 주문 금액 요약 -->
+                    
+                  </div>
+                  
+                  <div class="vm-cart-item is-soldout">
+                    <div class="cart-item-action">
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="cart-order-checkbox"
+    value="all"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+                      <button class="vits-btn-delete" aria-label="주문리스트삭제">
+                        <span class="sr-only">삭제</span>
+                        <i class="ic ic-x"></i>
+                      </button>
+                    </div>
+                    <!-- S: 상품 정보 -->
+                    <div class="cart-item-product">
+                      <div class="product-thumb">
+                        <a href="#!">
+                          <img
+                            src="../../public/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+                            alt="더블에이 a4용지"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+
+                      <div class="product-body">
+                        <div class="product-meta">
+                          <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+                        </div>
+
+                        <div class="product-info">
+                          <a href="#!">
+                            <div class="product-summary">
+                              <p class="product-name">
+                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+                                늘어납니다.
+                              </p>
+                              <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+                            </div>
+                          </a>
+                        </div>
+
+                        <div class="product-extra">
+                          <!-- prettier-ignore -->
+                          
+<!-- prettier-ignore -->
+
+
+
+<div class="vits-product-flags">
+  
+  <span class="vits-product-flag is-today">
+    <span class="icon"> <i class="ic ic-lightning" aria-hidden="true"></i>
+ </span>
+    오늘출발
+  </span>
+   
+  <span class="vits-product-flag is-tomorrow">내일출발</span>
+   
+  <span class="vits-product-flag is-hot">특가</span>
+   
+</div>
+
+
+                          <!-- prettier-ignore -->
+                          <!-- prettier-ignore -->
+
+
+
+<div class="vits-product-promo">
+  <span class="vits-product-promo-badge is-free-ship">무료배송</span>
+</div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 상품 정보 -->
+
+                    <!-- S: 수량 및 가격 -->
+                    <div class="cart-item-price">
+                      <div class="cart-item-qty">
+                        
+                          
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary "
+  
+  
+  >
+  
+
+  <span class="text">상품추가</span>
+
+  
+</button>
+
+                          
+                        <!-- prettier-ignore -->
+                        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary icon-right"
+  
+  
+  >
+  
+
+  <span class="text">2M / 3EA</span>
+
+  
+    <span class="icon">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+    </span>
+  
+</button>
+
+                          
+                        
+                      </div>
+                      <div class="cart-item-price-info">
+                        <div class="price-group">
+                           
+                          <div class="price-sale">
+                            
+                            <span class="rate"></span>
+                            
+                            <strong class="price is-soldout"
+                              >일시품절</strong
+                            >
+                            
+                            <span class="vat"></span>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 수량 및 가격 -->
+
+                    
+                  </div>
+                  
+                  <!-- E: 장바구니 item -->
+
+                  <!-- S: 총금액 -->
+                  <!-- prettier-ignore -->
+                  
+                  <div class="vm-cart-total">
+                    <dl class="summary-list">
+                      <div class="summary-item">
+                        <dt>상품금액</dt>
+                        <dd>1,030,000원</dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>할인금액</dt>
+                        <dd class="text-discount">-30,000원</dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>부가세</dt>
+                        <dd>103,000원</dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>총 배송비</dt>
+                        <dd>5,000원</dd>
+                      </div>
+                      <div class="summary-item summary-total">
+                        <dt>결제예정금액</dt>
+                        <dd>1,138,000원</dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <!-- E: 총금액 -->
+
+                  <!-- S: 결제 버튼 -->
+                  <div class="vm-cart-submit">
+                    <button type="button" class="vits-btn-xl vits-btn-primary">
+                      <span class="text">1건 주문하기 (<em>19,950</em>원)</span>
+                    </button>
+                  </div>
+                  <!-- E: 결제 버튼 -->
+                </div>
+                <!-- E: vm-cart-order-body -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          
+
+<!-- prettier-ignore -->
+
+<!-- < % if (type === 'main') { 
+  < %- include('./main.ejs') 
+< % } else if (type === 'nav-bar') { 
+  < %- include('./nav-bar.ejs', { title: title }) 
+< % }  -->
+
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        
+
+<!-- prettier-ignore -->
+<div class="vm-bottom-bar">
+  
+    <!-- prettier-ignore -->
+    
+
+<!-- prettier-ignore -->
+
+
+
+<div class="bottom-tab-bar">
+  <nav class="tab-bar-nav">
+    <ul class="tab-bar-items">
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-category"></span>
+          <span class="text">카테고리</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-search"></span>
+          <span class="text">검색</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item is-active">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-home"></span>
+          <span class="text">홈</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-recently"></span>
+          <span class="text">최근 본 상품</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-mypage"></span>
+          <span class="text">마이</span>
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+</div>
+
+  
+</div>
+
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+  </body>
+</html>
