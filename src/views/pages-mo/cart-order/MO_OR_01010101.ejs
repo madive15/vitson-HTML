@@ -1,0 +1,346 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/결제'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-cart-order">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문/결제' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-cart-order">
+              <section class="vm-cart-order" data-checkbox-scope>
+                <h2 class="sr-only">주문/결제</h2>
+                <!-- S: vm-cart-order-sticky -->
+                <div class="vm-cart-order-sticky">
+                  <ul class="cart-toolbar">
+                    <li class="cart-toolbar-left">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                        size: 'm',
+                        name: 'cart-all-checkbox',
+                        value: 'all',
+                        checkboxType: 'all',
+                        text: '전체선택',
+                      }) %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        size: 'sm',
+                        variant: 'motext',
+                        text: '삭제',
+                      }) %>
+                    </li>
+                    <li class="cart-toolbar-right">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        size: 'sm',
+                        variant: 'motext',
+                        text: '견적서 생성',
+                      }) %>
+                    </li>
+                  </ul>
+                </div>
+                <!-- E: vm-cart-order-sticky -->
+                <!-- S: vm-cart-order-body -->
+                <div class="vm-cart-order-body">
+                  <div class="cart-order-util">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/form/input-checkbox.ejs`, {
+                    variant: 'basic', 
+                    size: 'm', 
+                    name: 'vits-cart-checkbox',
+                    datas: [
+                      {
+                        text: '오늘출발',
+                        value:'shipping-today',
+                      },
+                    ]
+                  }) %>
+                  </div>
+                  <!-- S: 장바구니 item -->
+                  <!-- prettier-ignore -->
+                  <%
+                    const cartItems = [
+                      {
+                        isSoldout: false,
+                        qtyButton: { text: '55 갑', iconName: 'ic-arrow-down', iconRight: true },
+                        price: {originTaxfree: '비과세', origin: null, rate: null, price: '1,224,900원', vat: null, isSoldout: false},
+                        summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
+                      },
+                      {
+                        isSoldout: false,
+                        qtyStepper: {type: 'horiz', variant: 'vm-cart-quantity', name: 'quantity', value: 1, min: 1, max: 10, step: 1, required: false},
+                        price: {originTaxfree: null, origin: '32,000원', rate: '30%', price: '1,224,900원', vat: '(VAT별도)', isSoldout: false},
+                        summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
+                      },
+                      {
+                        isSoldout: false,
+                        qtyButtons: [
+                          { text: '상품추가' },
+                          { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
+                        ],
+                        price: {originTaxfree: '비과세', origin: null, rate: null, price: '1,224,900원', vat: null, isSoldout: false},
+                        summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
+                      },
+                      {
+                        isSoldout: true,
+                        qtyButtons: [
+                          { text: '상품추가' },
+                          { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
+                        ],
+                        price: { originTaxfree: null, origin: null, rate: null, price: '일시품절', vat: null, isSoldout: true },
+                        summary: null,
+                      }
+                    ];
+                  %>
+                  <% cartItems.forEach((item, index) => { %>
+                  <div class="vm-cart-item<%= item.isSoldout ? ' is-soldout' : '' %>">
+                    <div class="cart-item-action">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                        size: 's',
+                        name: 'cart-order-checkbox',
+                        value: 'all',
+                        checkboxType: 'item',                        
+                      }) %>
+
+                      <button class="vits-btn-delete" aria-label="주문리스트삭제">
+                        <span class="sr-only">삭제</span>
+                        <i class="ic ic-x"></i>
+                      </button>
+                    </div>
+                    <!-- S: 상품 정보 -->
+                    <div class="cart-item-product">
+                      <div class="product-thumb">
+                        <a href="#!">
+                          <img
+                            src="<%= _public %>/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+                            alt="더블에이 a4용지"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+
+                      <div class="product-body">
+                        <div class="product-meta">
+                          <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+                        </div>
+
+                        <div class="product-info">
+                          <a href="#!">
+                            <div class="product-summary">
+                              <p class="product-name">
+                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+                                늘어납니다.
+                              </p>
+                              <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+                            </div>
+                          </a>
+                        </div>
+
+                        <div class="product-extra">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+                              today: true,
+                              tomorrow: true,
+                              hot: true
+                            }) %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, {
+                              text: '무료배송',
+                              variant: 'free-ship'
+                            }) %>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 상품 정보 -->
+
+                    <!-- S: 수량 및 가격 -->
+                    <div class="cart-item-price">
+                      <div class="cart-item-qty">
+                        <% if (item.qtyStepper) { %>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+                            type: item.qtyStepper.type,
+                            variant: item.qtyStepper.variant,
+                            name: item.qtyStepper.name,
+                            value: item.qtyStepper.value,
+                            min: item.qtyStepper.min,
+                            max: item.qtyStepper.max,
+                            step: item.qtyStepper.step,
+                            required: item.qtyStepper.required
+                          }) %>
+                        <% } else if (item.qtyButtons && item.qtyButtons.length) { %>
+                          <% item.qtyButtons.forEach((btn) => { %>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                              size: 'xs',
+                              variant: 'outline-tertiary',
+                              iconName: btn.iconName,
+                              iconRight: btn.iconRight,
+                              text: btn.text,
+                            }) %>
+                          <% }); %>
+                        <% } else if (item.qtyButton) { %>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'xs',
+                            variant: 'outline-tertiary',
+                            iconName: item.qtyButton.iconName,
+                            iconRight: item.qtyButton.iconRight,
+                            text: item.qtyButton.text,
+                          }) %>
+                        <% } %>
+                      </div>
+                      <div class="cart-item-price-info">
+                        <div class="price-group">
+                          <% if (item.price.originTaxfree) { %>
+                          <div class="price-origin-taxfree"><%= item.price.originTaxfree %></div>
+                          <% } %> <% if (item.price.origin) { %>
+                          <div class="price-origin"><%= item.price.origin %></div>
+                          <% } %>
+                          <div class="price-sale">
+                            <% if (item.price.rate) { %>
+                            <span class="rate"><%= item.price.rate %></span>
+                            <% } else { %>
+                            <span class="rate"></span>
+                            <% } %>
+                            <strong class="price<%= item.price.isSoldout ? ' is-soldout' : '' %>"
+                              ><%= item.price.price %></strong
+                            >
+                            <% if (item.price.vat) { %>
+                            <span class="vat"><%= item.price.vat %></span>
+                            <% } else { %>
+                            <span class="vat"></span>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- E: 수량 및 가격 -->
+
+                    <% if (!item.isSoldout) { %>
+                    <!-- S: 쿠폰 적용 -->
+                    <div class="cart-item-coupon">
+                      <p class="coupon-desc">쿠폰 적용시 최대 <strong>2,000원</strong> 할인</p>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        size: 'xs',
+                        variant: 'outline-primary',
+                        text: '쿠폰적용',
+                      }) %>
+                    </div>
+                    <!-- E: 쿠폰 적용 -->
+
+                    <!-- S: 주문 금액 요약 -->
+                    <div class="cart-summary">
+                      <dl class="summary-list">
+                        <div class="summary-item">
+                          <dt>상품금액</dt>
+                          <dd><%= item.summary.productPrice %></dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>할인금액</dt>
+                          <dd class="text-discount"><%= item.summary.discountPrice %></dd>
+                        </div>
+                        <div class="summary-item">
+                          <dt>배송비</dt>
+                          <dd><%= item.summary.shippingPrice %></dd>
+                        </div>
+                        <div class="summary-item summary-total">
+                          <dt>주문금액</dt>
+                          <dd><%= item.summary.totalPrice %></dd>
+                        </div>
+                      </dl>
+                    </div>
+                    <!-- E: 주문 금액 요약 -->
+                    <% } %>
+                  </div>
+                  <% }); %>
+                  <!-- E: 장바구니 item -->
+
+                  <!-- S: 총금액 -->
+                  <!-- prettier-ignore -->
+                  <%
+                    const orderTotalSummary = {
+                      productPrice: '1,030,000원',
+                      discountPrice: '-30,000원',
+                      taxPrice: '103,000원',
+                      shippingPrice: '5,000원',
+                      totalPrice: '1,138,000원',
+                    };
+                  %>
+                  <div class="vm-cart-total">
+                    <dl class="summary-list">
+                      <div class="summary-item">
+                        <dt>상품금액</dt>
+                        <dd><%= orderTotalSummary.productPrice %></dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>할인금액</dt>
+                        <dd class="text-discount"><%= orderTotalSummary.discountPrice %></dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>부가세</dt>
+                        <dd><%= orderTotalSummary.taxPrice %></dd>
+                      </div>
+                      <div class="summary-item">
+                        <dt>총 배송비</dt>
+                        <dd><%= orderTotalSummary.shippingPrice %></dd>
+                      </div>
+                      <div class="summary-item summary-total">
+                        <dt>결제예정금액</dt>
+                        <dd><%= orderTotalSummary.totalPrice %></dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <!-- E: 총금액 -->
+
+                  <!-- S: 결제 버튼 -->
+                  <div class="vm-cart-submit">
+                    <button type="button" class="vits-btn-xl vits-btn-primary">
+                      <span class="text">1건 주문하기 (<em>19,950</em>원)</span>
+                    </button>
+                  </div>
+                  <!-- E: 결제 버튼 -->
+                </div>
+                <!-- E: vm-cart-order-body -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'home' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

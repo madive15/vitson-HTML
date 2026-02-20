@@ -1,0 +1,38 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var _itemName = typeof itemName !== 'undefined' ? itemName : '';
+  var _itemNum = typeof itemNum !== 'undefined' ? itemNum : '';
+  var _icon = typeof icon !== 'undefined' ? icon : 'card';
+  var _isPrimary = typeof isPrimary !== 'undefined' ? isPrimary : false;
+%>
+
+<li>
+  <div class="pay-manage-item">
+    <div class="pay-manage-item-icon">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: _icon }) %>
+    </div>
+    <div class="pay-manage-item-info">
+      <p class="pay-manage-item-name">
+        <span class="text"><%= _itemName %></span>
+
+        <!-- prettier-ignore -->
+        <% if (_isPrimary) { %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/label/general-label.ejs`, { 
+          text: '대표', 
+          variant: 'blue' 
+        }) %>
+        <% } %>
+      </p>
+      <p class="pay-manage-item-number"><%= _itemNum %></p>
+    </div>
+    <div class="pay-manage-item-action">
+      <button type="button" class="pay-manage-item-button" aria-label="더보기">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'ellipsis' }) %>
+      </button>
+    </div>
+  </div>
+</li>

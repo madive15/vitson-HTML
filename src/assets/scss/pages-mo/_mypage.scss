@@ -74,7 +74,9 @@
 
 .vm-wrap {
   &.wrap-my-home .vm-content-wrap,
-  &.wrap-my-coupon .vm-content-wrap {
+  &.wrap-my-coupon .vm-content-wrap,
+  &.wrap-my-shipping .vm-content-wrap,
+  &.wrap-my-pay .vm-content-wrap {
     background: map.get(color.$layout-surf, 'mypage');
   }
 
@@ -1187,7 +1189,6 @@
 }
 
 // 배송지 목록
-// 배송지 목록
 .vm-address-select {
   @include mx.flex(flex, column);
   position: relative;
@@ -1310,6 +1311,225 @@
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  &-empty {
+    width: 100%;
+    padding: fn.rem(94) map.get(var.$unit, 20) 0;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    [class*='vits-btn-'],
+    .vits-empty-state-action {
+      width: 100%;
+    }
+  }
+}
+
+// 배송지 등록
+.vm-add-shipping-address {
+  .add-shipping-address {
+    &-form {
+      padding: map.get(var.$unit, 20) map.get(var.$unit, 20) map.get(var.$unit, 32);
+
+      &.form-freight {
+        padding-right: 0;
+        padding-left: 0;
+      }
+    }
+
+    &-dl {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+      gap: var.$mo-gutter 0;
+
+      /* stylelint-disable no-descending-specificity */
+      dt {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        flex: 0 0 fn.rem(70);
+
+        &.dt-address {
+          align-self: flex-start;
+        }
+      }
+
+      dd {
+        flex: 0 0 calc(100% - fn.rem(70));
+
+        [class*='vits-btn-'] {
+          flex-shrink: 0;
+          width: fn.rem(82);
+
+          .text {
+            font-size: fn.rem(12);
+            font-weight: 600;
+          }
+        }
+
+        &.dd-code {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 8);
+        }
+
+        &.dd-address,
+        &.dd-checkbox {
+          flex: 1 1 auto;
+          width: 100%;
+        }
+
+        &.dd-address {
+          margin-top: (map.get(var.$unit, 8) * -1);
+        }
+
+        &.dd-checkbox .vits-checkbox-item {
+          display: inline-flex;
+        }
+      }
+
+      &.dl-freight01 {
+        gap: map.get(var.$unit, 8) 0;
+        padding: 0 map.get(var.$unit, 20) map.get(var.$unit, 20);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+
+        .dd-freight01 {
+          @include mx.flex(flex, row, space-between, center);
+          flex: 1 1 auto;
+          width: 100%;
+
+          .asterisk-text {
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+
+            &::before {
+              @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+              content: '\002A';
+            }
+          }
+        }
+      }
+
+      &.dl-freight02 {
+        padding: map.get(var.$unit, 20) map.get(var.$unit, 20) 0;
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+  }
+}
+
+// 비츠온 페이 관리
+.vm-pay-manage {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+  padding: 0 var.$mo-gutter;
+
+  &-setting {
+    @include mx.flex;
+    gap: map.get(var.$unit, 8);
+
+    [class*='vits-btn-'] {
+      &[class*='secondary'] {
+        flex: 2 1 auto;
+      }
+
+      &[class*='primary'] {
+        flex: 3 1 auto;
+      }
+    }
+  }
+
+  &-list {
+    &.pay-manage-card {
+      .pay-manage-item-icon {
+        background: map.get(color.$layout-status, 'info-bg-default');
+
+        .ic {
+          width: map.get(var.$unit, 32);
+          height: map.get(var.$unit, 32);
+        }
+      }
+    }
+
+    &.pay-manage-bank {
+      .pay-manage-item-icon {
+        background: map.get(color.$layout-status, 'success-bg-default');
+
+        .ic {
+          width: fn.rem(25);
+          height: fn.rem(25);
+        }
+      }
+    }
+  }
+
+  .pay-manage {
+    &-list {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-item {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 20);
+      padding: var.$mo-gutter;
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-icon {
+        @include mx.flex(flex, row, center, center);
+        flex: 0 0 map.get(var.$unit, 56);
+        width: map.get(var.$unit, 56);
+        aspect-ratio: 1 / 1;
+        color: color.$color-white;
+        border-radius: 50%;
+      }
+
+      &-info {
+        @include mx.flex(flex, column);
+        flex-grow: 1;
+        gap: map.get(var.$unit, 4);
+        min-width: 0;
+      }
+
+      &-name {
+        /* stylelint-disable-next-line no-descending-specificity */
+        .text {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          padding-right: map.get(var.$unit, 8);
+        }
+      }
+
+      &-number {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-action {
+        flex: 0 0 map.get(var.$unit, 32);
+        width: map.get(var.$unit, 32);
+        aspect-ratio: 1 / 1;
+      }
+
+      &-button {
+        @include button.btn-reset;
+        @include icon.ic-size(map.get(var.$unit, 32));
+        color: map.get(color.$icon-neutral, 'secondary');
+        background: transparent;
+      }
+    }
+  }
+
+  &.pay-empty {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vits-empty-state {
+      padding: fn.rem(130) 0 var.$mo-section-gap;
+
+      &-action {
+        width: 100%;
+        padding: 0 var.$mo-gutter;
+
+        [class*='vits-btn-'] {
+          width: 100%;
         }
       }
     }
@@ -1736,6 +1956,92 @@
 
     dd {
       margin-top: map.get(var.$unit, 8);
+    }
+  }
+}
+
+// 화물 영업소
+.vm-freight-search {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+
+  &-group {
+    @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
+    padding: var.$mo-gutter;
+    background: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .vm-form-list {
+      gap: var.$mo-gutter;
+
+      .vits-select {
+        /* stylelint-disable no-descending-specificity */
+        &,
+        &-trigger {
+          width: 100%;
+        }
+        /* stylelint-enable no-descending-specificity */
+      }
+    }
+  }
+
+  .freight-branch {
+    &-list {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+    }
+
+    &-item {
+      padding: var.$mo-gutter;
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+    }
+
+    &-info {
+      @include mx.divider('p', 1, 10, 8, $color: map.get(color.$layout-surf, 'secondary'));
+    }
+
+    &-company {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-name,
+    &-address,
+    &-phone {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-address {
+      padding: map.get(var.$unit, 8) 0 map.get(var.$unit, 4);
+    }
+
+    &-action {
+      margin-top: var.$mo-gutter;
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      [class*='vits-btn-'] {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// 화물 영업소 - 모달 영역
+.vm-scope .k-window .modal-freight-search {
+  .vm-modal {
+    &-content {
+      padding-bottom: map.get(var.$unit, 20);
+    }
+
+    &-footer {
+      padding: map.get(var.$unit, 20) var.$mo-gutter;
+      box-shadow: map.get(var.$box-shadow, 'mo_menu');
+
+      .vits-pagination {
+        justify-content: center;
+      }
     }
   }
 }

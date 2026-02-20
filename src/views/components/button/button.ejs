@@ -12,6 +12,7 @@
   const _className = typeof className !== 'undefined' ? className : '';
   const _attrs = typeof attrs !== 'undefined' ? attrs : '';
   const _onclick = typeof onclick !== 'undefined' ? onclick : '';
+  const _form = typeof form !== 'undefined' ? form : '';
   
   // attrs 문자열을 파싱하여 속성 배열로 변환
   var _attrsArray = [];
@@ -33,6 +34,7 @@
 
 <button
   type="<%= _type || 'button' %>"
+  <% if (_form) { %>form="<%= _form %>"<% } %>
   class="vits-btn-<%= _size %> vits-btn-<%= _variant %> <%= _iconLeft ? 'icon-left' : '' %><%= _iconRight ? 'icon-right' : '' %><%= _disabled ? ' disabled' : '' %><%= _className ? ' ' + _className : '' %>"
   <%= _disabled ? 'disabled' : '' %>
   <% if (_onclick) { %>onclick="<%- _onclick %>"<% } %>

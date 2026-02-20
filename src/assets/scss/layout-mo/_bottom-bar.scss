@@ -48,29 +48,34 @@
       &-item {
         flex: 0 0 fn.rem(54);
 
-        .vits-btn-vertical-icon {
-          @include mx.flex(flex, column, flex-start, center);
+        $tab-icons: category, search, home, recently, mypage;
+
+        .link {
+          @include mx.flex(flex, column, center, center);
           gap: map.get(var.$unit, 4);
           width: 100%;
-          padding: fn.rem(5) 0;
 
           .icon {
-            @include icon.ic-size(map.get(var.$unit, 24));
-            color: map.get(color.$neutral-colors, '3');
+            width: map.get(var.$unit, 32);
+            height: map.get(var.$unit, 32);
+            color: map.get(color.$icon-neutral, 'secondary');
+            background-color: currentcolor;
+            mask: no-repeat center / contain;
 
             @media (width >= 744px) {
               width: calc(24 * 1.3);
               height: calc(24 * 1.3);
             }
+
+            @each $name in $tab-icons {
+              &.icon-#{$name} {
+                mask-image: url('/public/resources/img/mro/renewal/ic/ic-tab-#{$name}.svg');
+              }
+            }
           }
 
           .text {
-            @include typo.font-style(
-              $weight: 500,
-              $size: 10,
-              $line-height: fn.rem(16),
-              $color: map.get(color.$neutral-colors, '3')
-            );
+            @include typo.typography('b4r', $color: map.get(color.$gray-shades, '60'));
             white-space: nowrap;
 
             @media (width >= 744px) {
@@ -79,10 +84,32 @@
           }
         }
 
-        &.is-active .vits-btn-vertical-icon {
-          .icon,
+        &.is-active .link {
+          .icon {
+            @each $name in $tab-icons {
+              &.icon-#{$name} {
+                mask-image: url('/public/resources/img/mro/renewal/ic/ic-tab-#{$name}-bold.svg');
+              }
+            }
+
+            &:not(.icon-home) {
+              &,
+              & + .text {
+                color: map.get(color.$gray-shades, '100');
+              }
+            }
+
+            &.icon-home {
+              &,
+              & + .text {
+                color: map.get(color.$icon-colors, 'primary');
+              }
+            }
+          }
+
+          /* stylelint-disable-next-line no-descending-specificity */
           .text {
-            color: map.get(color.$brand-colors, 'primary');
+            font-weight: 600;
           }
         }
       }

@@ -1,0 +1,27 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var _company = typeof company !== 'undefined' ? company : '';
+  var _branch = typeof branch !== 'undefined' ? branch : '';
+  var _address = typeof address !== 'undefined' ? address : '';
+  var _phone = typeof phone !== 'undefined' ? phone : '';
+%>
+
+<li>
+  <div class="freight-branch-item">
+    <div class="freight-branch-info">
+      <p class="freight-branch-company"><%= _company %></p>
+      <p class="freight-branch-name"><%= _branch %></p>
+    </div>
+    <p class="freight-branch-address"><%= _address %></p>
+    <p class="freight-branch-phone"><%= _phone %></p>
+    <div class="freight-branch-action">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        size:'sm', 
+        variant: 'outline-secondary', 
+        text: '선택'
+      }) %>
+    </div>
+  </div>
+</li>
