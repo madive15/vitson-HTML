@@ -28,21 +28,27 @@
       @include button.btn-reset;
       width: 100%;
     }
-
-    &-panel {
-      padding: map.get(var.$unit, 20) 0 map.get(var.$unit, 52);
-      box-shadow: map.get(var.$box-shadow, 'elevation_-1');
-    }
   }
 
   &[class*='-underline'] {
-    .vm-tab-btn {
-      height: map.get(var.$unit, 48);
-      background: color.$color-white;
-      box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+    .vm-tab {
+      &-btn {
+        height: map.get(var.$unit, 48);
+        background: color.$color-white;
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
 
-      &.is-active {
-        box-shadow: inset 0 -2px 0 0 map.get(color.$layout-border, 'primary');
+        .text {
+          @include typo.typography('b2s');
+        }
+
+        &.is-active {
+          box-shadow: inset 0 -2px 0 0 map.get(color.$layout-border, 'primary');
+        }
+      }
+
+      &-panel {
+        padding: map.get(var.$unit, 20) 0 map.get(var.$unit, 52);
+        box-shadow: map.get(var.$box-shadow, 'elevation_-1');
       }
     }
   }
@@ -52,10 +58,6 @@
       @include mx.flex(flex, row, center, center);
       gap: map.get(var.$unit, 4);
 
-      .text {
-        @include typo.typography('b2s');
-      }
-
       .label {
         @include mx.flex(flex, row, center, center);
         @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand-sub'));
@@ -64,6 +66,102 @@
         padding: 0 fn.rem(3);
         background: map.get(color.$layout-status, 'brand-bg-sub');
         border-radius: fn.rem(22);
+      }
+    }
+  }
+
+  // 라디오 스타일 - 2개 버튼 기준
+  &[class*='-radio'] {
+    @include mx.flex(flex, column);
+    gap: var.$mo-section-gap;
+    padding: map.get(var.$unit, 20) var.$mo-gutter map.get(var.$unit, 52);
+
+    .tab-radio {
+      &-group {
+        width: 100%;
+        overflow: hidden;
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+      }
+
+      &-buttons {
+        @include mx.flex;
+        gap: map.get(var.$unit, 12);
+
+        [class*='vits-btn-'] {
+          &[class*='-secondary'] {
+            flex: 2 1 auto;
+          }
+
+          &[class*='-primary'] {
+            flex: 3 1 auto;
+          }
+        }
+      }
+    }
+
+    .vm-tab {
+      &-menus {
+        flex-wrap: wrap;
+        gap: map.get(var.$unit, 8);
+        align-items: center;
+        justify-content: space-between;
+        min-height: map.get(var.$unit, 48);
+        padding: map.get(var.$unit, 12) map.get(var.$unit, 20);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+      }
+
+      &-menu {
+        flex: 1 0 auto;
+      }
+
+      &-btn {
+        @include mx.flex(flex, row, flex-start, center);
+        position: relative;
+        gap: map.get(var.$unit, 4);
+
+        .text {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          flex-shrink: 0;
+        }
+
+        &::before,
+        &::after {
+          content: '';
+          border-radius: 50%;
+        }
+
+        &::before {
+          flex-shrink: 0;
+          width: var.$mo-gutter;
+          height: var.$mo-gutter;
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+          transition: box-shadow 0.2s;
+        }
+
+        &::after {
+          @include mx.position(absolute, fn.rem(5), $left: map.get(var.$unit, 4));
+          width: map.get(var.$unit, 8);
+          height: map.get(var.$unit, 8);
+          background: transparent;
+          transition: background 0.2s;
+        }
+
+        &.is-active {
+          &::before {
+            box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'brand');
+          }
+
+          &::after {
+            background: map.get(color.$layout-surf, 'brand');
+          }
+
+          .text {
+            font-weight: 600;
+            color: map.get(color.$text-colors, 'primary');
+          }
+        }
       }
     }
   }

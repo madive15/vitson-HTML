@@ -4,11 +4,11 @@
 <% const current = typeof currentTab !== 'undefined' ? currentTab : ''; %>
 <%
 const tabBarItems = [
-  { id: 'category', icon: 'menu', label: '카테고리', href: '#!' },
-  { id: 'search', icon: 'magnifying-glass', label: '검색', href: '#!' },
-  { id: 'home', icon: 'home2', label: '홈', href: '#!' },
-  { id: 'like', icon: 'heart', label: '좋아요', href: '#!' },
-  { id: 'mypage', icon: 'user', label: '마이페이지', href: '#!' }
+  { id: 'category', label: '카테고리', href: '#!' },
+  { id: 'search', label: '검색', href: '#!' },
+  { id: 'home', label: '홈', href: '#!' },
+  { id: 'recently', label: '최근 본 상품', href: '#!' },
+  { id: 'mypage', label: '마이', href: '#!' }
 ];
 %>
 
@@ -17,7 +17,11 @@ const tabBarItems = [
     <ul class="tab-bar-items">
       <% tabBarItems.forEach(function(item) { %>
       <li class="tab-bar-item<%= current === item.id ? ' is-active' : '' %>">
-        <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item) %>
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item) %> -->
+        <a href="<%- item.href %>" class="link">
+          <span class="icon icon-<%- item.id %>"></span>
+          <span class="text"><%- item.label %></span>
+        </a>
       </li>
       <% }); %>
     </ul>

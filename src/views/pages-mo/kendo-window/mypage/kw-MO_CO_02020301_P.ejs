@@ -1,0 +1,67 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!-- prettier-ignore -->
+<%
+  var branches = [
+    { company: '경동택배', branch: '과천지점', address: '경기 과천시 갈현동 123-45', phone: '010-1234-5678' },
+    { company: '경동택배', branch: '강남지점', address: '서울 강남구 역삼동 678-90', phone: '010-2345-6789' },
+    { company: '경동택배', branch: '수원지점', address: '경기 수원시 팔달구 인계동 34-12', phone: '010-3456-7890' },
+    { company: '경동택배', branch: '인천지점', address: '인천 남동구 구월동 456-78', phone: '010-4567-8901' },
+    { company: '경동택배', branch: '분당지점', address: '경기 성남시 분당구 정자동 12-34', phone: '010-5678-9012' }
+  ];
+%>
+
+<div class="vm-freight-search">
+  <div class="vm-freight-search-group">
+    <form class="vm-form">
+      <div class="vm-form-group">
+        <ul class="vm-form-list">
+          <li class="vm-form-item">
+            <p class="vm-form-item-label" aria-hidden="true">화물사 구분</p>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/select.ejs`, {
+              id: 'carrier-type',
+              name: 'carrier-type',
+              placeholder: '전체',
+              options: [
+                { value: 'carrier01', text: '대신화물' },
+                { value: 'carrier02', text: '경동화물' },
+              ],
+              value: '',
+              disabled: false,
+              portal: true,
+            }) %>
+          </li>
+
+          <li class="vm-form-item">
+            <p class="vm-form-item-label" aria-hidden="true">화물지점</p>
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'ipt-cargo-branch',
+              name: 'ipt-cargo-branch',
+              label: '화물지점',
+              placeholder: '지점명을 입력하세요',
+              required: true,
+              rootClass: 'size-l'
+            }) %>
+          </li>
+
+          <li class="vm-form-item">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/button/button.ejs`, {
+                size:'xl', variant: 'secondary', text: '조회하기'
+              }) %>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+  <div class="vm-freight-search-list">
+    <ul class="freight-branch-list">
+      <!-- prettier-ignore -->
+      <% branches.forEach(function(item) { %>
+        <%- include(`${_src}/views/components-mo/mypage/freight-branch-item.ejs`, item) %>
+      <% }); %>
+    </ul>
+  </div>
+</div>

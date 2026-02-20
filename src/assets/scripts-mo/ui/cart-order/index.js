@@ -1,12 +1,10 @@
 /**
- * @file scripts-mo/ui/form/index.js
- * @description 폼 관련 UI 모듈 통합
+ * @file scripts-mo/ui/cart-order/index.js
+ * @description 장바구니/주문 UI 모듈 통합
  */
 
-import './select.js';
-import './checkbox-total.js';
-import './textarea.js';
-import './input.js';
+import './cart.js';
+import './order.js';
 
 (function ($, window) {
   'use strict';
@@ -15,9 +13,9 @@ import './input.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['select', 'checkboxTotal', 'textarea', 'input'];
+  var modules = ['cart', 'order'];
 
-  window.UI.form = {
+  window.UI.cartOrder = {
     init: function () {
       modules.forEach(function (name) {
         var mod = window.UI[name];

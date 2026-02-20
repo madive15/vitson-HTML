@@ -50,6 +50,10 @@
   // - 실패 상태: .is-invalid 클래스 추가 (validationMessage와 함께 사용)
   // - 메시지 표시: hidden 속성 제거
   let _stateClasses = [];
+
+   if (_hasValue) {
+    _stateClasses.push('is-filled');
+  }
   
   if (_isInvalid) {
     _stateClasses.push('vits-validation');

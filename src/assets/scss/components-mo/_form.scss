@@ -13,6 +13,32 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 
+// input-item : mobile
+// input 자동완성 감지용 (0s 애니메이션으로 JS에 알림)
+@keyframes on-auto-fill-start {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.vits-input {
+  .input-item input {
+    color: map.get(color.$text-colors, 'primary');
+
+    &:-webkit-autofill {
+      animation-name: on-auto-fill-start;
+    }
+  }
+
+  &.is-filled .input-item {
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+  }
+}
+
 // 텍스트형 체크박스
 .vm-ckbox-text {
   position: relative;

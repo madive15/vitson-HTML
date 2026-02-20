@@ -1,9 +1,8 @@
 <% const _src = srcPath; const _public = publicPath; %>
-<!-- prettier-ignore -->
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '배송지 목록'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '비츠온 페이'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -12,35 +11,25 @@
     <!-- S: vm-wrapper -->
     <section class="vm-wrapper">
       <!-- S: vm-wrap -->
-      <div class="vm-wrap wrap-my-shipping">
+      <div class="vm-wrap wrap-my-pay">
         <!-- S: vm-content-wrap -->
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'nav-bar', title: '배송지 목록' 
+            type: 'nav-bar', 
+            title: '비츠온 페이',
           }) %>
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
-            <div class="vm-main-content main-content-my-shipping">
-              <section class="vm-address-select">
-                <h2 class="sr-only">배송지 목록</h2>
-
-                <div class="vm-address-select-empty">
-                  <!-- prettier-ignore -->
-                  <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
-                    size:'xl', 
-                    variant: 'secondary', 
-                    text: '배송지 추가하기',
-                  }) %>
-                  <%- include(`${_src}/views/components/empty-state.ejs`, {
-                    iconName: 'document-paper',
-                    title: '등록된 배송지가 없습니다',
-                    desc: '배송지를 추가해주세요',
-                    buttonHtml
-                  }) %>
-                </div>
-              </section>
+            <div class="vm-main-content main-content-my-pay">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal')"
+              >
+                <span class="text">비츠온페이 결제 수단 관리 팝업</span>
+              </button>
             </div>
           </main>
           <!-- E: vm-main -->
@@ -57,6 +46,19 @@
         <!-- E: vm-bottom-group -->
 
         <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal = { 
+          id: 'modal', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet empty-content',
+          title: '결제 수단 관리', 
+          contentPath: '',
+          buttons: [
+            { text: '정보수정', variant: 'secondary', action: 'close' },
+            { text: '삭제', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
         <!-- E: 팝업 영역 -->
       </div>
       <!-- E: vm-wrap -->

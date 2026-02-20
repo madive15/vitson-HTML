@@ -541,4 +541,26 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
       padding-bottom: map.get(var.$unit, 40);
     }
   }
+
+  &.empty-content {
+    .vm-modal {
+      &-header {
+        padding-bottom: map.get(var.$unit, 8);
+      }
+
+      &-content {
+        padding: 0;
+      }
+
+      &-buttons {
+        flex-direction: column;
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-btn {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+    }
+  }
 }

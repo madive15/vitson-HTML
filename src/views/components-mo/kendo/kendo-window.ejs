@@ -31,10 +31,13 @@ const winVariant = (typeof variant !== 'undefined' && variant) ? variant : '';
 const winSubtitle = (typeof subtitle !== 'undefined' && subtitle) ? subtitle : '';
 const winInfoTitle = (typeof infotitle !== 'undefined' && infotitle) ? infotitle : '';
 const winContentPath = (typeof contentPath !== 'undefined' && contentPath) ? contentPath : '';
+const winContentHtml = (typeof contentHtml !== 'undefined' && contentHtml) ? contentHtml : '';
 const winButtons = (typeof buttons !== 'undefined' && buttons) ? buttons : [];
-const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0);
 const winContentData = (typeof contentData !== 'undefined' && contentData) ? contentData : {};
 const winClassName = (typeof className !== 'undefined' && className) ? className : '';
+const winFooterPath = (typeof footerPath !== 'undefined' && footerPath) ? footerPath : '';
+const winFooterHtml = (typeof footerHtml !== 'undefined' && footerHtml) ? footerHtml : '';
+const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0 || !!winFooterPath || !!winFooterHtml);
 %>
 
 <div
@@ -67,15 +70,21 @@ const winClassName = (typeof className !== 'undefined' && className) ? className
 
   <!-- 컨텐츠 -->
   <div class="vm-modal-content<% if (!winHasFooter) { %> no-footer<% } %>" data-scroll-check>
-  <% if (winContentPath) { %>
-    <%- include(winContentPath, Object.assign({}, winContentData)) %>
+  <% if (winContentHtml) { %>
+    <%- winContentHtml %>
+  <% } else if (winContentPath) { %>
+      <%- include(winContentPath, Object.assign({}, winContentData)) %>
   <% } %>
   </div>
 
   <!-- 푸터 -->
 <% if (winHasFooter) { %>
   <div class="vm-modal-footer">
-<% if (winButtons.length > 0) { %>
+<% if (winFooterHtml) { %>
+    <%- winFooterHtml %>
+<% } else if (winFooterPath) { %>
+    <%- include(winFooterPath, Object.assign({}, winContentData)) %>
+<% } else if (winButtons.length > 0) { %>
     <div class="vm-modal-buttons <%= winButtons.length === 1 ? 'is-single' : 'is-double' %>">
 <% winButtons.forEach(function(btn) {
   const btnType = btn.type || 'button';

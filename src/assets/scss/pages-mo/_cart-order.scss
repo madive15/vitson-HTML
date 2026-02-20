@@ -11,3 +11,277 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+@use '@/assets/scss/layout/list' as list;
+
+$sticky-top: fn.rem(52);
+
+.vm-cart-order-sticky {
+  position: sticky;
+  top: $sticky-top;
+  z-index: map.get(var.$mo-zindex, 'toolbar');
+  border-top: 1px solid map.get(color.$layout-border, 'quinary');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+}
+
+.cart-toolbar {
+  @include mx.flex($align: center, $justify: space-between);
+  padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'base');
+
+  &-left {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: fn.rem(10);
+
+    .vits-btn-motext {
+      &::before {
+        font-size: fn.rem(10);
+        color: map.get(color.$layout-surf, 'secondary');
+        content: '|';
+      }
+    }
+  }
+}
+
+.vm-cart-order-body {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: map.get(var.$unit, 12);
+  padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+}
+
+.vm-cart-item {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: fn.rem(12);
+  width: 100%;
+  padding: map.get(var.$unit, 12) map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  /* 장바구니 아이템 */
+  .cart-item {
+    width: 100%;
+
+    /* 체크박스 및 삭제 버튼 */
+    &-action {
+      @include mx.flex(flex, row, space-between, center);
+      width: 100%;
+
+      .vits-btn-delete {
+        @include button.btn-reset;
+        width: fn.rem(20);
+        height: fn.rem(20);
+
+        .ic {
+          @include icon.ic-size(map.get(var.$unit, 20));
+          color: map.get(color.$icon-neutral, 'primary');
+        }
+      }
+    }
+
+    /* 상품 정보 */
+    &-product {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      gap: map.get(var.$unit, 8);
+
+      @include list.common-product-card-info;
+
+      .product-body {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 4);
+      }
+
+      .product-thumb {
+        width: fn.rem(92);
+        height: fn.rem(92);
+      }
+
+      .product-brand {
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+    }
+
+    /* 수량 및 가격 */
+    &-qty {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+      gap: map.get(var.$unit, 8);
+
+      .vm-cart-quantity {
+        .btn-step {
+          height: fn.rem(32);
+        }
+
+        .quantity-input {
+          min-width: fn.rem(36);
+          height: fn.rem(32);
+          padding: 0;
+          text-align: center;
+        }
+      }
+    }
+
+    &-price {
+      @include mx.flex(flex, row, space-between, center);
+      width: 100%;
+
+      .cart-item-price-info {
+        @include mx.flex(flex, column, flex-end, flex-end);
+        text-align: right;
+
+        .price-group {
+          @include mx.flex(flex, column, flex-end, flex-end);
+          gap: fn.rem(2);
+
+          .price-origin {
+            @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+            text-decoration: line-through;
+          }
+
+          .price-origin-taxfree {
+            @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          .price-sale {
+            @include mx.flex(flex, row, flex-end, baseline, wrap);
+            column-gap: fn.rem(4);
+            width: 100%;
+
+            .rate {
+              @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+            }
+
+            .price {
+              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+
+              &.is-soldout {
+                color: map.get(color.$label-shipping, 'today');
+              }
+            }
+
+            .vat {
+              @include typo.typography('b5r', $color: map.get(color.$text-colors, 'muted'));
+              flex-basis: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    &-coupon {
+      @include mx.flex(flex, row, space-between, center);
+      width: 100%;
+      padding: map.get(var.$unit, 8) map.get(var.$unit, 16);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'md');
+
+      .coupon-desc {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+
+        strong {
+          font-weight: inherit;
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  &.is-soldout {
+    .cart-item-product,
+    .cart-item-qty {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+  }
+}
+
+/* 주문 금액 요약 */
+.cart-summary {
+  width: 100%;
+  padding: 0 map.get(var.$unit, 12) map.get(var.$unit, 8);
+
+  .summary-list {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 12);
+    margin: 0;
+
+    .summary-item {
+      @include mx.flex(flex, row, space-between, center);
+      width: 100%;
+
+      dt {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      dd {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+
+        &.text-discount {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &.summary-total {
+        dt,
+        dd {
+          @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+    }
+  }
+}
+
+/* 총금액 */
+.vm-cart-total {
+  width: 100%;
+  padding: map.get(var.$unit, 16);
+  margin-top: map.get(var.$unit, 8);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'md');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .summary-list {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 16);
+
+    .summary-item {
+      @include mx.flex(flex, row, space-between, center);
+      width: 100%;
+
+      dt {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      dd {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+
+        &.text-discount {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &.summary-total {
+        dt {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        dd {
+          @include typo.typography('b2b', $color: map.get(color.$text-status, 'brand'));
+        }
+      }
+    }
+  }
+}
+
+.vm-cart-submit {
+  width: 100%;
+  padding: map.get(var.$unit, 16) 0 map.get(var.$unit, 32);
+  border-radius: map.get(var.$radius, 'md');
+
+  [class*='vits-btn'] {
+    width: 100%;
+
+    em {
+      font-style: normal;
+    }
+  }
+}

@@ -378,18 +378,33 @@
 /* ----------------------------------------------------------------------------- */
 .vits-home-main-banner {
   position: relative;
-  width: 100%;
+  width: 100vw;
   margin-bottom: fn.rem(32);
+  overflow: hidden;
 
   .main-banner-container {
     position: relative;
-    width: 100%;
-    overflow: hidden;
+    width: 100vw;
+    max-width: var.$desktop-width;
+    margin: 0 auto;
+  }
+
+  .swiper-wrapper {
+    width: 100vw;
   }
 
   .swiper-slide {
+    max-width: calc((var.$desktop-width / 2) - fn.rem(10));
     transition: opacity 0.5s ease;
 
+    @include mx.pc-sm {
+      max-width: calc((100% / 2) - fn.rem(10));
+    }
+
+    &.swiper-slide-active + .swiper-slide {
+      opacity: 1;
+    }
+    // stylelint-disable-next-line no-descending-specificity
     &:not(.swiper-slide-active) {
       opacity: 0.4;
     }
@@ -415,11 +430,11 @@
   }
 
   .banner-card-image {
-    max-height: fn.rem(384);
+    max-height: fn.rem(328);
     overflow: hidden;
     border-radius: map.get(var.$radius, 'lg');
 
-    @include mx.img-fit(contain);
+    @include mx.img-fit(cover);
   }
 
   // 진행 바 및 재생/멈춤
@@ -428,23 +443,36 @@
     width: 100%;
     max-width: var.$desktop-width;
     margin: fn.rem(10) auto 0;
+
+    @include mx.pc-sm {
+      padding: 0 fn.rem(20);
+    }
   }
 
-  .banner-progress-bar {
-    flex: 1;
-    min-width: 0;
+  .banner-pagination-bar {
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
     height: fn.rem(4);
-    overflow: hidden;
     background-color: map.get(color.$gray-shades, '30');
-    border-radius: fn.rem(2);
-  }
+    border-radius: fn.rem(4);
 
-  .banner-progress-fill {
-    width: 20%; // Swiper로 동적 조정
-    height: 100%;
-    background-color: map.get(color.$brand-colors, 'primary');
-    border-radius: fn.rem(2);
-    transition: width 0.3s ease;
+    .swiper-pagination-bullet {
+      flex: 1;
+      width: auto;
+      height: fn.rem(4);
+      margin: 0;
+      background-color: transparent;
+      border-radius: 0;
+      transition:
+        background-color 0.2s ease,
+        border-radius 0.2s ease,
+        opacity 0.2s ease;
+
+      &.swiper-pagination-bullet-active {
+        background-color: map.get(color.$brand-colors, 'primary');
+        border-radius: fn.rem(4);
+      }
+    }
   }
 
   .banner-progress-actions {

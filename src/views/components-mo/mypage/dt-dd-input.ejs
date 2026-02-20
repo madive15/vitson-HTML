@@ -1,0 +1,27 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+ 
+<%
+  var _required = typeof required !== 'undefined' ? required : false;
+  var _placeholder = typeof placeholder !== 'undefined' ? placeholder : '';
+  var _rootClass = typeof rootClass !== 'undefined' ? rootClass : 'size-m';
+  var _fieldClass = typeof fieldClass !== 'undefined' ? fieldClass : '';
+  var _readonly = typeof readonly !== 'undefined' ? readonly : false;
+
+  // dt 클래스 조합 (is-required + dt-접두사)
+  var dtClassList = [_required ? 'is-required' : '', _fieldClass ? 'dt-' + _fieldClass : ''].filter(Boolean).join(' ');
+  var ddClassStr = _fieldClass ? 'dd-' + _fieldClass : '';
+%>
+
+<dt<% if (dtClassList) { %> class="<%= dtClassList %>"<% } %>><%= label %></dt>
+<dd<% if (ddClassStr) { %> class="<%= ddClassStr %>"<% } %>>
+  <%- include(`${_src}/views/components/form/input-text.ejs`, {
+    id: id,
+    name: id,
+    label: label,
+    placeholder: _placeholder,
+    required: _required,
+    readonly: _readonly,
+    rootClass: _rootClass
+  }) %>
+</dd>
