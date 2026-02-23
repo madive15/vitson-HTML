@@ -1,0 +1,239 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  const _barCaseKey = (typeof barCaseKey !== 'undefined' && barCaseKey) ? barCaseKey : 'single';
+
+  // 상품 타입 — 'single': 단일상품, 'package': 포장단위, 'wire': 전선상품 (기본 'single')
+  const _productType = (typeof productType !== 'undefined' && productType) ? productType : 'single';
+  // 일시품절 여부 — 타입과 별개로 적용 (기본 false)
+  const _soldOut = (typeof soldOut !== 'undefined') ? !!soldOut : false;
+  // 수량 스테퍼 노출 여부 (기본 true)
+  const _showStepper = (typeof showStepper !== 'undefined') ? !!showStepper : true;
+  // 포장단위 선택값
+  const _selectedPackage = (typeof selectedPackage !== 'undefined' && selectedPackage) ? selectedPackage : '';
+
+  // 수량 관련
+  const _qtyValue = (typeof qtyValue !== 'undefined' && qtyValue) ? qtyValue : 1;
+  const _qtyMin = (typeof qtyMin !== 'undefined' && qtyMin) ? qtyMin : 1;
+  const _qtyMax = (typeof qtyMax !== 'undefined') ? qtyMax : Infinity;
+  const _qtyStep = (typeof qtyStep !== 'undefined' && qtyStep) ? qtyStep : 1;
+  const _qtyUnit = (typeof qtyUnit !== 'undefined' && qtyUnit) ? qtyUnit : '';
+  const _qtyValidation = (typeof qtyValidation !== 'undefined' && qtyValidation) ? qtyValidation : '';
+  const _qtyIsInvalid = (typeof qtyIsInvalid !== 'undefined') ? !!qtyIsInvalid : false;
+
+  // 가격 관련
+  const _unitPrice = (typeof unitPrice !== 'undefined' && unitPrice) ? unitPrice : 0;
+  const _couponDiscount = (typeof couponDiscount !== 'undefined' && couponDiscount) ? couponDiscount : false;
+
+  // 전선상품 관련
+  const _showWireTable = (typeof showWireTable !== 'undefined') ? !!showWireTable : false;
+  const _wireItems = (typeof wireItems !== 'undefined' && wireItems) ? wireItems : [];
+
+  // 금액 자동 계산 (단가 × 수량, VAT 10%)
+  const _productAmount = _unitPrice * _qtyValue;
+  const _vatAmount = Math.floor(_productAmount * 0.1);
+  const _totalAmount = _productAmount + _vatAmount;
+%>
+
+<div
+  class="bottom-product-bar is-open"
+  data-ui="product-bar"
+  data-bar-case="<%= _barCaseKey %>"
+  role="region"
+  aria-label="상품 주문"
+>
+  <div class="bar-handle" data-bar-handle aria-hidden="true">
+    <span class="handle-bar"></span>
+  </div>
+
+  <div class="bar-option" data-bar-option>
+    <div class="bar-option-inner">
+      <% if (_productType === 'package') { %>
+      <!-- S: 포장단위 시, 노출 -->
+      <!-- prettier-ignore -->
+      <%
+        const _packageOptions = [
+          { value: '1', name: '낱개', count: '1개', price: 4150 },
+          { value: '10', name: '10개', count: 'SET', price: 8150 },
+          { value: '100', name: '100개', count: 'SET', price: 74000 }
+        ];
+      %>
+      <div class="bar-option-row">
+        <div class="vm-option-box" data-ui="option-box">
+          <button type="button" class="trigger" data-option-trigger aria-expanded="false">
+            <span class="text">
+              <% var _selOpt = _selectedPackage ? _packageOptions.find(function(o) { return o.value ===
+              _selectedPackage; }) : null; %>
+              <!-- prettier-ignore -->
+              <% if (_selOpt) { %>
+              <span class="name"><%= _selOpt.name %> (<%= _selOpt.count %>)</span>
+              <span class="price">(&#8361;<%= _selOpt.price.toLocaleString() %>)</span>
+              <% } else { %> 포장단위 <% } %>
+            </span>
+            <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+          </button>
+          <ul class="option-list" data-option-list>
+            <% _packageOptions.forEach(function(opt) { %>
+            <li class="option-item">
+              <button
+                type="button"
+                class="option-btn<%= _selectedPackage === opt.value ? ' is-selected' : '' %>"
+                data-select-value="<%= opt.value %>"
+              >
+                <span class="name"><%= opt.name %> (<%= opt.count %>)</span>
+                <span class="price">(&#8361;<%= opt.price.toLocaleString() %>)</span>
+              </button>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+      <!-- E: 포장단위 시, 노출 -->
+      <% } %> <% if (_productType === 'wire' && _showWireTable) { %>
+      <!-- S: 전선상품 테이블 -->
+      <div class="bar-option-row">
+        <div class="bar-option-wire-table">
+          <table class="wire-table">
+            <colgroup>
+              <col style="width: 31.1%" />
+              <col style="width: 34.15%" />
+              <col style="width: auto" />
+              <col style="width: 16px" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>단위</th>
+                <th>수량</th>
+                <th>금액(원)</th>
+                <th><span class="sr-only">삭제</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (_wireItems.length) { %> <% _wireItems.forEach(function(item) { %>
+              <tr>
+                <td class="wire-table-unit"><%= item.unit %></td>
+                <td class="wire-table-qty">
+                  <div class="wire-stepper">
+                    <button type="button" class="wire-stepper-btn stepper-minus" aria-label="감소">
+                      <span class="icon">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'minus' }) %>
+                      </span>
+                    </button>
+                    <input type="number" class="wire-stepper-input" value="<%= item.qty %>" min="1" readonly />
+                    <button type="button" class="wire-stepper-btn stepper-plus" aria-label="증가">
+                      <span class="icon">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'plus' }) %>
+                      </span>
+                    </button>
+                  </div>
+                </td>
+                <td class="wire-table-price"><%= item.price.toLocaleString() %>원</td>
+                <td class="wire-table-remove">
+                  <button type="button" class="wire-remove-btn" aria-label="삭제">
+                    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+                  </button>
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td class="wire-table-empty" colspan="4">선택된 상품이 없습니다</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- E: 전선상품 테이블 -->
+      <% } %>
+
+      <div class="bar-option-row">
+        <% if (_showStepper) { %>
+        <div class="bar-option-quantity">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, { 
+            type: 'horiz',
+            name: 'quantity',
+            value: _qtyValue,
+            min: _qtyMin,
+            max: _qtyMax,
+            step: _qtyStep,
+            unit: _qtyUnit,
+            disabled: _soldOut,
+            id: 'orderQuantity', 
+            isInvalid: _qtyIsInvalid, 
+            validationMessage: _qtyValidation 
+          }) %>
+        </div>
+        <% } else if (_productType === 'wire') { %>
+        <!-- S: 전선상품 주문길이 (스테퍼 대체) -->
+        <div class="bar-option-wire">
+          <span class="wire-label">주문길이</span>
+          <div class="wire-input-group">
+            <input type="number" class="wire-input" value="1" min="1" />
+            <button type="button" class="wire-add-btn">
+              <span class="text bold">M</span>
+              <span class="text">추가</span>
+            </button>
+          </div>
+        </div>
+        <!-- E: 전선상품 주문길이 -->
+        <% } %>
+
+        <div class="bar-option-price">
+          <% if (_soldOut) { %>
+          <!-- S: 일시품절 -->
+          <div class="price-soldout">
+            <p class="price-soldout-text">일시품절</p>
+          </div>
+          <!-- E: 일시품절 -->
+          <% } else { %>
+          <!-- 쿠폰 데이터 있을 때만 노출 -->
+          <% if (_couponDiscount) { %>
+          <div class="price-coupon">
+            <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'coupon-fill' }) %> </span>
+            <span class="text">쿠폰 적용 시 <%= _couponDiscount.toLocaleString() %>원 할인</span>
+          </div>
+          <% } %>
+          <!-- 금액 자동 계산 (단가 × 수량, VAT 10%) -->
+          <div class="price-info">
+            <span class="price-info-sub">총 수량 <%= _qtyValue.toLocaleString() %><%= _qtyUnit %></span>
+            <div class="price-total">
+              <p class="price-total-amount"><%= _totalAmount.toLocaleString() %>원</p>
+              <p class="price-total-detail">
+                (상품금액 <%= _productAmount.toLocaleString() %>원 + VAT <%= _vatAmount.toLocaleString() %>원)
+              </p>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar-actions" data-bar-actions>
+    <%# 좋아요 %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/product/product-like-btn.ejs`, {
+      _isLiked: false
+    })%>
+
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p', 
+      variant: 'secondary', 
+      text: '바로구매',
+      attrs: 'data-bar-buy aria-expanded="false"',
+      disabled: _soldOut
+    }) %>
+
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p', 
+      variant: 'primary', 
+      text: '장바구니',
+      attrs: 'data-bar-cart aria-expanded="false"',
+      className: _soldOut ? 'is-disabled' : '',
+    }) %>
+  </div>
+</div>

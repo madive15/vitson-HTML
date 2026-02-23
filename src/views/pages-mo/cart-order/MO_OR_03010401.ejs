@@ -1,0 +1,226 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문완료'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-cart-order">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문완료' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-cart-order">
+              <section class="vm-cart-order">
+                <h2 class="sr-only">주문완료</h2>
+
+                <!-- S: vm-cart-order-body -->
+                <div class="vm-cart-order-body vm-order-complete">
+                  <!-- 주문 완료 상태 안내 -->
+                  <div class="order-complete-status">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                      iconName: 'check', 
+                      title: '주문이 완료 되었습니다.',
+                      desc: '주문번호 20260113-1A2B3C',                      
+                    }) %>
+                  </div>
+
+                  <!-- 주문 상품 -->
+                  <div class="order-section order-product">
+                    <div class="order-section-content">
+                      <div class="order-product-notice-column">
+                        <ul class="info-list">
+                          <li class="info-item">
+                            <span class="info-label">주문 상품</span>
+                            <span class="info-value">
+                              일회용 니트릴 장갑 150매 외 5건 일회용 니트릴 장갑 150매 외 5건
+                            </span>
+                          </li>
+                        </ul>
+
+                        <!-- [D] 택배 불가 시에만 노출 -->
+                        <div class="order-product-parcel-wrap">
+                          <div class="parcel-notice">
+                            <div class="parcel-notice-header">
+                              <span class="parcel-notice-icon" aria-hidden="true">
+                                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %>
+                              </span>
+                              <strong class="parcel-notice-title">택배 불가</strong>
+                            </div>
+                            <p class="parcel-notice-desc">
+                              <strong>택배 배송이 불가한 상품이 포함</strong>되어 있습니다. 이에 배송 전 사전 안내를
+                              위해 연락드릴 수 있으며, 배송이 불가한 경우 주문이 취소될 수 있습니다.
+                            </p>
+                          </div>
+                          <!-- [D] 택배 불가 상품이 여러 건일 경우 .order-product-item 반복 -->
+                          <div class="order-product-list">
+                            <!-- prettier-ignore -->
+                            <% const productList = [
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[123571] LED 트리구 96구 연결형(DC24V)' },
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[56290] 더블 OPP 접착테이프 투명 (초강력 접착제)' },
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[88234] 산업용 장갑 내마모 그레이 L' },
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[11205] 산업용 마스크 KF94 100매' },
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[33412] 안전화 컴포넌트 270mm' },
+                              { img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png', alt: '접착테이프', name: '[55678] 방진마스크 필터 교체용 5개입' }
+                            ]; %>
+
+                            <% productList.forEach(product => { %>
+                            <div class="order-product-item">
+                              <div class="order-product-item-thumb">
+                                <img src="<%= product.img %>" alt="<%= product.alt %>" />
+                              </div>
+                              <span class="order-product-item-name"><%= product.name %></span>
+                            </div>
+                            <% }) %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 배송 정보-->
+
+                    <div class="order-section-content order-shipping">
+                      <h2 class="order-section-title">배송정보</h2>
+                      <ul class="info-list">
+                        <li class="info-item">
+                          <span class="info-label">받는 사람</span>
+                          <span class="info-value">김철수</span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">연락처</span>
+                          <span class="info-value">010-1234-5678</span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">배송 주소</span>
+                          <span class="info-value"> [06234] 서울시 강남구 테헤란로 123, 위워크빌딩 5층 </span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">배송메모</span>
+                          <span class="info-value">부재시 경비실에 맡겨주세요</span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">배송방법</span>
+                          <span class="info-value">택배 <span class="info-value-status">(대납)</span></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- 결제 정보 -->
+                  <div class="order-section order-payment">
+                    <div class="vm-payment-summary">
+                      <h2 class="vm-payment-title">결제정보</h2>
+
+                      <div class="vm-payment-price">
+                        <ul class="vm-payment-price-list">
+                          <li>
+                            <span>상품금액</span>
+                            <strong>418,000원</strong>
+                          </li>
+                          <li class="is-discount">
+                            <span>할인금액</span>
+                            <strong>-83,500원</strong>
+                          </li>
+                          <li><span>최대혜택가</span><span>33,450원</span></li>
+                          <li><span>VAT</span><span>418,000원</span></li>
+                          <li><span>배송비</span><span>3,000원</span></li>
+                        </ul>
+                      </div>
+
+                      <div class="vm-payment-total">
+                        <span>총 결제금액</span>
+                        <strong class="is-emphasis">370,950원</strong>
+                      </div>
+
+                      <!-- 결제 수단: 신용카드, 여신결제, 무통장입금 (공통: vm-complete-method > pay-body > pay-list + 케이스별 영역) -->
+                      <div class="vm-complete-method">
+                        <div class="pay-body">
+                          <ul class="pay-list">
+                            <li class="pay-item">
+                              <span class="pay-label">결제수단</span>
+                              <span class="pay-value">신용카드 (일시불)</span>
+                            </li>
+                            <li class="pay-item">
+                              <span class="pay-label">카드정보</span>
+                              <span class="pay-value">신한카드 (****-****-****-1234)</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="vm-complete-method">
+                        <div class="pay-body pay-body-row">
+                          <ul class="pay-list">
+                            <li class="pay-item">
+                              <span class="pay-label">결제수단</span>
+                              <span class="pay-value">여신결제</span>
+                            </li>
+                          </ul>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            variant: 'outline-secondary',
+                            size: 'sm',
+                            text: '여신사용현황보기',
+                            type: 'link',
+                          }) %>
+                        </div>
+                      </div>
+                      <div class="vm-complete-method">
+                        <div class="pay-body pay-body-bank">
+                          <ul class="pay-list">
+                            <li class="pay-item">
+                              <span class="pay-label">결제수단</span>
+                              <span class="pay-value">무통장입금</span>
+                            </li>
+                          </ul>
+                          <p class="pay-account">기업은행 123-456789-01-001 (예금주: (주)일신비츠온)</p>
+                          <div class="pay-warning">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                              theme: 'red',
+                              text: '* 주문 후 5영업일 내에 입금 확인이 되지 않으면 주문이 자동 취소됩니다.', 
+                            }) %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- E: vm-cart-order-body -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'order-bar', 
+          leftText: '홈으로', 
+          rightText: '주문상세보기' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

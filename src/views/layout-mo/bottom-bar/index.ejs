@@ -11,5 +11,18 @@
     <%- include('./step-bar.ejs') %>
   <% } else if (type === 'cancel-bar') { %>
     <%- include('./cancel-bar.ejs') %>
+  <% } else if (type === 'product-bar') { %>
+    <% var cases = typeof barCases !== 'undefined' ? barCases : { single: {} }; %>
+    <% Object.keys(cases).forEach(function(key) { %>
+    <%- include('./product-bar.ejs', Object.assign({ barCaseKey: key }, cases[key])) %>
+    <% }); %>
+  <% } else if (type === 'order-bar') { %>
+    <%- include('./order-bar.ejs', { 
+      leftText: typeof leftText !== 'undefined' ? leftText : undefined, 
+      rightText: typeof rightText !== 'undefined' ? rightText : undefined, 
+      leftHtml: typeof leftHtml !== 'undefined' ? leftHtml : undefined, 
+      rightHtml: typeof rightHtml !== 'undefined' ? rightHtml : undefined, 
+      showLeft: typeof showLeft !== 'undefined' ? showLeft : undefined, 
+      showRight: typeof showRight !== 'undefined' ? showRight : undefined }) %>
   <% } %>
 </div>

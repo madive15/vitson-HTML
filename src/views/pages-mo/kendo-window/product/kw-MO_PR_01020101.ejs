@@ -1,0 +1,127 @@
+<% const _src = srcPath; %>
+<!-- prettier-ignore -->
+<%
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _products = mockData.products.slice(29, 39);
+
+  // 선택된 상품 — 4번째 상품 기본, URL 파라미터로 변경 가능
+  const _optionSelected = (typeof query !== 'undefined' && query.selectedOption)
+    ? query.selectedOption
+    : _products[3].productCode;
+
+  // 필터 mock 데이터
+  const _specFilters = [
+    {
+      name: 'spec-sq',
+      label: '규격(SQ)',
+      filters: [
+        { text: '관리책임자', value: 'sq01' },
+        { text: '사진촬영금지', value: 'sq02' },
+        { text: '통제구역관계자외출입금지', value: 'sq03' },
+        { text: '사진촬영금지', value: 'sq04' },
+        { text: '당기세요(FULL)', value: 'sq05' },
+        { text: '화장실 남녀공용', value: 'sq06' }
+      ]
+    },
+    {
+      name: 'spec-spread',
+      label: '필터 펼침',
+      filters: [
+        { text: '관리책임자', value: 'sp01' },
+        { text: '사진촬영금지', value: 'sp02' },
+        { text: '옵션', value: 'sp03' },
+        { text: '필터', value: 'sp04' },
+        { text: '사진촬영금지', value: 'sp05' },
+        { text: '사진촬영금지', value: 'sp06' },
+        { text: '필터', value: 'sp07' },
+        { text: '당기세요(FULL)', value: 'sp08' },
+        { text: '옵션', value: 'sp09' },
+        { text: '기타', value: 'sp10' }
+      ]
+    },
+    {
+      name: 'spec-filter',
+      label: '필터',
+      filters: [
+        { text: '관리책임자', value: 'ft01' },
+        { text: '옵션', value: 'ft02' },
+        { text: '텍스트', value: 'ft03' },
+        { text: '텍스트', value: 'ft04' },
+        { text: '옵션', value: 'ft05' },
+        { text: '옵션', value: 'ft06' },
+        { text: '사진촬영금지', value: 'ft07' },
+        { text: '당기세요(FULL)', value: 'ft08' },
+        { text: '내용', value: 'ft09' },
+        { text: '내용값', value: 'ft10' }
+      ]
+    }
+  ];
+
+  const _isMember = (typeof isMember !== 'undefined') ? isMember : true;
+%>
+
+<!-- S: 필터 영역 -->
+<div class="spec-filter" data-toggle-box="specFilter" data-scroll-check>
+  <div class="spec-filter-inner">
+    <% _specFilters.forEach(function(group, idx) { %>
+    <div class="spec-filter-section" data-collapse>
+      <div class="spec-filter-header">
+        <span class="spec-filter-title"><%= group.label %></span>
+        <button
+          type="button"
+          class="spec-filter-more"
+          data-collapse-btn
+          data-aria-label-base="<%= group.label %>"
+          data-aria-label-pair="더보기,접기"
+          aria-expanded="false"
+        >
+          <span class="text"></span>
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %> </span>
+        </button>
+      </div>
+      <div class="spec-filter-body" data-collapse-content data-visible-height="68">
+        <% group.filters.forEach(function(f) { %>
+        <label class="vm-checkbox-text-box">
+          <input type="checkbox" name="<%= group.name %>" value="<%= f.value %>" />
+          <span class="text"><%= f.text %></span>
+        </label>
+        <% }); %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <!-- 필터 액션 -->
+  <div class="spec-filter-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size: 'lg-p',
+      variant: 'outline-secondary',
+      text: '초기화',
+      attrs: 'data-spec-reset'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size: 'lg-p',
+      variant: 'primary',
+      text: '필터 적용',
+      attrs: 'data-spec-apply'
+    }) %>
+  </div>
+</div>
+<!-- E: 필터 영역 -->
+
+<!-- S: 상품 리스트 -->
+<div class="spec-product-list">
+  <ul class="vm-product-option-list">
+    <% _products.forEach(function(item) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/product/product-option-item.ejs`, {
+      item: item,
+      selectedOption: _optionSelected,
+      isMember: _isMember
+    }) %>
+    <% }); %>
+  </ul>
+</div>
+<!-- E: 상품 리스트 -->

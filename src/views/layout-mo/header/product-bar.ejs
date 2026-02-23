@@ -1,0 +1,33 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<header class="vm-header header-product-bar">
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/icon.ejs`, {
+      iconName: 'arrow-left' 
+    }) %>
+  </a>
+  
+  <div class="vm-header-search">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-text.ejs`, {
+      id: 'receiver-name',
+      name: 'receiverName',
+      label: '받는 사람',
+      placeholder: '테스트 헤더 상세용',
+      required: true,
+      rootClass: 'size-l',
+    }) %>
+
+    <button type="button" class="vm-header-btn btn-mic" aria-label="음성 검색">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: "mic" }) %>
+    </button>
+  </div>
+  <div class="vm-header-actions">
+    <button type="button" class="vm-header-btn btn-cart" aria-label="장바구니">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: "bag" }) %>
+      <span class="badge">9</span>
+    </button>
+  </div>
+</header>

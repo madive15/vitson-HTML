@@ -1,0 +1,282 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const _base = srcPath.includes('vitson-HTML') ? '/vitson-HTML' : ''; %>
+<!-- prettier-ignore -->
+<%
+  // 퍼블 확인용 mock 데이터
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _all = mockData.products.slice();
+  for (let i = _all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_all[i], _all[j]] = [_all[j], _all[i]];
+  }
+  const _products = _all.slice(29, 39);
+
+  const _mock = require(`${_src}/../public/resources/mock/product-detail.json`);
+  const _thumbImages = _mock.thumbImages;
+  const _overviewInfo = _mock.overviewInfo;
+  const _briefItems = _mock.briefItems;
+  const _briefDesc = _mock.briefDesc;
+  const _productAttribute = _mock.productAttribute;
+  const _specGroups = _mock.specGroups;
+  const _downloads = _mock.downloads;
+  const _barCases = _mock.barCases;
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '상품상세'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-product-details">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'product-bar',
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-product-details">
+              <section class="vm-product-details scrollRoot" id="scrollRoot" data-ui="tab-sticky" data-tab-top="100">
+                <h2 class="sr-only">상품 상세 페이지</h2>
+                <!-- S: 썸네일 + 주요 정보 -->
+                <div class="detail-overview">
+                  <!-- S: 썸네일 -->
+                  <div class="detail-thumb">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/product/detail-overview-thumb.ejs`, {
+                      thumbImages: _thumbImages
+                    }) %>
+                  </div>
+                  <!-- E: 썸네일 -->
+
+                  <!-- S: 주요 정보 -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/detail-overview-info.ejs`, {
+                    overviewInfo: _overviewInfo,
+                    briefItems: _briefItems,
+                    briefDesc: _briefDesc,
+                    optionCount: 84,
+                    isMember: true,
+                  }) %>
+                  <!-- E: 주요 정보 -->
+                </div>
+                <!-- E: 썸네일 + 주요 정보 -->
+
+                <!-- S: 추천상품 -->
+                <div
+                  class="detail-recommend"
+                  data-scroll-overflow-gradient
+                  data-scroll-target="[data-ui='product-items']"
+                >
+                  <p class="detail-recommend-title">MD가 꼼꼼히 고른 <span class="point-color">추천 상품</span></p>
+                  <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
+                    <% _products.forEach(function(item) { %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                      item: item,
+                      showLike: false,
+                      showCart: false,
+                      showCompareBtn: false
+                    }) %>
+                    <% }); %>
+                  </ul>
+                </div>
+                <!-- E: 추천상품 -->
+
+                <!-- S: 상세정보 + 제원정보 및 고시정보 + 관련 및 연관상품 -->
+                <div class="detail-tab">
+                  <nav class="detail-tab-nav" data-tab="nav" aria-label="상품 상세 탭">
+                    <button type="button" class="detail-tab-menu is-active" data-tab-target="detail-tab01">
+                      상세정보
+                    </button>
+                    <button type="button" class="detail-tab-menu" data-tab-target="detail-tab02">
+                      제원정보 및 고시정보
+                    </button>
+                    <button type="button" class="detail-tab-menu" data-tab-target="detail-tab03">
+                      관련 및 연관상품
+                    </button>
+                    <span class="detail-tab-nav-bar tabBar" data-tab="bar" aria-hidden="true"></span>
+                  </nav>
+
+                  <!-- S: 상세정보 -->
+                  <section data-tab-section="detail-tab01" class="detail-tab-panel">
+                    <h3 class="detail-tab-panel-title">상세정보</h3>
+
+                    <div class="content-panel01">
+                      <div class="detail-about-section">
+                        <div class="detail-about-group">
+                          <!-- S: 상품정보 -->
+                          <dl class="detail-attribute-list">
+                            <% _productAttribute.forEach(function(attr) { %>
+                            <dt><%= attr.label %></dt>
+                            <dd><%= attr.value %></dd>
+                            <% }); %>
+                          </dl>
+                          <!-- E: 상품정보 -->
+
+                          <!-- S: 상품 상세 이미지 -->
+                          <div class="detail-image-section" data-collapse>
+                            <div class="detail-image" data-collapse-content data-visible-height="500">
+                              <%- include(`${_src}/views/components-mo/product/temp-detail-image.ejs`) %>
+                            </div>
+
+                            <div class="detail-image-action">
+                              <button
+                                type="button"
+                                class="detail-image-btn"
+                                data-collapse-btn
+                                data-aria-label-base="상세 정보"
+                                data-aria-label-pair="더보기,접기"
+                                aria-expanded="false"
+                              ></button>
+                            </div>
+                          </div>
+                          <!-- E: 상품 상세 이미지 -->
+                        </div>
+
+                        <!-- S: 인증서 및 다운로드 -->
+                        <div class="detail-doc-download">
+                          <p class="detail-tab-title">인증서 및 다운로드</p>
+                          <div class="detail-doc-download-btns">
+                            <% _downloads.forEach(function(doc) { %>
+                            <button type="button" class="detail-doc-download-btn">
+                              <span class="icon">
+                                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'download-2' }) %>
+                              </span>
+                              <span class="text"><%= doc.text %></span>
+                            </button>
+                            <% }); %>
+                          </div>
+                        </div>
+                        <!-- E: 인증서 및 다운로드 -->
+                      </div>
+                    </div>
+                  </section>
+                  <!-- E: 상세정보 -->
+
+                  <!-- S: 제원정보 및 고시정보 -->
+                  <section data-tab-section="detail-tab02" class="detail-tab-panel">
+                    <div class="content-panel02">
+                      <h3 class="detail-tab-title">제원정보 및 고시정보</h3>
+
+                      <div class="detail-spec-group" data-collapse>
+                        <dl class="detail-spec-list" data-collapse-content data-visible-count="4">
+                          <% _specGroups.forEach(function(group) { %> <% group.items.forEach(function(spec) { %>
+                          <dt><%= spec.label %></dt>
+                          <dd><%= spec.value %></dd>
+                          <% }); %> <% }); %>
+                        </dl>
+                        <button
+                          type="button"
+                          class="detail-spec-btn"
+                          data-collapse-btn
+                          data-aria-label-base="제원정보 및 고시정보"
+                          data-aria-label-pair="더보기, 접기"
+                          aria-expanded="false"
+                        ></button>
+                      </div>
+                    </div>
+                  </section>
+                  <!-- E: 제원정보 및 고시정보 -->
+
+                  <!-- S: 관련 및 연관상품 -->
+                  <section data-tab-section="detail-tab03" class="detail-tab-panel">
+                    <h3 class="detail-tab-panel-title">관련 및 연관상품</h3>
+
+                    <div class="content-panel03">
+                      <!-- S: 이런 상품은 어때요? -->
+                      <div
+                        class="detail-recommend"
+                        data-scroll-overflow-gradient
+                        data-scroll-target="[data-ui='product-items']"
+                      >
+                        <p class="detail-recommend-title"><span class="point-color">이런 상품</span>은 어때요?</p>
+                        <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
+                          <% _products.forEach(function(item) { %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                            item: item,
+                            showLike: false,
+                            showCart: false,
+                            showCompareBtn: false
+                          }) %>
+                          <% }); %>
+                        </ul>
+                      </div>
+                      <!-- E: 이런 상품은 어때요? -->
+
+                      <!-- S: 함께 본 상품 -->
+                      <div
+                        class="detail-recommend"
+                        data-scroll-overflow-gradient
+                        data-scroll-target="[data-ui='product-items']"
+                      >
+                        <p class="detail-recommend-title">다른 고객이 <span class="point-color">함께 본 상품</span></p>
+                        <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
+                          <% _products.forEach(function(item) { %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                            item: item,
+                            showLike: false,
+                            showCart: false,
+                            showCompareBtn: false
+                          }) %>
+                          <% }); %>
+                        </ul>
+                      </div>
+                      <!-- E: 함께 본 상품 -->
+                    </div>
+                  </section>
+                  <!-- E: 관련 및 연관상품 -->
+                </div>
+                <!-- E: 상세정보 + 제원정보 및 고시정보 + 관련 및 연관상품 -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'product-bar',
+          barCases: _barCases
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+        var barType = params.get('barType') || 'single';
+
+        document.querySelectorAll('[data-bar-case]').forEach(function (el) {
+          el.style.display = el.dataset.barCase === barType ? '' : 'none';
+        });
+      })();
+    </script>
+  </body>
+</html>

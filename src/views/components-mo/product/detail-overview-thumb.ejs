@@ -1,0 +1,61 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  // 페이지에서 thumbImages로 전달받음
+  const _thumbImages = thumbImages || [];
+%>
+
+<!-- S: 상품 썸네일 갤러리 -->
+<div class="vm-detail-gallery" data-ui="detail-gallery">
+  <!-- S: 메인 슬라이더 -->
+  <div class="gallery-main swiper" data-role="main">
+    <div class="swiper-wrapper">
+      <% _thumbImages.forEach(function(img) { %>
+      <div class="swiper-slide" data-role="zoom-open">
+        <img src="<%= img.src %>" alt="<%= img.alt %>" loading="lazy" />
+      </div>
+      <% }); %>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+  <!-- E: 메인 슬라이더 -->
+
+  <!-- S: 상세이미지 모달 -->
+  <div class="gallery-zoom" data-role="zoom" role="dialog" aria-label="상세이미지" aria-modal="true" hidden>
+    <div class="gallery-zoom-dimmed" data-role="zoom-close"></div>
+
+    <div class="gallery-zoom-panel">
+      <div class="gallery-zoom-header">
+        <h3 class="gallery-zoom-title">상세이미지</h3>
+        <button type="button" class="gallery-zoom-close" data-role="zoom-close" aria-label="닫기">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+        </button>
+      </div>
+
+      <div class="gallery-zoom-body swiper" data-role="zoom-swiper">
+        <div class="swiper-wrapper">
+          <% _thumbImages.forEach(function(img) { %>
+          <div class="swiper-slide">
+            <div class="gallery-zoom-img">
+              <img src="<%= img.large || img.src %>" alt="<%= img.alt %> 확대" />
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="gallery-zoom-thumbs swiper" data-role="zoom-thumbs">
+        <div class="swiper-wrapper">
+          <% _thumbImages.forEach(function(img) { %>
+          <div class="swiper-slide">
+            <img src="<%= img.src %>" alt="" aria-hidden="true" loading="lazy" />
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- E: 상세이미지 모달 -->
+</div>
+<!-- E: 상품 썸네일 갤러리 -->

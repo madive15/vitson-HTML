@@ -10,7 +10,39 @@
   const _unit = typeof unit !== 'undefined' ? unit : '';
   const _disabled = typeof disabled !== 'undefined' ? disabled : false;
   const _required = typeof required !== 'undefined' ? required : false;
+
+  // ===== 2026-02-22 추가: Validation 관련 =====
+  const _id = (typeof id !== 'undefined' && id) ? id : '';
+
+  const _errorMessage = (typeof validationMessage !== 'undefined' && validationMessage) ? validationMessage : '';
+  const _successMessage = (typeof successMessage !== 'undefined' && successMessage) ? successMessage : '';
+
+  const _isInvalidFlag = (typeof isInvalid !== 'undefined') ? (isInvalid === true) : false;
+  const _isInvalid = _isInvalidFlag || !!_errorMessage;
+
+  const _isValid = (typeof isValid !== 'undefined') ? (isValid === true) : false;
+
+  const _displayMessage = _isInvalid ? _errorMessage : (_isValid ? _successMessage : '');
+  const _hasMessage = !!_displayMessage;
+
+  const _validationId = _id ? `${_id}-validation` : '';
+
+  let _stateClasses = [];
+
+  if (_isInvalid) {
+    _stateClasses.push('vits-validation');
+    _stateClasses.push('is-invalid');
+  } else if (_isValid) {
+    _stateClasses.push('vits-validation');
+    _stateClasses.push('is-valid');
+  }
+
+  const _stateClass = _stateClasses.join(' ');
+  // ===== 2026-02-22 추가 끝 =====
 %>
+
+<!-- 2026-02-22 추가: validation 래퍼 -->
+<div class="vits-quantity <%= _stateClass %>">
 
 <% if (_type === 'horiz') { %>
   <div class="quantity-control type-horiz<% if (_variant) { %> <%= _variant %><% } %>">
@@ -24,6 +56,7 @@
       pattern="[0-9]*"
       class="quantity-input"
       <% if (_name) { %>name="<%= _name %>"<% } %>
+      <% if (_id) { %>id="<%= _id %>"<% } %>
       value="<%= _value %>"
       data-min="<%= _min %>"
       <% if (_max !== Infinity) { %>data-max="<%= _max %>"<% } %>
@@ -31,6 +64,10 @@
       aria-label="개수"
       <% if (_disabled) { %>disabled<% } %>
       <% if (_required) { %>required<% } %>
+      <% /* 2026-02-22 추가: aria 연결 */ %>
+      <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
+      <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+      <% if (_isValid) { %>aria-invalid="false"<% } %>
     />
     <span class="quantity-input-measure" aria-hidden="true"></span>
 
@@ -50,6 +87,7 @@
       pattern="[0-9]*"
       class="quantity-input"
       <% if (_name) { %>name="<%= _name %>"<% } %>
+      <% if (_id) { %>id="<%= _id %>"<% } %>
       value="<%= _value %>"
       data-min="<%= _min %>"
       <% if (_max !== Infinity) { %>data-max="<%= _max %>"<% } %>
@@ -57,6 +95,10 @@
       aria-label="단위"
       <% if (_disabled) { %>disabled<% } %>
       <% if (_required) { %>required<% } %>
+      <% /* 2026-02-22 추가: aria 연결 */ %>
+      <% if (_hasMessage && _validationId) { %>aria-describedby="<%= _validationId %>"<% } %>
+      <% if (_isInvalid) { %>aria-invalid="true"<% } %>
+      <% if (_isValid) { %>aria-invalid="false"<% } %>
     />
     <span class="quantity-input-measure" aria-hidden="true"></span>
     <% if (_unit) { %>
@@ -70,3 +112,10 @@
     </button>
   </div>
 <% } %>
+
+  <!-- 2026-02-22 추가: Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" <% if (!_hasMessage) { %>hidden<% } %>>
+    <p <% if (_validationId) { %>id="<%= _validationId %>"<% } %> aria-live="polite"><%= _displayMessage %></p>
+  </div>
+</div>

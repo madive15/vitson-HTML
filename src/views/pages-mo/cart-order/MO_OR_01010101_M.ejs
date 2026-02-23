@@ -1,0 +1,136 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '옵션/수량 변경 , 상품추가'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', 
+            title: '옵션/수량 변경', 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal')"
+              >
+                <span class="text">옵션/수량 변경 - 수량입력</span>
+              </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal2')"
+              >
+                <span class="text">옵션/수량 변경 - 단위</span>
+              </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal3')"
+              >
+                <span class="text">상품 추가</span>
+              </button>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal = { 
+          id: 'modal', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet',
+          title: '옵션/수량 변경', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_01010101_M.ejs`,
+          buttons: [
+            { text: '취소', variant: 'secondary', action: 'close' },
+            { text: '변경하기', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
+        <!-- prettier-ignore -->
+        <% const modal2 = { 
+          id: 'modal2', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet',
+          title: '옵션/수량 변경', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_01010101_M.ejs`,
+          buttons: [
+            { text: '취소', variant: 'secondary', action: 'close' },
+            { text: '변경하기', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+        <!-- prettier-ignore -->
+        <% const modal3 = { 
+          id: 'modal3', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '상품 추가', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_01010101_M_2.ejs`,
+          buttons: [
+            { text: '취소', variant: 'secondary', action: 'close' },
+            { text: '장바구니 담기', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+    <script>
+      (function () {
+        function whenReady(fn) {
+          if (typeof window.VmKendoWindow === 'undefined') {
+            setTimeout(function () {
+              whenReady(fn);
+            }, 50);
+            return;
+          }
+          fn();
+        }
+        whenReady(function () {
+          var orig = window.VmKendoWindow.open;
+          window.VmKendoWindow.open = function (id) {
+            orig.call(this, id);
+            var el = document.getElementById(id);
+            var sel = el && el.querySelector('.product-quantity-selector');
+            if (sel) sel.toggleAttribute('hidden', id === 'modal');
+          };
+        });
+      })();
+    </script>
+  </body>
+</html>

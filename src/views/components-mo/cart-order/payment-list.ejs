@@ -1,0 +1,376 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<section class="vm-payment">
+  <!-- 결제수단 선택 -->
+  <div class="vm-payment-method">
+    <h2 class="vm-payment-title">결제수단 선택하기</h2>
+
+    <!-- 간편결제 -->
+    <div class="vm-payment-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-simple',
+        value: 'simple',
+        text: '간편결제', checked: true, ariaControls: 'panel-simple', ariaExpanded:
+      'true', }) %>
+      <div class="pay-manage">
+        <a class="vm-text-link" href="!#"
+          >비츠온페이 관리하기
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+        </a>
+      </div>
+      <button type="button" class="vm-payment-item-toggle">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+
+      <div id="panel-simple" class="vm-payment-panel is-active" aria-labelledby="pay-simple">
+        <!-- 간편결제 탭 -->
+        <div class="vm-payment-tabs" role="tablist" aria-label="간편결제 수단">
+          <button
+            type="button"
+            id="tab-simple-card"
+            class="vm-payment-tab is-active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-simple-card"
+          >
+            비츠온페이 카드
+          </button>
+
+          <button
+            type="button"
+            id="tab-simple-account"
+            class="vm-payment-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-simple-account"
+          >
+            비츠온페이 계좌
+          </button>
+        </div>
+
+        <!--간편결제 탭 > 카드 -->
+        <div
+          id="panel-simple-card"
+          class="vm-payment-tab-panel is-active"
+          role="tabpanel"
+          aria-labelledby="tab-simple-card"
+        >
+          <!-- 안내 메시지 -->
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+            type: 'b-warning',
+            importantItems: [
+              {
+                text: '신용카드 결제시 ',
+                strong: '세금계산서 발급 불가',
+                after: ' 합니다.'
+              }
+            ]
+          }) %>
+
+          <!-- 카드 스와이퍼 -->
+          <div class="vm-card-list swiper-container js-swiper" data-swiper-type="payment">
+            <div class="swiper-wrapper">
+              <!-- prettier-ignore -->
+              <% const cards = [ 
+              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/shinhan@2x.png' , color: '#4a6bc2' },
+              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/ibk@2x.png' , color: '#004c9d' },
+              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/kb@2x.png' , color: '#ffbc00' },
+              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/keb@2x.png' , color: '#f2f9f8' },
+              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/woori@2x.png' , color: '#0067AC' },
+            ]; %>
+            <% cards.forEach((card, index) => { %>
+              <div
+                class="swiper-slide vm-card-item<%= index === 0 ? ' is-selected' : '' %>"
+                style="background-image: url('<%= card.image %>'); background-color: <%= card.color %>"
+              ></div>
+              <% }); %>
+            </div>
+            <div class="vits-swiper-navs">
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            </div>
+          </div>
+
+          <div class="vm-card-form">
+            <div class="vm-form-row">
+              <div class="vm-form-item">
+                <span class="vm-form-label">카드별칭</span>
+                <span class="vm-form-value">김비츠 신한</span>
+              </div>
+              <div class="vm-form-item">
+                <span class="vm-form-label">카드종류</span>
+                <span class="vm-form-value">신한카드(3318) <span class="vm-default-badge">대표</span></span>
+                <span class="vm-form-number">3318 **** **** ****</span>
+              </div>
+            </div>
+
+            <div class="vm-form-item">
+              <span class="vm-form-label">할부선택:</span>
+              <div class="vm-form-select">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'pay-installment',
+                name: 'payInstallment',
+                placeholder: '할부선택',
+                options: [
+                  { value: '일시불', text: '일시불' },
+                  { value: '할부', text: '할부' },
+                  { value: '할부', text: '할부' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '일시불', disabled: false
+              }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--간편결제 탭 > 계좌 -->
+        <div
+          id="panel-simple-account"
+          class="vm-payment-tab-panel"
+          role="tabpanel"
+          aria-labelledby="tab-simple-account"
+        >
+          <!-- 계좌 등록 버튼 -->
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button-vertical-icon.ejs`, {
+              icon: 'plus',
+              label: '계좌 등록하기',
+              variant: 'account-empty',
+              href: '#'
+            }) %>
+          <!-- 계좌 스와이퍼 -->
+          <div class="vm-card-list swiper-container js-swiper" data-swiper-type="payment">
+            <div class="swiper-wrapper">
+              <!-- prettier-ignore -->
+              <% const accounts = [ 
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/shinhan@2x.png' , color: '#4a6bc2' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/ibk@2x.png' , color: '#004c9d' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/kb@2x.png' , color: '#ffbc00' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/keb@2x.png' , color: '#f2f9f8' },
+                { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/woori@2x.png' , color: '#0067AC' },
+              ]; %>
+              <% accounts.forEach((account, index) => { %>
+              <div
+                class="swiper-slide vm-card-item<%= index === 0 ? ' is-selected' : '' %>"
+                style="background-image: url('<%= account.image %>'); background-color: <%= account.color %>"
+              ></div>
+              <% }); %>
+            </div>
+            <div class="vits-swiper-navs">
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            </div>
+          </div>
+
+          <!--case: 등록된계좌 -->
+          <div class="vm-card-form type-account">
+            <div class="vm-form-row">
+              <div class="vm-form-item">
+                <span class="vm-form-label">계좌별칭</span>
+                <span class="vm-form-value">김비츠 신한</span>
+              </div>
+              <div class="vm-form-item">
+                <span class="vm-form-label">계좌번호 <span class="vm-default-badge">대표</span></span>
+                <span class="vm-form-value">신한은행(1234)</span>
+                <span class="vm-form-number">3318 - 12******</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/pg-cart-oder/tax-invoice.ejs`) %>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드결제 -->
+    <div class="vm-payment-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment', id: 'pay-card', value: 'card', text: '카드결제', checked: false,
+      ariaControls: 'panel-card', ariaExpanded: 'false', }) %>
+      <button type="button" class="vm-payment-item-toggle">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+
+      <div id="panel-card" class="vm-payment-panel" aria-labelledby="pay-card">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+          type: 'b-warning',
+          text: '신용카드 결제가 가능합니다.',
+          importantItems: [
+            {
+              text: '신용카드 결제시 ',
+              strong: '세금계산서 발급 불가',
+              after: ' 합니다.'
+            }
+          ]
+        }) %>
+      </div>
+    </div>
+
+    <!-- 실시간 계좌이체 -->
+    <div class="vm-payment-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-transfer',
+        value: 'transfer',
+        text: '실시간계좌이체', checked: false, ariaControls: 'panel-transfer', ariaExpanded: 'true', }) %>
+      <button type="button" class="vm-payment-item-toggle">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+
+      <div id="panel-transfer" class="vm-payment-panel" aria-labelledby="pay-transfer">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+          type: 'b-warning',
+          importantItems: [
+            { text: '', strong: '이체 수수료 무료', after: ' 입니다.' },
+            { text: '', strong: '23시 이후', after: ' 에는 은행별로 실시간 계좌이체가 제한될 수 있습니다.' },
+            { text: '실시간 계좌 이체', strong: ' 일일 이체 한도는 200만원 ', after: '입니다.' }
+          ]
+        }) %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-cart-oder/tax-invoice.ejs`) %>
+      </div>
+    </div>
+
+    <!-- 무통장입금 -->
+    <div class="vm-payment-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-bank',
+        value: 'bank',
+        text: '무통장입금', checked: false, ariaControls: 'panel-bank', ariaExpanded: 'false', }) %>
+      <button type="button" class="vm-payment-item-toggle">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+      <div id="panel-bank" class="vm-payment-panel" aria-labelledby="pay-bank">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
+            type: 'b-warning',
+            importantItems: [
+              { text: '주문 후 영업일 ', strong: ' 5일 내에 입금 확인이 되지 않으면 ', after: ' 주문이 자동 취소됩니다.' },
+              { text: '입금 확인 상태에서는 ', strong: ' 부분 취소 불가능 합니다. ', after: '' },
+              { text: '주문자명과 입금자명이 다르더라도 ', strong: ' 정확한 금액 입금시 입금 확인 정상 처리 ', after: '됩니다.' }
+            ]
+          }) %>
+
+        <div class="vm-payment-bank">
+          <dl class="vm-payment-bank-list">
+            <div class="vm-payment-bank-item">
+              <dt>입금 계좌</dt>
+              <dd>국민 288965-04-531311</dd>
+            </div>
+            <div class="vm-payment-bank-item">
+              <dt>예금주명</dt>
+              <dd>주식회사 일신비츠온</dd>
+            </div>
+          </dl>
+
+          <div class="vm-payment-bank-input">
+            <label class="vm-form-label" for="pay-bank-depositor">입금자명</label>
+            <div class="vm-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                id: 'pay-bank-depositor',
+                name: 'bankDepositor',
+                label: '입금자명',
+                placeholder: '입금자명을 입력하세요',
+                rootClass: 'size-medium'
+              }) %>
+            </div>
+          </div>
+        </div>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-cart-oder/tax-invoice.ejs`) %>
+      </div>
+    </div>
+
+    <!-- 여신결제 -->
+    <div class="vm-payment-item">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
+        name: 'payment',
+        id: 'pay-credit',
+        value: 'credit',
+        text: '여신결제', checked: false, ariaControls: 'panel-credit', ariaExpanded:'false'
+      }) %>
+      <button type="button" class="vm-payment-item-toggle">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+      <div id="panel-credit" class="vm-payment-panel" aria-labelledby="pay-credit">
+        <div class="info-text">후불 고객이 정해진 여신 한도 내에서 결제하시는 방법입니다.</div>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/pg-cart-oder/tax-invoice.ejs`, { defaultTax: 'batch' }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결제정보 -->
+  <div class="vm-payment-summary">
+    <h2 class="vm-payment-title">결제정보</h2>
+
+    <div class="vm-payment-price">
+      <ul class="vm-payment-price-list">
+        <li>
+          <span>상품금액</span>
+          <strong>418,000원</strong>
+        </li>
+        <li class="is-discount">
+          <span>할인금액</span>
+          <strong>-83,500원</strong>
+        </li>
+      </ul>
+    </div>
+
+    <div class="vm-payment-price">
+      <ul class="vm-payment-price-sub">
+        <li><span>최대혜택가</span><span>33,450원</span></li>
+        <li><span>VAT</span><span>418,000원</span></li>
+        <li><span>배송비</span><span>3,000원</span></li>
+        <li>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+            theme: 'blue',
+            text: '도착지에서 착불 운임이 청구됩니다.', 
+          }) %>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 동의 체크박스 -->
+    <div class="vm-payment-agree">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
+        datas: [
+          {
+            className: 's',
+            name: 'payment-agree',
+            value: 'payment-agree',
+            srText: '동의 체크란',
+            agreeText: '주문할 상품의 상품명, 상품가격, 배송정보를 확인하였으며, 구매에 동의하시겠습니까? (전자상거래법 제8조 2항)',
+          }
+        ],
+      }) %>
+    </div>
+
+    <div class="vm-payment-total">
+      <span>결제예정금액</span>
+      <strong class="is-emphasis">370,950원</strong>
+    </div>
+  </div>
+</section>

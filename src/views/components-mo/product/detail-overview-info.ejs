@@ -1,0 +1,161 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var _info = typeof overviewInfo !== 'undefined' ? overviewInfo : {};
+  var _brand = _info.brand || '';
+  var _brandHref = _info.brandHref || '#!';
+  var _title = _info.title || '';
+  var _originalPrice = _info.originalPrice || '';
+  var _discountRate = _info.discountRate || '';
+  var _discountPrice = _info.discountPrice || '';
+  var _isLiked = typeof _info.isLiked !== 'undefined' ? _info.isLiked : false;
+  var _isMember = typeof isMember !== 'undefined' ? isMember : true;
+  var _briefItems = typeof briefItems !== 'undefined' ? briefItems : [];
+  var _briefDesc = typeof briefDesc !== 'undefined' ? briefDesc : [];
+  var _optionCount = typeof optionCount !== 'undefined' ? optionCount : 0;
+%>
+
+<div class="overview-info">
+  <div class="overview-product">
+    <div class="overview-product-info">
+      <p class="overview-brand">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/text-arrow-link.ejs`, {
+          href: _brandHref,
+          text: _brand,
+          size: 'sm'
+        }) %>
+      </p>
+      <div class="overview-header">
+        <p class="overview-title"><%= _title %></p>
+
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components-mo/product/product-like-btn.ejs`, {
+          _isLiked: _isLiked
+        })%>
+      </div>
+      <div class="overview-labels">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/label/product-flags.ejs`, {
+            today: true,
+            tomorrow: true,
+            hot: true,
+          }) %>
+      </div>
+    </div>
+
+    <div class="overview-product-price">
+      <% if (_isMember) { %>
+      <!-- S: 가격 (회원) -->
+      <div class="overview-price">
+        <p class="overview-price-original"><span class="sr-only">정상가</span><%= _originalPrice %></p>
+        <div class="overview-price-discount">
+          <p class="discount-rate"><span class="sr-only">할인율</span><%= _discountRate %></p>
+          <p class="discount-value"><span class="sr-only">할인가</span><%= _discountPrice %></p>
+        </div>
+
+        <%- include(`${_src}/views/components-mo/product/detail-overview-free.ejs`) %>
+      </div>
+
+      <div class="overview-coupon">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {
+          size:'md',
+          variant: 'primary',
+          text: '쿠폰받기',
+          iconLeft: true,
+          iconName: 'ic-line-download'
+        }) %>
+      </div>
+      <!-- E: 가격 (회원) -->
+      <% } else { %>
+      <!-- S: 가격 (비회원) -->
+      <div class="overview-price is-guest">
+        <p class="overview-price-member">회원전용혜택가</p>
+        <%- include(`${_src}/views/components-mo/product/detail-overview-free.ejs`) %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/button/button.ejs`, {
+          size:'lg-p',
+          variant: 'primary',
+          text: '로그인하고 가격 확인'
+        }) %>
+      </div>
+      <!-- E: 가격 (비회원) -->
+      <% } %>
+    </div>
+  </div>
+
+  <!-- 상품규격, 주요특징 -->
+  <div class="overview-details">
+    <!-- 상품 규격 -->
+    <div class="overview-toggle" data-collapse>
+      <div class="overview-toggle-header">
+        <p class="overview-toggle-title">상품규격</p>
+        <button
+          type="button"
+          class="overview-toggle-btn"
+          data-collapse-btn
+          data-aria-label-base="상품규격"
+          data-aria-label-pair="더보기,닫기"
+          aria-expanded="false"
+        ></button>
+      </div>
+      <div class="overview-toggle-content" data-collapse-content data-visible-hidden>
+        <div class="toggle-content">
+          <dl class="toggle-content-brief-items">
+            <% _briefItems.forEach(function(item) { %>
+            <dt><%= item.label %></dt>
+            <dd><%= item.value %></dd>
+            <% }); %>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- 주요특징 -->
+    <div class="overview-toggle" data-collapse>
+      <div class="overview-toggle-header">
+        <p class="overview-toggle-title">주요특징</p>
+        <button
+          type="button"
+          class="overview-toggle-btn"
+          data-collapse-btn
+          data-aria-label-base="주요특징"
+          data-aria-label-pair="더보기,닫기"
+          aria-expanded="false"
+        ></button>
+      </div>
+      <div class="overview-toggle-content" data-collapse-content data-visible-hidden>
+        <div class="toggle-content">
+          <% _briefDesc.forEach(function(group) { %>
+          <dl class="toggle-content-brief-desc">
+            <dt><%= group.title %></dt>
+            <% group.items.forEach(function(item) { %>
+            <dd><%= item %></dd>
+            <% }); %>
+          </dl>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 다른 규격 찾기 버튼, 대량구매 문의 -->
+  <div class="overview-action">
+    <% if (_optionCount) { %>
+    <div class="overview-option">
+      <button type="button" class="overview-option-btn">
+        <span class="text">다른 규격 찾기(전체 <%= _optionCount %>개 옵션)</span>
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %> </span>
+      </button>
+    </div>
+    <% } %>
+
+    <div class="overview-bulk">
+      <a href="#!" class="overview-bulk-btn">
+        <span class="text">대량구매 문의</span>
+        <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %> </span>
+      </a>
+    </div>
+  </div>
+</div>

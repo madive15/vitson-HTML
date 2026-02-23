@@ -374,10 +374,13 @@ $scoped-button-configs: (
       $active-bg: if(map.has-key($config, 'active-bg'), map.get($config, 'active-bg'), $hover-bg);
 
       @include mx.border(all, 1px, solid, $border);
-      font-weight: 600;
-      color: $text;
       background-color: color.$color-white;
       border-radius: map.get(var.$radius, 'sm');
+
+      .text {
+        font-weight: 600;
+        color: $text;
+      }
 
       @if map.has-key($config, 'padding-x') {
         padding: 0 fn.rem(map.get($config, 'padding-x'));
@@ -743,6 +746,11 @@ $-underline-btn-heights: (18, 19, 21, 24);
   &.fc-brand-sub {
     color: map.get(color.$text-status, 'brand-sub');
     border-color: map.get(color.$text-status, 'brand-sub');
+  }
+
+  &.fc-info {
+    color: map.get(color.$text-status, 'info');
+    border-color: map.get(color.$text-status, 'info');
   }
 }
 

@@ -16,12 +16,117 @@
 
 $sticky-top: fn.rem(52);
 
+.no-underline {
+  text-decoration: none;
+  border-bottom: 0;
+}
+
+/* 비활성화 스타일 */
+@mixin disabled-input-style {
+  .vm-input {
+    .disabled,
+    &.disabled,
+    &.is-disabled,
+    &[disabled],
+    [disabled] {
+      color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-disable') !important;
+      pointer-events: none;
+      cursor: none;
+      background-color: map.get(color.$button-fill-secondary, 'fill-surf-secondary-disable');
+    }
+  }
+}
+
+/* title 아래 테두리  */
+@mixin cart-order-title-underline {
+  &::before {
+    position: absolute;
+    right: fn.rem(-20);
+    bottom: 0;
+    left: fn.rem(-20);
+    width: auto;
+    height: 1px;
+    content: '';
+    background-color: map.get(color.$layout-border, 'quinary');
+  }
+}
+
+/* 셀렉트 영역 */
+@mixin cart-order-selectbox {
+  .vits-select {
+    width: 100%;
+
+    &-value {
+      font-size: fn.rem(14);
+    }
+
+    &-trigger {
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 map.get(var.$unit, 16);
+    }
+
+    &-list {
+      width: calc(100% - fn.rem(1));
+    }
+  }
+}
+
+/* 가이드 박스 (배경, 라운드) 
+  *배경색 커스텀 가능
+  ex. @include cart-order-surf-box(map.get(color.$layout-surf, 'base'));
+*/
+@mixin cart-order-surf-box($background-color: map.get(color.$layout-surf, 'raised')) {
+  padding: fn.rem(15) fn.rem(20) fn.rem(36);
+  background-color: $background-color;
+  border-radius: map.get(var.$radius, 'md');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+}
+
+/* 수량 스텝퍼 모바일용 */
+@mixin quantity-stepper-h32 {
+  .vm-cart-quantity {
+    height: fn.rem(34);
+
+    .btn-step {
+      width: fn.rem(32);
+      height: fn.rem(32);
+    }
+
+    .unit {
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+      height: fn.rem(32);
+      padding-left: 0;
+    }
+
+    .quantity-input {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+      width: fn.rem(36) !important;
+      min-width: fn.rem(36);
+      height: fn.rem(32);
+      padding-right: fn.rem(8);
+      text-align: center;
+    }
+  }
+}
+
 .vm-cart-order-sticky {
   position: sticky;
   top: $sticky-top;
   z-index: map.get(var.$mo-zindex, 'toolbar');
   border-top: 1px solid map.get(color.$layout-border, 'quinary');
   box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  /* 주문서 영역 안내 메시지 표시 시 */
+  &:has(.vits-alerts-anatomy) {
+    padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-top: 0;
+
+    .alerts-anatomy-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-status, 'brand-sub'));
+    }
+  }
 }
 
 .cart-toolbar {
@@ -33,12 +138,21 @@ $sticky-top: fn.rem(52);
     @include mx.flex(flex, row, flex-start, center);
     gap: fn.rem(10);
 
-    .vits-btn-motext {
+    .vits-text-underline-button {
+      color: map.get(color.$text-colors, 'primary');
+
       &::before {
+        margin-right: fn.rem(8);
         font-size: fn.rem(10);
         color: map.get(color.$layout-surf, 'secondary');
         content: '|';
       }
+    }
+  }
+
+  &-right {
+    .vits-text-underline-button {
+      color: map.get(color.$text-colors, 'primary');
     }
   }
 }
@@ -47,6 +161,11 @@ $sticky-top: fn.rem(52);
   @include mx.flex(flex, column, flex-start, flex-start);
   gap: map.get(var.$unit, 12);
   padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+
+  &:has(.vm-payment) {
+    gap: 0;
+    padding: 0;
+  }
 }
 
 .vm-cart-item {
@@ -106,18 +225,7 @@ $sticky-top: fn.rem(52);
       @include mx.flex(flex, row, flex-start, center, wrap);
       gap: map.get(var.$unit, 8);
 
-      .vm-cart-quantity {
-        .btn-step {
-          height: fn.rem(32);
-        }
-
-        .quantity-input {
-          min-width: fn.rem(36);
-          height: fn.rem(32);
-          padding: 0;
-          text-align: center;
-        }
-      }
+      @include quantity-stepper-h32;
     }
 
     &-price {
@@ -272,6 +380,7 @@ $sticky-top: fn.rem(52);
   }
 }
 
+/* 주문하기 버튼 */
 .vm-cart-submit {
   width: 100%;
   padding: map.get(var.$unit, 16) 0 map.get(var.$unit, 32);
@@ -282,6 +391,1186 @@ $sticky-top: fn.rem(52);
 
     em {
       font-style: normal;
+    }
+  }
+}
+
+/* 옵션/수량 변경 (팝업) */
+.cart-quantity-change {
+  @include mx.flex(flex, row, space-between, center, wrap);
+  gap: map.get(var.$unit, 24) map.get(var.$unit, 12);
+
+  .product {
+    &-summary {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 4);
+    }
+
+    &-name {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    }
+
+    &-spec {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-quantity-selector {
+      width: 100%;
+
+      .radio-item-area li {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .radio-item:has(input:checked) {
+        .label-name {
+          font-weight: 600;
+        }
+      }
+
+      .radio-item:not(:has(input:checked)) {
+        .label-name {
+          font-weight: 400;
+        }
+      }
+    }
+
+    &-quantity-stepper {
+      @include quantity-stepper-h32;
+    }
+  }
+}
+
+/* 상품 추가 (팝업) */
+.cart-product-add {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: map.get(var.$unit, 16);
+  width: 100%;
+
+  /* 상품 정보 카드 */
+  /* stylelint-disable-next-line no-descending-specificity */
+  .cart-item-product {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 8);
+    width: 100%;
+    padding: map.get(var.$unit, 12);
+    border: 1px solid map.get(color.$layout-border, 'quaternary');
+    border-radius: map.get(var.$radius, 'md');
+
+    @include list.common-product-card-info;
+
+    .product {
+      &-thumb {
+        width: fn.rem(60);
+        height: fn.rem(60);
+      }
+
+      &-body {
+        .product-brand {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        .product-name {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        .product-spec {
+          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+        }
+      }
+    }
+  }
+
+  /* 길이/수량 입력 행 */
+  .vm-order-input-row {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 16);
+    width: 100%;
+    padding: 0 map.get(var.$unit, 12);
+  }
+
+  .vm-order-cell {
+    @include mx.flex(flex, row, space-between, center);
+    gap: map.get(var.$unit, 16);
+    width: 100%;
+
+    .guide-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      flex-shrink: 0;
+    }
+  }
+
+  /* 길이 입력 (unit-control) */
+  .unit-control {
+    @include mx.flex(flex, row, flex-end, center);
+    gap: fn.rem(6);
+
+    .unit-control-input {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, flex-start, center);
+      gap: fn.rem(4);
+      min-height: fn.rem(32);
+      padding: 0 map.get(var.$unit, 12);
+      color: map.get(color.$text-colors, 'primary');
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+      border-radius: map.get(var.$radius, 'sm');
+
+      .unit-input {
+        width: fn.rem(57);
+        color: map.get(color.$text-colors, 'tertiary');
+        text-align: center;
+        border: 0;
+      }
+
+      .unit-text {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  /* 수량 스테퍼 */
+  .order-cell {
+    @include quantity-stepper-h32;
+  }
+
+  /* 추가된 항목 리스트 (밝은 회색 컨테이너, 내부 흰색) */
+  .vm-order-list-wrap {
+    width: 100%;
+  }
+
+  .vm-order-list {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    padding: map.get(var.$unit, 8) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  .order-item {
+    @include mx.flex(flex, row, space-between, center);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+    padding: fn.rem(6) 0;
+
+    .order-spec {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.ellipsis-single;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .order-price {
+      @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand'));
+      flex-shrink: 0;
+    }
+
+    .order-remove {
+      @include button.btn-reset;
+      @include icon.ic-size(map.get(var.$unit, 20));
+      @include mx.flex(flex, row, center, center);
+      flex-shrink: 0;
+      color: map.get(color.$icon-neutral, 'primary');
+
+      .ic {
+        @include icon.ic-size(map.get(var.$unit, 20));
+      }
+    }
+  }
+}
+
+/* ===배송 정보 및 방법 === */
+.vm-shipping {
+  @include mx.flex($direction: column);
+  gap: map.get(var.$unit, 12);
+  width: 100%;
+  padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+
+  /* 배송 방법 선택 */
+  &-method-wrapper {
+    @include cart-order-surf-box(map.get(color.$layout-surf, 'base'));
+  }
+
+  &-method {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 20);
+
+    &-tabs {
+      @include mx.flex;
+      gap: map.get(var.$unit, 16);
+    }
+
+    &-btn {
+      @include button.btn-reset;
+      @include mx.flex($align: center, $justify: center);
+      flex: 1;
+      gap: fn.rem(4);
+      min-height: fn.rem(50);
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'tertiary');
+      border-radius: map.get(var.$radius, 'md');
+
+      .text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .icon {
+        @include icon.ic-size(fn.rem(26));
+        color: map.get(color.$icon-neutral, 'tertiary');
+      }
+
+      &.is-active {
+        border-color: map.get(color.$layout-border, 'brand');
+        border-width: 2px;
+
+        .text,
+        .icon {
+          font-weight: 600;
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+    }
+
+    &-title {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      position: relative;
+      padding-bottom: fn.rem(15);
+
+      @include cart-order-title-underline;
+    }
+  }
+
+  /* 배송 방법 별 패널 */
+  &-body {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 12);
+    width: 100%;
+    padding-top: map.get(var.$unit, 20);
+  }
+
+  &-panel {
+    display: none;
+    gap: map.get(var.$unit, 24);
+    width: 100%;
+
+    @include mx.flex($direction: column);
+
+    /* ===배송 방법별 패널 초기화 === */
+    &[data-panel] {
+      display: none;
+
+      &.is-active {
+        display: block;
+      }
+    }
+
+    /* quick 패널 전용 스타일 */
+    &[data-panel='quick'] {
+      .vm-form-row {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+
+        .vm-form-label {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+        }
+      }
+    }
+  }
+
+  /* 안내 문구 */
+  &-guide {
+    width: 100%;
+    padding: map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+
+    ul {
+      @include mx.bullet-style;
+      @include mx.flex($direction: column);
+      /* stylelint-disable-next-line no-descending-specificity */
+      li {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        position: relative;
+        line-height: 1.4;
+        word-break: keep-all;
+
+        &::before {
+          background-color: map.get(color.$text-colors, 'secondary');
+        }
+
+        &.is-warning {
+          @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand'));
+
+          &::before {
+            background-color: map.get(color.$text-status, 'brand');
+          }
+        }
+      }
+    }
+  }
+
+  &-form {
+    padding-top: map.get(var.$unit, 20);
+
+    .vm-form {
+      // stylelint-disable-next-line no-descending-specificity
+      &-row {
+        @include mx.flex(flex, row, flex-start, center);
+        flex: 1;
+        gap: map.get(var.$unit, 24);
+        min-width: 0;
+
+        .vm-form-label {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          white-space: nowrap;
+        }
+
+        .vm-form-field {
+          @include cart-order-selectbox;
+          @include disabled-input-style;
+          width: 100%;
+
+          .vits-datepicker-single {
+            height: fn.rem(32);
+            overflow: hidden;
+          }
+        }
+      }
+
+      &-row-group {
+        @include mx.flex(flex, row, space-between, center);
+        gap: map.get(var.$unit, 12);
+        width: 100%;
+        // stylelint-disable-next-line no-descending-specificity
+        .vits-datepicker-single {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  /* ===받는 사람 / 보내는 사람=== */
+  &-receiver,
+  &-sender {
+    @include mx.flex($direction: column);
+    @include cart-order-surf-box;
+    gap: map.get(var.$unit, 16);
+
+    /* 배송지 선택 후 값 요약 (수정 케이스) */
+    .vm-receiver-view {
+      @include mx.flex($direction: column);
+      gap: map.get(var.$unit, 8);
+      width: 100%;
+
+      &-name,
+      &-phone,
+      &-address {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        margin: 0;
+        word-break: keep-all;
+      }
+    }
+
+    .vm-form {
+      &-box {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 24);
+      }
+
+      // stylelint-disable-next-line no-descending-specificity
+      &-row {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+
+        .vm-form-label {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+          white-space: nowrap;
+        }
+
+        .vm-form-field {
+          @include cart-order-selectbox;
+          @include disabled-input-style;
+          width: 100%;
+
+          .vits-textarea {
+            height: auto;
+          }
+        }
+      }
+
+      &-row-group {
+        @include mx.flex(flex, row, space-between, flex-end);
+        gap: map.get(var.$unit, 12);
+        width: 100%;
+
+        .vm-form-row {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .vits-btn-scoped-info {
+          padding: 0 fn.rem(12);
+        }
+      }
+    }
+  }
+
+  &-sender {
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+  }
+
+  &-title {
+    position: relative;
+    padding-bottom: fn.rem(15);
+
+    @include mx.flex(flex, row, space-between, center);
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    @include cart-order-title-underline;
+  }
+}
+
+/* ===결제 주문서=== */
+/* 결제 전체 */
+.vm-payment {
+  @include mx.flex(flex, column, flex-start, flex-start, wrap);
+  width: 100%;
+
+  /* ===결제정보 요약=== */
+  &-summary {
+    width: 100%;
+    background: map.get(color.$layout-surf, 'base');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  &-title {
+    @include typo.typography('b2sb', $color: map.get(color.$text-colors, 'primary'));
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    position: relative;
+    padding: fn.rem(14) fn.rem(32);
+  }
+
+  &-price {
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+  }
+
+  &-price-list {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
+
+    li {
+      @include mx.flex($align: center, $justify: space-between);
+
+      span {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
+      }
+
+      strong {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      &.is-discount {
+        /* stylelint-disable-next-line no-descending-specificity */
+        strong {
+          color: map.get(color.$text-status, 'brand-sub');
+        }
+      }
+    }
+  }
+
+  &-price-sub {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 12);
+
+    li {
+      @include mx.flex($align: center, $justify: space-between);
+
+      span {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      .vits-alerts-anatomy {
+        width: 100%;
+      }
+    }
+  }
+
+  &-total {
+    @include mx.flex($align: center, $justify: space-between);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32) map.get(var.$unit, 36);
+
+    span {
+      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    strong {
+      @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
+    }
+  }
+
+  &-agree {
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+
+    .checkbox-single-s {
+      align-items: flex-start;
+    }
+
+    .agree-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
+
+  /* ===결제수단 영역=== */
+  &-method {
+    width: calc(100% - fn.rem(32));
+    margin: 0 auto map.get(var.$unit, 20);
+    background: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+  }
+
+  &-item {
+    position: relative;
+    gap: map.get(var.$unit, 16) map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 20);
+
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    @include mx.flex(flex, row, flex-start, center, wrap);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    /* 라디오 공통 */
+    .radio-item {
+      @include mx.flex(inline-flex, row, flex-start, center);
+      gap: map.get(var.$unit, 8);
+      cursor: pointer;
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .label-name {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        align-items: center;
+        min-width: 0;
+        white-space: nowrap;
+      }
+
+      &:has(input:checked) {
+        .label-name {
+          @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
+        }
+      }
+    }
+
+    .vm-payment-item-toggle {
+      background: none;
+      border: 0;
+
+      [class*='ic-arrow-'] {
+        opacity: 0.4;
+      }
+    }
+
+    // 라디오 선택 시 비츠온페이 관리하기 버튼 표시
+    &:has([name='payment']:checked) {
+      .pay-manage {
+        pointer-events: auto;
+        visibility: visible;
+      }
+
+      .vm-payment-item-toggle {
+        [class*='ic-arrow-'] {
+          opacity: 1;
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    &:not(:has(.pay-manage)) {
+      .radio-item {
+        flex: 1;
+      }
+    }
+
+    /* 비츠온페이 관리하기 */
+    // stylelint-disable-next-line no-descending-specificity
+    .pay-manage {
+      @include mx.flex(inline-flex, row, flex-start, center);
+      flex: 1;
+      pointer-events: none;
+      visibility: hidden;
+
+      .vm-text-link {
+        @include mx.flex(inline-flex, row, center, center);
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  /* ===간편결제 탭=== */
+  &-tabs {
+    @include mx.flex;
+    padding: map.get(var.$unit, 2);
+    background-color: map.get(color.$layout-surf, 'sunken');
+    border-radius: map.get(var.$radius, 'sm');
+  }
+
+  &-tab {
+    @include button.btn-reset;
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    flex: 1;
+    color: map.get(color.$text-colors, 'tertiary');
+    border-radius: map.get(var.$radius, 'sm');
+
+    &.is-active {
+      padding: map.get(var.$unit, 8) 0;
+      font-weight: 600;
+      color: map.get(color.$text-status, 'brand');
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'brand');
+      border-radius: map.get(var.$radius, 'sm');
+    }
+  }
+
+  /* 간편결제 > 탭 패널 */
+  &-tab-panel {
+    display: none;
+    padding: map.get(var.$unit, 24) 0 map.get(var.$unit, 16);
+    margin-top: map.get(var.$unit, 12);
+    border: 1px solid map.get(color.$layout-border, 'quinary');
+    border-radius: map.get(var.$radius, 'md');
+
+    &#panel-simple-card {
+      .vits-order-alerts {
+        padding: 0 map.get(var.$unit, 16);
+        background-color: transparent;
+        border: none;
+      }
+    }
+
+    &#panel-simple-account {
+      .vits-tax {
+        margin: map.get(var.$unit, 20) map.get(var.$unit, 16) 0;
+      }
+    }
+
+    &.is-active {
+      display: block;
+    }
+
+    /* ===비츠온페이 등록 카드 (swiper)=== */
+    .vm-card-list {
+      width: 100%;
+      padding: map.get(var.$unit, 20) 0;
+      padding-left: map.get(var.$unit, 16);
+
+      .swiper-slide {
+        flex-shrink: 0;
+        width: calc(100% / 1.5);
+
+        // ipad mini size(768px) 이상일 때 2.5개씩 보여줌
+        @media (width >= 768px) {
+          width: calc(100% / 2.5);
+        }
+      }
+
+      .vits-swiper-navs {
+        $fade: linear-gradient(
+          var(--angle),
+          rgb(255 255 255 / 0%) 0%,
+          rgb(255 255 255 / 78%) 50%,
+          rgb(255 255 255 / 100%) 100%
+        );
+
+        &::after {
+          position: absolute;
+          inset: 0 0 0 auto;
+          z-index: 1;
+          width: 40px;
+          content: '';
+
+          --angle: 90deg;
+          background: $fade;
+        }
+
+        &::before {
+          position: absolute;
+          inset: 0 auto 0 0;
+          z-index: 1;
+          width: 20px;
+          content: '';
+
+          --angle: -90deg;
+          background: $fade;
+        }
+      }
+
+      .swiper-button-next {
+        right: 5px;
+      }
+
+      .swiper-button-prev {
+        left: 5px;
+      }
+
+      .swiper-button-disabled {
+        opacity: 0;
+      }
+    }
+
+    /* 카드 아이템 */
+    .vm-card-item {
+      @include mx.flex($direction: column, $justify: center);
+      width: 80px;
+      min-height: fn.rem(106);
+      padding: 0 map.get(var.$unit, 24);
+      overflow: hidden;
+      background-color: map.get(color.$layout-surf, 'base');
+      filter: grayscale(1);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: fn.rem(80) fn.rem(80);
+      border-radius: map.get(var.$radius, 'md');
+      opacity: 0.3;
+
+      .card-brand {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+        margin-bottom: map.get(var.$unit, 10);
+      }
+
+      .card-name,
+      .card-number {
+        @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+        margin-bottom: map.get(var.$unit, 4);
+      }
+
+      &.swiper-slide-active {
+        filter: grayscale(0);
+        border: 0;
+        opacity: 1;
+      }
+    }
+
+    /* 비츠온페이 카드할부 폼 */
+    .vm-card-form {
+      @include mx.flex(flex, column, flex-start, flex-start, wrap);
+      gap: map.get(var.$unit, 16);
+      padding: 0 map.get(var.$unit, 16) 0;
+
+      .vm-form-row {
+        @include mx.flex(flex, column, flex-start, flex-start, wrap);
+        gap: map.get(var.$unit, 16);
+      }
+
+      .vm-form-item {
+        @include mx.flex(flex, column, flex-start, flex-start, wrap);
+        gap: 0;
+      }
+
+      .vm-form-label {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        margin-bottom: map.get(var.$unit, 8);
+      }
+
+      .vm-form-value {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+
+        .vm-default-badge {
+          @include typo.typography('b5r', $color: map.get(color.$text-status, 'info'));
+          display: inline-block;
+          min-width: fn.rem(26);
+          padding: fn.rem(4);
+          margin-left: fn.rem(4);
+          line-height: normal;
+          vertical-align: middle;
+          background-color: map.get(color.$layout-status, 'info-bg-sub');
+          border-radius: map.get(var.$radius, 'sm');
+        }
+      }
+
+      .vm-form-number {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        margin-top: fn.rem(6);
+      }
+
+      .vm-form-select {
+        @include cart-order-selectbox;
+        width: 100%;
+      }
+    }
+
+    /* ===비츠온페이 계좌=== */
+    .type-account-empty {
+      gap: map.get(var.$unit, 12);
+      justify-content: center;
+      height: fn.rem(140);
+      margin: 0 map.get(var.$unit, 16);
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'quaternary');
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      &:hover .icon {
+        color: map.get(color.$text-colors, 'inverse');
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .icon {
+        @include icon.ic-size(fn.rem(24));
+        color: map.get(color.$text-colors, 'inverse');
+        background-color: map.get(color.$layout-surf, 'secondary');
+        border-radius: 50%;
+      }
+
+      .text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  /* ===하위 패널 (radio 연결)=== */
+  &-panel {
+    display: none;
+    width: 100%;
+
+    &.is-active {
+      display: block;
+    }
+
+    // 무통장입금 패널
+    &#panel-bank {
+      .vm-payment-bank {
+        &-list {
+          padding: 0;
+          padding-top: map.get(var.$unit, 24);
+          margin: 0;
+        }
+
+        &-item {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          gap: map.get(var.$unit, 8);
+          padding-bottom: map.get(var.$unit, 16);
+
+          dt {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            min-width: fn.rem(74);
+          }
+
+          dd {
+            @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+
+        // 입금자명 입력 필드
+        &-input {
+          @include mx.flex(flex, row, flex-start, flex-start);
+          gap: map.get(var.$unit, 8);
+
+          .vm-form-label {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            min-width: fn.rem(74);
+          }
+
+          .vm-form-field {
+            width: 100%;
+
+            ::placeholder {
+              color: map.get(color.$text-colors, 'muted');
+            }
+          }
+        }
+      }
+    }
+
+    // 여신결제 패널
+    &#panel-credit {
+      .info-text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  /* ===세금계산서 발급 신청=== */
+  // stylelint-disable-next-line no-descending-specificity
+  .vits-tax {
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    padding: map.get(var.$unit, 20);
+    margin: map.get(var.$unit, 20) 0 0;
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+
+    &.is-active {
+      display: block;
+    }
+
+    &-title {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+      padding-bottom: map.get(var.$unit, 16);
+    }
+
+    &-options {
+      @include mx.flex($align: flex-start, $direction: column);
+      gap: map.get(var.$unit, 12);
+
+      .radio-item {
+        @include mx.flex($align: center);
+        gap: map.get(var.$unit, 4);
+
+        .label-name {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+        }
+      }
+    }
+  }
+}
+
+/* ===주문완료=== */
+.vm-order-complete {
+  padding: 0;
+
+  .order-complete {
+    &-status {
+      width: 100%;
+      padding: map.get(var.$unit, 12) map.get(var.$unit, 16) map.get(var.$unit, 32);
+      background: map.get(color.$layout-surf, 'base');
+
+      .vits-empty-state-title {
+        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      .vits-empty-state-desc {
+        @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
+      }
+    }
+  }
+
+  .order-section {
+    width: 100%;
+  }
+
+  .order-section-title {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    padding: map.get(var.$unit, 20);
+  }
+
+  // 배송 정보
+  .order-shipping {
+    background-color: map.get(color.$layout-surf, 'base');
+
+    .info-list {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 12);
+      padding: 0 map.get(var.$unit, 20) map.get(var.$unit, 32);
+
+      .info-item {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: fn.rem(8);
+      }
+
+      .info-label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        flex-shrink: 0;
+        min-width: fn.rem(60);
+      }
+
+      .info-value {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        flex: 1;
+        min-width: 0;
+        word-break: break-word;
+      }
+
+      .info-value-status {
+        @include typo.typography('b3s', $color: map.get(color.$text-status, 'info-sub'));
+      }
+    }
+  }
+
+  // 주문 상품: 택배 불가 경고
+  .order-product-notice-column {
+    .info-list {
+      padding: map.get(var.$unit, 16) map.get(var.$unit, 20);
+      background-color: map.get(color.$layout-surf, 'base');
+      border-bottom: 1px solid map.get(color.$layout-border, 'quaternary');
+
+      .info-item {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: fn.rem(10);
+      }
+
+      .info-label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        flex-shrink: 0;
+        min-width: fn.rem(56);
+      }
+
+      .info-value {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        flex: 1;
+        min-width: 0;
+        word-break: break-word;
+      }
+    }
+  }
+
+  // 주문 상품: 택배 불가 경고 > 상품 목록
+  .order-product-parcel-wrap {
+    padding: fn.rem(16) fn.rem(20);
+    background-color: map.get(color.$layout-surf, 'raised');
+
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+
+    .parcel-notice {
+      padding-bottom: fn.rem(16);
+
+      &-header {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: fn.rem(8);
+      }
+
+      &-icon {
+        @include mx.flex($align: center, $justify: center);
+        @include icon.ic-size(fn.rem(20));
+        flex-shrink: 0;
+        color: map.get(color.$text-status, 'brand');
+      }
+
+      &-title {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+      }
+
+      &-desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        position: relative;
+        padding-left: fn.rem(10);
+        margin: fn.rem(12) 0 0 fn.rem(20);
+        line-height: 1.5;
+
+        &::before {
+          position: absolute;
+          top: fn.rem(8);
+          left: 0;
+          width: fn.rem(2);
+          height: fn.rem(2);
+          content: '';
+          background-color: map.get(color.$text-colors, 'secondary');
+          border-radius: 50%;
+        }
+
+        strong {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .order-product-list {
+      gap: fn.rem(4);
+      margin-top: fn.rem(16);
+
+      @include mx.flex(flex, column, flex-start, flex-start);
+    }
+
+    .order-product-item {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: fn.rem(10);
+      width: 100%;
+      padding: fn.rem(4);
+      background-color: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'sm');
+
+      &-thumb {
+        flex-shrink: 0;
+        width: fn.rem(24);
+        height: fn.rem(24);
+        overflow: hidden;
+        background-color: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'sm');
+
+        @include mx.media-box(cover);
+      }
+
+      &-name {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'default'));
+        flex: 1;
+        min-width: 0;
+        word-break: break-word;
+      }
+    }
+  }
+
+  // 결제 정보
+  .order-payment {
+    .vm-payment-summary {
+      padding-bottom: map.get(var.$unit, 36);
+    }
+
+    .vm-payment {
+      &-title,
+      &-total,
+      &-price {
+        padding-right: map.get(var.$unit, 20);
+        padding-left: map.get(var.$unit, 20);
+      }
+    }
+
+    // 결제 수단 (신용카드 / 여신결제 / 무통장입금)
+    .vm-complete-method {
+      padding: map.get(var.$unit, 20);
+      margin: 0 map.get(var.$unit, 16) 0;
+      background-color: map.get(color.$layout-surf, 'base');
+      border: 1px solid map.get(color.$layout-border, 'primary');
+      border-radius: map.get(var.$radius, 'lg');
+
+      & + .vm-complete-method {
+        margin-top: fn.rem(12);
+      }
+
+      .pay-list {
+        .pay-item {
+          @include mx.flex(flex, row, flex-start, flex-start);
+
+          & + .pay-item {
+            margin-top: fn.rem(12);
+          }
+        }
+      }
+
+      .pay-label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+        flex-shrink: 0;
+        min-width: fn.rem(60);
+      }
+
+      .pay-value {
+        @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+      }
+
+      .pay-account {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        padding: 0;
+        padding-left: fn.rem(60);
+        margin-bottom: fn.rem(16);
+      }
+
+      .pay-body {
+        // 케이스 2: 여신결제 — 목록 + 버튼 한 줄
+        &.pay-body-row {
+          @include mx.flex(flex, row, space-between, center, wrap);
+        }
+
+        &.pay-body-bank .pay-list {
+          margin-bottom: fn.rem(12);
+
+          .pay-value {
+            text-align: left;
+          }
+        }
+      }
     }
   }
 }

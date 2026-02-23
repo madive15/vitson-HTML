@@ -1,0 +1,97 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+/**
+ * @file product-option-item.ejs
+ * @description 다른 규격/옵션 선택 팝업 상품 아이템 (Mobile)
+ * @scope components-mo/product/
+ * @param {Object} item - 상품 데이터
+ * @param {string} [selectedOption=''] - 선택된 상품코드
+ *
+ * @state is-soldout: stockYn === 'N'
+ * @state is-selected: productCode === selectedOption
+ *
+ * @note 가격 노출 규칙
+ *   - 품절: 가격 비노출, "일시품절" 표시
+ *   - 기본: 정상가 + 할인율 + 판매가
+ *   - 할인율 ≤ 0.4%: 할인율 비노출
+ *   - 할인율 ≤ 0: 정상가·할인율 비노출, 판매가만
+ */
+
+const d_opt = item || {};
+const isSoldout_opt = d_opt.stockYn === 'N';
+const isSelected_opt = (typeof selectedOption !== 'undefined' && selectedOption) ? selectedOption === d_opt.productCode : false;
+const stateClass_opt = (isSoldout_opt ? ' is-soldout' : '') + (isSelected_opt ? ' is-selected' : '');
+
+// 가격 노출 규칙
+const rate_opt = Number(d_opt.discountRate) || 0;
+const showRate_opt = rate_opt > 0.4;
+const showOrigin_opt = rate_opt > 0;
+
+const comma_opt = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+const _isMember_opt = (typeof isMember !== 'undefined') ? isMember : true;
+%>
+
+<li class="vm-product-option-item" data-ui="product-option-item">
+  <a href="#!" class="vm-product-card<%= stateClass_opt %>">
+    <div class="product-thumb">
+      <img src="<%= d_opt.imageUrl %>" alt="<%= d_opt.productNm %>" loading="lazy" />
+    </div>
+
+    <div class="product-body">
+      <div class="product-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span><%= d_opt.brandNm %></p>
+        <p class="product-code"><span class="sr-only">상품코드</span><%= d_opt.productCode %></p>
+      </div>
+
+      <div class="product-info">
+        <div class="product-summary">
+          <p class="product-name"><span class="sr-only">상품명</span><%= d_opt.productNm %></p>
+          <p class="product-spec"><span class="sr-only">규격</span><%= d_opt.standard %></p>
+        </div>
+
+        <!-- prettier-ignore -->
+        <% if (_isMember_opt) { %>
+        <% if (isSoldout_opt) { %>
+        <div class="product-price is-soldout">
+          <p class="product-price-alt">일시품절</p>
+        </div>
+        <% } else { %>
+        <div class="product-price is-normal">
+          <% if (showOrigin_opt) { %>
+          <div class="price-origin-label">
+            <span class="sr-only">표준단가(정상가)</span><%= comma_opt(d_opt.originPrice) %>원
+          </div>
+          <% } %>
+          <div class="price-sale-row">
+            <% if (showRate_opt) { %>
+            <p class="price-rate"><span class="sr-only">할인율</span><%= rate_opt %>%</p>
+            <% } %>
+            <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma_opt(d_opt.salePrice) %>원</p>
+          </div>
+        </div>
+        <% } %> <% } %>
+      </div>
+
+      <!-- prettier-ignore -->
+      <%
+        const hasToday_opt = d_opt.todayShipYn === 'Y';
+        const hasTomorrow_opt = d_opt.tomorrowShipYn === 'Y';
+        const hasHot_opt = d_opt.hotYn === 'Y';
+        const hasCount_opt = d_opt.purchaseCount > 0;
+      %>
+      <% if (!isSoldout_opt && (hasToday_opt || hasTomorrow_opt || hasHot_opt || hasCount_opt || d_opt.freeShipYn === 'Y')) { %>
+      <div class="product-extra">
+        <% if (hasToday_opt || hasTomorrow_opt || hasHot_opt || hasCount_opt) { %> <%-
+        include(`${_src}/views/components/label/product-flags.ejs`, { today: hasToday_opt, tomorrow: hasTomorrow_opt,
+        hot: hasHot_opt, count: hasCount_opt ? d_opt.purchaseCount : 0, }) %> <% } %>
+        <!-- prettier-ignore -->
+        <% if (d_opt.freeShipYn === 'Y') { %>
+        <div class="product-cta"><%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %></div>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </a>
+</li>

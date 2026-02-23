@@ -1,0 +1,14 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // include 시 전달받은 값 사용, 기본값 방어
+  var isLiked = typeof _isLiked !== 'undefined' ? _isLiked : false;
+%>
+
+<!-- [D] 선택 시, active 클래스 추가 -->
+<button
+  type="button"
+  class="vm-like-btn<%= _isLiked ? ' active' : '' %>"
+  aria-label="좋아요"
+  aria-pressed="<%= _isLiked %>"
+></button>

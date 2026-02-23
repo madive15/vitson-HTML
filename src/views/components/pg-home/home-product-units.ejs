@@ -6,7 +6,7 @@
   @param {string}  type             - 상품 카드 타입 (default: 'default')
     'default'  : 기본형 - 회원 (일반 가격 + 배지)
     'soldout'  : 일시품절 (품절 표시 + 배지)
-    'guest'    : 비회원 (로그인 유도 + 배지 없음)
+    'guest'    : 비회원 (product-price/product-spec 비노출, 배지 노출)
     'cart'     : 장바구니 담기 버튼 (일반 가격 + 배지 + 장바구니 버튼)
     ※ 새로운 type 추가 시 price/extra/action 분기만 추가하면 확장 가능
 
@@ -27,10 +27,10 @@
 
   // type별 hover 기본값 맵
   const hoverDefaults = {
-    default : true,
-    soldout : false,
-    guest   : false,
-    cart    : false,
+    default   : true,
+    soldout   : false,
+    guest     : false,
+    cart      : false,
   };
 
   // showHoverActions 명시적 전달 시 우선, 아니면 type 기본값, 둘 다 없으면 false
@@ -89,28 +89,16 @@
     <div class="product-summary">
       <a href="#!">
         <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명 (초강력 접착제)</div>
-        <div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div>
+        <% if (type !== 'guest') { %><div class="product-spec"><span class="sr-only">규격</span>2.6mm(광~5kg)</div><% } %>
       </a>
     </div>
 
+    <% if (type !== 'guest') { %>
+    <!-- guest일 때 product-price 영역 비노출 -->
     <div class="product-price">
       <% if (type === 'soldout') { %>
       <!-- 일시품절 -->
       <div class="product-price-alt is-soldout">일시품절</div>
-      <% } else if (type === 'guest') { %>
-      <!-- 비회원 가격 (로그인 유도) -->
-      <div class="is-guest product-price-alt">
-        <div class="price-guest-text">
-          <p class="price-guest-text-title">회원 전용 혜택가</p>
-          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
-        </div>
-        <div class="price-guest-action">
-          <button class="price-login-button">
-            <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'lock-close' }) %> </span>
-            <span class="text">로그인하고 가격 확인</span>
-          </button>
-        </div>
-      </div>
       <% } else { %>
       <!-- 가격 노출 (회원 & 판매중) : default, cart 등 -->
       <div class="vits-price-box is-normal">
@@ -122,9 +110,9 @@
       </div>
       <% } %>
     </div>
+    <% } %>
 
-    <% if (type !== 'guest') { %>
-    <!-- 배지 영역 (회원만) -->
+    <!-- 배지 영역 -->
     <div class="product-extra">
       <div class="vits-product-flags">
         <span class="vits-product-flag is-today">
@@ -138,7 +126,7 @@
         <span class="vits-product-promo-badge is-free-ship">무료배송</span>
       </div>
     </div>
-    <% } %> <% if (type === 'cart') { %>
+    <% if (type === 'cart') { %>
     <!-- + 장바구니 담기 버튼 -->
     <div class="product-action-cart">
       <button class="product-cart-button">
