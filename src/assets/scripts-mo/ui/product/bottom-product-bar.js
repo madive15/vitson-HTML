@@ -238,6 +238,7 @@
 
         if (shouldClose) {
           $option.css('transition', TRANSITION_HEIGHT);
+          forceReflow($option[0]);
           $option.css('height', 0);
 
           state.timerId = setTimeout(function () {
@@ -254,6 +255,7 @@
 
       // snap back
       $option.css('transition', TRANSITION_HEIGHT);
+      forceReflow($option[0]);
       $option.css('height', state.optionHeight + 'px');
 
       state.timerId = setTimeout(function () {
