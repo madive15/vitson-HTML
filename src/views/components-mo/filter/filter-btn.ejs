@@ -2,10 +2,14 @@
 
 <!-- prettier-ignore -->
 <%# 필터 1개 이상 선택 시 rootClass에 is-selected 추가 %>
+<%
+  const _filterAttrs = (typeof attrs !== 'undefined' && attrs) ? attrs : '';
+%>
 <div class="filter-product-more" data-filter-state>
   <!-- prettier-ignore -->
   <%- include(`${_src}/views/components/button/button.ejs`, { 
       size: 'xs', variant: 'outline-tertiary', text: '필터',
-      iconLeft: true, iconName: 'ic-filter'
+      iconLeft: true, iconName: 'ic-filter',
+      attrs: _filterAttrs
     }) %>
 </div>

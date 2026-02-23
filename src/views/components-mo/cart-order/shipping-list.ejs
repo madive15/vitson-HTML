@@ -1,0 +1,448 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<section class="vm-shipping">
+  <div class="vm-shipping-method-wrapper">
+    <!-- 배송 방법 선택 -->
+    <div class="vm-shipping-method">
+      <h3 class="vm-shipping-method-title">배송 방법</h3>
+
+      <div class="vm-shipping-method-tabs">
+        <button type="button" class="vm-shipping-method-btn is-active" data-method="parcel">
+          <span class="icon">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'box' }) %>
+          </span>
+          <span class="text">택배</span>
+        </button>
+
+        <button type="button" class="vm-shipping-method-btn" data-method="quick">
+          <span class="icon">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'speed-truck' }) %>
+          </span>
+          <span class="text">퀵배송</span>
+        </button>
+
+        <button type="button" class="vm-shipping-method-btn" data-method="freight">
+          <span class="icon">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'freight' }) %>
+          </span>
+          <span class="text">화물</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 배송 방법별 내용 -->
+    <div class="vm-shipping-body">
+      <!-- ================= 택배 ================= -->
+      <div class="vm-shipping-panel is-active" data-panel="parcel">
+        <!-- 안내 문구 -->
+        <div class="vm-shipping-guide">
+          <ul>
+            <li>선택하신 택배로 배송되는 것을 원칙으로 합니다.</li>
+            <li class="is-warning">단, 비츠영업용 차량으로 직배송될 수도 있습니다.</li>
+            <li>발송 마감 시간은 16시입니다.</li>
+          </ul>
+        </div>
+
+        <!-- 택배사 선택 -->
+        <div class="vm-shipping-form">
+          <div class="vm-form-row">
+            <label class="vm-form-label">택배사 선택</label>
+            <div class="vm-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'shipping-carrier',
+                name: 'shippingCarrier',
+                placeholder: '선택',
+                options: [
+                  { value: '한진 택배', text: '한진 택배' },
+                  { value: '로젠 택배', text: '로젠 택배' },
+                  { value: '롯데 택배', text: '롯데 택배' },
+                  { value: '경동 택배', text: '경동 택배' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '선택',
+                disabled: false
+              }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 퀵배송 ================= -->
+      <div class="vm-shipping-panel" data-panel="quick">
+        <div class="vm-shipping-guide">
+          <ul>
+            <li>용달 차량으로 배송하는 방법입니다.</li>
+            <li class="is-warning">용달 비용은 담당자와 별도 협의가 필요합니다.</li>
+            <li>발송 마감 시간은 16시입니다.</li>
+          </ul>
+        </div>
+
+        <div class="vm-shipping-form">
+          <div class="vm-form-row-group">
+            <div class="vm-form-row">
+              <label class="vm-form-label">도착 희망일</label>
+              <div class="vm-form-field">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
+                  id: 'transArrival',
+                  name: 'transArrival',
+                  size: 'm',
+                  placeholder: '도착 희망일',
+                  dataName: '도착 희망일',
+                  options: { format: 'yyyy.MM.dd', culture: 'ko-KR' }
+                }) %>
+              </div>
+            </div>
+
+            <div class="vm-form-row">
+              <label class="vm-form-label">도착 희망 시간</label>
+              <div class="vm-form-field">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/form/select.ejs`, {
+                  id: 'shipping-time',
+                  name: 'shippingTime',
+                  placeholder: '시간 선택',
+                  options: [
+                    { value: '오전 09:00', text: '오전 09:00' },
+                    { value: '오전 10:00', text: '오전 10:00' },
+                    { value: '오전 11:00', text: '오전 11:00' },
+                    { value: '오전 12:00', text: '오전 12:00' },
+                    { value: '오후 01:00', text: '오후 01:00' },
+                    { value: '오후 02:00', text: '오후 02:00' },
+                    { value: '오후 03:00', text: '오후 03:00' },
+                    { value: '오후 04:00', text: '오후 04:00' },
+                    { value: '오후 05:00', text: '오후 05:00' },
+                    { value: '오후 06:00', text: '오후 06:00' },
+                    { value: '오후 07:00', text: '오후 07:00' },
+                    { value: '오후 08:00', text: '오후 08:00' },
+                  ],
+                  value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '시간 선택',
+                  disabled: false
+                }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 화물 ================= -->
+      <div class="vm-shipping-panel" data-panel="freight">
+        <div class="vm-shipping-guide">
+          <ul>
+            <li>경동/대신화물 지점으로 배송하는 방법입니다.</li>
+            <li class="is-warning">지점 수령 시 출고 후 해당 지점에 별도 방문해 주세요.</li>
+            <li>발송 마감 시간은 16시입니다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 받는 사람 case : 수정 -->
+  <div class="vm-shipping-receiver">
+    <h3 class="vm-shipping-title">
+      받는 사람
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+        text: '수정',
+        fs: 'b4r',
+        height: 16,
+        fc: 'info',
+      }) %>
+    </h3>
+
+    <div class="vm-form-box">
+      <!-- 배송지 선택 후 입력된 값 -->
+      <div class="vm-receiver-view">
+        <p class="vm-receiver-view-name">메가존 (홍길동)</p>
+        <p class="vm-receiver-view-phone">02-222-2222</p>
+        <p class="vm-receiver-view-address">(54366) 서울특별시 강남구 테헤란로 123</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 받는 사람 case : 완료 -->
+  <div class="vm-shipping-receiver">
+    <h3 class="vm-shipping-title">
+      받는 사람
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+        text: '완료',
+        fs: 'b4r',
+        height: 16,
+        fc: 'brand-sub',
+        className: 'no-underline',
+      }) %>
+    </h3>
+
+    <div class="vm-form-box">
+      <div class="vm-form-row">
+        <div class="vm-form-row-group">
+          <label class="vm-form-label">배송지 선택</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '배송지 변경',
+          }) %>
+        </div>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/select.ejs`, {
+            id: 'shipping-address',
+            name: 'shippingAddress',
+            placeholder: '배송지 선택',
+            options: [
+              { value: '여의도 본사', text: '여의도 본사' },
+              { value: '과천 지점', text: '과천 지점' },
+              { value: '남양주 지점', text: '남양주 지점' },
+              { value: '화성 지점', text: '화성 지점' },
+            ],
+            value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '여의도 본사',
+            disabled: false
+          }) %>
+        </div>
+      </div>
+
+      <!-- [D]case: 화물지점 선택 시 노출  {true | false}-->
+      <div class="vm-form-row" data-freight-visible="false">
+        <div class="vm-form-row-group">
+          <label class="vm-form-label">화물업체/영업소 선택</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '화물지점 선택',
+          }) %>
+        </div>
+        <div class="vm-form-row-group">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'freight-company',
+            name: 'freightCompany',
+            label: '화물사',
+            placeholder: '화물사',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'freight-office',
+            name: 'freightOffice',
+            label: '영업소명',
+            placeholder: '영업소명',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vm-form-row-group">
+        <div class="vm-form-row">
+          <label class="vm-form-label">받는 사람</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-name',
+            name: 'receiverName',
+            label: '받는 사람',
+            placeholder: '받는 사람',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+
+        <div class="vm-form-row">
+          <label class="vm-form-label">받는 사람 연락처</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-phone',
+            name: 'receiverPhone',
+            label: '받는 사람 연락처',
+            placeholder: '받는 사람 연락처',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+
+      <div class="vm-form-row" data-freight-hidden="false">
+        <div class="vm-form-row-group">
+          <label class="vm-form-label">배송지 주소</label>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'scoped-info',
+            text: '우편번호 찾기',
+          }) %>
+        </div>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address',
+            name: 'receiverAddress',
+            label: '배송지 주소',
+            placeholder: '배송지 주소',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+      <!-- [D]case: 화물지점 선택 시 비노출 {true | false}-->
+      <div class="vm-form-row" data-freight-hidden="false">
+        <label class="vm-form-label">상세 주소</label>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '(54366) 서울특별시 강남구 테헤란로 123',
+            placeholder: '상세 주소',
+            required: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+      <!-- [D]case: 필수 입력 항목 -->
+      <div class="vm-form-row" data-freight-hidden="false">
+        <label class="vm-form-label">상세 주소 (필수) case</label>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '',
+            placeholder: '상세 주소',
+            required: true,
+            isInvalid: true,
+            validationMessage: '필수 입력 항목입니다.',
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+      <div class="vm-form-row" data-freight-hidden="false">
+        <label class="vm-form-label">상세 주소 / 비활성화 case</label>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+            id: 'receiver-address-detail',
+            name: 'receiverAddressDetail',
+            label: '상세 주소',
+            value: '(54366) 서울특별시 강남구 테헤란로 123',
+            placeholder: '상세 주소',
+            rootClass: 'size-default',
+            disabled: true
+          }) %>
+        </div>
+      </div>
+
+      <div class="vm-form-row">
+        <label class="vm-form-label">배송 메모</label>
+        <div class="vm-form-field">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'receiver-memo',
+            name: 'receiverMemo',
+            placeholder: '배송 시 요청사항을 입력하세요.',
+            rootClass: 'size-default'
+          }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 보내는 사람 -->
+  <div class="vm-shipping-sender">
+    <h3 class="vm-shipping-title">
+      보내는 사람
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+        text: '완료',
+        fs: 'b4r',
+        height: 16,
+        fc: 'brand-sub',
+        className: 'no-underline',
+      }) %>
+    </h3>
+
+    <div class="vm-form-box">
+      <div class="vm-form-row">
+        <div class="vm-form-row-group">
+          <div class="vm-form-row">
+            <label class="vm-form-label">발송처 선택</label>
+            <div class="vm-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'sender-address',
+                name: 'senderAddress',
+                placeholder: '발송처 선택',
+                options: [
+                  { value: '메가존', text: '메가존' },
+                  { value: '네이버', text: '네이버' },
+                  { value: '비츠온', text: '비츠온' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '메가존',
+                disabled: false,
+              }) %>
+            </div>
+          </div>
+
+          <!-- [D]case: 화물지점 선택 시 노출  {true | false}-->
+          <div class="vm-form-row" data-freight-visible="false">
+            <label class="vm-form-label">운임 선택</label>
+            <div class="vm-form-field">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'sender-fee',
+                name: 'senderFee',
+                placeholder: '운임 지불 방법 선택',
+                options: [
+                  { value: '착불', text: '착불' },
+                  { value: '대납', text: '대납' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '운임 선택',
+                disabled: false,
+              }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vm-form-row-group">
+        <div class="vm-form-row">
+          <label class="vm-form-label">보내는 사람</label>
+          <div class="vm-form-field">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'sender-name',
+              name: 'senderName',
+              label: '보내는 사람',
+              placeholder: '보내는 사람',
+              value: '메가존',
+              required: true,
+              rootClass: 'size-default'
+            }) %>
+          </div>
+        </div>
+
+        <div class="vm-form-row">
+          <label class="vm-form-label">보내는 사람 연락처</label>
+          <div class="vm-form-field">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+              id: 'sender-phone',
+              name: 'senderPhone',
+              label: '보내는 사람 연락처',
+              placeholder: '보내는 사람 연락처',
+              required: true,
+              rootClass: 'size-default'
+            }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

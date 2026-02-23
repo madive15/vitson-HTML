@@ -447,7 +447,7 @@ import Swiper from 'swiper/bundle';
       var nextButton = wrapper ? wrapper.querySelector('.legend-nav-next') : null;
 
       var options = {
-        slidesPerView: 4,
+        slidesPerView: 5,
         spaceBetween: 16,
         speed: 500,
         slidesPerGroup: 1,
@@ -461,16 +461,16 @@ import Swiper from 'swiper/bundle';
           0: {
             slidesPerView: 4,
             spaceBetween: 20,
-            slidesPerGroup: 4,
+            slidesPerGroup: 8,
             grid: {
               rows: 2,
               fill: 'row'
             }
           },
           1280: {
-            slidesPerView: 4,
+            slidesPerView: 5,
             spaceBetween: 24,
-            slidesPerGroup: 8,
+            slidesPerGroup: 10,
             grid: {
               rows: 2,
               fill: 'row'

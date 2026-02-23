@@ -1,0 +1,73 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/결제-주문서'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-cart-order">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문/결제' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-cart-order">
+              <section class="vm-cart-order">
+                <h2 class="sr-only">주문/결제-주문서</h2>
+                <!-- S: vm-cart-order-sticky -->
+                <div class="vm-cart-order-sticky">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                    theme: 'red',
+                    text: '총 2건으로 나뉘어 발송될 예정입니다.', 
+                  }) %>
+                </div>
+                <!-- E: vm-cart-order-sticky -->
+                <!-- S: vm-cart-order-body -->
+                <div class="vm-cart-order-body">
+                  <!-- S: 배송 정보 및 방법 -->
+                  <%- include(`${_src}/views/components-mo/cart-order/shipping-list.ejs`) %>
+                  <!-- E: 배송 정보 및 방법 -->
+                  <!-- S: 주문서 -->
+                  <%- include(`${_src}/views/components-mo/cart-order/payment-list.ejs`) %>
+                  <!-- E: 주문서 -->
+                </div>
+                <!-- E: vm-cart-order-body -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'order-bar', 
+          showLeft: false, 
+          rightHtml: '<em>370,950</em>원 결제하기'
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

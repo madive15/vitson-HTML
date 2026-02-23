@@ -61,6 +61,13 @@
     });
   }
 
+  // collapse 높이 모드 재판별
+  function refreshCollapse(id) {
+    if (window.UI && window.UI.collapse && window.UI.collapse.refresh) {
+      window.UI.collapse.refresh('#' + id);
+    }
+  }
+
   function refresh(id) {
     clearTimeout(debounceTimers[id]);
     debounceTimers[id] = setTimeout(function () {
@@ -215,6 +222,7 @@
         $kw.addClass('is-opening');
         $kw.one('animationend', function () {
           $kw.removeClass('is-opening');
+          refreshCollapse(id);
         });
       }
 
@@ -232,6 +240,7 @@
         $kw.addClass('is-opening');
         $kw.one('animationend', function () {
           $kw.removeClass('is-opening');
+          refreshCollapse(id);
         });
       }
 

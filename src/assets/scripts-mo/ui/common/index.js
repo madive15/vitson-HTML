@@ -11,6 +11,10 @@ import './step-flow.js';
 import './expand.js';
 import './tab.js';
 import './scroll-buttons.js';
+import './tab-sticky.js';
+import './collapse.js';
+import './scroll-overflow-gradient.js';
+import './option-box.js';
 
 (function ($, window) {
   'use strict';
@@ -19,7 +23,20 @@ import './scroll-buttons.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
+  var modules = [
+    'tooltip',
+    'stickyObserver',
+    'overflowMenu',
+    'toggle',
+    'stepFlow',
+    'expand',
+    'tab',
+    'scrollButtons',
+    'tabSticky',
+    'collapse',
+    'scrollOverflowGradient',
+    'optionBox'
+  ];
 
   window.UI.common = {
     init: function () {

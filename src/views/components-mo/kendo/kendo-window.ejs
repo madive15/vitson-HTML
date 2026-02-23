@@ -1,30 +1,6 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
 <%
-/**
- * Kendo Window Component (Mobile)
- * - Kendo UI Window 기반, vm-modal 스타일 사용
- * - 열기: VmKendoWindow.open('id')
- * - 닫기: VmKendoWindow.close('id')
- *
- * @param {string} id - 윈도우 고유 ID (필수)
- * @param {string} title - 헤더 타이틀 (필수)
- * @param {string} variant - 'bottomsheet' (선택, 미입력시 기본 모달)
- * @param {string} subtitle - 헤더 서브타이틀 (선택)
- * @param {string} infotitle - 헤더 인포타이틀 (선택)
- * @param {string} contentPath - 컨텐츠 EJS 파일 경로 (필수)
- * @param {object} contentData - 컨텐츠에 전달할 데이터 (선택)
- * @param {array} buttons - 푸터 버튼 배열 (선택, 미입력시 푸터 없음)
- *   - {string} text: 버튼 텍스트
- *   - {string} variant: 'primary' | 'secondary' (기본값: 'primary')
- *   - {string} action: 'close' 입력 시 닫기 동작
- *   - {object} attrs: 추가 속성들
- *
- * @example
- * < % const winOpts = { id: 'myWindow', title: '제목', variant: 'bottomsheet', contentPath: `${_src}/views/.../content.ejs`, buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] }; % >
- * < %- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, winOpts) % >
- */
-
 const winId = id;
 const winTitle = (typeof title !== 'undefined' && title) ? title : '';
 const winVariant = (typeof variant !== 'undefined' && variant) ? variant : '';
@@ -38,6 +14,7 @@ const winClassName = (typeof className !== 'undefined' && className) ? className
 const winFooterPath = (typeof footerPath !== 'undefined' && footerPath) ? footerPath : '';
 const winFooterHtml = (typeof footerHtml !== 'undefined' && footerHtml) ? footerHtml : '';
 const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0 || !!winFooterPath || !!winFooterHtml);
+const winHeaderFilter = (typeof headerFilter !== 'undefined') ? !!headerFilter : false;
 %>
 
 <div
@@ -45,6 +22,7 @@ const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButton
   class="vm-modal-inner<%= winClassName ? ' ' + winClassName : '' %>"
   data-ui="kendo-window"
   <% if (winVariant) { %>data-variant="<%= winVariant %>"<% } %>
+  <% if (winHeaderFilter) { %>data-toggle-scope<% } %>
   role="dialog"
   aria-modal="true"
   aria-labelledby="<%= winId %>-title"
@@ -63,6 +41,12 @@ const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButton
       <p class="vm-modal-infotitle" id="<%= winId %>-infotitle"><%- winInfoTitle %></p>
 <% } %>
     </div>
+<% if (winHeaderFilter) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components-mo/filter/filter-btn.ejs`, {
+      attrs: 'data-toggle-btn data-toggle-target="specFilter" aria-expanded="false"'
+    }) %>
+<% } %>
     <button type="button" class="vm-modal-close" onclick="VmKendoWindow.close('<%= winId %>')" aria-label="닫기">
       <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
     </button>

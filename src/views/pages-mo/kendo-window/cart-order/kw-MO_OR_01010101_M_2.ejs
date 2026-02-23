@@ -1,0 +1,81 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<div class="cart-product-add">
+  <!-- S: 상품 정보 -->
+  <div class="cart-item-product">
+    <div class="product-thumb">
+      <a href="#!">
+        <img
+          src="<%= _public %>/resources/img/mro/renewal/temp/temp-sample-product-03.jpg"
+          alt="더블에이 a4용지"
+          loading="lazy"
+        />
+      </a>
+    </div>
+
+    <div class="product-body">
+      <div class="product-meta">
+        <p class="product-brand"><span class="sr-only">브랜드</span>더블에이</p>
+      </div>
+
+      <div class="product-info">
+        <a href="#!">
+          <div class="product-summary">
+            <p class="product-name">
+              <span class="sr-only">상품명</span>A4용지 Double A</p>
+            <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- E: 상품 정보 -->
+
+  <div class="vm-order-input-row">
+    <div class="vm-order-cell">
+      <p class="guide-text">원하는 길이를 입력해 주세요.</p>
+      <div class="order-cell">
+        <div class="unit-control">
+          <button type="button" class="unit-control-input" aria-label="길이">
+            <input type="text" id="" class="unit-input" value="3">
+          </button>
+          <span class="unit-text">M</span>
+        </div>
+      </div>
+    </div>
+    <div class="vm-order-cell">
+      <p class="guide-text">수량을 입력해 주세요.</p>
+      <div class="order-cell">
+        <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+          type: 'horiz',
+          variant: 'vm-cart-quantity',
+          name: 'quantity',
+          value: 999,
+          min: 1,
+          max: 10,
+          step: 1,
+        }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- 추가된 항목 리스트 -->
+  <div class="vm-order-list-wrap">
+    <ul class="vm-order-list">
+      <li class="order-item">
+        <span class="order-spec">3 m x 15개</span>
+        <span class="order-price">224,112원</span>
+        <button type="button" class="order-remove" aria-label="삭제">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+        </button>
+      </li>
+      <li class="order-item">
+        <span class="order-spec">16 m x 4개</span>
+        <span class="order-price">1,624,112원</span>
+        <button type="button" class="order-remove" aria-label="삭제">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

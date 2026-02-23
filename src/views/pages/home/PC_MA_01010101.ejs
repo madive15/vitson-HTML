@@ -43,10 +43,10 @@
                 <%- include(`${_src}/views/components/pg-home/home-product-swiper.ejs`, {
                   dataDesktop: 4,
                   products: [
-                    {type: 'guest', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: false},
-                    {type: 'guest', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: false},
+                    {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: false},
+                    {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: false},
+                    {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: false},
                     {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-03.png`, showHoverActions: true},
-                    {type: 'soldout', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-01.png`, showHoverActions: true},
                     {type: 'default', imgSrc: `${_public}/resources/img/mro/renewal/temp/temp-home-hot-02.png`, showHoverActions: true},
                   ]
                 }) %>
@@ -134,6 +134,19 @@
         document.addEventListener('click', function (e) {
           var btn = e.target.closest('[class*="product-action-"]');
           if (btn) btn.classList.toggle('active');
+        });
+      })();
+    </script>
+    <!-- type=guest 파라미터 시 상품 영역 전부 guest 버전(해당 요소 remove) -->
+    <script>
+      (function () {
+        if (new URLSearchParams(window.location.search).get('type') !== 'guest') return;
+        var sel =
+          ' .product-spec, .product-actions-hover, .product-action-cart, .product-frequent-badge , .price-origin-label , .price-sale-row';
+        document.querySelectorAll('.home-product-item , .brand-product-item ').forEach(function (item) {
+          item.querySelectorAll(sel).forEach(function (el) {
+            el.remove();
+          });
         });
       })();
     </script>

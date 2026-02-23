@@ -1,0 +1,28 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const showLeftBtn = typeof showLeft === 'undefined' ? true : showLeft; %>
+<% const showRightBtn = typeof showRight === 'undefined' ? true : showRight; %>
+<% const leftBtnText = typeof leftText !== 'undefined' ? leftText : '홈으로'; %>
+<% const rightBtnText = typeof rightText !== 'undefined' ? rightText : '주문상세보기'; %>
+<% const leftBtnHtml = typeof leftHtml !== 'undefined' ? leftHtml : ''; %>
+<% const rightBtnHtml = typeof rightHtml !== 'undefined' ? rightHtml : ''; %>
+<% const isSingle = showLeftBtn !== showRightBtn; %>
+<div class="bottom-order-bar<%= isSingle ? ' is-single' : '' %>">
+  <% if (showLeftBtn) { %>
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({
+    size:'xl', 
+    variant: 'secondary', 
+    text: leftBtnText,
+  }, leftBtnHtml ? { html: leftBtnHtml, text: '' } : {})) %>
+  <% } %>
+
+  <% if (showRightBtn) { %>
+  <!-- prettier-ignore -->
+  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({
+    size:'xl', 
+    variant: 'primary', 
+    text: rightBtnText,
+  }, rightBtnHtml ? { html: rightBtnHtml, text: '' } : {})) %>
+  <% } %>
+</div>

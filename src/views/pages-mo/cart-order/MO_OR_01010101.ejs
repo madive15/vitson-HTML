@@ -2,7 +2,7 @@
 <!-- prettier-ignore -->
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/결제'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문/결제-장바구니'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -37,18 +37,18 @@
                         text: '전체선택',
                       }) %>
                       <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/button/button.ejs`, {
-                        size: 'sm',
-                        variant: 'motext',
+                      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
                         text: '삭제',
+                        fs: 'b3',
+                        className: 'no-underline',
                       }) %>
                     </li>
                     <li class="cart-toolbar-right">
                       <!-- prettier-ignore -->
-                      <%- include(`${_src}/views/components/button/button.ejs`, {
-                        size: 'sm',
-                        variant: 'motext',
+                      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
                         text: '견적서 생성',
+                        fs: 'b3',
+                        className: 'no-underline',
                       }) %>
                     </li>
                   </ul>

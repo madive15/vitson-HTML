@@ -142,19 +142,21 @@
 
   .alerts-text-important {
     @include typo.typography($text-typography, $color: $text-color);
-    @include mx.flex(flex, row, flex-start, center);
-    gap: map.get(var.$unit, 4);
+    @include mx.flex(flex, row, flex-start, center, wrap);
     line-height: normal;
 
     .alerts-icon {
       @include icon.ic-size(map.get(var.$unit, 12));
       min-width: map.get(var.$unit, 12);
+      margin-right: map.get(var.$unit, 4);
       background-color: $icon-color;
       mask: url('/public/resources/img/mro/renewal/ic/ic-tip-info.svg') no-repeat center / contain;
     }
 
     strong {
       @include typo.typography('b4b', $color: $strong-color);
+      margin: 0 map.get(var.$unit, 2);
+      line-height: normal;
     }
   }
 }

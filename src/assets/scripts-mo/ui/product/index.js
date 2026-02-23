@@ -4,6 +4,8 @@
  */
 import './product-view-toggle.js';
 import './product-inline-banner.js';
+import './detail-gallery.js';
+import './bottom-product-bar.js';
 
 (function ($, window) {
   'use strict';
@@ -12,13 +14,20 @@ import './product-inline-banner.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['productViewToggle', 'productInlineBanner'];
+  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
 
   window.UI.product = {
     init: function () {
       modules.forEach(function (name) {
         var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
+        if (!mod) return;
+
+        // initAll 우선, 없으면 init
+        if (typeof mod.initAll === 'function') {
+          mod.initAll();
+        } else if (typeof mod.init === 'function') {
+          mod.init();
+        }
       });
     }
   };

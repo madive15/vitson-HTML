@@ -46,9 +46,6 @@ const stateClass = isGuest ? ' is-guest' : isSoldout ? ' is-soldout' : '';
 
 /* ── 피처 플래그 ── */
 const showCheckbox = (typeof _showCheckbox !== 'undefined') ? _showCheckbox : false;
-const showPriceNormal = isMember && !isSoldout && !isCompare;
-const showSoldoutText = isMember && isSoldout && !isCompare;
-const showGuestText = isGuest;
 const showLoginBtn = isGuest;
 
 const _showExtra = (typeof showExtra !== 'undefined') ? showExtra : (isMember && !isCompare);
@@ -95,14 +92,17 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       <div class="product-info">
         <a href="#!">
           <div class="product-summary">
-            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
+            <p class="product-name">
+              <span class="sr-only">상품명</span><% if (isSoldout) { %><span style="color: red">일시품절</span><% }
+              %><%= d.productNm %>
+            </p>
             <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
           </div>
         </a>
 
         <!-- prettier-ignore -->
-        <!-- [D] 가격 노출 (회원 & 판매중) => is-normal 클래스 추가 -->
-        <% if (showPriceNormal) { %>
+        <!-- [D] 회원 가격 => is-normal 클래스 추가 -->
+        <% if (isMember) { %>
         <div class="product-price is-normal">
           <% if (showOrigin) { %>
           <div class="price-origin-label">
@@ -116,19 +116,8 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma(d.salePrice) %>원</p>
           </div>
         </div>
-        <% } %>
-
-        <!-- prettier-ignore -->
-        <!-- [D] 일시품절 => is-soldout 클래스 추가 -->
-        <% if (showSoldoutText) { %>
-        <div class="product-price is-soldout">
-          <div class="product-price-alt">일시품절</div>
-        </div>
-        <% } %>
-
-        <!-- prettier-ignore -->
+        <% } else { %>
         <!-- [D] 비회원 가격 => is-guest 클래스 추가 -->
-        <% if (showGuestText) { %>
         <div class="product-price is-guest">
           <div class="price-guest-text">
             <p class="price-guest-text-title">회원 전용 혜택가</p>
@@ -156,24 +145,13 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             count: hasCount ? d.purchaseCount : 0,
           }) %>
         <% } %>
+        <!-- prettier-ignore -->
+        <% if (showPromo && d.freeShipYn === 'Y') { %>
         <div class="product-cta">
           <!-- prettier-ignore -->
-          <% if (showPromo && d.freeShipYn === 'Y') { %>
-            <%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %>
-          <% } %>
-          <!-- prettier-ignore -->
-          <% if (_showLike || _showCart || _showCompareBtn) { %>
-          <div class="product-actions">
-            <% if (_showLike) { %>
-            <button type="button" class="action-btn-like" aria-label="좋아요"></button>
-            <% } %> <% if (_showCart) { %>
-            <button type="button" class="action-btn-cart" aria-label="장바구니"></button>
-            <% } %> <% if (_showCompareBtn) { %>
-            <button type="button" class="action-btn-compare" aria-label="비교함"></button>
-            <% } %>
-          </div>
-          <% } %>
+          <%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %>
         </div>
+        <% } %>
       </div>
       <% } %>
 

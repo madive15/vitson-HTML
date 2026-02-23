@@ -1,0 +1,33 @@
+// -----------------------------------------------------------------------------
+// components-mo/_collapse.scss
+// -
+// -----------------------------------------------------------------------------
+
+// 숨김 기반: 스르륵 노출
+[data-visible-hidden] {
+  max-height: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.3s,
+    clip-path 0.3s,
+    opacity 0.2s,
+    visibility 0s 0.3s;
+
+  .is-open & {
+    max-height: 100vh;
+    overflow: auto;
+    clip-path: inset(0 0 0 0);
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    transition:
+      max-height 0.3s,
+      clip-path 0.3s,
+      opacity 0.2s,
+      visibility 0s 0s;
+  }
+}

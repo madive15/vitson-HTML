@@ -1,0 +1,59 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<div class="cart-quantity-change">
+  <div class="product-summary">
+    <p class="product-name">
+      <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
+      늘어납니다.
+    </p>
+    <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
+  </div>
+
+  <div class="product-quantity-selector">
+    <%- include(`${_src}/views/components/form/input-radio.ejs`, {
+      variant: '',        
+      name: 'rdo1',
+      list: 'row',
+      gap: 12,
+      datas: [
+        {
+          text: '낱개',
+          value: '1',
+          qty: 1,
+          checked: true, 
+          disabled: false, 
+          required: false,  
+        },
+        {
+          text: '소포장',
+          value: '30',
+          qty: 30,
+          checked: false, 
+          disabled: false, 
+          required: false,  
+        },
+        {
+          text: '대포장',
+          value: '100',
+          qty: 100,
+          checked: false, 
+          disabled: false, 
+          required: false,  
+        },
+      ]
+    }) %>
+  </div>
+
+  <div class="product-quantity-stepper">
+    <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+      type: 'horiz',
+      variant: 'vm-cart-quantity',
+      name: 'quantity',
+      value: 1,
+      min: 1,
+      max: 100,
+      step: 1,
+      unit: 'BOX',
+    }) %>
+  </div>
+</div>

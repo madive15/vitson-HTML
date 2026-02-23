@@ -137,7 +137,6 @@
   $width: 28,
   $height: 28
 ) {
-  @include button.btn-reset;
   @include mx.flex(flex, row, center, center);
   @include typo.typography('b4s', $color: $color);
   width: fn.rem($width);
@@ -220,7 +219,7 @@
   }
 
   &:has(.home-rank) {
-    padding: fn.rem(80) 0;
+    padding: 0 0 fn.rem(80);
   }
 }
 
@@ -1024,7 +1023,6 @@
   .product-price {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 4);
-    margin-top: map.get(var.$unit, 12);
 
     .price-origin-label {
       @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
@@ -1043,6 +1041,10 @@
     .price-sale {
       @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
     }
+  }
+
+  .product-extra {
+    @include mx.flex(flex, row, flex-start, center, wrap);
   }
 
   .product-price-alt.is-soldout {
@@ -1490,8 +1492,35 @@
   flex-direction: column;
   gap: fn.rem(12);
   min-width: fn.rem(200);
+  container-type: inline-size;
 
   @include list.common-product-card-info;
+
+  // 아이템 너비 240px 이상일 때 상품명 폰트 크기 확대
+  @container (min-width: 240px) {
+    .product-brand {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    .product-name {
+      @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  &:first-child {
+    // 순위 배지 (카테고리 Best용)
+    .product-rank {
+      &-count {
+        // stylelint-disable-next-line no-descending-specificity
+        @include rank-num-circle(
+          $width: 22,
+          $height: 22,
+          $bg-color: map.get(color.$brand-colors, 'primary'),
+          $color: map.get(color.$icon-neutral, 'inverse')
+        );
+      }
+    }
+  }
 
   // 액티브 상태 배경색 (유닛 공통)
   // stylelint-disable-next-line no-descending-specificity
@@ -1698,12 +1727,7 @@
 
     &-count {
       // stylelint-disable-next-line no-descending-specificity
-      @include rank-num-circle(
-        $width: 22,
-        $height: 22,
-        $bg-color: map.get(color.$brand-colors, 'primary'),
-        $color: map.get(color.$icon-neutral, 'inverse')
-      );
+      @include rank-num-circle($width: 22, $height: 22);
     }
   }
 }

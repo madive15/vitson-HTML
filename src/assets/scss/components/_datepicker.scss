@@ -576,6 +576,11 @@ $vits-datepicker-single-sizes: (
       width: fn.rem(320);
       margin: 0;
       transform: none !important;
+
+      /* 02.21 (추가 수정) 모바일 넓이 */
+      @media screen and (width <= 768px) {
+        width: auto;
+      }
     }
 
     /* ===== Table Head ===== */
@@ -704,6 +709,14 @@ $vits-datepicker-single-sizes: (
 
   &.is-selected {
     border-color: map.get(color.$layout-border, 'primary');
+  }
+}
+
+/* ===== 02.21 (추가 수정) 모바일 영향 ===== */
+.vits-datepicker-single-container {
+  .k-calendar-container.k-popup {
+    background-color: transparent;
+    border: 0;
   }
 }
 /* stylelint-enable no-descending-specificity */

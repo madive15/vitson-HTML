@@ -27,7 +27,7 @@
   z-index: map.get(var.$mo-zindex, 'header');
 
   // nav-bar
-  &[class*='header-nav-bar'] {
+  &[class*='header-'][class*='-bar'] {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
     min-height: map.get(var.$mo-header, 'nav-bar');
@@ -93,6 +93,27 @@
           border-radius: 50%;
           box-shadow: inset 0 0 0 1px color.$color-white;
         }
+
+        // 상품상세 - 장바구니 버튼
+        &.btn-cart {
+          position: relative;
+
+          .badge {
+            @include mx.position(absolute, 2px, -2px);
+            @include mx.flex(flex, row, center, center);
+            @include typo.typography('b4r', $color: color.$color-white);
+            width: fn.rem(15);
+            height: fn.rem(15);
+            background: map.get(color.$brand-colors, '100');
+            border-radius: 50%;
+          }
+        }
+
+        &.btn-mic {
+          padding: map.get(var.$unit, 4);
+          background: map.get(color.$layout-surf, 'sunken');
+          border-radius: 50%;
+        }
       }
     }
   }
@@ -145,9 +166,27 @@
     }
   }
 
+  &-search {
+    @include mx.flex(flex, row, space-between, center);
+    position: relative;
+    flex-grow: 1;
+    gap: map.get(var.$unit, 8);
+    min-width: 0;
+
+    .btn-mic {
+      flex-shrink: 0;
+      width: map.get(var.$unit, 36) !important;
+      height: map.get(var.$unit, 36) !important;
+    }
+  }
+
   &:has(.vm-header-desc) {
     .vm-header-actions {
       align-self: flex-start;
     }
+  }
+
+  &.header-product-bar {
+    height: map.get(var.$mo-header, 'product-bar');
   }
 }
