@@ -10060,7 +10060,7 @@ var support_ui = __webpack_require__(2064);
       var prevButton = wrapper ? wrapper.querySelector('.legend-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.legend-nav-next') : null;
       var options = {
-        slidesPerView: 4,
+        slidesPerView: 5,
         spaceBetween: 16,
         speed: 500,
         slidesPerGroup: 1,
@@ -10074,16 +10074,16 @@ var support_ui = __webpack_require__(2064);
           0: {
             slidesPerView: 4,
             spaceBetween: 20,
-            slidesPerGroup: 4,
+            slidesPerGroup: 8,
             grid: {
               rows: 2,
               fill: 'row'
             }
           },
           1280: {
-            slidesPerView: 4,
+            slidesPerView: 5,
             spaceBetween: 24,
-            slidesPerGroup: 8,
+            slidesPerGroup: 10,
             grid: {
               rows: 2,
               fill: 'row'

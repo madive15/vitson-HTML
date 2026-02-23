@@ -15,7 +15,7 @@
   <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
   <meta name="format-detection" content="telephone=no,address=no,email=no" />
 
-  <title>주문/결제</title>
+  <title>주문/결제-장바구니</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
-<script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
 
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
@@ -139,19 +139,9 @@
                       
 
 
-<button
-  type="button"
+<button class="vits-text-underline-button fs-b3 no-underline" type="button"
   
-  class="vits-btn-sm vits-btn-motext "
-  
-  
-  >
-  
-
-  <span class="text">삭제</span>
-
-  
-</button>
+  >삭제</button>
 
                     </li>
                     <li class="cart-toolbar-right">
@@ -159,19 +149,9 @@
                       
 
 
-<button
-  type="button"
+<button class="vits-text-underline-button fs-b3 no-underline" type="button"
   
-  class="vits-btn-sm vits-btn-motext "
-  
-  
-  >
-  
-
-  <span class="text">견적서 생성</span>
-
-  
-</button>
+  >견적서 생성</button>
 
                     </li>
                   </ul>
@@ -511,6 +491,9 @@
                         
 
 
+<!-- 2026-02-22 추가: validation 래퍼 -->
+<div class="vits-quantity ">
+
 
   <div class="quantity-control type-horiz vm-cart-quantity">
     <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
@@ -524,11 +507,16 @@
       pattern="[0-9]*"
       class="quantity-input"
       name="quantity"
+      
       value="1"
       data-min="1"
       data-max="10"
       data-step="1"
       aria-label="개수"
+      
+      
+      
+      
       
       
     />
@@ -543,6 +531,12 @@
   </div>
 
 
+  <!-- 2026-02-22 추가: Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p  aria-live="polite"></p>
+  </div>
+</div>
                         
                       </div>
                       <div class="cart-item-price-info">

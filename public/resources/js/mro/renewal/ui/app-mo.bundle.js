@@ -821,6 +821,248 @@
 
 /***/ }),
 
+/***/ 2006:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/tab-sticky.js
+ * @description 스크롤 연동 탭 active 전환 (CSS sticky, JS는 active + 클릭 스크롤만)
+ * @scope [data-ui="tab-sticky"]
+ * @mapping data-tab="nav" 탭 네비, data-tab="bar" 언더바, data-tab-target 탭 버튼, data-tab-section 섹션
+ * @state .is-active — 현재 활성 탭 버튼
+ * @a11y aria-label 탭 네비, aria-hidden 언더바
+ * @events click(탭 버튼), scroll/resize/orientationchange(window)
+ * @note CSS sticky 기반, baseline 판정 + 마지막 섹션 뷰포트 중간선 보정
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiTabSticky';
+  var DATA_KEY = 'tabSticky';
+  var ROOT = '[data-ui="tab-sticky"]';
+  var NAV = '[data-tab="nav"]';
+  var BAR = '[data-tab="bar"]';
+  var BTN = '[data-tab-target]';
+  var SECTION = '[data-tab-section]';
+  var CLS = {
+    active: 'is-active'
+  };
+  var DEFAULTS = {
+    gap: 0
+  };
+  function getNavH(state) {
+    return state.$nav.outerHeight() || 0;
+  }
+
+  // 기준선 — CSS sticky top + nav 높이
+  function getBaseline(state) {
+    return state.stickyTop + getNavH(state) + state.opt.gap;
+  }
+  function updateBar(state) {
+    var $active = state.$tabs.filter('.' + CLS.active);
+    if (!$active.length) {
+      state.$bar.css({
+        opacity: 0,
+        width: 0
+      });
+      return;
+    }
+    var nav = state.$nav[0];
+    var navLeft = nav.getBoundingClientRect().left;
+    var aRect = $active[0].getBoundingClientRect();
+    state.$bar.css({
+      opacity: 1,
+      width: aRect.width,
+      transform: 'translateX(' + (aRect.left - navLeft + nav.scrollLeft) + 'px)'
+    });
+  }
+
+  // 활성 탭이 nav 밖으로 잘릴 때 보이도록 스크롤
+  function scrollActiveIntoView(state) {
+    var $active = state.$tabs.filter('.' + CLS.active);
+    if (!$active.length) return;
+    var nav = state.$nav[0];
+    var btn = $active[0];
+    var btnLeft = btn.offsetLeft;
+    var btnRight = btnLeft + btn.offsetWidth;
+    var navScroll = nav.scrollLeft;
+    var navVisible = nav.offsetWidth;
+    if (btnLeft < navScroll) {
+      // 왼쪽으로 잘림
+      nav.scrollTo({
+        left: btnLeft,
+        behavior: 'smooth'
+      });
+    } else if (btnRight > navScroll + navVisible) {
+      // 오른쪽으로 잘림
+      nav.scrollTo({
+        left: btnRight - navVisible,
+        behavior: 'smooth'
+      });
+    }
+  }
+  function setActive(state, id) {
+    state.$tabs.each(function () {
+      $(this).toggleClass(CLS.active, $(this).data('tab-target') === id);
+    });
+    updateBar(state);
+    scrollActiveIntoView(state);
+  }
+  function updateActiveByScroll(state) {
+    // 클릭 이동 직후 보호
+    if (state.clickLock) return;
+    var baseline = getBaseline(state);
+    var winH = $(window).height();
+    var len = state.$sections.length;
+
+    // 마지막 섹션 먼저 — 90% 이상 보이면 활성화
+    var lastEl = state.$sections.last()[0];
+    var lastRect = lastEl.getBoundingClientRect();
+    var lastH = lastRect.height || 1;
+    var lastVisTop = Math.max(lastRect.top, 0);
+    var lastVisBottom = Math.min(lastRect.bottom, winH);
+    var lastVisH = Math.max(lastVisBottom - lastVisTop, 0);
+    if (lastVisH / lastH >= 0.9) {
+      setActive(state, state.$sections.last().data('tab-section'));
+      return;
+    }
+
+    // 나머지 섹션
+    var activeId = state.$sections.first().data('tab-section');
+    for (var i = 0; i < len - 1; i++) {
+      var el = state.$sections[i];
+      var rect = el.getBoundingClientRect();
+      var id = $(el).data('tab-section');
+      var sectionH = rect.height || 1;
+      var scrolled = baseline - rect.top;
+      var scrolledRatio = scrolled / sectionH;
+      if (scrolledRatio < 0) break;
+      if (scrolledRatio >= 0.7 && i + 1 < len) {
+        // 다음 섹션이 뷰포트 상단 2/3 지점 이상 들어와야 전환
+        var nextRect = state.$sections[i + 1].getBoundingClientRect();
+        if (nextRect.top < winH * 0.66) {
+          activeId = $(state.$sections[i + 1]).data('tab-section');
+        } else {
+          activeId = id;
+          break;
+        }
+      } else {
+        activeId = id;
+        break;
+      }
+    }
+    setActive(state, activeId);
+  }
+  function scrollToSection($root, state, targetId) {
+    var $target = $root.find('[data-tab-section="' + targetId + '"]');
+    if (!$target.length) return;
+    var baseline = getBaseline(state);
+    var sectionTop = $target[0].getBoundingClientRect().top + window.pageYOffset;
+    var targetY = Math.max(sectionTop - baseline, 0);
+
+    // 클릭 보호
+    state.clickLock = true;
+    window.scrollTo({
+      top: targetY,
+      behavior: 'auto'
+    });
+    setActive(state, targetId);
+    setTimeout(function () {
+      state.clickLock = false;
+    }, 200);
+  }
+  function bind($root, state) {
+    var ticking = false;
+
+    // nav 가로 스크롤 시 언더바 위치 보정
+    state.$nav.on('scroll' + NS, function () {
+      updateBar(state);
+    });
+    $root.on('click' + NS, BTN, function () {
+      scrollToSection($root, state, $(this).data('tab-target'));
+    });
+    $(window).on('scroll' + NS, function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        updateActiveByScroll(state);
+        ticking = false;
+      });
+    });
+    $(window).on('resize' + NS, function () {
+      updateBar(state);
+    });
+    $(window).on('orientationchange' + NS, function () {
+      setTimeout(function () {
+        updateBar(state);
+      }, 300);
+    });
+    if (window.visualViewport) {
+      $(window.visualViewport).on('resize' + NS, function () {
+        updateBar(state);
+      });
+    }
+  }
+  function init(scope, options) {
+    var $root = $(scope || ROOT);
+    if (!$root.length || $root.data(DATA_KEY)) return;
+    var opt = $.extend({}, DEFAULTS, options);
+    var $nav = $root.find(NAV);
+    var $bar = $root.find(BAR);
+    var $tabs = $root.find(BTN);
+    var $sections = $root.find(SECTION);
+    if (!$nav.length || !$tabs.length || !$sections.length) return;
+
+    // CSS sticky top 값 읽기
+    var rawTop = $nav.css('top');
+    var stickyTop = rawTop === 'auto' ? 0 : parseInt(rawTop, 10) || 0;
+    var state = {
+      opt: opt,
+      stickyTop: stickyTop,
+      clickLock: false,
+      $nav: $nav,
+      $bar: $bar,
+      $tabs: $tabs,
+      $sections: $sections
+    };
+    $root.data(DATA_KEY, state);
+    bind($root, state);
+    updateActiveByScroll(state);
+  }
+  function destroy(scope) {
+    var $root = $(scope || ROOT);
+    var state = $root.data(DATA_KEY);
+    if (!state) return;
+    $root.off(NS);
+    $(window).off(NS);
+    if (window.visualViewport) {
+      $(window.visualViewport).off(NS);
+    }
+    state.$tabs.removeClass(CLS.active);
+    $root.removeData(DATA_KEY);
+  }
+  window.UI.tabSticky = {
+    init: init,
+    destroy: destroy,
+    goTo: function (scope, targetId) {
+      var $root = $(scope || ROOT);
+      var state = $root.data(DATA_KEY);
+      if (state) scrollToSection($root, state, targetId);
+    },
+    getActive: function (scope) {
+      var $root = $(scope || ROOT);
+      var state = $root.data(DATA_KEY);
+      if (!state) return null;
+      var $active = state.$tabs.filter('.' + CLS.active);
+      return $active.length ? $active.data('tab-target') : null;
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 2014:
 /***/ (function() {
 
@@ -1608,6 +1850,410 @@
 
 /***/ }),
 
+/***/ 2638:
+/***/ (function() {
+
+/**
+ * @file scroll-overflow-gradient.js
+ * @description 수평 스크롤 영역 오버플로우 시 우측 그라데이션 표시
+ * @scope [data-scroll-overflow-gradient]
+ * @option data-scroll-target {selector} 스크롤 대상 하위 요소 (생략 시 자기 자신)
+ * @state .is-overflow — 스크롤 가능하고 끝에 도달하지 않은 상태
+ * @note 그라데이션은 CSS ::after로 처리, 이 모듈은 클래스 토글만 담당
+ */
+(function (window) {
+  'use strict';
+
+  var $ = window.jQuery;
+  var DATA_KEY = 'scrollOverflowGradient';
+  var THRESHOLD = 2;
+  var Selector = {
+    SCOPE: '[data-scroll-overflow-gradient]'
+  };
+  var ClassName = {
+    OVERFLOW: 'is-overflow'
+  };
+  function init(el) {
+    var $scope = $(el);
+    if ($scope.data(DATA_KEY)) return;
+
+    // 스크롤 대상 결정 — data-scroll-target 있으면 하위 요소, 없으면 자기 자신
+    var targetSelector = $scope.attr('data-scroll-target');
+    var $scrollEl = targetSelector ? $scope.find(targetSelector) : $scope;
+    var scrollEl = $scrollEl[0];
+    if (!scrollEl) return;
+
+    // 인스턴스별 네임스페이스 (jQuery UI 미의존)
+    var ns = DATA_KEY + '.' + Math.random().toString(36).slice(2, 8);
+
+    // 스크롤 가능 여부 + 끝 도달 여부로 클래스 토글
+    function update() {
+      var hasOverflow = scrollEl.scrollWidth > scrollEl.clientWidth;
+      var atEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - THRESHOLD;
+      $scope.toggleClass(ClassName.OVERFLOW, hasOverflow && !atEnd);
+    }
+    $scrollEl.on('scroll.' + ns, update);
+    $(window).on('resize.' + ns, update);
+
+    // 초기 상태 반영
+    update();
+    var instance = {
+      update: update,
+      destroy: function () {
+        $scrollEl.off('scroll.' + ns);
+        $(window).off('resize.' + ns);
+        $scope.removeClass(ClassName.OVERFLOW);
+        $scope.removeData(DATA_KEY);
+      }
+    };
+    $scope.data(DATA_KEY, instance);
+  }
+  function initAll(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find(Selector.SCOPE).each(function () {
+      init(this);
+    });
+  }
+  function getInstance(selector) {
+    return $(selector).data(DATA_KEY) || null;
+  }
+  window.scrollOverflowGradient = {
+    init: init,
+    initAll: initAll,
+    getInstance: getInstance
+  };
+  $(function () {
+    initAll();
+  });
+})(window);
+
+/***/ }),
+
+/***/ 3012:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/product/bottom-product-bar.js
+ * @description 상품 하단 고정 바 — 옵션 확장/접힘 + 드래그 닫기
+ * @scope [data-ui="product-bar"]
+ *
+ * @mapping
+ *   [data-bar-handle] — 드래그 핸들
+ *   [data-bar-option] — 옵션 영역 (접힘/확장 대상)
+ *   [data-bar-actions] — 하단 버튼 영역
+ *   [data-bar-cart] — 장바구니 (닫혀있으면 열기, 열려있으면 담기)
+ *   [data-bar-buy] — 바로구매 (닫혀있으면 열기, 열려있으면 구매)
+ *
+ * @state
+ *   is-open — 옵션 영역 열림
+ *   is-dragging — 드래그 중
+ *
+ * @events
+ *   product-bar:open — 옵션 열림
+ *   product-bar:close — 옵션 닫힘
+ *   product-bar:cart — 장바구니 담기 (열린 상태에서 클릭)
+ *   product-bar:buy — 바로구매 (열린 상태에서 클릭)
+ *
+ * @note Kendo Window 미사용
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiProductBar';
+  var DRAG_THRESHOLD = 10;
+  var CLOSE_RATIO = 0.3;
+  var VELOCITY_THRESHOLD = 0.5;
+  var TRANSITION_HEIGHT = 'height 0.3s ease';
+  var TRANSITION_DELAY = 300;
+  var uid = 0;
+  var instances = {};
+
+  // CSS 전환 트리거용 리플로우
+  function forceReflow(el) {
+    return el.offsetHeight;
+  }
+
+  // 터치/마우스 이벤트에서 좌표 추출
+  function getClientY(e) {
+    if (e.touches && e.touches.length) return e.touches[0].clientY;
+    if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+    return e.clientY;
+  }
+  function init(el) {
+    var $root = typeof el === 'string' ? $('#' + el) : $(el);
+    if (!$root.length) return;
+    var id = $root.attr('id');
+    if (!id) {
+      id = 'product-bar-' + ++uid;
+      $root.attr('id', id);
+    }
+    if (instances[id]) return;
+    var $handle = $root.find('[data-bar-handle]');
+    var $option = $root.find('[data-bar-option]');
+    var $cartBtn = $root.find('[data-bar-cart]');
+    var $buyBtn = $root.find('[data-bar-buy]');
+    var handleEl = $handle[0];
+    var state = {
+      isOpen: $root.hasClass('is-open'),
+      isDragging: false,
+      startY: 0,
+      currentY: 0,
+      startTime: 0,
+      optionHeight: 0,
+      timerId: null
+    };
+
+    // 진행 중 타이머 정리
+    function clearPendingTimer() {
+      if (state.timerId) {
+        clearTimeout(state.timerId);
+        state.timerId = null;
+      }
+    }
+
+    // 접근성 상태 갱신
+    function updateExpanded(isOpen) {
+      var value = String(isOpen);
+      $cartBtn.attr('aria-expanded', value);
+      $buyBtn.attr('aria-expanded', value);
+    }
+
+    // 옵션 열기
+    function open() {
+      if (state.isOpen) return;
+      clearPendingTimer();
+      $option.css('display', 'block');
+      state.optionHeight = $option[0].scrollHeight;
+      $option.css({
+        height: 0,
+        overflow: 'hidden',
+        transition: TRANSITION_HEIGHT
+      });
+      forceReflow($option[0]);
+      $option.css('height', state.optionHeight + 'px');
+      state.isOpen = true;
+      $root.addClass('is-open');
+      updateExpanded(true);
+      $root.trigger('product-bar:open');
+      state.timerId = setTimeout(function () {
+        $option.css({
+          height: '',
+          overflow: ''
+        });
+        state.timerId = null;
+      }, TRANSITION_DELAY);
+    }
+
+    // 옵션 닫기
+    function close() {
+      if (!state.isOpen) return;
+      clearPendingTimer();
+      state.optionHeight = $option[0].scrollHeight;
+      $option.css({
+        height: state.optionHeight + 'px',
+        overflow: 'hidden',
+        transition: TRANSITION_HEIGHT
+      });
+      forceReflow($option[0]);
+      $option.css('height', 0);
+      state.timerId = setTimeout(function () {
+        state.isOpen = false;
+        $root.removeClass('is-open');
+        updateExpanded(false);
+        $option.css({
+          height: '',
+          overflow: '',
+          display: '',
+          transition: ''
+        });
+        $root.trigger('product-bar:close');
+        state.timerId = null;
+      }, TRANSITION_DELAY);
+    }
+
+    // 액션 버튼
+    function onActionClick(e) {
+      if (!state.isOpen) {
+        open();
+        return;
+      }
+      var $btn = $(e.currentTarget);
+
+      // 품절 + 장바구니 → 액션 차단
+      if ($btn.hasClass('is-disabled')) return;
+      var eventName = $btn.is('[data-bar-cart]') ? 'product-bar:cart' : 'product-bar:buy';
+      $root.trigger(eventName);
+    }
+
+    // 드래그 시작 (터치 + 마우스 공용)
+    function onDragStart(e) {
+      if (!state.isOpen) return;
+      state.startY = getClientY(e);
+      state.currentY = state.startY;
+      state.startTime = Date.now();
+      state.isDragging = false;
+      state.optionHeight = $option.outerHeight();
+
+      // 마우스일 때 document에 move/up 바인딩
+      if (e.type === 'mousedown') {
+        $(document).on('mousemove' + NS, onDragMove).on('mouseup' + NS, onDragEnd);
+      }
+    }
+
+    // 드래그 이동
+    function onDragMove(e) {
+      if (!state.isOpen) return;
+      var clientY = getClientY(e);
+      var deltaY = clientY - state.startY;
+      state.currentY = clientY;
+      if (!state.isDragging) {
+        if (Math.abs(deltaY) < DRAG_THRESHOLD) return;
+        state.isDragging = true;
+        $root.addClass('is-dragging');
+        $option.css({
+          height: state.optionHeight + 'px',
+          overflow: 'hidden',
+          transition: 'none'
+        });
+      }
+
+      // 위로 드래그 방지
+      if (deltaY < 0) return;
+
+      // 아래로 드래그 — 높이 줄이기
+      $option.css('height', Math.max(0, state.optionHeight - deltaY) + 'px');
+      if (e.cancelable) e.preventDefault();
+    }
+
+    // 드래그 종료
+    function onDragEnd() {
+      // 마우스 이벤트 해제
+      $(document).off('mousemove' + NS + ' mouseup' + NS);
+
+      // 드래그 안 했으면 클릭으로 간주 → 닫기
+      if (!state.isDragging) {
+        if (state.isOpen) close();
+        return;
+      }
+      if (!state.isDragging) return;
+      var deltaY = state.currentY - state.startY;
+      var elapsed = Date.now() - state.startTime;
+      var velocity = Math.abs(deltaY) / (elapsed || 1);
+      $root.removeClass('is-dragging');
+
+      // 닫기 판정
+      if (deltaY > 0) {
+        var shouldClose = velocity > VELOCITY_THRESHOLD || deltaY > state.optionHeight * CLOSE_RATIO;
+        if (shouldClose) {
+          $option.css('transition', TRANSITION_HEIGHT);
+          $option.css('height', 0);
+          state.timerId = setTimeout(function () {
+            state.isOpen = false;
+            $root.removeClass('is-open');
+            updateExpanded(false);
+            $option.css({
+              height: '',
+              overflow: '',
+              display: '',
+              transition: ''
+            });
+            $root.trigger('product-bar:close');
+            state.timerId = null;
+          }, TRANSITION_DELAY);
+          return;
+        }
+      }
+
+      // snap back
+      $option.css('transition', TRANSITION_HEIGHT);
+      $option.css('height', state.optionHeight + 'px');
+      state.timerId = setTimeout(function () {
+        $option.css({
+          height: '',
+          overflow: '',
+          transition: ''
+        });
+        state.timerId = null;
+      }, TRANSITION_DELAY);
+    }
+
+    // 이벤트 바인딩 — 클릭
+    $cartBtn.on('click' + NS, onActionClick);
+    $buyBtn.on('click' + NS, onActionClick);
+
+    // 드래그 — 터치 (native, passive: false)
+    if (handleEl) {
+      handleEl.addEventListener('touchstart', onDragStart, {
+        passive: true
+      });
+      handleEl.addEventListener('touchmove', onDragMove, {
+        passive: false
+      });
+      handleEl.addEventListener('touchend', onDragEnd);
+      handleEl.addEventListener('touchcancel', onDragEnd);
+
+      // 드래그 — 마우스 (데스크탑 호환)
+      $handle.on('mousedown' + NS, function (e) {
+        onDragStart(e.originalEvent);
+        e.preventDefault();
+      });
+    }
+    updateExpanded(false);
+    instances[id] = {
+      open: open,
+      close: close,
+      handleEl: handleEl,
+      onDragStart: onDragStart,
+      onDragMove: onDragMove,
+      onDragEnd: onDragEnd
+    };
+  }
+  function destroy(id) {
+    var inst = instances[id];
+    if (!inst) return;
+    var $root = $('#' + id);
+    $root.find('[data-bar-cart], [data-bar-buy]').off(NS);
+    $root.find('[data-bar-handle]').off(NS);
+    $(document).off('mousemove' + NS + ' mouseup' + NS);
+    if (inst.handleEl) {
+      inst.handleEl.removeEventListener('touchstart', inst.onDragStart);
+      inst.handleEl.removeEventListener('touchmove', inst.onDragMove);
+      inst.handleEl.removeEventListener('touchend', inst.onDragEnd);
+      inst.handleEl.removeEventListener('touchcancel', inst.onDragEnd);
+    }
+    $root.removeClass('is-open is-dragging');
+    $root.find('[data-bar-option]').css({
+      height: '',
+      overflow: '',
+      display: '',
+      transition: ''
+    });
+    delete instances[id];
+  }
+  function initAll(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find('[data-ui="product-bar"]').each(function () {
+      init(this);
+    });
+  }
+  window.UI.bottomProductBar = {
+    init: init,
+    destroy: destroy,
+    initAll: initAll,
+    open: function (id) {
+      if (instances[id]) instances[id].open();
+    },
+    close: function (id) {
+      if (instances[id]) instances[id].close();
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 3064:
 /***/ (function() {
 
@@ -1725,9 +2371,130 @@
 
 /***/ }),
 
+/***/ 3198:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/option-box.js
+ * @description data-속성 기반 옵션 선택 박스 (모바일)
+ * @scope [data-ui="option-box"]
+ *
+ * @mapping
+ *   [data-option-trigger] — 열기/닫기 버튼
+ *   [data-option-trigger] .text — 선택된 값 표시
+ *   [data-option-list] — 옵션 목록 (열림/닫힘 대상)
+ *   [data-select-value] — 옵션 버튼 (클릭 시 선택)
+ *
+ * @state
+ *   is-open — 옵션 목록 열림
+ *   is-selected — 선택된 옵션 항목
+ *
+ * @events
+ *   option-box:select — 옵션 선택 시 발생 (detail: { value, text })
+ *
+ * @a11y aria-expanded 제어
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiOptionBox';
+  var SCOPE = '[data-ui="option-box"]';
+  var TRIGGER = '[data-option-trigger]';
+  var LIST = '[data-option-list]';
+  var OPTION_BTN = '[data-select-value]';
+  var OPEN = 'is-open';
+  var SELECTED = 'is-selected';
+  var _bound = false;
+  function openList($scope) {
+    $scope.find(LIST).addClass(OPEN);
+    $scope.find(TRIGGER).attr('aria-expanded', 'true');
+  }
+  function closeList($scope) {
+    $scope.find(LIST).removeClass(OPEN);
+    $scope.find(TRIGGER).attr('aria-expanded', 'false');
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 트리거 클릭 — 열기/닫기
+    $(document).on('click' + NS, TRIGGER, function (e) {
+      e.preventDefault();
+      var $scope = $(this).closest(SCOPE);
+      if (!$scope.length) return;
+      if ($scope.find(LIST).hasClass(OPEN)) {
+        closeList($scope);
+      } else {
+        openList($scope);
+      }
+    });
+
+    // 옵션 선택
+    $(document).on('click' + NS, OPTION_BTN, function () {
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var value = $btn.attr('data-select-value');
+
+      // 선택 상태 갱신
+      $scope.find(OPTION_BTN).removeClass(SELECTED);
+      $btn.addClass(SELECTED);
+
+      // 트리거 텍스트 갱신
+      var $trigger = $scope.find(TRIGGER + ' .text');
+      if ($trigger.length) {
+        $trigger.html($btn.html());
+      }
+
+      // 닫기
+      closeList($scope);
+
+      // 커스텀 이벤트
+      $scope.trigger('option-box:select', {
+        value: value,
+        text: $trigger.text()
+      });
+    });
+
+    // 외부 클릭 시 닫기
+    $(document).on('mousedown' + NS + ' touchstart' + NS, function (e) {
+      $(SCOPE).each(function () {
+        var $scope = $(this);
+        if (!$scope.find(LIST).hasClass(OPEN)) return;
+        if ($(e.target).closest($scope).length) return;
+        closeList($scope);
+      });
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.optionBox = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 3474:
 /***/ (function() {
 
+/**
+ * @file scroll-buttons.js
+ * @description 수평 스크롤 버튼 그룹 — 활성 버튼 자동 스크롤 및 상태 관리
+ * @scope [data-scroll-buttons]
+ * @option data-peek {number} 잘린 버튼 노출 여백 (기본 40px)
+ * @state .is-active — 선택된 버튼
+ * @events scrollbuttons:change — 버튼 변경 시 발생, detail: {$btn}
+ * @note SKIP 셀렉터([data-range-picker-toggle])는 preventDefault 제외
+ */
 (function (window) {
   'use strict';
 
@@ -1749,6 +2516,8 @@
     var peek = parseInt($scope.attr('data-peek') || 40, 10);
     var $btns = $scope.find(Selector.BTN);
     var handlers = [];
+
+    // 활성 버튼이 보이도록 스크롤 위치 보정
     function scrollToBtn($btn) {
       var wrap = $scope[0];
       var btn = $btn[0];
@@ -1767,17 +2536,19 @@
           scrollLeft: 0
         }, 200);
       } else if (btnLeft < wrapLeft) {
-        // 왼쪽으로 잘린 경우만 이동
+        // 왼쪽으로 잘린 경우
         $scope.animate({
           scrollLeft: btnLeft - peek
         }, 200);
       } else if (btnRight > wrapRight) {
-        // 오른쪽으로 잘린 경우만 이동
+        // 오른쪽으로 잘린 경우
         $scope.animate({
           scrollLeft: btnRight - wrap.offsetWidth + peek
         }, 200);
       }
     }
+
+    // 버튼 활성 상태 전환 및 이벤트 발행
     function setActive($btn) {
       $btns.removeClass(ClassName.ACTIVE);
       $btn.addClass(ClassName.ACTIVE);
@@ -1786,6 +2557,8 @@
         $btn: $btn
       }]);
     }
+
+    // 터치 스크롤과 탭을 구분하는 핸들러 생성
     function createHandler(btn) {
       var isSkip = $(btn).is(Selector.SKIP);
       var touchStartX = 0;
@@ -1813,7 +2586,7 @@
       };
     }
 
-    // 모든 버튼 바인딩 — datepicker 토글 버튼은 preventDefault 제외
+    // 모든 버튼 바인딩 — SKIP 대상은 preventDefault 제외
     $btns.each(function () {
       var handler = createHandler(this);
       this.addEventListener(clickEvent, handler, {
@@ -1995,6 +2768,13 @@
       $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
     });
   }
+
+  // collapse 높이 모드 재판별
+  function refreshCollapse(id) {
+    if (window.UI && window.UI.collapse && window.UI.collapse.refresh) {
+      window.UI.collapse.refresh('#' + id);
+    }
+  }
   function refresh(id) {
     clearTimeout(debounceTimers[id]);
     debounceTimers[id] = setTimeout(function () {
@@ -2122,6 +2902,7 @@
         $kw.addClass('is-opening');
         $kw.one('animationend', function () {
           $kw.removeClass('is-opening');
+          refreshCollapse(id);
         });
       }
 
@@ -2139,6 +2920,7 @@
         $kw.addClass('is-opening');
         $kw.one('animationend', function () {
           $kw.removeClass('is-opening');
+          refreshCollapse(id);
         });
       }
 
@@ -2795,30 +3577,7 @@
 
 /***/ }),
 
-/***/ 6023:
-/***/ (function() {
-
-/**
- * @file scripts-mo/core/common.js
- * @description 공통 초기화 — DOMContentLoaded 시 UI 모듈 일괄 init
- */
-(function ($, window) {
-  'use strict';
-
-  var initialized = false;
-  $(function () {
-    if (initialized || !window.UI) return;
-    initialized = true;
-    Object.keys(window.UI).forEach(function (key) {
-      var mod = window.UI[key];
-      if (mod && typeof mod.init === 'function') mod.init();
-    });
-  });
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 6025:
+/***/ 6010:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2871,6 +3630,14 @@ var expand = __webpack_require__(8839);
 var tab = __webpack_require__(5332);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
 var scroll_buttons = __webpack_require__(3474);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab-sticky.js
+var tab_sticky = __webpack_require__(2006);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/collapse.js
+var collapse = __webpack_require__(9212);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-overflow-gradient.js
+var scroll_overflow_gradient = __webpack_require__(2638);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
+var option_box = __webpack_require__(3198);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -2885,12 +3652,16 @@ var scroll_buttons = __webpack_require__(3474);
 
 
 
+
+
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -2937,6 +3708,175 @@ var input = __webpack_require__(3064);
 var product_view_toggle = __webpack_require__(5487);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
 var product_inline_banner = __webpack_require__(905);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(7111);
+;// ./src/assets/scripts-mo/ui/product/detail-gallery.js
+/**
+ * @file detail-gallery.js
+ * @description 상품 상세 썸네일 갤러리 (메인 슬라이더 + 상세이미지 팝업 모달)
+ * @scope [data-ui="detail-gallery"]
+ * @mapping detail-overview-thumb.ejs
+ * @state .is-open — 모달 활성화
+ * @a11y hidden/aria-modal, ESC 닫기
+ * @note iOS body scroll lock — position:fixed + scrollTop 저장
+ * @note Android 물리 백버튼 — history.pushState 활용
+ */
+
+(function () {
+  'use strict';
+
+  const SCOPE = '[data-ui="detail-gallery"]';
+  const IS_OPEN = 'is-open';
+  let savedScrollY = 0;
+
+  // iOS body scroll lock
+  function lockScroll() {
+    savedScrollY = window.scrollY;
+    document.body.style.cssText = 'position:fixed;top:' + -savedScrollY + 'px;left:0;right:0;overflow:hidden;';
+  }
+  function unlockScroll() {
+    document.body.style.cssText = '';
+    window.scrollTo(0, savedScrollY);
+  }
+  function init() {
+    const root = document.querySelector(SCOPE);
+    if (!root) return;
+
+    // 중복 초기화 방지
+    if (root._galleryInstance) return;
+    const mainEl = root.querySelector('[data-role="main"]');
+    const zoomEl = root.querySelector('[data-role="zoom"]');
+    const zoomSwiperEl = root.querySelector('[data-role="zoom-swiper"]');
+    const zoomThumbsEl = root.querySelector('[data-role="zoom-thumbs"]');
+    if (!mainEl) return;
+    const total = mainEl.querySelectorAll('.swiper-slide').length;
+    const isSingle = total < 2;
+
+    // 1장이면 모달 썸네일 숨김
+    if (isSingle && zoomThumbsEl) zoomThumbsEl.style.display = 'none';
+
+    // 메인 Swiper
+    const mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+      slidesPerView: 1,
+      loop: false,
+      allowTouchMove: !isSingle,
+      observer: true,
+      observeParents: true,
+      pagination: isSingle ? false : {
+        el: mainEl.querySelector('.swiper-pagination'),
+        clickable: true
+      }
+    });
+
+    // 모달 Swiper — lazy init
+    let zoomSwiper = null;
+    let zoomThumbSwiper = null;
+    function createZoom(index) {
+      if (!zoomSwiper) {
+        if (!isSingle && zoomThumbsEl) {
+          zoomThumbSwiper = new swiper_bundle/* default */.A(zoomThumbsEl, {
+            slidesPerView: 'auto',
+            spaceBetween: 7,
+            watchSlidesProgress: true
+          });
+        }
+        zoomSwiper = new swiper_bundle/* default */.A(zoomSwiperEl, {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: false,
+          autoHeight: true,
+          observer: true,
+          observeParents: true,
+          thumbs: zoomThumbSwiper ? {
+            swiper: zoomThumbSwiper
+          } : undefined,
+          on: {
+            slideChange: function () {
+              // 활성 썸네일이 보이도록 스크롤
+              if (zoomThumbSwiper) {
+                zoomThumbSwiper.slideTo(this.activeIndex);
+              }
+            }
+          }
+        });
+      } else {
+        zoomSwiper.update();
+        if (zoomThumbSwiper) zoomThumbSwiper.update();
+      }
+      zoomSwiper.slideTo(index, 0);
+    }
+
+    // 모달 열기
+    function openZoom() {
+      if (!zoomEl) return;
+      const index = mainSwiper.activeIndex;
+      zoomEl.removeAttribute('hidden');
+      zoomEl.classList.add(IS_OPEN);
+      lockScroll();
+
+      // Android 뒤로가기 대응
+      history.pushState({
+        detailGalleryOpen: true
+      }, '');
+      requestAnimationFrame(() => {
+        createZoom(index);
+      });
+    }
+
+    // 모달 닫기
+    function closeZoom(fromPop) {
+      if (!zoomEl || !zoomEl.classList.contains(IS_OPEN)) return;
+      const index = zoomSwiper ? zoomSwiper.activeIndex : mainSwiper.activeIndex;
+      zoomEl.classList.remove(IS_OPEN);
+      zoomEl.setAttribute('hidden', '');
+      unlockScroll();
+      mainSwiper.slideTo(index, 0);
+      if (!fromPop) history.back();
+    }
+
+    // 이벤트
+    root.addEventListener('click', e => {
+      const target = e.target.closest('[data-role]');
+      if (!target) return;
+      const role = target.getAttribute('data-role');
+      if (role === 'zoom-open') openZoom();
+      if (role === 'zoom-close') closeZoom();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom();
+      }
+    });
+
+    // Android 물리 백버튼
+    window.addEventListener('popstate', () => {
+      if (zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom(true);
+      }
+    });
+    root._galleryInstance = {
+      main: mainSwiper,
+      zoom: () => zoomSwiper,
+      zoomThumb: () => zoomThumbSwiper
+    };
+  }
+  function destroy() {
+    const root = document.querySelector(SCOPE);
+    if (!root || !root._galleryInstance) return;
+    const inst = root._galleryInstance;
+    inst.main?.destroy(true, true);
+    inst.zoom()?.destroy(true, true);
+    inst.zoomThumb()?.destroy(true, true);
+    delete root._galleryInstance;
+  }
+  window.UI = window.UI || {};
+  window.UI.detailGallery = {
+    init,
+    destroy
+  };
+})();
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/bottom-product-bar.js
+var bottom_product_bar = __webpack_require__(3012);
 ;// ./src/assets/scripts-mo/ui/product/index.js
 /**
  * @file scripts-mo/ui/product/index.js
@@ -2944,17 +3884,26 @@ var product_inline_banner = __webpack_require__(905);
  */
 
 
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['productViewToggle', 'productInlineBanner'];
+  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
   window.UI.product = {
     init: function () {
       modules.forEach(function (name) {
         var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
+        if (!mod) return;
+
+        // initAll 우선, 없으면 init
+        if (typeof mod.initAll === 'function') {
+          mod.initAll();
+        } else if (typeof mod.init === 'function') {
+          mod.init();
+        }
       });
     }
   };
@@ -3013,6 +3962,318 @@ var filter_mapage = __webpack_require__(2624);
 })(window.jQuery, window);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
 var cart = __webpack_require__(9459);
+;// ./src/assets/scripts-mo/ui/cart-order/order.js
+/**
+ * @file scripts-mo/ui/cart-order/order.js
+ * @description 주문/결제(주문서) 페이지 UI 기능
+ * - 배송 방법 탭 전환 (택배/퀵배송/화물)
+ * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
+ * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
+ * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
+ * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[order] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var EVENT_NS = '.uiOrder';
+  var ROOT_SEL = '.vm-cart-order';
+  var METHOD_BTN_SEL = '.vm-shipping-method-btn';
+  var METHOD_PANEL_SEL = '.vm-shipping-panel';
+  var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
+  var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
+  var INIT_KEY = 'uiOrderInit';
+
+  // 결제수단 (데스크톱 vits-* → 모바일 vm-*)
+  var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
+  var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
+  var PAYMENT_ITEM_SEL = '.vm-payment-item';
+  var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
+  var PAYMENT_PANEL_SEL = '.vm-payment-panel';
+  var PAYMENT_METHOD_SEL = '.vm-payment-method';
+
+  // 결제 카드/계좌 Swiper
+  var PAYMENT_SWIPER_SEL = '.vm-card-list.js-swiper[data-swiper-type="payment"]';
+  var SWIPER_DATA_KEY = 'uiPaymentSwiper';
+  var PAYMENT_SWIPER_OPTIONS = {
+    slidesPerView: 'auto',
+    spaceBetween: 12,
+    speed: 500,
+    slidesOffsetAfter: 50,
+    breakpoints: {
+      768: {
+        slidesOffsetAfter: 280
+      }
+    },
+    a11y: false,
+    on: {
+      init: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      },
+      slideChangeTransitionEnd: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      }
+    }
+  };
+  var METHOD_FREIGHT = 'freight';
+  var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
+  var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
+  var ID_PAY_SIMPLE = 'pay-simple';
+  function getScope(root) {
+    if (!root) return $(ROOT_SEL);
+    var $el = $(root);
+    if (!$el.length) return $el;
+    return $el.find(ROOT_SEL).addBack().filter(ROOT_SEL);
+  }
+
+  /**
+   * 배송 방법 탭 클릭 시 해당 패널만 활성화
+   */
+  function bindShippingMethodTabs($scope) {
+    var $btns = $scope.find(METHOD_BTN_SEL);
+    var $panels = $scope.find(METHOD_PANEL_SEL);
+    if (!$btns.length || !$panels.length) return;
+    $btns.off('click' + EVENT_NS);
+    $btns.on('click' + EVENT_NS, function () {
+      var method = $(this).data('method');
+      if (!method) return;
+      $btns.removeClass('is-active');
+      $(this).addClass('is-active');
+      $panels.removeClass('is-active');
+      $panels.filter('[data-panel="' + method + '"]').addClass('is-active');
+      updateFreightVisibility($scope, method);
+    });
+  }
+
+  /**
+   * 화물 선택 시 data-freight-visible 영역 노출, data-freight-hidden 영역 비노출
+   */
+  function updateFreightVisibility($scope, method) {
+    var isFreight = method === METHOD_FREIGHT;
+    $scope.find(FREIGHT_VISIBLE_SEL).toggle(isFreight);
+    $scope.find(FREIGHT_HIDDEN_SEL).toggle(!isFreight);
+  }
+  function bindFreightVisibility($scope) {
+    var $activeBtn = $scope.find(METHOD_BTN_SEL + '.is-active');
+    var method = $activeBtn.length ? $activeBtn.data('method') : '';
+    updateFreightVisibility($scope, method);
+  }
+
+  /**
+   * 결제수단 탭 클릭 시 해당 탭패널만 활성화 (간편결제 내 카드/계좌 탭)
+   */
+  function setPaymentTabState($scope, $tab) {
+    if (!$tab || !$tab.length) return;
+    var tabId = $tab.attr('id');
+    var controlsId = $tab.attr('aria-controls');
+    var $tablist = $tab.closest('[role="tablist"]');
+    var $parentPanel = $tablist.closest(PAYMENT_PANEL_SEL);
+    if (!$tablist.length || !$parentPanel.length) return;
+    var $tabs = $tablist.find(PAYMENT_TAB_SEL);
+    var $panels = $parentPanel.find(PAYMENT_TAB_PANEL_SEL);
+    $tabs.each(function () {
+      var $t = $(this);
+      $t.removeClass('is-active');
+      $t.attr('aria-selected', 'false');
+      $t.attr('aria-expanded', 'false');
+    });
+    $tab.addClass('is-active');
+    $tab.attr('aria-selected', 'true');
+    $panels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    if (controlsId) {
+      var $targetPanel = $scope.find('#' + controlsId);
+      if ($targetPanel.length) {
+        $targetPanel.addClass('is-active');
+        $tab.attr('aria-expanded', 'true');
+        var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+        if (!currentLabelledBy || currentLabelledBy !== tabId) {
+          $targetPanel.attr('aria-labelledby', tabId);
+        }
+        // 노출된 패널 안의 payment 스와이퍼는 초기화 시 숨겨져 있었을 수 있으므로 크기 재계산
+        $targetPanel.find(PAYMENT_SWIPER_SEL).each(function () {
+          var instance = $(this).data(SWIPER_DATA_KEY);
+          if (instance && typeof instance.update === 'function') instance.update();
+        });
+      }
+    }
+  }
+
+  /**
+   * 결제수단 라디오 변경 시 해당 패널만 활성화 (간편결제/카드/계좌이체/무통장/여신)
+   */
+  function setPaymentPanelState($scope, $radio) {
+    if (!$radio || !$radio.length) return;
+    var controlsId = $radio.attr('aria-controls');
+    if (!controlsId) return;
+    var radioId = $radio.attr('id');
+    var $item = $radio.closest(PAYMENT_ITEM_SEL);
+    var $methodWrap = $item.closest(PAYMENT_METHOD_SEL);
+    if (!$item.length || !$methodWrap.length) return;
+    var $allPanels = $methodWrap.find(PAYMENT_PANEL_SEL);
+
+    // 간편결제 탭이 '계좌'일 때 다른 결제수단 선택 시 카드 탭으로 전환
+    var $tabSimpleAccount = $scope.find('#' + ID_TAB_SIMPLE_ACCOUNT);
+    if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
+      if (radioId !== ID_PAY_SIMPLE) {
+        var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+        if ($tabSimpleCard.length) {
+          setPaymentTabState($scope, $tabSimpleCard);
+        }
+      }
+    }
+    $allPanels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    $methodWrap.find(PAYMENT_RADIO_SEL).attr('aria-expanded', 'false');
+    var $targetPanel = $methodWrap.find('#' + controlsId);
+    if ($targetPanel.length) {
+      $targetPanel.addClass('is-active');
+      $radio.attr('aria-expanded', 'true');
+      var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+      if (!currentLabelledBy || currentLabelledBy !== radioId) {
+        $targetPanel.attr('aria-labelledby', radioId);
+      }
+    } else {
+      $radio.attr('aria-expanded', 'false');
+    }
+  }
+
+  /**
+   * 결제 카드/계좌 리스트 Swiper 초기화
+   */
+  function initPaymentSwipers($scope) {
+    if (typeof swiper_bundle/* default */.A === 'undefined') return;
+    var $containers = $scope.find(PAYMENT_SWIPER_SEL);
+    if (!$containers.length) return;
+    $containers.each(function () {
+      if ($(this).data(SWIPER_DATA_KEY)) return;
+      if (!this.querySelector('.swiper-wrapper')) return;
+      var prevEl = this.querySelector('.swiper-button-prev');
+      var nextEl = this.querySelector('.swiper-button-next');
+      var $el = $(this);
+      if (!this.classList.contains('swiper')) this.classList.add('swiper');
+      var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
+      if (prevEl && nextEl) {
+        options.navigation = {
+          nextEl: nextEl,
+          prevEl: prevEl,
+          disabledClass: 'swiper-button-disabled'
+        };
+      }
+      try {
+        var instance = new swiper_bundle/* default */.A(this, options);
+        $el.data(SWIPER_DATA_KEY, instance);
+        this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
+          slide.addEventListener('click', function () {
+            instance.slideTo(index);
+          });
+        });
+      } catch (e) {
+        console.warn('[order] Payment swiper init failed', e);
+      }
+    });
+  }
+
+  /**
+   * 결제수단 탭/라디오 이벤트 바인딩 및 초기 상태
+   */
+  function bindPayment($scope) {
+    var $payment = $scope.find('.vm-payment');
+    if (!$payment.length) return;
+
+    // 초기: 간편결제 카드 탭 활성화
+    var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+    if ($tabSimpleCard.length && !$tabSimpleCard.hasClass('is-active')) {
+      setPaymentTabState($scope, $tabSimpleCard);
+    }
+
+    // 탭 aria-expanded 초기화
+    $scope.find(PAYMENT_TAB_SEL).each(function () {
+      var $tab = $(this);
+      var isActive = $tab.hasClass('is-active');
+      var controlsId = $tab.attr('aria-controls');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
+      } else {
+        $tab.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_TAB_SEL + '.is-active').each(function () {
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 라디오 aria-expanded 초기화 후 체크된 항목 기준으로 패널 활성화
+    $scope.find(PAYMENT_RADIO_SEL).each(function () {
+      var $radio = $(this);
+      var controlsId = $radio.attr('aria-controls');
+      var isChecked = $radio.is(':checked');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
+      } else {
+        $radio.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_RADIO_SEL + ':checked').each(function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제수단 탭 클릭
+    $scope.off('click' + EVENT_NS, PAYMENT_TAB_SEL);
+    $scope.on('click' + EVENT_NS, PAYMENT_TAB_SEL, function (e) {
+      e.preventDefault();
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 결제수단 라디오 변경
+    $scope.off('change' + EVENT_NS, PAYMENT_RADIO_SEL);
+    $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제 카드/계좌 Swiper 초기화
+    initPaymentSwipers($scope);
+  }
+
+  /**
+   * 주문서 영역 초기화 (배송 탭, 화물 노출, 결제수단)
+   */
+  function bindRoot($scope) {
+    if ($scope.data(INIT_KEY)) return;
+    $scope.data(INIT_KEY, true);
+    bindShippingMethodTabs($scope);
+    bindFreightVisibility($scope);
+    bindPayment($scope);
+  }
+  window.UI.order = {
+    init: function (root) {
+      var $scope = getScope(root);
+      if (!$scope.length) return;
+      $scope.each(function () {
+        bindRoot($(this));
+      });
+      console.log('[order] order page initialized');
+    }
+  };
+  console.log('[order] module loaded');
+})(window.jQuery, window);
 ;// ./src/assets/scripts-mo/ui/cart-order/index.js
 /**
  * @file scripts-mo/ui/cart-order/index.js
@@ -3100,6 +4361,29 @@ console.log('[mobile/index] entry 실행');
 
 
 
+
+/***/ }),
+
+/***/ 6023:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/core/common.js
+ * @description 공통 초기화 — DOMContentLoaded 시 UI 모듈 일괄 init
+ */
+(function ($, window) {
+  'use strict';
+
+  var initialized = false;
+  $(function () {
+    if (initialized || !window.UI) return;
+    initialized = true;
+    Object.keys(window.UI).forEach(function (key) {
+      var mod = window.UI[key];
+      if (mod && typeof mod.init === 'function') mod.init();
+    });
+  });
+})(window.jQuery, window);
 
 /***/ }),
 
@@ -5038,6 +6322,233 @@ console.log('[mobile/index] entry 실행');
 
 /***/ }),
 
+/***/ 9212:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/collapse.js
+ * @description data-속성 기반 더보기/접기 공통 (모바일)
+ * @scope [data-collapse]
+ *
+ * @mapping [data-collapse-btn] ↔ [data-collapse-content]
+ * @state is-open 클래스 + aria-expanded 값으로 제어
+ *
+ * @option
+ *  - data-visible-count="N"       : N개까지만 노출 (개수 기반, dt+dd 쌍 대응)
+ *  - data-visible-height="N"      : Npx까지만 노출 (높이 기반, 인라인 스타일)
+ *  - data-visible-hidden           : 콘텐츠 전체 숨김 → 버튼으로 노출 (CSS 트랜지션)
+ *  - data-aria-label-base="..."   : aria-label 접두어 (예: "혜택")
+ *  - data-aria-label-pair="A,B"   : 닫힘/열림 라벨 (기본: "열기,닫기")
+ *
+ * @a11y aria-expanded 제어, aria-label 상태별 동기화
+ *
+ * @note
+ *  - 콘텐츠가 기준 이하면 버튼 자동 숨김 (hidden)
+ *  - 개수 모드: is-hidden 클래스로 개별 아이템 숨김
+ *  - 높이 모드: data 속성값 기반 인라인 max-height 제어
+ *  - 숨김 모드: is-open 클래스만 토글, CSS 트랜지션 전담 (_collapse.scss)
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiCollapse';
+  var ROOT = '[data-collapse]';
+  var CONTENT = '[data-collapse-content]';
+  var BTN = '[data-collapse-btn]';
+  var ACTIVE = 'is-open';
+  var HIDDEN = 'is-hidden';
+  var DEFAULT_PAIR = '열기,닫기';
+  var _bound = false;
+
+  // 모드 판별
+  function getMode($content) {
+    if ($content.is('[data-visible-count]')) return 'count';
+    if ($content.is('[data-visible-height]')) return 'height';
+    if ($content.is('[data-visible-hidden]')) return 'hidden';
+    return null;
+  }
+
+  // 개수 기반: 자식 아이템 조회 (dt+dd 쌍 대응)
+  function getCountItems($content) {
+    var hasDt = $content.children('dt').length > 0;
+    return {
+      $items: hasDt ? $content.children('dt') : $content.children(),
+      hasDt: hasDt
+    };
+  }
+
+  // aria-label 동기화
+  function syncAriaLabel($btn, isOpen) {
+    var base = $btn.attr('data-aria-label-base');
+    if (!base) return;
+    var pairStr = $btn.attr('data-aria-label-pair') || DEFAULT_PAIR;
+    var pair = pairStr.split(',').map(function (s) {
+      return s.trim();
+    });
+    $btn.attr('aria-label', base + ' ' + (isOpen ? pair[1] : pair[0]));
+  }
+
+  // 개수 기반: N번째 이후 아이템 is-hidden 토글
+  function applyCount($content, isOpen) {
+    var count = parseInt($content.data('visibleCount'), 10);
+    var result = getCountItems($content);
+    result.$items.each(function (i) {
+      if (i < count) return;
+      var $item = $(this);
+      var $pair = result.hasDt ? $item.add($item.next('dd')) : $item;
+      $pair.toggleClass(HIDDEN, !isOpen);
+    });
+  }
+
+  // 높이 기반: data 속성값으로 max-height 제어
+  function applyHeight($content, isOpen) {
+    if (isOpen) {
+      $content.css({
+        maxHeight: 'none',
+        overflow: 'visible'
+      });
+    } else {
+      $content.css({
+        maxHeight: $content.data('visibleHeight'),
+        overflow: 'hidden'
+      });
+    }
+  }
+  function open($btn, $content, $root) {
+    var mode = getMode($content);
+    $root.addClass(ACTIVE);
+    $btn.attr('aria-expanded', 'true');
+    syncAriaLabel($btn, true);
+    if (mode === 'count') applyCount($content, true);else if (mode === 'height') applyHeight($content, true);
+    // hidden 모드는 is-open 클래스만으로 CSS가 트랜지션 처리
+  }
+  function close($btn, $content, $root) {
+    var mode = getMode($content);
+    $root.removeClass(ACTIVE);
+    $btn.attr('aria-expanded', 'false');
+    syncAriaLabel($btn, false);
+    if (mode === 'count') applyCount($content, false);else if (mode === 'height') applyHeight($content, false);
+  }
+
+  // 높이 모드 버튼 판별 (이미지 로드 완료 후 scrollHeight 재측정)
+  function checkHeightNeedBtn($content, $btn) {
+    var visibleH = parseInt($content.data('visibleHeight'), 10);
+    function evaluate() {
+      // 팝업 등 비가시 영역은 scrollHeight가 0 → 버튼 숨기지 않음
+      if ($content[0].scrollHeight === 0) return;
+      $btn.prop('hidden', $content[0].scrollHeight <= visibleH);
+    }
+    var $imgs = $content.find('img');
+    var total = $imgs.length;
+
+    // 이미지 없으면 즉시 판별
+    if (!total) {
+      evaluate();
+      return;
+    }
+    var loaded = 0;
+    function onLoad() {
+      loaded++;
+      if (loaded >= total) evaluate();
+    }
+    $imgs.each(function () {
+      if (this.complete) {
+        onLoad();
+      } else {
+        $(this).one('load error', onLoad);
+      }
+    });
+  }
+
+  // 콘텐츠가 기준 이하면 버튼 숨김
+  function checkNeedBtn($content, $btn) {
+    var mode = getMode($content);
+    if (mode === 'count') {
+      var result = getCountItems($content);
+      var count = parseInt($content.data('visibleCount'), 10);
+      $btn.prop('hidden', result.$items.length <= count);
+    } else if (mode === 'height') {
+      checkHeightNeedBtn($content, $btn);
+    }
+    // hidden 모드는 항상 버튼 필요
+  }
+
+  // 초기 상태 세팅
+  function setupAll() {
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $content = $root.find(CONTENT);
+      var $btn = $root.find(BTN);
+      if (!$content.length || !$btn.length) return;
+      var mode = getMode($content);
+      if (!mode) return;
+
+      // 초기 aria-expanded 명시
+      $btn.attr('aria-expanded', 'false');
+
+      // 접힌 초기 상태 적용
+      if (mode === 'count') applyCount($content, false);else if (mode === 'height') applyHeight($content, false);
+      // hidden 모드는 CSS 기본 상태가 접힌 상태
+
+      syncAriaLabel($btn, false);
+      checkNeedBtn($content, $btn);
+    });
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+    $(document).on('click' + NS, BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $root = $btn.closest(ROOT);
+      if (!$root.length) return;
+      var $content = $root.find(CONTENT);
+      if (!$content.length) return;
+      var isOpen = $root.hasClass(ACTIVE);
+      if (isOpen) {
+        close($btn, $content, $root);
+      } else {
+        open($btn, $content, $root);
+      }
+    });
+  }
+  function init() {
+    setupAll();
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+
+    // 상태 복원
+    $(CONTENT).each(function () {
+      $(this).removeAttr('style').children().removeClass(HIDDEN);
+    });
+    $(ROOT).removeClass(ACTIVE);
+  }
+
+  // 외부에서 가시 상태 변경 후 재판별 호출용
+  function refresh($scope) {
+    var $target = $scope ? $($scope).find(ROOT) : $(ROOT);
+    $target.each(function () {
+      var $root = $(this);
+      var $content = $root.find(CONTENT);
+      var $btn = $root.find(BTN);
+      if (!$content.length || !$btn.length) return;
+      checkNeedBtn($content, $btn);
+    });
+  }
+  window.UI.collapse = {
+    init: init,
+    destroy: destroy,
+    refresh: refresh
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 9459:
 /***/ (function() {
 
@@ -5363,6 +6874,18 @@ console.log('[mobile/index] entry 실행');
 /******/ 		};
 /******/ 	}();
 /******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
@@ -5434,7 +6957,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766], function() { return __webpack_require__(6025); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766,979], function() { return __webpack_require__(6010); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
