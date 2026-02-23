@@ -2149,6 +2149,7 @@
         var shouldClose = velocity > VELOCITY_THRESHOLD || deltaY > state.optionHeight * CLOSE_RATIO;
         if (shouldClose) {
           $option.css('transition', TRANSITION_HEIGHT);
+          forceReflow($option[0]);
           $option.css('height', 0);
           state.timerId = setTimeout(function () {
             state.isOpen = false;
@@ -2169,6 +2170,7 @@
 
       // snap back
       $option.css('transition', TRANSITION_HEIGHT);
+      forceReflow($option[0]);
       $option.css('height', state.optionHeight + 'px');
       state.timerId = setTimeout(function () {
         $option.css({
