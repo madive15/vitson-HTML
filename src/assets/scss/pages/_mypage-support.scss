@@ -576,7 +576,7 @@
   }
 
   &-meta {
-    @include mx.flex($align: center);
+    @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
   }
 
@@ -621,6 +621,7 @@
 
   /* 답변 블록 */
   &-reply-meta {
+    @include mx.flex(flex, row, flex-start, center);
     @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
     margin-bottom: map.get(var.$unit, 16);
   }
@@ -636,6 +637,18 @@
     white-space: pre-line;
   }
 
+  &-actions {
+    @include mx.flex(flex, row, flex-end, center);
+    flex: 1;
+    gap: fn.rem(10);
+    // stylelint-disable-next-line no-descending-specificity
+    [class*='vits-btn'] {
+      @include button.btn-reset;
+      @include icon.ic-size(fn.rem(20));
+      color: map.get(color.$icon-neutral, 'secondary');
+    }
+  }
+
   /* 댓글 블록 */
   &-user {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
@@ -646,6 +659,7 @@
   }
 
   &-user-meta {
+    @include mx.flex(flex, row, flex-start, center);
     margin-bottom: fn.rem(12);
     color: map.get(color.$text-colors, 'primary');
   }
@@ -950,13 +964,13 @@
 
   /* 조회 필터 영역 */
   .mypage-query-fields {
-    @include mx.flex($align: center, $justify: space-between, $wrap: wrap);
-    gap: map.get(var.$unit, 12);
+    @include mx.flex(flex, row, space-between, center, wrap);
+    gap: map.get(var.$unit, 8);
     width: 100%;
 
     /* 상태 선택 */
     .mypage-query-status {
-      @include mx.flex($align: center, $wrap: wrap);
+      @include mx.flex(flex, row, flex-start, center, wrap);
       gap: map.get(var.$unit, 8);
 
       .mypage-query-control {
