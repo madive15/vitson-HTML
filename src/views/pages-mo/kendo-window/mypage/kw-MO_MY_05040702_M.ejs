@@ -44,9 +44,7 @@
     { left: { label: '생년월일', input: true, placeholder: '예) 1990-01-01' }, right: { label: '연락처(보증인 명의 휴대폰)', input: true, placeholder: '예) 01012341234' } }
   ];
 %>
-<section class="vits-credit-consent">
-  <h2 class="contract-main-title">개인신용 정보 수집 · 조회 · 이용 및 제공 동의서</h2>
-
+<section class="vm-credit-consent">
   <!-- S: 서론 -->
   <p class="consent-intro">
     (주)일신비츠온은 상거래관계설정, 유지목적으로 [개인정보보호법] 제15조 등, [신용정보의 이용 및 보호에 관한 법률] 제
@@ -110,13 +108,13 @@
   <div class="contract-box contract-buyer">
     <h3 class="contract-box-title">구매자</h3>
     <div class="contract-info-cols">
-      <div class="contract-info-row contract-info-row-full">
+      <dl class="contract-info-row">
         <dt><%= buyerFirstRow.label %></dt>
         <dd>
           <span class="contract-info-value"><%= buyerFirstRow.value %></span>
           <span class="contract-sign-area" title="서명 영역"><%= buyerFirstRow.signLabel %></span>
         </dd>
-      </div>
+      </dl>
       <dl class="contract-info-col contract-info-col-left">
         <% buyerRestRows.forEach(function(row) { %>
         <div class="contract-info-row">
@@ -145,6 +143,21 @@
         </div>
         <% }); %>
       </dl>
+      <!-- S: 거주지 주소 -->
+      <div class="contract-info-row contract-info-row-full">
+        <dt>거주지 주소</dt>
+        <dd>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'consent-buyer-addr',
+            name: 'consent-buyer-addr',
+            placeholder: '(예) 경기도 남양주시 진접읍 팔야산단로 12번길 55,56',
+            count: false,
+            rootClass: 'size-default'
+          }) %>
+        </dd>
+      </div>
+      <!-- E: 거주지 주소 -->
     </div>
   </div>
   <!-- E: 구매자 -->
@@ -153,7 +166,7 @@
   <div class="contract-box contract-guarantor">
     <h3 class="contract-box-title">보증인</h3>
     <div class="contract-info-cols">
-      <div class="contract-info-row contract-info-row-full">
+      <div class="contract-info-row">
         <dt><%= guarantorFirstRow.label %></dt>
         <dd>
           <input
@@ -198,16 +211,10 @@
   <!-- E: 보증인 -->
 
   <!-- S: 서명 일자 -->
-  <p class="contract-date-row">
+  <p class="contract-date-row input-date">
     20
     <input type="text" class="contract-input contract-input-year" maxlength="2" placeholder="" aria-label="연도" /> 년
     <input type="text" class="contract-input contract-input-month" maxlength="2" placeholder="" aria-label="월" /> 월
     <input type="text" class="contract-input contract-input-day" maxlength="2" placeholder="" aria-label="일" /> 일
   </p>
-  <!-- E: 서명 일자 -->
-  <div class="contract-signature-submit">
-    <%- include(`${_src}/views/components/button/button.ejs`, { text: '취소', variant: 'secondary' ,size: 'xxl'}) %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/button/button.ejs`, { text: '서명하기', variant: 'primary' ,size: 'xxl'}) %>
-  </div>
 </section>

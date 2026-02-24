@@ -15,6 +15,8 @@ import './tab-sticky.js';
 import './collapse.js';
 import './scroll-overflow-gradient.js';
 import './option-box.js';
+import './step-tab.js';
+import './auth.js';
 
 (function ($, window) {
   'use strict';
@@ -35,7 +37,9 @@ import './option-box.js';
     'tabSticky',
     'collapse',
     'scrollOverflowGradient',
-    'optionBox'
+    'optionBox',
+    'stepTab',
+    'auth'
   ];
 
   window.UI.common = {

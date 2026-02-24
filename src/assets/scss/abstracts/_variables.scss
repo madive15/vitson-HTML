@@ -88,6 +88,9 @@ $mo-header: (
   'product-bar': fn.rem(60),
   'bottom-bar-handle': map.get($unit, 36)
 );
+$mo-height: (
+  'step-tab-fix': fn.rem(166)
+);
 
 // 바텀바 타입별 높이 — 키 추가 시 .vm-wrap 여백 및 .bottom-{타입} 자동 생성
 $mo-bottom-bar: (
@@ -97,11 +100,13 @@ $mo-bottom-bar: (
   'product-bar': fn.rem(68),
   'order-bar': fn.rem(116)
 );
+$mo-zindex-bottom-bar: 100;
 $mo-zindex: (
   'header': 10,
   'toolbar': 9,
-  'bottom-bar': 100,
-  'overflow-menu': 100
+  'bottom-bar': $mo-zindex-bottom-bar,
+  'overflow-menu': 100,
+  'step-tab-fix': $mo-zindex-bottom-bar + 1
 );
 $mo-gutter: map.get($unit, 16);
 $mo-section-gap: map.get($unit, 24);

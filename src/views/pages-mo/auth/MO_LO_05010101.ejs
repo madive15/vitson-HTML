@@ -1,0 +1,71 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '휴면계정안내'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'nav-bar-logo' }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <!-- S: 휴면 상태 안내 -->
+                <div class="auth-dormant-form">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/empty-state.ejs`, { iconName: 'user', title: '계정이 휴면 상태로 전환되었습니다' }) %>
+
+                  <div class="auth-dormant-info-box">
+                    <p class="auth-dormant-info-text">
+                      회원님은 최근 <strong class="highlight-text">1년 이상서비스를 이용하지 않아</strong><br />관련
+                      법령에 따라<strong class="point-text">휴면 상태</strong>로 전환되었습니다.
+                    </p>
+                    <p class="auth-dormant-info-text">
+                      서비스를 이용하시려면 <strong class="point-text">[휴면 해제하기]</strong><br />
+                      버튼을 눌러주세요.
+                    </p>
+                  </div>
+
+                  <div class="auth-dormant-actions">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, { type: 'button', size: 'xl', variant: 'primary', text: '휴면 해제하기', className: 'auth-dormant-btn', }) %>
+                  </div>
+                </div>
+
+                <!-- S: 고객 지원 -->
+                <%- include(`${_src}/views/components/pg-auth/auth-contact.ejs`) %>
+                <!-- E: 고객 지원 -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

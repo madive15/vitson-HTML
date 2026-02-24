@@ -11,6 +11,7 @@
 @use '@/assets/scss/base/typography' as typo;
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
 
 @mixin my-home-layout {
   box-shadow: map.get(var.$box-shadow, 'elevation_1');
@@ -73,20 +74,23 @@
 }
 
 .vm-wrap {
-  &.wrap-my-home .vm-content-wrap,
-  &.wrap-my-coupon .vm-content-wrap,
-  &.wrap-my-shipping .vm-content-wrap,
-  &.wrap-my-pay .vm-content-wrap {
-    background: map.get(color.$layout-surf, 'mypage');
+  $mypage-bg-sections: 'home', 'coupon', 'shipping', 'pay', 'credit';
+
+  @each $section in $mypage-bg-sections {
+    &.wrap-my-#{$section} .vm-content-wrap {
+      background: map.get(color.$layout-surf, 'mypage');
+    }
   }
 
   &:has(.vm-claim-request.step-1.is-active) {
     background: map.get(color.$layout-surf, 'sunken');
   }
 
-  &:has(.vm-claim-request.step-2.is-active),
-  &:has(.vm-claim-request.step-3.is-active) {
-    background: color.$color-white;
+  // step-2, step-3 공통
+  @each $step in 2, 3 {
+    &:has(.vm-claim-request.step-#{$step}.is-active) {
+      background: color.$color-white;
+    }
   }
 
   &:has(.vm-claim-request.step-3.is-active) {
@@ -1536,6 +1540,474 @@
   }
 }
 
+// 후불관리
+.main-content-my-credit {
+  @include mx.flex(flex, column);
+  min-height: 0;
+
+  .vm-mypage-credit-process {
+    @include mx.flex(flex, column);
+    flex: 1 1 0%;
+    min-height: 0;
+    background: color.$color-white;
+  }
+}
+
+.vm-mypage {
+  // 후불 관리
+  &-credit-manage,
+  &-credit-process {
+    .credit-sign {
+      &-items {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-item {
+        width: 100%;
+
+        &-inner {
+          @include mx.flex(flex, column);
+          gap: fn.rem(10);
+          width: 100%;
+          padding: map.get(var.$unit, 12);
+          border-radius: map.get(var.$radius, 'md');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quinary');
+        }
+      }
+
+      &-info {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 2);
+      }
+
+      &-label {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 4);
+
+        .text {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+
+          em {
+            font-style: normal;
+
+            // 필수
+            &.is-req {
+              color: map.get(color.$text-status, 'brand-sub');
+            }
+
+            // 선택
+            &.is-opt {
+              color: map.get(color.$text-colors, 'tertiary');
+            }
+          }
+        }
+      }
+
+      &-desc {
+        @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand-sub'));
+        position: relative;
+        padding-left: fn.rem(6);
+
+        &::before {
+          @include mx.position(absolute, fn.rem(5), $left: 0);
+          width: map.get(var.$unit, 2);
+          height: map.get(var.$unit, 2);
+          content: '';
+          background: map.get(color.$label-step, 'processing');
+          border-radius: 50%;
+        }
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-end, center);
+
+        .vm-btn-help {
+          margin-right: auto;
+        }
+
+        [class='vits-btn-'] {
+          width: fn.rem(104);
+        }
+      }
+    }
+  }
+}
+
+// 후불관리 - 신청 프로세스
+.vm-step-tab {
+  @include mx.flex(flex, column, flex-start, center);
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  background: color.$color-white;
+
+  .step-tab {
+    &-inner {
+      @include mx.flex(flex, row, flex-start, center);
+      gap: map.get(var.$unit, 4);
+    }
+
+    &-number {
+      @include mx.flex(flex, row, center, center);
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+      background: map.get(color.$layout-surf, 'sunken');
+      border-radius: map.get(var.$unit, 20);
+    }
+
+    &-label {
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      display: none;
+    }
+
+    &-main {
+      @include mx.flex(flex, column, flex-start, center);
+      gap: map.get(var.$unit, 32);
+      width: 100%;
+
+      &-content {
+        @include mx.flex(flex, column, flex-start, center);
+        gap: map.get(var.$unit, 20);
+        width: 100%;
+        text-align: center;
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        [class*='vits-btn-'] {
+          min-width: fn.rem(180);
+        }
+      }
+    }
+
+    &-desc p {
+      @include typo.typography('b3s', $color: #4a5565);
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      & + p {
+        margin-top: map.get(var.$unit, 4);
+      }
+    }
+
+    &-status {
+      @include mx.flex(flex, column, center, center);
+      width: 100%;
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .vits-empty-state {
+        padding: 0;
+
+        &-content {
+          text-align: center;
+        }
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        [class*='vits-btn-'] {
+          width: fn.rem(156);
+        }
+      }
+    }
+
+    &-sign-group {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+    }
+
+    &-head {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+
+      &-title {
+        @include typo.typography('b1s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-desc {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  &-header {
+    @include mx.position(sticky, map.get(var.$mo-header, 'nav-bar'));
+    @include mx.flex(flex, row, center, center);
+    z-index: var.$zindex-base;
+    flex-shrink: 0;
+    width: 100%;
+    height: map.get(var.$unit, 52);
+  }
+
+  &-item {
+    @include mx.flex(flex, row, flex-start, center);
+
+    &:is(.is-active) .step-tab-label {
+      display: block;
+    }
+
+    // 진행중
+    &.is-active {
+      &:not(:last-of-type) {
+        .step-tab {
+          &-number {
+            color: color.$color-white;
+            background: map.get(color.$layout-surf, 'brand');
+          }
+        }
+      }
+
+      &:last-of-type {
+        .step-tab {
+          &-number {
+            color: color.$color-white;
+            background: map.get(color.$label-step, 'done');
+          }
+        }
+      }
+    }
+
+    &:not(:last-of-type)::after {
+      flex-shrink: 0;
+      width: fn.rem(11);
+      height: map.get(var.$unit, 2);
+      margin: 0 map.get(var.$unit, 8);
+      content: '';
+      background: map.get(color.$layout-surf, 'secondary');
+    }
+  }
+
+  &-content {
+    min-height: 100%;
+  }
+
+  &-panels {
+    display: grid;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+  }
+
+  &-panel {
+    display: none;
+    grid-row: 1;
+    grid-column: 1;
+    min-height: 100%;
+
+    &.is-active {
+      display: block;
+    }
+
+    &[data-step-tab-page='1'] {
+      .vm-step-tab-content {
+        @include mx.flex(flex, column, center, center);
+        padding: (var.$mo-section-gap + map.get(var.$mo-bottom-bar, 'tab-bar')) var.$mo-gutter var.$mo-section-gap;
+      }
+    }
+
+    &[data-step-tab-page='2'] {
+      .vm-step-tab-content {
+        padding: var.$mo-section-gap var.$mo-gutter (var.$mo-section-gap + map.get(var.$mo-height, 'step-tab-fix'));
+      }
+    }
+
+    &[data-step-tab-page='3'],
+    &[data-step-tab-page='4'] {
+      .vm-step-tab-content {
+        padding-top: calc(182 / 800 * 100vh);
+        background: map.get(color.$layout-surf, 'mypage');
+        box-shadow: map.get(var.$box-shadow, 'elevation_-1');
+
+        @supports (height: 1dvh) {
+          padding-top: calc(182 / 800 * 100dvh);
+        }
+      }
+    }
+  }
+
+  &-fix {
+    @include mx.position(fixed, $bottom: 0, $left: 0);
+    z-index: map.get(var.$mo-zindex, 'step-tab-fix');
+    box-sizing: content-box;
+    width: 100%;
+    height: map.get(var.$mo-height, 'step-tab-fix');
+    padding-bottom: var(--safe-bottom);
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+    box-shadow: map.get(var.$box-shadow, 'mo_menu');
+
+    .step-tab-fix {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 32);
+      padding: var.$mo-section-gap var.$mo-gutter map.get(var.$unit, 40);
+
+      &-text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        text-align: center;
+
+        [class*='text'] {
+          &[class*='-bold'] {
+            font-weight: 600;
+          }
+
+          &[class*='-point'] {
+            color: map.get(color.$text-status, 'brand-sub');
+          }
+        }
+      }
+    }
+  }
+}
+
+// 후불관리 - 신청완료 후 목록
+.vm-mypage-credit-manage {
+  .credit-manage {
+    &-head {
+      padding: map.get(var.$unit, 12) var.$mo-gutter var.$mo-section-gap;
+      background: color.$color-white;
+    }
+
+    &-title {
+      @include typo.typography('b2s');
+    }
+
+    &-body {
+      @include mx.flex(flex, column);
+      gap: var.$mo-section-gap;
+      padding: map.get(var.$unit, 20) var.$mo-gutter map.get(var.$unit, 52);
+      box-shadow: map.get(var.$box-shadow, 'elevation_-1');
+    }
+
+    &-usage {
+      &-title {
+        @include mx.flex(flex, row, flex-start, center);
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+        gap: map.get(var.$unit, 8);
+
+        small {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+      }
+
+      &-items {
+        @include mx.flex(flex, row, flex-start, stretch, wrap);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-item {
+        flex: 0 0 calc(50% - fn.rem(6));
+
+        .credit-usage {
+          &-item {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 2);
+            height: 100%;
+            padding: map.get(var.$unit, 12);
+            background: map.get(color.$layout-surf, 'raised');
+            border-radius: map.get(var.$radius, 'sm');
+          }
+
+          &-label {
+            @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          &-value {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+
+            &.value-blue {
+              color: map.get(color.$text-status, 'info-sub');
+            }
+
+            &.value-red {
+              color: map.get(color.$text-status, 'brand-sub');
+            }
+          }
+
+          &-desc {
+            @include mx.flex(inline-flex, row, flex-start, center);
+            gap: map.get(var.$unit, 2);
+            padding: map.get(var.$unit, 2) map.get(var.$unit, 4);
+            background: map.get(color.$layout-surf, 'sunken');
+            border-radius: map.get(var.$radius, 'sm');
+
+            &-label {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+
+            &-value {
+              @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+      }
+
+      &-body {
+        @include mx.flex(flex, column);
+        gap: var.$mo-section-gap;
+      }
+
+      &-info {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 12);
+
+        .credit-usage-info {
+          @include mx.flex(flex, row, flex-start, center, wrap);
+          gap: map.get(var.$unit, 8) 0;
+
+          /* stylelint-disable no-descending-specificity */
+          dt,
+          dd {
+            @include mx.flex(flex, row, flex-start, center);
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+            min-height: map.get(var.$unit, 32);
+          }
+
+          dt {
+            flex: 0 0 27.03%;
+          }
+
+          dd {
+            flex: 0 0 calc(100% - 27.03%);
+            padding-left: map.get(var.$unit, 8);
+            color: map.get(color.$text-colors, 'primary');
+          }
+          /* stylelint-enable no-descending-specificity */
+
+          &-title {
+            @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+          }
+        }
+
+        .credit-usage {
+          &-account {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: fn.rem(10);
+
+            > span {
+              @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+
+              &[class*='-number'] {
+                color: map.get(color.$text-status, 'info');
+              }
+            }
+          }
+        }
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &-button [class*='vits-btn-'] {
+        width: 100%;
+      }
+    }
+
+    &-sign-body {
+      @include mx.flex(flex, column);
+      gap: var.$mo-section-gap;
+
+      .credit-sign-actions [class*='vits-btn-'] {
+        width: fn.rem(104);
+      }
+    }
+  }
+}
+
 /* ================================================
 ======================= 팝업 =======================
 ================================================ */
@@ -2045,4 +2517,173 @@
       }
     }
   }
+}
+
+// 후불 신청서
+%common-credit-box {
+  padding: var.$mo-gutter;
+  background: color.$color-white;
+  border-radius: map.get(var.$radius, 'md');
+  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+}
+
+.vm-scope .k-window.is-slideright:has(.vm-modal-credit) {
+  padding-bottom: var(--safe-bottom);
+
+  .vm-modal-credit {
+    /* stylelint-disable no-descending-specificity */
+    .vm-modal {
+      &-header {
+        box-shadow: none;
+      }
+
+      &-content {
+        padding: var.$mo-section-gap var.$mo-gutter;
+      }
+
+      &-footer {
+        border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+        box-shadow: map.get(var.$box-shadow, 'mo_menu');
+      }
+    }
+    /* stylelint-enable no-descending-specificity */
+  }
+}
+
+$credit-manager-fix-height: fn.rem(116);
+
+.vm-credit-application {
+  @include mx.flex(flex, column);
+  position: relative;
+  gap: var.$mo-gutter;
+
+  /* stylelint-disable no-descending-specificity */
+  .credit {
+    &-company-info {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+      flex-shrink: 0;
+      gap: var.$mo-gutter 0;
+
+      dt,
+      dd {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      dt {
+        flex: 0 0 40.24%;
+      }
+
+      dd {
+        flex: 0 0 calc(100% - 40.24%);
+        padding-left: map.get(var.$unit, 12);
+      }
+    }
+
+    &-manager {
+      &-section {
+        @include mx.flex(flex, column);
+        gap: var.$mo-gutter;
+
+        .manager {
+          &-header {
+            @include mx.flex(flex, column);
+            gap: map.get(var.$unit, 2);
+          }
+
+          &-title {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+          }
+
+          &-desc {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          &-empty {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: map.get(var.$unit, 8);
+
+            .empty {
+              &-text {
+                @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+              }
+
+              &-btn {
+                flex-shrink: 0;
+                margin-left: auto;
+              }
+            }
+          }
+
+          &-content {
+            @extend %common-credit-box;
+          }
+
+          &-form {
+            @include mx.flex(flex, column);
+            gap: var.$mo-section-gap;
+
+            .form {
+              &-title {
+                @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+              }
+
+              &-fields {
+                @include mx.flex(flex, row, flex-start, center, wrap);
+                gap: var.$mo-gutter 0;
+
+                dt {
+                  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+                  flex: 0 0 27.03%;
+                }
+
+                dd {
+                  @include mx.flex(flex, column);
+                  flex: 0 0 calc(100% - 27.03%);
+                  gap: map.get(var.$unit, 8);
+                  padding-left: map.get(var.$unit, 8);
+                }
+              }
+
+              &-actions {
+                @include mx.flex(flex, row, space-between, center);
+                gap: map.get(var.$unit, 12);
+
+                [class*='vits-btn-'] {
+                  flex: 0 0 calc(50% - fn.rem(6));
+                }
+              }
+            }
+          }
+
+          &-list {
+            // @include mx.flex(flex, row, flex-start, flex-start);
+
+            .vits-chip-button-group {
+              // margin-top: (map.get(var.$unit, 2) * -1);
+              display: contents;
+
+              // 개별 칩 — flex gap 대신 margin으로 간격
+              .vits-chip-button {
+                display: inline-flex; // 인라인 + 내부 flex 유지
+                margin: 0 map.get(var.$unit, 8) map.get(var.$unit, 8) 0;
+              }
+            }
+
+            .empty-btn {
+              float: right;
+              margin: 0 0 map.get(var.$unit, 8) map.get(var.$unit, 8);
+            }
+
+            // float 해제
+            &::after {
+              display: block;
+              clear: both;
+              content: '';
+            }
+          }
+        }
+      }
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
 }

@@ -1,0 +1,437 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_contract.scss
+// - 전자서명 계약서, 동의서 전용 스타일
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+
+/* -----------------------------------------------------------------------------
+  vm-credit-contract (거래약정서 섹션)
+----------------------------------------------------------------------------- */
+.vm-credit-contract {
+  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+
+  p {
+    margin: 0 0 map.get(var.$unit, 8);
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.contract-articles {
+  margin-bottom: var.$mo-gutter;
+}
+
+.contract-article {
+  margin-bottom: map.get(var.$unit, 12);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-head {
+    @include typo.typography('b4s');
+    margin: 0 0 map.get(var.$unit, 2);
+  }
+
+  &-body {
+    @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    p {
+      margin-bottom: map.get(var.$unit, 2);
+      word-break: keep-all;
+
+      &:only-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+    .contract-date-row {
+      @include mx.flex(flex, row, flex-start, center, wrap);
+      gap: fn.rem(4);
+      margin-bottom: map.get(var.$unit, 2);
+
+      .signed-date {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+}
+
+.contract-input {
+  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+  display: inline-block;
+  min-width: map.get(var.$unit, 40);
+  padding: fn.rem(4) fn.rem(8);
+  background-color: map.get(color.$layout-surf, 'base');
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'sm');
+
+  &::placeholder {
+    color: map.get(color.$text-colors, 'quaternary');
+  }
+
+  &.contract-input-year,
+  &.contract-input-month,
+  &.contract-input-day {
+    width: map.get(var.$unit, 40);
+    text-align: center;
+  }
+
+  &.contract-input-full {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.contract-box {
+  margin-bottom: map.get(var.$unit, 20);
+  border: 1px solid map.get(color.$layout-border, 'tertiary');
+  border-radius: map.get(var.$radius, 'md');
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-title {
+    @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+    padding: 0 map.get(var.$unit, 20);
+    border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+
+    &:not(:has(.contract-box-desc)) {
+      line-height: map.get(var.$unit, 36);
+    }
+
+    &:has(.contract-box-desc) {
+      padding-top: map.get(var.$unit, 12);
+      padding-bottom: map.get(var.$unit, 12);
+    }
+  }
+
+  &-desc {
+    @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+    display: block;
+    padding-top: map.get(var.$unit, 2);
+  }
+
+  .contract-info-cols,
+  .contract-info-list {
+    display: grid;
+    padding: map.get(var.$unit, 12) map.get(var.$unit, 20);
+  }
+
+  .contract-info-cols {
+    grid-template-columns: 1fr;
+    gap: map.get(var.$unit, 16) map.get(var.$unit, 40);
+  }
+
+  .contract-info-list {
+    gap: map.get(var.$unit, 8);
+  }
+
+  .contract-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: map.get(var.$unit, 12);
+  }
+
+  .contract-info-row-full {
+    grid-column: 1 / -1;
+  }
+
+  .contract-info-row {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr;
+    gap: map.get(var.$unit, 4) 0;
+    align-items: start;
+
+    dt {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    dd {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.flex($align: center, $justify: space-between);
+      gap: map.get(var.$unit, 8);
+
+      .contract-input {
+        width: 100%;
+        min-height: fn.rem(32);
+      }
+
+      .vits-textarea {
+        height: map.get(var.$unit, 48);
+        padding: map.get(var.$unit, 8);
+
+        textarea {
+          @include mx.mo-scrollbar;
+          font-size: fn.rem(12);
+        }
+      }
+
+      &:has(.contract-sign-area) {
+        .contract-input {
+          max-width: fn.rem(200);
+        }
+      }
+    }
+  }
+
+  .contract-info-value {
+    margin-right: map.get(var.$unit, 8);
+  }
+
+  .contract-sign-area {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    position: relative;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+
+    .contract-sign-img {
+      @include mx.position(absolute, 50%, 0);
+      max-width: fn.rem(26);
+      transform: translateY(-50%);
+    }
+  }
+
+  .contract-info-row-full:has(.contract-sign-area) dd {
+    width: calc(50% - #{fn.rem(20)});
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  vm-credit-consent (개인신용 정보 수집·조회·이용 및 제공 동의서)
+----------------------------------------------------------------------------- */
+.vm-credit-consent {
+  @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+  padding: 0;
+
+  .contract-box {
+    margin-bottom: map.get(var.$unit, 20);
+
+    &:last-of-type {
+      margin-bottom: map.get(var.$unit, 24);
+    }
+  }
+
+  .contract-article-body p {
+    position: relative;
+    padding-left: map.get(var.$unit, 8);
+
+    &::before {
+      @include mx.position(absolute, $top: 0, $left: 0);
+      width: fn.rem(2);
+      height: fn.rem(2);
+      color: map.get(color.$text-colors, 'tertiary');
+      content: '·';
+    }
+
+    &:not(:only-of-type) {
+      margin-bottom: map.get(var.$unit, 4);
+    }
+  }
+
+  .contract-date-row {
+    @include mx.flex($align: center, $wrap: wrap, $justify: center);
+    @include typo.typography('b3s');
+    gap: map.get(var.$unit, 4);
+    padding-bottom: map.get(var.$unit, 12);
+    margin: 0 auto;
+
+    .signed-date {
+      @include typo.typography('b3s');
+
+      &:not(:first-of-type) {
+        margin-left: var.$mo-gutter;
+      }
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .contract-input:not(:first-of-type) {
+      margin-left: var.$mo-gutter;
+    }
+  }
+}
+
+.consent-intro {
+  @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+  margin: 0 0 var.$mo-gutter;
+}
+
+.consent-required {
+  margin-bottom: var.$mo-gutter;
+
+  .general-table-wrap {
+    min-height: fit-content;
+  }
+}
+
+.consent-required-question {
+  @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+  margin: 0 0 map.get(var.$unit, 12);
+}
+
+.consent-required-badge {
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+  common (공통 영역)
+----------------------------------------------------------------------------- */
+// .contract-main-title {
+//   @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+//   padding-bottom: map.get(var.$unit, 40);
+//   text-align: center;
+// }
+
+.vm-scope .k-window:not(.is-bottomsheet, .is-slideright) .modal-contract {
+  .vm-modal {
+    &-header {
+      padding: map.get(var.$unit, 32) map.get(var.$unit, 32) fn.rem(6);
+    }
+
+    &-content {
+      padding: fn.rem(6) map.get(var.$unit, 32) var.$mo-gutter;
+    }
+
+    &-footer {
+      padding: var.$mo-gutter map.get(var.$unit, 32) map.get(var.$unit, 32);
+    }
+  }
+
+  &.contract-type2 .vm-modal-title {
+    overflow: visible;
+    font-size: fn.rem(14);
+    white-space: normal;
+  }
+}
+
+.contract-signature-submit {
+  @include mx.flex(flex, row, space-between, center);
+  gap: fn.rem(12);
+  width: 100%;
+  margin-top: fn.rem(44);
+
+  [class^='vits-btn-'] {
+    &:first-child {
+      min-width: fn.rem(150);
+    }
+
+    &:last-child {
+      flex: 1;
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+  vm-guide-popup (가이드/도움말 팝업)
+----------------------------------------------------------------------------- */
+.vm-guide-popup {
+  @include mx.img-fit;
+
+  .vits-alerts-anatomy {
+    margin-bottom: var.$mo-gutter;
+  }
+}
+
+/* -----------------------------------
+ * 테이블 컴포넌트 (general-table) 다른 페이지에서 사용 가능
+ * ----------------------------------- */
+.general-table-title {
+  @include typo.typography('b1s', $color: map.get(color.$text-colors, 'primary'));
+  padding-bottom: fn.rem(12);
+}
+
+.general-table-wrap {
+  @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+  min-height: fn.rem(350);
+  overflow: hidden;
+  border-radius: map.get(var.$radius, 'md');
+
+  .vits-empty-state {
+    padding: fn.rem(150) 0;
+  }
+}
+
+.general-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: map.get(color.$layout-surf, 'sunken');
+  }
+
+  th {
+    @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+    height: map.get(var.$unit, 36);
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid map.get(color.$layout-border, 'quaternary');
+
+    .text-left {
+      display: block;
+      text-align: left;
+    }
+  }
+
+  td {
+    @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+    padding: fn.rem(9) var.$mo-section-gap;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid map.get(color.$layout-border, 'quinary');
+
+    [class*='vits-btn'] {
+      margin: 0 auto;
+    }
+
+    [class*='vits-checkbox'] {
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    span,
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  // stylelint-disable-next-line no-descending-specificity
+  tr:first-child td {
+    border-top: 0;
+  }
+
+  &-actions {
+    @include mx.flex($align: center, $justify: center);
+  }
+
+  &-edit {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    padding: fn.rem(6) fn.rem(16);
+    cursor: pointer;
+    background-color: map.get(color.$layout-surf, 'base');
+    border: 1px solid map.get(color.$layout-border, 'tertiary');
+    border-radius: map.get(var.$radius, 'md');
+    transition:
+      background-color 0.2s,
+      border-color 0.2s;
+
+    &:hover {
+      background-color: map.get(color.$layout-surf, 'sunken');
+      border-color: map.get(color.$layout-border, 'secondary');
+    }
+  }
+}
+
+/* end of general-table */

@@ -1,0 +1,184 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '후불결제전자서명-가이드(도움말)'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-credit">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', 
+            title: '후불결제전자서명-가이드(도움말)'
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-credit">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('guideModal01')"
+              >
+                <span class="text">후불결제전자서명 &gt; 거래약정서 도움말 </span>
+              </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('guideModal02')"
+              >
+                <span class="text">후불결제전자서명 &gt; 개인 신용정보 제공 동의서 도움말 </span>
+              </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('guideModal03')"
+              >
+                <span class="text">계좌이체 CMS 동의서 도움말</span>
+              </button>
+              <!-- prettier-ignore -->
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const guideModal01 = { 
+          id: 'guideModal01', 
+          title: '거래약정서 도움말',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_05040802_M.ejs`,
+          imageSrc: `${_public}/resources/img/mro/renewal/guide/guide-mycredit-modal-01.png`,
+          buttons: [
+            { text: '확인', variant: 'secondary', action: 'close' },
+          ]
+        }; %>
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, guideModal01) %>
+
+        <!-- prettier-ignore -->
+        <% const guideModal02 = { 
+          id: 'guideModal02', 
+          title: '신용정보 제공 동의서 도움말',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_05040802_M.ejs`,
+          imageSrc: `${_public}/resources/img/mro/renewal/guide/guide-mycredit-modal-02.png`,
+          buttons: [
+            { text: '확인', variant: 'secondary', action: 'close' },
+          ]
+        }; %>
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, guideModal02) %>
+
+        <!-- prettier-ignore -->
+        <% const guideModal03 = { 
+          id: 'guideModal03', 
+          title: '계좌이체 CMS 동의서 도움말',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_05040802_M.ejs`,
+          imageSrc: `${_public}/resources/img/mro/renewal/guide/guide-mycredit-modal-03.png`,
+          buttons: [
+            { text: '확인', variant: 'secondary', action: 'close' },
+          ]
+        }; %>
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, guideModal03) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 script - type=signed 시 모달 자동 오픈 + 서명 완료 UI, 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        if (new URLSearchParams(location.search).get('type') !== 'signed') return;
+        function run() {
+          var c = document.querySelector('.vm-credit-consent');
+          if (!c) return;
+
+          // 날짜 input → span
+          var dates = ['26', '2', '26'];
+          [].slice.call(c.querySelectorAll('.contract-date-row input.contract-input')).forEach(function (inp, i) {
+            var s = document.createElement('span');
+            s.className = 'signed-date';
+            s.textContent = dates[i] || inp.getAttribute('data-signed-value') || '';
+            inp.parentNode.replaceChild(s, inp);
+          });
+
+          // input → span
+          c.querySelectorAll('.contract-info-cols input.contract-input').forEach(function (inp) {
+            var s = document.createElement('span');
+            s.className = 'contract-info-value';
+            s.textContent = inp.getAttribute('data-signed-value') || inp.value || inp.placeholder || '';
+            inp.parentNode.replaceChild(s, inp);
+          });
+
+          // vits-textarea → span
+          c.querySelectorAll('.contract-info-cols .vits-textarea').forEach(function (wrap) {
+            var ta = wrap.querySelector('textarea');
+            var s = document.createElement('span');
+            s.className = 'contract-info-value';
+            s.textContent = (ta && (ta.getAttribute('data-signed-value') || ta.value || ta.placeholder)) || '';
+            wrap.parentNode.replaceChild(s, wrap);
+          });
+
+          // 체크박스 모두 체크
+          c.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+            cb.checked = true;
+            cb.setAttribute('checked', 'checked');
+            cb.dispatchEvent(new Event('change', {bubbles: true}));
+          });
+
+          // 컴포넌트 초기화 이후 리셋 방지 — 재체크
+          setTimeout(function () {
+            document.querySelectorAll('.vm-credit-consent input[type="checkbox"]').forEach(function (cb) {
+              cb.checked = true;
+              cb.setAttribute('checked', 'checked');
+              cb.dispatchEvent(new Event('change', {bubbles: true}));
+            });
+          }, 500);
+
+          // 서명 이미지 — 구매자, 보증인
+          var signImgPath = '<%= _public %>/resources/img/mro/renewal/sign/temp-sign.png';
+          c.querySelectorAll('.contract-sign-area').forEach(function (area) {
+            var img = document.createElement('img');
+            img.src = signImgPath;
+            img.alt = '서명';
+            img.className = 'contract-sign-img';
+            area.insertBefore(img, area.firstChild);
+          });
+
+          // kendo-window footer 버튼 → 저장하기로 교체
+          var $footer = document.querySelector('#modal .vm-modal-footer .vm-modal-buttons');
+          if ($footer) {
+            $footer.className = 'vm-modal-buttons is-single';
+            $footer.innerHTML =
+              '<button type="button" class="vm-modal-btn vm-modal-btn-primary"><span class="text">저장하기</span></button>';
+          }
+        }
+        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', run) : run();
+      })();
+    </script>
+    <!-- E: [REMOVE] 확인용 script - 개발 적용 시 제거 -->
+  </body>
+</html>

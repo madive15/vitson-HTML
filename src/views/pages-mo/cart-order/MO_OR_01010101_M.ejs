@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '옵션/수량 변경 , 상품추가'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '옵션/수량 변경 , 상품추가, 쿠폰자동적용'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -48,6 +48,15 @@
               >
                 <span class="text">상품 추가</span>
               </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal4')"
+              >
+                <span class="text">쿠폰 자동 적용</span>
+              </button>
             </div>
           </main>
           <!-- E: vm-main -->
@@ -89,7 +98,7 @@
             { text: '변경하기', variant: 'primary', action: 'close' },
           ]}; 
         %> 
-        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+          <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
         <!-- prettier-ignore -->
         <% const modal3 = { 
           id: 'modal3', 
@@ -101,8 +110,21 @@
             { text: '취소', variant: 'secondary', action: 'close' },
             { text: '장바구니 담기', variant: 'primary', action: 'close' },
           ]}; 
-        %> 
-        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
+          %> 
+          <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
+        <!-- prettier-ignore -->
+        <% const modal4 = { 
+            id: 'modal4', 
+            variant: 'center',
+            className: 'modal-center',
+            title: '쿠폰 자동 적용', 
+            contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_03010601_M.ejs`,
+            buttons: [
+              { text: '취소', variant: 'secondary', action: 'close' },
+              { text: '장바구니 담기', variant: 'primary', action: 'close' },
+            ]}; 
+          %> 
+          <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal4) %>
         <!-- E: 팝업 영역 -->
       </div>
       <!-- E: vm-wrap -->

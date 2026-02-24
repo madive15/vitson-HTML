@@ -1,0 +1,90 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '주문실패'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-cart-order">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '주문실패' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-cart-order">
+              <section class="vm-cart-order">
+                <h2 class="sr-only">주문실패</h2>
+
+                <!-- S: vm-cart-order-body -->
+                <div class="vm-cart-order-body vm-order-complete">
+                  <!-- 주문 실패 상태 안내 -->
+                  <div class="order-complete-status is-failed">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                      iconName: 'info', 
+                      title: '주문을 실패 하였습니다.',
+                      desc: '다음의 실패 사유를 확인한 후 다시 시도해 주세요',                      
+                    }) %>
+                  </div>
+
+                  <!-- 주문 상품 -->
+                  <div class="order-section order-product">
+                    <!-- 배송 정보-->
+                    <div class="order-section-content failed-reason">
+                      <h2 class="order-section-title">실패 상세 정보</h2>
+                      <ul class="info-list">
+                        <li class="info-item">
+                          <span class="info-label">결제 수단</span>
+                          <span class="info-value">카드결제 (신한카드 ****-****-****-1234)</span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">최종 결제 금액</span>
+                          <span class="info-value"><strong>30,000원</strong></span>
+                        </li>
+                        <li class="info-item">
+                          <span class="info-label">주문 실패 사유</span>
+                          <span class="info-value is-miss"> 체크 카드 한도 초과 </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- E: vm-cart-order-body -->
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'order-bar',
+          leftText: '홈으로',
+          rightText: '장바구니로 가기'
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

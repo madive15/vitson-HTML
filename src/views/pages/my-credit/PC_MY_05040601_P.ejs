@@ -1,45 +1,10 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!DOCTYPE html>
-<html lang="ko" class="vits-scope">
+<html lang="ko" class="vits-scope window-frame">
   <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '후불결제전자서명-거래약정서'}) %>
   <body class="vits-scope">
-    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
-
-    <section class="vits-wrapper">
-      <%- include(`${_src}/views/layout/header.ejs`) %>
-
-      <main id="skipNav" class="vits-main">
-        <div class="vits-wrap">
-          <div class="vits-grid">
-            <div class="vits-grid-main vits-main-plp">
-              <div class="vits-inner" style="padding: 100px 0">
-                <button
-                  type="button"
-                  class="vits-btn-md vits-btn-outline-secondary"
-                  onclick="VitsKendoWindow.open('contractModal')"
-                >
-                  <span class="text">후불결제전자서명 &gt; 전체계약내용 </span>
-                </button>
-                <!-- prettier-ignore -->
-
-                <% const contractModal = { 
-                  id: 'contractModal', 
-                  size: '800',
-                  title: '거래약정서',                  
-                  contentPath: `${_src}/views/pages/kendo-window/my-credit/kw-PC_MY_05040601_P.ejs`,
-                  buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '서명하기', variant: 'primary', action: 'close' }] 
-                  }; 
-                %> 
-                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, contractModal) %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <%- include(`${_src}/views/layout/footer.ejs`) %>
-    </section>
-
+    <%- include(`${_src}/views/pages/kendo-window/my-credit/kw-PC_MY_05040601_P.ejs`) %>
+    <!-- prettier-ignore -->
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
 
     <!-- S: [REMOVE] 확인용 script - type=signed 시 모달 자동 오픈 + 서명 완료 UI, 개발 적용 시 제거 -->
@@ -47,7 +12,7 @@
       (function () {
         if (new URLSearchParams(location.search).get('type') !== 'signed') return;
         function run() {
-          var c = document.querySelector('#contractModal .vits-credit-contract');
+          var c = document.querySelector('.vits-credit-contract');
           if (c) {
             var dates = ['26', '5', '25', '27', '5', '26'];
             [].slice.call(c.querySelectorAll('.contract-date-row input.contract-input')).forEach(function (inp, i) {
@@ -63,11 +28,10 @@
               inp.parentNode.replaceChild(s, inp);
             });
           }
-          var b = document.querySelector('#contractModal .vits-modal-buttons');
+          var b = document.querySelector('.vits-credit-contract .contract-signature-submit');
           if (b) {
-            b.className = 'vits-modal-buttons is-single';
             b.innerHTML =
-              '<button type="button" class="vits-modal-btn vits-modal-btn-primary" onclick="VitsKendoWindow.close(\'contractModal\')"><span class="text">저장하기</span></button>';
+              '<button type="button" class="vits-btn-xxl vits-btn-primary"><span class="text">저장하기</span></button>';
           }
           if (typeof VitsKendoWindow !== 'undefined' && VitsKendoWindow.open) VitsKendoWindow.open('contractModal');
         }
