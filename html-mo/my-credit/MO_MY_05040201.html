@@ -402,6 +402,13 @@
                     <div class="vm-step-tab-panel" data-step-tab-page="3">
                       <div class="vm-step-tab-content">
                         <div class="step-tab-status">
+                          <!-- [D] 스텝 3 상태 분기
+                                - 접수    → case 1 ("심사접수되었습니다") 노출
+                                - 심사중   → case 2 ("심사가 진행 중입니다") 노출
+                                - 승인    → 스텝 4로 이동 (케이스 1, 2 모두 미노출)
+                                * 상태값은 서버에서 전달, 페이지 진입 시 해당 상태에 맞는 화면만 렌더링
+                          -->
+
                           <!-- case 1. 심사접수 -->
                           <!-- prettier-ignore -->
                           
@@ -418,7 +425,7 @@
       
     </div>
     <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-order" aria-hidden="true"></i>
+      <i class="ic ic-check" aria-hidden="true"></i>
 
     </div>
   </div>
