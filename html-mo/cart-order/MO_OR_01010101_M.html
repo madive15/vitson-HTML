@@ -15,7 +15,7 @@
   <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
   <meta name="format-detection" content="telephone=no,address=no,email=no" />
 
-  <title>옵션/수량 변경 , 상품추가</title>
+  <title>옵션/수량 변경 , 상품추가, 쿠폰자동적용</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -130,6 +130,15 @@
                 onclick="VmKendoWindow.open('modal3')"
               >
                 <span class="text">상품 추가</span>
+              </button>
+
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal4')"
+              >
+                <span class="text">쿠폰 자동 적용</span>
               </button>
             </div>
           </main>
@@ -422,7 +431,7 @@
 </div>
         <!-- prettier-ignore -->
          
-        
+          
 
 
 
@@ -626,7 +635,7 @@
 </div>
         <!-- prettier-ignore -->
          
-        
+          
 
 
 
@@ -798,6 +807,85 @@
       </button>
 
       <button type="button" class="vm-modal-btn vm-modal-btn-primary" onclick="VmKendoWindow.close('modal3')">
+        <span class="text">장바구니 담기</span>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+        <!-- prettier-ignore -->
+         
+          
+
+
+
+<div
+  id="modal4"
+  class="vm-modal-inner modal-center"
+  data-ui="kendo-window"
+  data-variant="center"
+  
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal4-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vm-modal-header">
+    <div class="vm-modal-header-content">
+      <h2 class="vm-modal-title" id="modal4-title">쿠폰 자동 적용</h2>
+
+
+    </div>
+
+    <button type="button" class="vm-modal-close" onclick="VmKendoWindow.close('modal4')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vm-modal-content" data-scroll-check>
+  
+      
+<!-- S: 쿠폰 자동 적용 -->
+<section class="vm-auto-alert">
+  <h2 class="sr-only">쿠폰 자동 적용</h2>
+
+  <div class="vm-auto-alert-content">
+    <ul class="vm-auto-alert-list">
+      <li class="vm-auto-alert-item">
+        <p class="vm-auto-alert-text">장바구니 진입시 쿠폰 최대 혜택이 자동 적용됩니다.</p>
+      </li>
+      <li class="vm-auto-alert-item">
+        <p class="vm-auto-alert-text">자동 적용 이후에도 쿠폰을 직접 변경할 수 있습니다.</p>
+      </li>
+      <li class="vm-auto-alert-item">
+        <p class="vm-auto-alert-text">자동 적용을 원하지 않을 경우 ‘취소’를 클릭해 주세요.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+<!-- E: 쿠폰 자동 적용 -->
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vm-modal-footer">
+
+    <div class="vm-modal-buttons is-double">
+
+      <button type="button" class="vm-modal-btn vm-modal-btn-secondary" onclick="VmKendoWindow.close('modal4')">
+        <span class="text">취소</span>
+      </button>
+
+      <button type="button" class="vm-modal-btn vm-modal-btn-primary" onclick="VmKendoWindow.close('modal4')">
         <span class="text">장바구니 담기</span>
       </button>
 

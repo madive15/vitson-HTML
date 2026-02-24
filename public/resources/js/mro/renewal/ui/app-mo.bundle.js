@@ -103,6 +103,121 @@
 
 /***/ }),
 
+/***/ 689:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/auth.js
+ * @description 모바일 로그인/인증 페이지 UI (인증 탭, 비밀번호 표시·숨김 토글)
+ * @reference scripts/ui/auth-ui.js
+ * @scope .vits-auth-tabs + .vits-login-form-fields | .vm-login-form-fields
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var AUTH_TAB_FIELD_GROUPS = '.vits-login-form-fields, .vm-login-form-fields';
+  function setAuthTabActive(btnList, groupList, index) {
+    for (var i = 0; i < btnList.length; i++) {
+      var isActive = i === index;
+      btnList[i].classList.toggle('is-active', isActive);
+      btnList[i].setAttribute('aria-selected', isActive ? 'true' : 'false');
+    }
+    for (var j = 0; j < groupList.length; j++) {
+      var active = j === index;
+      groupList[j].style.display = active ? '' : 'none';
+      groupList[j].setAttribute('aria-hidden', active ? 'false' : 'true');
+    }
+  }
+
+  /**
+   * 인증 방법 탭 전환 (이메일/휴대전화 등)
+   */
+  function initAuthTabs(root) {
+    var el = root && root.nodeType === 1 ? root : document;
+    var tabWraps = el.querySelectorAll('.vits-auth-tabs');
+    for (var w = 0; w < tabWraps.length; w++) {
+      var tabWrap = tabWraps[w];
+      var buttons = tabWrap.querySelectorAll('button');
+      if (!buttons.length) continue;
+      var form = tabWrap.closest('form');
+      if (!form && tabWrap.parentElement) {
+        var next = tabWrap.parentElement.nextElementSibling;
+        if (next && next.tagName === 'FORM') form = next;
+      }
+      if (!form) continue;
+      var fieldGroups = form.querySelectorAll(AUTH_TAB_FIELD_GROUPS);
+      if (fieldGroups.length < 2) continue;
+      var currentIndex = -1;
+      for (var k = 0; k < buttons.length; k++) {
+        if (buttons[k].classList.contains('is-active')) {
+          currentIndex = k;
+          break;
+        }
+      }
+      if (currentIndex < 0) currentIndex = 0;
+      setAuthTabActive(buttons, fieldGroups, currentIndex);
+      for (var b = 0; b < buttons.length; b++) {
+        var btn = buttons[b];
+        if (btn.dataset.authTabBound === 'true') continue;
+        btn.dataset.authTabBound = 'true';
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        (function (idx) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            setAuthTabActive(buttons, fieldGroups, idx);
+          });
+        })(b);
+      }
+    }
+  }
+
+  /**
+   * 비밀번호 표시/숨김 토글 버튼 초기화
+   */
+  function initPasswordToggle(root) {
+    var el = root && root.nodeType === 1 ? root : document;
+    var eyeButtons = el.querySelectorAll('.vits-btn-eyes button');
+    for (var i = 0; i < eyeButtons.length; i++) {
+      var btn = eyeButtons[i];
+      if (btn.dataset.passwordToggleBound === 'true') continue;
+      btn.dataset.passwordToggleBound = 'true';
+      if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+      btn.addEventListener('click', function () {
+        var iconSpan = this.querySelector('.ic');
+        if (!iconSpan) return;
+        var isOpen = this.classList.contains('is-eye-open');
+        var input = this.closest('.vits-input') ? this.closest('.vits-input').querySelector('input') : null;
+        if (isOpen) {
+          this.classList.remove('is-eye-open');
+          this.classList.add('is-eye-close');
+          iconSpan.classList.remove('ic-eye-show');
+          iconSpan.classList.add('ic-eye-hide');
+          this.setAttribute('aria-label', '비밀번호 표시');
+          if (input) input.type = 'password';
+        } else {
+          this.classList.remove('is-eye-close');
+          this.classList.add('is-eye-open');
+          iconSpan.classList.remove('ic-eye-hide');
+          iconSpan.classList.add('ic-eye-show');
+          this.setAttribute('aria-label', '비밀번호 숨기기');
+          if (input) input.type = 'text';
+        }
+      });
+    }
+  }
+  window.UI.auth = {
+    init: function (root) {
+      initAuthTabs(root);
+      initPasswordToggle(root);
+    }
+  };
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 905:
 /***/ (function() {
 
@@ -3640,6 +3755,10 @@ var collapse = __webpack_require__(9212);
 var scroll_overflow_gradient = __webpack_require__(2638);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
 var option_box = __webpack_require__(3198);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-tab.js
+var step_tab = __webpack_require__(6323);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/auth.js
+var auth = __webpack_require__(689);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -3658,12 +3777,14 @@ var option_box = __webpack_require__(3198);
 
 
 
+
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -3972,6 +4093,7 @@ var cart = __webpack_require__(9459);
  * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
  * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
  * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
+ * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
  * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
  */
 
@@ -3991,11 +4113,13 @@ var cart = __webpack_require__(9459);
   var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
   var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
   var INIT_KEY = 'uiOrderInit';
+  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
 
-  // 결제수단 (데스크톱 vits-* → 모바일 vm-*)
+  // 결제수단 (모바일 vm-*)
   var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
   var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
   var PAYMENT_ITEM_SEL = '.vm-payment-item';
+  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
   var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
   var PAYMENT_PANEL_SEL = '.vm-payment-panel';
   var PAYMENT_METHOD_SEL = '.vm-payment-method';
@@ -4033,6 +4157,8 @@ var cart = __webpack_require__(9459);
   var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
   var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
   var ID_PAY_SIMPLE = 'pay-simple';
+  var ID_PANEL_CREDIT = 'panel-credit';
+  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
   function getScope(root) {
     if (!root) return $(ROOT_SEL);
     var $el = $(root);
@@ -4149,6 +4275,11 @@ var cart = __webpack_require__(9459);
       if (!currentLabelledBy || currentLabelledBy !== radioId) {
         $targetPanel.attr('aria-labelledby', radioId);
       }
+      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
+      if (controlsId === ID_PANEL_CREDIT) {
+        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
+        if ($taxBatch.length) $taxBatch.prop('checked', true);
+      }
     } else {
       $radio.attr('aria-expanded', 'false');
     }
@@ -4249,6 +4380,23 @@ var cart = __webpack_require__(9459);
     $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
       setPaymentPanelState($scope, $(this));
     });
+
+    // 결제수단 토글 클릭 시 해당 패널 활성화
+    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
+      $(document).data(TOGGLE_DELEGATE_KEY, true);
+      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
+        e.preventDefault();
+        var $toggle = $(this);
+        var $scope = $toggle.closest(ROOT_SEL);
+        if (!$scope.length) return;
+        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
+        var $radio = $item.find('input[type="radio"][aria-controls]');
+        if ($radio.length) {
+          $radio.prop('checked', true);
+          setPaymentPanelState($scope, $radio);
+        }
+      });
+    }
 
     // 결제 카드/계좌 Swiper 초기화
     initPaymentSwipers($scope);
@@ -4385,6 +4533,158 @@ console.log('[mobile/index] entry 실행');
       if (mod && typeof mod.init === 'function') mod.init();
     });
   });
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 6323:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/step-tab.js
+ * @description 단방향 스텝 탭 — 완료 버튼으로만 다음 스텝 이동
+ * @scope [data-step-tab-root]
+ * @mapping data-step-tab-nav 헤더(시각 표시만), data-step-tab-page 콘텐츠, data-step-tab-complete 완료 버튼
+ * @state .is-active — 현재 스텝 (탭·페이지)
+ * @state .is-done — 완료된 스텝 (탭)
+ * @state .is-disabled — 미도달 스텝 (탭)
+ * @option data-step-tab-root {number} 시작 스텝 (기본 1)
+ * @a11y aria-current="step" 현재 스텝, aria-disabled 미도달 스텝
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiStepTab';
+  var DATA_KEY = 'stepTab';
+  var ROOT = '[data-step-tab-root]';
+  var NAV = '[data-step-tab-nav]';
+  var PAGE = '[data-step-tab-page]';
+  var COMPLETE = '[data-step-tab-complete]';
+  var CLS = {
+    active: 'is-active',
+    done: 'is-done',
+    disabled: 'is-disabled'
+  };
+  var DEFAULTS = {
+    startStep: 1,
+    onBeforeComplete: null,
+    onComplete: null,
+    onAllDone: null
+  };
+  function parseOptions($root) {
+    var parsed = {};
+    var start = Number($root.attr('data-step-tab-root'));
+    if (start > 0) parsed.startStep = start;
+    return parsed;
+  }
+
+  // 스텝 전환 (내부용)
+  function goTo($root, step) {
+    var state = $root.data(DATA_KEY);
+    if (!state || step < 1 || step > state.total) return;
+    state.current = step;
+
+    // 페이지 전환
+    $root.find(PAGE).removeClass(CLS.active).filter('[data-step-tab-page="' + step + '"]').addClass(CLS.active);
+
+    // 탭 상태 갱신
+    $root.find(NAV).each(function () {
+      var $btn = $(this);
+      var n = Number($btn.data('stepTabNav'));
+      $btn.removeClass(CLS.active + ' ' + CLS.done + ' ' + CLS.disabled).removeAttr('aria-current');
+      if (n === step) {
+        $btn.addClass(CLS.active).attr('aria-current', 'step');
+      } else if (n < step) {
+        $btn.addClass(CLS.done).attr('aria-disabled', 'true');
+      } else {
+        $btn.addClass(CLS.disabled).attr('aria-disabled', 'true');
+      }
+    });
+  }
+
+  // 현재 스텝 완료 → 다음 이동
+  function complete($root) {
+    var state = $root.data(DATA_KEY);
+    if (!state) return;
+    var opt = state.opt;
+    var current = state.current;
+
+    // 완료 전 콜백 — false 반환 시 중단
+    if (typeof opt.onBeforeComplete === 'function') {
+      if (opt.onBeforeComplete(current) === false) return;
+    }
+    var isLast = current >= state.total;
+
+    // 스텝 완료 콜백
+    if (typeof opt.onComplete === 'function') {
+      opt.onComplete(current, isLast);
+    }
+
+    // 마지막 스텝 → 전체 완료 처리
+    if (isLast) {
+      $root.find(NAV + '[data-step-tab-nav="' + current + '"]').removeClass(CLS.active).addClass(CLS.done).removeAttr('aria-current').attr('aria-disabled', 'true');
+      if (typeof opt.onAllDone === 'function') {
+        opt.onAllDone();
+      }
+      return;
+    }
+    goTo($root, current + 1);
+  }
+  function bind($root) {
+    // 탭 헤더는 클릭 불가 — 이벤트 바인딩 없음 (단방향)
+
+    // 완료 버튼
+    $root.on('click' + NS, COMPLETE, function (e) {
+      e.preventDefault();
+      complete($root);
+    });
+  }
+  function init(scope, options) {
+    var $root = $(scope || ROOT);
+    if ($root.data(DATA_KEY)) return;
+    var opt = $.extend({}, DEFAULTS, parseOptions($root), options);
+    var total = $root.find(PAGE).length;
+    if (total < 2) return;
+    $root.data(DATA_KEY, {
+      opt: opt,
+      total: total,
+      current: 0
+    });
+    bind($root);
+    goTo($root, opt.startStep);
+  }
+  function destroy(scope) {
+    var $root = $(scope || ROOT);
+    var state = $root.data(DATA_KEY);
+    if (!state) return;
+    $root.off(NS).removeData(DATA_KEY);
+    $root.find(NAV).removeClass(CLS.active + ' ' + CLS.done + ' ' + CLS.disabled);
+    $root.find(PAGE).removeClass(CLS.active);
+  }
+  window.UI.stepTab = {
+    init: init,
+    destroy: destroy,
+    // 외부에서 프로그래밍 방식으로 완료
+    complete: function (scope) {
+      var $root = $(scope || ROOT);
+      if ($root.data(DATA_KEY)) {
+        complete($root);
+      }
+    },
+    reset: function (scope) {
+      var $root = $(scope || ROOT);
+      var state = $root.data(DATA_KEY);
+      if (!state) return;
+      $root.find(NAV).removeClass(CLS.done);
+      goTo($root, state.opt.startStep);
+    },
+    getCurrent: function (scope) {
+      var state = $(scope || ROOT).data(DATA_KEY);
+      return state ? state.current : null;
+    }
+  };
 })(window.jQuery, window);
 
 /***/ }),

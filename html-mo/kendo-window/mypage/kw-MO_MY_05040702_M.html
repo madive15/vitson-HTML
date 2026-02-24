@@ -1,41 +1,7 @@
-
-<!DOCTYPE html>
-<html lang="ko" class="vits-scope window-frame">
-  
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover"
-  />
-  <title>후불결제전자서명-개인신용 제공 동의서</title>
-  <!-- favicon -->
-  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
-
-  <!-- new 켄도 -->
-  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
-  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
-  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
-
-  <!-- public css 링크-->
-  <link rel="stylesheet" href="../../public/resources/css/mro/reset.css" />
-  <link rel="stylesheet" href="../../public/resources/css/mro/sub_layout.css" />
-  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
-  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
-  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
-<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
-
-  <body class="vits-scope">
-    
+<head><script defer src="../../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
 <!-- prettier-ignore -->
 
-<section class="vits-credit-consent">
-  <h2 class="contract-main-title">개인신용 정보 수집 · 조회 · 이용 및 제공 동의서</h2>
-
+<section class="vm-credit-consent">
   <!-- S: 서론 -->
   <p class="consent-intro">
     (주)일신비츠온은 상거래관계설정, 유지목적으로 [개인정보보호법] 제15조 등, [신용정보의 이용 및 보호에 관한 법률] 제
@@ -231,13 +197,13 @@
   <div class="contract-box contract-buyer">
     <h3 class="contract-box-title">구매자</h3>
     <div class="contract-info-cols">
-      <div class="contract-info-row contract-info-row-full">
+      <dl class="contract-info-row">
         <dt>대표(구매자) 성명</dt>
         <dd>
           <span class="contract-info-value">김메가</span>
           <span class="contract-sign-area" title="서명 영역">서명(인)</span>
         </dd>
-      </div>
+      </dl>
       <dl class="contract-info-col contract-info-col-left">
         
         <div class="contract-info-row">
@@ -266,6 +232,43 @@
         </div>
         
       </dl>
+      <!-- S: 거주지 주소 -->
+      <div class="contract-info-row contract-info-row-full">
+        <dt>거주지 주소</dt>
+        <dd>
+          <!-- prettier-ignore -->
+          
+
+<div class="vits-textarea-box size-default ">
+  <div class="vits-textarea" data-textarea-count="false">
+    <div class="textarea-box">
+      <label for="consent-buyer-addr" class="sr-only"></label>
+      <textarea
+        rows="4"
+        id="consent-buyer-addr"
+        name="consent-buyer-addr"
+        placeholder="(예) 경기도 남양주시 진접읍 팔야산단로 12번길 55,56"
+        required
+        
+        
+        
+        
+        
+      ></textarea>
+    </div>
+  
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="consent-buyer-addr-validation" aria-live="polite"></p>
+  </div>
+</div>
+        </dd>
+      </div>
+      <!-- E: 거주지 주소 -->
     </div>
   </div>
   <!-- E: 구매자 -->
@@ -274,7 +277,7 @@
   <div class="contract-box contract-guarantor">
     <h3 class="contract-box-title">보증인</h3>
     <div class="contract-info-cols">
-      <div class="contract-info-row contract-info-row-full">
+      <div class="contract-info-row">
         <dt>보증인 성명</dt>
         <dd>
           <input
@@ -319,103 +322,10 @@
   <!-- E: 보증인 -->
 
   <!-- S: 서명 일자 -->
-  <p class="contract-date-row">
+  <p class="contract-date-row input-date">
     20
     <input type="text" class="contract-input contract-input-year" maxlength="2" placeholder="" aria-label="연도" /> 년
     <input type="text" class="contract-input contract-input-month" maxlength="2" placeholder="" aria-label="월" /> 월
     <input type="text" class="contract-input contract-input-day" maxlength="2" placeholder="" aria-label="일" /> 일
   </p>
-  <!-- E: 서명 일자 -->
-  <div class="contract-signature-submit">
-    
-
-
-<button
-  type="button"
-  
-  class="vits-btn-xxl vits-btn-secondary "
-  
-  
-  >
-  
-
-  <span class="text">취소</span>
-
-  
-</button>
-
-    <!-- prettier-ignore -->
-    
-
-
-<button
-  type="button"
-  
-  class="vits-btn-xxl vits-btn-primary "
-  
-  
-  >
-  
-
-  <span class="text">서명하기</span>
-
-  
-</button>
-
-  </div>
 </section>
-
-    <!-- prettier-ignore -->
-    
-<!-- jquery -->
-<!-- Kendo UI Core JavaScript -->
-<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
-<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
-<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
-
-<!-- kr 설정 n$, 원 -->
-<script type="text/javaScript" language="javascript">
-  kendo.culture("ko-KR");
-</script>
-<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
-<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
-
-
-    <!-- S: [REMOVE] 확인용 script - type=signed 시 모달 자동 오픈 + 서명 완료 UI, 개발 적용 시 제거 -->
-    <script>
-      (function () {
-        if (new URLSearchParams(location.search).get('type') !== 'signed') return;
-        function run() {
-          var c = document.querySelector('.vits-credit-consent');
-          if (c) {
-            var dates = ['26', '2', '26'];
-            [].slice.call(c.querySelectorAll('.contract-date-row input.contract-input')).forEach(function (inp, i) {
-              var s = document.createElement('span');
-              s.className = 'signed-date';
-              s.textContent = dates[i] || inp.getAttribute('data-signed-value') || '';
-              inp.parentNode.replaceChild(s, inp);
-            });
-            c.querySelectorAll('.contract-info-cols input.contract-input').forEach(function (inp) {
-              var s = document.createElement('span');
-              s.className = 'contract-info-value';
-              s.textContent = inp.getAttribute('data-signed-value') || inp.value || inp.placeholder || '';
-              inp.parentNode.replaceChild(s, inp);
-            });
-            c.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
-              cb.checked = true;
-            });
-          }
-          var b = document.querySelector('.vits-credit-consent .contract-signature-submit');
-          if (b) {
-            b.innerHTML =
-              '<button type="button" class="vits-btn-xxl vits-btn-primary"><span class="text">저장하기</span></button>';
-          }
-          if (typeof VitsKendoWindow !== 'undefined' && VitsKendoWindow.open) VitsKendoWindow.open('contractModal');
-        }
-        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', run) : run();
-      })();
-    </script>
-    <!-- E: [REMOVE] 확인용 script - 개발 적용 시 제거 -->
-  </body>
-</html>

@@ -9850,7 +9850,17 @@ var support_ui = __webpack_require__(2064);
       // 슬라이드 개수 확인 (3개 이하면 Swiper 미적용, 정적인 리스트로 사용)
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
+
+      // is-nomore 클래스를 붙일 요소 (.event-banner-container = Swiper 컨테이너와 동일)
+      var bannerContainer = section.querySelector('.event-banner-container') || container;
+
+      // 슬라이드가 3개 이하: 다음으로 넘어갈 슬라이드가 없으므로 is-nomore + 네비 disabledClass 적용 후 Swiper 생략
       if (slideCount <= 3) {
+        bannerContainer.classList.add('is-nomore');
+        var prevBtn = section.querySelector('.event-banner-nav-prev');
+        var nextBtn = section.querySelector('.event-banner-nav-next');
+        if (prevBtn) prevBtn.classList.add('swiper-button-disabled');
+        if (nextBtn) nextBtn.classList.add('swiper-button-disabled');
         return;
       }
 
@@ -9861,18 +9871,40 @@ var support_ui = __webpack_require__(2064);
       }
       var prevButton = section.querySelector('.event-banner-nav-prev');
       var nextButton = section.querySelector('.event-banner-nav-next');
+      function updateIsNomore(swiper) {
+        if (swiper.isEnd) {
+          bannerContainer.classList.add('is-nomore');
+        } else {
+          bannerContainer.classList.remove('is-nomore');
+        }
+      }
       var options = {
         slidesPerView: 'auto',
         spaceBetween: 24,
         speed: 500,
         slidesPerGroup: 1,
         // 항상 1장씩 이동
+        slidesOffsetAfter: 30,
         watchSlidesProgress: true,
         a11y: false,
         navigation: {
           nextEl: nextButton,
           prevEl: prevButton,
           disabledClass: 'swiper-button-disabled'
+        },
+        on: {
+          init: function (swiper) {
+            // 레이아웃 계산 후 isEnd 반영되도록 한 프레임 뒤에 적용
+            requestAnimationFrame(function () {
+              updateIsNomore(swiper);
+            });
+          },
+          slideChange: function (swiper) {
+            updateIsNomore(swiper);
+          },
+          reachEnd: function () {
+            bannerContainer.classList.add('is-nomore');
+          }
         }
       };
       try {

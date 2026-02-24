@@ -1,0 +1,940 @@
+
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi, viewport-fit=cover, interactive-widget=resizes-content"
+  />
+
+  <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+
+  <title>후불신청서</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
+
+  <!-- new 켄도 -->
+  <link href="../../public/resources/kendo_new/styles/default-main.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/kendo_new/styles/font-icons/index.css" rel="stylesheet" type="text/css" />
+  <link href="../../public/resources/css/common/default-custom.css" rel="stylesheet" type="text/css" />
+
+  <!-- public css 링크-->
+  <link rel="stylesheet" href="../../public/resources/css/mro/mobile/reset.css" />
+  <!-- <link rel="stylesheet" href="/home/runner/work/vitson-HTML/vitson-HTML/public/resources/css/mro/mobile/sub_layout.css" /> -->
+  <link rel="stylesheet" href="../../public/resources/css/swiper_2.css" />
+  <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
+<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app-mo.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout-mo.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages-mo.css" rel="stylesheet"></head>
+
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          
+
+<!-- prettier-ignore -->
+
+  
+<!-- prettier-ignore -->
+
+<header class="vm-header header-product-bar">
+  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
+    <!-- prettier-ignore -->
+    <i class="ic ic-arrow-left" aria-hidden="true"></i>
+
+  </a>
+  
+  <div class="vm-header-search">
+    <!-- prettier-ignore -->
+    
+
+<div class="vits-input size-l ">
+  <div class="input-item">
+    <label for="receiver-name" class="sr-only">받는 사람</label>
+
+    <input
+      type="product-bar"
+      name="receiverName"
+      id="receiver-name"
+      placeholder="테스트 헤더 상세용"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="receiver-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+    <button type="button" class="vm-header-btn btn-mic" aria-label="음성 검색">
+      <i class="ic ic-mic" aria-hidden="true"></i>
+
+    </button>
+  </div>
+  <div class="vm-header-actions">
+    <button type="button" class="vm-header-btn btn-cart" aria-label="장바구니">
+      <i class="ic ic-bag" aria-hidden="true"></i>
+
+      <span class="badge">9</span>
+    </button>
+  </div>
+</header>
+
+
+
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('creditModal')"
+              >
+                <span class="text">후불신청서 팝업</span>
+              </button>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          
+
+<!-- prettier-ignore -->
+
+<!-- < % if (type === 'main') { 
+  < %- include('./main.ejs') 
+< % } else if (type === 'nav-bar') { 
+  < %- include('./nav-bar.ejs', { title: title }) 
+< % }  -->
+
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        
+
+<!-- prettier-ignore -->
+<div class="vm-bottom-bar">
+  
+    <!-- prettier-ignore -->
+    
+
+<!-- prettier-ignore -->
+
+
+
+<div class="bottom-tab-bar">
+  <nav class="tab-bar-nav">
+    <ul class="tab-bar-items">
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-category"></span>
+          <span class="text">카테고리</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-search"></span>
+          <span class="text">검색</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-home"></span>
+          <span class="text">홈</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-recently"></span>
+          <span class="text">최근 본 상품</span>
+        </a>
+      </li>
+      
+      <li class="tab-bar-item is-active">
+        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item)  -->
+        <a href="#!" class="link">
+          <span class="icon icon-mypage"></span>
+          <span class="text">마이</span>
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+</div>
+
+  
+</div>
+
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        
+
+
+
+<div
+  id="creditModal"
+  class="vm-modal-inner vm-modal-credit"
+  data-ui="kendo-window"
+  data-variant="slide-right"
+  
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="creditModal-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vm-modal-header">
+    <div class="vm-modal-header-content">
+      <h2 class="vm-modal-title" id="creditModal-title">후불 신청서</h2>
+
+
+    </div>
+
+    <button type="button" class="vm-modal-close" onclick="VmKendoWindow.close('creditModal')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vm-modal-content" data-scroll-check>
+  
+      
+
+<section class="vm-credit-application">
+  <h2 class="sr-only">후불 신청서</h2>
+
+  <!-- S: 회사 정보 -->
+  <dl class="credit-company-info">
+    <dt>회사명</dt>
+    <dd>메가존</dd>
+    <dt>사업자번호</dt>
+    <dd>123-45-67890</dd>
+
+    <!-- S: 사업자등록증 첨부 전 -->
+    <dt>사업자등록증 첨부하기</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-secondary icon-left vm-modal-credit"
+  
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-upload" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">파일 첨부하기</span>
+
+  
+</button>
+
+    </dd>
+    <!-- E: 사업자등록증 첨부 전 -->
+
+    <!-- S: 사업자등록증 첨부 후 -->
+    <dt>사업자등록증 첨부하기</dt>
+    <dd>
+      <!-- prettier-ignore -->
+      
+<!-- prettier-ignore -->
+
+
+<button type="button" class="vits-chip-file">
+  <span class="text name">회사 사업자 등록증</span>
+  <span class="text ext">.PDF</span>
+  <span class="icon"> <i class="ic ic-x" aria-hidden="true"></i>
+ </span>
+</button>
+
+    </dd>
+    <!-- E: 사업자등록증 첨부 후 -->
+  </dl>
+  <!-- E: 회사 정보 -->
+
+  <!-- S: 담당자 정보 -->
+  <div class="credit-manager-section" data-manager-section>
+    <div class="manager-header">
+      <h3 class="manager-title">담당자 정보 입력하기</h3>
+      <p class="manager-desc">기존 담당자 외 후불 관련 추가 담당자가 있을 경우 입력해 주세요.</p>
+    </div>
+
+    <!-- S: 담당자 없을 때 -->
+    <div class="manager-content" data-manager-empty>
+      <div class="manager-empty">
+        <p class="empty-text" data-manager-empty-text>추가 담당자 정보가 없습니다.</p>
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary icon-left empty-btn"
+  
+  
+  
+  data-manager-add-btn
+    >
+  
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">담당자 추가</span>
+
+  
+</button>
+
+      </div>
+    </div>
+    <!-- E: 담당자 없을 때 -->
+
+    <!-- S: 추가 담당자 목록 -->
+    <div class="manager-content is-hidden" data-manager-list>
+      <div class="manager-list">
+        <!-- prettier-ignore -->
+        
+
+
+<button
+  type="button"
+  
+  class="vits-btn-xs vits-btn-outline-tertiary icon-left empty-btn"
+  
+  
+  
+  data-manager-add-btn
+    >
+  
+    <span class="icon">
+      <i class="ic ic-user" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">담당자 추가</span>
+
+  
+</button>
+
+
+        <!-- prettier-ignore -->
+        
+
+<div class="vits-chip-button-group">
+    
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user1"
+  >
+    
+    <span class="text">김직원</span>
+    <span class="text team">영업팀 부장</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user2"
+  >
+    
+    <span class="text">김배달</span>
+    <span class="text team">물류팀</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user2"
+  >
+    
+    <span class="text">이배달</span>
+    <span class="text team">물류 사원</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user3"
+  >
+    
+    <span class="text">제갈유진</span>
+    <span class="text team">글로벌 디지털 트랜스포메이션 전략기획팀 부장</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user4"
+  >
+    
+    <span class="text">황보지훈</span>
+    <span class="text team">인사팀 선임매니저</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+     
+  <button
+    type="button"
+    class="vits-chip-button type-filled"
+    data-chip-action="remove"
+    data-chip-value="user5"
+  >
+    
+    <span class="text">박하늘별님구름햇님보다사랑스러우리박하늘별님구름햇님보다사랑스러우리</span>
+    <span class="text team">디지털혁신센터 플랫폼개발팀 책임연구원</span>
+    <span class="icon" aria-hidden="true">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+   
+</div>
+
+      </div>
+    </div>
+    <!-- E: 추가 담당자 목록 -->
+
+    <!-- S: 추가 담당자 입력 폼 -->
+    <div class="manager-content is-hidden" data-manager-form>
+      <div class="manager-form">
+        <p class="form-title">추가 담당자</p>
+        <dl class="form-fields">
+          <dt>이름</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-name" class="sr-only">이름</label>
+
+    <input
+      type="text"
+      name="credit-name"
+      id="credit-name"
+      placeholder="이름"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-name-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </dd>
+          <dt>부서/지위</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-team" class="sr-only">부서/직위</label>
+
+    <input
+      type="text"
+      name="credit-team"
+      id="credit-team"
+      placeholder="부서/직위"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-team-validation" aria-live="polite"></p>
+  </div>
+</div>
+          </dd>
+          <dt>휴대폰번호</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-phone" class="sr-only">휴대폰 번호</label>
+
+    <input
+      type="text"
+      name="credit-phone"
+      id="credit-phone"
+      placeholder="010-0000-0000"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-phone-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            <!-- prettier-ignore -->
+            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckb-phone"
+    value="ckb-phone"
+    
+    
+    
+    checked
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    문자 수신 동의
+  </span>
+  
+</label>
+          </dd>
+          <dt>이메일</dt>
+          <dd>
+            <!-- prettier-ignore -->
+            
+
+<div class="vits-input size-default ">
+  <div class="input-item">
+    <label for="credit-email" class="sr-only">이메일</label>
+
+    <input
+      type="text"
+      name="credit-email"
+      id="credit-email"
+      placeholder="email@example.com"
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="credit-email-validation" aria-live="polite"></p>
+  </div>
+</div>
+
+            <!-- prettier-ignore -->
+            
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-s">
+  <input
+    type="checkbox"
+    name="ckb-email"
+    value="ckb-email"
+    
+    
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+  <span class="label">
+    이메일 수신 동의
+  </span>
+  
+</label>
+          </dd>
+        </dl>
+        <div class="form-actions">
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-outline-secondary  vm-modal-credit"
+  
+  
+  
+  data-manager-cancel-btn
+    >
+  
+
+  <span class="text">취소</span>
+
+  
+</button>
+
+
+          <!-- prettier-ignore -->
+          
+
+
+<button
+  type="button"
+  
+  class="vits-btn-sm vits-btn-secondary  vm-modal-credit"
+  
+  
+  
+  data-manager-submit-btn
+    >
+  
+
+  <span class="text">추가</span>
+
+  
+</button>
+
+        </div>
+      </div>
+    </div>
+    <!-- E: 추가 담당자 입력 폼 -->
+  </div>
+  <!-- E: 담당자 정보 -->
+</section>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vm-modal-footer">
+
+    <div class="vm-modal-buttons is-double">
+
+      <button type="button" class="vm-modal-btn vm-modal-btn-secondary" onclick="VmKendoWindow.close('creditModal')">
+        <span class="text">취소</span>
+      </button>
+
+      <button type="button" class="vm-modal-btn vm-modal-btn-primary" onclick="VmKendoWindow.close('creditModal')">
+        <span class="text">다음단계로</span>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    
+<!-- jquery -->
+<!-- Kendo UI Core JavaScript -->
+<script src="../../public/resources/kendo_new/js/jquery-3.7.1.min.js"></script>
+<script src="../../public/resources/kendo_new/js/kendo.all.min.js"></script>
+<script src="../../public/resources/kendo_new/js/cultures/kendo.culture.ko-KR.min.js"></script>
+
+<!-- kr 설정 n$, 원 -->
+<script type="text/javaScript" language="javascript">
+  kendo.culture("ko-KR");
+</script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
+<!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
+
+
+    <script>
+      /**
+       * 후불 신청서 - 담당자 추가
+       * 퍼블리싱 UI 확인용 코드
+       */
+      (function ($) {
+        if (!$) return;
+
+        var $root = $('[data-manager-section]');
+        if (!$root.length) return;
+
+        var $empty = $root.find('[data-manager-empty]');
+        var $emptyText = $empty.find('.empty-text');
+        var $formOriginal = $root.find('[data-manager-form]');
+        var $list = $root.find('[data-manager-list]');
+
+        var MSG_EMPTY = '추가 담당자 정보가 없습니다.';
+        var MSG_INPUT = "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요.";
+        var formCounter = 0;
+        var isProcessing = false;
+
+        // 고유 id 생성 — clone 시 id 중복 방지
+        function assignUniqueIds($form) {
+          formCounter += 1;
+          var suffix = '-' + formCounter;
+
+          $form.find('[id]').each(function () {
+            var oldId = this.id;
+            var newId = oldId + suffix;
+            this.id = newId;
+
+            // label[for] 연결 갱신
+            $form.find('label[for="' + oldId + '"]').attr('for', newId);
+          });
+
+          // name도 갱신하여 form 데이터 충돌 방지
+          $form.find('[name]').each(function () {
+            $(this).attr('name', $(this).attr('name') + suffix);
+          });
+        }
+
+        // smooth scroll 폴백 — iOS Safari 구버전 대응
+        function smoothScrollTo(el) {
+          try {
+            el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+          } catch (_) {
+            el.scrollIntoView(false);
+          }
+        }
+
+        // 연속 클릭 방지 래퍼
+        function guard(fn) {
+          return function (e) {
+            if (isProcessing) return;
+            isProcessing = true;
+            fn.call(this, e);
+            setTimeout(function () {
+              isProcessing = false;
+            }, 300);
+          };
+        }
+
+        // 빈 상태 UI 갱신
+        function updateEmptyState() {
+          var visibleForms = $root.find('[data-manager-form]:not(.is-hidden)').length;
+          var isListVisible = !$list.hasClass('is-hidden');
+
+          if (!visibleForms && !isListVisible) {
+            $empty.removeClass('is-hidden');
+            $emptyText.text(MSG_EMPTY);
+          }
+        }
+
+        // [1] 담당자 추가 — form 복제 생성
+        $root.on(
+          'click',
+          '[data-manager-add-btn]',
+          guard(function () {
+            var $newForm = $formOriginal.clone();
+
+            assignUniqueIds($newForm);
+            $newForm.find('input[type="text"]').val('');
+            $newForm.find('input[type="checkbox"]').prop('checked', false);
+            $newForm.find('[name^="ckb-phone"]').prop('checked', true);
+            $newForm.removeClass('is-hidden');
+            $newForm.addClass('is-cloned');
+
+            if (!$list.hasClass('is-hidden') === false) {
+              $emptyText.text(MSG_INPUT);
+            }
+
+            var $lastForm = $root.find('[data-manager-form]:not(.is-hidden)').last();
+            if ($lastForm.length) {
+              $lastForm.after($newForm);
+            } else {
+              $list.after($newForm);
+            }
+
+            // 가상 키보드 대응 — 레이아웃 안정 후 스크롤
+            setTimeout(function () {
+              smoothScrollTo($newForm[0]);
+            }, 200);
+          })
+        );
+
+        // [2] 취소 — 해당 form 삭제
+        $root.on(
+          'click',
+          '[data-manager-cancel-btn]',
+          guard(function () {
+            var $form = $(this).closest('[data-manager-form]');
+
+            if ($form.hasClass('is-cloned')) {
+              $form.remove();
+            } else {
+              $form.addClass('is-hidden');
+            }
+
+            updateEmptyState();
+          })
+        );
+
+        // [3] 추가 — form 삭제 + chip 생성 + list 표시
+        $root.on(
+          'click',
+          '[data-manager-submit-btn]',
+          guard(function () {
+            var $form = $(this).closest('[data-manager-form]');
+            var valueId = 'user-' + Date.now();
+
+            var chipHtml =
+              '<button type="button" class="vits-chip-button type-filled"' +
+              ' data-chip-action="remove" data-chip-value="' +
+              valueId +
+              '">' +
+              '<span class="text">홍길동</span>' +
+              '<span class="text team">개발팀 대리</span>' +
+              '<span class="icon" aria-hidden="true">' +
+              '<i class="ic ic-x" aria-hidden="true"></i>' +
+              '</span>' +
+              '</button>';
+
+            $list.find('.vits-chip-button-group').append(chipHtml);
+
+            if ($form.hasClass('is-cloned')) {
+              $form.remove();
+            } else {
+              $form.addClass('is-hidden');
+            }
+
+            $empty.addClass('is-hidden');
+            $list.removeClass('is-hidden');
+          })
+        );
+
+        // [4] chip 삭제 감지 (MutationObserver)
+        if ($list.length && window.MutationObserver) {
+          var observer = new MutationObserver(function () {
+            var chipCount = $list.find('.vits-chip-button').length;
+
+            if (chipCount === 0) {
+              $list.addClass('is-hidden');
+              $empty.removeClass('is-hidden');
+
+              var hasVisibleForm = $root.find('[data-manager-form]:not(.is-hidden)').length > 0;
+              $emptyText.text(hasVisibleForm ? MSG_INPUT : MSG_EMPTY);
+            }
+          });
+
+          observer.observe($list[0], {childList: true, subtree: true});
+        }
+      })(window.jQuery);
+    </script>
+  </body>
+</html>
