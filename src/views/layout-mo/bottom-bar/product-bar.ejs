@@ -43,7 +43,7 @@
   role="region"
   aria-label="상품 주문"
 >
-  <div class="bar-handle" data-bar-handle aria-hidden="true">
+  <div class="bar-handle" data-bar-handle aria-hidden="true" aria-label="옵션 영역 열기/닫기" aria-expanded="false">
     <span class="handle-bar"></span>
   </div>
 
@@ -223,7 +223,7 @@
       size:'lg-p', 
       variant: 'secondary', 
       text: '바로구매',
-      attrs: 'data-bar-buy aria-expanded="false"',
+      attrs: 'data-bar-buy',
       disabled: _soldOut
     }) %>
 
@@ -232,7 +232,7 @@
       size:'lg-p', 
       variant: 'primary', 
       text: '장바구니',
-      attrs: 'data-bar-cart aria-expanded="false"',
+      attrs: 'data-bar-cart',
       className: _soldOut ? 'is-disabled' : '',
     }) %>
   </div>

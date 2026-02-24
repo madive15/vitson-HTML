@@ -11,25 +11,31 @@
   const _disabled = typeof disabled !== 'undefined' ? disabled : false;
 %>
 <div class="vits-favorites-folder-item">
-  <label class="folder-label">
-    <input 
-      type="checkbox" 
-      name="<%= _name %>" 
-      value="<%= _value %>"
-      data-checkbox-item
-      <% if (_checked) { %>checked<% } %>
-      <% if (_disabled) { %>disabled<% } %>
-    />
-    <span class="folder-icon"></span>
-    <span class="folder-content">
-      <b class="content-title">
-        <span class="title-name"><%= _title %></span>
-        <span class="title-count"><%= _count %></span>
-      </b>
-      <% if (_desc) { %>
-      <span class="content-desc"><%= _desc %></span>
-      <% } %>
-    </span>
-    <span class="folder-date"><%= _date %></span>
-  </label>
+  <!-- 26-02-24 label 태그 => div로 변경 -->
+  <div class="folder-label">
+    <!-- 26-02-24 input => checkbox-item.ejs 로 변경 -->
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+      name: _name,
+      value: _value,
+      checkboxType: "item",
+      checked: _checked,
+      disabled: _disabled,
+      size: 'xl'
+    }) %>
+
+    <!-- 26-02-24 a태그로 랩핑 -->
+    <a href="#!" class="folder-link">
+      <span class="folder-content">
+        <b class="content-title">
+          <span class="title-name"><%= _title %></span>
+          <span class="title-count"><%= _count %></span>
+        </b>
+        <% if (_desc) { %>
+        <span class="content-desc"><%= _desc %></span>
+        <% } %>
+      </span>
+      <span class="folder-date"><%= _date %></span>
+    </a>
+  </div>
 </div>

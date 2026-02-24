@@ -2097,7 +2097,6 @@
       gap: map.get(var.$unit, 20);
       height: fn.rem(92);
       padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
-      cursor: pointer;
       user-select: none;
       background: map.get(color.$layout-surf, 'base');
       border-radius: map.get(var.$radius, 'lg');
@@ -2106,6 +2105,13 @@
       > input {
         @include mx.sr-only;
       }
+    }
+
+    &-link {
+      @include mx.flex(flex, row, flex-start, center);
+      flex-grow: 1;
+      gap: map.get(var.$unit, 20);
+      min-width: 0;
     }
 
     &-icon {

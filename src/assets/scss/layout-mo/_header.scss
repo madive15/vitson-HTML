@@ -102,10 +102,12 @@
             @include mx.position(absolute, 2px, -2px);
             @include mx.flex(flex, row, center, center);
             @include typo.typography('b4r', $color: color.$color-white);
-            width: fn.rem(15);
+            width: max-content;
+            min-width: fn.rem(15);
             height: fn.rem(15);
+            padding: 0 map.get(var.$unit, 4);
             background: map.get(color.$brand-colors, '100');
-            border-radius: 50%;
+            border-radius: fn.rem(15);
           }
         }
 
