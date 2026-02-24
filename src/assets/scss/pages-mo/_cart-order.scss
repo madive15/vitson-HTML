@@ -579,7 +579,7 @@ $sticky-top: fn.rem(52);
   }
 }
 
-/* ===배송 정보 및 방법 === */
+/* 배송 정보 및 방법 */
 .vm-shipping {
   @include mx.flex($direction: column);
   gap: map.get(var.$unit, 12);
@@ -830,8 +830,7 @@ $sticky-top: fn.rem(52);
   }
 }
 
-/* ===결제 주문서=== */
-/* 결제 전체 */
+/* 결제 주문서 */
 .vm-payment {
   @include mx.flex(flex, column, flex-start, flex-start, wrap);
   width: 100%;
@@ -969,7 +968,9 @@ $sticky-top: fn.rem(52);
       border: 0;
 
       [class*='ic-arrow-'] {
+        color: inherit;
         opacity: 0.4;
+        fill: inherit;
       }
     }
 
@@ -1326,8 +1327,9 @@ $sticky-top: fn.rem(52);
   }
 }
 
-/* ===주문완료=== */
+/* 주문완료 / 주문실패 */
 .vm-order-complete {
+  gap: fn.rem(8);
   padding: 0;
 
   .order-complete {
@@ -1343,6 +1345,13 @@ $sticky-top: fn.rem(52);
       .vits-empty-state-desc {
         @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
       }
+
+      // 주문실패 상태
+      &.is-failed {
+        .vits-empty-state-desc {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
     }
   }
 
@@ -1351,12 +1360,13 @@ $sticky-top: fn.rem(52);
   }
 
   .order-section-title {
-    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
     padding: map.get(var.$unit, 20);
   }
 
-  // 배송 정보
-  .order-shipping {
+  // 배송 정보 , 주문실패 정보
+  .order-shipping,
+  .failed-reason {
     background-color: map.get(color.$layout-surf, 'base');
 
     .info-list {
@@ -1367,12 +1377,16 @@ $sticky-top: fn.rem(52);
       .info-item {
         @include mx.flex(flex, row, flex-start, flex-start);
         gap: fn.rem(8);
+
+        .is-miss {
+          @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
+        }
       }
 
       .info-label {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
         flex-shrink: 0;
-        min-width: fn.rem(60);
+        min-width: fn.rem(80);
       }
 
       .info-value {
@@ -1385,6 +1399,19 @@ $sticky-top: fn.rem(52);
       .info-value-status {
         @include typo.typography('b3s', $color: map.get(color.$text-status, 'info-sub'));
       }
+    }
+  }
+
+  // 주문실패 정보 표시 시 스타일
+  :has(.failed-reason) {
+    .order-section-title {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      padding: map.get(var.$unit, 16) map.get(var.$unit, 20);
+      border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
+    }
+
+    .info-list {
+      padding-top: map.get(var.$unit, 36);
     }
   }
 
@@ -1500,7 +1527,7 @@ $sticky-top: fn.rem(52);
     }
   }
 
-  // 결제 정보
+  // 결제 정보 (주문서 화면에서도 동일하게 쓰임)
   .order-payment {
     .vm-payment-summary {
       padding-bottom: map.get(var.$unit, 36);
@@ -1572,5 +1599,23 @@ $sticky-top: fn.rem(52);
         }
       }
     }
+  }
+}
+
+/* 쿠폰 자동 적용 (팝업) */
+.vm-auto-alert {
+  &-content {
+    @include mx.border(all, 1px, solid, map.get(color.$layout-border, 'quaternary'));
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 20);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'md');
+  }
+
+  &-list {
+    @include mx.bullet-style($bg: map.get(color.$text-colors, 'secondary'));
+  }
+
+  &-text {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
   }
 }

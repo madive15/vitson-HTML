@@ -189,4 +189,16 @@
   &.header-product-bar {
     height: map.get(var.$mo-header, 'product-bar');
   }
+
+  // nav-bar-logo: 로고만 노출 (로그인/인증 등)
+  &.header-nav-bar-logo {
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .vm-header-home {
+      width: fn.rem(84);
+      margin-left: fn.rem(9);
+
+      @include mx.img-fit(contain);
+    }
+  }
 }

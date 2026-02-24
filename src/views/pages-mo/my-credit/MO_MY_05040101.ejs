@@ -1,0 +1,207 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '후불관리'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-credit">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '후불관리' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-credit">
+              <section class="vm-mypage-credit-manage">
+                <div class="credit-manage-head">
+                  <h3 class="credit-manage-title">후불 사용 정보</h3>
+                </div>
+
+                <div class="credit-manage-body">
+                  <div class="vm-mypage-round-box credit-manage-usage">
+                    <div class="round-head">
+                      <p class="credit-manage-usage-title">여신 정보<small>(2025년 12월)</small></p>
+                    </div>
+
+                    <div class="round-body credit-manage-usage-body">
+                      <ul class="credit-manage-usage-items">
+                        <li class="credit-manage-usage-item">
+                          <div class="credit-usage-item">
+                            <p class="credit-usage-label">여신한도액</p>
+                            <p class="credit-usage-value">999,999,999원</p>
+                          </div>
+                        </li>
+                        <li class="credit-manage-usage-item">
+                          <div class="credit-usage-item">
+                            <p class="credit-usage-label">사용액</p>
+                            <p class="credit-usage-value value-blue">9,999,999원</p>
+                            <div class="credit-usage-detail">
+                              <p class="credit-usage-desc">
+                                <span class="credit-usage-desc-label">출하대기</span>
+                                <span class="credit-usage-desc-value">+ 9,999원</span>
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="credit-manage-usage-item">
+                          <div class="credit-usage-item">
+                            <p class="credit-usage-label">미수금</p>
+                            <p class="credit-usage-value value-red">999,999,999원</p>
+                          </div>
+                        </li>
+                        <li class="credit-manage-usage-item">
+                          <div class="credit-usage-item">
+                            <p class="credit-usage-label">잔액</p>
+                            <p class="credit-usage-value">999,999,999원</p>
+                          </div>
+                        </li>
+                      </ul>
+
+                      <div class="credit-manage-usage-info">
+                        <!-- S: 자동이체정보 / 결제일 — ?credit=transfer|payment 분기 -->
+                        <h4 class="credit-usage-info-title" data-credit-title>자동이체정보</h4>
+                        <div class="credit-usage-info-box">
+                          <dl class="credit-usage-info">
+                            <!-- 자동이체 항목 -->
+                            <dt data-credit-type="transfer">이체일</dt>
+                            <dd data-credit-type="transfer">5일, 15일, 25일</dd>
+                            <dt data-credit-type="transfer">출금계좌</dt>
+                            <dd data-credit-type="transfer">
+                              <p class="credit-usage-account">
+                                <span class="credit-usage-bank">우리은행</span>
+                                <span class="credit-usage-number">235-13-3456901</span>
+                              </p>
+                            </dd>
+
+                            <!-- 결제일 항목 -->
+                            <dt data-credit-type="payment">결제예정일</dt>
+                            <dd data-credit-type="payment">익월 30일</dd>
+                          </dl>
+                        </div>
+                        <!-- E: 자동이체정보 / 결제일 -->
+                      </div>
+
+                      <div class="credit-manage-usage-button">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size:'md', 
+                          variant: 'outline-secondary', 
+                          text: '구매내역서 조회', 
+                          iconLeft: true, 
+                          iconName: 'ic-document-paper'
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="vm-mypage-round-box credit-manage-sign">
+                    <div class="round-head">
+                      <p class="credit-manage-usage-title">전자서명 관리</p>
+                    </div>
+
+                    <div class="round-body credit-manage-sign-body">
+                      <!-- prettier-ignore -->
+                      <%
+                        const signItems = [
+                          { label: '거래약정서', variant: true },
+                          { label: '개인 신용정보 제공 동의서' },
+                          { label: '계좌이체 CMS 동의', helpBtn: true }
+                        ];
+                      %>
+                      <ul class="credit-sign-items">
+                        <% signItems.forEach(function(item) { %>
+                        <li class="credit-sign-item">
+                          <div class="credit-sign-item-inner">
+                            <div class="credit-sign-info">
+                              <p class="credit-sign-label">
+                                <span class="text"> <%= item.label %> </span>
+                              </p>
+                            </div>
+                            <div class="credit-sign-actions">
+                              <% if (item.helpBtn) { %>
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/text-underline-button.ejs`, {
+                                text: '도움말',
+                                fs: 'b5r',
+                                height: 15,
+                                fc: 'secondary',
+                                className: 'vm-btn-help'
+                              }) %>
+                              <% } %>
+
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/button/button.ejs`, {
+                                    size: 'sm',
+                                    variant: item.variant ? 'tertiary' : 'primary-soft',
+                                    text: item.variant ? '문서확인' : '서명하기',
+                                  }) %>
+                            </div>
+                          </div>
+                        </li>
+                        <% }); %>
+                      </ul>
+
+                      <div class="credit-sign-notice">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                          theme: 'blue', text: '후불 이용 안내', list:['자동이체는 자동 이체일에 등록된 계좌에서 자동으로 결제됩니다.','연체 시 후불 이용이 제한될 수 있으니 결제일을 꼭 준수해 주세요.','한도 증액은 고객센터로 신청해 주세요. 신청 후 심사를 거쳐 승인되며, 영업일 기준 2-3일 소요됩니다.','전자서명 문서는 언제든지 확인 및 다운로드가 가능합니다.']
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function ($) {
+        if (!$) return;
+
+        var TITLE_MAP = {transfer: '자동이체정보', payment: '결제일'};
+        var creditType = new URLSearchParams(location.search).get('credit') || 'transfer';
+        var oppositeType = creditType === 'transfer' ? 'payment' : 'transfer';
+
+        // 타이틀 변경
+        $('[data-credit-title]').text(TITLE_MAP[creditType] || TITLE_MAP.transfer);
+
+        // 해당 타입이 아닌 항목 숨김
+        $('[data-credit-type="' + oppositeType + '"]').hide();
+      })(window.jQuery);
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

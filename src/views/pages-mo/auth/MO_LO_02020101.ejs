@@ -1,0 +1,106 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: 'ID찾기-휴대전화번호/이메일/사업자등록번호'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '아이디 찾기' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <!-- 로고 / 타이틀 -->
+                <h2 class="vm-login-logo">
+                  <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오 로고" />
+                </h2>
+                <!-- S: 아이디 찾기 폼 -->
+                <div class="info-find-wrap">
+                  <!-- prettier-ignore -->
+                  <% const idFindTabs = [
+                    { text: '휴대전화번호', isActive: true },
+                    { text: '이메일', isActive: false },
+                    { text: '사업자등록번호', isActive: false }
+                  ]; %>
+                  <div class="info-find-tabs-wrap">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/tabs.ejs`, { 
+                      size: 'sm', 
+                      className: 'vits-auth-tabs', 
+                      tabClassName: 'vits-btn-md info-find-tab-btn', 
+                      tabs: idFindTabs, 
+                      showBadge: false, 
+                      ariaLabel: '아이디 찾기 방법', 
+                      idPrefix: 'info-find-tab' }) 
+                    %>
+                  </div>
+
+                  <form class="info-find-form" action="#" method="post">
+                    <div class="vm-login-form-fields" aria-hidden="false">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-name-phone', name: 'userName', label: '이름', placeholder: '이름', required: true, rootClass: 'size-large', }) %>
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-phone', name: 'userPhone', label: '휴대전화번호', placeholder: '휴대전화번호', required: true, rootClass: 'size-large', }) %>
+                    </div>
+                    <div class="vm-login-form-fields" aria-hidden="true">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-name-email', name: 'userNameEmail', label: '이름', placeholder: '이름', required: true, rootClass: 'size-large', }) %>
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-email', name: 'userEmail', label: '이메일 주소', placeholder: '이메일 주소', required: true, rootClass: 'size-large', }) %>
+                    </div>
+                    <div class="vm-login-form-fields" aria-hidden="true">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-rep-name', name: 'repName', label: '대표자 이름', placeholder: '대표자 이름', required: true, rootClass: 'size-large', }) %>
+                      <%- include(`${_src}/views/components/form/input-text.ejs`, { id: 'id-find-biz-no', name: 'bizNo', label: '사업자등록번호', placeholder: '사업자등록번호', required: true, rootClass: 'size-large', }) %>
+                    </div>
+
+                    <div class="info-find-form-actions">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { type: 'submit', size: 'xl', variant: 'primary', text: '아이디 찾기', className: 'info-find-btn', }) %>
+                    </div>
+
+                    <!-- S: 하단 링크 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/pg-auth/login-links.ejs`, {
+                      links: [
+                        { href: '#!', label: '비밀번호 찾기' },
+                        { href: '#!', label: '회원가입' },
+                      ],
+                    }) %>
+                    <!-- E: 하단 링크 -->
+                  </form>
+                </div>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

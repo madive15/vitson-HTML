@@ -12,23 +12,26 @@
 
 /* -----------------------------------------------------------------------------
   vits-credit-contract (거래약정서 섹션)
-   ----------------------------------------------------------------------------- */
+----------------------------------------------------------------------------- */
+.window-frame,
+.window-frame body {
+  width: 100%;
+  min-width: auto;
+}
+
 .vits-credit-contract {
-  padding: map.get(var.$unit, 24) 0;
-  line-height: 1.6;
-
   @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+  padding: map.get(var.$unit, 32) map.get(var.$unit, 48);
+
+  p {
+    margin: 0 0 map.get(var.$unit, 8);
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
 
-.vits-credit-contract p {
-  margin: 0 0 map.get(var.$unit, 8);
-}
-
-.vits-credit-contract p:last-child {
-  margin-bottom: 0;
-}
-
-/* 조항 목록 */
 .contract-articles {
   margin-bottom: map.get(var.$unit, 24);
 }
@@ -41,17 +44,15 @@
   }
 
   &-head {
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
     margin: 0 0 map.get(var.$unit, 8);
     font-weight: 600;
-
-    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
   }
 
   &-body {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
     padding-left: 0;
     margin: 0;
-
-    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
 
     /* stylelint-disable-next-line no-descending-specificity */
     p {
@@ -59,12 +60,10 @@
       word-break: keep-all;
     }
 
-    /* 제8조 계약 일자 - 날짜 입력 행 */
     .contract-date-row {
+      @include mx.flex($align: center, $wrap: wrap);
       gap: fn.rem(8);
       margin-bottom: map.get(var.$unit, 2);
-
-      @include mx.flex($align: center, $wrap: wrap);
 
       .signed-date {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
@@ -73,8 +72,8 @@
   }
 }
 
-/* 입력 필드 공통 */
 .contract-input {
+  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
   display: inline-block;
   min-width: fn.rem(50);
   padding: fn.rem(4) fn.rem(8);
@@ -82,17 +81,11 @@
   border: 1px solid map.get(color.$layout-border, 'tertiary');
   border-radius: map.get(var.$radius, 'sm');
 
-  @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
-
   &::placeholder {
     color: map.get(color.$text-colors, 'quaternary');
   }
 
-  &.contract-input-year {
-    width: fn.rem(50);
-    text-align: center;
-  }
-
+  &.contract-input-year,
   &.contract-input-month,
   &.contract-input-day {
     width: fn.rem(50);
@@ -105,9 +98,6 @@
   }
 }
 
-/* -----------------------------------------------------------------------------
-  contract-box (공급자/공급받는자/보증인 영역)
-   ----------------------------------------------------------------------------- */
 .contract-box {
   margin-bottom: map.get(var.$unit, 20);
   border: 1px solid map.get(color.$layout-border, 'tertiary');
@@ -118,10 +108,9 @@
   }
 
   &-title {
+    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
     padding: map.get(var.$unit, 16) map.get(var.$unit, 32);
     border-bottom: 1px solid map.get(color.$layout-border, 'quinary');
-
-    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
   }
 
   &-desc {
@@ -130,12 +119,19 @@
     padding: map.get(var.$unit, 4) 0;
   }
 
-  /* 2단 배치: 왼쪽 열(상호·주소·대표자) / 오른쪽 열(사업자번호·연락처) */
-  .contract-info-cols {
+  .contract-info-cols,
+  .contract-info-list {
     display: grid;
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+  }
+
+  .contract-info-cols {
     grid-template-columns: 1fr 1fr;
     gap: map.get(var.$unit, 16) map.get(var.$unit, 40);
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+  }
+
+  .contract-info-list {
+    gap: map.get(var.$unit, 8);
   }
 
   .contract-info-col {
@@ -145,13 +141,6 @@
     margin: 0;
   }
 
-  .contract-info-list {
-    display: grid;
-    gap: map.get(var.$unit, 8);
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
-  }
-
-  /* contract-info-cols 내 전체 폭 행(거주지 주소) */
   .contract-info-row-full {
     grid-column: 1 / -1;
   }
@@ -184,8 +173,8 @@
     margin-right: map.get(var.$unit, 8);
   }
 
-  /* (인) 서명 영역 */
   .contract-sign-area {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
     display: inline-block;
     min-width: fn.rem(46);
     min-height: fn.rem(24);
@@ -193,22 +182,19 @@
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
-
-    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
   }
 
-  .contract-info-row-full:has(.contract-sign-area) {
-    dd {
-      width: calc(50% - #{fn.rem(20)});
-    }
+  .contract-info-row-full:has(.contract-sign-area) dd {
+    width: calc(50% - #{fn.rem(20)});
   }
 }
 
 /* -----------------------------------------------------------------------------
   vits-credit-consent (개인신용 정보 수집·조회·이용 및 제공 동의서)
-   ----------------------------------------------------------------------------- */
+----------------------------------------------------------------------------- */
 .vits-credit-consent {
   @include typo.typography('b2r', $color: map.get(color.$text-colors, 'primary'));
+  padding: map.get(var.$unit, 32) map.get(var.$unit, 48);
 
   .contract-box {
     margin-bottom: map.get(var.$unit, 20);
@@ -217,30 +203,35 @@
       margin-bottom: map.get(var.$unit, 24);
     }
   }
+
+  .contract-article-body p {
+    position: relative;
+    padding-left: map.get(var.$unit, 8);
+
+    &::before {
+      @include mx.position(absolute, $top: 0, $left: 0);
+      width: fn.rem(2);
+      height: fn.rem(2);
+      color: map.get(color.$text-colors, 'tertiary');
+      content: '·';
+    }
+  }
+
+  .contract-date-row {
+    @include mx.flex($align: center, $wrap: wrap, $justify: center);
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+    gap: fn.rem(8);
+    margin: 0 auto;
+
+    .signed-date {
+      @include typo.typography('b3s');
+    }
+  }
 }
 
 .consent-intro {
-  margin: 0 0 map.get(var.$unit, 20);
-
   @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
-}
-
-/* pc_MY_05040701_P */
-.vits-credit-consent .contract-article {
-  &-body {
-    p {
-      position: relative;
-      padding-left: map.get(var.$unit, 8);
-
-      &::before {
-        @include mx.position(absolute, $top: 0, $left: 0);
-        width: fn.rem(2);
-        height: fn.rem(2);
-        color: map.get(color.$text-colors, 'tertiary');
-        content: '·';
-      }
-    }
-  }
+  margin: 0 0 map.get(var.$unit, 20);
 }
 
 .consent-required {
@@ -252,34 +243,47 @@
 }
 
 .consent-required-question {
-  margin: 0 0 map.get(var.$unit, 12);
-
   @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+  margin: 0 0 map.get(var.$unit, 12);
 }
 
 .consent-required-badge {
   font-weight: 600;
 }
 
-.vits-credit-consent .contract-date-row {
-  gap: fn.rem(8);
-  margin: 0 auto;
+/* -----------------------------------------------------------------------------
+  common (공통 영역)
+----------------------------------------------------------------------------- */
+.contract-main-title {
+  @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
+  padding-bottom: map.get(var.$unit, 40);
+  text-align: center;
+}
 
-  @include mx.flex($align: center, $wrap: wrap, $justify: center);
-  @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+.contract-signature-submit {
+  @include mx.flex(flex, row, space-between, center);
+  gap: fn.rem(12);
+  width: 100%;
+  margin-top: fn.rem(44);
 
-  .signed-date {
-    @include typo.typography('b3s');
+  [class^='vits-btn-'] {
+    &:first-child {
+      min-width: fn.rem(150);
+    }
+
+    &:last-child {
+      flex: 1;
+    }
   }
 }
 
 /* -----------------------------------------------------------------------------
   vits-guide-popup (가이드/도움말 팝업)
-   ----------------------------------------------------------------------------- */
+----------------------------------------------------------------------------- */
 .vits-guide-popup {
+  @include mx.img-fit;
+
   .vits-alerts-anatomy {
     margin-bottom: map.get(var.$unit, 32);
   }
-
-  @include mx.img-fit;
 }

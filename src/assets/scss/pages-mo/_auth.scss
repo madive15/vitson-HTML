@@ -1,0 +1,321 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_auth.scss
+// - 모바일 로그인/회원가입 페이지에서 사용.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+[class*='main-content-auth-'] {
+  padding-bottom: map.get(var.$mo-bottom-bar, 'tab-bar');
+  background-color: map.get(color.$layout-surf, 'base'); // 로그인 초기 배경색
+  &:has(.info-find-wrap) {
+    background-color: transparent;
+  }
+
+  &:has(.auth-dormant-form) {
+    background-color: map.get(color.$layout-surf, 'mypage');
+  }
+
+  @include mx.flex(flex, column, flex-start, flex-start);
+
+  /* 로그인 컨텐츠 */
+  .vm-login {
+    &-content {
+      width: 100%;
+      padding: map.get(var.$unit, 56) map.get(var.$unit, 16) 0;
+    }
+
+    &-logo {
+      @include mx.flex(flex, column, center, center);
+      width: fn.rem(152);
+      margin: 0 auto fn.rem(48);
+
+      @include mx.img-fit(contain);
+
+      .vm-login-subtitle {
+        @include typo.typography('b1', $color: map.get(color.$text-colors, 'tertiary'));
+        margin-top: fn.rem(10);
+      }
+    }
+
+    &-form {
+      @include mx.flex(flex, column, flex-start, flex-start);
+    }
+
+    /* 입력 영역 */
+    &-form-fields {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 12);
+      width: 100%;
+
+      /* 인증코드 유효시간 영역 */
+      .login-once-time-attack {
+        @include mx.flex(flex, column, center, center);
+        gap: map.get(var.$unit, 16);
+        width: 100%;
+        padding-top: map.get(var.$unit, 12);
+
+        .time-attack-info {
+          @include mx.flex(flex, row, center, center);
+          gap: map.get(var.$unit, 12);
+
+          .time-attack-label {
+            @include typo.typography('b2s', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+
+          .time-attack-value {
+            @include typo.typography('b2s', $color: map.get(color.$text-status, 'brand'));
+          }
+        }
+
+        .time-attack-btn {
+          padding: 0 fn.rem(25);
+
+          .text {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+          }
+        }
+      }
+    }
+
+    /* 옵션 영역 (아이디,자동 로그인 저장)  */
+    &-options {
+      margin-top: map.get(var.$unit, 12);
+
+      .login-checkbox {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 24);
+      }
+
+      .label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+
+  /* 로그인 버튼 */
+  .login-submit {
+    width: 100%;
+    margin-top: fn.rem(52);
+  }
+
+  /* 일회성 로그인 링크 */
+  .login-once-others {
+    padding: map.get(var.$unit, 16) 0 fn.rem(44);
+    margin: 0 auto;
+
+    .vm-text-link {
+      @include typo.typography('b2m', $color: map.get(color.$text-colors, 'tertiary'));
+      padding-bottom: fn.rem(4);
+      border-bottom: 2px solid map.get(color.$layout-border, 'tertiary');
+    }
+  }
+
+  /* 인증 탭 버튼 */
+  .vits-auth-tabs {
+    min-height: fn.rem(48);
+    margin-bottom: map.get(var.$unit, 52);
+
+    [class*='vits-btn-'] {
+      min-height: fn.rem(48);
+    }
+  }
+
+  .login-links {
+    @include mx.flex(flex, column, center, center);
+    width: 100%;
+
+    ul {
+      @include mx.divider('li', $h: 12, $gap: 16, $color: map.get(color.$layout-border, 'tertiary'));
+
+      a {
+        @include typo.typography('b3', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+
+  /* === 비밀번호 찾기 === */
+  .vm-signup {
+    &-headline {
+      padding: 0;
+      margin-bottom: map.get(var.$unit, 24);
+      text-align: center;
+    }
+
+    &-desc {
+      @include typo.typography('b2m', $color: map.get(color.$text-colors, 'default'));
+    }
+
+    // 비밀번호, 아이디 찾기 폼 공통
+    .info-find {
+      &-wrap {
+        .info-find-tabs-wrap {
+          & + .info-find-form {
+            padding: map.get(var.$unit, 44) map.get(var.$unit, 16);
+          }
+        }
+      }
+
+      &-tabs-wrap {
+        .vits-auth-tabs {
+          padding: 0;
+          margin-bottom: 0;
+          background-color: transparent;
+
+          [class*='vits-btn-'] {
+            padding: fn.rem(16) 0 fn.rem(32);
+            margin-bottom: fn.rem(-16);
+            border: 0;
+            border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+
+            .text {
+              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+
+        .info-find-tab-btn {
+          &.is-active .text {
+            @include typo.typography('b3b', $color: map.get(color.$text-colors, 'secondary'));
+          }
+        }
+
+        & + &-form {
+          border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+        }
+      }
+      // stylelint-disable-next-line no-descending-specificity
+      &-form {
+        padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
+        background-color: map.get(color.$layout-surf, 'base');
+
+        @include mx.flex(flex, column, flex-start, flex-start);
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        &-fields {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          gap: map.get(var.$unit, 12);
+        }
+
+        &-actions {
+          width: 100%;
+          margin: map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
+          // stylelint-disable-next-line no-descending-specificity
+          [class*='vits-btn-'] {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    // 휴면 계정 안내 폼
+    .auth-dormant {
+      &-form {
+        @include mx.flex(flex, column, center, center);
+        gap: map.get(var.$unit, 32);
+        padding: fn.rem(32) fn.rem(16);
+        background-color: map.get(color.$layout-surf, 'base');
+        border-radius: map.get(var.$radius, 'lg');
+        box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+        .vits-empty-state {
+          padding: 0;
+        }
+      }
+
+      &-info-box {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 20);
+        padding: map.get(var.$unit, 32) map.get(var.$unit, 16);
+        text-align: center;
+        background-color: map.get(color.$layout-surf, 'raised');
+        border-radius: map.get(var.$radius, 'sm');
+      }
+
+      &-info-text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+        margin: 0;
+
+        .highlight-text {
+          @include typo.typography('b3b', $color: map.get(color.$text-status, 'info'));
+        }
+
+        .point-text {
+          @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+        }
+      }
+
+      &-actions {
+        min-width: fn.rem(150);
+        // stylelint-disable-next-line no-descending-specificity
+        [class*='vits-btn-'] {
+          width: 100%;
+        }
+      }
+    }
+
+    /* auth 공통 컴포넌트 (회원가입 완료, 아이디 찾기 결과 등) */
+    .auth-contact {
+      @include mx.flex(flex, row, center, center);
+      gap: map.get(var.$unit, 32);
+      padding-top: fn.rem(24);
+
+      &-call,
+      &-kakaotalk {
+        @include mx.flex(flex, row, center, center);
+        gap: map.get(var.$unit, 8);
+        text-decoration: none;
+      }
+
+      &-icon {
+        flex-shrink: 0;
+        border-radius: 50%;
+
+        @include mx.flex(flex, row, center, center);
+        @include icon.ic-size(fn.rem(32));
+        @include mx.img-fit(contain);
+      }
+
+      &-text {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+  }
+}
+
+/* === kendo window 휴면해제 팝업 === */
+.vm-auth-dormant-modal {
+  position: relative;
+
+  .vm-auth-dormant {
+    &-form {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 16);
+
+      &-fields {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+
+        .form-field-label {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+          min-width: fn.rem(140);
+
+          .label-required {
+            @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
+            margin-left: map.get(var.$unit, 2);
+          }
+        }
+      }
+    }
+  }
+}

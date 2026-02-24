@@ -375,3 +375,40 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+// 스크롤바 커스텀
+@mixin mo-scrollbar {
+  scrollbar-color: #c1c1c1 transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    min-width: 30px;
+    min-height: 30px;
+    background: #c1c1c1;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: none;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}

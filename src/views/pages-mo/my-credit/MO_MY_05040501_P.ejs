@@ -1,0 +1,242 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '후불신청서'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-orders">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'product-bar',
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-orders">
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('creditModal')"
+              >
+                <span class="text">후불신청서 팝업</span>
+              </button>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, {
+          id: 'creditModal',
+          title: '후불 신청서',
+          variant: 'slide-right',
+          className: 'vm-modal-credit',
+          contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_MY_05040501_P.ejs`,
+          buttons: [
+            { text: '취소', variant: 'secondary', action: 'close' },
+            { text: '다음단계로', variant: 'primary', action: 'close' }
+          ]
+        }) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      /**
+       * 후불 신청서 - 담당자 추가
+       * 퍼블리싱 UI 확인용 코드
+       */
+      (function ($) {
+        if (!$) return;
+
+        var $root = $('[data-manager-section]');
+        if (!$root.length) return;
+
+        var $empty = $root.find('[data-manager-empty]');
+        var $emptyText = $empty.find('.empty-text');
+        var $formOriginal = $root.find('[data-manager-form]');
+        var $list = $root.find('[data-manager-list]');
+
+        var MSG_EMPTY = '추가 담당자 정보가 없습니다.';
+        var MSG_INPUT = "정보를 입력하신 후 '추가' 버튼을 클릭해 주세요.";
+        var formCounter = 0;
+        var isProcessing = false;
+
+        // 고유 id 생성 — clone 시 id 중복 방지
+        function assignUniqueIds($form) {
+          formCounter += 1;
+          var suffix = '-' + formCounter;
+
+          $form.find('[id]').each(function () {
+            var oldId = this.id;
+            var newId = oldId + suffix;
+            this.id = newId;
+
+            // label[for] 연결 갱신
+            $form.find('label[for="' + oldId + '"]').attr('for', newId);
+          });
+
+          // name도 갱신하여 form 데이터 충돌 방지
+          $form.find('[name]').each(function () {
+            $(this).attr('name', $(this).attr('name') + suffix);
+          });
+        }
+
+        // smooth scroll 폴백 — iOS Safari 구버전 대응
+        function smoothScrollTo(el) {
+          try {
+            el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+          } catch (_) {
+            el.scrollIntoView(false);
+          }
+        }
+
+        // 연속 클릭 방지 래퍼
+        function guard(fn) {
+          return function (e) {
+            if (isProcessing) return;
+            isProcessing = true;
+            fn.call(this, e);
+            setTimeout(function () {
+              isProcessing = false;
+            }, 300);
+          };
+        }
+
+        // 빈 상태 UI 갱신
+        function updateEmptyState() {
+          var visibleForms = $root.find('[data-manager-form]:not(.is-hidden)').length;
+          var isListVisible = !$list.hasClass('is-hidden');
+
+          if (!visibleForms && !isListVisible) {
+            $empty.removeClass('is-hidden');
+            $emptyText.text(MSG_EMPTY);
+          }
+        }
+
+        // [1] 담당자 추가 — form 복제 생성
+        $root.on(
+          'click',
+          '[data-manager-add-btn]',
+          guard(function () {
+            var $newForm = $formOriginal.clone();
+
+            assignUniqueIds($newForm);
+            $newForm.find('input[type="text"]').val('');
+            $newForm.find('input[type="checkbox"]').prop('checked', false);
+            $newForm.find('[name^="ckb-phone"]').prop('checked', true);
+            $newForm.removeClass('is-hidden');
+            $newForm.addClass('is-cloned');
+
+            if (!$list.hasClass('is-hidden') === false) {
+              $emptyText.text(MSG_INPUT);
+            }
+
+            var $lastForm = $root.find('[data-manager-form]:not(.is-hidden)').last();
+            if ($lastForm.length) {
+              $lastForm.after($newForm);
+            } else {
+              $list.after($newForm);
+            }
+
+            // 가상 키보드 대응 — 레이아웃 안정 후 스크롤
+            setTimeout(function () {
+              smoothScrollTo($newForm[0]);
+            }, 200);
+          })
+        );
+
+        // [2] 취소 — 해당 form 삭제
+        $root.on(
+          'click',
+          '[data-manager-cancel-btn]',
+          guard(function () {
+            var $form = $(this).closest('[data-manager-form]');
+
+            if ($form.hasClass('is-cloned')) {
+              $form.remove();
+            } else {
+              $form.addClass('is-hidden');
+            }
+
+            updateEmptyState();
+          })
+        );
+
+        // [3] 추가 — form 삭제 + chip 생성 + list 표시
+        $root.on(
+          'click',
+          '[data-manager-submit-btn]',
+          guard(function () {
+            var $form = $(this).closest('[data-manager-form]');
+            var valueId = 'user-' + Date.now();
+
+            var chipHtml =
+              '<button type="button" class="vits-chip-button type-filled"' +
+              ' data-chip-action="remove" data-chip-value="' +
+              valueId +
+              '">' +
+              '<span class="text">홍길동</span>' +
+              '<span class="text team">개발팀 대리</span>' +
+              '<span class="icon" aria-hidden="true">' +
+              '<i class="ic ic-x" aria-hidden="true"></i>' +
+              '</span>' +
+              '</button>';
+
+            $list.find('.vits-chip-button-group').append(chipHtml);
+
+            if ($form.hasClass('is-cloned')) {
+              $form.remove();
+            } else {
+              $form.addClass('is-hidden');
+            }
+
+            $empty.addClass('is-hidden');
+            $list.removeClass('is-hidden');
+          })
+        );
+
+        // [4] chip 삭제 감지 (MutationObserver)
+        if ($list.length && window.MutationObserver) {
+          var observer = new MutationObserver(function () {
+            var chipCount = $list.find('.vits-chip-button').length;
+
+            if (chipCount === 0) {
+              $list.addClass('is-hidden');
+              $empty.removeClass('is-hidden');
+
+              var hasVisibleForm = $root.find('[data-manager-form]:not(.is-hidden)').length > 0;
+              $emptyText.text(hasVisibleForm ? MSG_INPUT : MSG_EMPTY);
+            }
+          });
+
+          observer.observe($list[0], {childList: true, subtree: true});
+        }
+      })(window.jQuery);
+    </script>
+  </body>
+</html>

@@ -1129,13 +1129,15 @@
 
       &-pay {
         @include mx.flex(flex, column, center, flex-end);
-        flex: 0 0 fn.rem(248);
+        flex: 0 0 fn.rem(254);
         gap: map.get(var.$unit, 12);
+        width: fn.rem(254);
       }
 
       &-tools {
-        @include mx.flex(flex, row, flex-start, flex-end);
+        @include mx.flex(flex, row, flex-end, center, wrap);
         gap: map.get(var.$unit, 12);
+        width: 100%;
       }
 
       &-foot {
@@ -2783,6 +2785,7 @@
 
   .credit-company-info {
     @include list.form-dl-cst(144, 0, 0, 0, 16, 'b3r', map.get(color.$text-colors, 'default'));
+    align-items: center;
 
     dd {
       @include typo.typography('b3r');

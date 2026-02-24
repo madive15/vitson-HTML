@@ -1,28 +1,38 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
-<% const showLeftBtn = typeof showLeft === 'undefined' ? true : showLeft; %>
-<% const showRightBtn = typeof showRight === 'undefined' ? true : showRight; %>
-<% const leftBtnText = typeof leftText !== 'undefined' ? leftText : '홈으로'; %>
-<% const rightBtnText = typeof rightText !== 'undefined' ? rightText : '주문상세보기'; %>
-<% const leftBtnHtml = typeof leftHtml !== 'undefined' ? leftHtml : ''; %>
-<% const rightBtnHtml = typeof rightHtml !== 'undefined' ? rightHtml : ''; %>
-<% const isSingle = showLeftBtn !== showRightBtn; %>
-<div class="bottom-order-bar<%= isSingle ? ' is-single' : '' %>">
-  <% if (showLeftBtn) { %>
+<%
+  const def = (v, d) => (typeof v !== 'undefined' ? v : d);
+  const showL = def(showLeft, true);
+  const showR = def(showRight, true);
+  const left = { text: def(leftText, '홈으로'), html: def(leftHtml, '') };
+  const right = { text: def(rightText, '주문상세보기'), html: def(rightHtml, '') };
+%>
+<div class="bottom-order-bar<%= showL !== showR ? ' is-single' : '' %>">
+  <% if (showL) { %>
   <!-- prettier-ignore -->
-  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({
-    size:'xl', 
-    variant: 'secondary', 
-    text: leftBtnText,
-  }, leftBtnHtml ? { html: leftBtnHtml, text: '' } : {})) %>
+  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({ size: 'xl', variant: 'secondary', text: left.text }, left.html ? { html: left.html, text: '' } : {})) %>
   <% } %>
-
-  <% if (showRightBtn) { %>
+  <% if (showR) { %>
   <!-- prettier-ignore -->
-  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({
-    size:'xl', 
-    variant: 'primary', 
-    text: rightBtnText,
-  }, rightBtnHtml ? { html: rightBtnHtml, text: '' } : {})) %>
+  <%- include(`${_src}/views/components/button/button.ejs`, Object.assign({ size: 'xl', variant: 'primary', text: right.text }, right.html ? { html: right.html, text: '' } : {})) %>
   <% } %>
 </div>
+<%#
+<!-- prettier-ignore -->
+사용 예시 (include는 layout-mo/bottom-bar/index.ejs 에 type: 'order-bar' 로 전달) 장바구니/주문서 참고.
+
+  1) 기본 (왼쪽: 홈으로, 오른쪽: 주문상세보기)
+  { type: 'order-bar' }
+
+  2) 버튼 문구만 변경
+  { type: 'order-bar', leftText: '취소', rightText: '결제하기' }
+
+  3) 오른쪽 버튼만 + HTML (금액 강조 등)
+  { type: 'order-bar', showLeft: false, rightHtml: '<em>370,950</em>원 결제하기' }
+
+  4) 왼쪽만
+  { type: 'order-bar', showRight: false, leftText: '목록으로' }
+
+  5) 둘 다 HTML 
+  { type: 'order-bar', leftHtml: '<span class="icon-home"></span> 홈', rightHtml: '<strong>3</strong>개 상품 주문하기' }
+옵션: showLeft, showRight (기본 true), leftText, rightText, leftHtml, rightHtml %>

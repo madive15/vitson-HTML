@@ -5,6 +5,7 @@
  * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
  * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
  * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
+ * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
  * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
  */
 
@@ -27,11 +28,13 @@ import Swiper from 'swiper/bundle';
   var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
   var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
   var INIT_KEY = 'uiOrderInit';
+  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
 
-  // 결제수단 (데스크톱 vits-* → 모바일 vm-*)
+  // 결제수단 (모바일 vm-*)
   var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
   var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
   var PAYMENT_ITEM_SEL = '.vm-payment-item';
+  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
   var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
   var PAYMENT_PANEL_SEL = '.vm-payment-panel';
   var PAYMENT_METHOD_SEL = '.vm-payment-method';
@@ -70,6 +73,8 @@ import Swiper from 'swiper/bundle';
   var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
   var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
   var ID_PAY_SIMPLE = 'pay-simple';
+  var ID_PANEL_CREDIT = 'panel-credit';
+  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
 
   function getScope(root) {
     if (!root) return $(ROOT_SEL);
@@ -204,6 +209,11 @@ import Swiper from 'swiper/bundle';
       if (!currentLabelledBy || currentLabelledBy !== radioId) {
         $targetPanel.attr('aria-labelledby', radioId);
       }
+      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
+      if (controlsId === ID_PANEL_CREDIT) {
+        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
+        if ($taxBatch.length) $taxBatch.prop('checked', true);
+      }
     } else {
       $radio.attr('aria-expanded', 'false');
     }
@@ -312,6 +322,23 @@ import Swiper from 'swiper/bundle';
     $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
       setPaymentPanelState($scope, $(this));
     });
+
+    // 결제수단 토글 클릭 시 해당 패널 활성화
+    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
+      $(document).data(TOGGLE_DELEGATE_KEY, true);
+      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
+        e.preventDefault();
+        var $toggle = $(this);
+        var $scope = $toggle.closest(ROOT_SEL);
+        if (!$scope.length) return;
+        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
+        var $radio = $item.find('input[type="radio"][aria-controls]');
+        if ($radio.length) {
+          $radio.prop('checked', true);
+          setPaymentPanelState($scope, $radio);
+        }
+      });
+    }
 
     // 결제 카드/계좌 Swiper 초기화
     initPaymentSwipers($scope);

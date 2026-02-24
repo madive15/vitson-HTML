@@ -1,0 +1,141 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const contractArticles = [
+    { num: 1, title: '목적', body: '공급자 (주)일신비츠온은 공급받는자에게 물품을 공급하고, 공급받는자는 이를 판매,소비함에 있어 신뢰를 바탕으로 각 조항을 성실히 이행하여야 하며, 공급자는 비즈니스 파트너로서 투명하고 원활한 거래관계을 유지하여 공급받는자에게 최상의 물품과 서비스를 제공하기 위함이다.' },
+    { num: 2, title: '결제 방법', body: '공급받는자는 공급자에게 물품 대금을 매월 말일 거래 마감 후 결제 조건에 따라 30일 이내 공급자에게 현금으로 지불하여야 하며 매출할인 혜택은 결제 조건 30일 이내와 현금으로 결제 시 적용한다.' },
+    { num: 3, title: '한도 금액', body: '거래금액은 공급받는자의 신용과 담보 제공에 따라 정하여진 여신금액만큼 거래한다.' },
+    { num: 4, title: '반품 조건', body: ['1) 공급자의 반품 기준에 따르며 반품 기한은 출고일로부터 3개월 이내로 정한다.', '2) 매출할인 혜택으로 출고된 제품은 반품도 매출할인 혜택된 금액으로 산정된다.'] },
+    { num: 5, title: '통지의무', body: '거래약정 기간 중 공급받는자는 사업장 또는 대표자 변경 시 그 사실을 지체없이 공급자에게 통보한다.' },
+    { num: 6, title: '비밀유지', body: '공급자가 제공한 ISVM , 비츠온MRO , 모바일 ID, 비밀번호를 포함한 기업 및 개인정보를 별도의 정보이용 협약 없이 제3자에게 제공할 수 없다.' },
+    { num: 7, title: '소유권유보부 매매약정', body: '공급자가 물품을 계속적으로 공급하여 대금 완납 시 까지 물품의 소유권을 공급자에게 유보하기로 하며, 완납 시 소유권이 공급받는자에게로 넘어가기로 한다. 공급받는자는 물품대금을 미완납 시 공급자가 공급한 물품을 반출하는데 동의하며, 이을 위해 주거(사무실,영업장,창고)에 진입하는 것을 허락하며, 이에 어떠한 이의도(민,형사상 책임추궁 등)없도록 약정한다. 공급받는자가 임의로 상품을 은닉하고 타인에게 양도공증 및 담보물로 제공하거나 처분할 경우 민,형사상의 책임을 진다.' },
+    { num: 8, title: '계약 일자', body: null },
+    { num: 9, title: '필요서류', body: '"공급받는자" 의 사업자등록증 1부 / 대표자 신분증 사본 1부/ 보증인 신분증 사본 1부(주소변동내역이 있을시 뒷면 포함)' }
+  ];
+
+  const contractBoxes = [
+    {
+      title: '공급자',
+      boxClass: 'contract-supplier',
+      rows: [
+        { label: '상호', value: '주식회사 일신비츠온' },
+        { label: '사업자등록번호', value: '132-81-52217' },
+        { label: '사업장 주소', value: '경기도 남양주시 진접읍 12번길 55,56' },
+        { label: '사업장 연락처', value: '031-573-8500' },
+        { label: '대표자', value: '진미애', sign: true, signRole: 'supplier',  signImg: 'sign/sign-vits.png' },
+      ]
+    },
+    {
+      title: '공급받는자',
+      boxClass: 'contract-recipient',
+      rows: [
+        { label: '상호', value: '메가존' },
+        { label: '사업자등록번호', value: '214-86-79342' },
+        { label: '사업장 주소', value: '서울 강남구 가로수길 5 기본배송지테스트변경' },
+        { label: '사업장 연락처', input: true, placeholder: '(예) 0277778888', signedValue: '0277778888' },
+        { label: '대표자', value: '김메가', sign: true, signRole: 'recipient' },
+        { label: '휴대폰 연락처', input: true, placeholder: '(예) 01012341234', signedValue: '01012341234' },
+        { label: '거주지 주소', textarea: true, id: 'credit-recipient-addr', name: 'credit-recipient-addr', placeholder: '(예) 경기도 남양주시 진접읍 팔야산단로 12번길 55,56', full: true, signedValue: '경기도 남양주시 진접읍 팔야산단로 12번길 55,56' }
+      ]
+    },
+    {
+      title: '보증인',
+      boxClass: 'contract-guarantor',
+      desc: '보증인은 공급받는자의 채무 및 거래관계에서 발생하는 기타사항에 대해 책임을 같이할 수 있다.',
+      rows: [
+         { label: '거주지 주소', textarea: true, id: 'credit-guarantor-addr', name: 'credit-guarantor-addr', placeholder: '(예) 경기도 남양주시 진접읍 팔야산단로 12번길 55,56', full: true, signedValue: '경기도 남양주시 진접읍 팔야산단로 12번길 55,56' },
+        { label: '휴대폰 연락처', input: true, placeholder: '(예) 01012341234', signedValue: '01012341234' },
+        { label: '관계', input: true, placeholder: '(예) 부', signedValue: '부' },
+        { label: '성명', input: true, placeholder: '(예) 김일신', sign: true, signRole: 'guarantor', signedValue: '김일신' }
+      ]
+    }
+  ];
+%>
+<!-- prettier-ignore -->
+<section class="vm-credit-contract">
+  <!-- S: 조항 -->
+  <div class="contract-articles">
+    <% contractArticles.forEach(function(article) { %>
+    <article class="contract-article">
+      <h3 class="contract-article-head">제 <%= article.num %> 조 <%= article.title %></h3>
+      <% if (article.body === null) { %>
+      <div class="contract-article-body">
+        <p class="contract-date-row">
+          계약 유효일자는 거래약정서 작성일
+          <span>
+            <span>
+              20 <input type="text" class="contract-input contract-input-year" maxlength="2" placeholder="" aria-label="연도" data-signed-value="26" /> 년
+            </span>
+            <span>
+              <input type="text" class="contract-input contract-input-month" maxlength="2" placeholder="" aria-label="월" data-signed-value="5" /> 월
+            </span>
+            <span>
+              <input type="text" class="contract-input contract-input-day" maxlength="2" placeholder="" aria-label="일" data-signed-value="25" /> 일부터
+            </span>
+          </span>
+          <span>
+            <span>
+              20 <input type="text" class="contract-input contract-input-year" maxlength="2" placeholder="" aria-label="연도(종료)" data-signed-value="27" /> 년
+            </span>
+            <span>
+              <input type="text" class="contract-input contract-input-month" maxlength="2" placeholder="" aria-label="월(종료)" data-signed-value="5" /> 월
+            </span>
+            <span>
+              <input type="text" class="contract-input contract-input-day" maxlength="2" placeholder="" aria-label="일(종료)" data-signed-value="26" /> 일
+            </span>
+          </span>
+          까지로 한다.
+        </p>
+        <p>이의제기 및 계약종료 통지가 없을 시, 본 약정은 동일조건으로 매 1년씩 자동연장되는 것으로 한다.</p>
+      </div>
+      <% } else if (Array.isArray(article.body)) { %>
+      <div class="contract-article-body">
+        <% article.body.forEach(function(p) { %><p><%= p %></p><% }); %>
+      </div>
+      <% } else { %>
+      <p class="contract-article-body"><%= article.body %></p>
+      <% } %>
+    </article>
+    <% }); %>
+  </div>
+  <!-- E: 조항 -->
+
+  <!-- S: 공급자 / 공급받는자 / 보증인 -->
+  <% contractBoxes.forEach(function(box) { %>
+  <div class="contract-box <%= box.boxClass %>">
+    <h3 class="contract-box-title"><%= box.title %>
+      <% if (box.desc) { %><span class="contract-box-desc"><%= box.desc %></span><% } %>
+    </h3>
+    <dl class="contract-info-cols">
+      <% box.rows.forEach(function(row) { %>
+      <div class="contract-info-row<%= row.full ? ' contract-info-row-full' : '' %>">
+        <dt><%= row.label %></dt>
+        <dd>
+          <% if (row.value) { %>
+          <span class="contract-info-value"><%= row.value %></span>
+          <% } else if (row.textarea) { %>
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: row.id,
+            name: row.name,
+            placeholder: row.placeholder,
+            count: false,
+            rootClass: 'size-default',
+            attrs: row.signedValue ? 'data-signed-value="' + row.signedValue + '"' : ''
+          }) %>
+          <% } else { %>
+          <input type="text" class="contract-input<%= row.full ? ' contract-input-full' : '' %>" placeholder="<%= row.placeholder %>"<% if (row.signedValue) { %> data-signed-value="<%= row.signedValue %>"<% } %> />
+          <% } %>
+          <% if (row.sign) { %>
+          <span class="contract-sign-area" title="서명 영역" data-sign-role="<%= row.signRole %>">
+            <% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %>
+            (인)
+          </span>
+          <% } %>
+        </dd>
+      </div>
+      <% }); %>
+    </dl>
+  </div>
+  <% }); %>
+  <!-- E: 공급자 / 공급받는자 / 보증인 -->
+</section>
