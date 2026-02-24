@@ -67,6 +67,8 @@
         &-title {
           @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
           @include mx.ellipsis-multi;
+          flex-grow: 1;
+          min-width: 0;
         }
 
         &-labels {
@@ -232,13 +234,12 @@
 
         &-action {
           @include mx.flex(flex, column);
-          gap: map.get(var.$unit, 8);
+          gap: var.$mo-gutter;
           padding: var.$mo-section-gap var.$mo-gutter;
         }
 
-        // 다른 규격 - 전체 옵션, 대량구매 문의
-        &-option,
-        &-bulk {
+        // 다른 규격 - 전체 옵션
+        &-option {
           &-btn {
             @include button.btn-reset;
             @include mx.flex(flex, row, space-between, center);
@@ -257,6 +258,26 @@
               @include icon.ic-size(map.get(var.$unit, 24));
               flex-shrink: 0;
               color: map.get(color.$gray-shades, '90');
+            }
+          }
+        }
+
+        // 다른 규격 - 대량구매 문의
+        &-bulk {
+          @include mx.flex(flex, row, flex-start, center);
+
+          &-btn {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: map.get(var.$unit, 4);
+            height: fn.rem(26);
+
+            .icon {
+              @include icon.ic-size(var.$mo-gutter);
+              color: map.get(color.$neutral-colors, '3');
+            }
+
+            .text {
+              @include typo.typography('m1s', $color: map.get(color.$neutral-colors, '3'));
             }
           }
         }

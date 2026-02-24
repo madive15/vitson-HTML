@@ -164,7 +164,7 @@
     .bar {
       &-handle {
         position: relative;
-        height: 0;
+        height: map.get(var.$mo-header, 'bottom-bar-handle');
         touch-action: none;
         cursor: grab;
 
@@ -180,13 +180,13 @@
 
       &-option {
         display: none;
-        padding: map.get(var.$unit, 2) var.$mo-gutter fn.rem(14);
         box-shadow: inset 0 -1px 0 0 #e5e5e5;
 
         &-inner {
           @include mx.flex(flex, column);
           gap: map.get(var.$unit, 20);
           width: 100%;
+          padding: map.get(var.$unit, 2) var.$mo-gutter fn.rem(14);
         }
 
         &-row {
@@ -491,10 +491,6 @@
       border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
 
       .bar {
-        &-handle {
-          height: map.get(var.$mo-header, 'bottom-bar-handle');
-        }
-
         &-option {
           display: block;
         }

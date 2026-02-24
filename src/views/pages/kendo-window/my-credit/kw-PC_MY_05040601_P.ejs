@@ -20,7 +20,7 @@
       rows: [
         { col: 'left', label: '상호', value: '주식회사 일신비츠온' },
         { col: 'left', label: '사업장 주소', value: '경기도 남양주시 진접읍 12번길 55,56' },
-        { col: 'left', label: '대표자', value: '진미애', sign: true, signRole: 'supplier' },
+        { col: 'left', label: '대표자', value: '진미애', sign: true, signRole: 'supplier', signImg: 'sign/sign-vits.png' },
         { col: 'right', label: '사업자등록번호', value: '132-81-52217' },
         { col: 'right', label: '사업장 연락처', value: '031-573-8500' }
       ]
@@ -105,13 +105,13 @@
     </h3>
     <div class="contract-info-cols">
       <% if (box.fullFirst) { fullRowsFirst.forEach(function(row) { %>
-      <div class="contract-info-row contract-info-row-full">
+      <dl class="contract-info-row contract-info-row-full">
         <dt><%= row.label %></dt>
         <dd>
           <input type="text" class="contract-input contract-input-full" placeholder="<%= row.placeholder %>"<% if (row.signedValue) { %> data-signed-value="<%= row.signedValue %>"<% } %> />
-          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역">서명(인)</span><% } %>
+          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역"><% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %><%= row.signRole === 'supplier' ? '(인)' : '서명(인)' %></span><% } %>
         </dd>
-      </div>
+      </dl>
       <% }); } %>
       <% colGroups.forEach(function(col) { %>
       <dl class="contract-info-col <%= col.class %>">
@@ -121,10 +121,10 @@
           <dd>
             <% if (row.value) { %>
             <span class="contract-info-value"><%= row.value %></span>
-            <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역">서명(인)</span><% } %>
+            <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역"><% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %><%= row.signRole === 'supplier' ? '(인)' : '서명(인)' %></span><% } %>
             <% } else { %>
             <input type="text" class="contract-input<%= row.full ? ' contract-input-full' : '' %>" placeholder="<%= row.placeholder %>"<% if (row.signedValue) { %> data-signed-value="<%= row.signedValue %>"<% } %> />
-            <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역">서명(인)</span><% } %>
+            <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역"><% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %><%= row.signRole === 'supplier' ? '(인)' : '서명(인)' %></span><% } %>
             <% } %>
           </dd>
         </div>
@@ -132,22 +132,22 @@
       </dl>
       <% }); %>
       <% if (!box.fullFirst) { fullRowsFirst.forEach(function(row) { %>
-      <div class="contract-info-row contract-info-row-full">
+      <dl class="contract-info-row contract-info-row-full">
         <dt><%= row.label %></dt>
         <dd>
           <input type="text" class="contract-input contract-input-full" placeholder="<%= row.placeholder %>"<% if (row.signedValue) { %> data-signed-value="<%= row.signedValue %>"<% } %> />
-          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역">서명(인)</span><% } %>
+          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역"><% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %><%= row.signRole === 'supplier' ? '(인)' : '서명(인)' %></span><% } %>
         </dd>
-      </div>
+      </dl>
       <% }); } %>
       <% fullRowsAfter.forEach(function(row) { %>
-      <div class="contract-info-row contract-info-row-full">
+      <dl class="contract-info-row contract-info-row-full">
         <dt><%= row.label %></dt>
         <dd>
           <input type="text" class="contract-input contract-input-full" placeholder="<%= row.placeholder %>"<% if (row.signedValue) { %> data-signed-value="<%= row.signedValue %>"<% } %> />
-          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역">서명(인)</span><% } %>
+          <% if (row.sign) { %><span class="contract-sign-area" title="서명 영역"><% if (row.signImg) { %><img src="<%= _public %>/resources/img/mro/renewal/<%= row.signImg %>" alt="서명" class="contract-sign-img" /><% } %><%= row.signRole === 'supplier' ? '(인)' : '서명(인)' %></span><% } %>
         </dd>
-      </div>
+      </dl>
       <% }); %>
     </div>
   </div>

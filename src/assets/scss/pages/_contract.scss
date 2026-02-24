@@ -175,13 +175,21 @@
 
   .contract-sign-area {
     @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    position: relative;
     display: inline-block;
     min-width: fn.rem(46);
     min-height: fn.rem(24);
     padding: fn.rem(2) 0;
+    text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
+
+    .contract-sign-img {
+      @include mx.position(absolute, $top: 50%, $left: 50%);
+      max-width: fn.rem(33);
+      transform: translate(-50%, -50%);
+    }
   }
 
   .contract-info-row-full:has(.contract-sign-area) dd {

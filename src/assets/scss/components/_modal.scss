@@ -384,6 +384,21 @@ body:not(.is-option-modal-open) {
       max-height: calc(var(--vh, 1vh) * 95);
       padding: 0 !important;
       overflow: visible;
+
+      // 좋아요 폴더
+      /* stylelint-disable-next-line selector-id-pattern */
+      &#likeModal {
+        max-height: calc(var(--vh, 1vh) * 50);
+
+        .k-listview-content {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 12);
+
+          > .k-listview-item {
+            margin-bottom: 0 !important;
+          }
+        }
+      }
     }
 
     &.is-draggable .vits-modal-header {
