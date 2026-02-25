@@ -1,0 +1,164 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const surveyList = [
+    { title: '배송 만족도 조사 2026년 1월',  status: 'active', period: '2026-1-29 ~ 2026-02-10',  score: 0,    total: 5 },
+    { title: '배송 만족도 조사 2025년 12월', status: 'end',    period: '2025-12-29 ~ 2026-01-10', score: 2.67, total: 5 },
+    { title: '배송 만족도 조사 2025년 11월', status: 'end',    period: '2025-11-29 ~ 2025-12-10', score: 3.45, total: 5 },
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '설문 조사'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-survey">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '설문 조사' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-survey">
+              <div class="vm-mypage-survey">
+                <!-- 필터 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
+                  type: 'survey',
+                }) %>
+
+                <!-- [D] 설문 조사 1건 이상 -->
+                <div class="vm-mypage-survey-list">
+                  <div class="survey-items">
+                    <% surveyList.forEach(function (item) { %> <% var fillWidth = item.total > 0 ? (item.score /
+                    item.total * 100).toFixed(2) : '0.00'; %>
+                    <div class="survey-item">
+                      <div class="survey-item-head">
+                        <p class="survey-item-title"><%= item.title %></p>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/label/general-label.ejs`, {
+                          text: item.status === 'active' ? '진행중' : '종료',
+                          variant: item.status === 'active' ? 'blue' : 'gray'
+                        }) %>
+                      </div>
+                      <div class="survey-item-body">
+                        <div class="survey-item-content">
+                          <p class="survey-item-date"><%= item.period %></p>
+                          <div class="survey-item-stars">
+                            <div class="star-rating">
+                              <div
+                                class="star-stars"
+                                role="img"
+                                aria-label="별점 <%= item.score %>점 만점 <%= item.total %>점"
+                              >
+                                <div class="star-track">
+                                  <span class="star-layer star-layer-gray"></span>
+                                  <span class="star-layer star-layer-fill" style="width: <%= fillWidth %>%"></span>
+                                  <span class="star-layer star-layer-shape"></span>
+                                </div>
+                              </div>
+                              <span class="star-value">
+                                <span class="star-score"><%= item.score === 0 ? '-' : item.score %></span>
+                                <span class="star-sep"></span>
+                                <span class="star-max"><%= item.total %></span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="survey-item-actions">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size: 'md',
+                            variant: 'outline-secondary',
+                            text: '설문보기',
+                            iconLeft: true,
+                            iconName: 'ic-document-paper',
+                            className: 'survey-list-item-button'
+                          }) %>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+                  </div>
+                </div>
+
+                <!-- [D] 설문 조사 1건 미만 -->
+                <div class="vm-mypage-survey-empty" style="display: none">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/empty-state.ejs`, {
+                    iconName: 'document-paper',
+                    title: '조회된 설문조사가 없습니다',
+                  }) %>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var type = new URLSearchParams(location.search).get('type');
+
+        // type=empty: 빈 상태
+        if (type === 'empty') {
+          $('.vm-mypage-survey-list').hide();
+          $('.vm-mypage-survey-empty').show();
+        } else {
+          $('.vm-mypage-survey-list').show();
+          $('.vm-mypage-survey-empty').hide();
+        }
+
+        // 설문 필터 초기화
+        $('.survey-filter-reset').on('click', function () {
+          // datepicker reset - 전용 API 사용
+          var picker = VmKendoRangePicker.getInstance('#vm-survey-filter-daterange');
+          if (picker) picker.reset();
+
+          // select 초기화 (전체 = '0')
+          var $select = $('[data-select-id="survey-filter-select"]').closest('[data-vits-select]');
+          $select.find('[data-vits-select-value]').text('전체');
+          $select.addClass('is-selected');
+          $select.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $select.find('[data-vits-select-hidden]').val('0');
+        });
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

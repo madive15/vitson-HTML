@@ -1,0 +1,42 @@
+// -----------------------------------------------------------------------------
+// pages/_system.scss
+// - 시스템 전용 스타일 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-system-issue {
+  @include mx.flex(flex, column, center, center);
+  min-height: fn.rem(800);
+  background-color: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+
+  .vits-empty-state-desc {
+    text-align: center;
+    white-space: pre-line;
+  }
+
+  .vits-system-issue-desc {
+    @include mx.flex(flex, row, center, center);
+    gap: fn.rem(10);
+    padding: map.get(var.$unit, 20) fn.rem(60);
+    margin-top: fn.rem(24);
+    background-color: map.get(color.$layout-status, 'info-bg-sub');
+    border-radius: map.get(var.$radius, 'md');
+
+    .title {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .date {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+}

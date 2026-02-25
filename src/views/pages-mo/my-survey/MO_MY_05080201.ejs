@@ -1,0 +1,173 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const surveyData = {
+    title: '배송 만족도 조사 2025년 12월',
+    status: 'active',
+    period: '2025-12-29 ~ 2026-01-10',
+    total: 5
+  };
+
+  const questionList = [
+    { index: 1, question: '서비스 환경에 만족하십니까?', score: 0 },
+    { index: 2, question: '제품 퀄리티에 만족하십니까?', score: 0 },
+    { index: 3, question: '배송 상태는 괜찮았나요?', score: 3 },
+    { index: 4, question: '재구매 의향이 있으신가요?', score: 2 },
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '설문지'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-survey">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '설문지' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-survey">
+              <div class="vm-mypage-survey">
+                <div class="vm-mypage-survey-detail" data-survey-detail>
+                  <!-- 설문 요약 영역 -->
+                  <div class="survey-item">
+                    <div class="survey-item-head">
+                      <p class="survey-item-title"><%= surveyData.title %></p>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/general-label.ejs`, {
+                        text: surveyData.status === 'active' ? '진행중' : '종료',
+                        variant: surveyData.status === 'active' ? 'blue' : 'gray'
+                      }) %>
+                    </div>
+                    <div class="survey-item-body">
+                      <div class="survey-item-content">
+                        <p class="survey-item-date"><%= surveyData.period %></p>
+                        <div class="survey-item-stars">
+                          <div class="star-rating">
+                            <div
+                              class="star-stars"
+                              role="img"
+                              aria-label="평균 별점 만점 <%= surveyData.total %>점"
+                              data-survey-avg-stars
+                            >
+                              <div class="star-track">
+                                <span class="star-layer star-layer-gray"></span>
+                                <span class="star-layer star-layer-fill" style="width: 0%" data-survey-avg-fill></span>
+                                <span class="star-layer star-layer-shape"></span>
+                              </div>
+                            </div>
+                            <span class="star-value">
+                              <span class="star-score" data-survey-avg-score>-</span>
+                              <span class="star-max"><%= surveyData.total %></span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 문항 목록 -->
+                  <!-- [D] 설문 종료 시 is-disabled 클래스 추가 -->
+                  <div class="vm-mypage-survey-question">
+                    <% questionList.forEach(function (q) { %>
+                    <div class="survey-question-item" data-survey-question>
+                      <p class="survey-question-title"><%= q.index %>. <%= q.question %></p>
+                      <div
+                        class="star-rating-input"
+                        role="group"
+                        aria-label="<%= q.index %>번 문항 별점 선택"
+                        data-survey-star-input
+                        data-star-default="<%= q.score %>"
+                      >
+                        <div class="star-rating-input-stars">
+                          <% for (var i = 1; i <= 5; i++) { %>
+                          <button
+                            type="button"
+                            class="star-rating-input-star"
+                            data-star-value="<%= i %>"
+                            aria-label="<%= i %>점"
+                          >
+                            <i class="ic ic-star" aria-hidden="true"></i>
+                          </button>
+                          <% } %>
+                        </div>
+                        <span class="star-value">
+                          <span class="star-score">-</span>
+                          <span class="star-sep">/</span>
+                          <span class="star-max"><%= surveyData.total %></span>
+                        </span>
+                      </div>
+                    </div>
+                    <% }) %>
+
+                    <!-- 버튼 영역 -->
+                    <div class="survey-question-actions">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, {
+                        size: 'xl',
+                        variant: 'primary',
+                        text: '저장하기',
+                        className: 'survey-question-save'
+                      }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var type = new URLSearchParams(location.search).get('type');
+
+        if (type === 'end') {
+          // 상태 라벨 종료로 변경
+          $('.survey-item-head .vits-general-label')
+            .removeClass('is-general-blue')
+            .addClass('is-general-gray')
+            .text('종료');
+
+          // 문항 영역 비활성
+          $('.vm-mypage-survey-question').addClass('is-disabled');
+
+          // 저장하기 버튼 숨김
+          $('.survey-question-actions').hide();
+        }
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

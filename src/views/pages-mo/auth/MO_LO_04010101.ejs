@@ -1,0 +1,140 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '비밀번호 변경'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'nav-bar-logo' }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <div class="pw-change-form-wrap">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/empty-state.ejs`, { iconName: 'info', title: '비밀번호를 변경해 주세요.' }) %>
+
+                  <!-- 안내 메시지 -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                    theme: 'blue',
+                    text: '비밀번호가 변경된지 6개월이 지났습니다.\n개인정보보호를 위해 비밀번호를 변경해 주세요.',
+                  }) %>
+
+                  <!-- S: 비밀번호 변경 폼 -->
+                  <form class="pw-change-form" action="#" method="post" novalidate>
+                    <div class="pw-change-form-inner">
+                      <div class="vm-signup-form">
+                        <div class="vm-form-row">
+                          <label class="vm-form-label" for="pw-current">
+                            현재 비밀번호 <span class="label-required" aria-hidden="true">*</span>
+                          </label>
+                          <div class="vm-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, { 
+                              id: 'pw-current', 
+                              name: 'currentPassword', 
+                              type: 'password', 
+                              label: '현재 비밀번호', 
+                              placeholder: '현재 비밀번호', 
+                              required: true,
+                              rootClass: 'size-default',
+                              showPasswordToggle: true, }) %>
+                          </div>
+                        </div>
+                        <div class="vm-form-row">
+                          <label class="vm-form-label" for="pw-new">
+                            새 비밀번호 <span class="label-required" aria-hidden="true">*</span>
+                          </label>
+                          <div class="vm-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, { 
+                              id: 'pw-new', 
+                              name: 'newPassword', 
+                              type: 'password', 
+                              label: '새 비밀번호', 
+                              placeholder: '새 비밀번호', 
+                              required: true,
+                              rootClass: 'size-default', 
+                              showPasswordToggle: true,}) %>
+                          </div>
+                        </div>
+                        <div class="vm-form-row">
+                          <label class="vm-form-label" for="pw-new-confirm">
+                            새 비밀번호 확인 <span class="label-required" aria-hidden="true">*</span>
+                          </label>
+                          <div class="vm-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, { 
+                              id: 'pw-new-confirm', 
+                              name: 'newPasswordConfirm', 
+                              type: 'password', 
+                              label: '새 비밀번호 확인', 
+                              placeholder: '새 비밀번호 확인', 
+                              required: true, 
+                              rootClass: 'size-default', 
+                              showPasswordToggle: true}) %>
+
+                            <p class="vm-form-hint">영문/숫자/특수문자 조합 10자 이상</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- S: 액션 버튼 -->
+                    <div class="pw-change-actions">
+                      <!-- [D] 비활성화 상태 : disabled -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                        type: 'button', 
+                        size: 'xl', 
+                        variant: 'secondary', 
+                        text: '다음에 변경', 
+                        className: 'pw-change-btn-later', 
+                      }) %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                        type: 'submit', 
+                        size: 'xl', 
+                        variant: 'primary', 
+                        text: '비밀번호 변경', 
+                        className: 'pw-change-btn-submit',
+                      }) %>
+                    </div>
+                    <!-- E: 액션 버튼 -->
+                  </form>
+                  <!-- E: 비밀번호 변경 폼 -->
+                </div>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group --><!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

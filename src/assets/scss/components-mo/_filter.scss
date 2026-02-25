@@ -613,3 +613,48 @@ $filter-section-divider: inset 0 -1px 0 0 map.get(color.$layout-surf, 'secondary
     left: unset;
   }
 }
+
+// 마이페이지 설문조사 필터
+.vm-mypage-survey-filter {
+  position: relative;
+  background: color.$color-white;
+
+  .survey-filter {
+    &-toolbar,
+    &-actions {
+      padding: map.get(var.$unit, 20) var.$mo-gutter;
+    }
+
+    &-toolbar {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+      box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+
+      &-row {
+        width: 100%;
+
+        .vits-select {
+          &,
+          &-trigger {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    &-actions {
+      @include mx.flex;
+      gap: map.get(var.$unit, 8);
+    }
+
+    &-reset {
+      flex-shrink: 0;
+      width: fn.rem(98);
+    }
+
+    &-search {
+      flex-grow: 1;
+      min-width: 0;
+    }
+  }
+}

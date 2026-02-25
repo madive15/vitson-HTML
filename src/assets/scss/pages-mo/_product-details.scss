@@ -637,9 +637,8 @@
 
   // 상세이미지 모달
   .gallery-zoom {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
+    @include mx.position(fixed, 0, 0, 0, 0);
+    z-index: map.get(var.$mo-zindex, 'gallery-zoom');
     display: none;
     align-items: center;
     justify-content: center;
@@ -651,18 +650,20 @@
     }
 
     &-panel {
+      @include mx.flex(flex, column);
       position: relative;
       z-index: 1;
-      width: calc(100vw - (map.get(var.$unit, 20) * 2));
-      max-width: fn.rem(600);
-      padding-bottom: var.$mo-section-gap;
+      width: 100%;
+      height: 100%;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(var.$mo-section-gap + env(safe-area-inset-bottom));
       overflow: hidden;
       background: color.$color-white;
-      border-radius: map.get(var.$radius, 'md');
     }
 
     &-header {
       @include mx.flex(flex, row, space-between, center);
+      flex-shrink: 0;
       padding: var.$mo-section-gap map.get(var.$unit, 20) map.get(var.$unit, 20);
     }
 
@@ -671,20 +672,41 @@
     }
 
     &-body {
+      @include mx.flex(flex, row, center, center);
+      flex-grow: 1;
+      width: 100%;
+      min-width: 0;
+      min-height: 0;
       padding: map.get(var.$unit, 4) map.get(var.$unit, 20);
+
+      .swiper {
+        &-wrapper {
+          height: 100% !important;
+        }
+
+        &-slide {
+          height: 100%;
+        }
+      }
     }
 
     &-img {
       @include mx.img-fit;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      background: #f3f3f3;
-      border-radius: map.get(var.$radius, 'md');
+      background: color.$color-white;
     }
 
     &-thumbs {
+      flex-shrink: 0;
       width: calc(100% - (map.get(var.$unit, 20) * 2));
       padding: map.get(var.$unit, 8) 0 0;
       margin: 0 auto;
+
+      .swiper-wrapper {
+        @include mx.flex(flex, row, center, center);
+      }
 
       .swiper-slide {
         width: map.get(var.$unit, 40);

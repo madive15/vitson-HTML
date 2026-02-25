@@ -13,14 +13,121 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/form' as form;
 
+@mixin link-underline-style {
+  .vits-text-link {
+    @include typo.typography('b2m', $color: map.get(color.$text-colors, 'tertiary'));
+    padding-bottom: fn.rem(4);
+    border-bottom: 1px solid map.get(color.$layout-border, 'tertiary');
+  }
+}
+
+@mixin signup-form-style {
+  // 기본 인풋 레이아웃
+  .vm-signup-form {
+    @include mx.flex(flex, column, flex-start, stretch);
+    width: 100%;
+
+    .vm-form {
+      &-hint {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        width: 100%;
+        margin-top: map.get(var.$unit, 4);
+      }
+
+      &-row {
+        @include mx.flex(flex, row, space-between, center, wrap);
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-column {
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 12);
+        align-items: stretch;
+      }
+
+      &-label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        flex: 1.5 1 0;
+        min-width: fn.rem(100);
+      }
+
+      &-field {
+        flex: 3 1 0;
+        min-width: 0;
+
+        // 유효성 검사 시, 테두리 색상 변경
+        .vits-validation {
+          &.is-valid {
+            .input-item {
+              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+            }
+          }
+        }
+      }
+    }
+
+    .label-required {
+      color: map.get(color.$text-status, 'brand-sub');
+    }
+  }
+}
+
+@mixin button-actions-style {
+  @include mx.flex(flex, row, center, flex-end);
+  gap: map.get(var.$unit, 12);
+  width: 100%;
+  padding-bottom: map.get(var.$unit, 40);
+
+  [class*='vits-btn-'] {
+    flex: 1 1 0;
+    padding: 0 fn.rem(24);
+
+    &[class*='primary'] {
+      flex: 3 1 0;
+    }
+  }
+}
+
+@mixin info-card-style {
+  @include mx.flex(flex, column, center, center);
+  width: 100%;
+  padding: fn.rem(44) map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'raised');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+  .vits-empty-state {
+    padding: 0;
+  }
+}
+
+@mixin selectbox-w100 {
+  .vits-select {
+    width: 100%;
+
+    &-value {
+      font-size: fn.rem(14);
+    }
+
+    &-trigger {
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 map.get(var.$unit, 16);
+    }
+
+    &-list {
+      width: calc(100% - fn.rem(1));
+    }
+  }
+}
+
 [class*='main-content-auth-'] {
-  padding-bottom: map.get(var.$mo-bottom-bar, 'tab-bar');
   background-color: map.get(color.$layout-surf, 'base'); // 로그인 초기 배경색
   &:has(.info-find-wrap) {
     background-color: transparent;
   }
 
-  &:has(.auth-dormant-form) {
+  &:has(.auth-dormant-form, .id-find-form, .join-complete, .vits-signup-terms-card) {
     background-color: map.get(color.$layout-surf, 'mypage');
   }
 
@@ -29,8 +136,17 @@
   /* 로그인 컨텐츠 */
   .vm-login {
     &-content {
+      flex: 1;
       width: 100%;
       padding: map.get(var.$unit, 56) map.get(var.$unit, 16) 0;
+
+      @include mx.flex(flex, column, flex-start, flex-start);
+
+      // 아이디 찾기 결과
+      &:has(.id-find-form) {
+        @include mx.flex(flex, column, flex-start, center);
+        padding-top: fn.rem(80);
+      }
     }
 
     &-logo {
@@ -48,6 +164,7 @@
 
     &-form {
       @include mx.flex(flex, column, flex-start, flex-start);
+      width: 100%;
     }
 
     /* 입력 영역 */
@@ -107,16 +224,12 @@
     margin-top: fn.rem(52);
   }
 
-  /* 일회성 로그인 링크 */
+  /* 일회성 로그인 링크, 아이디찾기결과 메인 링크 */
   .login-once-others {
     padding: map.get(var.$unit, 16) 0 fn.rem(44);
     margin: 0 auto;
 
-    .vm-text-link {
-      @include typo.typography('b2m', $color: map.get(color.$text-colors, 'tertiary'));
-      padding-bottom: fn.rem(4);
-      border-bottom: 2px solid map.get(color.$layout-border, 'tertiary');
-    }
+    @include link-underline-style;
   }
 
   /* 인증 탭 버튼 */
@@ -141,154 +254,402 @@
       }
     }
   }
+}
 
-  /* === 비밀번호 찾기 === */
-  .vm-signup {
-    &-headline {
-      padding: 0;
-      margin-bottom: map.get(var.$unit, 24);
-      text-align: center;
+/* === 로그인/회워가입 폼 === */
+.vm-signup {
+  &-headline {
+    padding: 0;
+    margin-bottom: map.get(var.$unit, 24);
+    text-align: center;
+  }
+
+  &-desc {
+    @include typo.typography('b2m', $color: map.get(color.$text-colors, 'default'));
+  }
+
+  &-title {
+    @include typo.typography('h4b', $color: map.get(color.$text-colors, 'default'));
+  }
+
+  &-alert {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'default'));
+    padding-bottom: map.get(var.$unit, 24);
+  }
+
+  // 비밀번호, 아이디 찾기
+  .info-find {
+    &-wrap {
+      width: 100%;
+
+      .info-find-tabs-wrap {
+        & + .info-find-form {
+          padding: map.get(var.$unit, 44) map.get(var.$unit, 16);
+        }
+      }
     }
 
-    &-desc {
-      @include typo.typography('b2m', $color: map.get(color.$text-colors, 'default'));
-    }
+    &-tabs-wrap {
+      .vits-auth-tabs {
+        padding: 0;
+        margin-bottom: 0;
+        background-color: transparent;
 
-    // 비밀번호, 아이디 찾기 폼 공통
-    .info-find {
-      &-wrap {
-        .info-find-tabs-wrap {
-          & + .info-find-form {
-            padding: map.get(var.$unit, 44) map.get(var.$unit, 16);
+        [class*='vits-btn-'] {
+          padding: fn.rem(16) 0 fn.rem(32);
+          margin-bottom: fn.rem(-16);
+          border: 0;
+          border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+
+          .text {
+            @include typo.typography('b3b', $color: map.get(color.$text-colors, 'tertiary'));
           }
         }
       }
 
-      &-tabs-wrap {
-        .vits-auth-tabs {
-          padding: 0;
-          margin-bottom: 0;
-          background-color: transparent;
-
-          [class*='vits-btn-'] {
-            padding: fn.rem(16) 0 fn.rem(32);
-            margin-bottom: fn.rem(-16);
-            border: 0;
-            border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
-
-            .text {
-              @include typo.typography('b3b', $color: map.get(color.$text-colors, 'tertiary'));
-            }
-          }
-        }
-
-        .info-find-tab-btn {
-          &.is-active .text {
-            @include typo.typography('b3b', $color: map.get(color.$text-colors, 'secondary'));
-          }
-        }
-
-        & + &-form {
-          border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+      .info-find-tab-btn {
+        &.is-active .text {
+          @include typo.typography('b3b', $color: map.get(color.$text-colors, 'secondary'));
         }
       }
-      // stylelint-disable-next-line no-descending-specificity
-      &-form {
-        padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
-        background-color: map.get(color.$layout-surf, 'base');
 
+      & + &-form {
+        border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+      }
+    }
+    // stylelint-disable-next-line no-descending-specificity
+    &-form {
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
+      background-color: map.get(color.$layout-surf, 'base');
+
+      @include mx.flex(flex, column, flex-start, flex-start);
+      border-radius: map.get(var.$radius, 'lg');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      &-fields {
         @include mx.flex(flex, column, flex-start, flex-start);
-        border-radius: map.get(var.$radius, 'lg');
-        box-shadow: map.get(var.$box-shadow, 'elevation_1');
-
-        &-fields {
-          @include mx.flex(flex, column, flex-start, flex-start);
-          gap: map.get(var.$unit, 12);
-        }
-
-        &-actions {
-          width: 100%;
-          margin: map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
-          // stylelint-disable-next-line no-descending-specificity
-          [class*='vits-btn-'] {
-            width: 100%;
-          }
-        }
-      }
-    }
-
-    // 휴면 계정 안내 폼
-    .auth-dormant {
-      &-form {
-        @include mx.flex(flex, column, center, center);
-        gap: map.get(var.$unit, 32);
-        padding: fn.rem(32) fn.rem(16);
-        background-color: map.get(color.$layout-surf, 'base');
-        border-radius: map.get(var.$radius, 'lg');
-        box-shadow: map.get(var.$box-shadow, 'elevation_1');
-
-        .vits-empty-state {
-          padding: 0;
-        }
-      }
-
-      &-info-box {
-        @include mx.flex(flex, column, flex-start, flex-start);
-        gap: map.get(var.$unit, 20);
-        padding: map.get(var.$unit, 32) map.get(var.$unit, 16);
-        text-align: center;
-        background-color: map.get(color.$layout-surf, 'raised');
-        border-radius: map.get(var.$radius, 'sm');
-      }
-
-      &-info-text {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
-        margin: 0;
-
-        .highlight-text {
-          @include typo.typography('b3b', $color: map.get(color.$text-status, 'info'));
-        }
-
-        .point-text {
-          @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
-        }
+        gap: map.get(var.$unit, 12);
       }
 
       &-actions {
-        min-width: fn.rem(150);
+        width: 100%;
+        margin: map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
         // stylelint-disable-next-line no-descending-specificity
         [class*='vits-btn-'] {
           width: 100%;
         }
       }
     }
+  }
 
-    /* auth 공통 컴포넌트 (회원가입 완료, 아이디 찾기 결과 등) */
-    .auth-contact {
-      @include mx.flex(flex, row, center, center);
+  // 휴면 계정 안내
+  .auth-dormant {
+    &-form {
+      @include info-card-style;
+      @include mx.flex(flex, column, center, center);
       gap: map.get(var.$unit, 32);
-      padding-top: fn.rem(24);
+      padding: fn.rem(32) fn.rem(16);
+    }
 
-      &-call,
-      &-kakaotalk {
-        @include mx.flex(flex, row, center, center);
-        gap: map.get(var.$unit, 8);
-        text-decoration: none;
+    &-info-box {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 20);
+      padding: map.get(var.$unit, 32) map.get(var.$unit, 16);
+      text-align: center;
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'sm');
+    }
+
+    &-info-text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      .highlight-text {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'info'));
       }
 
-      &-icon {
-        flex-shrink: 0;
-        border-radius: 50%;
-
-        @include mx.flex(flex, row, center, center);
-        @include icon.ic-size(fn.rem(32));
-        @include mx.img-fit(contain);
-      }
-
-      &-text {
-        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+      .point-text {
+        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
       }
     }
+
+    &-actions {
+      @include button-actions-style;
+      flex: auto;
+      padding-bottom: 0;
+    }
+  }
+
+  // auth (회원가입 완료, 아이디 찾기 결과 등)
+  .auth-contact {
+    @include mx.flex(flex, row, center, center);
+    gap: map.get(var.$unit, 32);
+    width: 100%;
+    padding-top: fn.rem(24);
+
+    &-call,
+    &-kakaotalk {
+      @include mx.flex(flex, row, center, center);
+      gap: map.get(var.$unit, 8);
+      text-decoration: none;
+    }
+
+    &-icon {
+      flex-shrink: 0;
+      border-radius: 50%;
+
+      @include mx.flex(flex, row, center, center);
+      @include icon.ic-size(fn.rem(32));
+      @include mx.img-fit(contain);
+    }
+
+    &-text {
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+    }
+  }
+
+  // 아이디 찾기 완료
+  .id-find-form {
+    @include mx.flex(flex, column, center, flex-start);
+    width: 100%;
+    margin-top: fn.rem(16);
+
+    .id-info {
+      &-card {
+        @include info-card-style;
+
+        .id-info-text {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'tertiary'));
+          text-align: center;
+        }
+
+        .found-id-text {
+          @include typo.typography('b1s', $color: map.get(color.$text-status, 'brand'));
+          padding: 0 map.get(var.$unit, 12);
+        }
+      }
+
+      &-main-link {
+        padding: map.get(var.$unit, 40) 0 map.get(var.$unit, 16);
+        margin: 0 auto;
+
+        @include link-underline-style;
+      }
+
+      &-actions {
+        @include button-actions-style;
+        padding-bottom: fn.rem(24);
+        border-bottom: 1px solid map.get(color.$layout-border, 'tertiary');
+      }
+    }
+  }
+
+  // 회원가입 완료
+  .join-complete {
+    @include mx.flex(flex, column, center, flex-start);
+    width: 100%;
+
+    &-card {
+      @include info-card-style;
+      @include link-underline-style;
+      padding: fn.rem(32) fn.rem(16);
+
+      .vits-text-link {
+        margin: map.get(var.$unit, 32) 0 map.get(var.$unit, 16);
+      }
+    }
+
+    &-actions {
+      @include button-actions-style;
+      padding-bottom: 0;
+    }
+  }
+
+  // 비밀번호 변경 안내
+  .pw-change {
+    &-form-wrap {
+      @include mx.flex(flex, column, center, center);
+      flex: 1;
+      gap: map.get(var.$unit, 32);
+      width: 100%;
+
+      .alerts-anatomy-text {
+        white-space: pre-line;
+      }
+    }
+
+    &-form {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      flex: 1;
+      width: 100%;
+    }
+
+    &-form-inner {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      flex: 1;
+      gap: map.get(var.$unit, 20);
+      width: 100%;
+
+      @include signup-form-style;
+
+      .vm-signup-form {
+        gap: map.get(var.$unit, 12);
+
+        .vm-form-row {
+          align-items: flex-start;
+
+          .vm-form-label {
+            padding-top: map.get(var.$unit, 8);
+          }
+        }
+      }
+    }
+
+    &-actions {
+      @include button-actions-style;
+    }
+  }
+
+  &-form-wrap {
+    width: 100%;
+  }
+
+  // 회원가입 > 약관동의
+  &-terms {
+    @include signup-form-style;
+    // stylelint-disable-next-line no-descending-specificity
+    .vm-signup-form {
+      gap: map.get(var.$unit, 8);
+      padding: map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 24);
+      background-color: map.get(color.$layout-surf, 'base');
+      border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      @include selectbox-w100;
+    }
+
+    .vm-signup-submit {
+      padding-top: map.get(var.$unit, 24);
+      // stylelint-disable-next-line no-descending-specificity
+      [class*='vits-btn-'] {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// 약관동의 카드 (pc 소스 일부 가지고옴)
+.vits-signup {
+  &-terms-card {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
+  }
+
+  &-terms-all {
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 2);
+    padding: 0 map.get(var.$unit, 16);
+
+    .vits-checkbox-item.size-l {
+      align-items: center;
+    }
+  }
+
+  &-terms-all-desc {
+    @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+    padding-left: fn.rem(24);
+    margin: 0;
+  }
+
+  &-terms-list {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 4);
+  }
+
+  &-terms-item {
+    @include mx.flex(flex, row, space-between, center);
+    gap: map.get(var.$unit, 4);
+    width: 100%;
+    padding: map.get(var.$unit, 16);
+    border: 1px solid map.get(color.$layout-border, 'quaternary');
+    border-radius: map.get(var.$radius, 'md');
+
+    .vits-checkbox-item {
+      .label {
+        @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      .label-tag {
+        margin-left: map.get(var.$unit, 8);
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+
+      // 마케팅 및 광고 알림 설정 체크 시 텍스트 색상 변경
+      [value='marketing'] ~ .label {
+        .label-tag {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
+      }
+    }
+  }
+
+  &-terms-link {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: map.get(var.$unit, 4);
+    align-items: center;
+    color: map.get(color.$text-colors, 'tertiary');
+    text-decoration: none;
+
+    .ic {
+      @include icon.ic-size(fn.rem(16));
+    }
+  }
+
+  &-terms-details {
+    width: 100%;
+  }
+
+  &-terms-summary {
+    @include mx.flex(flex, row, space-between, center);
+    gap: map.get(var.$unit, 12);
+    list-style: none;
+    cursor: pointer;
+
+    .terms-toggle-btn {
+      @include button.btn-reset;
+      display: inline-flex;
+      flex: 1;
+      flex-shrink: 0;
+      justify-content: flex-start;
+      color: map.get(color.$text-colors, 'tertiary');
+
+      .ic {
+        @include icon.ic-size(fn.rem(16));
+      }
+    }
+  }
+
+  &-terms-sub {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 16);
+    // stylelint-disable-next-line no-descending-specificity
+    &.is-open {
+      padding-top: map.get(var.$unit, 12);
+      margin-top: map.get(var.$unit, 16);
+      border-top: 1px solid map.get(color.$layout-border, 'quaternary');
+
+      .label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+  }
+
+  .terms-toggle-btn[aria-expanded='true'] .ic {
+    transform: rotate(180deg);
   }
 }
 
@@ -317,5 +678,43 @@
         }
       }
     }
+  }
+}
+
+/* === 이용약관 모달 (공통팝업) MO_CO_01010101_M === */
+.vm-signup-terms {
+  padding: map.get(var.$unit, 16) map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 16);
+  background-color: map.get(color.$layout-surf, 'raised');
+  border-radius: map.get(var.$radius, 'lg');
+
+  &-body {
+    max-height: fn.rem(275);
+  }
+
+  &-article {
+    &[hidden] {
+      display: none;
+    }
+
+    &:not([hidden]) + .vm-signup-terms-article:not([hidden]) {
+      padding-top: map.get(var.$unit, 24);
+      margin-top: map.get(var.$unit, 24);
+      border-top: 1px solid map.get(color.$layout-border, 'quaternary');
+    }
+  }
+
+  &-section {
+    @include typo.typography('b4r', 'Noto Sans KR', 0, map.get(color.$text-colors, 'secondary'));
+
+    & + .vm-signup-terms-section {
+      margin-top: map.get(var.$unit, 24);
+    }
+  }
+}
+
+// 약관동의 모달 제목 스타일
+.k-window.k-window-titleless:has(.vm-signup-terms-article) {
+  .vm-modal-title {
+    @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
   }
 }
