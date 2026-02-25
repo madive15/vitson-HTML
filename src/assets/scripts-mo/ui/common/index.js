@@ -17,6 +17,7 @@ import './scroll-overflow-gradient.js';
 import './option-box.js';
 import './step-tab.js';
 import './auth.js';
+import './survey-detail.js';
 
 (function ($, window) {
   'use strict';
@@ -39,7 +40,8 @@ import './auth.js';
     'scrollOverflowGradient',
     'optionBox',
     'stepTab',
-    'auth'
+    'auth',
+    'surveyDetail'
   ];
 
   window.UI.common = {

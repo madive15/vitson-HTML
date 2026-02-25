@@ -1,0 +1,191 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const accountList = [
+    {
+      id: 'ckb-item1',
+      label: '경영지원팀',
+      isUsed: true,
+      name: '메가존',
+      task: '경영',
+      position: '사원',
+      phone: '010-2345-6666'
+    },
+    {
+      id: 'ckb-item2',
+      label: 'VIVHOHO',
+      isUsed: false,
+      name: '김호호',
+      task: '물류',
+      position: '사원',
+      phone: '010-2345-6666'
+    },
+    {
+      id: 'ckb-item3',
+      label: '물류팀',
+      isUsed: true,
+      name: '김호호',
+      task: '물류',
+      position: '사원',
+      phone: '010-2345-6666'
+    }
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '계정 등록'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-account">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '계정 등록' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-account">
+              <!-- [D] 등록된 계정이 1개 이상 있을 때 -->
+              <div class="vm-mypage-account" data-checkbox-scope>
+                <div class="vm-mypage-account-toolbar">
+                  <div class="toolbar-ckbox-all">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                      name: 'ckb-all',
+                      value: 'all',
+                      checkboxType: 'all',
+                      size: 'l',
+                      text: '전체 선택'
+                    }) %>
+                  </div>
+                  <div class="toolbar-actions">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size:'sm', 
+                      variant: 'primary', 
+                      text: '계정추가',
+                      iconLeft: true,
+                      iconName: 'ic-plus'
+                    }) %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size:'sm', 
+                      variant: 'secondary', 
+                      text: '선택 삭제',
+                    }) %>
+                  </div>
+                </div>
+                <ul class="vm-mypage-account-list">
+                  <% accountList.forEach(function(account) { %>
+                  <li class="account-list-row">
+                    <div class="account-list-item">
+                      <div class="account-list-item-head">
+                        <div class="account-list-item-name">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                            name: account.id,
+                            value: account.id,
+                            checkboxType: 'item',
+                            size: 'l',
+                            text: account.label
+                          }) %>
+                          <%- include(`${_src}/views/components/label/general-label.ejs`, {
+                            text: account.isUsed ? '사용' : '미사용',
+                            variant: account.isUsed ? 'blue' : 'gray'
+                          }) %>
+                        </div>
+                        <div class="account-list-item-actions">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            size:'sm',
+                            variant: 'outline-secondary',
+                            text: '수정'
+                          }) %>
+                        </div>
+                      </div>
+                      <div class="account-list-item-body">
+                        <dl class="account-list-item-info">
+                          <dt class="info-name">이름</dt>
+                          <dd class="info-name"><%= account.name %></dd>
+                          <dt>담당업무</dt>
+                          <dd><%= account.task %></dd>
+                          <dt>직급</dt>
+                          <dd><%= account.position %></dd>
+                          <dt>휴대폰</dt>
+                          <dd><%= account.phone %></dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </li>
+                  <% }); %>
+                </ul>
+              </div>
+
+              <!-- [D] 등록된 계정이 없을 때  -->
+              <div class="vm-mypage-account account-empty" style="display: none">
+                <!-- prettier-ignore -->
+                <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, { 
+                  size:'xl', 
+                  variant: 'secondary', 
+                  text: '계정 추가하기',
+                }) %>
+
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/empty-state.ejs`, {
+                  iconName: 'document-paper',
+                  title: '등록된 계정이 없습니다',
+                  buttonHtml 
+                }) %>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var isEmpty = new URLSearchParams(location.search).get('type') === 'empty';
+        var $account = $('.vm-mypage-account').not('.account-empty');
+        var $empty = $('.account-empty');
+
+        if (isEmpty) {
+          $account.hide();
+          $empty.show();
+        } else {
+          $account.show();
+          $empty.hide();
+        }
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

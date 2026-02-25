@@ -1,0 +1,155 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '약관 공통 모달'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'nav-bar-logo' }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="terms"
+                  onclick="VmKendoWindow.open('modal1')"
+                >
+                  <span class="text">이용약관</span>
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="marketing"
+                  onclick="VmKendoWindow.open('modal2')"
+                >
+                  <span class="text">마케팅 및 광고 알림 설정 상세보기 </span>
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="privacy"
+                  onclick="VmKendoWindow.open('modal3')"
+                >
+                  <span class="text">개인정보 수집 및 이용 동의 상세보기</span>
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="marketing-enterprise"
+                  onclick="VmKendoWindow.open('modal4')"
+                >
+                  <span class="text">기업회원 및 공급처 이용 동의 상세보기</span>
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="marketing-customer"
+                  onclick="VmKendoWindow.open('modal5')"
+                >
+                  <span class="text">isvm계정전환 > 매출처 이용 동의 상세보기</span>
+                </button>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal1 = { 
+          id: 'modal1', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '이용약관', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'terms' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal1) %>
+        <!-- prettier-ignore -->
+        <% const modal2 = { 
+          id: 'modal2', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '마케팅 및 광고 알림 설정 상세보기', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'marketing' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+        <!-- prettier-ignore -->
+        <% const modal3 = { 
+          id: 'modal3', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '개인정보 수집 및 이용 동의 상세보기', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'privacy' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
+        <!-- prettier-ignore -->
+        <% const modal4 = { 
+          id: 'modal4', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '기업회원 및 공급처 이용 동의 상세보기', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'marketing-enterprise' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal4) %>
+        <!-- prettier-ignore -->
+        <% const modal5 = { 
+          id: 'modal5', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '매출처 이용 동의 상세보기', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'marketing-customer' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal5) %>
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

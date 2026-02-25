@@ -1,0 +1,303 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '계정 등록'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-account">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '계정 등록' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-account">
+              <div class="vm-mypage-account">
+                <form class="vm-mypage-account-form" action="" method="post">
+                  <div class="account-form-body">
+                    <div class="account-form-rows">
+                      <div class="account-form-row">
+                        <span class="account-form-label" aria-hidden="true">아이디</span>
+                        <div class="account-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'account-id',
+                            name: 'userId',
+                            label: '아이디',
+                            placeholder: '아이디',
+                            required: true,
+                            rootClass: 'size-m'
+                          }) %>
+
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            type: 'button',
+                            size: 'sm',
+                            variant: 'secondary',
+                            text: '중복확인',
+                            className: 'account-form-btn'
+                          }) %>
+                        </div>
+                      </div>
+
+                      <div class="account-form-row">
+                        <span class="sr-only" aria-hidden="true">비밀번호</span>
+                        <div class="account-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'account-pw',
+                            name: 'password',
+                            type: 'password',
+                            label: '비밀번호',
+                            placeholder: '비밀번호',
+                            required: true,
+                            rootClass: 'size-m',
+                            showPasswordToggle: true,
+                          }) %>
+                        </div>
+                      </div>
+
+                      <div class="account-form-row">
+                        <div class="account-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'account-pw-confirm',
+                            name: 'passwordConfirm',
+                            type: 'password',
+                            label: '비밀번호 확인',
+                            placeholder: '비밀번호 확인',
+                            required: true,
+                            rootClass: 'size-m',
+                            showPasswordToggle: true,
+                          }) %>
+                        </div>
+                        <p class="account-form-field-hint">영문/숫자/특수문자 조합 10자 이상</p>
+                      </div>
+                    </div>
+
+                    <div class="account-form-row">
+                      <span class="account-form-label" aria-hidden="true">이름</span>
+                      <div class="account-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'account-name',
+                          name: 'userName',
+                          label: '이름',
+                          placeholder: '이름',
+                          required: true,
+                          rootClass: 'size-m'
+                        }) %>
+                      </div>
+                    </div>
+
+                    <div class="account-form-row">
+                      <span class="account-form-label" aria-hidden="true">휴대전화번호</span>
+                      <div class="account-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'account-mobile',
+                          name: 'mobile',
+                          label: '휴대전화번호',
+                          placeholder: '휴대전화번호',
+                          rootClass: 'size-m'
+                        }) %>
+                      </div>
+                    </div>
+
+                    <div class="account-form-rows rows-email">
+                      <div class="account-form-row">
+                        <span class="account-form-label" aria-hidden="true">이메일</span>
+                        <div class="account-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'account-email-id',
+                            name: 'email',
+                            label: '이메일',
+                            placeholder: '이메일',
+                            rootClass: 'size-m'
+                          }) %>
+                          <span class="account-form-at">@</span>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'account-email-domain',
+                            name: 'email',
+                            label: '도메인',
+                            placeholder: 'example.com',
+                            rootClass: 'size-m'
+                          }) %>
+                        </div>
+                      </div>
+
+                      <div class="account-form-row">
+                        <div class="account-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/select.ejs`, {
+                            id: 'select-email',
+                            name: 'select-email',
+                            placeholder: '직접입력',
+                            options: [
+                              { value: 'naver.com', text: 'naver.com' },
+                              { value: 'gmail.com', text: 'gmail.com' },
+                              { value: 'nate.com', text: 'nate.com' },
+                            ],
+                            value: '',
+                            disabled: false
+                          }) %>
+
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/button/button.ejs`, {
+                            type: 'button',
+                            size: 'sm',
+                            variant: 'secondary',
+                            text: '중복확인',
+                            className: 'account-form-btn',
+                            disabled: true
+                          }) %>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="account-form-row">
+                      <span class="account-form-label" aria-hidden="true">담당업무</span>
+                      <div class="account-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/select.ejs`, {
+                          id: 'account-job',
+                          name: 'jobRole',
+                          placeholder: '담당업무',
+                          maxHeight: 240,
+                          options: [
+                            { value: '기타', text: '기타' },
+                            { value: '회계', text: '회계' },
+                            { value: '구매', text: '구매' },
+                            { value: '물류', text: '물류' },
+                            { value: '경영', text: '경영' },
+                            { value: '기타', text: '기타' }
+                          ],
+                          value: '',
+                          disabled: false
+                        }) %>
+                      </div>
+                    </div>
+
+                    <div class="account-form-row">
+                      <span class="account-form-label" aria-hidden="true">직급</span>
+                      <div class="account-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'account-position',
+                          name: 'position',
+                          label: '직급',
+                          placeholder: '직급',
+                          rootClass: 'size-m'
+                        }) %>
+                      </div>
+                    </div>
+
+                    <div class="account-form-row">
+                      <span class="account-form-label" aria-hidden="true">사용여부</span>
+                      <div class="account-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-radio.ejs`, {
+                          name: 'useYn',
+                          list: 'row',
+                          gap: 16,
+                          datas: [
+                            { value: 'Y', text: '사용', checked: true },
+                            { value: 'N', text: '미사용' }
+                          ]
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="account-form-submit">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      size:'xl', 
+                      variant: 'primary', 
+                      text: '등록하기',
+                      className: "account-form-submit-btn"
+                    }) %>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var isSave = new URLSearchParams(location.search).get('type') === 'save';
+
+        // type=save: 수정 모드 - 기존 데이터 세팅
+        if (isSave) {
+          // 아이디 - readonly
+          $('#account-id').val('mztest').prop('readonly', true);
+
+          // 이름
+          $('#account-name').val('김메가');
+
+          // 휴대전화번호
+          $('#account-mobile').val('010-1234-5678');
+
+          // 이메일 아이디 / 도메인
+          $('#account-email-id').val('mztest');
+          $('#account-email-domain').val('gmail.com');
+
+          // 담당업무 - vits-select 구조에 맞게 직접 업데이트
+          var jobValue = '경영';
+          var $jobSelect = $('[data-select-id="account-job"]').closest('[data-vits-select]');
+
+          $jobSelect.find('[data-vits-select-value]').text(jobValue);
+          $jobSelect.addClass('is-selected');
+          $jobSelect.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === jobValue;
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $jobSelect.find('[data-vits-select-hidden]').val(jobValue);
+
+          // 직급
+          $('#account-position').val('팀원');
+
+          // 등록하기 → 저장하기 (.text 스팬 타겟)
+          $('.account-form-submit-btn .text').text('저장하기');
+        }
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

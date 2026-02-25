@@ -1,0 +1,139 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '회원가입-약관동의'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '회원가입' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <form class="vm-signup-form-wrap" action="#" method="post" novalidate>
+                  <div class="vm-signup-terms">
+                    <!-- 안내 문구 -->
+                    <div class="vm-signup-alert">
+                      비츠온엠알오 회원가입을 위해<br />
+                      약관에 동의해주세요
+                    </div>
+
+                    <!-- S: 약관 동의 (일반 회원가입: 기업회원 및 공급처 이용 동의 문구 사용) -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`, { agreeBizText: '기업회원 및 공급처 이용 동의' }) %>
+                    <!-- E: 약관 동의 -->
+
+                    <!-- S: 정보 입력 -->
+                    <div class="vm-signup-form">
+                      <div class="vm-form-row">
+                        <label class="vm-form-label" for="signup-bizno">
+                          사업자등록번호 <span class="label-required" aria-hidden="true">*</span>
+                        </label>
+                        <div class="vm-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'signup-bizno',
+                          name: 'bizNo',
+                          label: '사업자등록번호',
+                          placeholder: '사업자등록번호',
+                          required: true,
+                          rootClass: 'size-default',
+                        }) %>
+                        </div>
+                      </div>
+                      <div class="vm-form-row">
+                        <label class="vm-form-label">
+                          가입 경로 선택 <span class="label-required" aria-hidden="true">*</span>
+                        </label>
+                        <div class="vm-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/select.ejs`,{
+                            id: 'signup-path',
+                            name: 'signupPath',
+                            placeholder: '가입경로 선택',
+                            className: 'size-m',
+                            disabled: false, 
+                            maxHeight: 240,
+                            options: [
+                              { value: 'youtube', text: '유튜브' },
+                              { value: 'blog', text: '블로그' },
+                              { value: 'cafe', text: '카페' },
+                              { value: 'radio', text: '라디오 광고' },
+                              { value: 'facebook', text: '페이스북' },
+                              { value: 'instagram', text: '인스타' },
+                              { value: 'news', text: '뉴스' },
+                              { value: 'online-banner', text: '온라인 배너' },
+                              { value: 'referral', text: '지인 소개' },
+                              { value: 'etc', text: '기타' },
+                              { value: 'brochure', text: '책자우편물' },
+                              { value: 'vehicle-ad', text: '차량광고' },
+                              { value: 'visit-sales', text: '방문영업' },
+                              { value: 'fax', text: 'FAX' }
+                            ]
+                          }) %>
+                        </div>
+                      </div>
+                      <div class="vm-form-row">
+                        <label class="vm-form-label" for="signup-referrer">추천인 아이디</label>
+                        <div class="vm-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'signup-referrer',
+                          name: 'referrerId',
+                          label: '추천인 아이디',
+                          placeholder: '추천인 아이디',
+                          rootClass: 'size-default',
+                        }) %>
+                        </div>
+                      </div>
+                      <!-- 가입하기 버튼 -->
+                      <div class="vm-signup-submit">
+                        <!-- [D] 비활성화 상태 : disabled -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`,{
+                          type: 'submit',
+                          size: 'xl',
+                          variant: 'primary',
+                          text: '본인인증 후 가입하기',
+                        }) %>
+                      </div>
+                    </div>
+                    <!-- E: 정보 입력 -->
+                  </div>
+                </form>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

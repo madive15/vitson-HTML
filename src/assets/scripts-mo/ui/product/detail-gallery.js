@@ -7,6 +7,13 @@
  * @a11y hidden/aria-modal, ESC 닫기
  * @note iOS body scroll lock — position:fixed + scrollTop 저장
  * @note Android 물리 백버튼 — history.pushState 활용
+ * @example 외부 사용 예시
+ *          const gallery = UI.detailGallery.getInstance();
+ *          if (gallery) {
+ *            const idx = gallery.getActiveIndex();
+ *            gallery.slideTo(2);
+ *            gallery.openZoom();
+ *          }
  */
 import Swiper from 'swiper/bundle';
 
@@ -158,10 +165,17 @@ import Swiper from 'swiper/bundle';
       }
     });
 
+    // public API
     root._galleryInstance = {
       main: mainSwiper,
       zoom: () => zoomSwiper,
-      zoomThumb: () => zoomThumbSwiper
+      zoomThumb: () => zoomThumbSwiper,
+      // 외부 접근용 API
+      getActiveIndex: () => mainSwiper.activeIndex,
+      slideTo: (index) => mainSwiper.slideTo(index),
+      openZoom,
+      closeZoom,
+      getTotal: () => total
     };
   }
 
@@ -178,5 +192,10 @@ import Swiper from 'swiper/bundle';
   }
 
   window.UI = window.UI || {};
-  window.UI.detailGallery = {init, destroy};
+  window.UI.detailGallery = {
+    init,
+    destroy,
+    // 외부에서 UI.detailGallery.getInstance()로 접근
+    getInstance: () => document.querySelector(SCOPE)?._galleryInstance
+  };
 })();

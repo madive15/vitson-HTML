@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '휴면계정 해제 팝업'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '휴면계정해제/회원정보확인 팝업'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -29,6 +29,14 @@
                 onclick="VmKendoWindow.open('modal')"
               >
                 <span class="text">휴면계정 해제 팝업</span>
+              </button>
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal2')"
+              >
+                <span class="text">회원 정보 확인 팝업</span>
               </button>
             </div>
           </main>
@@ -58,6 +66,18 @@
           ]}; 
         %> 
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
+        <!-- prettier-ignore -->
+        <% const modal2 = { 
+          id: 'modal2', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '회원 정보 확인', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_LO_05020101_M.ejs`,
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
         <!-- E: 팝업 영역 -->
       </div>
       <!-- E: vm-wrap -->

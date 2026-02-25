@@ -1,0 +1,66 @@
+<!-- prettier-ignore -->
+<%
+/**
+ * @file filter/survey.ejs
+ * @description 설문조사 필터
+ */
+%>
+<% const _src = srcPath; %>
+<!-- prettier-ignore -->
+<% const _filterType = typeof filterType !== 'undefined' ? filterType : ''; %>
+
+<section class="vm-mypage-survey-filter">
+  <h2 class="sr-only">설문조사 검색</h2>
+  <div class="survey-filter-toolbar">
+    <div class="survey-filter-toolbar-row">
+      <p class="sr-only">설문 상태</p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/select.ejs`, {
+        id: 'survey-filter-select',
+        name: 'survey-filter-select',
+        placeholder: '설문 상태',
+        options: [
+          { value: '0', text: '전체' },
+          { value: '1', text: '진행중' },
+          { value: '2', text: '종료' },
+        ],
+        value: '0',
+        disabled: false,
+        portal: true,
+        maxHeight: '50vh'
+      }) %>
+    </div>
+    <div class="survey-filter-toolbar-row">
+      <p class="sr-only">조회 기간</p>
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+        options: {
+          id: 'vm-survey-filter-daterange',
+          startName: 'startDate',
+          endName: 'endDate',
+          opt: {
+            max: new Date() // 오늘 이후 날짜 비활성화 (미지정 시 제한 없음)
+          }
+        }
+      }) %>
+    </div>
+  </div>
+  <div class="survey-filter-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'outline-tertiary',
+      text: '초기화',
+      iconLeft: true,
+      iconName: 'ic-undo',
+      className: 'survey-filter-reset'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'secondary',
+      text: '조회하기',
+      className: 'survey-filter-search'
+    }) %>
+  </div>
+</section>
