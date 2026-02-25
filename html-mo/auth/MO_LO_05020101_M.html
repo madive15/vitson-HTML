@@ -15,7 +15,7 @@
   <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
   <meta name="format-detection" content="telephone=no,address=no,email=no" />
 
-  <title>휴면계정 해제 팝업</title>
+  <title>휴면계정해제/회원정보확인 팝업</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -112,6 +112,14 @@
                 onclick="VmKendoWindow.open('modal')"
               >
                 <span class="text">휴면계정 해제 팝업</span>
+              </button>
+              <br />
+              <button
+                type="button"
+                class="vits-btn-md vits-btn-outline-secondary"
+                onclick="VmKendoWindow.open('modal2')"
+              >
+                <span class="text">회원 정보 확인 팝업</span>
               </button>
             </div>
           </main>
@@ -333,6 +341,148 @@
 
       <button type="button" class="vm-modal-btn vm-modal-btn-primary" onclick="VmKendoWindow.close('modal')">
         <span class="text">해제하기</span>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+        <!-- prettier-ignore -->
+         
+        
+
+
+
+<div
+  id="modal2"
+  class="vm-modal-inner modal-center"
+  data-ui="kendo-window"
+  data-variant="center"
+  
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal2-title"
+  
+  
+  style="display:none;"
+>
+  <!-- 헤더 -->
+  <div class="vm-modal-header">
+    <div class="vm-modal-header-content">
+      <h2 class="vm-modal-title" id="modal2-title">회원 정보 확인</h2>
+
+
+    </div>
+
+    <button type="button" class="vm-modal-close" onclick="VmKendoWindow.close('modal2')" aria-label="닫기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+  </div>
+
+  <!-- 컨텐츠 -->
+  <div class="vm-modal-content" data-scroll-check>
+  
+      
+<!-- prettier-ignore -->
+<section class="vm-auth-dormant-modal">
+  <h2 class="sr-only">휴면계정 해제</h2>
+
+  <form class="vm-auth-dormant-form" action="" method="post">
+    <div class="vm-auth-dormant-form-fields">
+      <span class="form-field-label">아이디</span>
+
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-id" class="sr-only">아이디</label>
+
+    <input
+      type="text"
+      name="loginId"
+      id="login-id"
+      placeholder="mztest1"
+      
+      
+      
+      required
+      disabled
+      
+
+      
+      
+      
+    />
+    
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-id-validation" aria-live="polite"></p>
+  </div>
+</div> 
+    </div>
+
+    <div class="vm-auth-dormant-form-fields">
+      <span class="form-field-label">비밀번호<span class="label-required">*</span></span>
+
+      <!-- prettier-ignore -->
+      
+
+<div class="vits-input size-large ">
+  <div class="input-item">
+    <label for="login-pw" class="sr-only">비밀번호</label>
+
+    <input
+      type="password"
+      name="password"
+      id="login-pw"
+      placeholder="비밀번호"
+      
+      
+      
+      required
+      
+      
+
+      
+      
+      
+    />
+    
+      <div class="vits-btn-eyes">
+        <button type="button" class="is-eye-close" aria-label="비밀번호 표시">
+          <span class="ic ic-eye-hide" aria-hidden="true"></span>
+        </button>
+      </div>
+      
+  </div>
+
+  <!-- Validation 메시지 영역 -->
+  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
+  <div class="validation-message" hidden>
+    <p id="login-pw-validation" aria-live="polite"></p>
+  </div>
+</div> 
+    </div>
+  </form>
+</section>
+
+  
+  </div>
+
+  <!-- 푸터 -->
+
+  <div class="vm-modal-footer">
+
+    <div class="vm-modal-buttons is-single">
+
+      <button type="button" class="vm-modal-btn vm-modal-btn-primary" onclick="VmKendoWindow.close('modal2')">
+        <span class="text">확인</span>
       </button>
 
     </div>
