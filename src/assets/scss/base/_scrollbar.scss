@@ -32,17 +32,24 @@ html.vits-scope,
 body.vits-scope,
 .vits-scrollbar {
   // thumb만 보이게(트랙/레일 숨김)
-  --vits-scrollbar-size: 8px;
-  --vits-scrollbar-radius: 4px;
+  // size = 간격(6) + thumb(8) + 간격(6)
+  --vits-scrollbar-size: 20px;
+  --vits-scrollbar-gap: 6px;
+  --vits-scrollbar-radius: 100px;
   --vits-scrollbar-track: transparent;
   --vits-scrollbar-thumb: #c1c1c1;
   --vits-scrollbar-thumb-hover: #a8a8a8;
-  scrollbar-color: var(--vits-scrollbar-thumb) transparent;
-  scrollbar-width: thin;
+
+  // Firefox 전용 (webkit 미지원 브라우저 폴백)
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-color: var(--vits-scrollbar-thumb) transparent;
+    scrollbar-width: thin;
+  }
 
   &::-webkit-scrollbar {
     width: var(--vits-scrollbar-size);
     height: var(--vits-scrollbar-size);
+    background: transparent;
   }
 
   &::-webkit-scrollbar-track,
@@ -62,13 +69,15 @@ body.vits-scope,
     min-width: 30px;
     min-height: 30px;
     background: var(--vits-scrollbar-thumb);
-    border: 0;
-    border-radius: var(--vits-scrollbar-radius);
+    background-clip: padding-box;
+    border: var(--vits-scrollbar-gap) solid transparent; // 4면 균일
+    border-radius: calc(var(--vits-scrollbar-radius) + var(--vits-scrollbar-gap));
     box-shadow: none;
   }
 
   &::-webkit-scrollbar-thumb:hover {
     background: var(--vits-scrollbar-thumb-hover);
+    background-clip: padding-box;
   }
 
   &::-webkit-resizer {

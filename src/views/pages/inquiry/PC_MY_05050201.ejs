@@ -87,6 +87,22 @@
                             </div>
                           </div>
                           <div class="inquiry-detail-user-body">답변주셔서 감사합니다</div>
+
+                          <!-- [D] case : edit-mode 버튼 임의 영역 -->
+                          <div class="vits-edit-actions">
+                            <%- include(`${_src}/views/components/button/button.ejs`, {
+                              size: 'xs',
+                              variant: 'outline-secondary',
+                              text: '취소',
+                              className: 'btn-edit-cancel'
+                            }) %>
+                            <%- include(`${_src}/views/components/button/button.ejs`, {
+                              size: 'xs',
+                              variant: 'primary',
+                              text: '저장',
+                              className: 'btn-edit-save'
+                            }) %>
+                          </div>
                         </div>
                         <div class="inquiry-detail-comment">
                           <%- include(`${_src}/views/components/form/textarea.ejs`, {

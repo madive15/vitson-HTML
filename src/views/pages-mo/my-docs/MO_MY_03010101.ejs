@@ -1,0 +1,161 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '세금계산서 조회'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-docs">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '세금계산서 조회' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-docs">
+              <div class="vm-mypage-docs">
+                <!-- 필터 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
+                  type: 'docs',
+                }) %>
+
+                <div class="vm-mypage-docs-group">
+                  <div class="vm-mypage-docs-alerts">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                      theme: 'blue',
+                      className: 'style-my-docs',
+                      text: '세금계산서 안내',
+                      list: [
+                        { text: '세금계산서는 매월 말일 기준으로 발행됩니다.', className: 'text-tertiary' },
+                        '세금계산서 보기 버튼을 클릭하시면 상세 내역을 확인할 수 있습니다.',
+                        { text: '과거 세금계산서는 최대 5년까지 조회 가능합니다.', className: 'text-tertiary' },
+                        { text: '세금계산서 관련 문의사항은 고객센터로 연락 주시기 바랍니다.', className: 'text-tertiary' },
+                      ]
+                    }) %>
+                  </div>
+
+                  <!-- [D] 세금계산서 1건 이상 -->
+                  <div class="vm-mypage-docs-list">
+                    <div class="vm-mypage-docs-controls">
+                      <p class="docs-item-count"><span>총</span><span class="count-total">4</span><span>개</span></p>
+                    </div>
+                    <div class="docs-items">
+                      <!-- prettier-ignore -->
+                      <%
+                        var taxList = [
+                          { number: '1234567890', createdDate: '2025.12.25', expireDate: '2025.12.26', priceList: [{ label: '공급가액', value: '418,000원' }, { label: '세액', value: '41,800원' }, { label: '합계', value: '459,800원', isTotal: true }] },
+                          { number: '1234567890', createdDate: '2025.12.25', expireDate: '2025.12.26', priceList: [{ label: '공급가액', value: '418,000원' }, { label: '세액', value: '41,800원' }, { label: '합계', value: '459,800원', isTotal: true }] },
+                          { number: '1234567890', createdDate: '2025.12.25', expireDate: '2025.12.26', priceList: [{ label: '공급가액', value: '418,000원' }, { label: '세액', value: '41,800원' }, { label: '합계', value: '459,800원', isTotal: true }] },
+                          { number: '1234567890', createdDate: '2025.12.25', expireDate: '2025.12.26', priceList: [{ label: '공급가액', value: '418,000원' }, { label: '세액', value: '41,800원' }, { label: '합계', value: '459,800원', isTotal: true }] },
+                        ];
+                      %>
+                      <% taxList.forEach(function(item) { %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components-mo/filter/filter-docs-list-item.ejs`, {
+                          type: 'tax',
+                          number: item.number,
+                          createdLabel: '작성일자',
+                          expireLabel: '발행일자',
+                          createdDate: item.createdDate,
+                          expireDate: item.expireDate,
+                          priceList: item.priceList,
+                        }) %>
+                      <% }); %>
+                    </div>
+                  </div>
+
+                  <!-- [D] 세금계산서 1건 미만 -->
+                  <div class="vm-mypage-docs-empty" style="display: none">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/empty-state.ejs`, {
+                      iconName: 'document-paper',
+                      title: '세금계산서가 없습니다',
+                    }) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var type = new URLSearchParams(location.search).get('type');
+
+        // type=empty: 빈 상태
+        if (type === 'empty') {
+          $('.vm-mypage-docs-list').hide();
+          $('.vm-mypage-docs-empty').show();
+        } else {
+          $('.vm-mypage-docs-list').show();
+          $('.vm-mypage-docs-empty').hide();
+        }
+
+        // 필터 초기화
+        $('.docs-filter-reset').on('click', function () {
+          // datepicker reset
+          var picker = VmKendoRangePicker.getInstance('#vm-docs-filter-daterange');
+          if (picker) picker.reset();
+
+          // select 초기화 (전체 = '0')
+          var $select = $('[data-select-id="docs-filter-select"]').closest('[data-vits-select]');
+          $select.find('[data-vits-select-value]').text('전체');
+          $select.removeClass('is-selected');
+          $select.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $select.find('[data-vits-select-hidden]').val('0');
+
+          // 조회연도 초기화 (전체 = '0')
+          var $yearSelect = $('[data-select-id="docs-filter-year-select"]').closest('[data-vits-select]');
+          $yearSelect.find('[data-vits-select-value]').text('전체');
+          $yearSelect.removeClass('is-selected');
+          $yearSelect.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $yearSelect.find('[data-vits-select-hidden]').val('0');
+        });
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

@@ -29,6 +29,22 @@
     var $tabBar = $('#tab-Bar');
     var $tabBtns = $tabNav.find('.tab-btn[data-target]');
     var $sections = $('.tab-section[id]');
+    // display:none 인 탭 버튼 제외, 보이는 탭만 사용
+    function isVisible($el) {
+      return $el.length && $el.css('display') !== 'none';
+    }
+    function getVisibleTabBtns() {
+      return $tabBtns.filter(function () {
+        return $(this).css('display') !== 'none';
+      });
+    }
+    function getVisibleSectionIds() {
+      var ids = [];
+      getVisibleTabBtns().each(function () {
+        ids.push($(this).data('target'));
+      });
+      return ids;
+    }
     // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
     var $body = $('body');
     var $optionModal = $('#findOtherOptionModal');
@@ -74,6 +90,9 @@
       if (!$tabBar.length || !$activeBtn || !$activeBtn.length) {
         return;
       }
+      if (!isVisible($activeBtn)) {
+        return;
+      }
       var left = $activeBtn.position().left;
       $tabBar.css({
         width: $activeBtn.outerWidth(),
@@ -95,9 +114,20 @@
     }
 
     function getCurrentSectionId() {
+      var visibleIds = getVisibleSectionIds();
+      if (!visibleIds.length) {
+        return null;
+      }
+      var $visibleSections = $(
+        visibleIds
+          .map(function (id) {
+            return document.getElementById(id);
+          })
+          .filter(Boolean)
+      );
       var baseline = getScrollTop() + getTabWrapHeight();
-      var currentId = $sections.first().attr('id');
-      $sections.each(function () {
+      var currentId = $visibleSections.first().attr('id');
+      $visibleSections.each(function () {
         var $section = $(this);
         if (getElementTop($section) <= baseline + 1) {
           currentId = $section.attr('id');
@@ -111,11 +141,14 @@
     }
 
     function updateActiveOnScroll() {
-      if (!$sections.length) {
+      var visibleIds = getVisibleSectionIds();
+      if (!visibleIds.length) {
         return;
       }
-      var targetId = isAtBottom() ? $sections.last().attr('id') : getCurrentSectionId();
-      setActiveById(targetId);
+      var targetId = isAtBottom() ? visibleIds[visibleIds.length - 1] : getCurrentSectionId();
+      if (targetId) {
+        setActiveById(targetId);
+      }
     }
 
     function scrollToSection($target) {
@@ -253,6 +286,11 @@
 
     $(window).on('scroll', onScroll);
     $(window).on('resize', function () {
+      var $visible = getVisibleTabBtns();
+      var $active = $tabBtns.filter('.is-active');
+      if ($visible.length && (!$active.length || !isVisible($active))) {
+        setActiveById($visible.first().data('target'));
+      }
       updateShowPrice();
       updateActiveOnScroll();
       updateTabBar($tabBtns.filter('.is-active'));
@@ -262,6 +300,12 @@
 
     if (!$tabWrap.length || !$tabNav.length || !$tabBtns.length || !$sections.length) {
       return;
+    }
+
+    var $visibleBtns = getVisibleTabBtns();
+    var $activeBtn = $tabBtns.filter('.is-active');
+    if ($visibleBtns.length && (!$activeBtn.length || !isVisible($activeBtn))) {
+      setActiveById($visibleBtns.first().data('target'));
     }
 
     updateShowPrice();

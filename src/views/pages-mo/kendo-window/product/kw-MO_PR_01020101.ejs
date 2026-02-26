@@ -81,10 +81,9 @@
       </div>
       <div class="spec-filter-body" data-collapse-content data-visible-height="68">
         <% group.filters.forEach(function(f) { %>
-        <label class="vm-checkbox-text-box">
-          <input type="checkbox" name="<%= group.name %>" value="<%= f.value %>" />
+        <button class="vm-checkbox-text-box" aria-pressed="false">
           <span class="text"><%= f.text %></span>
-        </label>
+        </button>
         <% }); %>
       </div>
     </div>
@@ -125,3 +124,12 @@
   </ul>
 </div>
 <!-- E: 상품 리스트 -->
+
+<script>
+  document.querySelectorAll('.vm-checkbox-text-box').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var isActive = this.classList.toggle('is-active');
+      this.setAttribute('aria-pressed', isActive);
+    });
+  });
+</script>

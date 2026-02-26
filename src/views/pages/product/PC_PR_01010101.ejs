@@ -74,12 +74,13 @@
                               팬던트 LED 팬던트 LED 팬던트 LED 제품명이 1줄일 경우 2줄일 경우 아래로 늘어남
                             </div>
                             <div class="product-shipping-tags">
-                              <%- include(`${_src}/views/components/label/product-flags.ejs`, {today: true,tomorrow: true,hot: true }) %>
-                              <%- include(`${_src}/views/components/label/product-promo-badge.ejs`, { text: '롯데택배불가', variant: 'free-ship' }) %>
+                              <%- include(`${_src}/views/components/label/product-flags.ejs`, {today: true,tomorrow:
+                              true,hot: true }) %> <%- include(`${_src}/views/components/label/product-promo-badge.ejs`,
+                              { text: '롯데택배불가', variant: 'free-ship' }) %>
                             </div>
                           </li>
                           <li>
-                            <button type="button" class="vits-btn like-btn active" aria-label="좋아요버튼" >
+                            <button type="button" class="vits-btn like-btn active" aria-label="좋아요버튼">
                               <span class="icon">
                                 <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'heart' }) %>
                               </span>
@@ -105,7 +106,10 @@
                             </div>
                           </li>
                           <li>
-                            <div class="discount-coupon" onclick="alert('할인쿠폰받기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_CO_03010101_P.html');">
+                            <div
+                              class="discount-coupon"
+                              onclick="alert('할인쿠폰받기 팝업은 단독 페이지로 분리하였습니다. html/product/PC_CO_03010101_P.html');"
+                            >
                               <!-- [D] 쿠폰받기 비활성화시 disabled 추가 -->
                               <!-- prettier-ignore -->
                               <%- include(`${_src}/views/components/button/button.ejs`, {
@@ -360,14 +364,13 @@
                     <h2 class="title">MD가 꼼꼼히 고른 <span class="primary">추천 상품</span></h2>
                   </div>
                   <div class="vits-banner-swiper">
-                    <%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %>                       
+                    <%- include(`${_src}/views/components/swiper/swiper-type.ejs`) %>
                   </div>
                 </div>
                 <!-- e: section - MD가 꼼꼼히 고른 추천 상품 -->
 
                 <!-- s: 상세상품보기 TAB bar 영역 -->
                 <%- include(`${_src}/views/components/pg-product/tab-scrollbar.ejs`) %>
-
               </div>
               <!-- e: PC_PR_01010101 -->
             </div>

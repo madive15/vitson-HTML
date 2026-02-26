@@ -396,7 +396,7 @@
       @include mx.border(all, 1px, solid, $color: map.get(color.$gray-shades, '30'));
 
       .content-text {
-        white-space: pre-wrap;
+        white-space: pre-line;
       }
     }
   }
@@ -1403,19 +1403,21 @@
 }
 
 /* stylelint-disable selector-class-pattern */
-// as-is iframe 운영소스 추가
+/* as-is - iframe 운영소스 추가 */
 .video_box_inner.youtube-video-frame,
 .video_box_inner.youtube-video-frame iframe {
   min-height: fn.rem(650);
 }
 
-.img_line_desc_first {
-  h3 {
+// 문제가 되면 삭제 부탁드립니다.
+.img_line_desc_first,
+.img_line {
+  h3,
+  h2 {
     @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
   }
 }
 /* stylelint-enable selector-class-pattern */
-// e. as-is
 
 /* ===modal kendo window -쿠폰 다운로드 팝업 === */
 .vits-coupon-download {

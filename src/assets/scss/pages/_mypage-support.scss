@@ -233,8 +233,8 @@
 
   .star-stars {
     display: inline-block;
-    width: fn.rem(80); // 5개 별 영역 (이미지 적용 시 조정)
-    height: fn.rem(15);
+    width: fn.rem(88); // 5개 별 영역 (이미지 적용 시 조정)
+    height: fn.rem(16);
   }
 
   .star-track {
@@ -656,6 +656,13 @@
     margin-bottom: map.get(var.$unit, 12);
     background-color: map.get(color.$layout-surf, 'raised');
     border-radius: map.get(var.$radius, 'lg');
+
+    // 내가 쓴 답변 수정 버튼 영역
+    .vits-edit-actions {
+      @include mx.flex(flex, row, flex-end, center);
+      gap: fn.rem(10);
+      margin-top: fn.rem(12);
+    }
   }
 
   &-user-meta {

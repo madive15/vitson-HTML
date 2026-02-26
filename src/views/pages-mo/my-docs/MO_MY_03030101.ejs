@@ -1,0 +1,158 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var billList = [
+    {
+      dateText: '2025년 12월',
+      name: '2025년 12월 구매내역서',
+      price: '5,500,000',
+    },
+    {
+      dateText: '2025년 11월',
+      name: '2025년 11월 구매내역서',
+      price: '3,280,000',
+    },
+    {
+      dateText: '2025년 10월',
+      name: '2025년 10월 구매내역서',
+      price: '1,920,000',
+    },
+    {
+      dateText: '2025년 9월',
+      name: '2025년 9월 구매내역서',
+      price: '780,000',
+    },
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '구매내역서 조회'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-docs">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '구매내역서 조회' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-docs">
+              <div class="vm-mypage-docs">
+                <!-- 필터 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
+                  type: 'docs',
+                  carryover: {
+                    companyName: '메가존(주)',
+                    baseDate: '2026.01.25',
+                    amount: '975,345,090',
+                  },
+                }) %>
+
+                <div class="vm-mypage-docs-group">
+                  <div class="vm-mypage-docs-alerts">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+                      theme: 'blue',
+                      className: 'style-my-docs',
+                      text: '구매내역서 안내',
+                      list: [
+                        { text: '구매계산서는 매월 말일 기준으로 발행됩니다.', className: 'text-tertiary' },
+                        '구매내역서 보기 버튼을 클릭하시면 상세 내역을 확인할 수 있습니다.',
+                        { text: '과거 구매내역서는 최대 3년까지 조회 가능합니다.', className: 'text-tertiary' },
+                        { text: '구매내역서 관련 문의사항은 고객센터로 연락 주시기 바랍니다.', className: 'text-tertiary' },
+                      ]
+                    }) %>
+                  </div>
+
+                  <!-- [D] 구매내역서 1건 이상 -->
+                  <div class="vm-mypage-docs-list">
+                    <div class="vm-mypage-docs-controls">
+                      <p class="docs-item-count"><span>총</span><span class="count-total">4</span><span>개</span></p>
+                    </div>
+                    <div class="docs-items">
+                      <% billList.forEach(function(item) { %>
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components-mo/filter/filter-docs-list-item.ejs`, {
+                          type: 'bill',
+                          dateText: item.dateText,
+                          name: item.name,
+                          price: item.price,
+                        }) %>
+                      <% }); %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        // 필터 초기화
+        $('.docs-filter-reset').on('click', function () {
+          // datepicker reset
+          var picker = VmKendoRangePicker.getInstance('#vm-docs-filter-daterange');
+          if (picker) picker.reset();
+
+          // select 초기화 (전체 = '0')
+          var $select = $('[data-select-id="docs-filter-select"]').closest('[data-vits-select]');
+          $select.find('[data-vits-select-value]').text('전체');
+          $select.removeClass('is-selected');
+          $select.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $select.find('[data-vits-select-hidden]').val('0');
+
+          // 조회연도 초기화 (전체 = '0')
+          var $yearSelect = $('[data-select-id="docs-filter-year-select"]').closest('[data-vits-select]');
+          $yearSelect.find('[data-vits-select-value]').text('전체');
+          $yearSelect.removeClass('is-selected');
+          $yearSelect.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $yearSelect.find('[data-vits-select-hidden]').val('0');
+        });
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

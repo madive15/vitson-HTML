@@ -1,0 +1,138 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '대량구매문의-작성'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-inquiry">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '대량 구매 문의' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-inquiry">
+              <div class="vm-mypage-inquiry">
+                <%# 상품 %>
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/mypage/inquiry-bulk-product-item.ejs`) %>
+
+                <div class="vm-mypage-inquiry-form">
+                  <h2 id="bulk-inquiry-form-title" class="inquiry-form-title">문의 내용</h2>
+
+                  <form action="" class="inquiry-form" aria-labelledby="bulk-inquiry-form-title">
+                    <div class="inquiry-form-rows">
+                      <!-- S: 제목 -->
+                      <div class="inquiry-form-row">
+                        <span class="inquiry-form-label">제목</span>
+                        <div class="inquiry-form-field">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'inquiry-title',
+                            name: 'inquiryTitle',
+                            label: '제목',
+                            placeholder: '제목을 입력해주세요.',
+                            required: false,
+                            rootClass: 'size-l'
+                          }) %>
+                        </div>
+                      </div>
+                      <!-- E: 제목 -->
+
+                      <!-- S: 내용 (에디터 영역 placeholder) -->
+                      <div class="inquiry-form-row">
+                        <span class="inquiry-form-label">내용</span>
+                        <div
+                          class="inquiry-form-editor"
+                          style="border: 1px solid #ddd; height: 300px; background: #fff"
+                        >
+                          에디터 마크업 미적용, 영역만 표시
+                        </div>
+                      </div>
+                      <!-- E: 내용 -->
+                    </div>
+
+                    <!-- S: 첨부 파일 -->
+                    <!-- [D] case 1. 업로드된 파일 : 0개 -->
+                    <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`) %>
+
+                    <!-- [D] case 2. 업로드된 파일 : 1개 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`, {
+                      fileList: ['2026 1월 대량 구매 목록.jpg'],
+                    }) %>
+
+                    <!-- [D] case 3. 업로드된 파일 : 2개 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`, {
+                      fileList: ['2026 1월 대량 구매 목록.jpg','2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록.jpg'],
+                    }) %>
+                    <!-- E: 첨부 파일 -->
+
+                    <!-- S: 연락받으실 연락처 -->
+                    <div class="inquiry-form-row">
+                      <h3 class="inquiry-form-title">연락받으실 연락처</h3>
+                      <div class="inquiry-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'inquiry-contact',
+                          name: 'inquiryContact',
+                          label: '연락받으실 연락처',
+                          placeholder: '010-1234-5678',
+                          rootClass: 'size-l'
+                        }) %>
+                      </div>
+                    </div>
+                    <!-- E: 연락받으실 연락처 -->
+
+                    <!-- [D] 등록하기 버튼
+                              ㄴ 디폴트 : 비활성 
+                              ㄴ 필수값  충족 시 활성(제목/내용/연락처 + 첨부파일 제한 통과) 
+                              ㄴ “문의 등록되었습니다.” 컨펌창 안내 후 이전 화면 (상품 상세) 이동
+                     -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, { 
+                      size: 'xl',
+                      variant: 'primary', 
+                      text: '등록하기',
+                      disabled: true,
+                    }) %>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

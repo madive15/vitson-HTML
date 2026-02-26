@@ -20,5 +20,10 @@
   $(function () {
     console.log('[common] DOM ready');
     if (window.UI && window.UI.init) window.UI.init();
+
+    // pre-wrap 요소의 선행 공백·줄바꿈 제거
+    $('[data-pre-trim]').each(function () {
+      this.textContent = this.textContent.replace(/^\s+/, '');
+    });
   });
 })(window.jQuery || window.$, window);

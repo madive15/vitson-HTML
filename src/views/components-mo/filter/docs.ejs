@@ -1,0 +1,136 @@
+<!-- prettier-ignore -->
+<%
+/**
+ * @file filter/docs.ejs
+ * @description 서류관리 필터
+ */
+%>
+<% 
+  const _src = srcPath; 
+  const _public = publicPath;
+  
+  const carryover = locals.carryover || null;
+%>
+<!-- prettier-ignore -->
+
+<section class="vm-mypage-docs-filter">
+  <h2 class="sr-only">조회 기간/연도 검색</h2>
+
+  <%# 구매내역서 출력 %>
+  <% if (carryover) { %>
+<div class="docs-filter-carryover">
+  <div class="docs-filter-carryover-inner">
+    <div class="docs-filter-carryover-head">
+      <p class="docs-filter-carryover-title">전월 이월금액 안내</p>
+      <button type="button" class="docs-filter-carryover-button">
+        <span class="icon">
+          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'update' }) %>
+        </span>
+        <span class="text">업데이트</span>
+      </button>
+    </div>
+    <div class="docs-filter-carryover-body">
+      <p class="docs-filter-carryover-desc">
+        <span class="carryover-user"><%= carryover.companyName %></span>
+        <span class="carryover-text">님의 <%= carryover.baseDate %> 현재기준 이월금액</span>
+      </p>
+      <p class="docs-filter-carryover-amount">
+        <span class="carryover-amount"><%= carryover.amount %></span>
+        <span class="carryover-amount-unit">원</span>
+        <span class="carryover-amount-vat">(VAT 포함)</span>
+      </p>
+    </div>
+  </div>
+</div>
+<% } %>
+
+
+  <div class="docs-filter-toolbar">
+    <div class="docs-filter-toolbar-row">
+      <p class="docs-filter-toolbar-label">조회 기간</p>
+      <div class="docs-filter-toolbar-select select-period">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+          id: 'docs-filter-select',
+          name: 'docs-filter-select',
+          placeholder: '조회 기간',
+          options: [
+            { value: '0', text: '전월' },
+            { value: '1', text: '당월' },
+            { value: '2', text: '6개월' },
+            { value: '3', text: '12개월' },
+            { value: '4', text: '기간 설정' },
+          ],
+          value: '0',
+          disabled: false,
+          portal: true,
+          maxHeight: '50vh'
+        }) %>
+      </div>
+
+      <div class="docs-filter-toolbar-datepicker">
+        <!-- prettier-ignore -->
+        <%
+          var now = new Date();
+          var prevFirst = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          var prevLast = new Date(now.getFullYear(), now.getMonth(), 0);
+  
+          // yyyy.MM.dd 포맷
+          function fmtDate(d) {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var dd = String(d.getDate()).padStart(2, '0');
+            return y + '.' + m + '.' + dd;
+          }
+        %>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/kendo/kendo-datepicker.ejs`, {
+          options: {
+            id: 'vm-docs-filter-daterange',
+            startValue: fmtDate(prevFirst),
+            endValue: fmtDate(prevLast)
+          }
+        }) %>
+      </div>
+    </div>
+    <div class="docs-filter-toolbar-row">
+      <p class="docs-filter-toolbar-label">조회 연도</p>
+      <div class="docs-filter-toolbar-select select-year">
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/form/select.ejs`, {
+          id: 'docs-filter-year-select',
+          name: 'docs-filter-year-select',
+          placeholder: '조회 연도',
+          options: [
+            { value: '0', text: '2026년' },
+            { value: '1', text: '2025년' },
+            { value: '2', text: '2024년' },
+            { value: '3', text: '2023년' },
+          ],
+          value: '0',
+          disabled: false,
+          portal: true,
+          maxHeight: '50vh'
+        }) %>
+      </div>
+    </div>
+  </div>
+  <div class="docs-filter-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'outline-tertiary',
+      text: '초기화',
+      iconLeft: true,
+      iconName: 'ic-undo',
+      className: 'docs-filter-reset'
+    }) %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size:'lg-p',
+      variant: 'secondary',
+      text: '조회하기',
+      className: 'docs-filter-search'
+    }) %>
+  </div>
+</section>

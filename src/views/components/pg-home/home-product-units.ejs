@@ -46,7 +46,7 @@
   const showRankBadge = typeof locals.showRankBadge !== 'undefined' ? locals.showRankBadge : false;
   const rankCount = typeof locals.rankCount !== 'undefined' ? locals.rankCount : 0;
 %>
-<article class="home-product-item">
+<article class="home-product-item<%= type === 'soldout' ? ' is-soldout' : '' %>">
   <div class="product-thumb">
     <a href="#!">
       <img src="<%= imgSrc %>" alt="<%= imgAlt %>" />
@@ -78,6 +78,8 @@
     <div class="product-rank-badge">
       <div class="product-rank-count"><%= rankCount %></div>
     </div>
+    <% } %> <% if (type === 'soldout') { %>
+    <div class="product-soldout-alt"><span class="text">일시품절</span></div>
     <% } %>
   </div>
 
@@ -88,18 +90,14 @@
 
     <div class="product-summary">
       <a href="#!">
-        <div class="product-name"><span class="sr-only">상품명</span>더블 OPP 접착테이프 투명 (초강력 접착제)</div>
+        <div class="product-name"><span class="sr-only">상품명</span>다운라이트 LED 슬림 (방습형) W 170</div>
       </a>
     </div>
 
     <% if (type !== 'guest') { %>
     <!-- guest일 때 product-price 영역 비노출 -->
     <div class="product-price">
-      <% if (type === 'soldout') { %>
-      <!-- 일시품절 -->
-      <div class="product-price-alt is-soldout">일시품절</div>
-      <% } else { %>
-      <!-- 가격 노출 (회원 & 판매중) : default, cart 등 -->
+      <!-- 가격 노출 (회원 & 판매중/일시품절) : default, cart, soldout 등 -->
       <div class="vits-price-box is-normal">
         <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>999,999,999원</div>
         <div class="price-sale-row">
@@ -107,7 +105,6 @@
           <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>999,999,999원</div>
         </div>
       </div>
-      <% } %>
     </div>
     <% } %>
 

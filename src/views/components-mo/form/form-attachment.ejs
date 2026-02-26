@@ -1,0 +1,46 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var fileList = Array.isArray(locals.fileList) ? locals.fileList : [];
+  var fileLimit = locals.fileLimit || 2;
+%>
+
+<div class="inquiry-form-attachment">
+  <h3 class="inquiry-form-title">첨부파일</h3>
+
+  <% if (fileList.length < fileLimit) { %>
+  <div class="form-attachment">
+    <p class="form-attachment-notice">jpg, png, gif 파일 각 5MB까지 2개 파일 업로드 가능</p>
+    <div class="form-attachment-file">
+      <input type="file" id="inquiry-file-upload" accept=".jpg,.png,.gif" multiple class="sr-only" aria-hidden="true" />
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/button/button.ejs`, {
+        type: 'button',
+        size: 'lg-p',
+        variant: 'secondary',
+        text: '파일 첨부하기',
+        iconLeft: true,
+        iconName: 'ic-upload',
+        attrs: 'data-file-btn="inquiry-file-upload"',
+        className: 'form-attachment-file-button'
+      }) %>
+    </div>
+  </div>
+  <% } %> <% if (fileList.length > 0) { %>
+  <div class="form-attachment-upload">
+    <% fileList.forEach(function(file) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/chip-file.ejs`, { filename: file }) %>
+    <% }); %>
+  </div>
+  <% } %>
+</div>
+
+<script>
+  document.querySelectorAll('[data-file-btn]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var targetId = this.dataset.fileBtn;
+      document.getElementById(targetId).click();
+    });
+  });
+</script>

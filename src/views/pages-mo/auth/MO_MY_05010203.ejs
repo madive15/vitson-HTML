@@ -1,0 +1,234 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '회원탈퇴'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '회원탈퇴' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <!-- <form class="vm-signup-form-wrap" action="#" method="post" novalidate></form> -->
+                <form class="vm-withdraw-form" action="#" method="post" novalidate>
+                  <!-- S: 회원 탈퇴 유의사항 -->
+                  <div class="vm-withdraw-notice">
+                    <div class="vits-alerts-anatomy type-red">
+                      <div class="vits-alerts-anatomy-inner">
+                        <div class="alerts-anatomy-icon">
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %>
+                        </div>
+                        <div class="alerts-anatomy-content">
+                          <p class="alerts-anatomy-text">회원 탈퇴 전 유의사항을 꼭 확인하세요!</p>
+                          <!-- prettier-ignore -->
+                          <ul class="alerts-anatomy-list">
+                            <li>1. 회원 탈퇴 시 A/S를 포함한 비츠온엠알오의 모든 서비스 이용이 불가능합니다.</li>
+                            <li>2. 탈퇴 완료 후 14일 이내 동일한 이메일로 재가입이 불가합니다.</li>
+                            <li>3. 유효기간이 경과되지 않은 미사용 쿠폰 관련 정보는 회원 탈퇴와 함께 삭제되며 복원되지 않습니다. </li>
+                            <li>4. 회원 탈퇴 후 비츠온엠알오에 등록된 게시물은 편집 및 삭제가 불가능합니다. 게시물 삭제를 원하시는 경우, 
+                              반드시 탈퇴 신청 전에 해당 게시물을 삭제해 주시기 바랍니다. </li>
+                            <li>5. 이미 결제가 완료된 주문 건은 회원 탈퇴로 인해 자동 취소되지 않습니다.</li>
+                            <li>6. 다음 각 호에 해당하는 경우에는 회원 탈퇴가 제한될 수 있습니다.
+                              <ul class="alerts-anatomy-list-sub">
+                                <li>결제가 완료된 상품이 준비 중인 경우</li>
+                                <li>완료되지 않은 반품, 교환 또는 대체품 출하 건이 있는 경우</li>
+                                <li>완료되지 않은 환불 내역이 있는 경우</li>
+                              </ul>
+                            </li>
+                            <li>7. 거래 정보가 있는 경우,「전자상거래 등에서의 소비자보호에 관한 법률」에 따라 계약 또는 청약철회에 관한 기록, 
+                              대금결제 및 재화·서비스 공급에 관한 기록은 탈퇴 후에도 5년간 보관됩니다. </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- E: 회원 탈퇴 유의사항 -->
+
+                  <!-- S: 동의 체크박스 -->
+                  <div class="vm-withdraw-agree">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                      name: 'withdrawAgree',
+                      value: 'agree',
+                      size: 'l',
+                      text: '위 내용을 모두 확인했으며, 회원 탈퇴에 동의합니다.',
+                      checkboxType: 'item',
+                      checked: false,
+                      required: true,
+                    }) %>
+                  </div>
+                  <!-- E: 동의 체크박스 -->
+
+                  <!-- S: 본인 확인 -->
+                  <div class="vm-withdraw-fields">
+                    <div class="vm-form-row">
+                      <label class="vm-form-label" for="withdraw-id">
+                        아이디 <span class="label-required" aria-hidden="true">*</span>
+                      </label>
+                      <div class="vm-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'withdraw-id',
+                          name: 'withdrawId',
+                          label: '아이디',
+                          placeholder: '아이디',
+                          required: true,
+                          rootClass: 'size-default'
+                        }) %>
+                      </div>
+                    </div>
+                    <div class="vm-form-row">
+                      <label class="vm-form-label" for="withdraw-pw">
+                        비밀번호 <span class="label-required" aria-hidden="true">*</span>
+                      </label>
+                      <div class="vm-form-field">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                          id: 'withdraw-pw',
+                          name: 'withdrawPassword',
+                          type: 'password',
+                          label: '비밀번호',
+                          placeholder: '비밀번호',
+                          required: true,
+                          rootClass: 'size-default',
+                          showPasswordToggle: true,
+                        }) %>
+                      </div>
+                    </div>
+
+                    <!-- S: 탈퇴 사유 -->
+                    <div class="vm-form-row type-withdraw-reason">
+                      <label class="vm-form-label"
+                        >탈퇴 사유 <span class="label-required" aria-hidden="true">*</span>
+                      </label>
+                      <div class="vm-form-field">
+                        <ul class="vm-withdraw-reason-list" data-checkbox-scope>
+                          <li class="vm-withdraw-reason-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'withdrawReason',
+                              value: 'noProduct',
+                              size: 'm',
+                              text: '원하는 상품이 없어서',
+                              checkboxType: 'item',
+                            }) %>
+                          </li>
+                          <li class="vm-withdraw-reason-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'withdrawReason',
+                              value: 'noBenefit',
+                              size: 'm',
+                              text: '회원전용 쇼핑 혜택이 부족해서',
+                              checkboxType: 'item',
+                            }) %>
+                          </li>
+                          <li class="vm-withdraw-reason-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'withdrawReason',
+                              value: 'delivery',
+                              size: 'm',
+                              text: '배송이 원활하지 않아서',
+                              checkboxType: 'item',
+                            }) %>
+                          </li>
+                          <li class="vm-withdraw-reason-item">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'withdrawReason',
+                              value: 'service',
+                              size: 'm',
+                              text: '서비스 및 고객지원이 만족스럽지 않아서',
+                              checkboxType: 'item',
+                            }) %>
+                          </li>
+                          <li class="vm-withdraw-reason-item reason-etc">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                              name: 'withdrawReason',
+                              value: 'etc',
+                              size: 'm',
+                              text: '기타',
+                              checkboxType: 'item',
+                            }) %>
+                            <div class="vm-withdraw-reason-etc-box">
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                                id: 'withdraw-reason-etc',
+                                name: 'mwithdrawReasonEtcemoB',
+                                placeholder: '탈퇴 사유 입력',
+                                placeholder: '탈퇴 사유를 입력해주세요.',
+                                count: true, 
+                                maxLength: 200, 
+                                rootClass: 'size-default'
+                              }) %>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- E: 탈퇴 사유 -->
+                  </div>
+                  <!-- E: 본인 확인 -->
+
+                  <!-- S: 액션 버튼 -->
+                  <div class="vm-withdraw-actions">
+                    <!-- [D] 비활성화 상태 : disabled -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, { 
+                      type: 'button', 
+                      size: 'xl', 
+                      variant: 'secondary', 
+                      text: '취소', 
+                      className: 'pw-change-btn-later', 
+                    }) %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, { 
+                      type: 'submit', 
+                      size: 'xl', 
+                      variant: 'primary', 
+                      text: '탈퇴하기', 
+                      className: 'pw-change-btn-submit',
+                    }) %>
+                  </div>
+                  <!-- E: 액션 버튼 -->
+                </form>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

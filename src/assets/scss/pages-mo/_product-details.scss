@@ -172,11 +172,16 @@
           &-content {
             .toggle {
               &-content {
+                @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
                 max-height: fn.rem(164);
                 padding: var.$mo-gutter;
                 overflow: hidden auto;
                 background: linear-gradient(0deg, #f9f9f9 0%, #f9f9f9 100%), #fff;
-                border-radius: map.get(var.$radius, 'md');
+                border-radius: 0 0 map.get(var.$radius, 'md') map.get(var.$radius, 'md');
+
+                &[data-pre-trim] {
+                  white-space: pre-wrap;
+                }
 
                 // 상품 규격
                 &-brief-items {

@@ -15,7 +15,7 @@
 
 @mixin link-underline-style {
   .vits-text-link {
-    @include typo.typography('b2m', $color: map.get(color.$text-colors, 'tertiary'));
+    @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
     padding-bottom: fn.rem(4);
     border-bottom: 1px solid map.get(color.$layout-border, 'tertiary');
   }
@@ -121,13 +121,43 @@
   }
 }
 
+@mixin signup-submit-style {
+  width: 100%;
+
+  [class*='vits-btn-'] {
+    width: 100%;
+  }
+}
+
 [class*='main-content-auth-'] {
   background-color: map.get(color.$layout-surf, 'base'); // 로그인 초기 배경색
   &:has(.info-find-wrap) {
     background-color: transparent;
   }
 
-  &:has(.auth-dormant-form, .id-find-form, .join-complete, .vits-signup-terms-card) {
+  // 회원가입 > 입력 폼 , 회원탈퇴
+  &:has(.vm-signup-write-inner) {
+    .vm-login-content {
+      padding-top: map.get(var.$unit, 20);
+      padding-bottom: map.get(var.$mo-bottom-bar, 'tab-bar');
+    }
+  }
+
+  &:has(.vm-withdraw-form) {
+    .vm-login-content {
+      padding-top: map.get(var.$unit, 20);
+    }
+  }
+
+  // 배경색 제외 설정
+  &:has(
+      .auth-dormant-form,
+      .id-find-form,
+      .join-complete,
+      .vits-signup-terms-card,
+      .isvm-transfer,
+      .vm-signup-write-inner
+    ) {
     background-color: map.get(color.$layout-surf, 'mypage');
   }
 
@@ -135,6 +165,7 @@
 
   /* 로그인 컨텐츠 */
   .vm-login {
+    // stylelint-disable no-descending-specificity
     &-content {
       flex: 1;
       width: 100%;
@@ -254,6 +285,105 @@
       }
     }
   }
+
+  // ISVM 전환 신청 (MO_MY_05010204)
+  .isvm-transfer {
+    padding: 0;
+
+    .isvm-brand {
+      @include mx.flex(flex, row, center, center, wrap);
+      gap: map.get(var.$unit, 12);
+      padding: map.get(var.$unit, 56) 0 map.get(var.$unit, 36);
+      background-color: map.get(color.$layout-surf, 'base');
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+      img {
+        width: auto;
+        height: fn.rem(20);
+      }
+
+      &-arrow {
+        @include mx.background('ic/ic-triple-arrow.svg');
+        display: inline-flex;
+        align-items: center;
+        width: fn.rem(13.5);
+        height: fn.rem(9);
+      }
+
+      &-sub {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+        padding: fn.rem(28) map.get(var.$unit, 16) 0;
+        text-align: center;
+
+        &-point {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'default'));
+
+          b {
+            @include typo.typography('b2s', $color: map.get(color.$text-status, 'success-sub'));
+          }
+        }
+
+        &-text {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          width: 100%;
+        }
+      }
+    }
+
+    // 하단 안내
+    .vm-isvm-info {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 32);
+
+      &-warning {
+        @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+        padding-left: fn.rem(10);
+
+        .point-dot {
+          &::before {
+            display: inline-block;
+            margin-right: map.get(var.$unit, 4);
+            content: '*';
+
+            @include typo.typography('b5r', $color: map.get(color.$text-status, 'brand'));
+          }
+        }
+      }
+
+      &-sub {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'default'));
+        margin: 0;
+
+        &.typo-b4r {
+          @include typo.typography('b4s', $color: map.get(color.$text-status, 'info'));
+        }
+      }
+
+      &-list {
+        @include mx.flex(flex, column);
+        @include mx.bullet-style(10, 7, 2, 2, map.get(color.$icon-neutral, 'secondary'));
+        gap: map.get(var.$unit, 4);
+
+        li {
+          margin-top: 0 !important;
+
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        }
+      }
+    }
+
+    .vits-signup-terms-card {
+      margin: map.get(var.$unit, 24) map.get(var.$unit, 16) 0;
+    }
+
+    .vm-signup-submit {
+      @include signup-submit-style;
+      padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 48);
+    }
+  }
 }
 
 /* === 로그인/회워가입 폼 === */
@@ -317,7 +447,7 @@
         border-radius: 0 0 map.get(var.$radius, 'lg') map.get(var.$radius, 'lg');
       }
     }
-    // stylelint-disable-next-line no-descending-specificity
+
     &-form {
       padding: map.get(var.$unit, 24) map.get(var.$unit, 16);
       background-color: map.get(color.$layout-surf, 'base');
@@ -334,7 +464,7 @@
       &-actions {
         width: 100%;
         margin: map.get(var.$unit, 40) 0 map.get(var.$unit, 20);
-        // stylelint-disable-next-line no-descending-specificity
+
         [class*='vits-btn-'] {
           width: 100%;
         }
@@ -517,7 +647,7 @@
   // 회원가입 > 약관동의
   &-terms {
     @include signup-form-style;
-    // stylelint-disable-next-line no-descending-specificity
+
     .vm-signup-form {
       gap: map.get(var.$unit, 8);
       padding: map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 24);
@@ -529,10 +659,281 @@
     }
 
     .vm-signup-submit {
+      @include signup-submit-style;
       padding-top: map.get(var.$unit, 24);
-      // stylelint-disable-next-line no-descending-specificity
-      [class*='vits-btn-'] {
+    }
+  }
+
+  // 회원가입 > 회원정보입력
+  &-write-inner {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    gap: map.get(var.$unit, 24);
+    width: 100%;
+    padding: map.get(var.$unit, 20);
+    background-color: map.get(color.$layout-surf, 'base');
+    border-radius: map.get(var.$radius, 'lg');
+    box-shadow: map.get(var.$box-shadow, 'elevation_1');
+
+    .vm-signup-submit {
+      @include signup-submit-style;
+    }
+
+    .vm-signup-section {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 16);
+      width: 100%;
+    }
+
+    .vm-signup-section-title {
+      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      margin: 0;
+
+      .label-required {
+        color: map.get(color.$text-status, 'brand-sub');
+      }
+    }
+
+    .vm-signup-form {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 20);
+      width: 100%;
+
+      .vm-form-row {
         width: 100%;
+      }
+
+      .vm-form-field {
+        @include mx.flex(flex, row, flex-start, flex-start);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+
+        @include selectbox-w100;
+
+        [class*='vits-btn-']:not([class*='vits-btn-eyes']) {
+          padding: 0 fn.rem(20);
+        }
+      }
+
+      .vm-form-hint {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        width: 100%;
+        padding-left: fn.rem(12);
+        margin-top: map.get(var.$unit, 4);
+      }
+
+      .validation-message p {
+        padding-left: fn.rem(12);
+        font-size: fn.rem(12);
+        font-weight: 400;
+      }
+
+      .vm-form-column {
+        @include mx.flex(flex, column, flex-start, stretch);
+        gap: map.get(var.$unit, 12);
+        width: 100%;
+      }
+
+      .vm-form-label {
+        // Body/13/13 Sb
+        @include typo.typography('m1s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+    }
+
+    // 접기/펼치기 공통 스타일 (마케팅·세금계산서)
+    @mixin auth-toggle-box-surface {
+      padding: map.get(var.$unit, 16) map.get(var.$unit, 12);
+      background-color: map.get(color.$layout-surf, 'raised');
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    @mixin auth-toggle-row {
+      @include mx.flex($align: center, $justify: space-between);
+    }
+
+    @mixin auth-toggle-btn-base {
+      @include button.btn-reset;
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      @include mx.flex($align: center);
+      gap: map.get(var.$unit, 4);
+    }
+
+    @mixin auth-toggle-text-expand-collapse {
+      // 기본: 접힌 상태(펼치기 노출)
+      &.is-expanded {
+        display: none;
+      }
+
+      &.is-collapsed {
+        display: inline;
+      }
+    }
+
+    @mixin auth-toggle-icon {
+      @include icon.ic-size(fn.rem(16));
+      transition: transform 0.2s;
+    }
+
+    @mixin auth-toggle-body($with-margin-top: false) {
+      overflow: hidden;
+      transition:
+        margin 0.3s,
+        padding-top 0.3s,
+        max-height 0.3s,
+        clip-path 0.3s,
+        opacity 0.2s,
+        visibility 0s 0s;
+
+      &.is-open {
+        display: block;
+        padding-top: map.get(var.$unit, 24);
+      }
+    }
+
+    @mixin auth-toggle-btn-aria-expanded($text-class, $icon-class) {
+      &-btn[aria-expanded='true'] {
+        #{$text-class}.is-expanded {
+          display: inline;
+        }
+
+        #{$text-class}.is-collapsed {
+          display: none;
+        }
+
+        #{$icon-class} .ic {
+          transform: rotate(180deg);
+        }
+      }
+
+      &-btn[aria-expanded='false'] {
+        #{$text-class}.is-expanded {
+          display: none;
+        }
+
+        #{$text-class}.is-collapsed {
+          display: inline;
+        }
+
+        #{$icon-class} .ic {
+          transform: rotate(0deg);
+        }
+      }
+    }
+
+    .vm-modify-toggle-box {
+      width: 100%;
+
+      @include auth-toggle-box-surface;
+
+      .vm-modify-marketing {
+        &-toggle {
+          @include auth-toggle-row;
+        }
+
+        &-btn {
+          @include auth-toggle-btn-base;
+        }
+
+        &-text {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+          @include auth-toggle-text-expand-collapse;
+        }
+
+        &-icon {
+          @include auth-toggle-icon;
+        }
+
+        @include auth-toggle-btn-aria-expanded('.vm-modify-marketing-text', '.vm-modify-marketing-icon');
+
+        &-body {
+          @include auth-toggle-body(false);
+        }
+
+        &-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: map.get(var.$unit, 16);
+        }
+
+        &-item {
+          @include mx.flex($align: center);
+        }
+      }
+
+      .vits-checkbox-item .label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+      }
+    }
+
+    // 세금계산서 정보
+    .vm-signup-tax {
+      padding-top: map.get(var.$unit, 16);
+
+      &-head {
+        @include mx.flex($direction: column);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-title {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-btn {
+        @include auth-toggle-btn-base;
+      }
+
+      &-body {
+        @include auth-toggle-body(true);
+      }
+
+      &-text {
+        @include auth-toggle-text-expand-collapse;
+      }
+
+      &-icon {
+        @include auth-toggle-icon;
+      }
+
+      // 접기/펼치기 영역 box
+      .vm-signup-toggle-box {
+        @include auth-toggle-box-surface;
+        width: 100%;
+        margin-bottom: map.get(var.$unit, 12);
+
+        .vm-signup-tax-toggle {
+          @include auth-toggle-row;
+        }
+
+        .vm-signup-tax-text {
+          @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+          @include auth-toggle-text-expand-collapse;
+        }
+
+        .vits-checkbox-item .label {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+        }
+      }
+
+      @include auth-toggle-btn-aria-expanded('.vm-signup-tax-text', '.vm-signup-tax-icon');
+    }
+
+    // 회원탈퇴 및 ISVM 전환 신청 버튼 스타일
+    .vm-signup-footer {
+      &-list {
+        @include mx.flex($align: center, $justify: flex-start);
+        gap: map.get(var.$unit, 32);
+      }
+
+      .vits-text-underline-button {
+        @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
+
+        &.type-member-delete {
+          color: map.get(color.$text-status, 'brand-sub');
+          border-color: map.get(color.$text-status, 'brand-sub');
+        }
+
+        &.type-member-transfer {
+          color: map.get(color.$text-colors, 'tertiary');
+        }
       }
     }
   }
@@ -636,7 +1037,7 @@
   &-terms-sub {
     @include mx.flex(flex, column);
     gap: map.get(var.$unit, 16);
-    // stylelint-disable-next-line no-descending-specificity
+
     &.is-open {
       padding-top: map.get(var.$unit, 12);
       margin-top: map.get(var.$unit, 16);
@@ -681,12 +1082,115 @@
   }
 }
 
-/* === 이용약관 모달 (공통팝업) MO_CO_01010101_M === */
-.vm-signup-terms {
-  padding: map.get(var.$unit, 16) map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 16);
-  background-color: map.get(color.$layout-surf, 'raised');
-  border-radius: map.get(var.$radius, 'lg');
+/* === 회원탈퇴 팝업 (MO_MY_05010203_M) === */
+// stylelint-disable-next-line selector-id-pattern
+.vm-withdraw {
+  &-form {
+    @include mx.flex(flex, column, flex-start, flex-start);
+    @include signup-form-style;
+    gap: map.get(var.$unit, 24);
+    width: 100%;
+  }
 
+  &-agree {
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+    margin: 0 auto;
+  }
+
+  &-notice {
+    width: 100%;
+
+    .vits-alerts-anatomy.type-red {
+      margin-bottom: 0;
+
+      .alerts-anatomy-list {
+        li {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          padding-left: 0;
+        }
+
+        li::before {
+          content: none;
+        }
+      }
+
+      .alerts-anatomy-list-sub {
+        @include mx.bullet-style(8, 6, 2, 2, map.get(color.$icon-neutral, 'secondary'), 2);
+
+        li {
+          @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+          margin-left: fn.rem(14);
+        }
+      }
+    }
+  }
+
+  /* stylelint-disable-next-line no-duplicate-selectors */
+  &-agree {
+    .vits-checkbox-item .label {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+    }
+  }
+
+  &-fields {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 20);
+    width: 100%;
+    padding-top: map.get(var.$unit, 12);
+
+    .vm-form-row {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 8);
+
+      .vm-form-label {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+        min-width: fn.rem(110);
+
+        .label-required {
+          @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand-sub'));
+          margin-left: map.get(var.$unit, 2);
+        }
+      }
+
+      .vm-form-field {
+        flex: 1;
+        min-width: 0;
+      }
+
+      &.type-withdraw-reason {
+        .vm-form-field {
+          @include mx.flex(flex, column, flex-start, flex-start);
+          width: 100%;
+          padding: map.get(var.$unit, 16);
+          background-color: map.get(color.$layout-surf, 'raised');
+          border-radius: map.get(var.$radius, 'md');
+
+          .vm-withdraw-reason-list {
+            @include mx.flex(flex, column, flex-start, flex-start);
+            gap: map.get(var.$unit, 16);
+            width: 100%;
+
+            .reason-etc {
+              width: 100%;
+
+              .vm-withdraw-reason-etc-box {
+                margin-top: map.get(var.$unit, 16);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &-actions {
+    @include button-actions-style;
+  }
+}
+
+/* === 이용약관 모달 (공통팝업) MO_CO_01010101_M === */
+// stylelint-disable no-duplicate-selectors
+.vm-signup-terms {
   &-body {
     max-height: fn.rem(275);
   }
@@ -705,6 +1209,9 @@
 
   &-section {
     @include typo.typography('b4r', 'Noto Sans KR', 0, map.get(color.$text-colors, 'secondary'));
+    padding: map.get(var.$unit, 16) map.get(var.$unit, 8) map.get(var.$unit, 16) map.get(var.$unit, 16);
+    background-color: map.get(color.$layout-surf, 'raised');
+    border-radius: map.get(var.$radius, 'lg');
 
     & + .vm-signup-terms-section {
       margin-top: map.get(var.$unit, 24);

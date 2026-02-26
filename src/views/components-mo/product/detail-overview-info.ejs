@@ -126,15 +126,19 @@
         ></button>
       </div>
       <div class="overview-toggle-content" data-collapse-content data-visible-hidden>
-        <div class="toggle-content">
-          <% _briefDesc.forEach(function(group) { %>
-          <dl class="toggle-content-brief-desc">
-            <dt><%= group.title %></dt>
-            <% group.items.forEach(function(item) { %>
-            <dd><%= item %></dd>
-            <% }); %>
-          </dl>
-          <% }); %>
+        <!-- 
+          [D] 데이터 불러오는 구조
+               ㄴ data-pre-trim 추가 요청 (앞뒤 공백 제거용)
+        -->
+        <!-- prettier-ignore -->
+        <div class="toggle-content" data-pre-trim>
+*제품특징
+
+*제품용도
+-욕실등
+
+*주의사항
+-전자식 스위치 사용시 잔불 현상이 일어날수 있음
         </div>
       </div>
     </div>
