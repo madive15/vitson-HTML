@@ -12,6 +12,7 @@
 @use '@/assets/scss/components/icon' as icon;
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/layout/list' as list;
+@use '@/assets/scss/components-mo/product' as product;
 
 @mixin my-home-layout {
   box-shadow: map.get(var.$box-shadow, 'elevation_1');
@@ -74,7 +75,7 @@
 }
 
 .vm-wrap {
-  $mypage-bg-sections: 'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey';
+  $mypage-bg-sections: 'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry';
 
   @each $section in $mypage-bg-sections {
     &.wrap-my-#{$section} .vm-content-wrap {
@@ -2243,20 +2244,43 @@
 }
 
 // 설문조사
-@mixin survey-common-wrap {
-  padding: var.$mo-section-gap var.$mo-gutter;
+@mixin mysub-common-wrap($pb: var.$mo-section-gap) {
+  padding: var.$mo-section-gap var.$mo-gutter $pb;
   box-shadow: map.get(var.$box-shadow, 'elevation_-1');
 }
 
-@mixin survey-common-item {
+@mixin mysub-common-item {
   @include mx.flex(flex, column);
+  @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
   padding: map.get(var.$unit, 20);
   background: color.$color-white;
   border-radius: map.get(var.$radius, 'md');
-  box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quinary');
+}
+
+@mixin mysub-common-empty {
+  // 등록된 계정 없을 떄
+  &-empty {
+    /* stylelint-disable no-descending-specificity */
+    .vits-empty-state {
+      padding-top: min(26.38vw, 192px);
+
+      &-action {
+        width: 100%;
+        padding-right: map.get(var.$unit, 4);
+        padding-left: map.get(var.$unit, 4);
+
+        [class*='vits-btn-'] {
+          width: 100%;
+        }
+      }
+    }
+    /* stylelint-enable no-descending-specificity */
+  }
 }
 
 .vm-mypage-survey {
+  @include mysub-common-empty;
+
   .survey {
     &-items {
       @include mx.flex(flex, column);
@@ -2264,7 +2288,7 @@
     }
 
     &-item {
-      @include survey-common-item;
+      @include mysub-common-item;
       gap: map.get(var.$unit, 12);
 
       &-head {
@@ -2312,26 +2336,7 @@
   }
 
   &-list {
-    @include survey-common-wrap;
-  }
-
-  // 설문조사 - 등록된 계정 없을 떄
-  &-empty {
-    /* stylelint-disable no-descending-specificity */
-    .vits-empty-state {
-      padding-top: min(26.38vw, 192px);
-
-      &-action {
-        width: 100%;
-        padding-right: map.get(var.$unit, 4);
-        padding-left: map.get(var.$unit, 4);
-
-        [class*='vits-btn-'] {
-          width: 100%;
-        }
-      }
-    }
-    /* stylelint-enable no-descending-specificity */
+    @include mysub-common-wrap;
   }
 
   &-detail {
@@ -2374,14 +2379,13 @@
   }
 
   &-question {
-    @include survey-common-wrap;
+    @include mysub-common-wrap(map.get(var.$unit, 52));
     @include mx.flex(flex, column);
     gap: var.$mo-gutter;
-    padding-bottom: map.get(var.$unit, 52);
 
     .survey-question {
       &-item {
-        @include survey-common-item;
+        @include mysub-common-item;
         gap: var.$mo-gutter;
       }
 
@@ -2413,8 +2417,8 @@
   /* stylelint-disable-next-line no-descending-specificity */
   .star-stars {
     display: inline-block;
-    width: fn.rem(81); // svg 파일크기와 동일
-    height: fn.rem(15);
+    width: fn.rem(88); // svg 파일크기와 동일
+    height: fn.rem(16);
   }
 
   .star-track {
@@ -2536,6 +2540,336 @@
   .star-max {
     font-weight: 500;
     color: map.get(color.$text-colors, 'muted');
+  }
+}
+
+// 서류관리
+.vm-mypage-docs {
+  @include mysub-common-empty;
+
+  &-group {
+    @include mysub-common-wrap(map.get(var.$unit, 52));
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 36);
+
+    .docs {
+      &-items {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 20);
+      }
+
+      &-item {
+        @include mysub-common-item;
+        @include mx.flex(flex, column);
+        gap: var.$mo-section-gap;
+        padding: var.$mo-section-gap;
+
+        &-count {
+          @include mx.flex;
+
+          > span {
+            @include typo.typography('m1r', $color: map.get(color.$text-colors, 'tertiary'));
+
+            &.count-total {
+              margin-left: map.get(var.$unit, 8);
+              font-weight: 600;
+              color: map.get(color.$text-colors, 'secondary');
+            }
+          }
+        }
+
+        &-content {
+          @include mx.flex(flex, column);
+          gap: var.$mo-section-gap;
+        }
+
+        &-info {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 8);
+          width: 100%;
+        }
+
+        &-date-icon {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 4);
+          width: 100%;
+          padding-bottom: map.get(var.$unit, 12);
+
+          /* stylelint-disable-next-line no-descending-specificity */
+          .icon {
+            @include icon.ic-size(var.$mo-gutter);
+            color: map.get(color.$layout-border, 'tertiary');
+          }
+
+          .text {
+            @include typo.typography('m1r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+
+        &-number {
+          @include typo.typography('b3s');
+        }
+
+        &-name {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+          @include mx.ellipsis-multi;
+        }
+
+        &-price {
+          @include mx.flex;
+          gap: map.get(var.$unit, 2);
+
+          span {
+            @include typo.typography('b1s', $color: map.get(color.$text-status, 'brand-sub'));
+          }
+        }
+
+        &-date {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 4);
+
+          > li {
+            @include typo.typography('m1r', $color: map.get(color.$text-colors, 'tertiary'));
+          }
+        }
+
+        &-price-list {
+          @include mx.flex($wrap: wrap);
+          @include mx.border('top', $color: map.get(color.$layout-border, 'quinary'));
+          gap: map.get(var.$unit, 8) 0;
+          width: 100%;
+          padding-top: var.$mo-gutter;
+
+          /* stylelint-disable no-descending-specificity */
+          dt {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+            width: 20%;
+
+            &.price-total {
+              font-weight: 600;
+              color: map.get(color.$text-colors, 'default');
+            }
+          }
+
+          dd {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
+            width: 80%;
+            text-align: right;
+
+            &.price-total {
+              font-size: fn.rem(16);
+              font-weight: 600;
+              color: map.get(color.$text-status, 'brand-sub');
+            }
+          }
+          /* stylelint-enable no-descending-specificity */
+        }
+
+        &-actions,
+        &-download {
+          width: 100%;
+        }
+
+        // 세금
+        // &.docs-tax {
+        // }
+
+        // 견적서
+        &.docs-quote .docs-item {
+          &-number {
+            font-weight: 400;
+          }
+        }
+
+        // 구매내역서
+        &.docs-bill .docs-item {
+          &-name {
+            font-size: fn.rem(14);
+            color: map.get(color.$text-colors, 'default');
+          }
+        }
+      }
+    }
+
+    // gap크기만큼 margin-top 주기
+    .vm-mypage-docs-empty {
+      margin-top: (map.get(var.$unit, 36) * -1);
+    }
+  }
+
+  &-list {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 12);
+  }
+
+  &-controls {
+    @include mx.flex;
+    width: 100%;
+  }
+}
+
+// 대량 구매 문의, 1:1문의
+.vm-mypage-inquiry {
+  @include mysub-common-wrap(map.get(var.$unit, 52));
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 32);
+
+  &-product {
+    @include product.common-product-info;
+    padding: var.$mo-gutter map.get(var.$unit, 20);
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'lg');
+
+    .inquiry-product {
+      &-body {
+        @include mx.flex;
+        gap: var.$mo-gutter;
+        width: 100%;
+      }
+
+      &-thumb {
+        flex: 0 0 fn.rem(60);
+        width: fn.rem(60);
+        overflow: hidden;
+        border-radius: map.get(var.$unit, 2);
+      }
+
+      &-info {
+        @include mx.flex(flex, column);
+        flex-grow: 1;
+        gap: map.get(var.$unit, 4);
+        min-width: 0;
+
+        .product {
+          &-brand {
+            font-size: fn.rem(12);
+            color: map.get(color.$text-colors, 'tertiary');
+          }
+
+          &-code {
+            @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+            padding: 0 map.get(var.$unit, 4);
+            font-size: fn.rem(11);
+            line-height: fn.rem(14);
+            color: map.get(color.$text-colors, 'tertiary');
+          }
+
+          &-spec {
+            font-size: fn.rem(12);
+          }
+        }
+      }
+
+      &-footer {
+        @include mx.flex(flex, column, flex-end, flex-end);
+        @include mx.border('top', $color: map.get(color.$layout-surf, 'sunken'));
+        padding-top: map.get(var.$unit, 12);
+        margin-top: map.get(var.$unit, 12);
+
+        .product {
+          &-price {
+            flex-direction: row;
+            gap: map.get(var.$unit, 8);
+            align-items: center;
+            justify-content: flex-end;
+
+            .price {
+              &-origin-label {
+                /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+                font-family: PretendardGOV;
+                font-size: fn.rem(12);
+              }
+            }
+
+            &-vat {
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &-form {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+
+    .inquiry-form {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 32);
+
+      &-title {
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &-row {
+        @include mx.flex(flex, row, flex-start, flex-start, wrap);
+        width: 100%;
+
+        &:has(> .inquiry-form-label) {
+          gap: map.get(var.$unit, 8);
+        }
+
+        &:has(> .inquiry-form-title) {
+          gap: map.get(var.$unit, 12);
+        }
+
+        & ~ .inquiry-form-row {
+          margin-top: var.$mo-section-gap;
+        }
+      }
+
+      &-label {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        width: 100%;
+      }
+
+      &-field {
+        width: 100%;
+      }
+
+      &-editor {
+        width: 100%;
+      }
+
+      &-attachment {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 12);
+
+        .form-attachment {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 8);
+
+          &-notice {
+            @include typo.typography('b4r', $color: map.get(color.$text-status, 'brand-sub'));
+            position: relative;
+            padding-left: fn.rem(6);
+
+            &::before {
+              @include mx.position(absolute, 5px, $left: 0);
+              width: fn.rem(2);
+              height: fn.rem(2);
+              content: '';
+              background: map.get(color.$label-step, 'processing');
+              border-radius: fn.rem(2);
+            }
+          }
+
+          &-file {
+            position: relative;
+
+            &-button {
+              width: 100%;
+            }
+          }
+
+          &-upload {
+            @include mx.flex(flex, row, flex-start, flex-start, wrap);
+            gap: map.get(var.$unit, 8);
+          }
+        }
+      }
+    }
   }
 }
 

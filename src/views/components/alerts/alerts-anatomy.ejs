@@ -4,18 +4,23 @@
   const _theme = typeof theme !== 'undefined' ? theme : 'red';
   const _text = typeof text !== 'undefined' ? text : '';
   const _list = typeof list !== 'undefined' ? list : [];
+  const _className = typeof className !== 'undefined' ? className : '';
 %>
 
-<div class="vits-alerts-anatomy<%= _theme === 'blue' ? ' type-blue' : ' type-red' %>">
+<div
+  class="vits-alerts-anatomy<%= _theme === 'blue' ? ' type-blue' : ' type-red' %><%= _className ? ' ' + _className : '' %>"
+>
   <div class="vits-alerts-anatomy-inner">
     <div class="alerts-anatomy-icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'info' }) %></div>
     <div class="alerts-anatomy-content">
       <p class="alerts-anatomy-text"><%= _text %></p>
       <% if (_list.length > 0) { %>
       <ul class="alerts-anatomy-list">
-        <% _list.forEach(function(item) { %>
+        <% _list.forEach(function(item) { %> <% if (typeof item === 'string') { %>
         <li><%= item %></li>
-        <% }); %>
+        <% } else { %>
+        <li class="<%= item.className || '' %>"><%= item.text || '' %></li>
+        <% } %> <% }); %>
       </ul>
       <% } %>
     </div>

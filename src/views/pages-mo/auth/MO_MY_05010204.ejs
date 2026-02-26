@@ -1,0 +1,106 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: 'ISVM 전환 신청'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: 'ISVM 전환 신청' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content isvm-transfer">
+                <form class="vm-signup-form-wrap" action="#" method="post" novalidate>
+                  <div class="vm-signup-terms">
+                    <!-- S: 로고/ISVM 로고 영역 -->
+                    <div class="isvm-brand">
+                      <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-header.svg" alt="비츠온엠알오" />
+                      <span class="isvm-brand-arrow" aria-hidden="true"></span>
+                      <img src="<%= _public %>/resources/img/mro/renewal/logo/logo-isvm.png" alt="ISVM" />
+
+                      <!-- 안내 문구 -->
+                      <div class="isvm-brand-sub">
+                        <p class="isvm-brand-sub-point">
+                          <b>ISVM</b>으로 이관할 경우 비츠온엠알오<br />
+                          서비스 이용 및 접속 할 수 없습니다.
+                        </p>
+                        <p class="isvm-brand-sub-text">현재 사용 중인 계정을<br />약관 동의 후 ISVM으로 이관합니다.</p>
+                      </div>
+                    </div>
+                    <!-- E: 로고/ISVM 로고 영역 -->
+
+                    <!-- S: 약관 동의 -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/pg-auth/signup-terms-card.ejs`, { agreeBizText: '매출처 이용 동의' }) %>
+                    <!-- E: 약관 동의 -->
+
+                    <!-- S: 하단 안내 -->
+                    <div class="vm-isvm-info">
+                      <p class="vm-isvm-info-sub">
+                        ISVM은 사업자대상 B2B 쇼핑몰로,<br />
+                        가입 승인 후 상품 단가 조회 및 구매가 가능합니다.
+                      </p>
+                      <p class="vm-isvm-info-sub typo-b4r">
+                        회원가입 신청 시 담당자 확인을 거쳐 승인 처리가 진행됩니다.
+                      </p>
+                      <ul class="vm-isvm-info-list">
+                        <li>승인 소요 시간: 평일 08:30~18:00 기준 1시간 이내</li>
+                        <li>주말 및 공휴일: 휴무로 인해 승인 처리가 어려우며, 평일 업무시간에 순차 처리됩니다.</li>
+                      </ul>
+                      <p class="vm-isvm-info-warning">
+                        <span class="point-dot"></span>승인 전에는 서비스 이용이 제한되며, 추가 확인이 필요한 경우
+                        영업팀에서 연락드릴 수 있습니다.
+                      </p>
+                    </div>
+                    <!-- E: 하단 안내 -->
+                  </div>
+
+                  <!-- 전환 신청 버튼 -->
+                  <div class="vm-signup-submit">
+                    <!-- [D] 비활성화 상태 : disabled -->
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`,{
+                      type: 'submit',
+                      size: 'xl',
+                      variant: 'primary',
+                      text: '전환 신청',
+                      disabled: false,
+                    }) %>
+                  </div>
+                </form>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

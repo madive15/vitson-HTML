@@ -168,9 +168,16 @@
 /* ----------------------------------------------------------------------------- */
 /* 홈 섹션 (home-section) */
 /* ----------------------------------------------------------------------------- */
+.vits-main-home {
+  @include mx.flex(flex, column, flex-start, flex-start);
+  gap: fn.rem(80);
+}
+
 .home-section {
   position: relative;
+  width: 100%;
   margin: 0 auto;
+  overflow: hidden;
 
   /* 배경색 */
   &:has(.vits-home-main-category-menu) {
@@ -180,12 +187,12 @@
 
   /* 상.하 간격 */
   &:has(.vits-home-frequent-menu) {
-    padding: fn.rem(30) 0 0;
+    // padding: fn.rem(30) 0 0;
   }
 
   /* 배경색 + 타이틀 */
   &:has(.vits-home-event-banner) {
-    padding: fn.rem(80) 0;
+    padding: fn.rem(80) fn.rem(16) fn.rem(80) 0;
     overflow: hidden;
     background-color: map.get(color.$layout-surf, 'sunken');
 
@@ -199,27 +206,7 @@
 
   /* 상.하 간격 */
   &:has(.vits-home-product-legend) {
-    padding: fn.rem(100) 0;
-  }
-
-  &:has(.home-brand-swiper-wrapper) {
-    padding: 0 0 fn.rem(80);
-  }
-
-  &:has(.home-product-swiper-wrapper) {
-    padding: fn.rem(80) 0;
-  }
-
-  &:has(.vits-home-promo-products) {
-    padding: fn.rem(80) 0;
-  }
-
-  &:has(.vits-home-category-best) {
-    padding: fn.rem(80) 0;
-  }
-
-  &:has(.home-rank) {
-    padding: 0 0 fn.rem(80);
+    padding: fn.rem(20) 0;
   }
 }
 
@@ -378,7 +365,6 @@
 .vits-home-main-banner {
   position: relative;
   width: 100vw;
-  margin-bottom: fn.rem(32);
   overflow: hidden;
 
   .main-banner-container {
@@ -889,7 +875,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    max-height: fn.rem(210);
+    max-height: fn.rem(250);
     overflow: hidden;
     border-radius: map.get(var.$radius, 'lg');
   }
@@ -945,9 +931,11 @@
   }
 
   .brand-product-item {
+    position: relative;
+
     @include mx.flex(flex, row, flex-start, center);
     gap: fn.rem(16);
-    padding: fn.rem(16) fn.rem(8);
+    padding: fn.rem(8);
     margin-top: fn.rem(12);
     border: 2px solid transparent;
     border-radius: map.get(var.$radius, 'md');
@@ -991,28 +979,46 @@
         width: auto;
       }
     }
+
+    &.is-soldout {
+      .brand-product-thumb img {
+        filter: blur(2px);
+      }
+    }
   }
 
   .brand-product-link {
     @include mx.flex(flex, row, flex-start, center);
     flex: 1;
-    gap: fn.rem(16);
+    gap: fn.rem(8);
     min-width: 0;
     text-decoration: none;
   }
 
   .brand-product-thumb {
-    flex: 0 0 fn.rem(80);
-    width: fn.rem(80);
-    height: fn.rem(80);
+    position: relative;
+    flex: 0 0 fn.rem(92);
+    width: fn.rem(92);
+    height: fn.rem(92);
     overflow: hidden;
-    background-color: map.get(color.$gray-shades, '20');
+    background-color: color.$color-white;
     border-radius: map.get(var.$radius, 'md');
 
     @include mx.img-fit(contain);
     // stylelint-disable-next-line no-descending-specificity
     img {
       transition: opacity 0.2s ease;
+    }
+
+    // 일시품절(02.25 추가)
+    .product-soldout-alt {
+      @include mx.flex(flex, column, center, center);
+      @include mx.position(absolute, 0, 0, 0, 0);
+      background-color: hsl(0deg 0% 0% / 40%);
+
+      .text {
+        @include typo.typography('b3s', $color: map.get(color.$icon-neutral, 'inverse'));
+      }
     }
   }
 
@@ -1023,7 +1029,7 @@
     min-width: 0;
 
     .product-brand {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
     }
 
     .product-name {
@@ -1254,6 +1260,8 @@
     flex-shrink: 0;
     min-width: fn.rem(400);
     max-width: fn.rem(500);
+    padding-top: fn.rem(12);
+    overflow: hidden;
 
     @include mx.pc-sm {
       min-width: fn.rem(300);
@@ -1264,7 +1272,7 @@
   .js-home-rank-swiper {
     box-sizing: content-box;
     padding-bottom: fn.rem(24);
-    overflow: hidden;
+    overflow: visible;
   }
 
   .home-rank-slide {
@@ -1303,7 +1311,6 @@
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: map.get(var.$radius, 'md');
-    transition: min-height 0.25s ease;
 
     @include typo.typography('h4m', $color: map.get(color.$text-colors, 'tertiary'));
 
@@ -1617,7 +1624,7 @@
     width: 100%;
     height: 100%;
     visibility: hidden;
-    background-color: rgb(255 255 255 / 80%);
+    background-color: rgb(255 255 255 / 60%);
     border-bottom: 1px solid map.get(color.$layout-status, 'brand-bg-sub');
     border-radius: map.get(var.$radius, 'md');
     opacity: 0;
@@ -1626,10 +1633,29 @@
       visibility 0.5s ease;
   }
 
+  // 일시품절 (02.25 추가)
+  // stylelint-disable-next-line no-descending-specificity
+  .product-soldout-alt {
+    @include mx.flex(flex, column, center, center);
+    @include mx.position(absolute, 0, 0, 0, 0);
+    background-color: hsl(0deg 0% 0% / 40%);
+
+    .text {
+      @include typo.typography('b2s', $color: map.get(color.$icon-neutral, 'inverse'));
+    }
+  }
+
+  &.is-soldout {
+    // stylelint-disable-next-line no-descending-specificity
+    .product-thumb img {
+      filter: blur(2px);
+    }
+  }
+
   // hover 시 이미지 블러 + 액션 영역 fade in
   &:has(.product-actions-hover):hover {
     .product-thumb img {
-      filter: blur(5px);
+      filter: blur(2px);
     }
 
     .product-actions-hover {

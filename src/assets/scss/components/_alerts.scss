@@ -58,6 +58,14 @@
 
           > li {
             @include typo.typography('b4r', $color: $text-color);
+
+            &.text-tertiary {
+              color: map.get(color.$text-colors, 'tertiary');
+
+              &::before {
+                background: map.get(color.$layout-border, 'tertiary');
+              }
+            }
           }
         }
       }
@@ -85,13 +93,17 @@
   }
 }
 
-.vits-alerts-anatomy.type-red {
-  @include alerts-anatomy('red');
-}
-
 .vits-alerts-anatomy {
   &.type-blue {
     @include alerts-anatomy('blue');
+  }
+
+  &.type-red {
+    @include alerts-anatomy('red');
+  }
+
+  &.style-my-docs {
+    background: map.get(color.$layout-surf, 'base');
   }
 }
 

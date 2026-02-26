@@ -134,8 +134,9 @@
   }
 }
 
-// 텍스트 박스형 체크박스
+// 텍스트 박스형 체크박스 => button 변경
 .vm-checkbox-text-box {
+  @include button.btn-reset;
   @include mx.flex(flex, row, flex-start, center);
   position: relative;
   max-width: 100%;
@@ -144,16 +145,12 @@
   border-radius: map.get(var.$radius, 'sm');
   box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
 
-  input {
-    @include mx.sr-only;
-  }
-
   .text {
     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     @include mx.ellipsis-single;
   }
 
-  &:has(input:checked) {
+  &.is-active {
     box-shadow: inset 0 0 0 1px map.get(color.$icon-colors, 'hover');
 
     .text {

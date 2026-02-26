@@ -50,26 +50,24 @@
           <!-- S: 브랜드 추천 상품 리스트 -->
           <ul class="brand-product-list">
             <% for (let i = 0; i < productCount; i++) { %> <% const isSoldOut = i === 0; %>
-            <li class="brand-product-item <%= isSoldOut ? 'is-sold-out' : '' %>">
+            <li class="brand-product-item <%= isSoldOut ? 'is-soldout' : '' %>">
               <a href="#!" class="brand-product-link">
                 <div class="brand-product-thumb">
                   <img src="<%= _public %>/resources/img/mro/renewal/temp/temp-sample-product-02.jpg" alt="" />
+                  <% if (isSoldOut) { %>
+                  <div class="product-soldout-alt"><span class="text">일시품절</span></div>
+                  <% } %>
                 </div>
                 <div class="brand-product-info">
                   <div class="product-brand"><span class="sr-only">브랜드</span>서경</div>
                   <div class="product-name"><span class="sr-only">상품명</span>방진 마스크 방진 마스크 방진 마스크</div>
                   <div class="product-price">
-                    <% if (isSoldOut) { %>
-                    <div class="product-price-alt is-soldout">일시품절</div>
-                    <% } else { %>
                     <div class="price-origin-label"><span class="sr-only">표준단가(정상가)</span>32,000원</div>
                     <div class="price-sale-row">
                       <div class="price-rate"><span class="sr-only">할인율</span>30%</div>
                       <div class="price-sale"><span class="sr-only">공급단가(판매가)</span>24,900원</div>
                     </div>
-                    <% } %>
                   </div>
-                  <% if (!isSoldOut) { %>
                   <!-- 배지 영역 -->
                   <div class="product-extra">
                     <div class="vits-product-flags">
@@ -84,7 +82,6 @@
                       <span class="vits-product-promo-badge is-free-ship">무료배송</span>
                     </div>
                   </div>
-                  <% } %>
                 </div>
               </a>
               <div class="brand-product-action">

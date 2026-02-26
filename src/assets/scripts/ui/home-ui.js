@@ -12,7 +12,7 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   if (!$) {
-    console.log('[home-ui] jQuery not found');
+    return;
   }
 
   window.UI = window.UI || {};
@@ -50,20 +50,17 @@ import Swiper from 'swiper/bundle';
   function initMainBannerSwiper() {
     var container = document.querySelector('.js-home-main-banner-swiper');
     if (!container) {
-      console.warn('[home-ui] Banner container not found');
       return;
     }
 
     // 이미 초기화된 경우 중복 방지 (DOM 요소에 저장된 인스턴스 확인)
     var existingInstance = container[SWIPER_INSTANCE_KEY];
     if (existingInstance && typeof existingInstance.destroy === 'function') {
-      console.log('[home-ui] Swiper already initialized, skipping...');
       return;
     }
 
     // import된 Swiper 사용 (모듈 스코프에서 직접 사용)
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available');
       return;
     }
 
@@ -124,10 +121,8 @@ import Swiper from 'swiper/bundle';
           updatePlayPauseState(swiperInstance, toggleButton);
         });
       }
-
-      console.log('[home-ui] Main banner swiper initialized');
     } catch (e) {
-      console.error('[home-ui] Failed to initialize main banner swiper', e);
+      void e;
     }
   }
 
@@ -175,7 +170,6 @@ import Swiper from 'swiper/bundle';
     if (swiperInstance && typeof swiperInstance.destroy === 'function') {
       swiperInstance.destroy(true, true);
       delete targetContainer[SWIPER_INSTANCE_KEY];
-      console.log('[home-ui] Main banner swiper destroyed');
     }
   }
 
@@ -206,7 +200,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for event banner');
       return;
     }
 
@@ -287,16 +280,15 @@ import Swiper from 'swiper/bundle';
       try {
         var instance = new Swiper(container, options);
         container[EVENT_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Event banner swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize event banner swiper', e);
+        void e;
       }
     });
   }
 
   /**
    * 브랜드 Pick Swiper 초기화
-   * - 브랜드가 3개 초과일 때만 Swiper 적용
+   * - 항상 Swiper 적용, 브랜드가 3개 이하일 때만 navigation 비활성화(숨김)
    * - 브랜드 섹션을 가로로 스와이프할 수 있도록 구성
    */
   function initBrandSwiper() {
@@ -306,7 +298,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for brand swiper');
       return;
     }
 
@@ -315,12 +306,9 @@ import Swiper from 'swiper/bundle';
         return;
       }
 
-      // 브랜드 슬라이드 개수 확인 (3개 이하면 Swiper 미적용)
+      // 브랜드 슬라이드 개수 확인 (3개 이하면 navigation만 비활성화)
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
-      if (slideCount <= 3) {
-        return;
-      }
 
       // 이미 초기화된 경우 중복 실행 방지
       var existingInstance = container[BRAND_SWIPER_INSTANCE_KEY];
@@ -333,6 +321,20 @@ import Swiper from 'swiper/bundle';
       var prevButton = wrapper ? wrapper.querySelector('.home-brand-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.home-brand-nav-next') : null;
 
+      // 3개 이하일 때는 navigation 비활성화(숨김)
+      var navConfig =
+        slideCount <= 3
+          ? false
+          : {
+              nextEl: nextButton,
+              prevEl: prevButton,
+              disabledClass: 'swiper-button-disabled'
+            };
+      if (slideCount <= 3 && wrapper) {
+        if (prevButton) prevButton.style.display = 'none';
+        if (nextButton) nextButton.style.display = 'none';
+      }
+
       var options = {
         slidesPerView: 3,
         spaceBetween: 24,
@@ -340,19 +342,14 @@ import Swiper from 'swiper/bundle';
         slidesPerGroup: 1,
         watchSlidesProgress: true,
         a11y: false,
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-          disabledClass: 'swiper-button-disabled'
-        }
+        navigation: navConfig
       };
 
       try {
         var instance = new Swiper(container, options);
         container[BRAND_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Brand swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize brand swiper', e);
+        void e;
       }
     });
   }
@@ -369,7 +366,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for product swiper');
       return;
     }
 
@@ -382,8 +378,8 @@ import Swiper from 'swiper/bundle';
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
 
-      // 슬라이드가 1개 이하면 Swiper 미적용
-      if (slideCount <= 1) {
+      // 슬라이드가 0개면 Swiper 미적용
+      if (slideCount === 0) {
         return;
       }
 
@@ -401,6 +397,20 @@ import Swiper from 'swiper/bundle';
       var wrapper = container.closest('.home-product-swiper-wrapper');
       var prevButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-next') : null;
+
+      // 슬라이드가 데스크톱 기준 노출 개수 이하일 때는 navigation 비활성화
+      var navConfig =
+        slideCount <= desktopSlides
+          ? false
+          : {
+              nextEl: nextButton,
+              prevEl: prevButton,
+              disabledClass: 'swiper-button-disabled'
+            };
+      if (slideCount <= desktopSlides && wrapper) {
+        if (prevButton) prevButton.style.display = 'none';
+        if (nextButton) nextButton.style.display = 'none';
+      }
 
       var options = {
         slidesPerView: 1,
@@ -423,19 +433,14 @@ import Swiper from 'swiper/bundle';
             spaceBetween: 24
           }
         },
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-          disabledClass: 'swiper-button-disabled'
-        }
+        navigation: navConfig
       };
 
       try {
         var instance = new Swiper(container, options);
         container[PRODUCT_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Product swiper initialized with desktop slides:', desktopSlides);
       } catch (e) {
-        console.error('[home-ui] Failed to initialize product swiper', e);
+        void e;
       }
     });
   }
@@ -450,7 +455,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for legend swiper');
       return;
     }
 
@@ -481,7 +485,7 @@ import Swiper from 'swiper/bundle';
 
       var options = {
         slidesPerView: 5,
-        spaceBetween: 16,
+        spaceBetween: 24,
         speed: 500,
         slidesPerGroup: 1,
         grid: {
@@ -494,7 +498,7 @@ import Swiper from 'swiper/bundle';
           0: {
             slidesPerView: 4,
             spaceBetween: 20,
-            slidesPerGroup: 8,
+            slidesPerGroup: 1,
             grid: {
               rows: 2,
               fill: 'row'
@@ -503,7 +507,7 @@ import Swiper from 'swiper/bundle';
           1280: {
             slidesPerView: 5,
             spaceBetween: 24,
-            slidesPerGroup: 10,
+            slidesPerGroup: 1,
             grid: {
               rows: 2,
               fill: 'row'
@@ -520,9 +524,8 @@ import Swiper from 'swiper/bundle';
       try {
         var instance = new Swiper(container, options);
         container[LEGEND_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Legend swiper initialized with grid');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize legend swiper', e);
+        void e;
       }
     });
   }
@@ -540,7 +543,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for vertical rank');
       return;
     }
 
@@ -576,7 +578,7 @@ import Swiper from 'swiper/bundle';
 
     var RANK_SPACE_BETWEEN = 24;
 
-    // groupIndex: 0 = 1~5번, 1 = 6~10번 — 해당 그룹 높이로만 컨테이너 높이 설정
+    // groupIndex: 0 = 1~5번, 1 = 6~10번 — 컨테이너 높이 = 해당 구간 슬라이드 실제 높이 합 (active 반영 후 측정)
     function setRankSwiperHeight(groupIndex) {
       var slides = container.querySelectorAll('.swiper-slide');
       if (!slides.length) {
@@ -587,11 +589,15 @@ import Swiper from 'swiper/bundle';
         for (var i = 0; i < count && startIndex + i < slides.length; i++) {
           sum += slides[startIndex + i].offsetHeight;
         }
-        return sum + (count - 1) * RANK_SPACE_BETWEEN;
+        return sum + Math.max(0, count - 1) * RANK_SPACE_BETWEEN;
       }
-      var start = groupIndex === 0 ? 0 : 5;
-      var count = groupIndex === 0 ? 5 : Math.min(5, slides.length - 5);
-      var height = count > 0 ? groupHeight(start, count) : groupHeight(0, 5);
+      var height;
+      if (groupIndex === 0) {
+        height = groupHeight(0, 5);
+      } else {
+        // 6~10번(인덱스 5~9) 5개 슬라이드 실제 높이 합 (active 적용된 상태로 측정)
+        height = groupHeight(5, 5);
+      }
       container.style.height = height + 'px';
     }
 
@@ -612,6 +618,20 @@ import Swiper from 'swiper/bundle';
         },
         slideChange: function (swiper) {
           setActiveRank(swiper.activeIndex);
+          // 2그룹(6~10)에서 active 변경 시 높이 재계산 (DOM 반영 후 측정)
+          if (swiper.activeIndex >= 5) {
+            requestAnimationFrame(function () {
+              setRankSwiperHeight(1);
+            });
+          }
+        },
+        slideChangeTransitionEnd: function (swiper) {
+          // 2그룹(6~10번)으로 넘어간 후 전환 완료 시점에 6~10 높이 재계산 적용
+          if (swiper.activeIndex >= 5) {
+            requestAnimationFrame(function () {
+              setRankSwiperHeight(1);
+            });
+          }
         }
       }
     };
@@ -680,10 +700,8 @@ import Swiper from 'swiper/bundle';
           setRankSwiperHeight(instance.activeIndex >= 5 ? 1 : 0);
         }, 100);
       });
-
-      console.log('[home-ui] Vertical rank swiper initialized');
     } catch (e) {
-      console.error('[home-ui] Failed to initialize vertical rank swiper', e);
+      void e;
     }
   }
 
@@ -699,7 +717,6 @@ import Swiper from 'swiper/bundle';
     }
 
     if (!Swiper) {
-      console.error('[home-ui] Swiper is not available for line ad banner');
       return;
     }
 
@@ -749,17 +766,14 @@ import Swiper from 'swiper/bundle';
       try {
         var instance = new Swiper(container, options);
         container[LINE_AD_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Line ad banner swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize line ad banner swiper', e);
+        void e;
       }
     });
   }
 
   window.UI.homeUi = {
     init: function () {
-      console.log('[home-ui] init');
-
       // DOM 로드 후 Swiper 초기화
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {

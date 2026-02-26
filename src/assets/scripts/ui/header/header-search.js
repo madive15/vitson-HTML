@@ -359,22 +359,25 @@
     scheduleProductsHide($scope);
   }
 
-  // 인풋 핸들러
+  // 인풋 핸들러 - 포커스 중이면 빈 값이어도 패널 유지
   function handleInput($scope) {
     syncClearBtn($scope);
-    if (getInputValue($scope).length > 0) {
+    var state = getState($scope);
+    if (state.escClosing) return;
+    var isFocused = getEls($scope).$input.is(':focus');
+    if (isFocused || getInputValue($scope).length > 0) {
       openPanel($scope);
     } else {
       closePanel($scope);
     }
   }
 
+  // 지우기 후 포커스 유지, 패널 열린 상태 유지
   function handleClearClick($scope, e) {
     e.preventDefault();
     e.stopPropagation();
     getEls($scope).$input.val('').trigger('focus');
     syncClearBtn($scope);
-    closePanel($scope);
   }
 
   function handleFormSubmit($scope, e) {
@@ -391,16 +394,6 @@
     if (!state.isOpen) return;
     if ($(e.target).closest($scope[0]).length) return;
     closePanel($scope);
-  }
-
-  function handleKeydown($scope, e) {
-    var state = getState($scope);
-    if (!state.isOpen) return;
-    if (e.keyCode === KEY.ESC) {
-      e.preventDefault();
-      closePanel($scope);
-      getEls($scope).$input.trigger('blur');
-    }
   }
 
   // 이벤트 바인딩
@@ -421,10 +414,32 @@
       handleInput($scope);
     });
     els.$input.on('focus' + ns, function () {
-      if (getInputValue($scope).length > 0) {
+      syncClearBtn($scope);
+      openPanel($scope);
+    });
+    els.$input.on('click' + ns, function () {
+      var state = getState($scope);
+      if (!state.isOpen) openPanel($scope);
+    });
+    // ESC: 브라우저 기본동작 차단 + 패널 닫기
+    els.$input.on('keydown' + ns, function (e) {
+      if (e.keyCode !== KEY.ESC) return;
+      var state = getState($scope);
+      state.escClosing = true;
+      setState($scope, state);
+      if (state.isOpen) closePanel($scope);
+      setTimeout(function () {
+        var s = getState($scope);
+        s.escClosing = false;
+        setState($scope, s);
         syncClearBtn($scope);
-        openPanel($scope);
-      }
+      }, 0);
+    });
+
+    // 스코프 내 클릭 시 인풋 포커스 유지
+    $scope.on('mousedown' + ns, function (e) {
+      if ($(e.target).closest(SEL.INPUT).length) return;
+      e.preventDefault();
     });
 
     // 삭제버튼
@@ -476,9 +491,6 @@
     var docNs = ns + state.id;
     $(document).on('click' + docNs, function (e) {
       handleOutsideClick($scope, e);
-    });
-    $(document).on('keydown' + docNs, function (e) {
-      handleKeydown($scope, e);
     });
 
     // 리사이즈 (디바운스)

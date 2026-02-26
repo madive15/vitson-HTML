@@ -1,0 +1,77 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 문서 타입: 'quote'(견적서) | 'tax'(세금계산서) | 'bill'(구매내역서)
+  var type = locals.type || 'quote';
+  var number = locals.number || '';
+  var name = locals.name || '';
+  var dateText = locals.dateText || '';
+  var price = locals.price || '';
+  var createdLabel = locals.createdLabel || '작성일시';
+  var expireLabel = locals.expireLabel || '유효기간';
+  var createdDate = locals.createdDate || '';
+  var expireDate = locals.expireDate || '';
+  var priceList = Array.isArray(locals.priceList) ? locals.priceList : [];
+%>
+<!-- prettier-ignore -->
+
+<div class="docs-item docs-<%= type %>">
+  <div class="docs-item-content">
+    <div class="docs-item-info">
+      <% if (type === 'bill') { %>
+        <p class="docs-item-date-icon">
+          <span class="icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'calendar' }) %>
+          </span>
+          <span class="text"><%= dateText %></span>
+        </p>
+      <% } %>
+      
+      <%# 견적서, 세금계산서 출력 %>
+      <% if (type !== 'bill') { %>
+      <p class="docs-item-number"><%= number %></p>
+      <% } %>
+      
+      <%# 견적서, 구매내역서 출력 %>
+      <% if (type !== 'tax') { %>
+        <p class="docs-item-name"><%= name %></p>
+      <% } %>
+
+      <%# 구매내역서 출력 %>
+      <% if (type === 'bill') { %>
+        <p class="docs-item-price">
+          <span><%= price %></span><span>원</span>
+        </p>
+      <% } %>
+
+      <%# 견적서, 세금계산서 출력 %>
+      <% if (type !== 'bill') { %>
+      <ul class="docs-item-date">
+        <li><%= createdLabel %> : <%= createdDate %></li>
+        <li><%= expireLabel %> : <%= expireDate %></li>
+      </ul>
+      <% } %>
+    </div>
+    <%# 견적서, 세금계산서 출력 %>
+    <% if (type !== 'bill') { %>
+    <dl class="docs-item-price-list">
+      <% priceList.forEach(function(item) { %>
+        <% var totalCls = item.isTotal ? ' price-total' : ''; %>
+        <dt class="<%= totalCls %>"><%= item.label || '' %></dt>
+        <dd class="<%= totalCls %>"><%= item.value || '' %></dd>
+      <% }); %>
+    </dl>
+    <% } %>
+  </div>
+  <div class="docs-item-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+      size: 'md',
+      variant: 'outline-secondary',
+      text: '다운로드',
+      iconLeft: true,
+      iconName: 'ic-line-download',
+      className: 'docs-item-download weight-r'
+    }) %>
+  </div>
+</div>

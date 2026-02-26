@@ -24,6 +24,21 @@
   text: '텍스트 내용이 들어갑니다',  // (필수) 메인 텍스트
   list:['항목1','항목2']         // (선택) 블릿 리스트
 }) %&gt;
+
+// 추가 클래스 사용법:
+   - 상위: className: 'custom-style'
+   - li: { text: '텍스트', className: 'alerts-point' }
+&lt;%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+  theme: 'blue',
+  className: 'custom-style',
+  text: '안내 문구입니다.',
+  list: [
+    '일반 항목',
+    { text: '강조 항목', className: 'alerts-point' },
+    '일반 항목',
+    { text: '또 강조', className: 'alerts-point' },
+  ]
+}) %&gt;
             </pre>
           </code>
         </div>
