@@ -1157,6 +1157,22 @@
     var $tabBar = $('#tab-Bar');
     var $tabBtns = $tabNav.find('.tab-btn[data-target]');
     var $sections = $('.tab-section[id]');
+    // display:none 인 탭 버튼 제외, 보이는 탭만 사용
+    function isVisible($el) {
+      return $el.length && $el.css('display') !== 'none';
+    }
+    function getVisibleTabBtns() {
+      return $tabBtns.filter(function () {
+        return $(this).css('display') !== 'none';
+      });
+    }
+    function getVisibleSectionIds() {
+      var ids = [];
+      getVisibleTabBtns().each(function () {
+        ids.push($(this).data('target'));
+      });
+      return ids;
+    }
     // 다른 규격찾기 모달 열릴때 body 스크롤 class 추가
     var $body = $('body');
     var $optionModal = $('#findOtherOptionModal');
@@ -1194,6 +1210,9 @@
       if (!$tabBar.length || !$activeBtn || !$activeBtn.length) {
         return;
       }
+      if (!isVisible($activeBtn)) {
+        return;
+      }
       var left = $activeBtn.position().left;
       $tabBar.css({
         width: $activeBtn.outerWidth(),
@@ -1213,9 +1232,16 @@
       updateTabBar($targetBtn);
     }
     function getCurrentSectionId() {
+      var visibleIds = getVisibleSectionIds();
+      if (!visibleIds.length) {
+        return null;
+      }
+      var $visibleSections = $(visibleIds.map(function (id) {
+        return document.getElementById(id);
+      }).filter(Boolean));
       var baseline = getScrollTop() + getTabWrapHeight();
-      var currentId = $sections.first().attr('id');
-      $sections.each(function () {
+      var currentId = $visibleSections.first().attr('id');
+      $visibleSections.each(function () {
         var $section = $(this);
         if (getElementTop($section) <= baseline + 1) {
           currentId = $section.attr('id');
@@ -1227,11 +1253,14 @@
       return getScrollTop() + getViewportHeight() >= getScrollHeight() - 2;
     }
     function updateActiveOnScroll() {
-      if (!$sections.length) {
+      var visibleIds = getVisibleSectionIds();
+      if (!visibleIds.length) {
         return;
       }
-      var targetId = isAtBottom() ? $sections.last().attr('id') : getCurrentSectionId();
-      setActiveById(targetId);
+      var targetId = isAtBottom() ? visibleIds[visibleIds.length - 1] : getCurrentSectionId();
+      if (targetId) {
+        setActiveById(targetId);
+      }
     }
     function scrollToSection($target) {
       var targetTop = getElementTop($target) - getTabWrapHeight();
@@ -1357,6 +1386,11 @@
     });
     $(window).on('scroll', onScroll);
     $(window).on('resize', function () {
+      var $visible = getVisibleTabBtns();
+      var $active = $tabBtns.filter('.is-active');
+      if ($visible.length && (!$active.length || !isVisible($active))) {
+        setActiveById($visible.first().data('target'));
+      }
       updateShowPrice();
       updateActiveOnScroll();
       updateTabBar($tabBtns.filter('.is-active'));
@@ -1365,6 +1399,11 @@
 
     if (!$tabWrap.length || !$tabNav.length || !$tabBtns.length || !$sections.length) {
       return;
+    }
+    var $visibleBtns = getVisibleTabBtns();
+    var $activeBtn = $tabBtns.filter('.is-active');
+    if ($visibleBtns.length && (!$activeBtn.length || !isVisible($activeBtn))) {
+      setActiveById($visibleBtns.first().data('target'));
     }
     updateShowPrice();
     updateActiveOnScroll();
@@ -2459,21 +2498,25 @@
     scheduleProductsHide($scope);
   }
 
-  // 인풋 핸들러
+  // 인풋 핸들러 - 포커스 중이면 빈 값이어도 패널 유지
   function handleInput($scope) {
     syncClearBtn($scope);
-    if (getInputValue($scope).length > 0) {
+    var state = getState($scope);
+    if (state.escClosing) return;
+    var isFocused = getEls($scope).$input.is(':focus');
+    if (isFocused || getInputValue($scope).length > 0) {
       openPanel($scope);
     } else {
       closePanel($scope);
     }
   }
+
+  // 지우기 후 포커스 유지, 패널 열린 상태 유지
   function handleClearClick($scope, e) {
     e.preventDefault();
     e.stopPropagation();
     getEls($scope).$input.val('').trigger('focus');
     syncClearBtn($scope);
-    closePanel($scope);
   }
   function handleFormSubmit($scope, e) {
     e.preventDefault();
@@ -2489,15 +2532,6 @@
     if (!state.isOpen) return;
     if ($(e.target).closest($scope[0]).length) return;
     closePanel($scope);
-  }
-  function handleKeydown($scope, e) {
-    var state = getState($scope);
-    if (!state.isOpen) return;
-    if (e.keyCode === KEY.ESC) {
-      e.preventDefault();
-      closePanel($scope);
-      getEls($scope).$input.trigger('blur');
-    }
   }
 
   // 이벤트 바인딩
@@ -2515,10 +2549,32 @@
       handleInput($scope);
     });
     els.$input.on('focus' + ns, function () {
-      if (getInputValue($scope).length > 0) {
+      syncClearBtn($scope);
+      openPanel($scope);
+    });
+    els.$input.on('click' + ns, function () {
+      var state = getState($scope);
+      if (!state.isOpen) openPanel($scope);
+    });
+    // ESC: 브라우저 기본동작 차단 + 패널 닫기
+    els.$input.on('keydown' + ns, function (e) {
+      if (e.keyCode !== KEY.ESC) return;
+      var state = getState($scope);
+      state.escClosing = true;
+      setState($scope, state);
+      if (state.isOpen) closePanel($scope);
+      setTimeout(function () {
+        var s = getState($scope);
+        s.escClosing = false;
+        setState($scope, s);
         syncClearBtn($scope);
-        openPanel($scope);
-      }
+      }, 0);
+    });
+
+    // 스코프 내 클릭 시 인풋 포커스 유지
+    $scope.on('mousedown' + ns, function (e) {
+      if ($(e.target).closest(SEL.INPUT).length) return;
+      e.preventDefault();
     });
 
     // 삭제버튼
@@ -2570,9 +2626,6 @@
     var docNs = ns + state.id;
     $(document).on('click' + docNs, function (e) {
       handleOutsideClick($scope, e);
-    });
-    $(document).on('keydown' + docNs, function (e) {
-      handleKeydown($scope, e);
     });
 
     // 리사이즈 (디바운스)
@@ -8231,6 +8284,11 @@
   $(function () {
     console.log('[common] DOM ready');
     if (window.UI && window.UI.init) window.UI.init();
+
+    // pre-wrap 요소의 선행 공백·줄바꿈 제거
+    $('[data-pre-trim]').each(function () {
+      this.textContent = this.textContent.replace(/^\s+/, '');
+    });
   });
 })(window.jQuery || window.$, window);
 
@@ -9643,7 +9701,7 @@ var support_ui = __webpack_require__(2064);
   'use strict';
 
   if (!$) {
-    console.log('[home-ui] jQuery not found');
+    return;
   }
   window.UI = window.UI || {};
 
@@ -9680,20 +9738,17 @@ var support_ui = __webpack_require__(2064);
   function initMainBannerSwiper() {
     var container = document.querySelector('.js-home-main-banner-swiper');
     if (!container) {
-      console.warn('[home-ui] Banner container not found');
       return;
     }
 
     // 이미 초기화된 경우 중복 방지 (DOM 요소에 저장된 인스턴스 확인)
     var existingInstance = container[SWIPER_INSTANCE_KEY];
     if (existingInstance && typeof existingInstance.destroy === 'function') {
-      console.log('[home-ui] Swiper already initialized, skipping...');
       return;
     }
 
     // import된 Swiper 사용 (모듈 스코프에서 직접 사용)
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available');
       return;
     }
     var prevButton = container.querySelector('.banner-nav-prev');
@@ -9755,9 +9810,8 @@ var support_ui = __webpack_require__(2064);
           updatePlayPauseState(swiperInstance, toggleButton);
         });
       }
-      console.log('[home-ui] Main banner swiper initialized');
     } catch (e) {
-      console.error('[home-ui] Failed to initialize main banner swiper', e);
+      void e;
     }
   }
 
@@ -9803,7 +9857,6 @@ var support_ui = __webpack_require__(2064);
     if (swiperInstance && typeof swiperInstance.destroy === 'function') {
       swiperInstance.destroy(true, true);
       delete targetContainer[SWIPER_INSTANCE_KEY];
-      console.log('[home-ui] Main banner swiper destroyed');
     }
   }
 
@@ -9833,7 +9886,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for event banner');
       return;
     }
     containers.forEach(function (container) {
@@ -9910,16 +9962,15 @@ var support_ui = __webpack_require__(2064);
       try {
         var instance = new swiper_bundle/* default */.A(container, options);
         container[EVENT_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Event banner swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize event banner swiper', e);
+        void e;
       }
     });
   }
 
   /**
    * 브랜드 Pick Swiper 초기화
-   * - 브랜드가 3개 초과일 때만 Swiper 적용
+   * - 항상 Swiper 적용, 브랜드가 3개 이하일 때만 navigation 비활성화(숨김)
    * - 브랜드 섹션을 가로로 스와이프할 수 있도록 구성
    */
   function initBrandSwiper() {
@@ -9928,7 +9979,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for brand swiper');
       return;
     }
     containers.forEach(function (container) {
@@ -9936,12 +9986,9 @@ var support_ui = __webpack_require__(2064);
         return;
       }
 
-      // 브랜드 슬라이드 개수 확인 (3개 이하면 Swiper 미적용)
+      // 브랜드 슬라이드 개수 확인 (3개 이하면 navigation만 비활성화)
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
-      if (slideCount <= 3) {
-        return;
-      }
 
       // 이미 초기화된 경우 중복 실행 방지
       var existingInstance = container[BRAND_SWIPER_INSTANCE_KEY];
@@ -9953,6 +10000,17 @@ var support_ui = __webpack_require__(2064);
       var wrapper = container.closest('.home-brand-swiper-wrapper');
       var prevButton = wrapper ? wrapper.querySelector('.home-brand-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.home-brand-nav-next') : null;
+
+      // 3개 이하일 때는 navigation 비활성화(숨김)
+      var navConfig = slideCount <= 3 ? false : {
+        nextEl: nextButton,
+        prevEl: prevButton,
+        disabledClass: 'swiper-button-disabled'
+      };
+      if (slideCount <= 3 && wrapper) {
+        if (prevButton) prevButton.style.display = 'none';
+        if (nextButton) nextButton.style.display = 'none';
+      }
       var options = {
         slidesPerView: 3,
         spaceBetween: 24,
@@ -9960,18 +10018,13 @@ var support_ui = __webpack_require__(2064);
         slidesPerGroup: 1,
         watchSlidesProgress: true,
         a11y: false,
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-          disabledClass: 'swiper-button-disabled'
-        }
+        navigation: navConfig
       };
       try {
         var instance = new swiper_bundle/* default */.A(container, options);
         container[BRAND_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Brand swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize brand swiper', e);
+        void e;
       }
     });
   }
@@ -9987,7 +10040,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for product swiper');
       return;
     }
     containers.forEach(function (container) {
@@ -9999,8 +10051,8 @@ var support_ui = __webpack_require__(2064);
       var slides = container.querySelectorAll('.swiper-slide');
       var slideCount = slides.length;
 
-      // 슬라이드가 1개 이하면 Swiper 미적용
-      if (slideCount <= 1) {
+      // 슬라이드가 0개면 Swiper 미적용
+      if (slideCount === 0) {
         return;
       }
 
@@ -10018,6 +10070,17 @@ var support_ui = __webpack_require__(2064);
       var wrapper = container.closest('.home-product-swiper-wrapper');
       var prevButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.home-product-swiper-nav-next') : null;
+
+      // 슬라이드가 데스크톱 기준 노출 개수 이하일 때는 navigation 비활성화
+      var navConfig = slideCount <= desktopSlides ? false : {
+        nextEl: nextButton,
+        prevEl: prevButton,
+        disabledClass: 'swiper-button-disabled'
+      };
+      if (slideCount <= desktopSlides && wrapper) {
+        if (prevButton) prevButton.style.display = 'none';
+        if (nextButton) nextButton.style.display = 'none';
+      }
       var options = {
         slidesPerView: 1,
         spaceBetween: 16,
@@ -10039,18 +10102,13 @@ var support_ui = __webpack_require__(2064);
             spaceBetween: 24
           }
         },
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-          disabledClass: 'swiper-button-disabled'
-        }
+        navigation: navConfig
       };
       try {
         var instance = new swiper_bundle/* default */.A(container, options);
         container[PRODUCT_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Product swiper initialized with desktop slides:', desktopSlides);
       } catch (e) {
-        console.error('[home-ui] Failed to initialize product swiper', e);
+        void e;
       }
     });
   }
@@ -10064,7 +10122,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for legend swiper');
       return;
     }
     containers.forEach(function (container) {
@@ -10093,7 +10150,7 @@ var support_ui = __webpack_require__(2064);
       var nextButton = wrapper ? wrapper.querySelector('.legend-nav-next') : null;
       var options = {
         slidesPerView: 5,
-        spaceBetween: 16,
+        spaceBetween: 24,
         speed: 500,
         slidesPerGroup: 1,
         grid: {
@@ -10106,7 +10163,7 @@ var support_ui = __webpack_require__(2064);
           0: {
             slidesPerView: 4,
             spaceBetween: 20,
-            slidesPerGroup: 8,
+            slidesPerGroup: 1,
             grid: {
               rows: 2,
               fill: 'row'
@@ -10115,7 +10172,7 @@ var support_ui = __webpack_require__(2064);
           1280: {
             slidesPerView: 5,
             spaceBetween: 24,
-            slidesPerGroup: 10,
+            slidesPerGroup: 1,
             grid: {
               rows: 2,
               fill: 'row'
@@ -10131,9 +10188,8 @@ var support_ui = __webpack_require__(2064);
       try {
         var instance = new swiper_bundle/* default */.A(container, options);
         container[LEGEND_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Legend swiper initialized with grid');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize legend swiper', e);
+        void e;
       }
     });
   }
@@ -10150,7 +10206,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for vertical rank');
       return;
     }
     var existingInstance = container[VERTICAL_RANK_SWIPER_INSTANCE_KEY];
@@ -10181,7 +10236,7 @@ var support_ui = __webpack_require__(2064);
     }
     var RANK_SPACE_BETWEEN = 24;
 
-    // groupIndex: 0 = 1~5번, 1 = 6~10번 — 해당 그룹 높이로만 컨테이너 높이 설정
+    // groupIndex: 0 = 1~5번, 1 = 6~10번 — 컨테이너 높이 = 해당 구간 슬라이드 실제 높이 합 (active 반영 후 측정)
     function setRankSwiperHeight(groupIndex) {
       var slides = container.querySelectorAll('.swiper-slide');
       if (!slides.length) {
@@ -10192,11 +10247,15 @@ var support_ui = __webpack_require__(2064);
         for (var i = 0; i < count && startIndex + i < slides.length; i++) {
           sum += slides[startIndex + i].offsetHeight;
         }
-        return sum + (count - 1) * RANK_SPACE_BETWEEN;
+        return sum + Math.max(0, count - 1) * RANK_SPACE_BETWEEN;
       }
-      var start = groupIndex === 0 ? 0 : 5;
-      var count = groupIndex === 0 ? 5 : Math.min(5, slides.length - 5);
-      var height = count > 0 ? groupHeight(start, count) : groupHeight(0, 5);
+      var height;
+      if (groupIndex === 0) {
+        height = groupHeight(0, 5);
+      } else {
+        // 6~10번(인덱스 5~9) 5개 슬라이드 실제 높이 합 (active 적용된 상태로 측정)
+        height = groupHeight(5, 5);
+      }
       container.style.height = height + 'px';
     }
     var options = {
@@ -10216,6 +10275,20 @@ var support_ui = __webpack_require__(2064);
         },
         slideChange: function (swiper) {
           setActiveRank(swiper.activeIndex);
+          // 2그룹(6~10)에서 active 변경 시 높이 재계산 (DOM 반영 후 측정)
+          if (swiper.activeIndex >= 5) {
+            requestAnimationFrame(function () {
+              setRankSwiperHeight(1);
+            });
+          }
+        },
+        slideChangeTransitionEnd: function (swiper) {
+          // 2그룹(6~10번)으로 넘어간 후 전환 완료 시점에 6~10 높이 재계산 적용
+          if (swiper.activeIndex >= 5) {
+            requestAnimationFrame(function () {
+              setRankSwiperHeight(1);
+            });
+          }
         }
       }
     };
@@ -10280,9 +10353,8 @@ var support_ui = __webpack_require__(2064);
           setRankSwiperHeight(instance.activeIndex >= 5 ? 1 : 0);
         }, 100);
       });
-      console.log('[home-ui] Vertical rank swiper initialized');
     } catch (e) {
-      console.error('[home-ui] Failed to initialize vertical rank swiper', e);
+      void e;
     }
   }
 
@@ -10297,7 +10369,6 @@ var support_ui = __webpack_require__(2064);
       return;
     }
     if (!swiper_bundle/* default */.A) {
-      console.error('[home-ui] Swiper is not available for line ad banner');
       return;
     }
     containers.forEach(function (container) {
@@ -10344,16 +10415,13 @@ var support_ui = __webpack_require__(2064);
       try {
         var instance = new swiper_bundle/* default */.A(container, options);
         container[LINE_AD_SWIPER_INSTANCE_KEY] = instance;
-        console.log('[home-ui] Line ad banner swiper initialized');
       } catch (e) {
-        console.error('[home-ui] Failed to initialize line ad banner swiper', e);
+        void e;
       }
     });
   }
   window.UI.homeUi = {
     init: function () {
-      console.log('[home-ui] init');
-
       // DOM 로드 후 Swiper 초기화
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {

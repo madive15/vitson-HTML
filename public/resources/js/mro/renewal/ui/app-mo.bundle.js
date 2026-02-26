@@ -1055,6 +1055,18 @@
       });
     });
   }
+
+  /**
+   * @description pre-wrap 요소의 선행 공백·줄바꿈 제거
+   * @scope [data-pre-trim]
+   * @note 서버 렌더링 시 태그와 텍스트 사이 줄바꿈이 그대로 노출되는 현상 보정
+   */
+  function trimPreContent() {
+    var targets = document.querySelectorAll('[data-pre-trim]');
+    targets.forEach(function (el) {
+      el.textContent = el.textContent.replace(/^\s+/, '');
+    });
+  }
   setDeviceClass();
   setVh();
   var rafId = null;
@@ -1077,9 +1089,13 @@
   // ---
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initScrollEnd);
+    document.addEventListener('DOMContentLoaded', function () {
+      initScrollEnd();
+      trimPreContent();
+    });
   } else {
     initScrollEnd();
+    trimPreContent();
   }
 })(window, document);
 

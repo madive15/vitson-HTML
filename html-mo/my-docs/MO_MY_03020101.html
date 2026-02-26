@@ -17,7 +17,7 @@
   <!-- [iOS] 전화/주소/메일 자동 링크 감지로 밑줄이 생기는 현상 완화(format-detection) -->
   <meta name="format-detection" content="telephone=no,address=no,email=no" />
 
-  <title>설문 조사</title>
+  <title>견적서 조회</title>
   <!-- favicon -->
   <link rel="shortcut icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="../../public/resources/img/mro/favicon/favicon.ico" type="image/x-icon" />
@@ -44,7 +44,7 @@
     <!-- S: vm-wrapper -->
     <section class="vm-wrapper">
       <!-- S: vm-wrap -->
-      <div class="vm-wrap wrap-my-survey">
+      <div class="vm-wrap wrap-my-docs">
         <!-- S: vm-content-wrap -->
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
@@ -66,7 +66,7 @@
   </a>
   
  
-  <p class="vm-header-title" data-header-title>설문 조사</p>
+  <p class="vm-header-title" data-header-title>견적서 조회</p>
 
 
   <div class="vm-header-actions">
@@ -107,8 +107,8 @@
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
-            <div class="vm-main-content main-content-my-survey">
-              <div class="vm-mypage-survey">
+            <div class="vm-main-content main-content-my-docs">
+              <div class="vm-mypage-docs">
                 <!-- 필터 -->
                 <!-- prettier-ignore -->
                 <!-- prettier-ignore -->
@@ -123,13 +123,19 @@
 
 <!-- prettier-ignore -->
 
-<section class="vm-mypage-survey-filter">
-  <h2 class="sr-only">설문조사 검색</h2>
-  <div class="survey-filter-toolbar">
-    <div class="survey-filter-toolbar-row">
-      <p class="sr-only">설문 상태</p>
-      <!-- prettier-ignore -->
-      
+<section class="vm-mypage-docs-filter">
+  <h2 class="sr-only">조회 기간/연도 검색</h2>
+
+  
+  
+
+
+  <div class="docs-filter-toolbar">
+    <div class="docs-filter-toolbar-row">
+      <p class="docs-filter-toolbar-label">조회 기간</p>
+      <div class="docs-filter-toolbar-select select-period">
+        <!-- prettier-ignore -->
+        
 
 
 
@@ -137,7 +143,7 @@
 <div
   class="vits-select is-selected"
   data-vits-select
-   data-select-id="survey-filter-select" 
+   data-select-id="docs-filter-select" 
   
    data-vits-select-portal 
    data-max-height="50vh" 
@@ -153,8 +159,8 @@
     <span
       class="vits-select-value"
       data-vits-select-value
-      data-placeholder="설문 상태"
-    >전체</span>
+      data-placeholder="조회 기간"
+    >전월</span>
 
     <span class="vits-select-icon" aria-hidden="true">
       <i class="ic ic-arrow-down" aria-hidden="true"></i>
@@ -172,7 +178,7 @@
            
         aria-selected="true"
         
-      >전체</li>
+      >전월</li>
     
       <li
         class="vits-select-option"
@@ -182,7 +188,7 @@
            
         aria-selected="false"
         
-      >진행중</li>
+      >당월</li>
     
       <li
         class="vits-select-option"
@@ -192,36 +198,58 @@
            
         aria-selected="false"
         
-      >종료</li>
+      >6개월</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >12개월</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="4"
+           
+        aria-selected="false"
+        
+      >기간 설정</li>
     
   </ul>
 
   
-    <input type="hidden" name="survey-filter-select" value="0" data-vits-select-hidden />
+    <input type="hidden" name="docs-filter-select" value="0" data-vits-select-hidden />
   
 </div>
 
-    </div>
-    <div class="survey-filter-toolbar-row">
-      <p class="sr-only">조회 기간</p>
-      <!-- prettier-ignore -->
-      
+      </div>
+
+      <div class="docs-filter-toolbar-datepicker">
+        <!-- prettier-ignore -->
+        
+        <!-- prettier-ignore -->
+        
 
 
 <div class="vits-kendo-range-picker size-md" 
-     id="vm-survey-filter-daterange"
+     id="vm-docs-filter-daterange"
      data-ui="kendo-range-picker"
-     data-opt="{&amp;quot;max&amp;quot;:&amp;quot;2026-02-26T00:07:39.006Z&amp;quot;,&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
+     data-opt="{&amp;quot;format&amp;quot;:&amp;quot;yyyy.MM.dd&amp;quot;,&amp;quot;separator&amp;quot;:&amp;quot; ~ &amp;quot;,&amp;quot;placeholder&amp;quot;:&amp;quot;시작일 ~ 종료일&amp;quot;}">
     
     <input type="hidden" 
            class="js-start-date" 
            name="startDate" 
-           value="">
+           value="2026.01.01">
     
     <input type="hidden" 
            class="js-end-date" 
            name="endDate" 
-           value="">
+           value="2026.01.31">
     
     <span class="picker-input k-picker k-datepicker">
         <input type="text" 
@@ -244,17 +272,106 @@
         <div class="js-kendo-calendar"></div>
     </div>
 </div>
+      </div>
+    </div>
+    <div class="docs-filter-toolbar-row">
+      <p class="docs-filter-toolbar-label">조회 연도</p>
+      <div class="docs-filter-toolbar-select select-year">
+        <!-- prettier-ignore -->
+        
+
+
+
+
+<div
+  class="vits-select is-selected"
+  data-vits-select
+   data-select-id="docs-filter-year-select" 
+  
+   data-vits-select-portal 
+   data-max-height="50vh" 
+>
+  <button
+    type="button"
+    class="vits-select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-vits-select-trigger
+    
+  >
+    <span
+      class="vits-select-value"
+      data-vits-select-value
+      data-placeholder="조회 연도"
+    >2026년</span>
+
+    <span class="vits-select-icon" aria-hidden="true">
+      <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+    </span>
+  </button>
+
+  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
+    
+      <li
+        class="vits-select-option vits-select-selected"
+        role="option"
+        tabindex="-1"
+        data-value="0"
+           
+        aria-selected="true"
+        
+      >2026년</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="1"
+           
+        aria-selected="false"
+        
+      >2025년</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="2"
+           
+        aria-selected="false"
+        
+      >2024년</li>
+    
+      <li
+        class="vits-select-option"
+        role="option"
+        tabindex="-1"
+        data-value="3"
+           
+        aria-selected="false"
+        
+      >2023년</li>
+    
+  </ul>
+
+  
+    <input type="hidden" name="docs-filter-year-select" value="0" data-vits-select-hidden />
+  
+</div>
+
+      </div>
     </div>
   </div>
-  <div class="survey-filter-actions">
+  <div class="docs-filter-actions">
     <!-- prettier-ignore -->
     
 
 
 <button
-  type="survey"
+  type="docs"
   
-  class="vits-btn-lg-p vits-btn-outline-tertiary icon-left survey-filter-reset"
+  class="vits-btn-lg-p vits-btn-outline-tertiary icon-left docs-filter-reset"
   
   
   >
@@ -274,9 +391,9 @@
 
 
 <button
-  type="survey"
+  type="docs"
   
-  class="vits-btn-lg-p vits-btn-secondary  survey-filter-search"
+  class="vits-btn-lg-p vits-btn-secondary  docs-filter-search"
   
   
   >
@@ -293,224 +410,251 @@
 
 
 
-                <!-- [D] 설문 조사 1건 이상 -->
-                <div class="vm-mypage-survey-list">
-                  <div class="survey-items">
-                     
-                    <div class="survey-item">
-                      <div class="survey-item-head">
-                        <p class="survey-item-title">배송 만족도 조사 2026년 1월</p>
-                        <!-- prettier-ignore -->
-                        <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-blue">진행중</span>
-
-
-                      </div>
-                      <div class="survey-item-body">
-                        <div class="survey-item-content">
-                          <p class="survey-item-date">2026-1-29 ~ 2026-02-10</p>
-                          <div class="survey-item-stars">
-                            <div class="star-rating">
-                              <div
-                                class="star-stars"
-                                role="img"
-                                aria-label="별점 0점 만점 5점"
-                              >
-                                <div class="star-track">
-                                  <span class="star-layer star-layer-gray"></span>
-                                  <span class="star-layer star-layer-fill" style="width: 0.00%"></span>
-                                  <span class="star-layer star-layer-shape"></span>
-                                </div>
-                              </div>
-                              <span class="star-value">
-                                <span class="star-score">-</span>
-                                <span class="star-sep"></span>
-                                <span class="star-max">5</span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="survey-item-actions">
-                          <!-- prettier-ignore -->
-                          
-
-
-<button
-  type="button"
-  
-  class="vits-btn-md vits-btn-outline-secondary icon-left survey-list-item-button"
-  
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-document-paper" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">설문보기</span>
-
-  
-</button>
-
-                        </div>
-                      </div>
+                <div class="vm-mypage-docs-group">
+                  <!-- [D] 견적서 1건 이상 -->
+                  <div class="vm-mypage-docs-list">
+                    <div class="vm-mypage-docs-controls">
+                      <p class="docs-item-count"><span>총</span><span class="count-total">3</span><span>개</span></p>
                     </div>
-                     
-                    <div class="survey-item">
-                      <div class="survey-item-head">
-                        <p class="survey-item-title">배송 만족도 조사 2025년 12월</p>
-                        <!-- prettier-ignore -->
-                        <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-gray">종료</span>
-
-
-                      </div>
-                      <div class="survey-item-body">
-                        <div class="survey-item-content">
-                          <p class="survey-item-date">2025-12-29 ~ 2026-01-10</p>
-                          <div class="survey-item-stars">
-                            <div class="star-rating">
-                              <div
-                                class="star-stars"
-                                role="img"
-                                aria-label="별점 2.67점 만점 5점"
-                              >
-                                <div class="star-track">
-                                  <span class="star-layer star-layer-gray"></span>
-                                  <span class="star-layer star-layer-fill" style="width: 53.40%"></span>
-                                  <span class="star-layer star-layer-shape"></span>
-                                </div>
-                              </div>
-                              <span class="star-value">
-                                <span class="star-score">2.67</span>
-                                <span class="star-sep"></span>
-                                <span class="star-max">5</span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="survey-item-actions">
-                          <!-- prettier-ignore -->
-                          
-
-
-<button
-  type="button"
-  
-  class="vits-btn-md vits-btn-outline-secondary icon-left survey-list-item-button"
-  
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-document-paper" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">설문보기</span>
-
-  
-</button>
-
-                        </div>
-                      </div>
-                    </div>
-                     
-                    <div class="survey-item">
-                      <div class="survey-item-head">
-                        <p class="survey-item-title">배송 만족도 조사 2025년 11월</p>
-                        <!-- prettier-ignore -->
-                        <!-- prettier-ignore -->
-
-
-
-<span class="vits-general-label is-general-gray">종료</span>
-
-
-                      </div>
-                      <div class="survey-item-body">
-                        <div class="survey-item-content">
-                          <p class="survey-item-date">2025-11-29 ~ 2025-12-10</p>
-                          <div class="survey-item-stars">
-                            <div class="star-rating">
-                              <div
-                                class="star-stars"
-                                role="img"
-                                aria-label="별점 3.45점 만점 5점"
-                              >
-                                <div class="star-track">
-                                  <span class="star-layer star-layer-gray"></span>
-                                  <span class="star-layer star-layer-fill" style="width: 69.00%"></span>
-                                  <span class="star-layer star-layer-shape"></span>
-                                </div>
-                              </div>
-                              <span class="star-value">
-                                <span class="star-score">3.45</span>
-                                <span class="star-sep"></span>
-                                <span class="star-max">5</span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="survey-item-actions">
-                          <!-- prettier-ignore -->
-                          
-
-
-<button
-  type="button"
-  
-  class="vits-btn-md vits-btn-outline-secondary icon-left survey-list-item-button"
-  
-  
-  >
-  
-    <span class="icon">
-      <i class="ic ic-document-paper" aria-hidden="true"></i>
-    </span>
-  
-
-  <span class="text">설문보기</span>
-
-  
-</button>
-
-                        </div>
-                      </div>
-                    </div>
-                    
-                  </div>
-                </div>
-
-                <!-- [D] 설문 조사 1건 미만 -->
-                <div class="vm-mypage-survey-empty" style="display: none">
-                  <!-- prettier-ignore -->
-                  
+                    <div class="docs-items">
+                      <!-- prettier-ignore -->
+                      
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
 
 <!-- prettier-ignore -->
 
+<div class="docs-item docs-quote">
+  <div class="docs-item-content">
+    <div class="docs-item-info">
+      
+      
+      
+      
+      <p class="docs-item-number">QT-20241215-001</p>
+      
+      
+      
+      
+        <p class="docs-item-name">프리미엄 사무용 의자 외 2건(상품명) 프리미엄 사무용 의자 외 2건(상품명)</p>
+      
 
-<section class="vits-empty-state" data-ui="empty-state">
-  <div class="vits-empty-state-content">
-    <div class="vits-empty-state-text">
-      <h2 class="vits-empty-state-title">조회된 설문조사가 없습니다</h2>
+      
+      
+
+      
+      
+      <ul class="docs-item-date">
+        <li>작성일시 : 2024.12.15 13:22:10</li>
+        <li>유효기간 : 2024.12.22</li>
+      </ul>
       
     </div>
-    <div class="vits-empty-state-icon" aria-hidden="true">
-      <i class="ic ic-document-paper" aria-hidden="true"></i>
-
-    </div>
+    
+    
+    <dl class="docs-item-price-list">
+      
+        
+        <dt class="">공급가</dt>
+        <dd class="">418,000원</dd>
+      
+        
+        <dt class="">부가세</dt>
+        <dd class="">41,800원</dd>
+      
+        
+        <dt class=" price-total">합계</dt>
+        <dd class=" price-total">459,800원</dd>
+      
+    </dl>
+    
   </div>
-  
-</section>
+  <div class="docs-item-actions">
+    <!-- prettier-ignore -->
+    
 
+
+<button
+  type="quote"
+  
+  class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
+  
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-line-download" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">다운로드</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+                      
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+<!-- prettier-ignore -->
+
+<div class="docs-item docs-quote">
+  <div class="docs-item-content">
+    <div class="docs-item-info">
+      
+      
+      
+      
+      <p class="docs-item-number">QT-20250103-047</p>
+      
+      
+      
+      
+        <p class="docs-item-name">2025년 1분기 사무환경 개선을 위한 프리미엄 인체공학 사무용 의자(메쉬백/요추지지대/높이조절/팔걸이포함) 외 15건</p>
+      
+
+      
+      
+
+      
+      
+      <ul class="docs-item-date">
+        <li>작성일시 : 2025.01.03 09:15:33</li>
+        <li>유효기간 : 2025.01.10</li>
+      </ul>
+      
+    </div>
+    
+    
+    <dl class="docs-item-price-list">
+      
+        
+        <dt class="">공급가</dt>
+        <dd class="">2,340,000원</dd>
+      
+        
+        <dt class="">부가세</dt>
+        <dd class="">234,000원</dd>
+      
+        
+        <dt class=" price-total">합계</dt>
+        <dd class=" price-total">2,574,000원</dd>
+      
+    </dl>
+    
+  </div>
+  <div class="docs-item-actions">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="quote"
+  
+  class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
+  
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-line-download" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">다운로드</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+                      
+                      <!-- prettier-ignore -->
+                      
+<!-- prettier-ignore -->
+
+<!-- prettier-ignore -->
+
+<div class="docs-item docs-quote">
+  <div class="docs-item-content">
+    <div class="docs-item-info">
+      
+      
+      
+      
+      <p class="docs-item-number">QT-20250218-012</p>
+      
+      
+      
+      
+        <p class="docs-item-name">모니터 받침대 및 키보드 트레이 세트</p>
+      
+
+      
+      
+
+      
+      
+      <ul class="docs-item-date">
+        <li>작성일시 : 2025.02.18 14:05:50</li>
+        <li>유효기간 : 2025.02.25</li>
+      </ul>
+      
+    </div>
+    
+    
+    <dl class="docs-item-price-list">
+      
+        
+        <dt class="">공급가</dt>
+        <dd class="">87,000원</dd>
+      
+        
+        <dt class="">부가세</dt>
+        <dd class="">8,700원</dd>
+      
+        
+        <dt class=" price-total">합계</dt>
+        <dd class=" price-total">95,700원</dd>
+      
+    </dl>
+    
+  </div>
+  <div class="docs-item-actions">
+    <!-- prettier-ignore -->
+    
+
+
+<button
+  type="quote"
+  
+  class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
+  
+  
+  >
+  
+    <span class="icon">
+      <i class="ic ic-line-download" aria-hidden="true"></i>
+    </span>
+  
+
+  <span class="text">다운로드</span>
+
+  
+</button>
+
+  </div>
+</div>
+
+                      
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -623,27 +767,16 @@
     <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
     <script>
       $(function () {
-        var type = new URLSearchParams(location.search).get('type');
-
-        // type=empty: 빈 상태
-        if (type === 'empty') {
-          $('.vm-mypage-survey-list').hide();
-          $('.vm-mypage-survey-empty').show();
-        } else {
-          $('.vm-mypage-survey-list').show();
-          $('.vm-mypage-survey-empty').hide();
-        }
-
-        // 설문 필터 초기화
-        $('.survey-filter-reset').on('click', function () {
-          // datepicker reset - 전용 API 사용
-          var picker = VmKendoRangePicker.getInstance('#vm-survey-filter-daterange');
+        // 필터 초기화
+        $('.docs-filter-reset').on('click', function () {
+          // datepicker reset
+          var picker = VmKendoRangePicker.getInstance('#vm-docs-filter-daterange');
           if (picker) picker.reset();
 
           // select 초기화 (전체 = '0')
-          var $select = $('[data-select-id="survey-filter-select"]').closest('[data-vits-select]');
+          var $select = $('[data-select-id="docs-filter-select"]').closest('[data-vits-select]');
           $select.find('[data-vits-select-value]').text('전체');
-          $select.addClass('is-selected');
+          $select.removeClass('is-selected');
           $select.find('[data-value]').each(function () {
             var isSelected = $(this).data('value') === '0';
             $(this)
@@ -651,6 +784,18 @@
               .attr('aria-selected', isSelected ? 'true' : 'false');
           });
           $select.find('[data-vits-select-hidden]').val('0');
+
+          // 조회연도 초기화 (전체 = '0')
+          var $yearSelect = $('[data-select-id="docs-filter-year-select"]').closest('[data-vits-select]');
+          $yearSelect.find('[data-vits-select-value]').text('전체');
+          $yearSelect.removeClass('is-selected');
+          $yearSelect.find('[data-value]').each(function () {
+            var isSelected = $(this).data('value') === '0';
+            $(this)
+              .toggleClass('vits-select-selected', isSelected)
+              .attr('aria-selected', isSelected ? 'true' : 'false');
+          });
+          $yearSelect.find('[data-vits-select-hidden]').val('0');
         });
       });
     </script>
