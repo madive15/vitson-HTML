@@ -1,0 +1,40 @@
+// -----------------------------------------------------------------------------
+// components-mo/_label.scss
+// - 모바일 라벨 공통 스타일 정의.
+// -----------------------------------------------------------------------------
+
+@use 'sass:list';
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+.vits-product {
+  &-flag {
+    height: fn.rem(20);
+
+    @include typo.typography('b4r');
+    line-height: normal;
+  }
+
+  &-promo {
+    &-badge.is-free-ship {
+      height: fn.rem(20);
+
+      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+      line-height: normal;
+    }
+  }
+}
+
+/* vits-general-label : 모바일 용으로 재정의 (높이값 , 폰트사이즈) */
+.vits-general-label {
+  min-height: fn.rem(20);
+
+  @include typo.typography('b4r');
+  line-height: normal;
+}

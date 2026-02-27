@@ -1,0 +1,87 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '공통 알림 모달'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-auth-login">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'nav-bar-logo' }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-auth-login">
+              <section class="vm-login-content vm-signup">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="terms"
+                  onclick="VmKendoWindow.open('modal1')"
+                >
+                  <span class="text">공통 알림 모달 (버튼 두개)</span>
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="terms"
+                  onclick="VmKendoWindow.open('modal2')"
+                >
+                  <span class="text">공통 알림 모달 (버튼 한개만)</span>
+                </button>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal1 = { 
+          id: 'modal1', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '비츠온엠알오',                  
+          contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_alert.ejs`,
+          buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] 
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal1) %>
+
+        <!-- prettier-ignore -->
+        <% const modal2 = { 
+          id: 'modal2', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '비츠온엠알오',                  
+          contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_alert.ejs`,
+          buttons: [{ text: '확인', variant: 'primary', action: 'close' }] 
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

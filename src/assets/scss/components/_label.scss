@@ -180,7 +180,7 @@
     flex-shrink: 0;
     height: fn.rem(18);
     padding: 0 map.get(var.$unit, 4);
-    line-height: normal;
+    line-height: 1.2;
     border-radius: map.get(var.$radius, 'sm');
 
     // modifier별 토큰 맵
@@ -188,6 +188,7 @@
       today: (
         text: map.get(color.$text-status, 'brand-sub'),
         bg: map.get(color.$layout-status, 'brand-bg-sub'),
+        icon: map.get(color.$icon-colors, 'primary'),
         hasicon: true
       ),
       tomorrow: (
@@ -216,7 +217,7 @@
         @if map.get($opt, hasicon) == true {
           .icon {
             @include icon.ic-size(map.get(var.$unit, 12));
-            color: map.get($opt, text);
+            color: map.get($opt, icon);
           }
         }
       }
@@ -279,6 +280,54 @@
     flex-shrink: 0;
     margin-left: map.get(var.$unit, 8);
     color: map.get(color.$icon-neutral, 'secondary');
+
+    &.left {
+      margin-right: map.get(var.$unit, 8);
+      margin-left: 0;
+    }
+  }
+
+  &.mobile-chip-file {
+    height: map.get(var.$unit, 36);
+    background: color.$color-white;
+    border-color: map.get(color.$button-ghost-tertiary, 'ghost-border-tertiary-default');
+
+    .icon {
+      width: map.get(var.$unit, 20);
+      height: map.get(var.$unit, 20);
+    }
+
+    .img {
+      @include icon.ic-size(var.$mo-section-gap);
+      @include mx.img-fit;
+      box-sizing: content-box;
+      flex-shrink: 0;
+      padding: 0 map.get(var.$unit, 8) 0 map.get(var.$unit, 4);
+    }
+
+    &.text-bold .text {
+      font-weight: 600;
+      color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default');
+    }
+
+    &.type-order {
+      flex-grow: 1;
+      min-width: 0;
+      height: map.get(var.$unit, 32);
+      padding: 0 map.get(var.$unit, 8);
+      background: map.get(color.$layout-surf, 'sunken');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'secondary');
+
+      .text.name {
+        margin-right: auto;
+        font-size: fn.rem(12);
+        color: map.get(color.$text-colors, 'tertiary');
+      }
+
+      .icon {
+        @include icon.ic-size(var.$mo-section-gap);
+      }
+    }
   }
 }
 
@@ -292,7 +341,7 @@
   justify-content: center;
   min-height: fn.rem(18);
   padding: 0 map.get(var.$unit, 4);
-  line-height: 1.4;
+  line-height: 1.2;
   white-space: nowrap;
   border-radius: map.get(var.$radius, 'sm');
 
@@ -307,8 +356,8 @@
   }
 
   &.is-general-green {
-    color: map.get(color.$text-status, 'success-sub');
-    background-color: map.get(color.$layout-status, 'success-bg-default');
+    color: map.get(color.$text-status, 'success');
+    background-color: map.get(color.$layout-status, 'success-bg-sub');
   }
 
   &.is-general-gray {

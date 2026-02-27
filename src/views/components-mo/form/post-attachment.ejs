@@ -1,0 +1,20 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _fileNames = typeof fileNames !== 'undefined' ? fileNames : [];
+%>
+
+<div class="vm-post-attachment">
+  <p class="attachment-title">첨부파일</p>
+  <div class="attachment-items">
+    <% _fileNames.forEach(function(file) { %>
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/label/chip-file.ejs`, {
+        filename: file,
+        removable: false,
+        iconLeft: 'line-download',
+        addClass: 'mobile-chip-file text-bold'
+      }) %>
+    <% }) %>
+  </div>
+</div>

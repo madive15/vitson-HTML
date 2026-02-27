@@ -1,0 +1,136 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const archiveList = [
+    { name: '2026년 1월 제품 카탈로그', date: '2026-01-15' },
+    { name: '안전용품 규격 가이드 v2.0', date: '2026-01-08' },
+    { name: '2025년 4분기 신제품 안내서', date: '2025-12-20' },
+    { name: '전선 및 케이블 제품 스펙 자료', date: '2025-12-05' },
+    { name: '산업용 마스크 인증서류 모음', date: '2025-11-18' },
+    { name: '2025년 하반기 가격표', date: '2025-11-01' },
+    { name: '작업 안전화 선택 가이드', date: '2025-10-14' },
+    { name: '소방용품 제품 카탈로그 2025', date: '2025-09-30' },
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '자료실-목록'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-support">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '자료실' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-support">
+              <div class="vm-mypage-support">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/mypage/support-nav.ejs`, { 
+                  currentTab: 3 
+                }) %>
+                <div class="vm-mypage-support-panel panel-pd-zero">
+                  <div class="vm-mypage-support-archive">
+                    <div class="support-archive-filter">
+                      <div class="filter-select">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/select.ejs`, {
+                          id: 'archive-search-type',
+                          name: 'archive-search-type',
+                          placeholder: '선택',
+                          options: [
+                            { value: 'title', text: '제목' },
+                            { value: 'content', text: '내용' },
+                          ],
+                          value: (typeof size !== 'undefined' && size !== null) ? String(size) : 'title',
+                          disabled: false,
+                          className: 'size-l'
+                        }) %>
+                      </div>
+
+                      <div class="filter-search">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/form/input-search.ejs`, {
+                          idPrefix: 'archive-search',
+                          action: '/archive-search',
+                          name: 'archive-search',
+                          placeholder: '검색어를 입력해주세요.',
+                          addClassName: 'size-xl'
+                        }) %>
+                      </div>
+                    </div>
+
+                    <!-- [D] 시국세 목록 -->
+                    <div class="support-archive-items">
+                      <% archiveList.forEach(function(item) { %>
+                      <a href="#!" class="support-archive-item">
+                        <p class="support-archive-item-name"><%= item.name %></p>
+                        <p class="support-archive-item-date"><%= item.date %></p>
+                      </a>
+                      <% }) %>
+                    </div>
+
+                    <!-- [D] No Data -->
+                    <div class="vm-mypage-inquiry-empty" style="display: none">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'document-paper',
+                        title: '등록된 게시글이 없습니다',
+                      }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var type = new URLSearchParams(location.search).get('type');
+
+        // type=empty: 빈 상태
+        if (type === 'empty') {
+          $('.support-archive-items').hide();
+          $('.vm-mypage-inquiry-empty').show();
+        } else {
+          $('.support-archive-items').show();
+          $('.vm-mypage-inquiry-empty').hide();
+        }
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

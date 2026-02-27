@@ -5,10 +5,29 @@
   const lastDot = _filename.lastIndexOf('.');
   const _name = lastDot > 0 ? _filename.substring(0, lastDot) : _filename;
   const _ext = lastDot > 0 ? _filename.substring(lastDot) : '';
+
+  // 좌측 아이콘 이름 (falsy면 미노출)
+  const _iconLeft = typeof iconLeft !== 'undefined' ? iconLeft : '';
+  // 삭제(x) 버튼 노출 여부
+  const _removable = typeof removable !== 'undefined' ? removable : true;
+  // 최상위 추가 클래스
+  const _addClass = typeof addClass !== 'undefined' ? addClass : '';
+
+  // 좌측 이미지 경로 (falsy면 미노출)
+  const _imgLeft = typeof imgLeft !== 'undefined' ? imgLeft : '';
 %>
 
-<button type="button" class="vits-chip-file">
+<button type="button" class="vits-chip-file<%= _addClass ? ' ' + _addClass : '' %>">
+  <% if (_iconLeft) { %>
+  <span class="icon left"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: _iconLeft }) %> </span>
+  <% } %> <% if (_imgLeft) { %>
+  <span class="img">
+    <img src="<%= _imgLeft %>" alt="" aria-hidden="true" />
+  </span>
+  <% } %>
   <span class="text name"><%= _name %></span>
   <span class="text ext"><%= _ext %></span>
+  <% if (_removable) { %>
   <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %> </span>
+  <% } %>
 </button>

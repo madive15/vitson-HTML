@@ -1,0 +1,191 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '1:1 문의-작성'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-support">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '1:1 문의' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-support">
+              <div class="vm-mypage-support">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/mypage/support-nav.ejs`, { 
+                  currentTab: 2 
+                }) %>
+                <div class="vm-mypage-support-panel">
+                  <div class="vm-mypage-inquiry-form">
+                    <form action="" class="inquiry-form">
+                      <div class="inquiry-form-rows">
+                        <!-- S: 문의유형 -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label is-required">문의유형</span>
+                          <div class="inquiry-form-select">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/select.ejs`, {
+                              id: 'inquiry-type',
+                              name: 'inquiry-type',
+                              placeholder: '문의유형을 선택해주세요.',
+                              options: [
+                                { value: 'delivery', text: '배송' },
+                                { value: 'product', text: '상품문의' },
+                                { value: 'order', text: '주문관련' },
+                                { value: 'document', text: '증빙서류관련' },
+                                { value: 'member', text: '회원정보관련' },
+                                { value: 'etc', text: '기타' },
+                              ],
+                              value: 'l-0',
+                              disabled: false,
+                              className: '',
+                              className: 'size-l'
+                            }) %>
+                          </div>
+                        </div>
+                        <!-- E: 문의유형 -->
+
+                        <!-- S: 상세유형 -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label is-required">상세유형</span>
+                          <div class="inquiry-form-select">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/select.ejs`, {
+                              id: 'size-l',
+                              name: 'size',
+                              placeholder: '상세유형을 선택해주세요.',
+                              options: [
+                                { value: 's-1', text: '배송일정' },
+                                { value: 's-2', text: '송장번호' },
+                              ],
+                              value: '',
+                              disabled: false,
+                              className: '',
+                              className: 'size-l'
+                            }) %>
+                          </div>
+                        </div>
+                        <!-- E: 상세유형 -->
+
+                        <!-- S: 주문정보 없을 때 -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label">주문정보</span>
+                          <div class="inquiry-form-order-info">
+                            <!-- prettier-ignore -->
+                            <!-- < %- include(`${_src}/views/components/label/chip-file.ejs`, {
+                              filename: 'LED 트리구 96구 연결형(DC24V)LED 트리구 96구 연결형(DC24V)',
+                              imgLeft: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png',
+                              addClass: 'mobile-chip-file type-order'
+                            }) %> -->
+
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/button/button.ejs`, {
+                              size:'sm', variant: 'tertiary', text: '주문조회'
+                            }) %>
+                          </div>
+                        </div>
+                        <!-- E: 주문정보 -->
+
+                        <!-- S: 주문정보 있을 때 -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label">주문정보</span>
+                          <div class="inquiry-form-order-info">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/label/chip-file.ejs`, {
+                              filename: 'LED 트리구 96구 연결형(DC24V)LED 트리구 96구 연결형(DC24V)',
+                              imgLeft: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png',
+                              addClass: 'mobile-chip-file type-order'
+                            }) %>
+
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/button/button.ejs`, {
+                              size:'sm', variant: 'tertiary', text: '주문조회'
+                            }) %>
+                          </div>
+                        </div>
+                        <!-- E: 주문정보 -->
+
+                        <!-- S: 제목 -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label is-required">제목</span>
+                          <div class="inquiry-form-field">
+                            <!-- prettier-ignore -->
+                            <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                            id: 'inquiry-title',
+                            name: 'inquiryTitle',
+                            label: '제목',
+                            placeholder: '제목을 입력해주세요.',
+                            required: true,
+                            rootClass: 'size-xl',
+                          }) %>
+                          </div>
+                        </div>
+                        <!-- E: 제목 -->
+
+                        <!-- S: 내용 (에디터 영역 placeholder) -->
+                        <div class="inquiry-form-row">
+                          <span class="inquiry-form-label is-required">내용</span>
+                          <div
+                            class="inquiry-form-editor"
+                            style="border: 1px solid #ddd; height: 300px; background: #fff"
+                          >
+                            에디터 마크업 미적용, 영역만 표시
+                          </div>
+                        </div>
+                        <!-- E: 내용 -->
+                      </div>
+
+                      <!-- [D] 등록하기 버튼
+                              ㄴ 디폴트 : 비활성 
+                              ㄴ 필수값  충족 시 활성(제목/내용/연락처 + 첨부파일 제한 통과) 
+                              ㄴ “문의 등록되었습니다.” 컨펌창 안내 후 이전 화면 (상품 상세) 이동
+                     -->
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/button/button.ejs`, { 
+                      size: 'xl',
+                      variant: 'primary', 
+                      text: '등록하기',
+                      disabled: true,
+                    }) %>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

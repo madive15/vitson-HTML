@@ -591,6 +591,21 @@
     white-space: pre-line;
   }
 
+  &-contact {
+    @include mx.flex($align: center);
+    gap: map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 24) 0;
+    border-bottom: 1px solid map.get(color.$layout-surf, 'sunken');
+
+    .contact-label {
+      @include typo.typography('b3b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    .contact-value {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+  }
+
   &-reply {
     padding: map.get(var.$unit, 36);
     margin-top: map.get(var.$unit, 40);
@@ -694,6 +709,14 @@
       position: absolute;
       right: fn.rem(20);
       bottom: fn.rem(20);
+    }
+  }
+
+  .support-detail-files {
+    padding-top: 0;
+
+    &-title {
+      @include typo.typography('b3b', $color: map.get(color.$text-colors, 'secondary'));
     }
   }
 }

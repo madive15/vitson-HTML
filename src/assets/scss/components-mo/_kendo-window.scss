@@ -431,6 +431,60 @@
   .k-window:has(.modal-category-sheet) ~ .k-overlay {
     z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
   }
+
+  // 뷰포트 풀스크린 — 화면 전체 꽉 참
+  /* stylelint-disable no-descending-specificity */
+  .k-window:has(.modal-viewport) {
+    @include mx.position(fixed, 0, 0, 0, 0);
+    z-index: var.$zindex-modal;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100vh;
+    max-height: 100dvh;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 0;
+
+    .k-window-content {
+      @include mx.flex(flex, column, flex-start, flex-start);
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-height: 100%;
+      padding: 0 !important;
+      overflow: hidden;
+    }
+
+    .vm-modal {
+      &-inner {
+        @include mx.flex(flex, column, flex-start, flex-start);
+        flex: 1 1 0;
+        width: 100vw;
+        width: 100%;
+        min-width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        max-height: 100vh;
+        max-height: 100dvh;
+      }
+
+      &-content {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .vm-attachment-popup {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
 }
 
 // 슬라이드 팝업 — 탭바 하위 맨위 표시

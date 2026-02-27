@@ -28,9 +28,11 @@ body.vits-scope {
   overscroll-behavior: none;
 }
 
+// 변수 선언 + 문서 스크롤바
 html.vits-scope,
 body.vits-scope,
-.vits-scrollbar {
+.vits-scrollbar,
+.has-scroll {
   // thumb만 보이게(트랙/레일 숨김)
   // size = 간격(6) + thumb(8) + 간격(6)
   --vits-scrollbar-size: 20px;
@@ -47,37 +49,36 @@ body.vits-scope,
   }
 
   &::-webkit-scrollbar {
-    width: var(--vits-scrollbar-size);
-    height: var(--vits-scrollbar-size);
-    background: transparent;
+    width: var(--vits-scrollbar-size) !important;
+    height: var(--vits-scrollbar-size) !important;
   }
 
   &::-webkit-scrollbar-track,
   &::-webkit-scrollbar-track-piece {
-    background: transparent;
+    background: transparent !important;
     border: 0;
     box-shadow: none;
   }
 
   &::-webkit-scrollbar-corner {
-    background: transparent;
+    background: transparent !important;
     border: 0;
     box-shadow: none;
   }
 
   &::-webkit-scrollbar-thumb {
-    min-width: 30px;
-    min-height: 30px;
-    background: var(--vits-scrollbar-thumb);
-    background-clip: padding-box;
-    border: var(--vits-scrollbar-gap) solid transparent; // 4면 균일
+    min-width: 60px;
+    min-height: 60px;
+    background: var(--vits-scrollbar-thumb) !important;
+    background-clip: padding-box !important;
+    border: var(--vits-scrollbar-gap) solid transparent !important;
     border-radius: calc(var(--vits-scrollbar-radius) + var(--vits-scrollbar-gap));
     box-shadow: none;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: var(--vits-scrollbar-thumb-hover);
-    background-clip: padding-box;
+    background: var(--vits-scrollbar-thumb-hover) !important;
+    background-clip: padding-box !important;
   }
 
   &::-webkit-resizer {

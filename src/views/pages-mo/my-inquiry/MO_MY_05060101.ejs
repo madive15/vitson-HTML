@@ -1,0 +1,103 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% 
+  const inquiryList = [
+    {
+      isAnswered: false,
+      date: '2027-01-01',
+      title: '[46156] 2단 원통파 A타입(싱글락)(A)',
+      description: '단가 확인 요청',
+    },
+    {
+      isAnswered: true,
+      date: '2026-03-15',
+      title: '[38291] 3단 사각파 B타입(더블락)(B)',
+      description: '단가 확인 요청',
+    },
+    {
+      isAnswered: true,
+      date: '2026-02-10',
+      title: '[52034] 1단 원통파 C타입(싱글락)(C)',
+      description: '단가 확인 요청',
+    },
+    {
+      isAnswered: true,
+      date: '2026-01-05',
+      title: '[71820] 4단 사각파 A타입(더블락)(A)',
+      description: '단가 확인 요청',
+    },
+  ];
+ %>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '대량구매문의-목록'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-inquiry">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '대량 구매 문의' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-inquiry">
+              <div class="vm-mypage-inquiry">
+                <div class="vm-mypage-inquiry-group">
+                  <div class="vm-mypage-inquiry-list">
+                    <ul class="inquiry-list">
+                      <% inquiryList.forEach(function(item) { %>
+                      <li>
+                        <a href="#!" class="inquiry-list-item">
+                          <div class="inquiry-list-item-head">
+                            <%- include(`${_src}/views/components/label/general-label.ejs`, { text: item.isAnswered ?
+                            '답변완료' : '답변대기', variant: item.isAnswered ? 'green' : 'gray' }) %>
+                            <p class="inquiry-list-item-text"><%= item.date %></p>
+                          </div>
+                          <div class="inquiry-list-item-body">
+                            <p class="inquiry-list-item-title"><%= item.title %></p>
+                          </div>
+                          <div class="inquiry-list-item-footer">
+                            <p class="inquiry-list-item-text"><%= item.description %></p>
+                          </div>
+                        </a>
+                      </li>
+                      <% }) %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

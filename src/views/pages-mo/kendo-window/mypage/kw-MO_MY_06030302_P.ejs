@@ -1,0 +1,48 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const orderList = [
+    { orderNo: '2601002043', name: '전선릴트 50M', date: '2027-01-01', img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png' },
+    { orderNo: '2601005821', name: 'LED 트리구 96구 연결형(DC24V) LED 트리구 96구 연결형(DC24V) LED 트리구 96구 연결형(DC24V) LED 트리구 96구 연결형(DC24V)', date: '2026-11-15', img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png' },
+    { orderNo: '2512009374', name: '3M 방진마스크 8210', date: '2026-09-03', img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png' },
+    { orderNo: '2511004652', name: '안전화 6인치 중작업용', date: '2026-07-22', img: 'https://vitsonimg.co.kr/images/productsNew/56/56290.png' },
+  ];
+%>
+
+<!-- prettier-ignore -->
+<div class="vm-inquiry-order">
+  <div class="vm-inquiry-order-notice">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/alerts/alerts-anatomy.ejs`, {
+      theme: 'blue', text: '최근 6개월의 주문만 조회됩니다.'
+    }) %>
+  </div>
+  <div class="vm-inquiry-order-list">
+    <% orderList.forEach(function(item) { %>
+    <button type="button" href="#!" class="vm-inquiry-order-item">
+      <span class="order-item-thumb">
+        <img src="<%= item.img %>" alt="" />
+      </span>
+      <span class="order-item-info">
+        <span class="order-item-number">주문번호: <%= item.orderNo %></span>
+        <span class="order-item-name"><%= item.name %></span>
+        <span class="order-item-date"><%= item.date %></span>
+      </span>
+    </button>
+    <% }) %>
+  </div>
+</div>
+
+<!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+<script>
+  document.querySelectorAll('.vm-inquiry-order-item').forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelectorAll('.vm-inquiry-order-item').forEach(function (el) {
+        el.classList.remove('is-selected');
+      });
+      this.classList.add('is-selected');
+    });
+  });
+</script>
+<!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->

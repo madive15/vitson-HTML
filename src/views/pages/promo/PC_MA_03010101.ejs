@@ -1,0 +1,112 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+const tabId = 'promo-products';
+const activeId = 'under1';
+const IMG_BASE = `${_public}/resources/img/mro/renewal/temp`;
+
+// 초특가 가격대별 탭 카테고리
+const tabItems = [
+  { id: 'under1', label: '~ 1만원 이하' },
+  { id: 'under2', label: '~ 2만원 이하' },
+  { id: 'under3', label: '~ 3만원 이하' },
+  { id: 'under5', label: '~ 5만원 이하' },
+  { id: 'under10', label: '~ 10만원 이하' }
+];
+%>
+<!DOCTYPE html>
+<!-- 
+  [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
+    - 문서 스크롤 주체가 html/body로 달라질 수 있어 둘 다 클래스 적용 
+  -->
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '초특가 상품목록'}) %>
+  <!-- [D] vits-scope 적용(상단 주석 참고) -->
+  <body class="vits-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vits-wrapper -->
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <!-- S: vits-main -->
+      <main id="skipNav" class="vits-main">
+        <!-- S: vits-wrap -->
+        <div class="vits-wrap">
+          <!-- S: vits-grid -->
+          <div class="vits-grid">
+            <!-- S: vits-grid-main -->
+            <div class="vits-grid-main vits-main-promo-products">
+              <div class="vits-inner">
+                <!-- S: 기획전 상품목록 탭 (초특가) -->
+                <div class="vits-promo-products">
+                  <div class="promo-products-header">
+                    <div class="header-main">
+                      <div class="banner">
+                        <img src="<%= IMG_BASE %>/temp-ex01.jpg" alt="초특가 기획전" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="promo-products-body">
+                    <div class="vits-promo-products-tab" data-vits-tab="promo-products-category">
+                      <ul class="promo-products-tab-nav" data-tab-nav role="tablist" aria-label="가격대별 카테고리">
+                        <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+                        <li>
+                          <button
+                            type="button"
+                            id="tab-<%= tabId %>-<%= item.id %>"
+                            class="tab-btn<%= isActive ? ' is-active' : '' %>"
+                            data-tab-id="<%= item.id %>"
+                            role="tab"
+                            aria-selected="<%= isActive %>"
+                            aria-controls="panel-<%= tabId %>-<%= item.id %>"
+                            tabindex="<%= isActive ? '0' : '-1' %>"
+                          >
+                            <span class="tab-btn-text"><%= item.label %></span>
+                          </button>
+                        </li>
+                        <% }) %>
+                      </ul>
+
+                      <div class="promo-products-tab-content" data-tab-content>
+                        <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
+                        <div
+                          class="tab-panel<%= isActive ? ' is-active' : '' %>"
+                          data-tab-panel="<%= item.id %>"
+                          id="panel-<%= tabId %>-<%= item.id %>"
+                          role="tabpanel"
+                          aria-labelledby="tab-<%= tabId %>-<%= item.id %>"
+                          aria-hidden="<%= !isActive %>"
+                        >
+                          <!-- 상품 목록 영역 (6열) -->
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components/pg-promo/promo-product-list.ejs`, {
+                              listClass: 'product-cols-6'
+                          }) %>
+                        </div>
+                        <% }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- E: 기획전 상품목록 탭 (초특가) -->
+              </div>
+            </div>
+            <!-- E: vits-grid-main -->
+          </div>
+          <!-- E: vits-grid -->
+        </div>
+        <!-- E: vits-wrap -->
+      </main>
+      <!-- E: vits-main -->
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+    <!-- E: vits-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

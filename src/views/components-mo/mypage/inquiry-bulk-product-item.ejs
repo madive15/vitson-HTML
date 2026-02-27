@@ -1,7 +1,12 @@
-<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% 
+  const _src = srcPath; 
+  const _public = publicPath; 
+  const _className = typeof className !== 'undefined' ? className : '';
+%>
 <!-- prettier-ignore -->
 
-<a href="#" target="_blank" class="vm-mypage-inquiry-product">
+<a href="#" target="_blank" class="vm-mypage-inquiry-product<%= _className ? ' ' + _className : '' %>">
   <div class="inquiry-product-body">
     <div class="inquiry-product-thumb">
       <div class="product-thumb">

@@ -13,6 +13,11 @@
   const _attrs = typeof attrs !== 'undefined' ? attrs : '';
   const _onclick = typeof onclick !== 'undefined' ? onclick : '';
   const _form = typeof form !== 'undefined' ? form : '';
+  const _href = typeof href !== 'undefined' ? href : '';
+  const _download = typeof download !== 'undefined' ? download : false;
+  const _target = typeof target !== 'undefined' ? target : null;
+  const _rel = (_target === '_blank') ? 'noopener noreferrer' : null;
+  const _isLink = !!_href;
   
   // attrs 문자열을 파싱하여 속성 배열로 변환
   var _attrsArray = [];
@@ -30,12 +35,28 @@
       }
     }
   }
-%>
 
+  const _btnClass = 'vits-btn-' + _size + ' vits-btn-' + _variant + (_iconLeft ? ' icon-left' : '') + (_iconRight ? ' icon-right' : '') + (_disabled ? ' disabled' : '') + (_className ? ' ' + _className : '');
+%>
+<% if (_isLink) { %>
+<a href="<%= _href %>"
+  <%= _download ? 'download' : '' %>
+  <% if (_target) { %> target="<%= _target %>"<% } %>
+  <% if (_rel) { %> rel="<%= _rel %>"<% } %>
+  class="<%= _btnClass %>"
+  <% if (_onclick) { %>onclick="<%- _onclick %>"<% } %>
+  <% _attrsArray.forEach(function(attr) { 
+    if (attr.value === null) { %>
+  <%= attr.key %>
+    <% } else { %>
+  <%= attr.key %>="<%= attr.value %>"
+    <% }
+  }); %>>
+<% } else { %>
 <button
   type="<%= _type || 'button' %>"
   <% if (_form) { %>form="<%= _form %>"<% } %>
-  class="vits-btn-<%= _size %> vits-btn-<%= _variant %> <%= _iconLeft ? 'icon-left' : '' %><%= _iconRight ? 'icon-right' : '' %><%= _disabled ? ' disabled' : '' %><%= _className ? ' ' + _className : '' %>"
+  class="<%= _btnClass %>"
   <%= _disabled ? 'disabled' : '' %>
   <% if (_onclick) { %>onclick="<%- _onclick %>"<% } %>
   <% _attrsArray.forEach(function(attr) { 
@@ -45,6 +66,7 @@
   <%= attr.key %>="<%= attr.value %>"
     <% }
   }); %>>
+<% } %>
   <% if (_iconLeft) { %>
     <span class="icon">
       <i class="ic <%= _iconName %>" aria-hidden="true"></i>
@@ -58,4 +80,8 @@
       <i class="ic <%= _iconName %>" aria-hidden="true"></i>
     </span>
   <% } %>
+<% if (_isLink) { %>
+</a>
+<% } else { %>
 </button>
+<% } %>

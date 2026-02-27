@@ -65,18 +65,25 @@
 
                     <!-- S: 첨부 파일 -->
                     <!-- [D] case 1. 업로드된 파일 : 0개 -->
-                    <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`) %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`, {
+                      addClass: 'mobile-chip-file'
+                    }) %>
 
                     <!-- [D] case 2. 업로드된 파일 : 1개 -->
                     <!-- prettier-ignore -->
                     <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`, {
                       fileList: ['2026 1월 대량 구매 목록.jpg'],
+                      addClass: 'mobile-chip-file'
                     }) %>
 
                     <!-- [D] case 3. 업로드된 파일 : 2개 -->
                     <!-- prettier-ignore -->
                     <%- include(`${_src}/views/components-mo/form/form-attachment.ejs`, {
-                      fileList: ['2026 1월 대량 구매 목록.jpg','2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록.jpg'],
+                      fileList: [
+                        '2026 1월 대량 구매 목록.jpg',
+                        '2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록 2026 2월 대량 구매 목록.jpg'],
+                      addClass: 'mobile-chip-file'
                     }) %>
                     <!-- E: 첨부 파일 -->
 

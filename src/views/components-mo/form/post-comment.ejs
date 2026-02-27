@@ -1,0 +1,142 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<div class="vm-post-comment">
+  <%# 관리자 댓글 %>
+  <div class="comment-admin">
+    <div class="comment-admin-head">
+      <p class="head-admin">고객센터</p>
+      <p class="head-date">2027-01-01 16:20:10</p>
+    </div>
+    <div class="comment-admin-content">
+      안녕하세요. 고객님<br />
+      확인 결과, 해당 상품은 현재 배송 중이며 내일(1월 2일) 오전 중 도착 예정입니다.<br />
+      추가 문의사항이 있으시면 언제든지 연락 주시기 바랍니다.<br />
+      감사합니다.<br />
+    </div>
+  </div>
+
+  <%# 고객 댓글 영역 (리스트 + 입력) %>
+  <div class="comment-user">
+    <p class="comment-user-title">댓글</p>
+
+    <div class="comment-list">
+      <!-- [D] 뷰 모드 -->
+      <div class="comment-list-item">
+        <div class="comment-list-item-head">
+          <div class="comment-list-item-meta">
+            <p class="comment-list-item-user">김메가</p>
+            <p class="comment-list-item-date">2027-01-01 16:20:10</p>
+          </div>
+          <div class="comment-list-item-actions">
+            <button class="vm-btn-modify" aria-label="수정">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'pencil' }) %>
+            </button>
+            <button class="vm-btn-delete" aria-label="삭제">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'waste-basket' }) %>
+            </button>
+          </div>
+        </div>
+        <div class="comment-list-item-body">
+          답변주셔서 감사합니다.
+        </div>
+      </div>
+
+      <!-- [D] 편집 모드 -->
+      <div class="comment-list-item">
+        <div class="comment-list-item-head">
+          <div class="comment-list-item-meta">
+            <p class="comment-list-item-user">김메가</p>
+            <p class="comment-list-item-date">2027-01-01 16:20:10</p>
+          </div>
+          <div class="comment-list-item-actions">
+            <button class="vm-btn-modify" aria-label="수정">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'pencil' }) %>
+            </button>
+            <button class="vm-btn-delete" aria-label="삭제">
+              <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'waste-basket' }) %>
+            </button>
+          </div>
+        </div>
+        <div class="comment-list-item-body">
+          <!-- [D] 편집 (textarea) -->
+          <div class="comment-edit-mode">
+            <div class="comment-edit-textarea">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/textarea.ejs`, {
+                id: 'memoA',
+                name: 'memoA',
+                placeholder: '댓글 편집 모드',
+                count: false,
+                rootClass: 'size-default'
+              }) %>
+            </div>
+            <div class="comment-edit-actions">
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size: 'xs',
+                variant: 'outline-secondary',
+                text: '취소',
+                className: 'btn-edit-cancel'
+              }) %>
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size: 'xs',
+                variant: 'outline-primary',
+                text: '저장',
+                className: 'btn-edit-save'
+              }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <%# 댓글 입력 %>
+    <div class="comment-form">
+      <div class="comment-edit-mode">
+        <div class="comment-edit-textarea">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'memoB',
+            name: 'memoB',
+            placeholder: '댓글을 입력해주세요',
+            count: false,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+        <div class="comment-edit-actions">
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'outline-primary',
+            text: '등록',
+            className: 'btn-edit-submit'
+          }) %>
+        </div>
+      </div>
+    </div>
+    <div class="comment-form">
+      <div class="comment-edit-mode">
+        <div class="comment-edit-textarea">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'memoB',
+            name: 'memoB',
+            placeholder: '댓글을 입력해주세요',
+            count: false,
+            disabled: true,
+            rootClass: 'size-default'
+          }) %>
+        </div>
+        <div class="comment-edit-actions">
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size: 'xs',
+            variant: 'outline-primary',
+            text: '등록',
+            className: 'btn-edit-submit',
+            disabled: true,
+          }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
