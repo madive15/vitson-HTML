@@ -115,22 +115,27 @@
 <button
   type="button"
   
-  class="vits-btn-xl vits-btn-primary  join-complete-btn-login"
+  class="vits-btn-xl vits-btn-primary join-complete-btn-login"
   
   
   >
+
   
 
   <span class="text">로그인</span>
 
   
+
 </button>
+
 
                   </div>
                   <!-- E: 액션 버튼 -->
                 </div>
 
+                
                 <!-- S: 고객 지원 -->
+                <div id="auth-contact-section">
                 
 <!-- [D] case: 회원가입 완료 / 아이디 찾기 결과 / 휴면상태 안내 페이지 공통 사용 -->
 <div class="auth-contact">
@@ -148,7 +153,9 @@
   </a>
 </div>
 
+                </div>
                 <!-- E: 고객 지원 -->
+                
               </section>
             </div>
           </main>
@@ -191,5 +198,22 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+    <script>
+      // type=isvm 일 때 처리  (회원가입 양식과 똑같아 조건부 처리 하였습니다.)
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var isVM = params.get('type') === 'isvm';
+        if (!isVM) return;
+        var titleEl = document.querySelector('.join-complete .vits-empty-state-title');
+        var descEl = document.querySelector('.join-complete .vits-empty-state-desc');
+        var btnEl = document.querySelector('.join-complete-btn-login .text');
+        var contactSection = document.getElementById('auth-contact-section');
+        if (titleEl) titleEl.textContent = '전환 신청 완료';
+        if (descEl) descEl.innerHTML = 'ISVM 전환 신청이 정상적으로 접수되었습니다.<br />담당자 승인 완료 후 ISVM 서비스 이용 가능합니다.';
+        if (btnEl) btnEl.textContent = 'ISVM 이동하기';
+        if (contactSection) contactSection.remove();
+        document.title = 'ISVM 계정전환 완료';
+      })();
+    </script>
   </body>
 </html>
