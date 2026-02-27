@@ -188,3 +188,25 @@
     @include order-alerts('b-warning');
   }
 }
+
+//   -----------------------------------------------------------------------------
+// 공통 알림 모달 (vits-common-alert-modal,vm-common-alert-modal)
+// - PC 기준 스타일입니다. MO 따로 있을 경우 작업해야 합니다.
+// -----------------------------------------------------------------------------
+@mixin common-alert-modal {
+  .common-alert-modal-content,
+  & * {
+    @include typo.typography('b2r', $color: map.get(color.$text-colors, 'secondary'));
+    line-height: 1.5;
+  }
+}
+
+// PC
+.vits-common-alert-modal {
+  @include common-alert-modal;
+}
+
+// MO
+.vm-common-alert-modal {
+  @include common-alert-modal;
+}

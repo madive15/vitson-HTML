@@ -3,7 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '회원가입 완료'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, { meta_title: typeof type !== 'undefined' && type === 'isvm' ? 'ISVM 계정전환 완료' : '회원가입 완료' }) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -28,8 +28,8 @@
                     <!-- prettier-ignore -->
                     <%- include(`${_src}/views/components/empty-state.ejs`, {
                       iconName: 'user',
-                      title: '회원 가입 완료',
-                      desc: '비츠온엠알오 회원 가입이 완료되었습니다.',
+                      title: typeof type !== 'undefined' && type === 'isvm' ? '전환 신청 완료' : '회원 가입 완료',
+                      desc: typeof type !== 'undefined' && type === 'isvm' ? 'ISVM 전환 신청이 정상적으로 접수되었습니다.\n담당자 승인 완료 후 ISVM 서비스 이용 가능합니다.' : '비츠온엠알오 회원 가입이 완료되었습니다.',
                     }) %>
 
                     <!-- S: 메인 링크 -->
@@ -44,16 +44,20 @@
                       type: 'button',
                       size: 'xl',
                       variant: 'primary',
-                      text: '로그인',
+                      text: typeof type !== 'undefined' && type === 'isvm' ? 'isvm 이동하기' : '로그인',
                       className: 'join-complete-btn-login',
                     }) %>
                   </div>
                   <!-- E: 액션 버튼 -->
                 </div>
 
+                <% if (typeof type === 'undefined' || type !== 'isvm') { %>
                 <!-- S: 고객 지원 -->
+                <div id="auth-contact-section">
                 <%- include(`${_src}/views/components/pg-auth/auth-contact.ejs`) %>
+                </div>
                 <!-- E: 고객 지원 -->
+                <% } %>
               </section>
             </div>
           </main>
@@ -73,5 +77,22 @@
     <!-- E: vm-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+    <script>
+      // type=isvm 일 때 처리  (회원가입 양식과 똑같아 조건부 처리 하였습니다.)
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var isVM = params.get('type') === 'isvm';
+        if (!isVM) return;
+        var titleEl = document.querySelector('.join-complete .vits-empty-state-title');
+        var descEl = document.querySelector('.join-complete .vits-empty-state-desc');
+        var btnEl = document.querySelector('.join-complete-btn-login .text');
+        var contactSection = document.getElementById('auth-contact-section');
+        if (titleEl) titleEl.textContent = '전환 신청 완료';
+        if (descEl) descEl.innerHTML = 'ISVM 전환 신청이 정상적으로 접수되었습니다.<br />담당자 승인 완료 후 ISVM 서비스 이용 가능합니다.';
+        if (btnEl) btnEl.textContent = 'ISVM 이동하기';
+        if (contactSection) contactSection.remove();
+        document.title = 'ISVM 계정전환 완료';
+      })();
+    </script>
   </body>
 </html>
