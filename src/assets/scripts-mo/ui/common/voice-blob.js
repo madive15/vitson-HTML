@@ -6,12 +6,14 @@
   window.UI = window.UI || {};
 
   var instance = null;
+  // 상단에 추가 — webpack이 빌드 시 파일을 output에 복사하고 URL 반환
+  var voiceBlobPath = require('./voice-blob.json');
 
   function init() {
     var $container = $('[data-voice-blob-anim]');
     if (!$container.length || instance) return;
 
-    var lottiePath = $container.data('lottie-path');
+    var lottiePath = voiceBlobPath;
     if (!lottiePath) return;
 
     import('@lottiefiles/dotlottie-wc').then(function () {
