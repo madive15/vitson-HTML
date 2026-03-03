@@ -1,0 +1,168 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const noticeTabs = [
+    { id: 'all',   label: '전체' },
+    { id: 'price', label: '가격변동공지' },
+  ];
+
+  const categoryLabelMap = {
+    notice: '공지',
+    price:  '가격변동',
+  };
+
+  const noticeList = [
+    { id: 1, category: 'notice', isFixed: true,  date: '2027-01-01', title: '[안내] 1월 은행/카드/기관 시스템 점검 일정 안내' },
+    { id: 2, category: 'price',  isFixed: true,  date: '2027-01-01', title: '[안내] 1월 은행/카드/기관 시스템 점검 일정 안내 일정텍스트' },
+    { id: 3, category: 'notice', isFixed: false, date: '2027-01-01', title: '[안내] 인터넷판매불가 안내' },
+    { id: 4, category: 'price',  isFixed: false, date: '2027-01-01', title: '[안내] 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내 인터넷판매불가 안내' },
+    { id: 5, category: 'notice', isFixed: false, date: '2027-01-01', title: '[공지] 2월 시스템 업데이트 안내' },
+    { id: 6, category: 'notice', isFixed: false, date: '2027-01-01', title: '[공지] 3월 웹사이트 성능 개선 작업' },
+  ];
+
+  // 고정 공지 상단 고정 → 날짜 내림차순
+  noticeList.sort(function(a, b) {
+    if (a.isFixed !== b.isFixed) return a.isFixed ? -1 : 1;
+    return new Date(b.date) - new Date(a.date);
+  });
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '공지사항'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-support">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar', title: '고객지원센터' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-support">
+              <div class="vm-mypage-support">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/mypage/support-nav.ejs`, { 
+                  currentTab: 0 
+                }) %>
+                <div class="vm-mypage-support-panel">
+                  <div class="vm-mypage-support-tab tab-notice">
+                    <!-- [D] 공지사항 탭 목록 -->
+                    <div class="support-tab-section" data-tab-scope>
+
+                      <!-- [D] 활성 탭의 button에 is-active 클래스 추가 -->
+                      <ul class="support-tab" role="tablist">
+                        <% noticeTabs.forEach(function(tab, index) { %>
+                        <li class="support-tab-item" role="presentation">
+                          <button
+                            type="button"
+                            class="support-tab-btn<%= index === 0 ? ' is-active' : '' %>"
+                            role="tab"
+                            aria-selected="<%= index === 0 ? 'true' : 'false' %>"
+                            aria-controls="support-tab-panel-<%= tab.id %>"
+                            data-tab-btn
+                            data-tab-target="support-tab-<%= tab.id %>"
+                          >
+                            <%= tab.label %>
+                          </button>
+                        </li>
+                        <% }) %>
+                      </ul>
+
+                      <!-- [D] 활성 패널에 is-active 클래스 추가, 비활성 패널은 hidden 처리 -->
+                      <% noticeTabs.forEach(function(tab, index) {
+                        // 탭 id가 'all'이면 전체, 아니면 해당 category만 필터
+                        var items = tab.id === 'all'
+                          ? noticeList
+                          : noticeList.filter(function(item) { return item.category === tab.id; });
+                      %>
+                      <div
+                        class="support-tab-panel"
+                        data-tab-panel="support-tab-<%= tab.id %>"
+                        role="tabpanel"
+                        id="support-tab-panel-<%= tab.id %>"
+                        <%= index !== 0 ? 'hidden' : '' %>
+                      >
+                        <ul class="notice-list">
+                          <!-- [D] 상단 고정 시, is-fixed 클래스 추가  -->
+                          <% items.forEach(function(item) { %>
+                          <li class="notice-list-item<%= item.isFixed ? ' is-fixed' : '' %>">
+                            <a href="#!" class="notice-item-link">
+                              <div class="notice-item-meta">
+                                <!-- [D] 상단 고정 시, iconName: 'notice' -->
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/label/general-label.ejs`, {
+                                  text: categoryLabelMap[item.category],
+                                  variant: item.category === 'price' ? 'red' : 'green',
+                                  iconName: item.isFixed ? 'notice' : undefined
+                                }) %>
+                                <span class="notice-item-date"><%= item.date %></span>
+                              </div>
+                              <p class="notice-item-title"><%= item.title %></p>
+                            </a>
+                          </li>
+                          <% }) %>
+                        </ul>
+                      </div>
+                      <% }) %>
+
+                      <!-- [D] No Data: 공지사항 없음 -->
+                      <div class="vm-mypage-inquiry-empty empty-no-data" style="display: none">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, {
+                          iconName: 'document-paper',
+                          title: '등록된 게시글이 없습니다',
+                        }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- S: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      $(function () {
+        var type = new URLSearchParams(location.search).get('type');
+
+        if (type === 'empty') {
+          // 탭 버튼은 두고 패널만 숨김
+          $('.support-tab-panel').hide();
+          $('.empty-no-data').show();
+        }
+      });
+    </script>
+    <!-- E: [REMOVE] 확인용 임시 코드 - 개발 적용 시 제거 -->
+  </body>
+</html>

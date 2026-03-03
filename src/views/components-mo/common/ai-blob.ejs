@@ -1,0 +1,25 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const _base = srcPath.includes('vitson-HTML') ? '/vitson-HTML' : ''; %>
+
+<%# AI 음성인식 — is-active 토글로 노출 제어 %>
+<div class="vm-ai-blob is-active" data-voice-blob>
+  <div class="vm-ai-blob-box">
+    <p class="vm-ai-blob-text">
+      <strong>듣고있어요...</strong>
+      <span>찾으시는 상품을 말씀해주세요</span>
+      <!-- [D] 인식 진행 중 -->
+      <span class="voice-word is-speaking">형광드ㅇ</span>
+
+      <!-- [D] 최종 확정 단어 -->
+      <span class="voice-word is-final">형광등</span>
+    </p>
+    <div class="vm-ai-blob-content">
+      <div
+        class="vm-voice-blob-anim"
+        data-voice-blob-anim
+        data-lottie-path="<%= _base %>/resources/lottie/voice-blob.json"
+      ></div>
+    </div>
+  </div>
+</div>

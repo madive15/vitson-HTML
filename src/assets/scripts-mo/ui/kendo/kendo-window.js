@@ -3,6 +3,7 @@
  * @description 모바일 Kendo Window 초기화 모듈
  * @variant 'bottomsheet' — 하단에서 슬라이드 업 (CSS 애니메이션)
  * @variant 'slide-right' — 오른쪽에서 슬라이드 인 (풀스크린)
+ * @variant 'slide-left'  — 왼쪽에서 슬라이드 인 (풀스크린)
  *
  * VmKendoWindow.open('myWindow');
  * VmKendoWindow.close('myWindow');
@@ -78,7 +79,7 @@
       checkScroll(id);
 
       var $kw = $el.closest('.k-window');
-      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright')) {
+      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright') && !$kw.hasClass('is-slideleft')) {
         inst.center();
       }
     }, DEBOUNCE_DELAY);
@@ -140,7 +141,8 @@
     var id = $el.attr('id');
     var variant = $el.attr('data-variant');
     var isBottom = variant === 'bottomsheet';
-    var isSlide = variant === 'slide-right';
+    var isSlide = variant === 'slide-right' || variant === 'slide-left';
+    var isSlideLeft = variant === 'slide-left';
     var noAnimation = isBottom || isSlide;
 
     var opts = {
@@ -153,11 +155,14 @@
       actions: [],
       animation: noAnimation ? false : undefined,
       open: function () {
+        console.log('kendo open id:', id);
         lockBody();
         if (openedWindows.indexOf(id) === -1) {
           openedWindows.push(id);
         }
         observeContent(id);
+        console.log('trigger kendo:open with:', id, typeof id);
+        $(document).trigger('kendo:open', [id]);
       },
       close: function () {
         disconnectContent(id);
@@ -167,6 +172,9 @@
         if (openedWindows.length === 0) {
           unlockBody();
         }
+
+        // 닫힘 이벤트 발행
+        $(document).trigger('kendo:close', [id]);
       }
     };
 
@@ -179,7 +187,7 @@
     }
 
     if (isSlide) {
-      $kw.addClass('is-slideright');
+      $kw.addClass(isSlideLeft ? 'is-slideleft' : 'is-slideright');
     }
   }
 
@@ -205,9 +213,21 @@
     if (inst) {
       var $kw = $el.closest('.k-window');
       var isBottom = $kw.hasClass('is-bottomsheet');
-      var isSlide = $kw.hasClass('is-slideright');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
 
       if (!isBottom && !isSlide) inst.center();
+
+      // 슬라이드 팝업은 마지막 하나만 유지
+      if (isSlide) {
+        openedWindows.slice().forEach(function (winId) {
+          if (winId === id) return;
+          var $w = $('#' + winId).closest('.k-window');
+          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
+            close(winId);
+          }
+        });
+      }
+
       inst.open();
 
       // 바텀시트: 하단 고정 + 슬라이드 업
@@ -226,7 +246,7 @@
         });
       }
 
-      // 슬라이드 라이트: 풀스크린 + 오른쪽에서 인
+      // 슬라이드: 풀스크린
       if (isSlide) {
         $kw.css({
           top: '0',
@@ -257,11 +277,11 @@
 
     if (inst) {
       var $kw = $el.closest('.k-window');
-      var isSlide = $kw.hasClass('is-slideright');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
 
       $el.find('.vm-modal-content').removeClass('has-scroll');
 
-      // 슬라이드 라이트만 애니메이션 후 close
+      // 슬라이드만 애니메이션 후 close
       if (isSlide) {
         closeWithAnimation($kw, inst);
         return;

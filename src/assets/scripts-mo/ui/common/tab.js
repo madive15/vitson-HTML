@@ -1,14 +1,3 @@
-/**
- * @file scripts-mo/ui/common/tab.js
- * @description data-속성 기반 탭 공통 (모바일)
- * @scope [data-tab-scope]
- *
- * @mapping [data-tab-btn][data-tab-target] ↔ [data-tab-panel="target"]
- * @state is-active 클래스 + aria-selected 값으로 제어
- *
- * @a11y role="tablist", role="tab", role="tabpanel", aria-selected 제어
- * @note URL 파라미터 딥링크 지원 — ?tab={data-tab-target 값}으로 특정 탭 직접 활성화
- */
 (function ($, window) {
   'use strict';
 
@@ -21,8 +10,33 @@
   var BTN = '[data-tab-btn]';
   var PANEL = '[data-tab-panel]';
   var ACTIVE = 'is-active';
+  var PEEK = 40;
 
   var _bound = false;
+
+  // 활성 탭 버튼이 보이도록 스크롤 보정
+  function scrollToBtn($scope, $btn) {
+    var $tabList = $scope.find('[role="tablist"]');
+    if (!$tabList.length || !$tabList[0].scrollWidth) return;
+
+    var wrap = $tabList[0];
+    var btn = $btn[0];
+    var $btns = $tabList.find(BTN);
+    var btnLeft = btn.offsetLeft;
+    var btnRight = btnLeft + btn.offsetWidth;
+    var wrapLeft = wrap.scrollLeft;
+    var wrapRight = wrapLeft + wrap.offsetWidth;
+
+    if (btn === $btns.last()[0]) {
+      $tabList.animate({scrollLeft: wrap.scrollWidth}, 200);
+    } else if (btn === $btns.first()[0]) {
+      $tabList.animate({scrollLeft: 0}, 200);
+    } else if (btnLeft < wrapLeft) {
+      $tabList.animate({scrollLeft: btnLeft - PEEK}, 200);
+    } else if (btnRight > wrapRight) {
+      $tabList.animate({scrollLeft: btnRight - wrap.offsetWidth + PEEK}, 200);
+    }
+  }
 
   // 탭 전환
   function activate($scope, target) {
@@ -48,6 +62,12 @@
     // 대상 패널 활성
     var $activePanel = $scope.find(PANEL + '[data-tab-panel="' + target + '"]');
     $activePanel.addClass(ACTIVE).removeAttr('hidden');
+
+    // 스크롤 보정
+    scrollToBtn($scope, $activeBtn);
+
+    // 탭 전환 이벤트 발행
+    $scope.trigger('tab:change', [target, $activeBtn]);
   }
 
   function bind() {
@@ -57,7 +77,6 @@
     // 탭 클릭
     $(document).on('click' + NS, BTN, function (e) {
       e.preventDefault();
-
       var $btn = $(this);
       var $scope = $btn.closest(SCOPE);
       if (!$scope.length) return;
@@ -84,7 +103,6 @@
       // 좌: 이전, 우: 다음 (순환)
       var nextIdx = key === 37 ? (idx - 1 + len) % len : (idx + 1) % len;
       var $next = $tabs.eq(nextIdx);
-
       $next.focus();
       $next.trigger('click');
     });
@@ -96,7 +114,7 @@
     // URL 파라미터 기반 탭 딥링크 (?tab=tab2)
     var urlTab = new URLSearchParams(window.location.search).get('tab');
 
-    // 초기 활성 탭 설정 (is-active 있는 버튼 기준)
+    // 초기 활성 탭 설정
     $(SCOPE).each(function () {
       var $scope = $(this);
       var $activeBtn;
@@ -126,9 +144,5 @@
     _bound = false;
   }
 
-  window.UI.tab = {
-    init: init,
-    destroy: destroy,
-    activate: activate
-  };
+  window.UI.tab = {init: init, destroy: destroy, activate: activate};
 })(window.jQuery, window);

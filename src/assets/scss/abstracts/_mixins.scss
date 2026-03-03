@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
+@use 'sass:math';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/functions' as fn;
 @use '@/assets/scss/base/colors' as color;
@@ -260,25 +261,45 @@
 }
 
 /* divider */
-@mixin divider($item: 'li', $w: 1, $h: 12, $gap: 12, $color: map.get(color.$gray-shades, '30')) {
-  @include flex(flex, row, flex-start, center);
+@mixin divider($item: 'li', $w: 1, $h: 12, $gap: 12, $color: map.get(color.$gray-shades, '30'), $trail: false) {
+  @include flex(flex, row, flex-start, center, wrap);
 
   > #{$item} {
-    &:not(:only-of-type, :last-of-type) {
-      padding-right: fn.rem($gap);
+    // 구분선을 앞 요소 오른쪽에 배치 → 줄바꿈 시 구분선이 윗줄에 유지
+    @if $trail {
+      &:not(:only-of-type, :last-of-type) {
+        @include flex(flex, row, flex-start, center);
+        position: relative;
+
+        &::after {
+          flex-shrink: 0;
+          width: fn.rem($w);
+          height: fn.rem($h);
+          margin: 0 fn.rem($gap);
+          content: '';
+          background-color: $color;
+        }
+      }
     }
+    /* stylelint-disable-next-line at-rule-empty-line-before */
+    @else {
+      // 기본: 구분선을 뒷 요소 왼쪽에 배치
+      &:not(:only-of-type, :last-of-type) {
+        padding-right: fn.rem($gap);
+      }
 
-    & + #{$item} {
-      position: relative;
-      padding-left: fn.rem($gap);
+      & + #{$item} {
+        position: relative;
+        padding-left: fn.rem($gap);
 
-      &::before {
-        @include position(absolute, $top: 50%, $left: 0);
-        width: fn.rem($w);
-        height: fn.rem($h);
-        content: '';
-        background-color: $color;
-        transform: translateY(-50%);
+        &::before {
+          @include position(absolute, $top: 50%, $left: 0);
+          width: fn.rem($w);
+          height: fn.rem($h);
+          content: '';
+          background-color: $color;
+          transform: translateY(-50%);
+        }
       }
     }
   }

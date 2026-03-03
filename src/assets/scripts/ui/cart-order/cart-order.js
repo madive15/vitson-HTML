@@ -29,6 +29,9 @@
       var addressWrapSelector = '.vits-address-modify-form';
       var addressTypeSelector = '.vits-address-type input[type="radio"][name="shippingType"]';
       var addressPanelSelector = '.vits-address-fields[data-address-panel]';
+      var paymentSummaryWrapSelector = '.vits-payment-wrap';
+      var paymentSummaryToggleSelector = '.vits-payment-toggle';
+      var paymentSummaryPriceSelector = '.vits-payment-price';
 
       function setDiscountState($item, isActive) {
         var $toggle = $item.find('.discount-toggle').first();
@@ -110,6 +113,36 @@
         });
       }
 
+      function setPaymentSummaryState($wrap, isOpen) {
+        if (!$wrap.length) return;
+
+        var $toggle = $wrap.find(paymentSummaryToggleSelector).first();
+        var $price = $wrap.find(paymentSummaryPriceSelector).first();
+
+        if (!$toggle.length || !$price.length) return;
+
+        var nextOpen = !!isOpen;
+
+        // hidden/aria-hidden 토글
+        if (nextOpen) {
+          $price.removeAttr('hidden');
+          $price.attr('aria-hidden', 'false');
+        } else {
+          $price.attr('hidden', 'hidden');
+          $price.attr('aria-hidden', 'true');
+        }
+
+        // 버튼 aria-expanded 토글
+        $toggle.attr('aria-expanded', nextOpen ? 'true' : 'false');
+
+        // 아이콘 방향 토글 (ic-arrow-down ↔ ic-arrow-up)
+        var $icon = $toggle.find('.ic').first();
+        if ($icon.length) {
+          $icon.toggleClass('ic-arrow-down', !nextOpen);
+          $icon.toggleClass('ic-arrow-up', nextOpen);
+        }
+      }
+
       $(discountItemSelector).each(function () {
         var $item = $(this);
         var isActive = $item.find('.discount-info').first().hasClass('is-active');
@@ -142,6 +175,14 @@
         }
       });
 
+      // 결제정보 요약 영역 초기 상태 설정
+      $(paymentSummaryWrapSelector).each(function () {
+        var $wrap = $(this);
+        var $price = $wrap.find(paymentSummaryPriceSelector).first();
+        var isOpen = !$price.is('[hidden]');
+        setPaymentSummaryState($wrap, isOpen);
+      });
+
       $(document)
         .off('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle')
         .on('click.cartOrderDiscount', discountItemSelector + ' .discount-toggle', function () {
@@ -167,6 +208,17 @@
           var $wrap = $radio.closest(addressWrapSelector);
           var typeValue = $radio.val();
           setAddressTypeState($wrap, typeValue, $radio.attr('id'));
+        });
+
+      // 결제정보 요약 토글 버튼 클릭 이벤트
+      $(document)
+        .off('click.cartOrderPaymentSummary', paymentSummaryToggleSelector)
+        .on('click.cartOrderPaymentSummary', paymentSummaryToggleSelector, function () {
+          var $toggle = $(this);
+          var $wrap = $toggle.closest(paymentSummaryWrapSelector);
+          var $price = $wrap.find(paymentSummaryPriceSelector).first();
+          var isOpen = !$price.is('[hidden]');
+          setPaymentSummaryState($wrap, !isOpen);
         });
 
       // 결제수단 탭 처리
@@ -221,9 +273,17 @@
       var paymentItemSelector = '.vits-payment-item';
       var paymentRadioSelector = '.vits-payment-item input[type="radio"][aria-controls]';
       var paymentPanelSelector = '.vits-payment-panel';
+      var taxInvoiceRadioSelector = '.vits-tax input[type="radio"]';
+      var lastPaymentRadioId = null;
 
       function setPaymentPanelState($radio) {
         if (!$radio.length) return;
+
+        // 마지막으로 선택된 결제수단 라디오 ID 저장 (세금계산서 라디오와 무관하게 유지)
+        var currentRadioId = $radio.attr('id');
+        if (currentRadioId) {
+          lastPaymentRadioId = currentRadioId;
+        }
         // vits-tax 세금계산서 라디오는 패널 전환에 영향 주지 않음
         var controlsId = $radio.attr('aria-controls');
         if (!controlsId) return;
@@ -269,6 +329,15 @@
             var currentLabelledBy = $targetPanel.attr('aria-labelledby');
             if (!currentLabelledBy || currentLabelledBy !== radioId) {
               $targetPanel.attr('aria-labelledby', radioId);
+            }
+
+            // [여신결제(pay-credit)] 패널이 활성화될 때는
+            // 해당 패널 안의 세금계산서 라디오를 '일괄 발급(batch)'으로 고정
+            if (radioId === 'pay-credit') {
+              var $taxBatchInCredit = $targetPanel.find('input[type="radio"][name="tax-invoice"][value="batch"]');
+              if ($taxBatchInCredit.length) {
+                $taxBatchInCredit.prop('checked', true);
+              }
             }
           } else {
             // 패널을 찾을 수 없으면 false로 설정
@@ -329,6 +398,21 @@
       $(paymentRadioSelector + ':checked').each(function () {
         setPaymentPanelState($(this));
       });
+
+      // 세금계산서 라디오를 클릭해도 현재 선택된 결제수단(pay-credit 등)은 유지되도록 처리
+      $(document)
+        .off('change.cartOrderTaxInvoice', taxInvoiceRadioSelector)
+        .on('change.cartOrderTaxInvoice', taxInvoiceRadioSelector, function () {
+          if (!lastPaymentRadioId) return;
+
+          var $lastPaymentRadio = $('#' + lastPaymentRadioId);
+          if (!$lastPaymentRadio.length) return;
+
+          // 세금계산서 라디오 선택으로 인해 결제수단 라디오가 해제되었으면 다시 선택 상태로 복원
+          if (!$lastPaymentRadio.is(':checked')) {
+            $lastPaymentRadio.prop('checked', true);
+          }
+        });
 
       // 결제수단 탭 클릭 이벤트
       $(document)

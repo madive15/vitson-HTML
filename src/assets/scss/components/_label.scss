@@ -85,7 +85,7 @@
       }
 
       .icon {
-        color: map.get(color.$icon-neutral, 'primary');
+        color: map.get(color.$icon-neutral, 'tertiary');
       }
 
       .remove {
@@ -236,7 +236,6 @@
       @include mx.flex(flex, row, flex-start, center);
       @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
       height: fn.rem(18);
-      padding: 0 map.get(var.$unit, 4);
       line-height: normal;
 
       &::before {
@@ -429,7 +428,9 @@ $order-status-color-mobile: (
 
     @each $code, $pair in $order-status-color-mobile {
       &[data-status='#{$code}'] {
-        @include typo.typography('b5r', $color: list.nth($pair, 2));
+        @include typo.typography('b4r', $color: list.nth($pair, 2));
+        height: map.get(var.$unit, 20);
+        line-height: normal;
         background-color: list.nth($pair, 1);
       }
     }
@@ -516,7 +517,9 @@ $claim-status-color-mobile: (
 
     @each $code, $pair in $claim-status-color-mobile {
       &[data-status='#{$code}'] {
-        @include typo.typography('b5r', $color: list.nth($pair, 2));
+        @include typo.typography('b4r', $color: list.nth($pair, 2));
+        height: map.get(var.$unit, 20);
+        line-height: normal;
         background-color: list.nth($pair, 1);
       }
     }

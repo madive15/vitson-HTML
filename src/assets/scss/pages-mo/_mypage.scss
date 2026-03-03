@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// pages/_mypage.scss
+// pages-mo/_mypage.scss
 // - 마이페이지 전용 스타일 모듈 모음
 // -----------------------------------------------------------------------------
 
@@ -2263,6 +2263,7 @@
     /* stylelint-disable no-descending-specificity */
     .vits-empty-state {
       padding-top: min(26.38vw, 192px);
+      padding-bottom: min(26.38vw, 192px);
 
       &-action {
         width: 100%;
@@ -3060,6 +3061,46 @@
         padding-top: var.$mo-section-gap;
       }
     }
+
+    // 공지사항
+    .inquiry-detail-notice {
+      .detail-notice {
+        &-head {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 12);
+          padding: 0 var.$mo-gutter map.get(var.$unit, 20);
+        }
+
+        &-meta {
+          @include mx.flex(flex, row, flex-start, center);
+
+          .vits-general-label {
+            flex-shrink: 0;
+          }
+
+          .text-date {
+            @include typo.typography('m1r', $color: map.get(color.$text-colors, 'tertiary'));
+            flex-grow: 1;
+            min-width: 0;
+            text-align: right;
+          }
+        }
+
+        &-title {
+          @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+        }
+
+        &-content {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          padding: map.get(var.$unit, 20) var.$mo-gutter map.get(var.$unit, 40);
+          line-height: 1.5;
+        }
+
+        &-info {
+          padding: map.get(var.$unit, 20) var.$mo-gutter 0;
+        }
+      }
+    }
   }
 
   &-list {
@@ -3140,6 +3181,7 @@
 // 댓글 코멘트
 .vm-post-comment {
   .comment {
+    /* stylelint-disable-next-line no-descending-specificity */
     &-admin {
       @include mx.flex(flex, column);
       gap: var.$mo-gutter;
@@ -3262,6 +3304,185 @@
         @include mx.position(absolute, $bottom: var.$mo-gutter, $right: var.$mo-gutter);
         @include mx.flex(flex, row, flex-end, center);
         gap: map.get(var.$unit, 8);
+      }
+    }
+  }
+}
+
+// FAQ, 공지사항 탭
+.vm-wrap.wrap-my-support:has(.vm-mypage-support-tab.tab-faq) {
+  /* stylelint-disable-next-line no-descending-specificity */
+  .vm-content-wrap {
+    background: color.$color-white;
+  }
+}
+
+.vm-mypage-support-tab {
+  .support-tab-filter {
+    padding: var.$mo-section-gap var.$mo-gutter map.get(var.$unit, 12);
+
+    .vits-input-search-form {
+      .input-search-btn {
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+  }
+
+  .support-tab {
+    @include mx.flex;
+    @include mx.hidden-scrollbar;
+    gap: map.get(var.$unit, 4);
+    padding: map.get(var.$unit, 12) 0 var.$mo-section-gap;
+    overflow: auto hidden;
+    -webkit-overflow-scrolling: touch;
+
+    &-item {
+      flex-shrink: 0;
+
+      &:first-of-type {
+        padding-left: var.$mo-gutter;
+      }
+
+      &:last-of-type {
+        padding-right: var.$mo-gutter;
+      }
+    }
+
+    &-btn {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      @include typo.typography('m1m', $color: map.get(color.$text-colors, 'tertiary'));
+      height: map.get(var.$unit, 40);
+      padding: 0 var.$mo-gutter;
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'sm');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+      &.is-active {
+        color: color.$color-white;
+        background: map.get(color.$layout-surf, 'primary');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-surf, 'primary');
+      }
+    }
+  }
+
+  .support-tab-accordion {
+    &-trigger {
+      @include button.btn-reset;
+      @include mx.flex(flex, column, flex-start, flex-start);
+      gap: map.get(var.$unit, 8);
+      width: 100%;
+      padding: var.$mo-gutter;
+      text-align: left;
+      box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &[aria-expanded='true'] .icon {
+        color: map.get(color.$icon-neutral, 'secondary');
+        transform: rotate(180deg);
+      }
+    }
+
+    &-title {
+      @include mx.flex(flex, row, flex-start, flex-start);
+      position: relative;
+      width: 100%;
+
+      /* stylelint-disable no-descending-specificity */
+      .text {
+        @include typo.typography('b3s');
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      .icon {
+        @include icon.ic-size(map.get(var.$unit, 20));
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'tertiary');
+        transition: transform 0.3s;
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+
+    &-answer {
+      padding: map.get(var.$unit, 20) map.get(var.$unit, 20) map.get(var.$unit, 36);
+      background: map.get(color.$layout-surf, 'mypage');
+
+      /* stylelint-disable no-descending-specificity */
+      &,
+      p {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+        line-height: 1.5;
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+  }
+
+  &.tab-notice {
+    padding-bottom: fn.rem(28);
+
+    .support-tab {
+      padding: 0;
+
+      &-section {
+        @include mx.flex(flex, column);
+        gap: var.$mo-gutter;
+      }
+
+      &-item {
+        &:first-of-type {
+          padding-left: 0;
+        }
+
+        &:last-of-type {
+          padding-right: 0;
+        }
+      }
+    }
+
+    .notice {
+      &-list {
+        overflow: hidden;
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'md');
+
+        &-item {
+          &:not(:last-of-type) {
+            @include mx.border('bottom', $color: map.get(color.$layout-border, 'quinary'));
+          }
+
+          &.is-fixed .notice-item-title {
+            font-weight: 600;
+            color: map.get(color.$text-status, 'info-sub');
+          }
+        }
+      }
+
+      &-item {
+        &-link {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 12);
+          padding: var.$mo-gutter;
+        }
+
+        &-meta {
+          @include mx.flex(flex, row, flex-start, center);
+          width: 100%;
+
+          .vits-general-label {
+            flex-shrink: 0;
+            margin-right: auto;
+          }
+        }
+
+        &-date {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        }
+
+        &-title {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          @include mx.ellipsis-single;
+        }
       }
     }
   }

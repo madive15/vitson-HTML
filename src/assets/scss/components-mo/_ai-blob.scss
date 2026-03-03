@@ -1,0 +1,83 @@
+// -----------------------------------------------------------------------------
+// components-mo/_ai-blob.scss
+// - AI 음성인식 블롭 Lottie 애니메이션 (전체 화면 오버레이)
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+@use '@/assets/scss/components-mo/product' as product;
+
+.vm-ai-blob {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: map.get(var.$mo-zindex, 'ai-blob');
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  background: rgb(255 255 255 / 90%);
+
+  &.is-active {
+    display: flex;
+  }
+
+  &-box {
+    @include mx.flex(flex, column, center, center);
+    gap: 0;
+    width: 100%;
+  }
+
+  &-text {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 8);
+    width: 100%;
+    text-align: center;
+
+    strong {
+      @include typo.typography('h2b', $color: map.get(color.$text-colors, 'secondary'));
+    }
+
+    span {
+      &:not(.voice-word) {
+        @include typo.typography('b1r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &.voice-word {
+        @include typo.typography('h2b', $color: map.get(color.$text-colors, 'muted'));
+        padding-top: var.$mo-gutter;
+
+        &.is-final {
+          color: map.get(color.$text-status, 'info-sub');
+        }
+      }
+    }
+  }
+
+  &-content {
+    @include mx.flex(flex, row, center, center);
+    width: 100%;
+
+    // padding: 0 map.get(var.$unit, 32);
+  }
+}
+
+.vm-voice-blob-anim {
+  flex: 0 0 auto;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+
+  dotlottie-wc {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}

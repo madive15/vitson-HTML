@@ -12,6 +12,15 @@
 @use '@/assets/scss/components/button' as button;
 @use '@/assets/scss/components/form' as form;
 
+/*
+* 결제정보 박스 mixin 
+*/
+@mixin payment-info-box {
+  background: map.get(color.$layout-surf, 'base');
+  border-radius: map.get(var.$radius, 'lg');
+  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
+}
+
 /* 가이드 박스 (배경, 테두리, 라운드) 
   *배경색 커스텀 가능
   ex. @include cart-order-surf-box(map.get(color.$layout-surf, 'base'));
@@ -32,7 +41,7 @@
   $icon-size: fn.rem(12);
 
   @include mx.flex($align: flex-start);
-  @include typo.typography('b4r', $color: $text-color);
+  @include typo.typography('b3r', $color: $text-color);
 
   @if $bold-selector {
     #{$bold-selector} {
@@ -45,7 +54,7 @@
     width: $icon-size;
     min-width: $icon-size;
     height: $icon-size;
-    margin-top: fn.rem(2);
+    margin-top: fn.rem(3);
     margin-right: map.get(var.$unit, 4);
     content: '';
     background-color: $icon-color;
@@ -771,26 +780,24 @@
 /* ===결제 정보=== */
 /* 결제 전체 */
 .vits-payment {
-  @include mx.flex($direction: column);
-  background: map.get(color.$layout-surf, 'base');
-  border-radius: map.get(var.$radius, 'lg');
-  box-shadow: 0 4px 7px 0 rgb(0 0 0 / 4%);
+  @include mx.flex(flex, column, flex-start, stretch);
 
   /* ===결제정보 요약=== */
   &-summary {
-    padding-bottom: map.get(var.$unit, 32);
+    @include payment-info-box;
+    margin-bottom: map.get(var.$unit, 16);
   }
 
   &-title {
     @include typo.typography('h3b', $color: map.get(color.$text-colors, 'secondary'));
+    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
     padding: fn.rem(17) fn.rem(32);
   }
 
   // 가격 영역
   &-price {
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
-
-    @include mx.border(bottom, 1px, solid, map.get(color.$layout-border, 'quinary'));
+    @include mx.flex($direction: column);
+    gap: map.get(var.$unit, 16);
   }
 
   &-price-list {
@@ -810,7 +817,7 @@
 
       &.is-discount {
         strong {
-          color: map.get(color.$text-status, 'brand');
+          color: map.get(color.$text-status, 'brand-sub');
         }
       }
     }
@@ -818,47 +825,73 @@
 
   &-price-sub {
     @include mx.flex($direction: column);
-    gap: map.get(var.$unit, 12);
+    gap: map.get(var.$unit, 16);
 
     li {
-      @include mx.flex($align: center, $justify: space-between);
+      @include mx.flex(flex, row, space-between, center);
 
       span {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
-      }
 
-      strong {
-        @include typo.typography('b2b', $color: map.get(color.$text-colors, 'primary'));
+        & + span {
+          color: map.get(color.$text-colors, 'primary');
+        }
       }
     }
   }
 
+  // 결제예정금액
   &-total {
     @include mx.flex($align: center, $justify: space-between);
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32) map.get(var.$unit, 12);
 
     span {
-      @include typo.typography('b2b', $color: map.get(color.$text-colors, 'secondary'));
+      @include typo.typography('h3b', $color: map.get(color.$text-colors, 'primary'));
     }
 
     strong {
-      @include typo.typography('h4b', $color: map.get(color.$text-status, 'brand'));
+      @include typo.typography('h3b', $color: map.get(color.$text-status, 'brand'));
+    }
+
+    & + .vits-payment-item {
+      border-top: 0;
+    }
+  }
+
+  &-wrap {
+    @include mx.flex(flex, column, flex-start, stretch);
+    gap: map.get(var.$unit, 24);
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
+
+    .vits-payment-toggle {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, space-between, center);
+
+      .text {
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+
+      .ic {
+        @include icon.ic-size(fn.rem(24));
+        color: map.get(color.$text-colors, 'secondary');
+      }
     }
   }
 
   &-notice {
     padding: 0 map.get(var.$unit, 32);
 
-    @include cart-order-info-icon(
-      $text-color: map.get(color.$text-status, 'info-sub'),
-      $icon-color: map.get(color.$text-status, 'info')
-    );
+    @include cart-order-info-icon;
   }
 
   &-agree {
     width: calc(100% - fn.rem(64));
-    padding: fn.rem(44) 0 fn.rem(52);
+    padding: fn.rem(24) 0 fn.rem(32);
     margin: 0 auto;
+
+    .agree-text {
+      font-weight: 500;
+    }
 
     .checkbox-single-s {
       align-items: flex-start;
@@ -866,17 +899,18 @@
   }
 
   /* ===결제수단 영역=== */
+  &-method {
+    @include payment-info-box;
+  }
 
   /* 결제수단 단위 */
+  /* stylelint-disable-next-line no-descending-specificity */
   &-item {
     @include mx.border(top, 1px, solid, map.get(color.$layout-border, 'quinary'));
     @include mx.flex($direction: column);
     gap: map.get(var.$unit, 16);
-    padding: map.get(var.$unit, 20) map.get(var.$unit, 32);
-
-    &:first-child {
-      border-top: 0;
-    }
+    padding: map.get(var.$unit, 20) 0;
+    margin: 0 map.get(var.$unit, 32);
 
     /* 라디오 공통 */
     .radio-item {
@@ -886,7 +920,7 @@
 
       /* stylelint-disable-next-line no-descending-specificity */
       .label-name {
-        @include typo.typography('b3b', $color: map.get(color.$text-status, 'brand'));
+        @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
         align-items: center;
         white-space: nowrap;
 
@@ -896,6 +930,15 @@
           font-style: normal;
           line-height: normal;
         }
+
+        .label-sub {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          padding-left: map.get(var.$unit, 4);
+        }
+      }
+
+      input[type='radio']:checked ~ .label-name {
+        @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
       }
     }
   }
@@ -1170,6 +1213,15 @@
     border-radius: map.get(var.$radius, 'md');
   }
 
+  .vits-order-alerts {
+    padding: map.get(var.$unit, 20) map.get(var.$unit, 16);
+
+    .alerts-text-important {
+      flex-wrap: nowrap;
+      align-items: flex-start;
+    }
+  }
+
   // 무통장입금 패널
   &#panel-bank {
     .vits-payment-bank {
@@ -1196,14 +1248,17 @@
 
       // 입금자명 입력 필드
       &-input {
-        @include mx.flex($direction: column);
-        gap: fn.rem(10);
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 10);
 
         .vits-form-label {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+          min-width: fn.rem(74);
         }
 
         .vits-form-field {
+          flex: 1;
+
           ::placeholder {
             color: map.get(color.$text-colors, 'muted');
           }
@@ -1247,6 +1302,12 @@
 
       .label-name {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+      }
+
+      &:has(input:checked) {
+        .label-name {
+          color: map.get(color.$text-colors, 'secondary') !important;
+        }
       }
     }
   }

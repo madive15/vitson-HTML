@@ -160,6 +160,46 @@
   }
 }
 
+// input search (기본 지우기 버튼 노출)
+.vits-input-search {
+  &-form {
+    .input-clear-btn {
+      @include button.btn-reset;
+      @include mx.position(absolute, 50%, fn.rem(46));
+      @include icon.ic-size(var.$mo-gutter);
+      z-index: var.$zindex-base;
+      color: color.$color-white;
+      background: map.get(color.$gray-shades, '30');
+      border-radius: var.$mo-gutter;
+      transform: translateY(-50%);
+    }
+  }
+
+  &.theme-gray {
+    .vits-input-search-form {
+      background: map.get(color.$layout-surf, 'sunken');
+      border-radius: map.get(var.$radius, 'md');
+      box-shadow: none !important;
+
+      input {
+        color: map.get(color.$text-colors, 'primary');
+
+        &::placeholder {
+          color: map.get(color.$text-colors, 'muted');
+        }
+      }
+
+      .input-search-btn {
+        right: var.$mo-gutter;
+      }
+
+      .input-clear-btn {
+        background: map.get(color.$gray-shades, '40');
+      }
+    }
+  }
+}
+
 /* ================================================
 ======================= 팝업 =======================
 ================================================ */

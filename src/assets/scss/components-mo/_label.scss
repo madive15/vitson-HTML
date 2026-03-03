@@ -37,4 +37,23 @@
 
   @include typo.typography('b4r');
   line-height: normal;
+
+  .icon {
+    @include icon.ic-size(map.get(var.$unit, 12));
+    display: inline-block;
+    margin-right: map.get(var.$unit, 2);
+
+    > .ic {
+      display: block;
+    }
+  }
+}
+
+// 모바일 칩버튼
+.vits-chip-button {
+  text-align: left;
+
+  .text {
+    font-size: fn.rem(12);
+  }
 }

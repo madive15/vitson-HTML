@@ -1,20 +1,26 @@
+<% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
   /*
     general-label
     - 공통 상태/카테고리 레이블 (둥근 사각형, 4가지 색상 타입)
-    - 개별 사용: include 시 text, variant만 전달
 
     include params:
     - text: string (필수) 레이블 문구
-    - variant: 'blue' | 'red' | 'green' | 'gray' (필수) 색상 타입
+    - variant: 'blue' | 'red' | 'green' | 'gray' | 'sunken' (필수) 색상 타입
+    - iconName: string (선택) 아이콘명 — 전달 시 텍스트 앞에 아이콘 노출
   */
   const _text = (typeof text !== 'undefined' && text !== null) ? String(text).trim() : '';
   const _variant = (typeof variant !== 'undefined' && variant !== null) ? String(variant).trim().toLowerCase() : '';
-  const _validVariants = ['blue', 'red', 'green', 'gray' ,'sunken'];
+  const _iconName = (typeof iconName !== 'undefined' && iconName !== null) ? String(iconName).trim() : '';
+  const _validVariants = ['blue', 'red', 'green', 'gray', 'sunken'];
   const _type = _validVariants.includes(_variant) ? _variant : 'gray';
 %>
 
 <% if (_text) { %>
-<span class="vits-general-label is-general-<%= _type %>"><%= _text %></span>
+<span class="vits-general-label is-general-<%= _type %>">
+  <% if (_iconName) { %><span class="icon"
+    ><%- include(`${_src}/views/components/icon.ejs`, { iconName: _iconName }) %></span
+  ><% } %><%= _text %>
+</span>
 <% } %>

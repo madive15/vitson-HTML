@@ -5,29 +5,30 @@ defaultTax) ? defaultTax : 'single'; %>
   <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
   <div class="vits-tax-options">
+    <!-- prettier-ignore-start -->
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-single"
+        value="single"
+        <% if (taxChecked === 'single') { %>checked<% } %>
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">개별 발급 <span class="label-sub">주문별로 각 1회 발행</span></span>
+    </label>
     <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
-    name: 'tax-invoice',
-    id: 'tax-invoice-single',
-    value: 'single',
-    text: '개별 발급',
-    checked: taxChecked === 'single',
-  }) %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
-    name: 'tax-invoice',
-    id: 'tax-invoice-batch',
-    value: 'batch',
-    text: '일괄 발급',
-    checked: taxChecked === 'batch',
-  }) %>
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/form/input-radio-single.ejs`, {
-    name: 'tax-invoice',
-    id: 'tax-invoice-none',
-    value: 'none',
-    text: '발급 안함',
-    checked: taxChecked === 'none',
-  }) %>
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-batch"
+        value="batch"
+        <% if (taxChecked === 'batch') { %>checked<% } %>
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">일괄 발급 <span class="label-sub">익월에 통합 1회 발행</span></span>
+    </label>
+    <!-- [D] 발급안함 삭제 02.27 -->
   </div>
 </div>

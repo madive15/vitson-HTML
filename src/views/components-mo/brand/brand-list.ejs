@@ -1,0 +1,67 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  const brandFilters = ['전체','ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  const rawBrands = require(_src + '/views/mock-data/common/brand.mock.json');
+  const brandItems = rawBrands.map(item => item.brandNm.trim()).filter(name => name).sort();
+%>
+
+<div class="vm-brand-sheet" data-brand-sheet>
+  <!-- 검색 -->
+  <div class="vm-brand-sheet-search">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/form/input-search.ejs`, { 
+      idPrefix: 'brand-search', 
+      action: '/brand/search',
+      name: 'brand-search', 
+      placeholder: '브랜드를 검색하세요', 
+      hasClear: true 
+    }) %>
+  </div>
+
+  <!-- 필터 -->
+  <div class="vm-brand-sheet-filter" data-brand-filter>
+    <button type="button" class="brand-filter-prev is-disabled" data-brand-prev aria-label="이전">
+      <span class="icon">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+      </span>
+    </button>
+    <div class="brand-filter-scroll" data-brand-scroll>
+      <ul class="brand-filter-list" role="tablist" aria-label="브랜드 필터">
+        <% brandFilters.forEach((item, i) => { %>
+        <li role="presentation">
+          <button type="button" role="tab" class="brand-filter-btn<%= i === 0 ? ' is-active' : '' %>"
+            data-filter="<%= item === '전체' ? 'all' : item %>"
+            aria-selected="<%= i === 0 %>"
+            <%= i !== 0 ? 'tabindex="-1"' : '' %>><%= item %></button>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+    <button type="button" class="brand-filter-next" data-brand-next aria-label="다음">
+      <span class="icon">
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+      </span>
+    </button>
+  </div>
+
+  <!-- 브랜드 목록 -->
+  <div class="vm-brand-sheet-body" data-brand-body>
+    <p class="brand-count"><strong data-brand-count><%= brandItems.length %></strong>개의 브랜드</p>
+    <ul class="brand-list" data-brand-list>
+      <% brandItems.forEach(name => { %>
+      <li class="brand-item" data-brand-item>
+        <a href="#!" class="brand-link">
+          <span class="text"><%= name %></span>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+
+    <!-- 검색결과 없음 -->
+    <div class="brand-empty is-hidden" data-brand-empty>
+      <p>검색결과가 없습니다.</p>
+    </div>
+  </div>
+</div>

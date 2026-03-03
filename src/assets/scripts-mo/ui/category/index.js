@@ -2,8 +2,9 @@
  * @file scripts-mo/ui/category/index.js
  * @description 카테고리 UI 관련 모듈 통합 관리
  */
-import './category-sheet.js';
+import './category-renderer.js';
 import './category-tree-search.js';
+import './category-sheet.js';
 
 (function (window) {
   'use strict';
