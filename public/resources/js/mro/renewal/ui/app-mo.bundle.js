@@ -3076,6 +3076,7 @@
  * @description 모바일 Kendo Window 초기화 모듈
  * @variant 'bottomsheet' — 하단에서 슬라이드 업 (CSS 애니메이션)
  * @variant 'slide-right' — 오른쪽에서 슬라이드 인 (풀스크린)
+ * @variant 'slide-left'  — 왼쪽에서 슬라이드 인 (풀스크린)
  *
  * VmKendoWindow.open('myWindow');
  * VmKendoWindow.close('myWindow');
@@ -3138,7 +3139,7 @@
       if (!inst) return;
       checkScroll(id);
       var $kw = $el.closest('.k-window');
-      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright')) {
+      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright') && !$kw.hasClass('is-slideleft')) {
         inst.center();
       }
     }, DEBOUNCE_DELAY);
@@ -3188,7 +3189,8 @@
     var id = $el.attr('id');
     var variant = $el.attr('data-variant');
     var isBottom = variant === 'bottomsheet';
-    var isSlide = variant === 'slide-right';
+    var isSlide = variant === 'slide-right' || variant === 'slide-left';
+    var isSlideLeft = variant === 'slide-left';
     var noAnimation = isBottom || isSlide;
     var opts = {
       title: false,
@@ -3200,11 +3202,14 @@
       actions: [],
       animation: noAnimation ? false : undefined,
       open: function () {
+        console.log('kendo open id:', id);
         lockBody();
         if (openedWindows.indexOf(id) === -1) {
           openedWindows.push(id);
         }
         observeContent(id);
+        console.log('trigger kendo:open with:', id, typeof id);
+        $(document).trigger('kendo:open', [id]);
       },
       close: function () {
         disconnectContent(id);
@@ -3213,6 +3218,9 @@
         if (openedWindows.length === 0) {
           unlockBody();
         }
+
+        // 닫힘 이벤트 발행
+        $(document).trigger('kendo:close', [id]);
       }
     };
     $el.kendoWindow(opts);
@@ -3221,7 +3229,7 @@
       $kw.addClass('is-bottomsheet');
     }
     if (isSlide) {
-      $kw.addClass('is-slideright');
+      $kw.addClass(isSlideLeft ? 'is-slideleft' : 'is-slideright');
     }
   }
   function initAll(root) {
@@ -3241,8 +3249,19 @@
     if (inst) {
       var $kw = $el.closest('.k-window');
       var isBottom = $kw.hasClass('is-bottomsheet');
-      var isSlide = $kw.hasClass('is-slideright');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
       if (!isBottom && !isSlide) inst.center();
+
+      // 슬라이드 팝업은 마지막 하나만 유지
+      if (isSlide) {
+        openedWindows.slice().forEach(function (winId) {
+          if (winId === id) return;
+          var $w = $('#' + winId).closest('.k-window');
+          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
+            close(winId);
+          }
+        });
+      }
       inst.open();
 
       // 바텀시트: 하단 고정 + 슬라이드 업
@@ -3261,7 +3280,7 @@
         });
       }
 
-      // 슬라이드 라이트: 풀스크린 + 오른쪽에서 인
+      // 슬라이드: 풀스크린
       if (isSlide) {
         $kw.css({
           top: '0',
@@ -3290,10 +3309,10 @@
     var inst = $el.data('kendoWindow');
     if (inst) {
       var $kw = $el.closest('.k-window');
-      var isSlide = $kw.hasClass('is-slideright');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
       $el.find('.vm-modal-content').removeClass('has-scroll');
 
-      // 슬라이드 라이트만 애니메이션 후 close
+      // 슬라이드만 애니메이션 후 close
       if (isSlide) {
         closeWithAnimation($kw, inst);
         return;
@@ -3319,20 +3338,211 @@
 
 /***/ }),
 
-/***/ 5332:
+/***/ 4714:
 /***/ (function() {
 
 /**
- * @file scripts-mo/ui/common/tab.js
- * @description data-속성 기반 탭 공통 (모바일)
- * @scope [data-tab-scope]
+ * @file scripts-mo/ui/common/bottom-tab-bar.js
+ * @description 하단 탭바 액션 위임 + 카테고리 풀팝업 제어
+ * @scope .bottom-tab-bar
  *
- * @mapping [data-tab-btn][data-tab-target] ↔ [data-tab-panel="target"]
- * @state is-active 클래스 + aria-selected 값으로 제어
+ * @mapping
+ *  [data-action]  → 페이지 이동이 아닌 액션 트리거 버튼
  *
- * @a11y role="tablist", role="tab", role="tabpanel", aria-selected 제어
- * @note URL 파라미터 딥링크 지원 — ?tab={data-tab-target 값}으로 특정 탭 직접 활성화
+ * @events
+ *  tabBar:{action명} (document) — 액션 버튼 클릭 시 발행
+ *
+ * @note
+ *  - 카테고리 풀팝업 열기/닫기(토글) 직접 제어
+ *  - 풀팝업 내부 탭 전환 시 팝업 헤더 타이틀 동기화
+ *  - 카테고리 선택 시 해당 카테고리 페이지로 이동
  */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiBottomTabBar';
+  var SCOPE = '.bottom-tab-bar';
+  var FULL_POPUP = '.category-full-popup';
+  var POPUP_ID = 'categoryFullPopup';
+  var CAT_SCOPE = '[data-category-sheet]';
+  var OPEN_DELAY = 300;
+  var SEL_BREADCRUMB = '[data-ui="breadcrumb"]';
+
+  // 풀팝업 내부 카테고리 상태
+  var _state = {
+    path: {
+      depth1Id: '',
+      depth2Id: '',
+      depth3Id: ''
+    },
+    browseD1: ''
+  };
+  var _scopeBound = false;
+  var _bound = false;
+
+  // 풀팝업 열림 여부
+  function isPopupOpen() {
+    var $popup = $(FULL_POPUP);
+    return $popup.length && $popup.closest('.k-window').is(':visible');
+  }
+
+  // 풀팝업 안의 카테고리 스코프
+  function $catScope() {
+    return $('#' + POPUP_ID).find(CAT_SCOPE);
+  }
+
+  // 카테고리 선택 확정 → 페이지 이동
+  function onCommit(path) {
+    // 브레드크럼 있으면 바텀시트와 동일하게 처리 (브레드크럼 갱신 + 팝업 닫기)
+    if ($(SEL_BREADCRUMB).length) {
+      if (window.CategorySheet && window.CategorySheet.commitFromPopup) {
+        window.CategorySheet.commitFromPopup(path);
+      }
+      window.VmKendoWindow.close(POPUP_ID);
+      return;
+    }
+
+    // 브레드크럼 없으면 페이지 이동
+    var lastDepth = path.depth3Id || path.depth2Id || path.depth1Id;
+    if (lastDepth) {
+      window.location.href = '/category/' + lastDepth;
+    }
+  }
+
+  // 풀팝업 카테고리 렌더 + 이벤트 바인딩
+  function openCategoryPopup() {
+    if (!window.VmKendoWindow || !window.CategoryRenderer) return;
+    var R = window.CategoryRenderer;
+
+    // 바텀시트 경로 동기화
+    if (window.CategorySheet) {
+      var sheetPath = window.CategorySheet.getPath();
+      if (sheetPath.depth1Id) {
+        _state.path = sheetPath;
+        _state.browseD1 = sheetPath.depth1Id;
+      }
+    }
+    R.loadTree(function () {
+      var $scope = $catScope();
+      if (!$scope.length) return;
+
+      // 스코프 이벤트 최초 1회만 바인딩
+      if (!_scopeBound) {
+        R.bindScopeEvents($scope, _state, onCommit);
+        _scopeBound = true;
+      }
+
+      // 초기 상태 — 첫 번째 depth1 선택
+      var tree = R.getTree();
+      if (!_state.path.depth1Id && tree.length) {
+        _state.browseD1 = tree[0].categoryCode;
+      } else {
+        _state.browseD1 = _state.path.depth1Id;
+      }
+      R.renderDepth1($scope, _state.path, _state.browseD1);
+
+      // browseD1만 있고 path에 없을 때 첫 번째 항목 current 표시
+      if (!_state.path.depth1Id && tree.length) {
+        $scope.find('[data-depth1-item]').first().addClass('is-current');
+        R.renderSub($scope, _state.browseD1, _state.path);
+      }
+
+      // 카테고리 탭으로 초기화
+      if (window.UI && window.UI.tab) {
+        var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
+        if ($tabScope.length) {
+          window.UI.tab.activate($tabScope, 'categoryTab');
+        }
+      }
+      window.VmKendoWindow.open(POPUP_ID);
+      setTimeout(function () {
+        if (_state.path.depth1Id) {
+          R.scrollToActive($scope);
+        } else {
+          $scope.find('[data-depth1-panel]').scrollTop(0);
+          $scope.find('[data-sub-panel]').scrollTop(0);
+        }
+      }, OPEN_DELAY);
+    });
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 액션 버튼 클릭 → 풀팝업 열기/토글
+    $(document).on('click' + NS, SCOPE + ' [data-action]', function (e) {
+      e.preventDefault();
+      var action = $(this).data('action');
+      if (!action) return;
+      // 카테고리 액션
+      if (action === 'open-category-sheet') {
+        if (!window.VmKendoWindow) return;
+        // 바텀시트 열려있으면 닫고 풀팝업 열기
+        var $sheet = $('#categorySheet');
+        var sheetInst = $sheet.data('kendoWindow');
+        if (sheetInst && $sheet.is(':visible')) {
+          window.VmKendoWindow.close('categorySheet');
+        }
+        // 풀팝업 토글
+        if (isPopupOpen()) {
+          window.VmKendoWindow.close(POPUP_ID);
+          return;
+        }
+        openCategoryPopup();
+        return;
+      }
+
+      // 그 외 액션은 이벤트 발행
+      $(document).trigger('tabBar:' + action);
+    });
+
+    // 풀팝업 내부 탭 전환 → 팝업 타이틀 갱신
+    $(document).on('tab:change' + NS, FULL_POPUP + ' [data-tab-scope]', function (e, target, $btn) {
+      var title = $btn.find('.text').text();
+      $(this).closest(FULL_POPUP).find('.vm-modal-title').text(title);
+    });
+
+    // 바텀시트 카테고리 선택 → 풀팝업 상태 동기화
+    $(document).on('category:change' + NS, function (e, data) {
+      if (data && data.path) {
+        _state.path = $.extend({}, data.path);
+        _state.browseD1 = data.path.depth1Id;
+      }
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    var $scope = $catScope();
+    if ($scope.length && window.CategoryRenderer) {
+      window.CategoryRenderer.unbindScopeEvents($scope);
+    }
+    _state = {
+      path: {
+        depth1Id: '',
+        depth2Id: '',
+        depth3Id: ''
+      },
+      browseD1: ''
+    };
+    _scopeBound = false;
+    _bound = false;
+  }
+  window.UI.bottomTabBar = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5332:
+/***/ (function() {
+
 (function ($, window) {
   'use strict';
 
@@ -3343,7 +3553,38 @@
   var BTN = '[data-tab-btn]';
   var PANEL = '[data-tab-panel]';
   var ACTIVE = 'is-active';
+  var PEEK = 40;
   var _bound = false;
+
+  // 활성 탭 버튼이 보이도록 스크롤 보정
+  function scrollToBtn($scope, $btn) {
+    var $tabList = $scope.find('[role="tablist"]');
+    if (!$tabList.length || !$tabList[0].scrollWidth) return;
+    var wrap = $tabList[0];
+    var btn = $btn[0];
+    var $btns = $tabList.find(BTN);
+    var btnLeft = btn.offsetLeft;
+    var btnRight = btnLeft + btn.offsetWidth;
+    var wrapLeft = wrap.scrollLeft;
+    var wrapRight = wrapLeft + wrap.offsetWidth;
+    if (btn === $btns.last()[0]) {
+      $tabList.animate({
+        scrollLeft: wrap.scrollWidth
+      }, 200);
+    } else if (btn === $btns.first()[0]) {
+      $tabList.animate({
+        scrollLeft: 0
+      }, 200);
+    } else if (btnLeft < wrapLeft) {
+      $tabList.animate({
+        scrollLeft: btnLeft - PEEK
+      }, 200);
+    } else if (btnRight > wrapRight) {
+      $tabList.animate({
+        scrollLeft: btnRight - wrap.offsetWidth + PEEK
+      }, 200);
+    }
+  }
 
   // 탭 전환
   function activate($scope, target) {
@@ -3369,6 +3610,12 @@
     // 대상 패널 활성
     var $activePanel = $scope.find(PANEL + '[data-tab-panel="' + target + '"]');
     $activePanel.addClass(ACTIVE).removeAttr('hidden');
+
+    // 스크롤 보정
+    scrollToBtn($scope, $activeBtn);
+
+    // 탭 전환 이벤트 발행
+    $scope.trigger('tab:change', [target, $activeBtn]);
   }
   function bind() {
     if (_bound) return;
@@ -3409,7 +3656,7 @@
     // URL 파라미터 기반 탭 딥링크 (?tab=tab2)
     var urlTab = new URLSearchParams(window.location.search).get('tab');
 
-    // 초기 활성 탭 설정 (is-active 있는 버튼 기준)
+    // 초기 활성 탭 설정
     $(SCOPE).each(function () {
       var $scope = $(this);
       var $activeBtn;
@@ -3442,6 +3689,51 @@
     activate: activate
   };
 })(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5365:
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+(function ($) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var instance = null;
+  function init() {
+    var $container = $('[data-voice-blob-anim]');
+    if (!$container.length || instance) return;
+    var lottiePath = $container.data('lottie-path');
+    if (!lottiePath) return;
+    __webpack_require__.e(/* import() */ 96).then(__webpack_require__.bind(__webpack_require__, 3640)).then(function () {
+      if (instance) return;
+      var player = document.createElement('dotlottie-wc');
+      player.setAttribute('src', lottiePath);
+      player.setAttribute('loop', '');
+      player.setAttribute('autoplay', '');
+      player.setAttribute('layout', JSON.stringify({
+        fit: 'contain',
+        align: [0.5, 0.5]
+      }));
+      player.useFrameInterpolation = false;
+      player.style.width = '100%';
+      player.style.height = '100%';
+      $container[0].innerHTML = '';
+      $container[0].appendChild(player);
+      instance = player;
+    });
+  }
+  function destroy() {
+    if (!instance) return;
+    instance.remove();
+    instance = null;
+  }
+  window.UI.voiceBlob = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery);
 
 /***/ }),
 
@@ -3932,846 +4224,6 @@
 
 /***/ }),
 
-/***/ 6010:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
-var utils = __webpack_require__(1781);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
-var scroll_lock = __webpack_require__(2066);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
-var kendo_window = __webpack_require__(4387);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
-var kendo_datepicker = __webpack_require__(7713);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
-var kendo_datepicker_single = __webpack_require__(1014);
-;// ./src/assets/scripts-mo/ui/kendo/index.js
-/**
- * @file scripts-mo/ui/kendo/index.js
- * @description Kendo UI 관련 모듈 통합 관리
- */
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
-  window.UI.kendo = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.initAll === 'function') mod.initAll();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
-var tooltip = __webpack_require__(9592);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
-var sticky_observer = __webpack_require__(5723);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
-var overflow_menu = __webpack_require__(4305);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
-var toggle = __webpack_require__(8955);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
-var step_flow = __webpack_require__(8486);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
-var expand = __webpack_require__(8839);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
-var tab = __webpack_require__(5332);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
-var scroll_buttons = __webpack_require__(3474);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab-sticky.js
-var tab_sticky = __webpack_require__(2006);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/collapse.js
-var collapse = __webpack_require__(9212);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-overflow-gradient.js
-var scroll_overflow_gradient = __webpack_require__(2638);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
-var option_box = __webpack_require__(3198);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-tab.js
-var step_tab = __webpack_require__(6323);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/auth.js
-var auth = __webpack_require__(689);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/survey-detail.js
-var survey_detail = __webpack_require__(1151);
-;// ./src/assets/scripts-mo/ui/common/index.js
-/**
- * @file scripts-mo/ui/common/index.js
- * @description 공통 UI 모듈 통합
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail'];
-  window.UI.common = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
-var form_select = __webpack_require__(8550);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
-var checkbox_total = __webpack_require__(548);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
-var form_textarea = __webpack_require__(5912);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input.js
-var input = __webpack_require__(3064);
-;// ./src/assets/scripts-mo/ui/form/index.js
-/**
- * @file scripts-mo/ui/form/index.js
- * @description 폼 관련 UI 모듈 통합
- */
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['select', 'checkboxTotal', 'textarea', 'input'];
-  window.UI.form = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
-var product_view_toggle = __webpack_require__(5487);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
-var product_inline_banner = __webpack_require__(905);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(7111);
-;// ./src/assets/scripts-mo/ui/product/detail-gallery.js
-/**
- * @file detail-gallery.js
- * @description 상품 상세 썸네일 갤러리 (메인 슬라이더 + 상세이미지 팝업 모달)
- * @scope [data-ui="detail-gallery"]
- * @mapping detail-overview-thumb.ejs
- * @state .is-open — 모달 활성화
- * @a11y hidden/aria-modal, ESC 닫기
- * @note iOS body scroll lock — position:fixed + scrollTop 저장
- * @note Android 물리 백버튼 — history.pushState 활용
- * @example 외부 사용 예시
- *          const gallery = UI.detailGallery.getInstance();
- *          if (gallery) {
- *            const idx = gallery.getActiveIndex();
- *            gallery.slideTo(2);
- *            gallery.openZoom();
- *          }
- */
-
-(function () {
-  'use strict';
-
-  const SCOPE = '[data-ui="detail-gallery"]';
-  const IS_OPEN = 'is-open';
-  let savedScrollY = 0;
-
-  // iOS body scroll lock
-  function lockScroll() {
-    savedScrollY = window.scrollY;
-    document.body.style.cssText = 'position:fixed;top:' + -savedScrollY + 'px;left:0;right:0;overflow:hidden;';
-  }
-  function unlockScroll() {
-    document.body.style.cssText = '';
-    window.scrollTo(0, savedScrollY);
-  }
-  function init() {
-    const root = document.querySelector(SCOPE);
-    if (!root) return;
-
-    // 중복 초기화 방지
-    if (root._galleryInstance) return;
-    const mainEl = root.querySelector('[data-role="main"]');
-    const zoomEl = root.querySelector('[data-role="zoom"]');
-    const zoomSwiperEl = root.querySelector('[data-role="zoom-swiper"]');
-    const zoomThumbsEl = root.querySelector('[data-role="zoom-thumbs"]');
-    if (!mainEl) return;
-    const total = mainEl.querySelectorAll('.swiper-slide').length;
-    const isSingle = total < 2;
-
-    // 1장이면 모달 썸네일 숨김
-    if (isSingle && zoomThumbsEl) zoomThumbsEl.style.display = 'none';
-
-    // 메인 Swiper
-    const mainSwiper = new swiper_bundle/* default */.A(mainEl, {
-      slidesPerView: 1,
-      loop: false,
-      allowTouchMove: !isSingle,
-      observer: true,
-      observeParents: true,
-      pagination: isSingle ? false : {
-        el: mainEl.querySelector('.swiper-pagination'),
-        clickable: true
-      }
-    });
-
-    // 모달 Swiper — lazy init
-    let zoomSwiper = null;
-    let zoomThumbSwiper = null;
-    function createZoom(index) {
-      if (!zoomSwiper) {
-        if (!isSingle && zoomThumbsEl) {
-          zoomThumbSwiper = new swiper_bundle/* default */.A(zoomThumbsEl, {
-            slidesPerView: 'auto',
-            spaceBetween: 7,
-            watchSlidesProgress: true
-          });
-        }
-        zoomSwiper = new swiper_bundle/* default */.A(zoomSwiperEl, {
-          slidesPerView: 1,
-          spaceBetween: 20,
-          loop: false,
-          autoHeight: true,
-          observer: true,
-          observeParents: true,
-          thumbs: zoomThumbSwiper ? {
-            swiper: zoomThumbSwiper
-          } : undefined,
-          on: {
-            slideChange: function () {
-              // 활성 썸네일이 보이도록 스크롤
-              if (zoomThumbSwiper) {
-                zoomThumbSwiper.slideTo(this.activeIndex);
-              }
-            }
-          }
-        });
-      } else {
-        zoomSwiper.update();
-        if (zoomThumbSwiper) zoomThumbSwiper.update();
-      }
-      zoomSwiper.slideTo(index, 0);
-    }
-
-    // 모달 열기
-    function openZoom() {
-      if (!zoomEl) return;
-      const index = mainSwiper.activeIndex;
-      zoomEl.removeAttribute('hidden');
-      zoomEl.classList.add(IS_OPEN);
-      lockScroll();
-
-      // Android 뒤로가기 대응
-      history.pushState({
-        detailGalleryOpen: true
-      }, '');
-      requestAnimationFrame(() => {
-        createZoom(index);
-      });
-    }
-
-    // 모달 닫기
-    function closeZoom(fromPop) {
-      if (!zoomEl || !zoomEl.classList.contains(IS_OPEN)) return;
-      const index = zoomSwiper ? zoomSwiper.activeIndex : mainSwiper.activeIndex;
-      zoomEl.classList.remove(IS_OPEN);
-      zoomEl.setAttribute('hidden', '');
-      unlockScroll();
-      mainSwiper.slideTo(index, 0);
-      if (!fromPop) history.back();
-    }
-
-    // 이벤트
-    root.addEventListener('click', e => {
-      const target = e.target.closest('[data-role]');
-      if (!target) return;
-      const role = target.getAttribute('data-role');
-      if (role === 'zoom-open') openZoom();
-      if (role === 'zoom-close') closeZoom();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && zoomEl?.classList.contains(IS_OPEN)) {
-        closeZoom();
-      }
-    });
-
-    // Android 물리 백버튼
-    window.addEventListener('popstate', () => {
-      if (zoomEl?.classList.contains(IS_OPEN)) {
-        closeZoom(true);
-      }
-    });
-
-    // public API
-    root._galleryInstance = {
-      main: mainSwiper,
-      zoom: () => zoomSwiper,
-      zoomThumb: () => zoomThumbSwiper,
-      // 외부 접근용 API
-      getActiveIndex: () => mainSwiper.activeIndex,
-      slideTo: index => mainSwiper.slideTo(index),
-      openZoom,
-      closeZoom,
-      getTotal: () => total
-    };
-  }
-  function destroy() {
-    const root = document.querySelector(SCOPE);
-    if (!root || !root._galleryInstance) return;
-    const inst = root._galleryInstance;
-    inst.main?.destroy(true, true);
-    inst.zoom()?.destroy(true, true);
-    inst.zoomThumb()?.destroy(true, true);
-    delete root._galleryInstance;
-  }
-  window.UI = window.UI || {};
-  window.UI.detailGallery = {
-    init,
-    destroy,
-    // 외부에서 UI.detailGallery.getInstance()로 접근
-    getInstance: () => document.querySelector(SCOPE)?._galleryInstance
-  };
-})();
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/bottom-product-bar.js
-var bottom_product_bar = __webpack_require__(3012);
-;// ./src/assets/scripts-mo/ui/product/index.js
-/**
- * @file scripts-mo/ui/product/index.js
- * @description 상품 관련 UI 모듈 통합
- */
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
-  window.UI.product = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (!mod) return;
-
-        // initAll 우선, 없으면 init
-        if (typeof mod.initAll === 'function') {
-          mod.initAll();
-        } else if (typeof mod.init === 'function') {
-          mod.init();
-        }
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
-var category_sheet = __webpack_require__(6410);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
-var category_tree_search = __webpack_require__(1234);
-;// ./src/assets/scripts-mo/ui/category/index.js
-/**
- * @file scripts-mo/ui/category/index.js
- * @description 카테고리 UI 관련 모듈 통합 관리
- */
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['CategorySheet', 'CategoryTreeSearch'];
-  window.UI.category = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
-var filter_product = __webpack_require__(2014);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
-var filter_mapage = __webpack_require__(2624);
-;// ./src/assets/scripts-mo/ui/filter/index.js
-/**
- * @file scripts-mo/ui/filter/index.js
- * @description 필터 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['FilterProduct', 'FilterMypage'];
-  window.UI.filter = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
-var cart = __webpack_require__(9459);
-;// ./src/assets/scripts-mo/ui/cart-order/order.js
-/**
- * @file scripts-mo/ui/cart-order/order.js
- * @description 주문/결제(주문서) 페이지 UI 기능
- * - 배송 방법 탭 전환 (택배/퀵배송/화물)
- * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
- * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
- * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
- * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
- * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
- */
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) {
-    console.log('[order] jQuery not found');
-    return;
-  }
-  window.UI = window.UI || {};
-  var EVENT_NS = '.uiOrder';
-  var ROOT_SEL = '.vm-cart-order';
-  var METHOD_BTN_SEL = '.vm-shipping-method-btn';
-  var METHOD_PANEL_SEL = '.vm-shipping-panel';
-  var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
-  var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
-  var INIT_KEY = 'uiOrderInit';
-  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
-
-  // 결제수단 (모바일 vm-*)
-  var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
-  var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
-  var PAYMENT_ITEM_SEL = '.vm-payment-item';
-  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
-  var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
-  var PAYMENT_PANEL_SEL = '.vm-payment-panel';
-  var PAYMENT_METHOD_SEL = '.vm-payment-method';
-
-  // 결제 카드/계좌 Swiper
-  var PAYMENT_SWIPER_SEL = '.vm-card-list.js-swiper[data-swiper-type="payment"]';
-  var SWIPER_DATA_KEY = 'uiPaymentSwiper';
-  var PAYMENT_SWIPER_OPTIONS = {
-    slidesPerView: 'auto',
-    spaceBetween: 12,
-    speed: 500,
-    slidesOffsetAfter: 50,
-    breakpoints: {
-      768: {
-        slidesOffsetAfter: 280
-      }
-    },
-    a11y: false,
-    on: {
-      init: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
-      },
-      slideChangeTransitionEnd: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
-      }
-    }
-  };
-  var METHOD_FREIGHT = 'freight';
-  var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
-  var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
-  var ID_PAY_SIMPLE = 'pay-simple';
-  var ID_PANEL_CREDIT = 'panel-credit';
-  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
-  function getScope(root) {
-    if (!root) return $(ROOT_SEL);
-    var $el = $(root);
-    if (!$el.length) return $el;
-    return $el.find(ROOT_SEL).addBack().filter(ROOT_SEL);
-  }
-
-  /**
-   * 배송 방법 탭 클릭 시 해당 패널만 활성화
-   */
-  function bindShippingMethodTabs($scope) {
-    var $btns = $scope.find(METHOD_BTN_SEL);
-    var $panels = $scope.find(METHOD_PANEL_SEL);
-    if (!$btns.length || !$panels.length) return;
-    $btns.off('click' + EVENT_NS);
-    $btns.on('click' + EVENT_NS, function () {
-      var method = $(this).data('method');
-      if (!method) return;
-      $btns.removeClass('is-active');
-      $(this).addClass('is-active');
-      $panels.removeClass('is-active');
-      $panels.filter('[data-panel="' + method + '"]').addClass('is-active');
-      updateFreightVisibility($scope, method);
-    });
-  }
-
-  /**
-   * 화물 선택 시 data-freight-visible 영역 노출, data-freight-hidden 영역 비노출
-   */
-  function updateFreightVisibility($scope, method) {
-    var isFreight = method === METHOD_FREIGHT;
-    $scope.find(FREIGHT_VISIBLE_SEL).toggle(isFreight);
-    $scope.find(FREIGHT_HIDDEN_SEL).toggle(!isFreight);
-  }
-  function bindFreightVisibility($scope) {
-    var $activeBtn = $scope.find(METHOD_BTN_SEL + '.is-active');
-    var method = $activeBtn.length ? $activeBtn.data('method') : '';
-    updateFreightVisibility($scope, method);
-  }
-
-  /**
-   * 결제수단 탭 클릭 시 해당 탭패널만 활성화 (간편결제 내 카드/계좌 탭)
-   */
-  function setPaymentTabState($scope, $tab) {
-    if (!$tab || !$tab.length) return;
-    var tabId = $tab.attr('id');
-    var controlsId = $tab.attr('aria-controls');
-    var $tablist = $tab.closest('[role="tablist"]');
-    var $parentPanel = $tablist.closest(PAYMENT_PANEL_SEL);
-    if (!$tablist.length || !$parentPanel.length) return;
-    var $tabs = $tablist.find(PAYMENT_TAB_SEL);
-    var $panels = $parentPanel.find(PAYMENT_TAB_PANEL_SEL);
-    $tabs.each(function () {
-      var $t = $(this);
-      $t.removeClass('is-active');
-      $t.attr('aria-selected', 'false');
-      $t.attr('aria-expanded', 'false');
-    });
-    $tab.addClass('is-active');
-    $tab.attr('aria-selected', 'true');
-    $panels.each(function () {
-      $(this).removeClass('is-active');
-    });
-    if (controlsId) {
-      var $targetPanel = $scope.find('#' + controlsId);
-      if ($targetPanel.length) {
-        $targetPanel.addClass('is-active');
-        $tab.attr('aria-expanded', 'true');
-        var currentLabelledBy = $targetPanel.attr('aria-labelledby');
-        if (!currentLabelledBy || currentLabelledBy !== tabId) {
-          $targetPanel.attr('aria-labelledby', tabId);
-        }
-        // 노출된 패널 안의 payment 스와이퍼는 초기화 시 숨겨져 있었을 수 있으므로 크기 재계산
-        $targetPanel.find(PAYMENT_SWIPER_SEL).each(function () {
-          var instance = $(this).data(SWIPER_DATA_KEY);
-          if (instance && typeof instance.update === 'function') instance.update();
-        });
-      }
-    }
-  }
-
-  /**
-   * 결제수단 라디오 변경 시 해당 패널만 활성화 (간편결제/카드/계좌이체/무통장/여신)
-   */
-  function setPaymentPanelState($scope, $radio) {
-    if (!$radio || !$radio.length) return;
-    var controlsId = $radio.attr('aria-controls');
-    if (!controlsId) return;
-    var radioId = $radio.attr('id');
-    var $item = $radio.closest(PAYMENT_ITEM_SEL);
-    var $methodWrap = $item.closest(PAYMENT_METHOD_SEL);
-    if (!$item.length || !$methodWrap.length) return;
-    var $allPanels = $methodWrap.find(PAYMENT_PANEL_SEL);
-
-    // 간편결제 탭이 '계좌'일 때 다른 결제수단 선택 시 카드 탭으로 전환
-    var $tabSimpleAccount = $scope.find('#' + ID_TAB_SIMPLE_ACCOUNT);
-    if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
-      if (radioId !== ID_PAY_SIMPLE) {
-        var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
-        if ($tabSimpleCard.length) {
-          setPaymentTabState($scope, $tabSimpleCard);
-        }
-      }
-    }
-    $allPanels.each(function () {
-      $(this).removeClass('is-active');
-    });
-    $methodWrap.find(PAYMENT_RADIO_SEL).attr('aria-expanded', 'false');
-    var $targetPanel = $methodWrap.find('#' + controlsId);
-    if ($targetPanel.length) {
-      $targetPanel.addClass('is-active');
-      $radio.attr('aria-expanded', 'true');
-      var currentLabelledBy = $targetPanel.attr('aria-labelledby');
-      if (!currentLabelledBy || currentLabelledBy !== radioId) {
-        $targetPanel.attr('aria-labelledby', radioId);
-      }
-      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
-      if (controlsId === ID_PANEL_CREDIT) {
-        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
-        if ($taxBatch.length) $taxBatch.prop('checked', true);
-      }
-    } else {
-      $radio.attr('aria-expanded', 'false');
-    }
-  }
-
-  /**
-   * 결제 카드/계좌 리스트 Swiper 초기화
-   */
-  function initPaymentSwipers($scope) {
-    if (typeof swiper_bundle/* default */.A === 'undefined') return;
-    var $containers = $scope.find(PAYMENT_SWIPER_SEL);
-    if (!$containers.length) return;
-    $containers.each(function () {
-      if ($(this).data(SWIPER_DATA_KEY)) return;
-      if (!this.querySelector('.swiper-wrapper')) return;
-      var prevEl = this.querySelector('.swiper-button-prev');
-      var nextEl = this.querySelector('.swiper-button-next');
-      var $el = $(this);
-      if (!this.classList.contains('swiper')) this.classList.add('swiper');
-      var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
-      if (prevEl && nextEl) {
-        options.navigation = {
-          nextEl: nextEl,
-          prevEl: prevEl,
-          disabledClass: 'swiper-button-disabled'
-        };
-      }
-      try {
-        var instance = new swiper_bundle/* default */.A(this, options);
-        $el.data(SWIPER_DATA_KEY, instance);
-        this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
-          slide.addEventListener('click', function () {
-            instance.slideTo(index);
-          });
-        });
-      } catch (e) {
-        console.warn('[order] Payment swiper init failed', e);
-      }
-    });
-  }
-
-  /**
-   * 결제수단 탭/라디오 이벤트 바인딩 및 초기 상태
-   */
-  function bindPayment($scope) {
-    var $payment = $scope.find('.vm-payment');
-    if (!$payment.length) return;
-
-    // 초기: 간편결제 카드 탭 활성화
-    var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
-    if ($tabSimpleCard.length && !$tabSimpleCard.hasClass('is-active')) {
-      setPaymentTabState($scope, $tabSimpleCard);
-    }
-
-    // 탭 aria-expanded 초기화
-    $scope.find(PAYMENT_TAB_SEL).each(function () {
-      var $tab = $(this);
-      var isActive = $tab.hasClass('is-active');
-      var controlsId = $tab.attr('aria-controls');
-      if (controlsId) {
-        var $panel = $scope.find('#' + controlsId);
-        var isPanelActive = $panel.length && $panel.hasClass('is-active');
-        $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
-      } else {
-        $tab.attr('aria-expanded', 'false');
-      }
-    });
-    $scope.find(PAYMENT_TAB_SEL + '.is-active').each(function () {
-      setPaymentTabState($scope, $(this));
-    });
-
-    // 라디오 aria-expanded 초기화 후 체크된 항목 기준으로 패널 활성화
-    $scope.find(PAYMENT_RADIO_SEL).each(function () {
-      var $radio = $(this);
-      var controlsId = $radio.attr('aria-controls');
-      var isChecked = $radio.is(':checked');
-      if (controlsId) {
-        var $panel = $scope.find('#' + controlsId);
-        var isPanelActive = $panel.length && $panel.hasClass('is-active');
-        $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
-      } else {
-        $radio.attr('aria-expanded', 'false');
-      }
-    });
-    $scope.find(PAYMENT_RADIO_SEL + ':checked').each(function () {
-      setPaymentPanelState($scope, $(this));
-    });
-
-    // 결제수단 탭 클릭
-    $scope.off('click' + EVENT_NS, PAYMENT_TAB_SEL);
-    $scope.on('click' + EVENT_NS, PAYMENT_TAB_SEL, function (e) {
-      e.preventDefault();
-      setPaymentTabState($scope, $(this));
-    });
-
-    // 결제수단 라디오 변경
-    $scope.off('change' + EVENT_NS, PAYMENT_RADIO_SEL);
-    $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
-      setPaymentPanelState($scope, $(this));
-    });
-
-    // 결제수단 토글 클릭 시 해당 패널 활성화
-    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
-      $(document).data(TOGGLE_DELEGATE_KEY, true);
-      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
-        e.preventDefault();
-        var $toggle = $(this);
-        var $scope = $toggle.closest(ROOT_SEL);
-        if (!$scope.length) return;
-        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
-        var $radio = $item.find('input[type="radio"][aria-controls]');
-        if ($radio.length) {
-          $radio.prop('checked', true);
-          setPaymentPanelState($scope, $radio);
-        }
-      });
-    }
-
-    // 결제 카드/계좌 Swiper 초기화
-    initPaymentSwipers($scope);
-  }
-
-  /**
-   * 주문서 영역 초기화 (배송 탭, 화물 노출, 결제수단)
-   */
-  function bindRoot($scope) {
-    if ($scope.data(INIT_KEY)) return;
-    $scope.data(INIT_KEY, true);
-    bindShippingMethodTabs($scope);
-    bindFreightVisibility($scope);
-    bindPayment($scope);
-  }
-  window.UI.order = {
-    init: function (root) {
-      var $scope = getScope(root);
-      if (!$scope.length) return;
-      $scope.each(function () {
-        bindRoot($(this));
-      });
-      console.log('[order] order page initialized');
-    }
-  };
-  console.log('[order] module loaded');
-})(window.jQuery, window);
-;// ./src/assets/scripts-mo/ui/cart-order/index.js
-/**
- * @file scripts-mo/ui/cart-order/index.js
- * @description 장바구니/주문 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['cart', 'order'];
-  window.UI.cartOrder = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-;// ./src/assets/scripts-mo/core/ui.js
-/**
- * @file scripts-mo/core/ui.js
- * @description 모바일 UI 모듈 진입점
- * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order'];
-  window.UI.init = function () {
-    modules.forEach(function (name) {
-      var mod = window.UI[name];
-      if (mod && typeof mod.init === 'function') mod.init();
-    });
-  };
-
-  // DOM 준비 후 자동 초기화
-  $(document).ready(function () {
-    window.UI.init();
-  });
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
-var common = __webpack_require__(6023);
-;// ./src/assets/scripts-mo/index.js
-/**
- * @file mobile/index.js
- * @description 모바일 번들 엔트리(진입점)
- * @note
- *  - core 모듈은 utils → ui → common 순서로 포함
- *  - index.js는 짧게 유지(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서 관리
- */
-
-
-
-console.log('[mobile/index] entry 실행');
-;// ./src/app-mo.js
-// 모바일 전용
-
-
-// 공통 (PC와 동일)
-
-
-
-
-
-
-
-// 모바일 전용
-
-
-
-
-
-/***/ }),
-
 /***/ 6023:
 /***/ (function() {
 
@@ -4952,18 +4404,8 @@ console.log('[mobile/index] entry 실행');
 
 /**
  * @file scripts-mo/ui/category/category-sheet.js
- * @description 카테고리 바텀시트 — depth1/2/3 렌더 + 선택 → 브레드크럼 갱신
+ * @description 카테고리 바텀시트 — CategoryRenderer 기반 렌더 + 브레드크럼 갱신
  * @scope [data-category-sheet]
- *
- * @mapping
- *  [data-depth1-list]  → 좌측 depth1 목록
- *  [data-sub-list]     → 우측 전체보기 + depth2/3 목록
- *  [data-depth2-item]  → div.depth2-header([data-depth2-select] + [data-toggle-btn]) + ul[data-depth3-list]
- *
- * @state .is-active     — 확정된 선택 항목 (commitSelection 이후)
- * @state .is-current    — 탐색 중인 depth1 (좌측 패널 클릭 시)
- * @state .is-open       — depth2 아코디언 펼침
- * @state .has-children  — depth2 하위(depth3) 존재
  *
  * @events
  *  category:change (document) — 선택 확정 시 발행 { path, names, depth4 }
@@ -4974,114 +4416,40 @@ console.log('[mobile/index] entry 실행');
   'use strict';
 
   if (!$) return;
-
-  // 상수
-
   var NS = '.uiCategorySheet';
   var SCOPE = '[data-category-sheet]';
   var POPUP_ID = 'categorySheet';
-  var SLIDE_DURATION = 200;
-  var CLS = {
-    active: 'is-active',
-    current: 'is-current',
-    open: 'is-open',
-    hasChildren: 'has-children'
-  };
+  var OPEN_DELAY = 300;
   var SEL = {
-    depth1List: '[data-depth1-list]',
-    depth1Panel: '[data-depth1-panel]',
-    depth1Item: '[data-depth1-item]',
-    subList: '[data-sub-list]',
-    subPanel: '[data-sub-panel]',
-    depth2Item: '[data-depth2-item]',
-    depth2Select: '[data-depth2-select]',
-    depth3List: '[data-depth3-list]',
-    depth3Item: '[data-depth3-item]',
-    toggleBtn: '[data-toggle-btn]',
-    viewAll: '[data-view-all]',
-    breadcrumb: '[data-ui="breadcrumb"]',
     breadcrumbBtn: '[data-ui="breadcrumb"] button.vm-breadcrumb-btn',
     breadcrumbItems: '[data-ui="breadcrumb"] .vm-breadcrumb-items'
   };
-  var ESC_MAP = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  };
 
   // 내부 상태
-
-  var _tree = [];
-  var _path = {
-    depth1Id: '',
-    depth2Id: '',
-    depth3Id: ''
-  }; // 확정된 선택
-  var _browseD1 = ''; // 탐색 중인 depth1
+  var _state = {
+    path: {
+      depth1Id: '',
+      depth2Id: '',
+      depth3Id: ''
+    },
+    browseD1: ''
+  };
+  var _savedPath = null;
   var _bound = false;
 
-  // 유틸
-
-  function esc(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"']/g, function (ch) {
-      return ESC_MAP[ch];
-    });
-  }
-  function findNode(list, code) {
-    if (!code || !list) return null;
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].categoryCode === code) return list[i];
-    }
-    return null;
+  // 카테고리 시트 열림 여부
+  function isSheetOpen() {
+    var $el = $('#' + POPUP_ID);
+    var inst = $el.data('kendoWindow');
+    return inst && inst.element.is(':visible');
   }
 
-  // null 제거한 유효 자식 목록
-  function validChildren(node) {
-    if (!node || !Array.isArray(node.categoryList)) return [];
-    return node.categoryList.filter(function (c) {
-      return c && c.categoryCode;
-    });
+  // 바텀시트 안의 스코프
+  function $sheetScope() {
+    return $('#' + POPUP_ID).find(SCOPE);
   }
 
-  // 확정 경로 기준 d1→d2→d3 노드 조회
-  function resolvePath() {
-    var d1 = findNode(_tree, _path.depth1Id);
-    if (!d1) return {
-      d1: null,
-      d2: null,
-      d3: null
-    };
-    var d2 = findNode(validChildren(d1), _path.depth2Id);
-    var d3 = d2 ? findNode(validChildren(d2), _path.depth3Id) : null;
-    return {
-      d1: d1,
-      d2: d2,
-      d3: d3
-    };
-  }
-  function pathNames() {
-    var p = resolvePath();
-    if (!p.d1) return [];
-    var names = [p.d1.categoryNm];
-    if (p.d2) names.push(p.d2.categoryNm);
-    if (p.d3) names.push(p.d3.categoryNm);
-    return names;
-  }
-  function depth4Items() {
-    var p = resolvePath();
-    return p.d3 ? validChildren(p.d3) : [];
-  }
-  function scrollToCenter(panel, item) {
-    if (!panel || !item) return;
-    var h = panel.clientHeight;
-    panel.scrollTop = Math.max(0, item.offsetTop - (h - item.offsetHeight) / 2);
-  }
-
-  // 브레드크럼
-
+  // 브레드크럼 갱신
   function updateBreadcrumb(names) {
     if (!names || !names.length) return;
     var $list = $(SEL.breadcrumbItems);
@@ -5104,17 +4472,17 @@ console.log('[mobile/index] entry 실행');
   }
 
   // 선택 확정 → 브레드크럼 갱신 → 이벤트 발행 → 팝업 닫기
-
-  function commitSelection() {
-    _path.depth1Id = _browseD1;
-    var names = pathNames();
-    var d4 = depth4Items();
+  function onCommit(path) {
+    _state.path = $.extend({}, path);
+    _state.browseD1 = path.depth1Id;
+    _savedPath = null;
+    var R = window.CategoryRenderer;
+    var names = R.pathNames(path);
+    var d4 = R.depth4Items(path);
     updateBreadcrumb(names);
-
-    // 헤더 타이틀 갱신 — 마지막 뎁스 이름
     $('[data-header-title]').text(names[names.length - 1] || '');
     $(document).trigger('category:change', [{
-      path: $.extend({}, _path),
+      path: $.extend({}, path),
       names: names,
       depth4: d4
     }]);
@@ -5123,238 +4491,734 @@ console.log('[mobile/index] entry 실행');
     }
   }
 
-  // 렌더: depth1 (좌측 패널)
+  // 시트 열기
+  function openSheet() {
+    if (!window.VmKendoWindow || !window.CategoryRenderer) return;
+    var R = window.CategoryRenderer;
+    var $scope = $sheetScope();
+    if (!$scope.length) return;
 
-  function renderDepth1() {
-    var $scope = $(SCOPE);
-    var $list = $scope.find(SEL.depth1List);
-    if (!$list.length || !_tree.length) return;
-
-    // 팝업 열 때 탐색 위치를 확정 위치로 초기화
-    _browseD1 = _path.depth1Id;
-    var html = [];
-    for (var i = 0; i < _tree.length; i++) {
-      var node = _tree[i];
-      if (!node || !node.categoryCode) continue;
-      var code = node.categoryCode;
-      var isActive = code === _path.depth1Id;
-      var isCurrent = code === _browseD1;
-      html.push('<li class="depth1-item' + (isActive ? ' ' + CLS.active : '') + (isCurrent ? ' ' + CLS.current : '') + '"' + ' data-depth1-item role="option" tabindex="0"' + ' aria-selected="' + isActive + '"' + ' data-code="' + esc(code) + '">' + esc(node.categoryNm) + '</li>');
-    }
-    $list.html(html.join(''));
-    if (_browseD1) {
-      renderSub(_browseD1);
-    }
+    // 열기 전 경로 백업
+    _savedPath = $.extend({}, _state.path);
+    _state.browseD1 = _state.path.depth1Id;
+    R.renderDepth1($scope, _state.path, _state.browseD1);
+    window.VmKendoWindow.open(POPUP_ID);
+    setTimeout(function () {
+      R.scrollToActive($scope);
+    }, OPEN_DELAY);
   }
-
-  // 렌더: 우측 패널 (전체보기 + depth2/3)
-
-  function renderSub(d1Code) {
-    var $scope = $(SCOPE);
-    var $list = $scope.find(SEL.subList);
-    if (!$list.length) return;
-    var d1 = findNode(_tree, d1Code);
-    if (!d1) {
-      $list.empty();
-      return;
-    }
-
-    // 확정된 depth1을 보고 있을 때만 active 표시
-    var isConfirmed = d1Code === _path.depth1Id;
-    var isViewAllActive = isConfirmed && !_path.depth2Id;
-    var d2List = validChildren(d1);
-    var html = ['<li class="view-all' + (isViewAllActive ? ' ' + CLS.active : '') + '" data-view-all>' + '<button type="button" class="text">전체보기</button>' + '</li>'];
-    for (var i = 0; i < d2List.length; i++) {
-      html.push(buildDepth2Html(d2List[i], isConfirmed));
-    }
-    $list.html(html.join(''));
-  }
-  function buildDepth2Html(d2, isConfirmed) {
-    var children = validChildren(d2);
-    var hasChild = children.length > 0;
-    var code = esc(d2.categoryCode);
-    var name = esc(d2.categoryNm);
-    var d3Id = 'depth3-' + code;
-
-    // 확정 depth1을 보고 있을 때만 active/open 판정
-    var hasActiveD3 = false;
-    var isOpen = false;
-    var isD2Active = false;
-    if (isConfirmed) {
-      hasActiveD3 = hasChild && _path.depth3Id && children.some(function (c) {
-        return c.categoryCode === _path.depth3Id;
-      });
-      isOpen = hasActiveD3;
-      isD2Active = hasActiveD3 || !_path.depth3Id && d2.categoryCode === _path.depth2Id;
-    }
-    var p = [];
-
-    // depth2 래퍼
-    p.push('<li class="depth2-item' + (hasChild ? ' ' + CLS.hasChildren : '') + (isOpen ? ' ' + CLS.open : '') + (isD2Active ? ' ' + CLS.active : '') + '" data-depth2-item data-code="' + code + '">');
-
-    // 헤더: 타이틀 + 토글
-    p.push('<div class="depth2-header">');
-    p.push('<button type="button" class="text" data-depth2-select>' + name + '</button>');
-    if (hasChild) {
-      p.push('<button type="button" class="toggle-btn" data-toggle-btn' + ' aria-expanded="' + !!isOpen + '"' + ' aria-controls="' + d3Id + '"' + ' aria-label="' + name + ' 하위 카테고리 펼치기">' + '<i class="ic ic-arrow-right"></i>' + '</button>');
-    }
-    p.push('</div>');
-
-    // depth3 목록
-    if (hasChild) {
-      p.push('<ul class="depth3-list" data-depth3-list' + ' id="' + d3Id + '" role="listbox"' + (isOpen ? '' : ' style="display:none"') + '>');
-      for (var j = 0; j < children.length; j++) {
-        var d3 = children[j];
-        var isD3Active = isConfirmed && d3.categoryCode === _path.depth3Id;
-        p.push('<li class="depth3-item' + (isD3Active ? ' ' + CLS.active : '') + '"' + ' data-depth3-item role="option" tabindex="0"' + ' data-code="' + esc(d3.categoryCode) + '"' + ' data-depth2="' + code + '">' + esc(d3.categoryNm) + '</li>');
-      }
-      p.push('</ul>');
-    }
-    p.push('</li>');
-    return p.join('');
-  }
-
-  // 스크롤: 활성 항목 중앙 정렬
-
-  function scrollToActive() {
-    var $scope = $(SCOPE);
-    requestAnimationFrame(function () {
-      // 좌측: 확정 depth1 or 탐색 depth1
-      var d1Panel = $scope.find(SEL.depth1Panel)[0];
-      var d1Target = d1Panel && (d1Panel.querySelector(SEL.depth1Item + '.' + CLS.active) || d1Panel.querySelector(SEL.depth1Item + '.' + CLS.current));
-      scrollToCenter(d1Panel, d1Target);
-
-      // 우측: depth3 > depth2 > 전체보기 순으로 탐색
-      var subPanel = $scope.find(SEL.subPanel)[0];
-      var subTarget = subPanel && (subPanel.querySelector(SEL.depth3Item + '.' + CLS.active) || subPanel.querySelector(SEL.depth2Item + '.' + CLS.active) || subPanel.querySelector(SEL.viewAll + '.' + CLS.active));
-      scrollToCenter(subPanel, subTarget);
-    });
-  }
-
-  // 이벤트 바인딩
-
   function bindEvents() {
     if (_bound) return;
     _bound = true;
     var $doc = $(document);
 
-    // depth1 클릭 → 탐색만 (확정 안 함)
-    $doc.on('click' + NS, SCOPE + ' ' + SEL.depth1Item, function () {
-      var $item = $(this);
-      var code = $item.attr('data-code');
-
-      // is-current만 이동, is-active는 유지
-      $item.addClass(CLS.current).siblings().removeClass(CLS.current);
-      _browseD1 = code;
-      _path.depth2Id = '';
-      _path.depth3Id = '';
-      renderSub(code);
+    // 브레드크럼 클릭 → 바텀시트 오픈
+    $doc.on('click' + NS, SEL.breadcrumbBtn, function () {
+      if (isSheetOpen()) return;
+      openSheet();
     });
 
-    // 전체보기 → 탐색 중인 depth1로 확정
-    $doc.on('click' + NS, SCOPE + ' ' + SEL.viewAll, function () {
-      _path.depth2Id = '';
-      _path.depth3Id = '';
-      commitSelection();
-    });
-
-    // depth2 타이틀 → 해당 depth2 확정
-    $doc.on('click' + NS, SCOPE + ' ' + SEL.depth2Select, function () {
-      var $d2 = $(this).closest(SEL.depth2Item);
-      _path.depth2Id = $d2.attr('data-code');
-      _path.depth3Id = '';
-      commitSelection();
-    });
-
-    // depth2 토글 → depth3 아코디언
-    $doc.on('click' + NS, SCOPE + ' ' + SEL.toggleBtn, function (e) {
-      e.stopPropagation();
-      var $btn = $(this);
-      var $d2 = $btn.closest(SEL.depth2Item);
-      var $list = $d2.find(SEL.depth3List);
-      var isOpen = $d2.hasClass(CLS.open);
-      $d2.toggleClass(CLS.open);
-      $btn.attr('aria-expanded', String(!isOpen));
-      $list.slideToggle(SLIDE_DURATION);
-    });
-
-    // depth3 선택 → 확정
-    $doc.on('click' + NS, SCOPE + ' ' + SEL.depth3Item, function () {
-      var $item = $(this);
-      _path.depth2Id = $item.attr('data-depth2');
-      _path.depth3Id = $item.attr('data-code');
-      commitSelection();
-    });
-
-    // 키보드: Enter/Space → click
-    $doc.on('keydown' + NS, SCOPE + ' ' + SEL.depth1Item + ',' + SCOPE + ' ' + SEL.depth3Item, function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        $(e.target).trigger('click');
+    // 바텀시트 닫힘 → 선택 안 했으면 탐색 상태 복원
+    $(document).on('kendo:close' + NS, function (e, id) {
+      if (id !== POPUP_ID) return;
+      if (_savedPath) {
+        _state.path = $.extend({}, _savedPath);
+        _state.browseD1 = _savedPath.depth1Id;
+        _savedPath = null;
       }
     });
-
-    // 브레드크럼 클릭 → 팝업 오픈
-    $doc.on('click' + NS, SEL.breadcrumbBtn, function () {
-      if (!window.VmKendoWindow) return;
-      renderDepth1();
-      scrollToActive(); // 팝업 열기 전 즉시 스크롤 (안 보이는 상태)
-      window.VmKendoWindow.open(POPUP_ID);
-    });
   }
+  function init() {
+    if (!window.CategoryRenderer) return;
+    var R = window.CategoryRenderer;
 
-  /**
-   * @param {object} [config]
-   * @param {string} config.treeUrl  — category JSON 경로
-   * @param {object} config.path     — { depth1Id, depth2Id, depth3Id }
-   */
-  function init(config) {
-    // data-attribute 폴백
-    if (!config) {
-      var $scope = $(SCOPE);
-      if (!$scope.length) return;
-      config = {
-        treeUrl: $scope.data('treeUrl'),
-        path: {
-          depth1Id: $scope.data('depth1') || '',
-          depth2Id: $scope.data('depth2') || '',
-          depth3Id: $scope.data('depth3') || ''
-        }
+    // 바텀시트 내부 스코프에서 경로 읽기
+    var $scope = $sheetScope();
+    if ($scope.length) {
+      _state.path = {
+        depth1Id: $scope.data('depth1') || '',
+        depth2Id: $scope.data('depth2') || '',
+        depth3Id: $scope.data('depth3') || ''
       };
+      _state.browseD1 = _state.path.depth1Id;
     }
-    if (!config || !config.path) return;
-    _path = $.extend({
-      depth1Id: '',
-      depth2Id: '',
-      depth3Id: ''
-    }, config.path);
-    _browseD1 = _path.depth1Id;
     bindEvents();
-    $.getJSON(config.treeUrl).done(function (data) {
-      _tree = Array.isArray(data) ? data : data.tree || [];
-      renderDepth1();
-      updateBreadcrumb(pathNames());
-    }).fail(function () {
-      console.warn('[CategorySheet] tree 로드 실패:', config.treeUrl);
+
+    // tree 로드 후 스코프 이벤트 바인딩 + 브레드크럼 초기화
+    R.loadTree(function () {
+      var $scope = $sheetScope();
+      if ($scope.length) {
+        R.bindScopeEvents($scope, _state, onCommit);
+      }
+      updateBreadcrumb(R.pathNames(_state.path));
     });
   }
   function destroy() {
     $(document).off(NS);
-    _tree = [];
-    _path = {
-      depth1Id: '',
-      depth2Id: '',
-      depth3Id: ''
+    var $scope = $sheetScope();
+    if ($scope.length && window.CategoryRenderer) {
+      window.CategoryRenderer.unbindScopeEvents($scope);
+    }
+    _state = {
+      path: {
+        depth1Id: '',
+        depth2Id: '',
+        depth3Id: ''
+      },
+      browseD1: ''
     };
-    _browseD1 = '';
     _bound = false;
   }
   window.CategorySheet = {
     init: init,
     destroy: destroy,
-    scrollToActive: scrollToActive
+    getPath: function () {
+      return $.extend({}, _state.path);
+    },
+    commitFromPopup: function (path) {
+      _state.path = $.extend({}, path);
+      _state.browseD1 = path.depth1Id;
+      var R = window.CategoryRenderer;
+      var names = R.pathNames(path);
+      var d4 = R.depth4Items(path);
+      updateBreadcrumb(names);
+      $('[data-header-title]').text(names[names.length - 1] || '');
+      $(document).trigger('category:change', [{
+        path: $.extend({}, path),
+        names: names,
+        depth4: d4
+      }]);
+    }
   };
 })(window.jQuery, window);
+
+/***/ }),
+
+/***/ 6525:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/form/input-search.js
+ * @description input-search 공통 (모바일)
+ * @scope [data-search-form]
+ *
+ * @events (인풋에서 버블링)
+ *  inputSearch:submit { query }
+ *  inputSearch:clear
+ *
+ * @events ($(document))
+ *  ui:input-search-submit { query, form, input }
+ *  ui:input-search-clear  { form, input }
+ *
+ * @api
+ *  init(root?, opt?)                    스캔 초기화
+ *  init({$form,$input}, {onSubmit})     단일 폼 초기화
+ *  destroy(root?)                       해제
+ *  setValue(target, value)              값 세팅 (이벤트 미발생)
+ *  clear(target)                        초기화 + 이벤트
+ *  setInvalid(arg, on)                  validation 토글
+ *  setMessage(target, message)          메시지 변경 + invalid 토글
+ *  normalize(str)                       trim + 연속공백 → 1칸
+ */
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.inputSearch = window.UI.inputSearch || {};
+  var NS = '.inputSearch';
+  var DATA_KEY = 'inputSearchInit';
+  var FORM = '[data-search-form]';
+  var INPUT = '[data-search-input]';
+  var CLEAR = '[data-search-clear]';
+  var VALID_WRAP = '.vits-input-search.vits-validation';
+  var VALID_MSG = '.input-validation';
+  var MSG_TEXT = '[aria-live="polite"]';
+
+  // 한글 IME 조합 중 submit 방지용 플래그
+  var _composing = false;
+  function trimText(str) {
+    return String(str || '').replace(/^\s+|\s+$/g, '');
+  }
+  function normalizeSpaces(str) {
+    return trimText(str).replace(/\s+/g, ' ');
+  }
+  function findValidation($input) {
+    if (!$input || !$input.length) return $();
+    var $wrap = $input.closest(VALID_WRAP);
+    return $wrap.length ? $wrap.find(VALID_MSG).first() : $();
+  }
+  function setInvalid($input, $validation, on) {
+    if ($input && $input.length) {
+      $input.attr('aria-invalid', on ? 'true' : 'false');
+    }
+    if ($validation && $validation.length) {
+      if (on) {
+        $validation.removeAttr('hidden');
+      } else {
+        $validation.attr('hidden', '');
+      }
+    }
+  }
+  function resolveFromForm($form) {
+    var $input = $form.find(INPUT).first();
+    return {
+      $form: $form,
+      $input: $input,
+      $clear: $form.find(CLEAR),
+      $validation: $input.length ? findValidation($input) : $()
+    };
+  }
+  function resolveFromArg(arg) {
+    if (!arg || !arg.$form || !arg.$input) return null;
+    return {
+      $form: arg.$form,
+      $input: arg.$input,
+      $clear: arg.$clear && arg.$clear.length ? arg.$clear : arg.$form.find(CLEAR),
+      $validation: arg.$validation && arg.$validation.length ? arg.$validation : findValidation(arg.$input)
+    };
+  }
+  function getEl(target) {
+    var $t = $(target);
+    var $form = $t.is(FORM) ? $t : $t.closest(FORM);
+    if (!$form.length) $form = $t.find(FORM).first();
+    return $form.data(DATA_KEY) || null;
+  }
+  function syncClearBtn(el) {
+    if (!el.$clear.length) return;
+    if (trimText(el.$input.val())) {
+      el.$clear.removeAttr('hidden');
+    } else {
+      el.$clear.attr('hidden', '');
+    }
+  }
+  function doClear(el) {
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    setInvalid(el.$input, el.$validation, false);
+  }
+  function bindEvents(el, opt) {
+    var onSubmit = opt && typeof opt.onSubmit === 'function' ? opt.onSubmit : null;
+    var input = el.$input[0];
+
+    // 입력 → validation 해제 + 클리어 버튼 토글
+    el.$input.off('input' + NS).on('input' + NS, function () {
+      setInvalid(el.$input, el.$validation, false);
+      syncClearBtn(el);
+    });
+
+    // 한글 IME 조합 중 submit 방지
+    input.addEventListener('compositionstart', function () {
+      _composing = true;
+    });
+    input.addEventListener('compositionend', function () {
+      _composing = false;
+    });
+
+    // 클리어(X) 버튼 — touchend로 iOS 300ms 딜레이 회피
+    if (el.$clear.length) {
+      el.$clear.off('click' + NS + ' touchend' + NS).on('click' + NS + ' touchend' + NS, function (e) {
+        e.preventDefault();
+        doClear(el);
+        el.$input.focus();
+      });
+    }
+
+    // submit
+    el.$form.off('submit' + NS).on('submit' + NS, function (e) {
+      e.preventDefault();
+
+      // IME 조합 중이면 무시
+      if (_composing) return;
+      var query = normalizeSpaces(el.$input.val());
+      if (!query) {
+        syncClearBtn(el);
+        el.$input.trigger('inputSearch:clear');
+        $(document).trigger('ui:input-search-clear', {
+          form: el.$form[0],
+          input: el.$input[0]
+        });
+        el.$input[0].blur();
+        return;
+      }
+      var ctx = {
+        $form: el.$form,
+        $input: el.$input,
+        $validation: el.$validation
+      };
+      var ok = true;
+      if (onSubmit) ok = onSubmit(query, ctx) !== false;
+      setInvalid(el.$input, el.$validation, !ok);
+      if (ok) {
+        syncClearBtn(el);
+        el.$input.trigger('inputSearch:submit', {
+          query: query
+        });
+        $(document).trigger('ui:input-search-submit', {
+          query: query,
+          form: el.$form[0],
+          input: el.$input[0]
+        });
+      }
+
+      // iOS에서 키보드 닫기
+      el.$input[0].blur();
+    });
+  }
+  function unbindEvents(el) {
+    el.$input.off(NS);
+    el.$form.off(NS);
+    if (el.$clear.length) el.$clear.off(NS);
+
+    // addEventListener로 붙인 건 참조가 없어 제거 불가 — destroy 시 DOM 제거 전제
+    // compositionstart/end는 경량이라 누수 무시 가능
+  }
+  function initOne($form, opt) {
+    if ($form.data(DATA_KEY)) return;
+    var el = resolveFromForm($form);
+    if (!el.$input.length) return;
+
+    // iOS 16px 미만 폰트에서 자동 줌 방지
+    if (/iPhone|iPad/.test(navigator.userAgent)) {
+      var fontSize = parseFloat(window.getComputedStyle(el.$input[0]).fontSize);
+      if (fontSize < 16) {
+        el.$input.css('font-size', '16px');
+      }
+    }
+    bindEvents(el, opt);
+    syncClearBtn(el);
+    $form.data(DATA_KEY, el);
+  }
+  function destroyOne($form) {
+    var el = $form.data(DATA_KEY);
+    if (!el) return;
+    unbindEvents(el);
+    setInvalid(el.$input, el.$validation, false);
+    el.$input.val('');
+    if (el.$clear.length) el.$clear.attr('hidden', '');
+    $form.removeData(DATA_KEY);
+  }
+  function eachForm(root, fn) {
+    var $scope = root ? $(root) : $(document);
+    if ($scope.is(FORM)) {
+      fn($scope);
+      return;
+    }
+    $scope.find(FORM).each(function () {
+      fn($(this));
+    });
+  }
+  window.UI.inputSearch.normalize = function (str) {
+    return normalizeSpaces(str);
+  };
+  window.UI.inputSearch.setInvalid = function (arg, on) {
+    var $input = arg && arg.$input ? arg.$input : $();
+    var $validation = arg && arg.$validation ? arg.$validation : $();
+    setInvalid($input, $validation, !!on);
+  };
+  window.UI.inputSearch.setMessage = function (target, message) {
+    var el = getEl(target);
+    if (!el || !el.$validation.length) return;
+    el.$validation.find(MSG_TEXT).text(message || '');
+    setInvalid(el.$input, el.$validation, !!message);
+  };
+  window.UI.inputSearch.setValue = function (target, value) {
+    var el = getEl(target);
+    if (!el) return;
+    el.$input.val(value);
+    syncClearBtn(el);
+  };
+  window.UI.inputSearch.clear = function (target) {
+    var el = getEl(target);
+    if (el) doClear(el);
+  };
+  window.UI.inputSearch.init = function (arg, opt) {
+    var el = resolveFromArg(arg);
+    if (el) {
+      if (el.$form.data(DATA_KEY)) return;
+      bindEvents(el, opt);
+      el.$form.data(DATA_KEY, el);
+      return;
+    }
+    var isRootEl = arg instanceof $ || arg && arg.nodeType || typeof arg === 'string' && $(arg).length;
+    var root = isRootEl ? arg : null;
+    var options = opt || (!isRootEl && arg && typeof arg === 'object' ? arg : null);
+    eachForm(root, function ($form) {
+      initOne($form, options);
+    });
+  };
+  window.UI.inputSearch.destroy = function (root) {
+    eachForm(root, destroyOne);
+  };
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
+/***/ 6823:
+/***/ (function() {
+
+/**
+ * @file search-suggest.js
+ * @description 검색 입력 상태에 따라 기본 뷰/연관검색어 뷰 토글
+ * @scope [data-search-view]
+ * @state .is-hidden — 비활성 뷰 숨김
+ * @note clear 버튼, input 이벤트 연동
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.searchSuggest';
+  var IS_HIDDEN = 'is-hidden';
+  var bound = false;
+  var SEL = {
+    DEFAULT: '[data-search-view="default"]',
+    SUGGEST: '[data-search-view="suggest"]',
+    INPUT: '[data-search-input]',
+    CLEAR: '[data-search-clear]'
+  };
+  function init() {
+    // 중복 바인딩 방지
+    if (bound) return;
+    var $default = $(SEL.DEFAULT).first();
+    var $suggest = $(SEL.SUGGEST).first();
+    var $input = $(SEL.INPUT).first();
+    if (!$default.length || !$suggest.length || !$input.length) return;
+    function showSuggest() {
+      $default.addClass(IS_HIDDEN);
+      $suggest.removeClass(IS_HIDDEN);
+    }
+    function showDefault() {
+      $suggest.addClass(IS_HIDDEN);
+      $default.removeClass(IS_HIDDEN);
+    }
+
+    // 입력 감지
+    $input.on('input' + NS, function () {
+      if ($.trim($(this).val())) {
+        showSuggest();
+      } else {
+        showDefault();
+      }
+    });
+
+    // clear 버튼
+    $input.closest('form').on('click' + NS, SEL.CLEAR, function () {
+      showDefault();
+    });
+    bound = true;
+  }
+  function destroy() {
+    $(SEL.INPUT).off(NS);
+    $(SEL.INPUT).closest('form').off(NS);
+    bound = false;
+  }
+  window.UI.searchSuggest = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
+/***/ 6840:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/footer/footer-biz-info.js
+ * @purpose 푸터 '사업자정보조회' 레이어 팝업에 통신판매사업자 등록현황(OpenAPI) 결과를 테이블로 주입
+ * @assumption
+ *  - 트리거: .company-btn-lookup + data-biz-brno="사업자등록번호(숫자)"
+ *  - 레이어: [data-toggle-box="modal-company"] (open/close는 toggle.js가 담당, 여기서는 데이터 조회/주입만)
+ *  - 상태/영역: [data-biz-status], [data-biz-table], [data-biz-field="..."]
+ * @ops -note
+ *  - 현재 인증키는 개인 계정 기준(개발/테스트용)
+ *  - 운영 서버 반영 시 회사 계정/회사 정보 기준으로 인증키 및 관련 정보 수정/교체 요청 필요
+ * @note
+ *  - resultType=json 사용
+ *  - OP_PATH는 사업자등록번호별 조회(/getMllBsBiznoInfo_2) 기준
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+
+  // Config: 마크업 변경 대비(트리거/레이어/주입 셀렉터는 이 구간만 수정)
+  var ROOT_SEL = '[data-footer-biz]'; // 스코프(없으면 document 기준으로 1회만 동작)
+  var LAYER_SEL = '[data-toggle-box="modal-company"]'; // 레이어(푸터 사업자정보조회 팝업)
+  var TRIGGER_SEL = '.company-btn-lookup'; // 트리거(사업자정보조회 버튼)
+
+  var END_POINT = 'https://apis.data.go.kr/1130000/MllBs_2Service';
+  var OP_PATH = '/getMllBsBiznoInfo_2';
+
+  // Ops: 운영 반영 시 회사 계정 키로 교체 필요(Encoding 키 권장)
+  var SERVICE_KEY = '06d4351e0dfaaa207724b9c64e8fcc9814fce520ff565409cd7b70715706f34b';
+  var STATUS_SEL = '[data-biz-status]'; // 상태 문구 영역
+  var TABLE_SEL = '[data-biz-table]'; // 결과 테이블(숨김 토글 대상)
+  var FIELD_SEL = '[data-biz-field]'; // 필드 셀(키 기반 주입)
+
+  // Event: destroy/unbind 대비 네임스페이스 고정
+  var EVT_NS = '.footerBizInfo';
+
+  // Cache: 동일 brno 중복 호출 방지(진행 중 요청은 합치고, 성공 결과는 brno별 보관)
+  var cache = {
+    items: {},
+    // { [brno]: item }
+    pendings: {} // { [brno]: jqXHR/promise }
+  };
+
+  // DOM: root 스코프 기준으로 레이어/주입 대상 캐시(레이어는 first()만 사용)
+  function getEls($root) {
+    var $scope = $root && $root.length ? $root : $(document);
+    var $layer = $scope.find(LAYER_SEL).first();
+    return {
+      $root: $scope,
+      $layer: $layer,
+      $status: $layer.find(STATUS_SEL).first(),
+      $table: $layer.find(TABLE_SEL).first(),
+      $fields: $layer.find(FIELD_SEL)
+    };
+  }
+
+  // Utils: 사업자등록번호는 숫자만 유지(비정상 입력 방어)
+  function normalizeBrno(v) {
+    return String(v || '').replace(/\D/g, '');
+  }
+
+  // Utils: 사업자등록번호 표시용 포맷(000-00-00000)
+  function formatBrno(v) {
+    var n = normalizeBrno(v);
+    if (n.length === 10) return n.slice(0, 3) + '-' + n.slice(3, 5) + '-' + n.slice(5);
+    return n || '-';
+  }
+
+  // Utils: YYYYMMDD → YYYY.MM.DD 표시
+  function formatYmd(v) {
+    var n = String(v || '').replace(/\D/g, '');
+    if (n.length === 8) return n.slice(0, 4) + '.' + n.slice(4, 6) + '.' + n.slice(6);
+    return n || '-';
+  }
+
+  // Fetch: API 호출 URL 조립(사업자등록번호별 조회)
+  function buildUrl(brno) {
+    return END_POINT + OP_PATH + '?serviceKey=' + encodeURIComponent(SERVICE_KEY) + '&pageNo=1' + '&numOfRows=10' + '&resultType=json' + '&brno=' + encodeURIComponent(brno);
+  }
+
+  // Parse: OpenAPI 표준 header(resultCode/resultMsg) 추출(가능한 경우)
+  function pickApiMeta(json) {
+    var header = json && json.response && json.response.header;
+    if (!header) return null;
+    return {
+      resultCode: header.resultCode,
+      resultMsg: header.resultMsg
+    };
+  }
+
+  // Parse: OpenAPI 응답 구조 변동 대응(일반 케이스 우선, 실패 시 fallback DFS)
+  function pickFirstItem(json) {
+    var body = json && json.response && json.response.body;
+    var root = body || json;
+    var v;
+
+    // body.items.item
+    v = root && root.items && root.items.item;
+    if (Array.isArray(v)) return v[0] || null;
+    if (v && typeof v === 'object') return v;
+
+    // body.item
+    v = root && root.item;
+    if (Array.isArray(v)) return v[0] || null;
+    if (v && typeof v === 'object') return v;
+
+    // body.items
+    v = root && root.items;
+    if (Array.isArray(v)) return v[0] || null;
+    if (v && typeof v === 'object') return v;
+
+    // Fallback: 데이터처럼 보이는 객체를 DFS로 1개 탐색(정답 보장 로직이 아닌 최후 방어)
+    function findFirstObject(node, depth) {
+      if (!node || depth > 8) return null;
+      if (Array.isArray(node)) {
+        for (var i = 0; i < node.length; i += 1) {
+          var r1 = findFirstObject(node[i], depth + 1);
+          if (r1) return r1;
+        }
+        return null;
+      }
+      if (typeof node === 'object') {
+        var keys = Object.keys(node);
+
+        // 원시값(문자/숫자/불리언) 필드가 3개 이상이면 “데이터 객체”로 간주
+        var primitiveCount = 0;
+        for (var k = 0; k < keys.length; k += 1) {
+          var val = node[keys[k]];
+          var t = typeof val;
+          if (val == null) continue;
+          if (t === 'string' || t === 'number' || t === 'boolean') primitiveCount += 1;
+        }
+        if (primitiveCount >= 3) return node;
+        for (var j = 0; j < keys.length; j += 1) {
+          var r2 = findFirstObject(node[keys[j]], depth + 1);
+          if (r2) return r2;
+        }
+      }
+      return null;
+    }
+    return findFirstObject(root, 0);
+  }
+
+  // UI: 상태 문구/테이블 노출만 제어(레이어 open/close는 toggle.js 담당)
+  function setUiLoading(els) {
+    if (els.$status.length) els.$status.text('조회 중입니다…');
+    if (els.$table.length) els.$table.prop('hidden', true);
+  }
+
+  // UI: 에러 시 문구 표시 및 테이블 숨김
+  function setUiError(els, msg) {
+    if (els.$status.length) els.$status.text(msg || '조회에 실패했습니다.');
+    if (els.$table.length) els.$table.prop('hidden', true);
+  }
+
+  // UI: 성공 시 문구 제거 및 테이블 노출
+  function setUiSuccess(els) {
+    if (els.$status.length) els.$status.text('');
+    if (els.$table.length) els.$table.prop('hidden', false);
+  }
+
+  // Render helper: data-biz-field 키로 셀을 찾아 텍스트 주입(값 없으면 '-')
+  function setFieldText(els, key, value) {
+    if (!els || !els.$layer || !els.$layer.length) return;
+    var $cell = els.$layer.find('[data-biz-field="' + key + '"]').first();
+    if (!$cell.length) return;
+    $cell.text(value == null || value === '' ? '-' : String(value));
+  }
+
+  // Render: 테이블 필드 매핑(스펙 변경 시 여기만 수정)
+  function renderBizInfo(els, brno, item) {
+    setFieldText(els, 'bzmnNm', item && item.bzmnNm); // 상호
+    setFieldText(els, 'brno', formatBrno(item && item.brno || brno)); // 사업자등록번호
+    setFieldText(els, 'operSttusCdNm', item && item.operSttusCdNm); // 운영상태
+    setFieldText(els, 'ctpvNm', item && item.ctpvNm); // 시/도
+    setFieldText(els, 'dclrInsttNm', item && item.dclrInsttNm); // 신고기관
+    setFieldText(els, 'fromYmd', formatYmd(item && item.fromYmd)); // 신고일/조회기간(스펙 확정 시 필드명 기준으로 조정)
+    setFieldText(els, 'prmmiMnno', item && item.prmmiMnno); // 인허가(등록)번호
+  }
+
+  // Fetch: JSON 파싱 실패 방어(text로 받는 경우 대비)
+  function parseJsonSafe(text) {
+    try {
+      return typeof text === 'string' ? JSON.parse(text) : text;
+    } catch (e) {
+      console.warn('[footerBizInfo] JSON parse failed:', e);
+      return null;
+    }
+  }
+
+  // Fetch: 동일 brno는 1회만 조회(진행 중 요청은 pendings 재사용)
+  function fetchBizInfoOnce(brno) {
+    var n = normalizeBrno(brno);
+    if (!n) return $.Deferred().reject('INVALID_BRNO').promise();
+    if (cache.items[n]) return $.Deferred().resolve(cache.items[n]).promise();
+    if (cache.pendings[n]) return cache.pendings[n];
+    cache.pendings[n] = $.ajax({
+      url: buildUrl(n),
+      method: 'GET',
+      dataType: 'text',
+      // 서버 응답 헤더/포맷 이슈 대비(필요 시 json으로 변경)
+      timeout: 8000 // 운영 환경/네트워크 정책에 따라 조정 가능
+    }).then(function (text) {
+      var json = parseJsonSafe(text);
+      if (!json) return $.Deferred().reject('PARSE_ERROR').promise();
+      var meta = pickApiMeta(json);
+      if (meta && meta.resultCode && meta.resultCode !== '00') {
+        return $.Deferred().reject(meta.resultMsg || 'API_ERROR').promise();
+      }
+      var item = pickFirstItem(json);
+      if (!item) return $.Deferred().reject('EMPTY').promise();
+      cache.items[n] = item;
+      return item;
+    }).always(function () {
+      delete cache.pendings[n];
+    });
+    return cache.pendings[n];
+  }
+
+  // Bind: 트리거에서 사업자번호 읽기(숫자만)
+  function readBrno($btn) {
+    return normalizeBrno($btn && $btn.length ? $btn.attr('data-biz-brno') : '');
+  }
+
+  // Bind: 트리거 클릭 시 조회/주입만 수행(레이어 토글은 toggle.js)
+  function bindTrigger(els) {
+    var $root = els.$root;
+
+    // Bind: 동일 root에서 중복 바인딩 방지(재초기화 대비)
+    $root.off('click' + EVT_NS, TRIGGER_SEL);
+    $root.on('click' + EVT_NS, TRIGGER_SEL, function () {
+      var brno = readBrno($(this));
+      if (!els.$layer.length) return;
+      if (!brno) {
+        setUiError(els, '사업자등록번호가 없습니다.');
+        return;
+      }
+
+      // UX: 캐시가 없을 때만 로딩 표시(선조회/기조회면 즉시 렌더)
+      if (!cache.items[brno]) setUiLoading(els);
+      fetchBizInfoOnce(brno).then(function (item) {
+        setUiSuccess(els);
+        renderBizInfo(els, brno, item);
+      }).fail(function (err) {
+        setUiError(els, err === 'EMPTY' ? '조회 결과가 없습니다.' : '조회에 실패했습니다.');
+      }).always(function () {
+        // UX: 비정상 종료로 로딩 문구가 남는 경우 방어
+        if (els.$status.length && els.$status.text() === '조회 중입니다…') {
+          setUiError(els, '조회에 실패했습니다.');
+        }
+      });
+    });
+  }
+
+  // Prefetch: 최초 1회 선조회로 팝업 오픈 시 즉시 렌더(실패해도 UX 영향 최소)
+  function prefetchOnce(els) {
+    var $btn = els.$root.find(TRIGGER_SEL).first();
+    var brno = readBrno($btn);
+    if (!brno) return;
+    if (cache.items[brno]) {
+      renderBizInfo(els, brno, cache.items[brno]);
+      return;
+    }
+    fetchBizInfoOnce(brno).then(function (item) {
+      renderBizInfo(els, brno, item);
+    });
+  }
+
+  // Init: root 1개 초기화(스코프별 분리 가능)
+  function initRoot($root) {
+    var els = getEls($root);
+    if (!els.$layer.length) return;
+    bindTrigger(els);
+    prefetchOnce(els);
+  }
+  window.UI.footerBizInfo = {
+    // UI.init()에서 호출되는 엔트리
+    init: function () {
+      var $roots = $(ROOT_SEL);
+
+      // 스코프가 없으면 문서 기준으로 1회만 초기화
+      if (!$roots.length) {
+        initRoot($(document));
+        return;
+      }
+      $roots.each(function () {
+        initRoot($(this));
+      });
+    }
+  };
+})(window.jQuery || window.$, window);
 
 /***/ }),
 
@@ -5960,6 +5824,509 @@ console.log('[mobile/index] entry 실행');
   }
   console.log('[' + DATA_UI + '] loaded');
 })(window);
+
+/***/ }),
+
+/***/ 8134:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/category/category-renderer.js
+ * @description 카테고리 depth1/2/3 렌더 공통 모듈
+ * @note 바텀시트, 풀팝업 등에서 스코프($scope)를 넘겨 재사용
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  var TREE_URL = '/public/resources/mock/category.json';
+  var SLIDE_DURATION = 200;
+  var CLS = {
+    active: 'is-active',
+    current: 'is-current',
+    open: 'is-open',
+    hasChildren: 'has-children'
+  };
+  var SEL = {
+    depth1List: '[data-depth1-list]',
+    depth1Panel: '[data-depth1-panel]',
+    depth1Item: '[data-depth1-item]',
+    subList: '[data-sub-list]',
+    subPanel: '[data-sub-panel]',
+    depth2Item: '[data-depth2-item]',
+    depth2Select: '[data-depth2-select]',
+    depth3List: '[data-depth3-list]',
+    depth3Item: '[data-depth3-item]',
+    toggleBtn: '[data-toggle-btn]',
+    viewAll: '[data-view-all]'
+  };
+  var ESC_MAP = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+
+  // 공유 tree 데이터 — 한 번만 fetch
+  var _tree = [];
+  var _treeLoaded = false;
+  var _treeCallbacks = [];
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, function (ch) {
+      return ESC_MAP[ch];
+    });
+  }
+  function findNode(list, code) {
+    if (!code || !list) return null;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].categoryCode === code) return list[i];
+    }
+    return null;
+  }
+  function validChildren(node) {
+    if (!node || !Array.isArray(node.categoryList)) return [];
+    return node.categoryList.filter(function (c) {
+      return c && c.categoryCode;
+    });
+  }
+
+  // tree 로드 — 캐싱, 중복 요청 방지
+  function loadTree(callback) {
+    if (_treeLoaded) {
+      callback(_tree);
+      return;
+    }
+    _treeCallbacks.push(callback);
+    // 첫 번째 요청만 fetch
+    if (_treeCallbacks.length > 1) return;
+    var base = window.location.pathname.indexOf('/vitson-HTML') === 0 ? '/vitson-HTML' : '';
+    $.getJSON(base + TREE_URL).done(function (data) {
+      _tree = Array.isArray(data) ? data : data.tree || [];
+      _treeLoaded = true;
+      for (var i = 0; i < _treeCallbacks.length; i++) {
+        _treeCallbacks[i](_tree);
+      }
+      _treeCallbacks = [];
+    }).fail(function () {
+      console.warn('[CategoryRenderer] tree 로드 실패');
+      _treeCallbacks = [];
+    });
+  }
+  function getTree() {
+    return _tree;
+  }
+
+  // 경로 기준 노드 조회
+  function resolvePath(path) {
+    var d1 = findNode(_tree, path.depth1Id);
+    if (!d1) return {
+      d1: null,
+      d2: null,
+      d3: null
+    };
+    var d2 = findNode(validChildren(d1), path.depth2Id);
+    var d3 = d2 ? findNode(validChildren(d2), path.depth3Id) : null;
+    return {
+      d1: d1,
+      d2: d2,
+      d3: d3
+    };
+  }
+  function pathNames(path) {
+    var p = resolvePath(path);
+    if (!p.d1) return [];
+    var names = [p.d1.categoryNm];
+    if (p.d2) names.push(p.d2.categoryNm);
+    if (p.d3) names.push(p.d3.categoryNm);
+    return names;
+  }
+  function depth4Items(path) {
+    var p = resolvePath(path);
+    return p.d3 ? validChildren(p.d3) : [];
+  }
+  function scrollToCenter(panel, item) {
+    if (!panel || !item) return;
+    var h = panel.clientHeight;
+    panel.scrollTop = Math.max(0, item.offsetTop - (h - item.offsetHeight) / 2);
+  }
+
+  // 스크롤: 활성 항목 중앙 정렬
+  function scrollToActive($scope) {
+    requestAnimationFrame(function () {
+      var d1Panel = $scope.find(SEL.depth1Panel)[0];
+      var d1Target = d1Panel && (d1Panel.querySelector(SEL.depth1Item + '.' + CLS.active) || d1Panel.querySelector(SEL.depth1Item + '.' + CLS.current));
+      scrollToCenter(d1Panel, d1Target);
+      var subPanel = $scope.find(SEL.subPanel)[0];
+      var subTarget = subPanel && (subPanel.querySelector(SEL.depth3Item + '.' + CLS.active) || subPanel.querySelector(SEL.depth2Item + '.' + CLS.active) || subPanel.querySelector(SEL.viewAll + '.' + CLS.active));
+      scrollToCenter(subPanel, subTarget);
+    });
+  }
+
+  // 렌더: depth1 (좌측 패널)
+  function renderDepth1($scope, path, browseD1) {
+    var $list = $scope.find(SEL.depth1List);
+    if (!$list.length || !_tree.length) return;
+    var html = [];
+    for (var i = 0; i < _tree.length; i++) {
+      var node = _tree[i];
+      if (!node || !node.categoryCode) continue;
+      var code = node.categoryCode;
+      var isActive = code === path.depth1Id;
+      var isCurrent = code === browseD1;
+      html.push('<li class="depth1-item' + (isActive ? ' ' + CLS.active : '') + (isCurrent ? ' ' + CLS.current : '') + '"' + ' data-depth1-item role="option" tabindex="0"' + ' aria-selected="' + isActive + '"' + ' data-code="' + esc(code) + '">' + esc(node.categoryNm) + '</li>');
+    }
+    $list.html(html.join(''));
+    if (browseD1) {
+      renderSub($scope, browseD1, path);
+    }
+  }
+
+  // 렌더: 우측 패널 (전체보기 + depth2/3)
+  function renderSub($scope, d1Code, path) {
+    var $list = $scope.find(SEL.subList);
+    if (!$list.length) return;
+    var d1 = findNode(_tree, d1Code);
+    if (!d1) {
+      $list.empty();
+      return;
+    }
+    var isConfirmed = d1Code === path.depth1Id;
+    var isViewAllActive = isConfirmed && !path.depth2Id;
+    var d2List = validChildren(d1);
+    var html = ['<li class="view-all' + (isViewAllActive ? ' ' + CLS.active : '') + '" data-view-all>' + '<button type="button" class="text">전체보기</button>' + '</li>'];
+    for (var i = 0; i < d2List.length; i++) {
+      html.push(buildDepth2Html(d2List[i], isConfirmed, path));
+    }
+    $list.html(html.join(''));
+  }
+  function buildDepth2Html(d2, isConfirmed, path) {
+    var children = validChildren(d2);
+    var hasChild = children.length > 0;
+    var code = esc(d2.categoryCode);
+    var name = esc(d2.categoryNm);
+    var d3Id = 'depth3-' + code;
+    var hasActiveD3 = false;
+    var isOpen = false;
+    var isD2Active = false;
+    if (isConfirmed) {
+      hasActiveD3 = hasChild && path.depth3Id && children.some(function (c) {
+        return c.categoryCode === path.depth3Id;
+      });
+      isOpen = hasActiveD3;
+      isD2Active = hasActiveD3 || !path.depth3Id && d2.categoryCode === path.depth2Id;
+    }
+    var p = [];
+    p.push('<li class="depth2-item' + (hasChild ? ' ' + CLS.hasChildren : '') + (isOpen ? ' ' + CLS.open : '') + (isD2Active ? ' ' + CLS.active : '') + '" data-depth2-item data-code="' + code + '">');
+    p.push('<div class="depth2-header">');
+    p.push('<button type="button" class="text" data-depth2-select>' + name + '</button>');
+    if (hasChild) {
+      p.push('<button type="button" class="toggle-btn" data-toggle-btn' + ' aria-expanded="' + !!isOpen + '"' + ' aria-controls="' + d3Id + '"' + ' aria-label="' + name + ' 하위 카테고리 펼치기">' + '<i class="ic ic-arrow-right"></i>' + '</button>');
+    }
+    p.push('</div>');
+    if (hasChild) {
+      p.push('<ul class="depth3-list" data-depth3-list' + ' id="' + d3Id + '" role="listbox"' + (isOpen ? '' : ' style="display:none"') + '>');
+      for (var j = 0; j < children.length; j++) {
+        var d3 = children[j];
+        var isD3Active = isConfirmed && d3.categoryCode === path.depth3Id;
+        p.push('<li class="depth3-item' + (isD3Active ? ' ' + CLS.active : '') + '"' + ' data-depth3-item role="option" tabindex="0"' + ' data-code="' + esc(d3.categoryCode) + '"' + ' data-depth2="' + code + '">' + esc(d3.categoryNm) + '</li>');
+      }
+      p.push('</ul>');
+    }
+    p.push('</li>');
+    return p.join('');
+  }
+
+  // 이벤트 바인딩 — 스코프 내부 클릭 처리 (콜백 방식)
+  function bindScopeEvents($scope, state, onCommit) {
+    var ns = '.uiCatRenderer' + $scope.attr('id');
+    // 중복 바인딩 방지
+    $scope.off(ns);
+
+    // depth1 클릭
+    $scope.on('click' + ns, SEL.depth1Item, function () {
+      var $item = $(this);
+      var code = $item.attr('data-code');
+      $item.addClass(CLS.current).siblings().removeClass(CLS.current);
+      state.browseD1 = code;
+      state.path.depth2Id = '';
+      state.path.depth3Id = '';
+      renderSub($scope, code, state.path);
+    });
+
+    // 전체보기
+    $scope.on('click' + ns, SEL.viewAll, function () {
+      state.path.depth2Id = '';
+      state.path.depth3Id = '';
+      state.path.depth1Id = state.browseD1;
+      if (onCommit) onCommit(state.path);
+    });
+
+    // depth2 선택
+    $scope.on('click' + ns, SEL.depth2Select, function () {
+      var $d2 = $(this).closest(SEL.depth2Item);
+      state.path.depth2Id = $d2.attr('data-code');
+      state.path.depth3Id = '';
+      state.path.depth1Id = state.browseD1;
+      if (onCommit) onCommit(state.path);
+    });
+
+    // depth2 토글
+    $scope.on('click' + ns, SEL.toggleBtn, function (e) {
+      e.stopPropagation();
+      var $btn = $(this);
+      var $d2 = $btn.closest(SEL.depth2Item);
+      var $list = $d2.find(SEL.depth3List);
+      var isOpen = $d2.hasClass(CLS.open);
+      $d2.toggleClass(CLS.open);
+      $btn.attr('aria-expanded', String(!isOpen));
+      $list.slideToggle(SLIDE_DURATION);
+    });
+
+    // depth3 선택
+    $scope.on('click' + ns, SEL.depth3Item, function () {
+      var $item = $(this);
+      state.path.depth2Id = $item.attr('data-depth2');
+      state.path.depth3Id = $item.attr('data-code');
+      state.path.depth1Id = state.browseD1;
+      if (onCommit) onCommit(state.path);
+    });
+
+    // 키보드
+    $scope.on('keydown' + ns, SEL.depth1Item + ',' + SEL.depth3Item, function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        $(e.target).trigger('click');
+      }
+    });
+  }
+
+  // 이벤트 해제
+  function unbindScopeEvents($scope) {
+    var ns = '.uiCatRenderer' + $scope.attr('id');
+    $scope.off(ns);
+  }
+  window.CategoryRenderer = {
+    loadTree: loadTree,
+    getTree: getTree,
+    renderDepth1: renderDepth1,
+    renderSub: renderSub,
+    scrollToActive: scrollToActive,
+    pathNames: pathNames,
+    depth4Items: depth4Items,
+    bindScopeEvents: bindScopeEvents,
+    unbindScopeEvents: unbindScopeEvents,
+    SEL: SEL,
+    CLS: CLS
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 8307:
+/***/ (function() {
+
+/**
+ * @file search-rank.js
+ * @description 실시간 검색어 2열 순차 flip 롤링
+ * @scope [data-ui="search-rank"]
+ * @state .is-flipping — flip 전환 중
+ * @option data-rank-interval — 롤링 간격 ms(기본 3000)
+ * @note 순차 딜레이는 SCSS nth-child, JS는 마지막 아이템 transitionend로 정리
+ * @note JS 셀렉터는 data- 속성 전용 — 클래스 변경에 영향 없음
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var MODULE_KEY = 'searchRank';
+  var SCOPE_SEL = '[data-ui="search-rank"]';
+  var NS = '.searchRank';
+  var SEL = {
+    ITEM: '[data-rank-item]',
+    FLIP: '[data-rank-flip]',
+    CURRENT: '[data-rank-slot="current"]',
+    NEXT: '[data-rank-slot="next"]',
+    NUM: '[data-rank-num]',
+    WORD: '[data-rank-word]',
+    MOVE: '[data-rank-move]'
+  };
+  var MOVE_CLS = 'move-up move-down move-same move-new';
+  function toInt(v) {
+    var n = parseInt(v, 10);
+    return isNaN(n) ? null : n;
+  }
+  function calcMove(prev, curr) {
+    if (prev === null) return 'new';
+    if (prev > curr) return 'up';
+    if (prev < curr) return 'down';
+    return 'same';
+  }
+
+  // DOM에서 현재 데이터 수집
+  function readList($scope) {
+    var items = [];
+    $scope.find(SEL.ITEM).each(function () {
+      var $it = $(this);
+      var word = ($it.attr('data-word') || '').trim();
+      if (!word) return;
+      var prev = toInt($it.attr('data-prev-rank'));
+      var curr = toInt($it.attr('data-curr-rank'));
+      items.push({
+        currRank: curr,
+        word: word,
+        move: calcMove(prev, curr)
+      });
+    });
+    return items;
+  }
+
+  // 슬롯에 데이터 반영
+  function renderSlot($slot, it) {
+    if (!$slot.length || !it) return;
+    $slot.find(SEL.NUM).text(it.currRank != null ? it.currRank : '');
+    $slot.find(SEL.WORD).text(it.word);
+    var $mv = $slot.find(SEL.MOVE);
+    $mv.removeClass(MOVE_CLS).addClass('move-' + it.move);
+  }
+
+  // 트랜지션 끄고 원위치
+  function resetFlip($item) {
+    var flip = $item.find(SEL.FLIP)[0];
+    if (!flip) return;
+    flip.style.transition = 'none';
+    $item.removeClass('is-flipping');
+    void flip.offsetHeight; // reflow
+    flip.style.transition = '';
+  }
+  function createInstance($scope) {
+    var interval = parseInt($scope.attr('data-rank-interval'), 10) || 3000;
+    var timer = null;
+    var animating = false;
+    function stop() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+      $scope.off(NS);
+    }
+    function start() {
+      stop();
+      timer = window.setInterval(tick, interval);
+    }
+
+    // flip 완료 처리
+    function finalize(newItems) {
+      var $items = $scope.find(SEL.ITEM);
+      $items.each(function (i) {
+        var $row = $(this);
+
+        // current에 새 데이터 복사
+        renderSlot($row.find(SEL.CURRENT), newItems[i]);
+
+        // data 속성 갱신(다음 flip 변동 계산용)
+        if (newItems[i]) {
+          $row.attr('data-curr-rank', newItems[i].currRank);
+          $row.attr('data-word', newItems[i].word);
+        }
+        resetFlip($row);
+      });
+      animating = false;
+    }
+    function flip(newItems) {
+      if (animating) return;
+      animating = true;
+      var $items = $scope.find(SEL.ITEM);
+
+      // next 슬롯에 새 데이터 세팅
+      $items.each(function (i) {
+        renderSlot($(this).find(SEL.NEXT), newItems[i]);
+      });
+
+      // flip 트리거
+      $items.each(function () {
+        $(this).addClass('is-flipping');
+      });
+
+      // 마지막 아이템(딜레이 가장 긴)의 transitionend 한 번만 감지
+      var $lastInCol = $scope.find('[data-rank-item]:last-child').first();
+      $lastInCol.one('transitionend' + NS, function (e) {
+        if (e.originalEvent.propertyName !== 'transform') {
+          // transform 아닌 이벤트면 다시 한 번 대기
+          $lastInCol.one('transitionend' + NS, function () {
+            finalize(newItems);
+          });
+          return;
+        }
+        finalize(newItems);
+      });
+    }
+    function tick() {
+      if (animating) return;
+      // 퍼블 확인용 — 실서비스에서는 update()로 대체
+      var list = readList($scope);
+      if (list.length < 2) return;
+      flip(list);
+    }
+
+    // 초기 current 슬롯 세팅
+    var initialList = readList($scope);
+    $scope.find(SEL.ITEM).each(function (i) {
+      renderSlot($(this).find(SEL.CURRENT), initialList[i]);
+    });
+    var touchStartX = 0;
+    var touchMoved = false;
+    var SCROLL_THRESHOLD = 10;
+    $scope.on('touchstart' + NS, SEL.ITEM, function (e) {
+      touchStartX = e.originalEvent.touches[0].clientX;
+      touchMoved = false;
+    }).on('touchmove' + NS, SEL.ITEM, function (e) {
+      var dx = Math.abs(e.originalEvent.touches[0].clientX - touchStartX);
+      if (dx > SCROLL_THRESHOLD) touchMoved = true;
+    }).on('click' + NS, SEL.ITEM, function (e) {
+      if (touchMoved) e.preventDefault();
+    });
+    start();
+    return {
+      start: start,
+      stop: stop,
+      update: function (newItems) {
+        flip(newItems);
+      },
+      destroy: function () {
+        stop();
+        animating = false;
+      }
+    };
+  }
+  window.UI.searchRank = {
+    init: function (root) {
+      var $root = root ? $(root) : $(document);
+      $root.find(SCOPE_SEL).each(function () {
+        var $el = $(this);
+        if ($el.data(MODULE_KEY)) return;
+        var inst = createInstance($el);
+        $el.data(MODULE_KEY, inst);
+      });
+    },
+    destroy: function (root) {
+      var $root = root ? $(root) : $(document);
+      $root.find(SCOPE_SEL).each(function () {
+        var $el = $(this);
+        var inst = $el.data(MODULE_KEY);
+        if (inst && typeof inst.destroy === 'function') inst.destroy();
+        $el.removeData(MODULE_KEY);
+      });
+    },
+    getInstance: function () {
+      var $el = $(SCOPE_SEL).first();
+      return $el.length ? $el.data(MODULE_KEY) : null;
+    }
+  };
+})(window.jQuery || window.$, window, document);
 
 /***/ }),
 
@@ -6751,6 +7118,394 @@ console.log('[mobile/index] entry 실행');
 
 /***/ }),
 
+/***/ 8844:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/brand/brand-sheet.js
+ * @description 브랜드 시트 — 필터 스크롤 + 검색 + 목록 필터링
+ * @scope [data-brand-sheet]
+ *
+ * @state is-active (필터 버튼), is-disabled (화살표)
+ * @events inputSearch:submit, inputSearch:clear
+ *
+ * @note
+ *   - 필터 버튼: 전체 / ㄱ~ㅎ / A~Z 한 줄 스크롤
+ *   - 화살표: 보이는 영역만큼 스냅 스크롤, 끝에서 is-disabled
+ *   - 검색: 2자 이상 입력 후 엔터 → 목록 필터링
+ *   - fitButtons: 뷰포트 너비에 맞춰 버튼 너비 역산 → 잘림 방지
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  var NS = '.uiBrandSheet';
+  var SCOPE = '[data-brand-sheet]';
+  var SEL = {
+    filter: '[data-brand-filter]',
+    prev: '[data-brand-prev]',
+    next: '[data-brand-next]',
+    scroll: '[data-brand-scroll]',
+    filterBtn: '.brand-filter-btn',
+    body: '[data-brand-body]',
+    list: '[data-brand-list]',
+    item: '[data-brand-item]',
+    count: '[data-brand-count]',
+    empty: '[data-brand-empty]',
+    input: '[data-search-input]'
+  };
+  var CLS = {
+    active: 'is-active',
+    disabled: 'is-disabled'
+  };
+  var GAP = 8;
+  var MIN_W = 38;
+  var _bound = false;
+  var _scrollTimer = null;
+  var _btnCache = null;
+  function $scope() {
+    return $(SCOPE);
+  }
+
+  // 버튼 기본 정보 캐싱
+  function cacheBtnWidths($root) {
+    _btnCache = [];
+    $root.find('.brand-filter-list > li').each(function () {
+      var $btn = $(this).find(SEL.filterBtn);
+      _btnCache.push({
+        $btn: $btn,
+        li: this,
+        baseWidth: $btn.outerWidth()
+      });
+    });
+  }
+
+  // 뷰포트에 맞춰 버튼 너비 역산 — 잘림 방지 핵심
+  function fitButtons($root) {
+    var $scroll = $root.find(SEL.scroll);
+    var el = $scroll[0];
+    if (!el || !_btnCache || !_btnCache.length) return;
+    var viewWidth = el.clientWidth;
+
+    // 뷰포트에 온전히 들어가는 버튼 수
+    var fitCount = Math.floor((viewWidth + GAP) / (MIN_W + GAP));
+    if (fitCount < 1) fitCount = 1;
+
+    // 역산: fitCount × btnW + (fitCount - 1) × GAP = viewWidth
+    var btnW = (viewWidth - (fitCount - 1) * GAP) / fitCount;
+
+    // 모든 버튼에 동일 너비 적용
+    for (var i = 0; i < _btnCache.length; i++) {
+      _btnCache[i].$btn.css('width', btnW + 'px');
+    }
+
+    // 스크롤 이동 계산용 캐싱
+    $root.data('fitCount', fitCount);
+    $root.data('unitW', btnW + GAP);
+  }
+
+  // 화살표 disabled 상태 갱신 (너비 분배 로직 제거 — fitButtons가 담당)
+  function updateArrows($root) {
+    var $scroll = $root.find(SEL.scroll);
+    var el = $scroll[0];
+    if (!el) return;
+    var maxScroll = el.scrollWidth - el.clientWidth;
+    $root.find(SEL.prev).toggleClass(CLS.disabled, el.scrollLeft <= 1);
+    $root.find(SEL.next).toggleClass(CLS.disabled, el.scrollLeft >= maxScroll - 1);
+  }
+
+  // 화살표 클릭 → fitCount 단위 스냅 스크롤
+  function scrollFilter($root, direction) {
+    var $scroll = $root.find(SEL.scroll);
+    var el = $scroll[0];
+    if (!el || !_btnCache || !_btnCache.length) return;
+    var fitCount = $root.data('fitCount') || 1;
+    var unit = $root.data('unitW') || MIN_W + GAP;
+    var scrollLeft = el.scrollLeft;
+    var totalBtns = _btnCache.length;
+
+    // 현재 시작 버튼 인덱스 (unit 단위 정렬)
+    var currentIdx = Math.round(scrollLeft / unit);
+    var targetIdx;
+    if (direction === 'next') {
+      targetIdx = currentIdx + fitCount;
+    } else {
+      targetIdx = currentIdx - fitCount;
+    }
+
+    // 마지막 그룹 시작 인덱스 = 전체 - 한 화면분
+    var lastGroupIdx = totalBtns - fitCount;
+    if (lastGroupIdx < 0) lastGroupIdx = 0;
+
+    // 범위 보정
+    if (targetIdx > lastGroupIdx) targetIdx = lastGroupIdx;
+    if (targetIdx < 0) targetIdx = 0;
+    var target = targetIdx * unit;
+    $scroll.animate({
+      scrollLeft: target
+    }, 200, function () {
+      updateArrows($root);
+    });
+  }
+
+  // 자유 스크롤 후 가장 가까운 버튼 경계로 스냅
+  function snapScroll($root) {
+    var $scroll = $root.find(SEL.scroll);
+    var el = $scroll[0];
+    if (!el) return;
+    var unit = $root.data('unitW') || MIN_W + GAP;
+    var scrollLeft = el.scrollLeft;
+    var maxScroll = el.scrollWidth - el.clientWidth;
+
+    // 끝에 도달한 경우 스냅하지 않음
+    if (scrollLeft <= 1 || scrollLeft >= maxScroll - 1) return;
+
+    // 가장 가까운 unit 배수로 스냅
+    var snapped = Math.round(scrollLeft / unit) * unit;
+    snapped = Math.max(0, Math.min(snapped, maxScroll));
+
+    // 이미 정렬돼 있으면 무시
+    if (Math.abs(scrollLeft - snapped) < 1) return;
+    $scroll.animate({
+      scrollLeft: snapped
+    }, 120, function () {
+      updateArrows($root);
+    });
+  }
+
+  // 초성 추출
+  function getChosung(char) {
+    var code = char.charCodeAt(0) - 0xac00;
+    if (code < 0 || code > 11171) return null;
+    var list = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+    return list[Math.floor(code / 588)];
+  }
+
+  // 쌍자음 → 기본 자음
+  function normalizeChosung(cho) {
+    var map = {
+      ㄲ: 'ㄱ',
+      ㄸ: 'ㄷ',
+      ㅃ: 'ㅂ',
+      ㅆ: 'ㅅ',
+      ㅉ: 'ㅈ'
+    };
+    return map[cho] || cho;
+  }
+
+  // 브랜드명이 필터 기준에 맞는지 판별
+  function matchFilter(text, filter) {
+    if (filter === 'all') return true;
+    if (!text) return false;
+    var first = text.charAt(0);
+    if (/[ㄱ-ㅎ]/.test(filter)) {
+      if (/[가-힣]/.test(first)) {
+        return normalizeChosung(getChosung(first)) === filter;
+      }
+      return false;
+    }
+    if (/[A-Z]/.test(filter)) {
+      return first.toUpperCase() === filter;
+    }
+    return false;
+  }
+
+  // 브랜드 캐시 생성
+  function cacheBrands($root) {
+    var items = [];
+    $root.find(SEL.item).each(function () {
+      var $el = $(this);
+      items.push({
+        $el: $el,
+        text: $.trim($el.text())
+      });
+    });
+    $root.data('brandCache', items);
+  }
+
+  // 목록 필터링
+  function filterList($root, filter, keyword) {
+    var items = $root.data('brandCache');
+    if (!items) return;
+    var count = 0;
+    var kw = keyword ? keyword.toLowerCase() : '';
+    items.forEach(function (item) {
+      var filterMatch = matchFilter(item.text, filter);
+      var kwMatch = !kw || item.text.toLowerCase().indexOf(kw) > -1;
+      var show = filterMatch && kwMatch;
+      if (show) {
+        item.$el.removeClass('is-hidden');
+        count++;
+      } else {
+        item.$el.addClass('is-hidden');
+      }
+    });
+    $root.find(SEL.count).text(count);
+    var $empty = $root.find(SEL.empty);
+    var $list = $root.find(SEL.list);
+    if (count === 0) {
+      $list.addClass('is-hidden');
+      $empty.removeClass('is-hidden');
+    } else {
+      $list.removeClass('is-hidden');
+      $empty.addClass('is-hidden');
+    }
+
+    // 목록 스크롤 최상위로
+    var $body = $root.find(SEL.body);
+    if ($body[0]) $body[0].scrollTop = 0;
+  }
+
+  // 현재 활성 필터값
+  function activeFilter($root) {
+    return $root.find(SEL.filterBtn + '.' + CLS.active).data('filter') || 'all';
+  }
+  function bindEvents() {
+    if (_bound) return;
+    _bound = true;
+    var $doc = $(document);
+
+    // 화살표 클릭
+    $doc.on('click' + NS, SEL.prev, function () {
+      scrollFilter($(this).closest(SCOPE), 'prev');
+    });
+    $doc.on('click' + NS, SEL.next, function () {
+      scrollFilter($(this).closest(SCOPE), 'next');
+    });
+
+    // 스크롤 끝나면 버튼 경계로 스냅
+    $(SCOPE).find(SEL.scroll).on('scroll' + NS, function () {
+      var $el = $(this);
+      var $root = $el.closest(SCOPE);
+      updateArrows($root);
+
+      // 스크롤 멈춤 감지 → 스냅 정렬
+      clearTimeout(_scrollTimer);
+      _scrollTimer = setTimeout(function () {
+        snapScroll($root);
+      }, 150);
+    });
+
+    // 필터 버튼 클릭
+    $doc.on('click' + NS, SEL.filterBtn, function () {
+      var $btn = $(this);
+      var $root = $btn.closest(SCOPE);
+      var filter = $btn.data('filter');
+      $root.find(SEL.filterBtn).removeClass(CLS.active).attr({
+        'aria-selected': 'false',
+        tabindex: '-1'
+      });
+      $btn.addClass(CLS.active).attr({
+        'aria-selected': 'true',
+        tabindex: '0'
+      });
+
+      // 숨긴 필터 버튼 + 화살표 복원
+      $root.find('.brand-filter-list > li').removeClass('is-hidden');
+      $root.find(SEL.prev).removeClass('is-hidden');
+      $root.find(SEL.next).removeClass('is-hidden');
+
+      // 버튼 너비 재계산 + 화살표 상태 갱신
+      fitButtons($root);
+      updateArrows($root);
+      filterList($root, filter, '');
+      if (window.UI && window.UI.inputSearch) {
+        window.UI.inputSearch.clear($root);
+      }
+    });
+
+    // 검색 실행 — 전체만 보이고 나머지 필터 숨김
+    $doc.on('inputSearch:submit' + NS, SEL.input, function (e, data) {
+      var $root = $(this).closest(SCOPE);
+
+      // 필터 전체로 전환
+      $root.find(SEL.filterBtn).removeClass(CLS.active).attr({
+        'aria-selected': 'false',
+        tabindex: '-1'
+      });
+      $root.find(SEL.filterBtn + '[data-filter="all"]').addClass(CLS.active).attr({
+        'aria-selected': 'true',
+        tabindex: '0'
+      });
+
+      // 전체 외 필터 버튼 숨김 + 화살표 숨김
+      $root.find('.brand-filter-list > li').each(function () {
+        var $btn = $(this).find(SEL.filterBtn);
+        if ($btn.data('filter') !== 'all') {
+          $(this).addClass('is-hidden');
+        }
+      });
+      $root.find(SEL.prev).addClass('is-hidden');
+      $root.find(SEL.next).addClass('is-hidden');
+
+      // 스크롤 초기화
+      var $scroll = $root.find(SEL.scroll);
+      if ($scroll[0]) $scroll[0].scrollLeft = 0;
+      filterList($root, 'all', data.query);
+    });
+
+    // 검색 초기화 — 필터 메뉴 전부 복원
+    $doc.on('inputSearch:clear' + NS, SEL.input, function () {
+      var $root = $(this).closest(SCOPE);
+
+      // 숨긴 필터 버튼 + 화살표 복원
+      $root.find('.brand-filter-list > li').removeClass('is-hidden');
+      $root.find(SEL.prev).removeClass('is-hidden');
+      $root.find(SEL.next).removeClass('is-hidden');
+
+      // 버튼 너비 재계산 + 화살표 상태 갱신
+      fitButtons($root);
+      updateArrows($root);
+      filterList($root, activeFilter($root), '');
+    });
+
+    // 브랜드 탭 활성화 시 fitButtons + 화살표 갱신
+    $doc.on('tab:change' + NS, function (e, data) {
+      if (data === 'brandTab') {
+        var $root = $scope();
+        if ($root.length) {
+          if (!_btnCache || !_btnCache.length) {
+            cacheBtnWidths($root);
+          }
+          fitButtons($root);
+          updateArrows($root);
+          filterList($root, activeFilter($root), '');
+        }
+      }
+    });
+  }
+
+  // init에 cacheBtnWidths + fitButtons + updateArrows 추가
+  function init() {
+    var $root = $scope();
+    if (!$root.length) return;
+    cacheBrands($root);
+    cacheBtnWidths($root);
+    fitButtons($root);
+    bindEvents();
+    updateArrows($root);
+  }
+  function destroy() {
+    $(document).off(NS);
+    clearTimeout(_scrollTimer);
+    _scrollTimer = null;
+    var $root = $scope();
+    if ($root.length) {
+      $root.removeData('brandCache');
+      $root.removeData('fitCount');
+      $root.removeData('unitW');
+    }
+    _bound = false;
+    _btnCache = null;
+  }
+  window.brandSheet = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 8955:
 /***/ (function() {
 
@@ -6877,6 +7632,132 @@ console.log('[mobile/index] entry 실행');
     init: init,
     destroy: destroy,
     closeAll: closeAll
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 9098:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/chip-button.js
+ * @description 칩 버튼 제거(삭제) 공통: data-속성 기반
+ * @scope .vits-chip-button-group
+ *
+ * @mapping
+ *  [data-chip-action="remove"] → 해당 칩(.vits-chip-button) DOM 제거
+ *  [data-chip-clear]           → 스코프([data-chip-clear-scope]) 내 칩 전체 제거
+ *
+ * @events
+ *  ui:chip-remove     (document) — 칩 삭제 시 발행 { value, chipEl, groupEl }
+ *  ui:chip-remove-all (document) — 전체 삭제 시 발행 { groupEl }
+ *
+ * @a11y
+ *  - X 버튼은 aria-label로 "… 삭제" 제공(마크업에서 처리)
+ *
+ * @note
+ *  - 이벤트 위임 방식으로 동적 렌더에도 대응
+ *  - 표현/상태는 CSS에서 처리, JS는 삭제 동작만 담당
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiChipButton';
+  var GROUP_SEL = '.vits-chip-button-group';
+  var CHIP_SEL = '.vits-chip-button';
+  var REMOVE_SEL = '[data-chip-action="remove"]';
+  var CLEAR_SEL = '[data-chip-clear]';
+  var SCOPE_SEL = '[data-chip-clear-scope]';
+  var _bound = false;
+  var _observers = [];
+
+  // 칩 제거 → DOM 삭제 + 커스텀 이벤트 발행
+  function removeChip($chip) {
+    if (!$chip || !$chip.length) return;
+    var value = $chip.attr('data-chip-value') || '';
+    var chipEl = $chip[0];
+    var $group = $chip.closest(GROUP_SEL);
+    var groupEl = $group.length ? $group[0] : null;
+    $chip.remove();
+
+    // 스코프 내 남은 칩 없으면 전체삭제 버튼 숨김
+    var $scope = $(groupEl).closest(SCOPE_SEL);
+    if ($scope.length && !$scope.find(CHIP_SEL).length) {
+      $scope.find(CLEAR_SEL).addClass('is-hidden');
+    }
+    $(document).trigger('ui:chip-remove', {
+      value: value,
+      chipEl: chipEl,
+      groupEl: groupEl
+    });
+  }
+
+  // 전체 삭제 → 스코프 내 칩 일괄 제거 + 커스텀 이벤트 발행
+  function removeAll($scope) {
+    if (!$scope || !$scope.length) return;
+    var $group = $scope.find(GROUP_SEL);
+    var groupEl = $group.length ? $group[0] : null;
+    $scope.find(CHIP_SEL).remove();
+
+    // 전체삭제 후 버튼 숨김
+    $scope.find(CLEAR_SEL).addClass('is-hidden');
+    $(document).trigger('ui:chip-remove-all', {
+      groupEl: groupEl
+    });
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 이벤트 위임: 그룹 내 remove 버튼 클릭(터치) 처리
+    $(document).on('click' + NS, GROUP_SEL + ' ' + REMOVE_SEL, function (e) {
+      e.preventDefault();
+      var $chip = $(this).closest(CHIP_SEL);
+      removeChip($chip);
+    });
+
+    // 칩 추가/제거 감지 → 전체삭제 버튼 상태 갱신
+    $(SCOPE_SEL).each(function (_, el) {
+      var $scope = $(el);
+      var groupEl = $scope.find(GROUP_SEL)[0];
+      if (!groupEl) return;
+      var ob = new MutationObserver(function () {
+        var hasChip = $scope.find(CHIP_SEL).length > 0;
+        $scope.find(CLEAR_SEL).toggleClass('is-hidden', !hasChip);
+      });
+      ob.observe(groupEl, {
+        childList: true
+      });
+      _observers.push(ob);
+    });
+
+    // 전체삭제: 가장 가까운 부모 스코프 내 칩 전체 제거
+    $(document).on('click' + NS, CLEAR_SEL, function (e) {
+      e.preventDefault();
+      var $scope = $(this).closest(SCOPE_SEL);
+      if (!$scope.length) $scope = $(this).parent();
+      removeAll($scope);
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.chipButton = {
+    init: init,
+    destroy: destroy,
+    // 외부에서 칩 추가 후 전체삭제 버튼 상태 갱신
+    updateClearBtn: function ($scope) {
+      if (!$scope || !$scope.length) return;
+      var hasChip = $scope.find(CHIP_SEL).length > 0;
+      $scope.find(CLEAR_SEL).toggleClass('is-hidden', !hasChip);
+    }
   };
 })(window.jQuery, window);
 
@@ -7106,6 +7987,923 @@ console.log('[mobile/index] entry 실행');
     refresh: refresh
   };
 })(window.jQuery, window);
+
+/***/ }),
+
+/***/ 9348:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
+var utils = __webpack_require__(1781);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
+var scroll_lock = __webpack_require__(2066);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
+var kendo_window = __webpack_require__(4387);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
+var kendo_datepicker = __webpack_require__(7713);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
+var kendo_datepicker_single = __webpack_require__(1014);
+;// ./src/assets/scripts-mo/ui/kendo/index.js
+/**
+ * @file scripts-mo/ui/kendo/index.js
+ * @description Kendo UI 관련 모듈 통합 관리
+ */
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
+  window.UI.kendo = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.initAll === 'function') mod.initAll();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
+var tooltip = __webpack_require__(9592);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
+var sticky_observer = __webpack_require__(5723);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
+var overflow_menu = __webpack_require__(4305);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
+var toggle = __webpack_require__(8955);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
+var step_flow = __webpack_require__(8486);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
+var expand = __webpack_require__(8839);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
+var tab = __webpack_require__(5332);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
+var scroll_buttons = __webpack_require__(3474);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab-sticky.js
+var tab_sticky = __webpack_require__(2006);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/collapse.js
+var collapse = __webpack_require__(9212);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-overflow-gradient.js
+var scroll_overflow_gradient = __webpack_require__(2638);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
+var option_box = __webpack_require__(3198);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-tab.js
+var step_tab = __webpack_require__(6323);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/auth.js
+var auth = __webpack_require__(689);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/survey-detail.js
+var survey_detail = __webpack_require__(1151);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/footer.js
+var footer = __webpack_require__(6840);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/voice-blob.js
+var voice_blob = __webpack_require__(5365);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/bottom-tab-bar.js
+var bottom_tab_bar = __webpack_require__(4714);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/chip-button.js
+var chip_button = __webpack_require__(9098);
+;// ./src/assets/scripts-mo/ui/common/index.js
+/**
+ * @file scripts-mo/ui/common/index.js
+ * @description 공통 UI 모듈 통합
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail', 'footerBizInfo', 'voiceBlob', 'bottomTabBar', 'chipButton'];
+  window.UI.common = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
+var form_select = __webpack_require__(8550);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
+var checkbox_total = __webpack_require__(548);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
+var form_textarea = __webpack_require__(5912);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input.js
+var input = __webpack_require__(3064);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input-search.js
+var input_search = __webpack_require__(6525);
+;// ./src/assets/scripts-mo/ui/form/index.js
+/**
+ * @file scripts-mo/ui/form/index.js
+ * @description 폼 관련 UI 모듈 통합
+ */
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['select', 'checkboxTotal', 'textarea', 'input', 'inputSearch'];
+  window.UI.form = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
+var product_view_toggle = __webpack_require__(5487);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
+var product_inline_banner = __webpack_require__(905);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(7111);
+;// ./src/assets/scripts-mo/ui/product/detail-gallery.js
+/**
+ * @file detail-gallery.js
+ * @description 상품 상세 썸네일 갤러리 (메인 슬라이더 + 상세이미지 팝업 모달)
+ * @scope [data-ui="detail-gallery"]
+ * @mapping detail-overview-thumb.ejs
+ * @state .is-open — 모달 활성화
+ * @a11y hidden/aria-modal, ESC 닫기
+ * @note iOS body scroll lock — position:fixed + scrollTop 저장
+ * @note Android 물리 백버튼 — history.pushState 활용
+ * @example 외부 사용 예시
+ *          const gallery = UI.detailGallery.getInstance();
+ *          if (gallery) {
+ *            const idx = gallery.getActiveIndex();
+ *            gallery.slideTo(2);
+ *            gallery.openZoom();
+ *          }
+ */
+
+(function () {
+  'use strict';
+
+  const SCOPE = '[data-ui="detail-gallery"]';
+  const IS_OPEN = 'is-open';
+  let savedScrollY = 0;
+
+  // iOS body scroll lock
+  function lockScroll() {
+    savedScrollY = window.scrollY;
+    document.body.style.cssText = 'position:fixed;top:' + -savedScrollY + 'px;left:0;right:0;overflow:hidden;';
+  }
+  function unlockScroll() {
+    document.body.style.cssText = '';
+    window.scrollTo(0, savedScrollY);
+  }
+  function init() {
+    const root = document.querySelector(SCOPE);
+    if (!root) return;
+
+    // 중복 초기화 방지
+    if (root._galleryInstance) return;
+    const mainEl = root.querySelector('[data-role="main"]');
+    const zoomEl = root.querySelector('[data-role="zoom"]');
+    const zoomSwiperEl = root.querySelector('[data-role="zoom-swiper"]');
+    const zoomThumbsEl = root.querySelector('[data-role="zoom-thumbs"]');
+    if (!mainEl) return;
+    const total = mainEl.querySelectorAll('.swiper-slide').length;
+    const isSingle = total < 2;
+
+    // 1장이면 모달 썸네일 숨김
+    if (isSingle && zoomThumbsEl) zoomThumbsEl.style.display = 'none';
+
+    // 메인 Swiper
+    const mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+      slidesPerView: 1,
+      loop: false,
+      allowTouchMove: !isSingle,
+      observer: true,
+      observeParents: true,
+      pagination: isSingle ? false : {
+        el: mainEl.querySelector('.swiper-pagination'),
+        clickable: true
+      }
+    });
+
+    // 모달 Swiper — lazy init
+    let zoomSwiper = null;
+    let zoomThumbSwiper = null;
+    function createZoom(index) {
+      if (!zoomSwiper) {
+        if (!isSingle && zoomThumbsEl) {
+          zoomThumbSwiper = new swiper_bundle/* default */.A(zoomThumbsEl, {
+            slidesPerView: 'auto',
+            spaceBetween: 7,
+            watchSlidesProgress: true
+          });
+        }
+        zoomSwiper = new swiper_bundle/* default */.A(zoomSwiperEl, {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: false,
+          autoHeight: true,
+          observer: true,
+          observeParents: true,
+          thumbs: zoomThumbSwiper ? {
+            swiper: zoomThumbSwiper
+          } : undefined,
+          on: {
+            slideChange: function () {
+              // 활성 썸네일이 보이도록 스크롤
+              if (zoomThumbSwiper) {
+                zoomThumbSwiper.slideTo(this.activeIndex);
+              }
+            }
+          }
+        });
+      } else {
+        zoomSwiper.update();
+        if (zoomThumbSwiper) zoomThumbSwiper.update();
+      }
+      zoomSwiper.slideTo(index, 0);
+    }
+
+    // 모달 열기
+    function openZoom() {
+      if (!zoomEl) return;
+      const index = mainSwiper.activeIndex;
+      zoomEl.removeAttribute('hidden');
+      zoomEl.classList.add(IS_OPEN);
+      lockScroll();
+
+      // Android 뒤로가기 대응
+      history.pushState({
+        detailGalleryOpen: true
+      }, '');
+      requestAnimationFrame(() => {
+        createZoom(index);
+      });
+    }
+
+    // 모달 닫기
+    function closeZoom(fromPop) {
+      if (!zoomEl || !zoomEl.classList.contains(IS_OPEN)) return;
+      const index = zoomSwiper ? zoomSwiper.activeIndex : mainSwiper.activeIndex;
+      zoomEl.classList.remove(IS_OPEN);
+      zoomEl.setAttribute('hidden', '');
+      unlockScroll();
+      mainSwiper.slideTo(index, 0);
+      if (!fromPop) history.back();
+    }
+
+    // 이벤트
+    root.addEventListener('click', e => {
+      const target = e.target.closest('[data-role]');
+      if (!target) return;
+      const role = target.getAttribute('data-role');
+      if (role === 'zoom-open') openZoom();
+      if (role === 'zoom-close') closeZoom();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom();
+      }
+    });
+
+    // Android 물리 백버튼
+    window.addEventListener('popstate', () => {
+      if (zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom(true);
+      }
+    });
+
+    // public API
+    root._galleryInstance = {
+      main: mainSwiper,
+      zoom: () => zoomSwiper,
+      zoomThumb: () => zoomThumbSwiper,
+      // 외부 접근용 API
+      getActiveIndex: () => mainSwiper.activeIndex,
+      slideTo: index => mainSwiper.slideTo(index),
+      openZoom,
+      closeZoom,
+      getTotal: () => total
+    };
+  }
+  function destroy() {
+    const root = document.querySelector(SCOPE);
+    if (!root || !root._galleryInstance) return;
+    const inst = root._galleryInstance;
+    inst.main?.destroy(true, true);
+    inst.zoom()?.destroy(true, true);
+    inst.zoomThumb()?.destroy(true, true);
+    delete root._galleryInstance;
+  }
+  window.UI = window.UI || {};
+  window.UI.detailGallery = {
+    init,
+    destroy,
+    // 외부에서 UI.detailGallery.getInstance()로 접근
+    getInstance: () => document.querySelector(SCOPE)?._galleryInstance
+  };
+})();
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/bottom-product-bar.js
+var bottom_product_bar = __webpack_require__(3012);
+;// ./src/assets/scripts-mo/ui/product/index.js
+/**
+ * @file scripts-mo/ui/product/index.js
+ * @description 상품 관련 UI 모듈 통합
+ */
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
+  window.UI.product = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (!mod) return;
+
+        // initAll 우선, 없으면 init
+        if (typeof mod.initAll === 'function') {
+          mod.initAll();
+        } else if (typeof mod.init === 'function') {
+          mod.init();
+        }
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-renderer.js
+var category_renderer = __webpack_require__(8134);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
+var category_tree_search = __webpack_require__(1234);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
+var category_sheet = __webpack_require__(6410);
+;// ./src/assets/scripts-mo/ui/category/index.js
+/**
+ * @file scripts-mo/ui/category/index.js
+ * @description 카테고리 UI 관련 모듈 통합 관리
+ */
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['CategorySheet', 'CategoryTreeSearch'];
+  window.UI.category = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
+var filter_product = __webpack_require__(2014);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
+var filter_mapage = __webpack_require__(2624);
+;// ./src/assets/scripts-mo/ui/filter/index.js
+/**
+ * @file scripts-mo/ui/filter/index.js
+ * @description 필터 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['FilterProduct', 'FilterMypage'];
+  window.UI.filter = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
+var cart = __webpack_require__(9459);
+;// ./src/assets/scripts-mo/ui/cart-order/order.js
+/**
+ * @file scripts-mo/ui/cart-order/order.js
+ * @description 주문/결제(주문서) 페이지 UI 기능
+ * - 배송 방법 탭 전환 (택배/퀵배송/화물)
+ * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
+ * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
+ * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
+ * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
+ * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[order] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var EVENT_NS = '.uiOrder';
+  var ROOT_SEL = '.vm-cart-order';
+  var METHOD_BTN_SEL = '.vm-shipping-method-btn';
+  var METHOD_PANEL_SEL = '.vm-shipping-panel';
+  var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
+  var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
+  var INIT_KEY = 'uiOrderInit';
+  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
+
+  // 결제수단 (모바일 vm-*)
+  var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
+  var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
+  var PAYMENT_ITEM_SEL = '.vm-payment-item';
+  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
+  var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
+  var PAYMENT_PANEL_SEL = '.vm-payment-panel';
+  var PAYMENT_METHOD_SEL = '.vm-payment-method';
+
+  // 결제 카드/계좌 Swiper
+  var PAYMENT_SWIPER_SEL = '.vm-card-list.js-swiper[data-swiper-type="payment"]';
+  var SWIPER_DATA_KEY = 'uiPaymentSwiper';
+  var PAYMENT_SWIPER_OPTIONS = {
+    slidesPerView: 'auto',
+    spaceBetween: 12,
+    speed: 500,
+    slidesOffsetAfter: 50,
+    breakpoints: {
+      768: {
+        slidesOffsetAfter: 280
+      }
+    },
+    a11y: false,
+    on: {
+      init: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      },
+      slideChangeTransitionEnd: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      }
+    }
+  };
+  var METHOD_FREIGHT = 'freight';
+  var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
+  var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
+  var ID_PAY_SIMPLE = 'pay-simple';
+  var ID_PANEL_CREDIT = 'panel-credit';
+  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
+  function getScope(root) {
+    if (!root) return $(ROOT_SEL);
+    var $el = $(root);
+    if (!$el.length) return $el;
+    return $el.find(ROOT_SEL).addBack().filter(ROOT_SEL);
+  }
+
+  /**
+   * 배송 방법 탭 클릭 시 해당 패널만 활성화
+   */
+  function bindShippingMethodTabs($scope) {
+    var $btns = $scope.find(METHOD_BTN_SEL);
+    var $panels = $scope.find(METHOD_PANEL_SEL);
+    if (!$btns.length || !$panels.length) return;
+    $btns.off('click' + EVENT_NS);
+    $btns.on('click' + EVENT_NS, function () {
+      var method = $(this).data('method');
+      if (!method) return;
+      $btns.removeClass('is-active');
+      $(this).addClass('is-active');
+      $panels.removeClass('is-active');
+      $panels.filter('[data-panel="' + method + '"]').addClass('is-active');
+      updateFreightVisibility($scope, method);
+    });
+  }
+
+  /**
+   * 화물 선택 시 data-freight-visible 영역 노출, data-freight-hidden 영역 비노출
+   */
+  function updateFreightVisibility($scope, method) {
+    var isFreight = method === METHOD_FREIGHT;
+    $scope.find(FREIGHT_VISIBLE_SEL).toggle(isFreight);
+    $scope.find(FREIGHT_HIDDEN_SEL).toggle(!isFreight);
+  }
+  function bindFreightVisibility($scope) {
+    var $activeBtn = $scope.find(METHOD_BTN_SEL + '.is-active');
+    var method = $activeBtn.length ? $activeBtn.data('method') : '';
+    updateFreightVisibility($scope, method);
+  }
+
+  /**
+   * 결제수단 탭 클릭 시 해당 탭패널만 활성화 (간편결제 내 카드/계좌 탭)
+   */
+  function setPaymentTabState($scope, $tab) {
+    if (!$tab || !$tab.length) return;
+    var tabId = $tab.attr('id');
+    var controlsId = $tab.attr('aria-controls');
+    var $tablist = $tab.closest('[role="tablist"]');
+    var $parentPanel = $tablist.closest(PAYMENT_PANEL_SEL);
+    if (!$tablist.length || !$parentPanel.length) return;
+    var $tabs = $tablist.find(PAYMENT_TAB_SEL);
+    var $panels = $parentPanel.find(PAYMENT_TAB_PANEL_SEL);
+    $tabs.each(function () {
+      var $t = $(this);
+      $t.removeClass('is-active');
+      $t.attr('aria-selected', 'false');
+      $t.attr('aria-expanded', 'false');
+    });
+    $tab.addClass('is-active');
+    $tab.attr('aria-selected', 'true');
+    $panels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    if (controlsId) {
+      var $targetPanel = $scope.find('#' + controlsId);
+      if ($targetPanel.length) {
+        $targetPanel.addClass('is-active');
+        $tab.attr('aria-expanded', 'true');
+        var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+        if (!currentLabelledBy || currentLabelledBy !== tabId) {
+          $targetPanel.attr('aria-labelledby', tabId);
+        }
+        // 노출된 패널 안의 payment 스와이퍼는 초기화 시 숨겨져 있었을 수 있으므로 크기 재계산
+        $targetPanel.find(PAYMENT_SWIPER_SEL).each(function () {
+          var instance = $(this).data(SWIPER_DATA_KEY);
+          if (instance && typeof instance.update === 'function') instance.update();
+        });
+      }
+    }
+  }
+
+  /**
+   * 결제수단 라디오 변경 시 해당 패널만 활성화 (간편결제/카드/계좌이체/무통장/여신)
+   */
+  function setPaymentPanelState($scope, $radio) {
+    if (!$radio || !$radio.length) return;
+    var controlsId = $radio.attr('aria-controls');
+    if (!controlsId) return;
+    var radioId = $radio.attr('id');
+    var $item = $radio.closest(PAYMENT_ITEM_SEL);
+    var $methodWrap = $item.closest(PAYMENT_METHOD_SEL);
+    if (!$item.length || !$methodWrap.length) return;
+    var $allPanels = $methodWrap.find(PAYMENT_PANEL_SEL);
+
+    // 간편결제 탭이 '계좌'일 때 다른 결제수단 선택 시 카드 탭으로 전환
+    var $tabSimpleAccount = $scope.find('#' + ID_TAB_SIMPLE_ACCOUNT);
+    if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
+      if (radioId !== ID_PAY_SIMPLE) {
+        var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+        if ($tabSimpleCard.length) {
+          setPaymentTabState($scope, $tabSimpleCard);
+        }
+      }
+    }
+    $allPanels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    $methodWrap.find(PAYMENT_RADIO_SEL).attr('aria-expanded', 'false');
+    var $targetPanel = $methodWrap.find('#' + controlsId);
+    if ($targetPanel.length) {
+      $targetPanel.addClass('is-active');
+      $radio.attr('aria-expanded', 'true');
+      var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+      if (!currentLabelledBy || currentLabelledBy !== radioId) {
+        $targetPanel.attr('aria-labelledby', radioId);
+      }
+      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
+      if (controlsId === ID_PANEL_CREDIT) {
+        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
+        if ($taxBatch.length) $taxBatch.prop('checked', true);
+      }
+    } else {
+      $radio.attr('aria-expanded', 'false');
+    }
+  }
+
+  /**
+   * 결제 카드/계좌 리스트 Swiper 초기화
+   */
+  function initPaymentSwipers($scope) {
+    if (typeof swiper_bundle/* default */.A === 'undefined') return;
+    var $containers = $scope.find(PAYMENT_SWIPER_SEL);
+    if (!$containers.length) return;
+    $containers.each(function () {
+      if ($(this).data(SWIPER_DATA_KEY)) return;
+      if (!this.querySelector('.swiper-wrapper')) return;
+      var prevEl = this.querySelector('.swiper-button-prev');
+      var nextEl = this.querySelector('.swiper-button-next');
+      var $el = $(this);
+      if (!this.classList.contains('swiper')) this.classList.add('swiper');
+      var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
+      if (prevEl && nextEl) {
+        options.navigation = {
+          nextEl: nextEl,
+          prevEl: prevEl,
+          disabledClass: 'swiper-button-disabled'
+        };
+      }
+      try {
+        var instance = new swiper_bundle/* default */.A(this, options);
+        $el.data(SWIPER_DATA_KEY, instance);
+        this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
+          slide.addEventListener('click', function () {
+            instance.slideTo(index);
+          });
+        });
+      } catch (e) {
+        console.warn('[order] Payment swiper init failed', e);
+      }
+    });
+  }
+
+  /**
+   * 결제수단 탭/라디오 이벤트 바인딩 및 초기 상태
+   */
+  function bindPayment($scope) {
+    var $payment = $scope.find('.vm-payment');
+    if (!$payment.length) return;
+
+    // 초기: 간편결제 카드 탭 활성화
+    var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+    if ($tabSimpleCard.length && !$tabSimpleCard.hasClass('is-active')) {
+      setPaymentTabState($scope, $tabSimpleCard);
+    }
+
+    // 탭 aria-expanded 초기화
+    $scope.find(PAYMENT_TAB_SEL).each(function () {
+      var $tab = $(this);
+      var isActive = $tab.hasClass('is-active');
+      var controlsId = $tab.attr('aria-controls');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
+      } else {
+        $tab.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_TAB_SEL + '.is-active').each(function () {
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 라디오 aria-expanded 초기화 후 체크된 항목 기준으로 패널 활성화
+    $scope.find(PAYMENT_RADIO_SEL).each(function () {
+      var $radio = $(this);
+      var controlsId = $radio.attr('aria-controls');
+      var isChecked = $radio.is(':checked');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
+      } else {
+        $radio.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_RADIO_SEL + ':checked').each(function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제수단 탭 클릭
+    $scope.off('click' + EVENT_NS, PAYMENT_TAB_SEL);
+    $scope.on('click' + EVENT_NS, PAYMENT_TAB_SEL, function (e) {
+      e.preventDefault();
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 결제수단 라디오 변경
+    $scope.off('change' + EVENT_NS, PAYMENT_RADIO_SEL);
+    $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제수단 토글 클릭 시 해당 패널 활성화
+    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
+      $(document).data(TOGGLE_DELEGATE_KEY, true);
+      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
+        e.preventDefault();
+        var $toggle = $(this);
+        var $scope = $toggle.closest(ROOT_SEL);
+        if (!$scope.length) return;
+        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
+        var $radio = $item.find('input[type="radio"][aria-controls]');
+        if ($radio.length) {
+          $radio.prop('checked', true);
+          setPaymentPanelState($scope, $radio);
+        }
+      });
+    }
+
+    // 결제 카드/계좌 Swiper 초기화
+    initPaymentSwipers($scope);
+  }
+
+  /**
+   * 주문서 영역 초기화 (배송 탭, 화물 노출, 결제수단)
+   */
+  function bindRoot($scope) {
+    if ($scope.data(INIT_KEY)) return;
+    $scope.data(INIT_KEY, true);
+    bindShippingMethodTabs($scope);
+    bindFreightVisibility($scope);
+    bindPayment($scope);
+  }
+  window.UI.order = {
+    init: function (root) {
+      var $scope = getScope(root);
+      if (!$scope.length) return;
+      $scope.each(function () {
+        bindRoot($(this));
+      });
+      console.log('[order] order page initialized');
+    }
+  };
+  console.log('[order] module loaded');
+})(window.jQuery, window);
+;// ./src/assets/scripts-mo/ui/cart-order/index.js
+/**
+ * @file scripts-mo/ui/cart-order/index.js
+ * @description 장바구니/주문 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['cart', 'order'];
+  window.UI.cartOrder = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/brand/brand-sheet.js
+var brand_sheet = __webpack_require__(8844);
+;// ./src/assets/scripts-mo/ui/brand/index.js
+/**
+ * @file scripts-mo/ui/brand/index.js
+ * @description 브랜드 UI 모듈 통합
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['brandSheet'];
+  window.UI.brand = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-rank.js
+var search_rank = __webpack_require__(8307);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-suggest.js
+var search_suggest = __webpack_require__(6823);
+;// ./src/assets/scripts-mo/ui/search/index.js
+/**
+ * @file scripts-mo/ui/search/index.js
+ * @description 검색 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['searchRank', 'searchSuggest'];
+  window.UI.search = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    },
+    destroy: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.destroy === 'function') mod.destroy();
+      });
+    }
+  };
+})(window.jQuery || window.$, window);
+;// ./src/assets/scripts-mo/core/ui.js
+/**
+ * @file scripts-mo/core/ui.js
+ * @description 모바일 UI 모듈 진입점
+ * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search'];
+  window.UI.init = function () {
+    modules.forEach(function (name) {
+      var mod = window.UI[name];
+      if (mod && typeof mod.init === 'function') mod.init();
+    });
+  };
+
+  // DOM 준비 후 자동 초기화
+  $(document).ready(function () {
+    window.UI.init();
+  });
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
+var common = __webpack_require__(6023);
+;// ./src/assets/scripts-mo/index.js
+/**
+ * @file mobile/index.js
+ * @description 모바일 번들 엔트리(진입점)
+ * @note
+ *  - core 모듈은 utils → ui → common 순서로 포함
+ *  - index.js는 짧게 유지(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서 관리
+ */
+
+
+
+console.log('[mobile/index] entry 실행');
+;// ./src/app-mo.js
+// 모바일 전용
+
+
+// 공통 (PC와 동일)
+
+
+
+
+
+
+
+// 모바일 전용
+
+
+
+
 
 /***/ }),
 
@@ -7446,9 +9244,28 @@ console.log('[mobile/index] entry 실행');
 /******/ 		};
 /******/ 	}();
 /******/ 	
+/******/ 	/* webpack/runtime/ensure chunk */
+/******/ 	!function() {
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		// Since all referenced chunks are already included
+/******/ 		// in this file, this function is empty here.
+/******/ 		__webpack_require__.e = function() { return Promise.resolve(); };
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -7460,7 +9277,6 @@ console.log('[mobile/index] entry 실행');
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			605: 0,
-/******/ 			96: 0,
 /******/ 			817: 0,
 /******/ 			152: 0,
 /******/ 			486: 0,
@@ -7517,7 +9333,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766,979], function() { return __webpack_require__(6010); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766,979], function() { return __webpack_require__(9348); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

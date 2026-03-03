@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="../../public/resources/css/XEIcon/xeicon.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/swiper-bundle.min.css" />
   <link rel="stylesheet" href="../../public/resources/css/common/catalog.css" />
-<script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
+<script defer src="../../public/resources/js/mro/renewal/ui/vendors.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/swiper.bundle.js"></script><script defer src="../../public/resources/js/mro/renewal/ui/app.bundle.js"></script><link href="../../public/resources/css/mro/renewal/vendors.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/base.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/layout.css" rel="stylesheet"><link href="../../public/resources/css/mro/renewal/pages.css" rel="stylesheet"></head>
 
   <!-- [D] vits-scope 적용(상단 주석 참고) -->
   <body class="vits-scope">
@@ -23980,34 +23980,39 @@
   <!-- 결제정보 -->
   <div class="vits-payment-summary">
     <h2 class="vits-payment-title">결제정보</h2>
-
-    <div class="vits-payment-price">
-      <ul class="vits-payment-price-list">
-        <li>
-          <span>상품금액</span>
-          <strong>418,000원</strong>
-        </li>
-        <li class="is-discount">
-          <span>할인금액</span>
-          <strong>-83,500원</strong>
-        </li>
-      </ul>
-    </div>
-
-    <div class="vits-payment-price">
-      <ul class="vits-payment-price-sub">
-        <li><span>최대혜택가</span><span>33,450원</span></li>
-        <li><span>VAT</span><span>418,000원</span></li>
-        <li><span>배송비</span><span>3,000원</span></li>
-      </ul>
-    </div>
-
+    <!-- [D] 결제금액 정보 영역 : 구조 수정 (추가 및 수정) 02.27 -->
     <div class="vits-payment-total">
       <span>결제예정금액</span>
       <strong class="is-emphasis">370,950원</strong>
     </div>
-
     <p class="vits-payment-notice">도착지에서 착불 운임이 청구됩니다.</p>
+
+    <div class="vits-payment-wrap">
+      <button type="button" class="vits-payment-toggle" aria-expanded="false" aria-controls="vits-payment-price">
+        <span class="text">상품금액 자세히</span>
+        <!-- prettier-ignore -->
+        <i class="ic ic-arrow-down" aria-hidden="true"></i>
+
+      </button>
+      <div id="vits-payment-price" class="vits-payment-price" hidden aria-hidden="true">
+        <ul class="vits-payment-price-list">
+          <li>
+            <span>상품금액</span>
+            <strong>418,000원</strong>
+          </li>
+          <li class="is-discount">
+            <span>할인금액</span>
+            <strong>-83,500원</strong>
+          </li>
+        </ul>
+        <ul class="vits-payment-price-sub">
+          <li><span>최대혜택가</span><span>33,450원</span></li>
+          <li><span>VAT</span><span>418,000원</span></li>
+          <li><span>배송비</span><span>3,000원</span></li>
+        </ul>
+      </div>
+    </div>
+    <!-- // E. 02.27 -->
   </div>
 
   <!-- 결제수단 선택 -->
@@ -24317,66 +24322,31 @@
   <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
   <div class="vits-tax-options">
+    <!-- prettier-ignore-start -->
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-single"
+        value="single"
+        checked
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">개별 발급 <span class="label-sub">주문별로 각 1회 발행</span></span>
+    </label>
     <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-single"
-    value="single"
-    checked
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">개별 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-batch"
-    value="batch"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">일괄 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-none"
-    value="none"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">발급 안함</span>
-  
-</label>
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-batch"
+        value="batch"
+        
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">일괄 발급 <span class="label-sub">익월에 통합 1회 발행</span></span>
+    </label>
+    <!-- [D] 발급안함 삭제 02.27 -->
   </div>
 </div>
 
@@ -24509,66 +24479,31 @@
   <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
   <div class="vits-tax-options">
+    <!-- prettier-ignore-start -->
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-single"
+        value="single"
+        checked
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">개별 발급 <span class="label-sub">주문별로 각 1회 발행</span></span>
+    </label>
     <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-single"
-    value="single"
-    checked
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">개별 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-batch"
-    value="batch"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">일괄 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-none"
-    value="none"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">발급 안함</span>
-  
-</label>
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-batch"
+        value="batch"
+        
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">일괄 발급 <span class="label-sub">익월에 통합 1회 발행</span></span>
+    </label>
+    <!-- [D] 발급안함 삭제 02.27 -->
   </div>
 </div>
 
@@ -24703,66 +24638,31 @@
   <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
   <div class="vits-tax-options">
+    <!-- prettier-ignore-start -->
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-single"
+        value="single"
+        checked
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">개별 발급 <span class="label-sub">주문별로 각 1회 발행</span></span>
+    </label>
     <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-single"
-    value="single"
-    checked
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">개별 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-batch"
-    value="batch"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">일괄 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-none"
-    value="none"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">발급 안함</span>
-  
-</label>
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-batch"
+        value="batch"
+        
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">일괄 발급 <span class="label-sub">익월에 통합 1회 발행</span></span>
+    </label>
+    <!-- [D] 발급안함 삭제 02.27 -->
   </div>
 </div>
 
@@ -24802,66 +24702,31 @@
   <h2 class="vits-tax-title">세금계산서 발급 신청</h2>
 
   <div class="vits-tax-options">
+    <!-- prettier-ignore-start -->
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-single"
+        value="single"
+        
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">개별 발급 <span class="label-sub">주문별로 각 1회 발행</span></span>
+    </label>
     <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-single"
-    value="single"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">개별 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-batch"
-    value="batch"
-    checked
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">일괄 발급</span>
-  
-</label>
-    <!-- prettier-ignore -->
-    
-
-<label class="radio-item">
-  <input
-    type="radio"
-    name="tax-invoice"
-    id="tax-invoice-none"
-    value="none"
-    
-    
-    
-    
-    
-  />
-  <span class="radio-icon" aria-hidden="true"></span>
-  
-    <span class="label-name">발급 안함</span>
-  
-</label>
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="tax-invoice"
+        id="tax-invoice-batch"
+        value="batch"
+        checked
+      />
+      <span class="radio-icon" aria-hidden="true"></span>
+      <span class="label-name">일괄 발급 <span class="label-sub">익월에 통합 1회 발행</span></span>
+    </label>
+    <!-- [D] 발급안함 삭제 02.27 -->
   </div>
 </div>
 
