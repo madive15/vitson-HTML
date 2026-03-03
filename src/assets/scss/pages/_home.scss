@@ -1501,6 +1501,7 @@
   gap: fn.rem(12);
   min-width: fn.rem(200);
   container-type: inline-size;
+  height: 100%;
 
   @include list.common-product-card-info;
 
@@ -1553,7 +1554,8 @@
 
   .product {
     &-body {
-      @include mx.flex(flex, column, flex-start, flex-start);
+      @include mx.flex(flex, column, flex-start, stretch);
+      flex: 1;
       gap: map.get(var.$unit, 8);
       padding: 0 map.get(var.$unit, 16) map.get(var.$unit, 16);
 
@@ -1569,6 +1571,8 @@
     }
 
     &-action-cart {
+      @include mx.flex(inline-flex, column, flex-end, stretch);
+      flex: 1;
       width: 100%;
       margin-top: map.get(var.$unit, 20);
 

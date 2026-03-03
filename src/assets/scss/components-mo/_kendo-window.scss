@@ -163,6 +163,44 @@
   }
 }
 
+// 슬라이드 (왼쪽에서 오른쪽으로)
+[data-modal-box][data-modal-type='slide-left'] {
+  [class$='-panel'] {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+    transform: translateX(-100%);
+    transform-origin: left center;
+  }
+
+  &.is-open.is-active {
+    [class$='-dim'] {
+      transition: none;
+      transform: none;
+    }
+
+    [class$='-panel'] {
+      transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        visibility 0s 0s;
+      transform: translateX(0);
+    }
+  }
+
+  &.is-open.is-closing {
+    [class$='-panel'] {
+      transform: translateX(-100%);
+    }
+  }
+}
+
 /* 접근성 */
 
 @media (prefers-reduced-motion: reduce) {
@@ -314,6 +352,7 @@
   - 기본: 화면 중앙 모달
   - is-bottomsheet: 하단 고정 바텀시트 (슬라이드 업)
   - is-slideright: 오른쪽에서 슬라이드 인 (풀스크린)
+  - is-slideleft: 왼쪽에서 슬라이드 인 (풀스크린)
 ============================================================= */
 
 @keyframes vm-slide-up {
@@ -343,6 +382,26 @@
 
   to {
     transform: translateX(100%);
+  }
+}
+
+@keyframes vm-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vm-slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
   }
 }
 
@@ -414,9 +473,46 @@
     }
   }
 
+  // 슬라이드 레프트 — 풀스크린 (왼쪽에서 오른쪽)
+  .k-window.is-slideleft:has(.vm-modal-header) {
+    padding-bottom: calc(#{map.get(var.$mo-bottom-bar, 'tab-bar')} + var(--safe-bottom));
+    overflow: hidden;
+    border-radius: 0;
+
+    .vm-modal {
+      &-header {
+        flex-shrink: 0;
+        align-items: center;
+        height: fn.rem(48);
+        padding: 0 var.$mo-gutter;
+      }
+
+      &-inner {
+        max-height: 100vh;
+        max-height: 100dvh;
+      }
+    }
+
+    .k-window-content {
+      max-height: 100%;
+    }
+
+    &.is-opening {
+      animation: vm-slide-in-left 0.35s ease forwards;
+    }
+
+    &.is-closing {
+      animation: vm-slide-out-left 0.3s ease forwards;
+    }
+
+    &:has(.vm-detail-option) {
+      padding-bottom: var(--safe-bottom);
+    }
+  }
+
   // 카테고리 바텀시트 — 탭바 하위 표시 + 노치 안전영역
   .k-window:has(.modal-category-sheet) {
-    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 1 !important;
+    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
 
     /* stylelint-disable-next-line no-descending-specificity */
     .vm-modal-inner {
@@ -488,7 +584,7 @@
 }
 
 // 슬라이드 팝업 — 탭바 하위 맨위 표시
-$tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
+$tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.category-full-popup');
 
 @each $target in $tabbar-under-window-has {
   .vm-scope {
@@ -528,7 +624,7 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
 }
 
 // 모달
-.vm-scope .k-window:not(.is-bottomsheet, .is-slideright) {
+.vm-scope .k-window:not(.is-bottomsheet, .is-slideright, .is-slideleft) {
   .vm-modal {
     /* stylelint-disable-next-line no-descending-specificity */
     &-inner {
@@ -619,6 +715,39 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup');
         flex: 1 1 auto;
         width: 100%;
       }
+    }
+  }
+}
+
+// 카테고리 풀 팝업
+.vm-scope .k-window.is-slideleft {
+  /* stylelint-disable-next-line no-descending-specificity */
+  &:has(.category-full-popup) {
+    border-radius: 0;
+  }
+
+  .category-full-popup {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vm-modal-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .vm-tab-browse {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .vm-tab-browse-panel {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
     }
   }
 }

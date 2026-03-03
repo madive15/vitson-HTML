@@ -36,12 +36,16 @@
       }
 
       &-items {
-        @include mx.flex(flex, row, center, center);
-        gap: map.get(var.$unit, 16);
+        @include mx.flex(flex, row, space-between, center);
+        width: 100%;
+
+        @media (width <= 296px) {
+          @include mx.hidden-scrollbar;
+          max-width: fn.rem(280);
+          overflow: auto hidden;
+        }
 
         @media (width >= 744px) {
-          justify-content: space-between;
-          width: 100%;
           padding: 0 map.get(var.$unit, 16);
         }
       }
@@ -50,6 +54,10 @@
         flex: 0 0 fn.rem(54);
 
         $tab-icons: category, search, home, recently, mypage;
+
+        .link:is(button) {
+          @include button.btn-reset;
+        }
 
         .link {
           @include mx.flex(flex, column, center, center);
@@ -537,6 +545,203 @@
 
     &.is-single [class*='vits-btn-'] {
       flex: 1 1 100%;
+    }
+  }
+}
+
+/* ================================================
+======================= 팝업 =======================
+================================================ */
+// 카테고리
+.vm-tab-browse {
+  &-list {
+    @include mx.flex;
+
+    > li {
+      flex: 1;
+      width: 50%;
+    }
+  }
+
+  &-menu {
+    @include button.btn-reset;
+    width: 100%;
+    height: map.get(var.$unit, 48);
+    box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quaternary');
+
+    .text {
+      @include typo.typography('b2s');
+    }
+
+    &.is-active {
+      box-shadow: inset 0 -2px 0 0 map.get(color.$layout-border, 'brand');
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      .text {
+        color: map.get(color.$text-status, 'brand');
+      }
+    }
+  }
+}
+
+// 브랜드
+.vm-brand-sheet {
+  @include mx.flex(flex, column);
+  height: 100%;
+
+  &-search {
+    flex-shrink: 0;
+    padding: map.get(var.$unit, 20) var.$mo-gutter map.get(var.$unit, 8);
+
+    .vits-input-search-form .input-search-btn {
+      right: var.$mo-gutter;
+    }
+  }
+
+  &-filter {
+    @include mx.flex;
+    flex-shrink: 0;
+    gap: map.get(var.$unit, 8);
+    width: 100%;
+    padding: map.get(var.$unit, 8) var.$mo-gutter;
+
+    button {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, center, center);
+      height: map.get(var.$unit, 32);
+      background: color.$color-white;
+    }
+
+    .brand-filter {
+      &-prev,
+      &-next {
+        flex-shrink: 0;
+
+        /* stylelint-disable-next-line no-descending-specificity */
+        .icon {
+          @include icon.ic-size(map.get(var.$unit, 24));
+          color: map.get(color.$icon-neutral, 'tertiary');
+        }
+
+        &.is-disabled,
+        &[disabled] {
+          pointer-events: none;
+          opacity: 0.3;
+        }
+      }
+
+      &-prev {
+        margin-left: -5px;
+      }
+
+      &-next {
+        margin-right: -5px;
+      }
+
+      &-scroll {
+        flex-grow: 1;
+        min-width: 0;
+        overflow: auto hidden;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      &-list {
+        @include mx.flex;
+        gap: map.get(var.$unit, 8);
+
+        > li {
+          flex-shrink: 0;
+        }
+
+        .brand-filter-btn {
+          @include typo.typography(
+            'b3r',
+            $color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default')
+          );
+          min-width: fn.rem(38);
+          border-radius: map.get(var.$radius, 'sm');
+          box-shadow: inset 0 0 0 1px map.get(color.$button-ghost-tertiary, 'ghost-border-tertiary-default');
+
+          &.is-active {
+            color: map.get(color.$button-fill-secondary, 'fill-on_surf-secondary-default');
+            background: map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+            box-shadow: inset 0 0 0 1px map.get(color.$button-fill-secondary, 'fill-surf-secondary-default');
+          }
+        }
+      }
+    }
+  }
+
+  &-body {
+    @include mx.flex(flex, column);
+    flex-grow: 1;
+    gap: var.$mo-gutter;
+    min-width: 0;
+    min-height: 0;
+    padding: var.$mo-gutter var.$mo-gutter map.get(var.$unit, 52);
+    overflow: hidden auto;
+
+    .brand {
+      &-count {
+        @include mx.position(sticky, 0);
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        z-index: var.$zindex-base;
+        background: color.$color-white;
+
+        strong {
+          padding-right: map.get(var.$unit, 4);
+          font-weight: 600;
+          color: map.get(color.$text-status, 'brand');
+        }
+
+        &::before,
+        &::after {
+          @include mx.position(absolute, $left: 0);
+          z-index: var.$zindex-base;
+          width: 100%;
+          height: calc(100% + 2px);
+          content: '';
+        }
+
+        &::before {
+          top: calc((100% + 2px) * -1);
+          background: color.$color-white;
+        }
+
+        &::after {
+          top: 100%;
+          background: linear-gradient(to bottom, #fff 0%, rgb(255 255 255 / 0%) 100%);
+        }
+      }
+
+      &-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(fn.rem(106), 1fr));
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-link {
+        @include mx.flex(flex, row, center, center);
+        width: 100%;
+        height: fn.rem(60);
+        padding: map.get(var.$unit, 4);
+        text-align: center;
+        background: color.$color-white;
+        border-radius: map.get(var.$radius, 'sm');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+        .text {
+          @include typo.typography('b4s');
+        }
+      }
+
+      &-empty p {
+        @include typo.typography('b4s');
+      }
     }
   }
 }

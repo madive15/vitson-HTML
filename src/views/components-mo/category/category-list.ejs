@@ -1,6 +1,14 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const catPath = (typeof categoryPath !== 'undefined' && categoryPath) ? categoryPath : {}; %>
 
-<div class="vm-category-sheet" data-category-sheet>
+<div
+  class="vm-category-sheet"
+  data-category-sheet
+  data-depth1="<%= catPath.depth1Id || '' %>"
+  data-depth2="<%= catPath.depth2Id || '' %>"
+  data-depth3="<%= catPath.depth3Id || '' %>"
+>
   <div class="sheet-body">
     <div class="depth1-panel" data-depth1-panel>
       <ul class="depth1-list" data-depth1-list role="listbox" aria-label="대분류"></ul>

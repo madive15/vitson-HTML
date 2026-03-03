@@ -12,13 +12,26 @@ import '../ui/product/index.js';
 import '../ui/category/index.js';
 import '../ui/filter/index.js';
 import '../ui/cart-order/index.js';
+import '../ui/brand/index.js';
+import '../ui/search/index.js';
 
 (function ($, window) {
   'use strict';
 
   window.UI = window.UI || {};
 
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order'];
+  var modules = [
+    'scrollLock',
+    'kendo',
+    'common',
+    'form',
+    'product',
+    'category',
+    'filter',
+    'cart-order',
+    'brand',
+    'search'
+  ];
 
   window.UI.init = function () {
     modules.forEach(function (name) {

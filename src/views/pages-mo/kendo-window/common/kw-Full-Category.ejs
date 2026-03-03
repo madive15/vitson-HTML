@@ -1,0 +1,44 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<div class="vm-tab-browse" data-tab-scope>
+  <ul class="vm-tab-browse-list" role="tablist">
+    <li role="presentation">
+      <button 
+        type="button" 
+        role="tab" 
+        class="vm-tab-browse-menu is-active"
+        data-tab-btn 
+        data-tab-target="categoryTab"
+        aria-selected="true" 
+        aria-controls="categoryTab" 
+        tabindex="0"
+      >
+        <span class="text">카테고리</span>
+      </button>
+    </li>
+    <li role="presentation">
+      <button 
+        type="button" 
+        role="tab"
+        class="vm-tab-browse-menu"
+        data-tab-btn 
+        data-tab-target="brandTab"
+        aria-selected="false" 
+        aria-controls="brandTab" 
+        tabindex="-1">
+        <span class="text">브랜드</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- 카테고리 -->
+  <div class="vm-tab-browse-panel panel-category" data-tab-panel="categoryTab" id="categoryTab" role="tabpanel">
+    <%- include(`${_src}/views/components-mo/category/category-list.ejs`) %>
+  </div>
+
+  <!-- 브랜드 -->
+  <div class="vm-tab-browse-panel panel-brand" data-tab-panel="brandTab" id="brandTab" role="tabpanel" hidden>
+    <%- include(`${_src}/views/components-mo/brand/brand-list.ejs`) %>
+  </div>
+</div>

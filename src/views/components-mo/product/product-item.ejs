@@ -46,7 +46,10 @@ const stateClass = isGuest ? ' is-guest' : isSoldout ? ' is-soldout' : '';
 
 /* ── 피처 플래그 ── */
 const showCheckbox = (typeof _showCheckbox !== 'undefined') ? _showCheckbox : false;
-const showLoginBtn = isGuest;
+const _showLoginBtn = (typeof showLoginBtn !== 'undefined') ? showLoginBtn : false;
+
+const _showModel = (typeof d.showModel !== 'undefined') ? d.showModel : true;
+const _showSpec = (typeof d.showSpec !== 'undefined') ? d.showSpec : true;
 
 const _showExtra = (typeof showExtra !== 'undefined') ? showExtra : (isMember && !isCompare);
 const _showLike = (typeof showLike !== 'undefined') ? showLike : (isMember && !isCompare);
@@ -84,7 +87,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     <div class="product-body">
       <div class="product-meta">
         <p class="product-brand"><span class="sr-only">브랜드</span><%= d.brandNm %></p>
-        <% if (d.modelNm) { %>
+        <% if (_showModel) { %>
         <p class="product-model"><span class="sr-only">모델명</span><%= d.modelNm %></p>
         <% } %>
       </div>
@@ -96,7 +99,9 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
               <span class="sr-only">상품명</span><% if (isSoldout) { %><span style="color: red">일시품절</span><% }
               %><%= d.productNm %>
             </p>
+            <% if (_showSpec) { %>
             <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
+            <% } %>
           </div>
         </a>
 
@@ -121,7 +126,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         <div class="product-price is-guest">
           <div class="price-guest-text">
             <p class="price-guest-text-title">회원 전용 혜택가</p>
-            <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+            <p class="price-guest-text-desc">(1개만 사도 <span class="point-color">무료배송</span>)</p>
           </div>
         </div>
         <% } %>
@@ -156,7 +161,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       <% } %>
 
       <!-- prettier-ignore -->
-      <% if (showLoginBtn) { %>
+      <% if (_showLoginBtn) { %>
       <div class="product-price is-guest">
         <div class="price-guest-action">
           <button class="price-login-button">

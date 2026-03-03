@@ -17,6 +17,17 @@ html.vm-scope body {
   }
 
   /* e: iOS 크롬 Data Detector 스타일 제거 */
+
+  /* stylelint-disable no-descending-specificity */
+  // 자동완성 배경색 초기화
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    box-shadow: 0 0 0 1000px #fff inset;
+    -webkit-text-fill-color: inherit;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  /* stylelint-enable no-descending-specificity */
 }
 
 html.vm-scope body {

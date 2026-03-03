@@ -110,12 +110,6 @@
             border-radius: fn.rem(15);
           }
         }
-
-        &.btn-mic {
-          padding: map.get(var.$unit, 4);
-          background: map.get(color.$layout-surf, 'sunken');
-          border-radius: 50%;
-        }
       }
     }
   }
@@ -172,13 +166,11 @@
     @include mx.flex(flex, row, space-between, center);
     position: relative;
     flex-grow: 1;
-    gap: map.get(var.$unit, 8);
+    gap: var.$mo-gutter;
     min-width: 0;
 
     .btn-mic {
       flex-shrink: 0;
-      width: map.get(var.$unit, 36) !important;
-      height: map.get(var.$unit, 36) !important;
     }
   }
 
@@ -201,6 +193,53 @@
       margin-left: fn.rem(9);
 
       @include mx.img-fit(contain);
+    }
+  }
+
+  &.header-search-bar {
+    padding-top: fn.rem(10) !important;
+    padding-bottom: fn.rem(10) !important;
+
+    .vits-input-search {
+      flex-grow: 1;
+      min-width: 0;
+      height: map.get(var.$unit, 44);
+      background: map.get(color.$layout-surf, 'sunken');
+      border-radius: map.get(var.$radius, 'md');
+
+      &-form {
+        height: 100%;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none !important;
+
+        input[type='search'] {
+          padding-right: map.get(var.$unit, 36);
+          padding-left: map.get(var.$unit, 12);
+          font-size: fn.rem(13);
+          font-weight: 400;
+
+          &::placeholder {
+            color: map.get(color.$text-colors, 'muted');
+          }
+        }
+
+        .input-search-btn {
+          right: map.get(var.$unit, 8);
+          width: map.get(var.$unit, 20);
+          height: map.get(var.$unit, 20);
+          color: map.get(color.$icon-neutral, 'tertiary');
+
+          .text {
+            @include mx.sr-only;
+          }
+        }
+
+        .input-clear-btn {
+          right: map.get(var.$unit, 36);
+          background: map.get(color.$gray-shades, '40');
+        }
+      }
     }
   }
 }

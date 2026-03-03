@@ -438,11 +438,13 @@
   }
 
   .product-brand-name {
-    padding-bottom: map.get(var.$unit, 16);
-    line-height: normal;
-
-    @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
     @include mx.flex($align: center);
+    padding-bottom: map.get(var.$unit, 16);
+
+    .text {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'secondary'));
+      line-height: normal;
+    }
   }
 
   .product {
@@ -953,13 +955,12 @@
 
       // 좋아요 버튼 checkbox
       .like-btn {
+        @include icon.ic-size(map.get(var.$unit, 52));
         position: relative;
         display: block;
-        width: map.get(var.$unit, 52);
-        height: map.get(var.$unit, 52);
         cursor: pointer;
         background-color: color.$color-white;
-        border: 1px solid map.get(color.$gray-shades, 'primary');
+        border: 1px solid map.get(color.$layout-border, 'secondary');
         border-radius: map.get(var.$radius, xl);
         transition:
           background-color 0.3s ease,
@@ -973,11 +974,8 @@
         }
 
         @include mx.common-mouse-event {
+          color: map.get(color.$brand-colors, 'primary');
           border-color: map.get(color.$brand-colors, 'primary');
-
-          .ic {
-            background-color: map.get(color.$brand-colors, 'primary');
-          }
         }
 
         &.active {

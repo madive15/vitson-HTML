@@ -1,21 +1,44 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-  const archiveList = [
-    { name: '2026년 1월 제품 카탈로그', date: '2026-01-15' },
-    { name: '안전용품 규격 가이드 v2.0', date: '2026-01-08' },
-    { name: '2025년 4분기 신제품 안내서', date: '2025-12-20' },
-    { name: '전선 및 케이블 제품 스펙 자료', date: '2025-12-05' },
-    { name: '산업용 마스크 인증서류 모음', date: '2025-11-18' },
-    { name: '2025년 하반기 가격표', date: '2025-11-01' },
-    { name: '작업 안전화 선택 가이드', date: '2025-10-14' },
-    { name: '소방용품 제품 카탈로그 2025', date: '2025-09-30' },
-  ];
+   // 퍼블 확인용 mock 데이터
+  var faqData = require(`${_src}/../public/resources/mock/faq.json`);
+
+  // faqGbCd → 탭 id 매핑
+  var gbCdToTabId = {
+    '1': 'member',
+    '2': 'product',
+    '3': 'order',
+    '4': 'payment',
+    '5': 'delivery'
+  };
+
+  // 카테고리 라벨 매핑 (탭 메뉴 + 패널 라벨 공용)
+  var categoryLabelMap = {
+    all: '전체',
+    member: '회원',
+    product: '상품',
+    order: '주문',
+    payment: '결제',
+    delivery: '배송/반품/교환'
+  };
+
+  // 탭 메뉴 생성
+  var faqTabs = Object.keys(categoryLabelMap).map(function(key) {
+    return { id: key, label: categoryLabelMap[key] };
+  });
+
+  // 업데이트 날짜 → 생성 날짜 기준 내림차순
+  faqData.sort(function(a, b) {
+    var dateA = a.udatetime || a.rdatetime || 0;
+    var dateB = b.udatetime || b.rdatetime || 0;
+    return dateB - dateA;
+  });
 %>
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '자료실-목록'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: 'FAQ'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -29,7 +52,7 @@
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'nav-bar', title: '자료실' 
+            type: 'nav-bar', title: '고객지원센터' 
           }) %>
 
           <!-- S: vm-main -->
@@ -38,55 +61,102 @@
               <div class="vm-mypage-support">
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components-mo/mypage/support-nav.ejs`, { 
-                  currentTab: 3 
+                  currentTab: 1 
                 }) %>
                 <div class="vm-mypage-support-panel panel-pd-zero">
-                  <div class="vm-mypage-support-archive">
-                    <div class="support-archive-filter">
-                      <div class="filter-select">
-                        <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/form/select.ejs`, {
-                          id: 'archive-search-type',
-                          name: 'archive-search-type',
-                          placeholder: '선택',
-                          options: [
-                            { value: 'title', text: '제목' },
-                            { value: 'content', text: '내용' },
-                          ],
-                          value: (typeof size !== 'undefined' && size !== null) ? String(size) : 'title',
-                          disabled: false,
-                          className: 'size-l'
-                        }) %>
-                      </div>
-
-                      <div class="filter-search">
-                        <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/form/input-search.ejs`, {
-                          idPrefix: 'archive-search',
-                          action: '/archive-search',
-                          name: 'archive-search',
-                          placeholder: '검색어를 입력해주세요.',
-                          addClassName: 'size-xl'
-                        }) %>
-                      </div>
+                  <div class="vm-mypage-support-tab tab-faq">
+                    <div class="support-tab-filter">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/form/input-search.ejs`, {
+                        idPrefix: 'archive-search',
+                        action: '/archive-search',
+                        name: 'archive-search',
+                        placeholder: '찾으시는 질문을 검색해보세요',
+                        addClassName: 'size-xl theme-gray',
+                        hasClear: true
+                      }) %>
                     </div>
 
-                    <!-- [D] 시국세 목록 -->
-                    <div class="support-archive-items">
-                      <% archiveList.forEach(function(item) { %>
-                      <a href="#!" class="support-archive-item">
-                        <p class="support-archive-item-name"><%= item.name %></p>
-                        <p class="support-archive-item-date"><%= item.date %></p>
-                      </a>
+                    <!-- [D] FAQ 목록 -->
+                    <div class="support-tab-section" data-tab-scope>
+                      <!-- [D] 활성 탭의 button에 is-active 클래스 추가 -->
+                      <ul class="support-tab" role="tablist">
+                        <% faqTabs.forEach(function(tab, index) { %>
+                        <li class="support-tab-item" role="presentation">
+                          <button
+                            type="button"
+                            class="support-tab-btn<%= index === 0 ? ' is-active' : '' %>"
+                            role="tab"
+                            aria-selected="<%= index === 0 ? 'true' : 'false' %>"
+                            aria-controls="support-tab-panel-<%= tab.id %>"
+                            data-tab-btn
+                            data-tab-target="support-tab-<%= tab.id %>"
+                          >
+                            <%= tab.label %>
+                          </button>
+                        </li>
+                        <% }) %>
+                      </ul>
+
+                      <!-- [D] 활성 패널에 is-active 클래스 추가, 비활성 패널은 hidden 처리 -->
+                      <% faqTabs.forEach(function(tab, index) { %>
+                      <div
+                        class="support-tab-panel"
+                        data-tab-panel="support-tab-<%= tab.id %>"
+                        role="tabpanel"
+                        <%= index !== 0 ? 'hidden' : '' %>
+                      >
+                        <%
+                          var filtered = tab.id === 'all'
+                            ? faqData
+                            : faqData.filter(function(item) { return gbCdToTabId[item.faqGbCd] === tab.id; });
+                        %>
+                        <!-- [D] 열린 항목의 data-toggle-box에 is-open 클래스 추가 -->
+                        <div class="support-tab-accordion-list" data-toggle-scope data-toggle-group="true">
+                          <% filtered.forEach(function(item, idx) { %>
+                          <div class="support-tab-accordion-item">
+                            <button
+                              type="button"
+                              class="support-tab-accordion-trigger"
+                              aria-expanded="false"
+                              data-toggle-btn
+                              data-toggle-target="support-tab-<%= tab.id %>-<%= idx %>"
+                            >
+                              <!-- prettier-ignore -->
+                              <%- include(`${_src}/views/components/label/general-label.ejs`, { 
+                                text: categoryLabelMap[gbCdToTabId[item.faqGbCd]], 
+                                variant:'sunken'
+                              }) %>
+                              <span class="support-tab-accordion-title">
+                                <span class="text"><%= item.title %></span>
+                                <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %></span>
+                              </span>
+                            </button>
+                            <div class="support-tab-accordion-content" data-toggle-box="support-tab-<%= tab.id %>-<%= idx %>">
+                              <div class="support-tab-accordion-answer"><%- item.contents %></div>
+                            </div>
+                          </div>
+                          <% }) %>
+                        </div>
+                      </div>
                       <% }) %>
                     </div>
 
-                    <!-- [D] No Data -->
-                    <div class="vm-mypage-inquiry-empty" style="display: none">
+                    <!-- [D] No Data: FAQ 없음 -->
+                    <div class="vm-mypage-inquiry-empty empty-no-data" style="display: none">
                       <!-- prettier-ignore -->
                       <%- include(`${_src}/views/components/empty-state.ejs`, {
                         iconName: 'document-paper',
-                        title: '등록된 게시글이 없습니다',
+                        title: '등록된 FAQ가 없습니다',
+                      }) %>
+                    </div>
+
+                    <!-- [D] No Data: 검색 결과 없음 -->
+                    <div class="vm-mypage-inquiry-empty empty-no-search" style="display: none">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/empty-state.ejs`, {
+                        iconName: 'document-paper',
+                        title: '검색 결과가 없습니다',
                       }) %>
                     </div>
                   </div>
@@ -121,13 +191,14 @@
       $(function () {
         var type = new URLSearchParams(location.search).get('type');
 
-        // type=empty: 빈 상태
         if (type === 'empty') {
-          $('.support-archive-items').hide();
-          $('.vm-mypage-inquiry-empty').show();
-        } else {
-          $('.support-archive-items').show();
-          $('.vm-mypage-inquiry-empty').hide();
+          $('.support-tab-section').hide();
+          $('.empty-no-data').show();
+        } else if (type === 'search-empty') {
+          $('#archive-search-searchKeyword').val('접착테이프').trigger('input');
+          $('[data-search-clear]').removeAttr('hidden');
+          $('.support-tab-section').hide();
+          $('.empty-no-search').show();
         }
       });
     </script>

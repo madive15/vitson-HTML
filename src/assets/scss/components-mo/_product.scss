@@ -56,11 +56,11 @@ $mo-product-gap: map.get(var.$unit, 8);
     }
 
     &-brand {
-      @include typo.typography('m2r', $color: map.get(color.$text-colors, 'secondary'));
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     }
 
     &-model {
-      @include typo.typography('m2r', $color: map.get(color.$text-colors, 'muted'));
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
     }
 
     &-info {
@@ -74,12 +74,12 @@ $mo-product-gap: map.get(var.$unit, 8);
     }
 
     &-name {
-      @include typo.typography('b4s', $color: map.get(color.$text-colors, 'primary'));
+      @include typo.typography('m1s', $color: map.get(color.$text-colors, 'primary'));
       @include mx.ellipsis-multi;
     }
 
     &-spec {
-      @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
       @include mx.ellipsis-multi;
     }
 
@@ -126,11 +126,15 @@ $mo-product-gap: map.get(var.$unit, 8);
           gap: map.get(var.$unit, 2);
 
           &-title {
-            @include typo.typography('b5s', $color: map.get(color.$text-status, 'info-sub'));
+            @include typo.typography('b3s', $color: map.get(color.$text-status, 'info-sub'));
           }
 
           &-desc {
-            @include typo.typography('b5r', $color: map.get(color.$text-colors, 'secondary'));
+            @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+
+            .point-color {
+              color: map.get(color.$text-colors, 'primary');
+            }
           }
         }
 

@@ -3,34 +3,38 @@
   <!-- 결제정보 -->
   <div class="vits-payment-summary">
     <h2 class="vits-payment-title">결제정보</h2>
-
-    <div class="vits-payment-price">
-      <ul class="vits-payment-price-list">
-        <li>
-          <span>상품금액</span>
-          <strong>418,000원</strong>
-        </li>
-        <li class="is-discount">
-          <span>할인금액</span>
-          <strong>-83,500원</strong>
-        </li>
-      </ul>
-    </div>
-
-    <div class="vits-payment-price">
-      <ul class="vits-payment-price-sub">
-        <li><span>최대혜택가</span><span>33,450원</span></li>
-        <li><span>VAT</span><span>418,000원</span></li>
-        <li><span>배송비</span><span>3,000원</span></li>
-      </ul>
-    </div>
-
+    <!-- [D] 결제금액 정보 영역 : 구조 수정 (추가 및 수정) 02.27 -->
     <div class="vits-payment-total">
       <span>결제예정금액</span>
       <strong class="is-emphasis">370,950원</strong>
     </div>
-
     <p class="vits-payment-notice">도착지에서 착불 운임이 청구됩니다.</p>
+
+    <div class="vits-payment-wrap">
+      <button type="button" class="vits-payment-toggle" aria-expanded="false" aria-controls="vits-payment-price">
+        <span class="text">상품금액 자세히</span>
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+      </button>
+      <div id="vits-payment-price" class="vits-payment-price" hidden aria-hidden="true">
+        <ul class="vits-payment-price-list">
+          <li>
+            <span>상품금액</span>
+            <strong>418,000원</strong>
+          </li>
+          <li class="is-discount">
+            <span>할인금액</span>
+            <strong>-83,500원</strong>
+          </li>
+        </ul>
+        <ul class="vits-payment-price-sub">
+          <li><span>최대혜택가</span><span>33,450원</span></li>
+          <li><span>VAT</span><span>418,000원</span></li>
+          <li><span>배송비</span><span>3,000원</span></li>
+        </ul>
+      </div>
+    </div>
+    <!-- // E. 02.27 -->
   </div>
 
   <!-- 결제수단 선택 -->

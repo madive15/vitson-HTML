@@ -18,6 +18,10 @@ import './option-box.js';
 import './step-tab.js';
 import './auth.js';
 import './survey-detail.js';
+import './footer.js';
+import './voice-blob.js';
+import './bottom-tab-bar.js';
+import './chip-button.js';
 
 (function ($, window) {
   'use strict';
@@ -41,7 +45,11 @@ import './survey-detail.js';
     'optionBox',
     'stepTab',
     'auth',
-    'surveyDetail'
+    'surveyDetail',
+    'footerBizInfo',
+    'voiceBlob',
+    'bottomTabBar',
+    'chipButton'
   ];
 
   window.UI.common = {

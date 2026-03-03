@@ -1,0 +1,283 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_search.scss
+// - 검색 전용 스타일 모듈 모음
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/layout/list' as list;
+@use '@/assets/scss/components-mo/product' as product;
+
+// 검색 페이지 - 기본배경
+.vm-wrap.wrap-search {
+  .vm-content-wrap {
+    background: color.$color-white;
+  }
+}
+
+// 검색 화면
+.vm-search-view {
+  $recommend-card: '.vm-product-inline-recommend .vm-product-card';
+
+  &:has(#{$recommend-card}) {
+    padding-bottom: fn.rem(28);
+  }
+
+  &:not(:has(#{$recommend-card})) {
+    padding-bottom: map.get(var.$unit, 52);
+  }
+
+  &-head {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: var.$mo-gutter;
+    padding: 0 var.$mo-gutter map.get(var.$unit, 20);
+
+    .vits-text-underline-button {
+      flex-shrink: 0;
+    }
+  }
+
+  &-title {
+    @include typo.typography('b2m', $color: color.$color-black);
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .vm-search {
+    &-keywords {
+      @include mx.flex(flex, column);
+      @include mx.border('bottom', fn.rem(8), $color: map.get(color.$layout-surf, 'sunken'));
+      gap: map.get(var.$unit, 32);
+      padding: var.$mo-section-gap 0;
+    }
+
+    $rank-item-height: fn.rem(35);
+    $rank-stagger-delay: 0.08s;
+
+    &-rank {
+      &-list {
+        @include mx.flex;
+        gap: map.get(var.$unit, 8);
+        padding: 0 var.$mo-gutter var.$mo-section-gap;
+        margin-bottom: var.$mo-section-gap * -1;
+        overflow: auto hidden;
+      }
+
+      &-col {
+        @include mx.flex(flex, column);
+        flex: 0 0 59.44%;
+        width: 59.44%;
+        padding: map.get(var.$unit, 8);
+        overflow: hidden;
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+        // 순차 딜레이
+        @for $i from 1 through 5 {
+          .vm-search-rank-link:nth-child(#{$i}) .vm-search-rank-flip {
+            transition-delay: $rank-stagger-delay * ($i - 1);
+          }
+        }
+      }
+
+      &-flip {
+        @include mx.flex(flex, column);
+        transition: transform 0.4s ease-in-out;
+        will-change: transform;
+      }
+
+      &-link {
+        display: block;
+        height: $rank-item-height;
+        overflow: hidden;
+
+        &:not(:last-of-type) {
+          box-shadow: inset 0 -1px 0 0 map.get(color.$layout-surf, 'sunken');
+        }
+
+        &.is-flipping .vm-search-rank-flip {
+          transform: translateY(-$rank-item-height);
+        }
+      }
+
+      &-slot {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+        width: 100%;
+        height: $rank-item-height;
+        padding: 0 map.get(var.$unit, 12);
+
+        .text {
+          &-num {
+            @include typo.typography('b3s', $color: map.get(color.$text-status, 'brand'));
+            flex: 0 0 var.$mo-gutter;
+            min-width: var.$mo-gutter;
+            font-style: normal;
+            text-align: center;
+          }
+
+          &-word {
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+            @include mx.ellipsis-single;
+            flex-grow: 1;
+            min-width: 0;
+          }
+
+          &-move {
+            @include typo.typography('b5s');
+            flex-shrink: 0;
+            min-width: var.$mo-section-gap;
+            min-height: fn.rem(6);
+
+            &.move-up {
+              @include mx.background('ic/rank-up.svg', transparent);
+            }
+
+            &.move-down {
+              @include mx.background('ic/rank-down.svg', transparent);
+            }
+
+            &.move-same {
+              @include mx.background('ic/rank-same.svg', transparent);
+            }
+
+            &.move-new::before {
+              color: map.get(color.$text-status, 'brand');
+              content: 'NEW';
+            }
+          }
+        }
+      }
+    }
+
+    &-recent {
+      &-keywords {
+        padding: 0 var.$mo-gutter;
+
+        .vits-chip-button {
+          gap: 0;
+          height: auto;
+          min-height: fn.rem(28);
+          padding: map.get(var.$unit, 4) map.get(var.$unit, 12);
+
+          .text {
+            min-width: 0;
+            max-height: calc(2 * 1.4em);
+            overflow: hidden;
+            text-overflow: clip;
+            white-space: normal;
+          }
+
+          &-group {
+            flex-wrap: wrap;
+            gap: map.get(var.$unit, 8);
+          }
+        }
+      }
+    }
+
+    &-recommend {
+      .vm-product-inline-recommend {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+
+        .product-recommend {
+          &-head {
+            padding-right: var.$mo-gutter;
+            padding-left: var.$mo-gutter;
+          }
+
+          &-title {
+            font-size: fn.rem(16);
+            font-weight: 500;
+            color: color.$color-black;
+          }
+
+          &-body {
+            padding-bottom: 0;
+          }
+
+          &-list {
+            gap: map.get(var.$unit, 12);
+            padding-bottom: var.$mo-section-gap;
+
+            > li {
+              &:first-of-type {
+                margin-left: var.$mo-gutter;
+              }
+
+              &:last-of-type {
+                margin-right: var.$mo-gutter;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vm-search-rank-flip {
+      transition: none;
+    }
+  }
+
+  // 연관 검색어
+  &.view-suggest {
+    padding: map.get(var.$unit, 12) var.$mo-gutter map.get(var.$unit, 52);
+
+    .vm-search-suggest {
+      &-items {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 4);
+
+        &:not(:first-of-type) {
+          @include mx.border('top', $color: map.get(color.$layout-surf, 'sunken'));
+          padding-top: map.get(var.$unit, 4);
+          margin-top: map.get(var.$unit, 4);
+        }
+      }
+
+      &-item {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+        width: 100%;
+        min-height: map.get(var.$unit, 36);
+        padding: fn.rem(6) map.get(var.$unit, 8);
+
+        .icon {
+          flex-shrink: 0;
+
+          &.left {
+            @include icon.ic-size(var.$mo-gutter);
+            color: map.get(color.$icon-neutral, 'secondary');
+          }
+
+          &.right {
+            @include icon.ic-size(var.$mo-section-gap);
+            color: map.get(color.$icon-neutral, 'disabled');
+          }
+        }
+
+        .text {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          flex-grow: 1;
+          min-width: 0;
+
+          em {
+            font-style: normal;
+            font-weight: 700;
+            color: map.get(color.$text-status, 'brand');
+          }
+        }
+      }
+    }
+  }
+}

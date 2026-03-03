@@ -4,7 +4,7 @@
 <% const current = typeof currentTab !== 'undefined' ? currentTab : ''; %>
 <%
 const tabBarItems = [
-  { id: 'category', label: '카테고리', href: '#!' },
+  { id: 'category', label: '카테고리', action: 'open-category-sheet' },
   { id: 'search', label: '검색', href: '#!' },
   { id: 'home', label: '홈', href: '#!' },
   { id: 'recently', label: '최근 본 상품', href: '#!' },
@@ -17,13 +17,30 @@ const tabBarItems = [
     <ul class="tab-bar-items">
       <% tabBarItems.forEach(function(item) { %>
       <li class="tab-bar-item<%= current === item.id ? ' is-active' : '' %>">
-        <!-- < %- include(`${_src}/views/components/button/button-vertical-icon.ejs`, item) %> -->
+        <% if (item.action) { %> <%/* 페이지 이동이 아닌 액션 항목 */%>
+        <button type="button" class="link" data-action="<%- item.action %>">
+          <span class="icon icon-<%- item.id %>"></span>
+          <span class="text"><%- item.label %></span>
+        </button>
+        <% } else { %>
         <a href="<%- item.href %>" class="link">
           <span class="icon icon-<%- item.id %>"></span>
           <span class="text"><%- item.label %></span>
         </a>
+        <% } %>
       </li>
       <% }); %>
     </ul>
   </nav>
 </div>
+
+<!-- S: 카테고리 풀팝업 -->
+<!-- prettier-ignore -->
+<%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, {
+  id: 'categoryFullPopup',
+  title: '카테고리',
+  variant: 'slide-left',
+  className: 'category-full-popup',
+  contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-Full-Category.ejs`,
+}) %>
+<!-- E: 카테고리 풀팝업 -->

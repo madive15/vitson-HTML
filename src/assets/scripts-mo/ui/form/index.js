@@ -7,6 +7,7 @@ import './select.js';
 import './checkbox-total.js';
 import './textarea.js';
 import './input.js';
+import './input-search.js';
 
 (function ($, window) {
   'use strict';
@@ -15,7 +16,7 @@ import './input.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['select', 'checkboxTotal', 'textarea', 'input'];
+  var modules = ['select', 'checkboxTotal', 'textarea', 'input', 'inputSearch'];
 
   window.UI.form = {
     init: function () {

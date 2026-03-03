@@ -1,0 +1,197 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<% const _base = srcPath.includes('vitson-HTML') ? '/vitson-HTML' : ''; %>
+<!-- prettier-ignore -->
+<%
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _all = mockData.products.slice();
+  for (let i = _all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_all[i], _all[j]] = [_all[j], _all[i]];
+  }
+  const _recommendProducts = _all.slice(20, 30).map(item => ({
+    ...item,
+    showModel: false,
+    showSpec: false
+  }));
+%>
+
+<!-- prettier-ignore -->
+<%
+  const highlight = require(`${_src}/views/helpers/highlight.js`);
+  const suggestKeyword = '에어';
+
+  const suggestCategories = [
+    { text: '에어 컨부자재/공구 > 실외기받침 > 받침대'},
+    { text: '화분 > 분재 > 에어 받침대' }
+  ];
+
+  const suggestWords = [
+    '에어 컨',
+    '에어 컨 배관',
+    '에어 컨 가스',
+    '에어 컨 호스',
+    '에어 건',
+    '에어 공구'
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '검색'}) %>
+  <body class="vm-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vm-wrapper">
+      <div class="vm-wrap wrap-search">
+        <div class="vm-content-wrap">
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'search-bar' }) %>
+
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-search">
+              <!-- 검색창 -->
+              <div class="vm-search-view" data-search-view="default">
+                <div class="vm-search-keywords">
+                  <!-- 최근 검색어 -->
+                  <div class="vm-search-recent" data-chip-clear-scope>
+                    <div class="vm-search-view-head">
+                      <p class="vm-search-view-title">최근 검색어</p>
+                      <%- include(`${_src}/views/components/button/text-underline-button.ejs`, { text: '전체 삭제',
+                      className: 'height-18', attrs: 'data-chip-clear' }) %>
+                    </div>
+
+                    <div class="vm-search-recent-keywords">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components/label/chip-button.ejs`, { 
+                        datas: [{ 
+                          action:'full',
+                          variant:'outline', 
+                          value:'kw1', 
+                          name:'라면' 
+                        }, { 
+                          action:'full', 
+                          variant:'outline', 
+                          value:'kw2',
+                          name:'전기톱' 
+                        }, { 
+                          action:'full', 
+                          variant:'outline', 
+                          value:'kw3', 
+                          name:'길게 나열해야 하는데 최대 2줄 길게 나열 길게 나열해야 하는데 최대 2줄 길게 나열 길게 나열해야 하는데 최대 2줄' 
+                        }] 
+                      }) %>
+                    </div>
+                  </div>
+
+                  <!-- 실시간 검색어 -->
+                  <div class="vm-search-rank">
+                    <div class="vm-search-view-head">
+                      <p class="vm-search-view-title">실시간 검색어</p>
+                    </div>
+
+                    <!-- prettier-ignore -->
+                    <%
+                      const rankItems = [
+                        { word:'다운라이트', prevRank:3, currRank:1 },
+                        { word:'망치', prevRank:2, currRank:2 },
+                        { word:'LED 전등', prevRank:null, currRank:3 },
+                        { word:'그라인더', prevRank:6, currRank:4 },
+                        { word:'A4 용지', prevRank:3, currRank:5 },
+                        { word:'톱', prevRank:8, currRank:6 },
+                        { word:'장갑', prevRank:9, currRank:7 },
+                        { word:'라면', prevRank:5, currRank:8 },
+                        { word:'방화용품', prevRank:10, currRank:9 },
+                        { word:'핫팩', prevRank:12, currRank:10 }
+                      ];
+                    %>
+
+                    <div class="vm-search-rank-list" data-ui="search-rank" data-rank-interval="3000">
+                      <% [0,5].forEach(function(start){ %>
+                      <div class="vm-search-rank-col">
+                        <% rankItems.slice(start,start+5).forEach(function(item){ %>
+                        <a
+                          href="#"
+                          class="vm-search-rank-link"
+                          data-rank-item
+                          data-curr-rank="<%= item.currRank %>"
+                          data-prev-rank="<%= item.prevRank %>"
+                          data-word="<%= item.word %>"
+                        >
+                          <div class="vm-search-rank-flip" data-rank-flip>
+                            <span class="vm-search-rank-slot" data-rank-slot="current">
+                              <em class="text-num" data-rank-num><%= item.currRank %></em>
+                              <span class="text-word" data-rank-word><%= item.word %></span>
+                              <span class="text-move" data-rank-move aria-hidden="true"></span>
+                            </span>
+                            <span class="vm-search-rank-slot" data-rank-slot="next">
+                              <em class="text-num" data-rank-num></em>
+                              <span class="text-word" data-rank-word></span>
+                              <span class="text-move" data-rank-move aria-hidden="true"></span>
+                            </span>
+                          </div>
+                        </a>
+                        <% }); %>
+                      </div>
+                      <% }); %>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vm-search-recommend">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
+                    title:'추천상품',
+                    showTooltip:false, 
+                    products:_recommendProducts 
+                  }) %>
+                </div>
+              </div>
+
+              <!-- 연관검색어 -->
+              <div class="vm-search-view view-suggest is-hidden" data-search-view="suggest">
+                <div class="vm-search-suggest">
+                  <!-- 카테고리 경로형 -->
+                  <div class="vm-search-suggest-items items-category">
+                    <% suggestCategories.forEach(function(item) { %>
+                    <a href="#!" class="vm-search-suggest-item">
+                      <div class="icon left">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+                      </div>
+                      <div class="text"><%- highlight(item.text, suggestKeyword) %></div>
+                      <div class="icon right">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-up-right' }) %>
+                      </div>
+                    </a>
+                    <% }); %>
+                  </div>
+
+                  <!-- 일반 키워드형 -->
+                  <div class="vm-search-suggest-items items-word">
+                    <% suggestWords.forEach(function(word) { %>
+                    <a href="#!" class="vm-search-suggest-item">
+                      <div class="icon left">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'magnifying-glass' }) %>
+                      </div>
+                      <div class="text"><%- highlight(word, suggestKeyword) %></div>
+                      <div class="icon right">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-up-right' }) %>
+                      </div>
+                    </a>
+                    <% }); %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { type:'tab-bar', currentTab:'mypage' }) %>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

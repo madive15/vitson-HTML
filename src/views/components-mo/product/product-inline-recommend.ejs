@@ -1,13 +1,24 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 
+<%
+  const _title = typeof title !== 'undefined'
+    ? title
+    : '함께보면 <span class="point-color">좋아요</span>'; %>
+
+<!-- prettier-ignore -->
+<% 
+  const _showTooltip = typeof showTooltip !== 'undefined'
+    ? showTooltip
+    : true;
+%>
+
 <section class="vm-product-inline-recommend">
   <div class="product-recommend-inner">
     <div class="product-recommend-head">
       <div class="product-recommend-head-inner vits-tooltip-anchor">
-        <h2 class="product-recommend-title">
-          함께보면 <span class="point-color">좋아요</span>
-        </h2>
+        <h2 class="product-recommend-title"><%- _title %></h2>
+        <% if (_showTooltip) { %>
         <!-- prettier-ignore -->
         <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
           size: 'sm', 
@@ -26,6 +37,7 @@
             anchor: true,
             footerContent: buttonHtml
           }) %>
+        <% } %>
       </div>
     </div>
     <div class="product-recommend-body">
