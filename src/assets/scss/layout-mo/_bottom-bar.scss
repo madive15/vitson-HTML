@@ -61,8 +61,10 @@
 
         .link {
           @include mx.flex(flex, column, center, center);
+          position: relative;
           gap: map.get(var.$unit, 4);
           width: 100%;
+          touch-action: manipulation;
 
           .icon {
             width: map.get(var.$unit, 32);
@@ -90,6 +92,13 @@
             @media (width >= 744px) {
               font-size: 14px;
             }
+          }
+
+          // 터치 영역 확보 — iPad Safari mask 관통 방지
+          &::before {
+            position: absolute;
+            inset: 0;
+            content: '';
           }
         }
 
