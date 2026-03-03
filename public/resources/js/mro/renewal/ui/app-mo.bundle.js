@@ -4393,17 +4393,18 @@ console.log('[mobile/index] entry 실행');
         _state.browseD1 = sheetPath.depth1Id;
       }
     }
+
+    // 팝업 먼저 열기 — 즉시 반응
+    window.VmKendoWindow.open(POPUP_ID);
+
+    // 콘텐츠는 팝업 안에서 비동기 렌더
     R.loadTree(function () {
       var $scope = $catScope();
       if (!$scope.length) return;
-
-      // 스코프 이벤트 최초 1회만 바인딩
       if (!_scopeBound) {
         R.bindScopeEvents($scope, _state, onCommit);
         _scopeBound = true;
       }
-
-      // 초기 상태 — 첫 번째 depth1 선택
       var tree = R.getTree();
       if (!_state.path.depth1Id && tree.length) {
         _state.browseD1 = tree[0].categoryCode;
@@ -4411,21 +4412,16 @@ console.log('[mobile/index] entry 실행');
         _state.browseD1 = _state.path.depth1Id;
       }
       R.renderDepth1($scope, _state.path, _state.browseD1);
-
-      // browseD1만 있고 path에 없을 때 첫 번째 항목 current 표시
       if (!_state.path.depth1Id && tree.length) {
         $scope.find('[data-depth1-item]').first().addClass('is-current');
         R.renderSub($scope, _state.browseD1, _state.path);
       }
-
-      // 카테고리 탭으로 초기화
       if (window.UI && window.UI.tab) {
         var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
         if ($tabScope.length) {
           window.UI.tab.activate($tabScope, 'categoryTab');
         }
       }
-      window.VmKendoWindow.open(POPUP_ID);
       setTimeout(function () {
         if (_state.path.depth1Id) {
           R.scrollToActive($scope);
