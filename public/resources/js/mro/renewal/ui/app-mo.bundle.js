@@ -2209,6 +2209,975 @@
 
 /***/ }),
 
+/***/ 2735:
+/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
+var utils = __webpack_require__(1781);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
+var scroll_lock = __webpack_require__(2066);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
+var kendo_window = __webpack_require__(4387);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
+var kendo_datepicker = __webpack_require__(7713);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
+var kendo_datepicker_single = __webpack_require__(1014);
+;// ./src/assets/scripts-mo/ui/kendo/index.js
+/**
+ * @file scripts-mo/ui/kendo/index.js
+ * @description Kendo UI 관련 모듈 통합 관리
+ */
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
+  window.UI.kendo = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.initAll === 'function') mod.initAll();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
+var tooltip = __webpack_require__(9592);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
+var sticky_observer = __webpack_require__(5723);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
+var overflow_menu = __webpack_require__(4305);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
+var toggle = __webpack_require__(8955);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
+var step_flow = __webpack_require__(8486);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
+var expand = __webpack_require__(8839);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
+var tab = __webpack_require__(5332);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
+var scroll_buttons = __webpack_require__(3474);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab-sticky.js
+var tab_sticky = __webpack_require__(2006);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/collapse.js
+var collapse = __webpack_require__(9212);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-overflow-gradient.js
+var scroll_overflow_gradient = __webpack_require__(2638);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
+var option_box = __webpack_require__(3198);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-tab.js
+var step_tab = __webpack_require__(6323);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/auth.js
+var auth = __webpack_require__(689);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/survey-detail.js
+var survey_detail = __webpack_require__(1151);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/footer.js
+var footer = __webpack_require__(6840);
+;// ./src/assets/scripts-mo/ui/common/voice-blob.json
+var voice_blob_namespaceObject = /*#__PURE__*/JSON.parse('{"v":"4.8.0","meta":{"g":"custom","a":"","k":"","d":"","tc":""},"fr":60,"ip":0,"op":1958,"w":1000,"h":1000,"nm":"voice-blob","ddd":0,"assets":[{"id":"mic_all","layers":[{"ty":4,"nm":"mic-svg","sr":1,"ks":{"o":{"a":0,"k":85,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[40,40,0],"ix":2},"a":{"a":0,"k":[27,27,0],"ix":1},"s":{"a":0,"k":[80,80,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[-0.9261999999999997,0],[0,-0.9263000000000012],[-2.1944000000000017,-2.1123999999999974],[-3.133800000000001,0],[-2.197099999999999,2.114699999999999],[-0.00019999999999953388,2.958400000000001],[-0.9262999999999977,0],[0,-0.9263000000000012],[2.8370999999999995,-2.730799999999995],[3.3688000000000002,-0.36410000000000053],[0,0],[0,0],[0,-0.9262000000000015],[0.9263000000000048,0],[0,0],[0,0.9263000000000048],[-0.9263000000000012,0],[0,0],[0,0],[2.4344,2.3430999999999997],[0.00020000000000131024,3.8904999999999994]],"o":[[0,-0.9263000000000012],[0.9262999999999995,0],[0.00019999999999953388,2.958400000000001],[2.197099999999999,2.114699999999999],[3.133800000000001,0],[2.1944000000000017,-2.1123999999999974],[0,-0.9263000000000012],[0.9262000000000015,0],[-0.00009999999999621423,3.8904999999999994],[-2.4344000000000037,2.3430999999999997],[0,0],[0,0],[0.9263000000000048,0],[0,0.9263000000000048],[0,0],[-0.9263000000000012,0],[0,-0.9262000000000015],[0,0],[0,0],[-3.3688000000000002,-0.36410000000000053],[-2.8370999999999995,-2.730799999999995],[0,0]],"v":[[11.7397,24.9892],[13.4168,23.3121],[15.0939,24.9892],[18.5087,32.9111],[26.8335,36.2243],[35.1583,32.9111],[38.5731,24.9892],[40.2502,23.3121],[41.9272,24.9892],[37.484,35.3285],[28.5106,39.4851],[28.5106,43.6041],[34.4999,43.6041],[36.177,45.2812],[34.4999,46.9583],[19.1671,46.9583],[17.49,45.2812],[19.1671,43.6041],[25.1564,43.6041],[25.1564,39.4851],[16.183,35.3285],[11.7397,24.9892]],"c":true},"ix":2},"nm":"Path 1"},{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[0.7570999999999977,0.7286000000000001],[1.1004000000000005,0],[0.7592999999999996,-0.7309000000000001],[0.00009999999999976694,-1.0016999999999996],[0,0],[-0.7570000000000014,-0.7286000000000001],[-1.1004000000000005,0],[-0.7593000000000032,0.7307999999999986],[-0.00009999999999976694,1.0015999999999998],[0,0]],"o":[[0,-1.0016999999999996],[-0.7593000000000032,-0.7309000000000001],[-1.1005000000000003,0],[-0.7571000000000012,0.7286000000000001],[0,0],[0.00019999999999953388,1.0015999999999998],[0.7592999999999996,0.7307999999999986],[1.1004000000000005,0],[0.7569999999999979,-0.7286000000000001],[0,0],[0,0]],"v":[[30.9066,13.9194],[29.7356,11.2155],[26.8335,10.0625],[23.9314,11.2155],[22.7603,13.9194],[22.7603,24.9892],[23.9314,27.6931],[26.8335,28.8461],[29.7356,27.6931],[30.9066,24.9892],[30.9066,13.9194]],"c":true},"ix":2},"nm":"Path 2"},{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[1.3993000000000038,-1.346899999999998],[1.9495000000000005,0],[1.3973000000000013,1.3449000000000026],[0.0002000000000030866,1.933399999999999],[0,0],[-1.3993000000000002,1.3469799999999985],[-1.9495000000000005,0],[-1.3972999999999978,-1.3449400000000011],[-0.00010000000000331966,-1.933399999999999],[0,0]],"o":[[-0.0002000000000066393,1.933399999999999],[-1.3972999999999978,1.3449000000000026],[-1.9495000000000005,0],[-1.3993000000000002,-1.346899999999998],[0,0],[0.00010000000000331966,-1.933399999999999],[1.3973000000000013,-1.3449400000000011],[1.9495000000000005,0],[1.3993000000000038,1.3469799999999985],[0,0],[0,0]],"v":[[34.2608,24.9892],[32.0629,30.1105],[26.8335,32.2003],[21.6041,30.1105],[19.4062,24.9892],[19.4062,13.9194],[21.6041,8.79812],[26.8335,6.70831],[32.0629,8.79812],[34.2608,13.9194],[34.2608,24.9892]],"c":true},"ix":2},"nm":"Path 3"},{"ty":"fl","c":{"a":0,"k":[1,1,1,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":"Fill"},{"ty":"tr","p":{"a":0,"k":[0,0],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7}}],"nm":"mic-group","bm":0}],"ip":0,"op":1958,"st":0,"bm":0}],"w":80,"h":80,"nm":"mic-all","fr":25}],"layers":[{"ddd":0,"ind":50,"ty":0,"nm":"mic-icon","sr":1,"refId":"mic_all","w":80,"h":80,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[40,40,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[492,492,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[354,354,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[492,492,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[492,492,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":1,"ty":4,"nm":"cyan","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,0,0.898,1,1,0,0.898,1,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-381,-242],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-85.638,-294.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[283.245,-192.931],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[254.979,-122.575],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[246.063,109.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[54.886,324.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-265.166,223.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-381,-242]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[257,56],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[227.919,282.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-380.881,339.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-405.198,-155.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[-64.749,-440.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[276.814,-350.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[257,56]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":2,"ty":4,"nm":"pink","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,1,0,0.494,1,1,0,0.494,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[307,86],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[277.919,312.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-330.881,369.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-355.198,-125.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[-14.748999999999995,-410.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[326.814,-320.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[307,86]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-431,-272],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-135.638,-324.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[233.245,-222.931],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[204.979,-152.575],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[196.063,79.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[4.886000000000003,294.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-315.166,193.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-431,-272]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":3,"ty":4,"nm":"lpink","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,1,0.835,1,1,1,0.835,1,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-501,-142],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-205.638,-194.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[163.245,-92.93100000000001],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[134.979,-22.575000000000003],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[126.06299999999999,209.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[-65.114,424.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-385.166,323.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-501,-142]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[377,-44],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[347.919,182.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-260.881,239.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-285.198,-255.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[55.251000000000005,-540.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[396.814,-450.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[377,-44]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":201,"ty":4,"nm":"pulse-2","sr":1,"ks":{"o":{"a":0,"k":19,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[94,94,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1.065]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[47,47,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,-0.114]}},{"t":126,"s":[94,94,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":162,"s":[94,94,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"st","c":{"a":0,"k":[1,0.823528992896,0,1],"ix":3},"o":{"a":0,"k":0,"ix":4},"w":{"a":0,"k":5,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":3,"k":{"a":0,"k":[0,0,0.898,1,0.5,1,0.835,1,1,1,0,0.494],"ix":9}},"s":{"a":0,"k":[0,-422],"ix":5},"e":{"a":0,"k":[0,414],"ix":6},"t":1,"nm":"Gradient Fill 1","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":202,"ty":4,"nm":"pulse-3","sr":1,"ks":{"o":{"a":0,"k":12,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[119,119,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[27,27,100],"i":{"x":[0,0,0],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":162,"s":[119,119,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"st","c":{"a":0,"k":[1,0.823528992896,0,1],"ix":3},"o":{"a":0,"k":0,"ix":4},"w":{"a":0,"k":5,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":3,"k":{"a":0,"k":[0,0,0.898,1,0.5,1,0.835,1,1,1,0,0.494],"ix":9}},"s":{"a":0,"k":[0,-422],"ix":5},"e":{"a":0,"k":[0,414],"ix":6},"t":1,"nm":"Gradient Fill 1","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0}],"markers":[]}');
+;// ./src/assets/scripts-mo/ui/common/voice-blob.js
+/**
+ * @file voice-blob.js
+ * @description AI 음성인식 Lottie 애니메이션 제어
+ * @scope [data-voice-blob-anim]
+ * @state instance — dotlottie-wc 플레이어 인스턴스
+ */
+
+(function ($) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var instance = null;
+
+  // 로티 애니메이션 초기화
+  function init() {
+    var $container = $('[data-voice-blob-anim]');
+    if (!$container.length || instance) return;
+    if (!voice_blob_namespaceObject) return;
+    __webpack_require__.e(/* import() */ 96).then(__webpack_require__.bind(__webpack_require__, 3640)).then(function () {
+      if (instance) return;
+      var player = document.createElement('dotlottie-wc');
+
+      // JSON 데이터 직접 전달 (빌드 시 URL 의존 제거)
+      player.data = voice_blob_namespaceObject;
+      player.setAttribute('loop', '');
+      player.setAttribute('autoplay', '');
+      player.setAttribute('layout', JSON.stringify({
+        fit: 'contain',
+        align: [0.5, 0.5]
+      }));
+      player.useFrameInterpolation = false;
+      player.style.width = '100%';
+      player.style.height = '100%';
+      $container[0].innerHTML = '';
+      $container[0].appendChild(player);
+      instance = player;
+    });
+  }
+
+  // 인스턴스 제거
+  function destroy() {
+    if (!instance) return;
+    instance.remove();
+    instance = null;
+  }
+  window.UI.voiceBlob = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/bottom-tab-bar.js
+var bottom_tab_bar = __webpack_require__(4714);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/chip-button.js
+var chip_button = __webpack_require__(9098);
+;// ./src/assets/scripts-mo/ui/common/index.js
+/**
+ * @file scripts-mo/ui/common/index.js
+ * @description 공통 UI 모듈 통합
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail', 'footerBizInfo', 'voiceBlob', 'bottomTabBar', 'chipButton'];
+  window.UI.common = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
+var form_select = __webpack_require__(8550);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
+var checkbox_total = __webpack_require__(548);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
+var form_textarea = __webpack_require__(5912);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input.js
+var input = __webpack_require__(3064);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input-search.js
+var input_search = __webpack_require__(6525);
+;// ./src/assets/scripts-mo/ui/form/index.js
+/**
+ * @file scripts-mo/ui/form/index.js
+ * @description 폼 관련 UI 모듈 통합
+ */
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['select', 'checkboxTotal', 'textarea', 'input', 'inputSearch'];
+  window.UI.form = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
+var product_view_toggle = __webpack_require__(5487);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
+var product_inline_banner = __webpack_require__(905);
+// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
+var swiper_bundle = __webpack_require__(7111);
+;// ./src/assets/scripts-mo/ui/product/detail-gallery.js
+/**
+ * @file detail-gallery.js
+ * @description 상품 상세 썸네일 갤러리 (메인 슬라이더 + 상세이미지 팝업 모달)
+ * @scope [data-ui="detail-gallery"]
+ * @mapping detail-overview-thumb.ejs
+ * @state .is-open — 모달 활성화
+ * @a11y hidden/aria-modal, ESC 닫기
+ * @note iOS body scroll lock — position:fixed + scrollTop 저장
+ * @note Android 물리 백버튼 — history.pushState 활용
+ * @example 외부 사용 예시
+ *          const gallery = UI.detailGallery.getInstance();
+ *          if (gallery) {
+ *            const idx = gallery.getActiveIndex();
+ *            gallery.slideTo(2);
+ *            gallery.openZoom();
+ *          }
+ */
+
+(function () {
+  'use strict';
+
+  const SCOPE = '[data-ui="detail-gallery"]';
+  const IS_OPEN = 'is-open';
+  let savedScrollY = 0;
+
+  // iOS body scroll lock
+  function lockScroll() {
+    savedScrollY = window.scrollY;
+    document.body.style.cssText = 'position:fixed;top:' + -savedScrollY + 'px;left:0;right:0;overflow:hidden;';
+  }
+  function unlockScroll() {
+    document.body.style.cssText = '';
+    window.scrollTo(0, savedScrollY);
+  }
+  function init() {
+    const root = document.querySelector(SCOPE);
+    if (!root) return;
+
+    // 중복 초기화 방지
+    if (root._galleryInstance) return;
+    const mainEl = root.querySelector('[data-role="main"]');
+    const zoomEl = root.querySelector('[data-role="zoom"]');
+    const zoomSwiperEl = root.querySelector('[data-role="zoom-swiper"]');
+    const zoomThumbsEl = root.querySelector('[data-role="zoom-thumbs"]');
+    if (!mainEl) return;
+    const total = mainEl.querySelectorAll('.swiper-slide').length;
+    const isSingle = total < 2;
+
+    // 1장이면 모달 썸네일 숨김
+    if (isSingle && zoomThumbsEl) zoomThumbsEl.style.display = 'none';
+
+    // 메인 Swiper
+    const mainSwiper = new swiper_bundle/* default */.A(mainEl, {
+      slidesPerView: 1,
+      loop: false,
+      allowTouchMove: !isSingle,
+      observer: true,
+      observeParents: true,
+      pagination: isSingle ? false : {
+        el: mainEl.querySelector('.swiper-pagination'),
+        clickable: true
+      }
+    });
+
+    // 모달 Swiper — lazy init
+    let zoomSwiper = null;
+    let zoomThumbSwiper = null;
+    function createZoom(index) {
+      if (!zoomSwiper) {
+        if (!isSingle && zoomThumbsEl) {
+          zoomThumbSwiper = new swiper_bundle/* default */.A(zoomThumbsEl, {
+            slidesPerView: 'auto',
+            spaceBetween: 7,
+            watchSlidesProgress: true
+          });
+        }
+        zoomSwiper = new swiper_bundle/* default */.A(zoomSwiperEl, {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          loop: false,
+          autoHeight: true,
+          observer: true,
+          observeParents: true,
+          thumbs: zoomThumbSwiper ? {
+            swiper: zoomThumbSwiper
+          } : undefined,
+          on: {
+            slideChange: function () {
+              // 활성 썸네일이 보이도록 스크롤
+              if (zoomThumbSwiper) {
+                zoomThumbSwiper.slideTo(this.activeIndex);
+              }
+            }
+          }
+        });
+      } else {
+        zoomSwiper.update();
+        if (zoomThumbSwiper) zoomThumbSwiper.update();
+      }
+      zoomSwiper.slideTo(index, 0);
+    }
+
+    // 모달 열기
+    function openZoom() {
+      if (!zoomEl) return;
+      const index = mainSwiper.activeIndex;
+      zoomEl.removeAttribute('hidden');
+      zoomEl.classList.add(IS_OPEN);
+      lockScroll();
+
+      // Android 뒤로가기 대응
+      history.pushState({
+        detailGalleryOpen: true
+      }, '');
+      requestAnimationFrame(() => {
+        createZoom(index);
+      });
+    }
+
+    // 모달 닫기
+    function closeZoom(fromPop) {
+      if (!zoomEl || !zoomEl.classList.contains(IS_OPEN)) return;
+      const index = zoomSwiper ? zoomSwiper.activeIndex : mainSwiper.activeIndex;
+      zoomEl.classList.remove(IS_OPEN);
+      zoomEl.setAttribute('hidden', '');
+      unlockScroll();
+      mainSwiper.slideTo(index, 0);
+      if (!fromPop) history.back();
+    }
+
+    // 이벤트
+    root.addEventListener('click', e => {
+      const target = e.target.closest('[data-role]');
+      if (!target) return;
+      const role = target.getAttribute('data-role');
+      if (role === 'zoom-open') openZoom();
+      if (role === 'zoom-close') closeZoom();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom();
+      }
+    });
+
+    // Android 물리 백버튼
+    window.addEventListener('popstate', () => {
+      if (zoomEl?.classList.contains(IS_OPEN)) {
+        closeZoom(true);
+      }
+    });
+
+    // public API
+    root._galleryInstance = {
+      main: mainSwiper,
+      zoom: () => zoomSwiper,
+      zoomThumb: () => zoomThumbSwiper,
+      // 외부 접근용 API
+      getActiveIndex: () => mainSwiper.activeIndex,
+      slideTo: index => mainSwiper.slideTo(index),
+      openZoom,
+      closeZoom,
+      getTotal: () => total
+    };
+  }
+  function destroy() {
+    const root = document.querySelector(SCOPE);
+    if (!root || !root._galleryInstance) return;
+    const inst = root._galleryInstance;
+    inst.main?.destroy(true, true);
+    inst.zoom()?.destroy(true, true);
+    inst.zoomThumb()?.destroy(true, true);
+    delete root._galleryInstance;
+  }
+  window.UI = window.UI || {};
+  window.UI.detailGallery = {
+    init,
+    destroy,
+    // 외부에서 UI.detailGallery.getInstance()로 접근
+    getInstance: () => document.querySelector(SCOPE)?._galleryInstance
+  };
+})();
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/bottom-product-bar.js
+var bottom_product_bar = __webpack_require__(3012);
+;// ./src/assets/scripts-mo/ui/product/index.js
+/**
+ * @file scripts-mo/ui/product/index.js
+ * @description 상품 관련 UI 모듈 통합
+ */
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
+  window.UI.product = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (!mod) return;
+
+        // initAll 우선, 없으면 init
+        if (typeof mod.initAll === 'function') {
+          mod.initAll();
+        } else if (typeof mod.init === 'function') {
+          mod.init();
+        }
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-renderer.js
+var category_renderer = __webpack_require__(8134);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
+var category_tree_search = __webpack_require__(1234);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
+var category_sheet = __webpack_require__(6410);
+;// ./src/assets/scripts-mo/ui/category/index.js
+/**
+ * @file scripts-mo/ui/category/index.js
+ * @description 카테고리 UI 관련 모듈 통합 관리
+ */
+
+
+
+(function (window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['CategorySheet', 'CategoryTreeSearch'];
+  window.UI.category = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
+var filter_product = __webpack_require__(2014);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
+var filter_mapage = __webpack_require__(2624);
+;// ./src/assets/scripts-mo/ui/filter/index.js
+/**
+ * @file scripts-mo/ui/filter/index.js
+ * @description 필터 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['FilterProduct', 'FilterMypage'];
+  window.UI.filter = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
+var cart = __webpack_require__(9459);
+;// ./src/assets/scripts-mo/ui/cart-order/order.js
+/**
+ * @file scripts-mo/ui/cart-order/order.js
+ * @description 주문/결제(주문서) 페이지 UI 기능
+ * - 배송 방법 탭 전환 (택배/퀵배송/화물)
+ * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
+ * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
+ * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
+ * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
+ * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[order] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var EVENT_NS = '.uiOrder';
+  var ROOT_SEL = '.vm-cart-order';
+  var METHOD_BTN_SEL = '.vm-shipping-method-btn';
+  var METHOD_PANEL_SEL = '.vm-shipping-panel';
+  var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
+  var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
+  var INIT_KEY = 'uiOrderInit';
+  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
+
+  // 결제수단 (모바일 vm-*)
+  var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
+  var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
+  var PAYMENT_ITEM_SEL = '.vm-payment-item';
+  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
+  var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
+  var PAYMENT_PANEL_SEL = '.vm-payment-panel';
+  var PAYMENT_METHOD_SEL = '.vm-payment-method';
+
+  // 결제 카드/계좌 Swiper
+  var PAYMENT_SWIPER_SEL = '.vm-card-list.js-swiper[data-swiper-type="payment"]';
+  var SWIPER_DATA_KEY = 'uiPaymentSwiper';
+  var PAYMENT_SWIPER_OPTIONS = {
+    slidesPerView: 'auto',
+    spaceBetween: 12,
+    speed: 500,
+    slidesOffsetAfter: 50,
+    breakpoints: {
+      768: {
+        slidesOffsetAfter: 280
+      }
+    },
+    a11y: false,
+    on: {
+      init: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      },
+      slideChangeTransitionEnd: function (swiper) {
+        if (!swiper.slides || !swiper.slides.length) return;
+        $(swiper.slides).removeClass('is-selected');
+        var active = swiper.slides[swiper.activeIndex];
+        if (active) $(active).addClass('is-selected');
+      }
+    }
+  };
+  var METHOD_FREIGHT = 'freight';
+  var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
+  var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
+  var ID_PAY_SIMPLE = 'pay-simple';
+  var ID_PANEL_CREDIT = 'panel-credit';
+  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
+  function getScope(root) {
+    if (!root) return $(ROOT_SEL);
+    var $el = $(root);
+    if (!$el.length) return $el;
+    return $el.find(ROOT_SEL).addBack().filter(ROOT_SEL);
+  }
+
+  /**
+   * 배송 방법 탭 클릭 시 해당 패널만 활성화
+   */
+  function bindShippingMethodTabs($scope) {
+    var $btns = $scope.find(METHOD_BTN_SEL);
+    var $panels = $scope.find(METHOD_PANEL_SEL);
+    if (!$btns.length || !$panels.length) return;
+    $btns.off('click' + EVENT_NS);
+    $btns.on('click' + EVENT_NS, function () {
+      var method = $(this).data('method');
+      if (!method) return;
+      $btns.removeClass('is-active');
+      $(this).addClass('is-active');
+      $panels.removeClass('is-active');
+      $panels.filter('[data-panel="' + method + '"]').addClass('is-active');
+      updateFreightVisibility($scope, method);
+    });
+  }
+
+  /**
+   * 화물 선택 시 data-freight-visible 영역 노출, data-freight-hidden 영역 비노출
+   */
+  function updateFreightVisibility($scope, method) {
+    var isFreight = method === METHOD_FREIGHT;
+    $scope.find(FREIGHT_VISIBLE_SEL).toggle(isFreight);
+    $scope.find(FREIGHT_HIDDEN_SEL).toggle(!isFreight);
+  }
+  function bindFreightVisibility($scope) {
+    var $activeBtn = $scope.find(METHOD_BTN_SEL + '.is-active');
+    var method = $activeBtn.length ? $activeBtn.data('method') : '';
+    updateFreightVisibility($scope, method);
+  }
+
+  /**
+   * 결제수단 탭 클릭 시 해당 탭패널만 활성화 (간편결제 내 카드/계좌 탭)
+   */
+  function setPaymentTabState($scope, $tab) {
+    if (!$tab || !$tab.length) return;
+    var tabId = $tab.attr('id');
+    var controlsId = $tab.attr('aria-controls');
+    var $tablist = $tab.closest('[role="tablist"]');
+    var $parentPanel = $tablist.closest(PAYMENT_PANEL_SEL);
+    if (!$tablist.length || !$parentPanel.length) return;
+    var $tabs = $tablist.find(PAYMENT_TAB_SEL);
+    var $panels = $parentPanel.find(PAYMENT_TAB_PANEL_SEL);
+    $tabs.each(function () {
+      var $t = $(this);
+      $t.removeClass('is-active');
+      $t.attr('aria-selected', 'false');
+      $t.attr('aria-expanded', 'false');
+    });
+    $tab.addClass('is-active');
+    $tab.attr('aria-selected', 'true');
+    $panels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    if (controlsId) {
+      var $targetPanel = $scope.find('#' + controlsId);
+      if ($targetPanel.length) {
+        $targetPanel.addClass('is-active');
+        $tab.attr('aria-expanded', 'true');
+        var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+        if (!currentLabelledBy || currentLabelledBy !== tabId) {
+          $targetPanel.attr('aria-labelledby', tabId);
+        }
+        // 노출된 패널 안의 payment 스와이퍼는 초기화 시 숨겨져 있었을 수 있으므로 크기 재계산
+        $targetPanel.find(PAYMENT_SWIPER_SEL).each(function () {
+          var instance = $(this).data(SWIPER_DATA_KEY);
+          if (instance && typeof instance.update === 'function') instance.update();
+        });
+      }
+    }
+  }
+
+  /**
+   * 결제수단 라디오 변경 시 해당 패널만 활성화 (간편결제/카드/계좌이체/무통장/여신)
+   */
+  function setPaymentPanelState($scope, $radio) {
+    if (!$radio || !$radio.length) return;
+    var controlsId = $radio.attr('aria-controls');
+    if (!controlsId) return;
+    var radioId = $radio.attr('id');
+    var $item = $radio.closest(PAYMENT_ITEM_SEL);
+    var $methodWrap = $item.closest(PAYMENT_METHOD_SEL);
+    if (!$item.length || !$methodWrap.length) return;
+    var $allPanels = $methodWrap.find(PAYMENT_PANEL_SEL);
+
+    // 간편결제 탭이 '계좌'일 때 다른 결제수단 선택 시 카드 탭으로 전환
+    var $tabSimpleAccount = $scope.find('#' + ID_TAB_SIMPLE_ACCOUNT);
+    if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
+      if (radioId !== ID_PAY_SIMPLE) {
+        var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+        if ($tabSimpleCard.length) {
+          setPaymentTabState($scope, $tabSimpleCard);
+        }
+      }
+    }
+    $allPanels.each(function () {
+      $(this).removeClass('is-active');
+    });
+    $methodWrap.find(PAYMENT_RADIO_SEL).attr('aria-expanded', 'false');
+    var $targetPanel = $methodWrap.find('#' + controlsId);
+    if ($targetPanel.length) {
+      $targetPanel.addClass('is-active');
+      $radio.attr('aria-expanded', 'true');
+      var currentLabelledBy = $targetPanel.attr('aria-labelledby');
+      if (!currentLabelledBy || currentLabelledBy !== radioId) {
+        $targetPanel.attr('aria-labelledby', radioId);
+      }
+      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
+      if (controlsId === ID_PANEL_CREDIT) {
+        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
+        if ($taxBatch.length) $taxBatch.prop('checked', true);
+      }
+    } else {
+      $radio.attr('aria-expanded', 'false');
+    }
+  }
+
+  /**
+   * 결제 카드/계좌 리스트 Swiper 초기화
+   */
+  function initPaymentSwipers($scope) {
+    if (typeof swiper_bundle/* default */.A === 'undefined') return;
+    var $containers = $scope.find(PAYMENT_SWIPER_SEL);
+    if (!$containers.length) return;
+    $containers.each(function () {
+      if ($(this).data(SWIPER_DATA_KEY)) return;
+      if (!this.querySelector('.swiper-wrapper')) return;
+      var prevEl = this.querySelector('.swiper-button-prev');
+      var nextEl = this.querySelector('.swiper-button-next');
+      var $el = $(this);
+      if (!this.classList.contains('swiper')) this.classList.add('swiper');
+      var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
+      if (prevEl && nextEl) {
+        options.navigation = {
+          nextEl: nextEl,
+          prevEl: prevEl,
+          disabledClass: 'swiper-button-disabled'
+        };
+      }
+      try {
+        var instance = new swiper_bundle/* default */.A(this, options);
+        $el.data(SWIPER_DATA_KEY, instance);
+        this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
+          slide.addEventListener('click', function () {
+            instance.slideTo(index);
+          });
+        });
+      } catch (e) {
+        console.warn('[order] Payment swiper init failed', e);
+      }
+    });
+  }
+
+  /**
+   * 결제수단 탭/라디오 이벤트 바인딩 및 초기 상태
+   */
+  function bindPayment($scope) {
+    var $payment = $scope.find('.vm-payment');
+    if (!$payment.length) return;
+
+    // 초기: 간편결제 카드 탭 활성화
+    var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
+    if ($tabSimpleCard.length && !$tabSimpleCard.hasClass('is-active')) {
+      setPaymentTabState($scope, $tabSimpleCard);
+    }
+
+    // 탭 aria-expanded 초기화
+    $scope.find(PAYMENT_TAB_SEL).each(function () {
+      var $tab = $(this);
+      var isActive = $tab.hasClass('is-active');
+      var controlsId = $tab.attr('aria-controls');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
+      } else {
+        $tab.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_TAB_SEL + '.is-active').each(function () {
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 라디오 aria-expanded 초기화 후 체크된 항목 기준으로 패널 활성화
+    $scope.find(PAYMENT_RADIO_SEL).each(function () {
+      var $radio = $(this);
+      var controlsId = $radio.attr('aria-controls');
+      var isChecked = $radio.is(':checked');
+      if (controlsId) {
+        var $panel = $scope.find('#' + controlsId);
+        var isPanelActive = $panel.length && $panel.hasClass('is-active');
+        $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
+      } else {
+        $radio.attr('aria-expanded', 'false');
+      }
+    });
+    $scope.find(PAYMENT_RADIO_SEL + ':checked').each(function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제수단 탭 클릭
+    $scope.off('click' + EVENT_NS, PAYMENT_TAB_SEL);
+    $scope.on('click' + EVENT_NS, PAYMENT_TAB_SEL, function (e) {
+      e.preventDefault();
+      setPaymentTabState($scope, $(this));
+    });
+
+    // 결제수단 라디오 변경
+    $scope.off('change' + EVENT_NS, PAYMENT_RADIO_SEL);
+    $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
+      setPaymentPanelState($scope, $(this));
+    });
+
+    // 결제수단 토글 클릭 시 해당 패널 활성화
+    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
+      $(document).data(TOGGLE_DELEGATE_KEY, true);
+      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
+        e.preventDefault();
+        var $toggle = $(this);
+        var $scope = $toggle.closest(ROOT_SEL);
+        if (!$scope.length) return;
+        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
+        var $radio = $item.find('input[type="radio"][aria-controls]');
+        if ($radio.length) {
+          $radio.prop('checked', true);
+          setPaymentPanelState($scope, $radio);
+        }
+      });
+    }
+
+    // 결제 카드/계좌 Swiper 초기화
+    initPaymentSwipers($scope);
+  }
+
+  /**
+   * 주문서 영역 초기화 (배송 탭, 화물 노출, 결제수단)
+   */
+  function bindRoot($scope) {
+    if ($scope.data(INIT_KEY)) return;
+    $scope.data(INIT_KEY, true);
+    bindShippingMethodTabs($scope);
+    bindFreightVisibility($scope);
+    bindPayment($scope);
+  }
+  window.UI.order = {
+    init: function (root) {
+      var $scope = getScope(root);
+      if (!$scope.length) return;
+      $scope.each(function () {
+        bindRoot($(this));
+      });
+      console.log('[order] order page initialized');
+    }
+  };
+  console.log('[order] module loaded');
+})(window.jQuery, window);
+;// ./src/assets/scripts-mo/ui/cart-order/index.js
+/**
+ * @file scripts-mo/ui/cart-order/index.js
+ * @description 장바구니/주문 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['cart', 'order'];
+  window.UI.cartOrder = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/brand/brand-sheet.js
+var brand_sheet = __webpack_require__(8844);
+;// ./src/assets/scripts-mo/ui/brand/index.js
+/**
+ * @file scripts-mo/ui/brand/index.js
+ * @description 브랜드 UI 모듈 통합
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['brandSheet'];
+  window.UI.brand = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-rank.js
+var search_rank = __webpack_require__(8307);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-suggest.js
+var search_suggest = __webpack_require__(6823);
+;// ./src/assets/scripts-mo/ui/search/index.js
+/**
+ * @file scripts-mo/ui/search/index.js
+ * @description 검색 UI 모듈 통합
+ */
+
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['searchRank', 'searchSuggest'];
+  window.UI.search = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.init === 'function') mod.init();
+      });
+    },
+    destroy: function () {
+      modules.forEach(function (name) {
+        var mod = window.UI[name];
+        if (mod && typeof mod.destroy === 'function') mod.destroy();
+      });
+    }
+  };
+})(window.jQuery || window.$, window);
+;// ./src/assets/scripts-mo/core/ui.js
+/**
+ * @file scripts-mo/core/ui.js
+ * @description 모바일 UI 모듈 진입점
+ * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
+ */
+
+
+
+
+
+
+
+
+
+
+
+(function ($, window) {
+  'use strict';
+
+  window.UI = window.UI || {};
+  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search'];
+  window.UI.init = function () {
+    modules.forEach(function (name) {
+      var mod = window.UI[name];
+      if (mod && typeof mod.init === 'function') mod.init();
+    });
+  };
+
+  // DOM 준비 후 자동 초기화
+  $(document).ready(function () {
+    window.UI.init();
+  });
+})(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
+var common = __webpack_require__(6023);
+;// ./src/assets/scripts-mo/index.js
+/**
+ * @file mobile/index.js
+ * @description 모바일 번들 엔트리(진입점)
+ * @note
+ *  - core 모듈은 utils → ui → common 순서로 포함
+ *  - index.js는 짧게 유지(엔트리 역할만)
+ *  - 기능 추가/삭제는 core/ui.js에서 관리
+ */
+
+
+
+console.log('[mobile/index] entry 실행');
+;// ./src/app-mo.js
+// 모바일 전용
+
+
+// 공통 (PC와 동일)
+
+
+
+
+
+
+
+// 모바일 전용
+
+
+
+
+
+/***/ }),
+
 /***/ 3012:
 /***/ (function() {
 
@@ -3689,51 +4658,6 @@
     activate: activate
   };
 })(window.jQuery, window);
-
-/***/ }),
-
-/***/ 5365:
-/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
-
-(function ($) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var instance = null;
-  function init() {
-    var $container = $('[data-voice-blob-anim]');
-    if (!$container.length || instance) return;
-    var lottiePath = $container.data('lottie-path');
-    if (!lottiePath) return;
-    __webpack_require__.e(/* import() */ 96).then(__webpack_require__.bind(__webpack_require__, 3640)).then(function () {
-      if (instance) return;
-      var player = document.createElement('dotlottie-wc');
-      player.setAttribute('src', lottiePath);
-      player.setAttribute('loop', '');
-      player.setAttribute('autoplay', '');
-      player.setAttribute('layout', JSON.stringify({
-        fit: 'contain',
-        align: [0.5, 0.5]
-      }));
-      player.useFrameInterpolation = false;
-      player.style.width = '100%';
-      player.style.height = '100%';
-      $container[0].innerHTML = '';
-      $container[0].appendChild(player);
-      instance = player;
-    });
-  }
-  function destroy() {
-    if (!instance) return;
-    instance.remove();
-    instance = null;
-  }
-  window.UI.voiceBlob = {
-    init: init,
-    destroy: destroy
-  };
-})(window.jQuery);
 
 /***/ }),
 
@@ -7990,923 +8914,6 @@
 
 /***/ }),
 
-/***/ 9348:
-/***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/utils.js
-var utils = __webpack_require__(1781);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/scroll-lock.js
-var scroll_lock = __webpack_require__(2066);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-window.js
-var kendo_window = __webpack_require__(4387);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker.js
-var kendo_datepicker = __webpack_require__(7713);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/kendo/kendo-datepicker-single.js
-var kendo_datepicker_single = __webpack_require__(1014);
-;// ./src/assets/scripts-mo/ui/kendo/index.js
-/**
- * @file scripts-mo/ui/kendo/index.js
- * @description Kendo UI 관련 모듈 통합 관리
- */
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['VmKendoWindow', 'VmKendoRangePicker', 'VmKendoDatePickerSingle'];
-  window.UI.kendo = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.initAll === 'function') mod.initAll();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tooltip.js
-var tooltip = __webpack_require__(9592);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/sticky-observer.js
-var sticky_observer = __webpack_require__(5723);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/overflow-menu.js
-var overflow_menu = __webpack_require__(4305);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/toggle.js
-var toggle = __webpack_require__(8955);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-flow.js
-var step_flow = __webpack_require__(8486);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/expand.js
-var expand = __webpack_require__(8839);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab.js
-var tab = __webpack_require__(5332);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-buttons.js
-var scroll_buttons = __webpack_require__(3474);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/tab-sticky.js
-var tab_sticky = __webpack_require__(2006);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/collapse.js
-var collapse = __webpack_require__(9212);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/scroll-overflow-gradient.js
-var scroll_overflow_gradient = __webpack_require__(2638);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/option-box.js
-var option_box = __webpack_require__(3198);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/step-tab.js
-var step_tab = __webpack_require__(6323);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/auth.js
-var auth = __webpack_require__(689);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/survey-detail.js
-var survey_detail = __webpack_require__(1151);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/footer.js
-var footer = __webpack_require__(6840);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/voice-blob.js
-var voice_blob = __webpack_require__(5365);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/bottom-tab-bar.js
-var bottom_tab_bar = __webpack_require__(4714);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/chip-button.js
-var chip_button = __webpack_require__(9098);
-;// ./src/assets/scripts-mo/ui/common/index.js
-/**
- * @file scripts-mo/ui/common/index.js
- * @description 공통 UI 모듈 통합
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail', 'footerBizInfo', 'voiceBlob', 'bottomTabBar', 'chipButton'];
-  window.UI.common = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/select.js
-var form_select = __webpack_require__(8550);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/checkbox-total.js
-var checkbox_total = __webpack_require__(548);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/textarea.js
-var form_textarea = __webpack_require__(5912);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input.js
-var input = __webpack_require__(3064);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/form/input-search.js
-var input_search = __webpack_require__(6525);
-;// ./src/assets/scripts-mo/ui/form/index.js
-/**
- * @file scripts-mo/ui/form/index.js
- * @description 폼 관련 UI 모듈 통합
- */
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['select', 'checkboxTotal', 'textarea', 'input', 'inputSearch'];
-  window.UI.form = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-view-toggle.js
-var product_view_toggle = __webpack_require__(5487);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/product-inline-banner.js
-var product_inline_banner = __webpack_require__(905);
-// EXTERNAL MODULE: ./node_modules/.pnpm/swiper@11.2.8/node_modules/swiper/swiper-bundle.mjs + 32 modules
-var swiper_bundle = __webpack_require__(7111);
-;// ./src/assets/scripts-mo/ui/product/detail-gallery.js
-/**
- * @file detail-gallery.js
- * @description 상품 상세 썸네일 갤러리 (메인 슬라이더 + 상세이미지 팝업 모달)
- * @scope [data-ui="detail-gallery"]
- * @mapping detail-overview-thumb.ejs
- * @state .is-open — 모달 활성화
- * @a11y hidden/aria-modal, ESC 닫기
- * @note iOS body scroll lock — position:fixed + scrollTop 저장
- * @note Android 물리 백버튼 — history.pushState 활용
- * @example 외부 사용 예시
- *          const gallery = UI.detailGallery.getInstance();
- *          if (gallery) {
- *            const idx = gallery.getActiveIndex();
- *            gallery.slideTo(2);
- *            gallery.openZoom();
- *          }
- */
-
-(function () {
-  'use strict';
-
-  const SCOPE = '[data-ui="detail-gallery"]';
-  const IS_OPEN = 'is-open';
-  let savedScrollY = 0;
-
-  // iOS body scroll lock
-  function lockScroll() {
-    savedScrollY = window.scrollY;
-    document.body.style.cssText = 'position:fixed;top:' + -savedScrollY + 'px;left:0;right:0;overflow:hidden;';
-  }
-  function unlockScroll() {
-    document.body.style.cssText = '';
-    window.scrollTo(0, savedScrollY);
-  }
-  function init() {
-    const root = document.querySelector(SCOPE);
-    if (!root) return;
-
-    // 중복 초기화 방지
-    if (root._galleryInstance) return;
-    const mainEl = root.querySelector('[data-role="main"]');
-    const zoomEl = root.querySelector('[data-role="zoom"]');
-    const zoomSwiperEl = root.querySelector('[data-role="zoom-swiper"]');
-    const zoomThumbsEl = root.querySelector('[data-role="zoom-thumbs"]');
-    if (!mainEl) return;
-    const total = mainEl.querySelectorAll('.swiper-slide').length;
-    const isSingle = total < 2;
-
-    // 1장이면 모달 썸네일 숨김
-    if (isSingle && zoomThumbsEl) zoomThumbsEl.style.display = 'none';
-
-    // 메인 Swiper
-    const mainSwiper = new swiper_bundle/* default */.A(mainEl, {
-      slidesPerView: 1,
-      loop: false,
-      allowTouchMove: !isSingle,
-      observer: true,
-      observeParents: true,
-      pagination: isSingle ? false : {
-        el: mainEl.querySelector('.swiper-pagination'),
-        clickable: true
-      }
-    });
-
-    // 모달 Swiper — lazy init
-    let zoomSwiper = null;
-    let zoomThumbSwiper = null;
-    function createZoom(index) {
-      if (!zoomSwiper) {
-        if (!isSingle && zoomThumbsEl) {
-          zoomThumbSwiper = new swiper_bundle/* default */.A(zoomThumbsEl, {
-            slidesPerView: 'auto',
-            spaceBetween: 7,
-            watchSlidesProgress: true
-          });
-        }
-        zoomSwiper = new swiper_bundle/* default */.A(zoomSwiperEl, {
-          slidesPerView: 1,
-          spaceBetween: 20,
-          loop: false,
-          autoHeight: true,
-          observer: true,
-          observeParents: true,
-          thumbs: zoomThumbSwiper ? {
-            swiper: zoomThumbSwiper
-          } : undefined,
-          on: {
-            slideChange: function () {
-              // 활성 썸네일이 보이도록 스크롤
-              if (zoomThumbSwiper) {
-                zoomThumbSwiper.slideTo(this.activeIndex);
-              }
-            }
-          }
-        });
-      } else {
-        zoomSwiper.update();
-        if (zoomThumbSwiper) zoomThumbSwiper.update();
-      }
-      zoomSwiper.slideTo(index, 0);
-    }
-
-    // 모달 열기
-    function openZoom() {
-      if (!zoomEl) return;
-      const index = mainSwiper.activeIndex;
-      zoomEl.removeAttribute('hidden');
-      zoomEl.classList.add(IS_OPEN);
-      lockScroll();
-
-      // Android 뒤로가기 대응
-      history.pushState({
-        detailGalleryOpen: true
-      }, '');
-      requestAnimationFrame(() => {
-        createZoom(index);
-      });
-    }
-
-    // 모달 닫기
-    function closeZoom(fromPop) {
-      if (!zoomEl || !zoomEl.classList.contains(IS_OPEN)) return;
-      const index = zoomSwiper ? zoomSwiper.activeIndex : mainSwiper.activeIndex;
-      zoomEl.classList.remove(IS_OPEN);
-      zoomEl.setAttribute('hidden', '');
-      unlockScroll();
-      mainSwiper.slideTo(index, 0);
-      if (!fromPop) history.back();
-    }
-
-    // 이벤트
-    root.addEventListener('click', e => {
-      const target = e.target.closest('[data-role]');
-      if (!target) return;
-      const role = target.getAttribute('data-role');
-      if (role === 'zoom-open') openZoom();
-      if (role === 'zoom-close') closeZoom();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && zoomEl?.classList.contains(IS_OPEN)) {
-        closeZoom();
-      }
-    });
-
-    // Android 물리 백버튼
-    window.addEventListener('popstate', () => {
-      if (zoomEl?.classList.contains(IS_OPEN)) {
-        closeZoom(true);
-      }
-    });
-
-    // public API
-    root._galleryInstance = {
-      main: mainSwiper,
-      zoom: () => zoomSwiper,
-      zoomThumb: () => zoomThumbSwiper,
-      // 외부 접근용 API
-      getActiveIndex: () => mainSwiper.activeIndex,
-      slideTo: index => mainSwiper.slideTo(index),
-      openZoom,
-      closeZoom,
-      getTotal: () => total
-    };
-  }
-  function destroy() {
-    const root = document.querySelector(SCOPE);
-    if (!root || !root._galleryInstance) return;
-    const inst = root._galleryInstance;
-    inst.main?.destroy(true, true);
-    inst.zoom()?.destroy(true, true);
-    inst.zoomThumb()?.destroy(true, true);
-    delete root._galleryInstance;
-  }
-  window.UI = window.UI || {};
-  window.UI.detailGallery = {
-    init,
-    destroy,
-    // 외부에서 UI.detailGallery.getInstance()로 접근
-    getInstance: () => document.querySelector(SCOPE)?._galleryInstance
-  };
-})();
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/product/bottom-product-bar.js
-var bottom_product_bar = __webpack_require__(3012);
-;// ./src/assets/scripts-mo/ui/product/index.js
-/**
- * @file scripts-mo/ui/product/index.js
- * @description 상품 관련 UI 모듈 통합
- */
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['productViewToggle', 'productInlineBanner', 'detailGallery', 'bottomProductBar'];
-  window.UI.product = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (!mod) return;
-
-        // initAll 우선, 없으면 init
-        if (typeof mod.initAll === 'function') {
-          mod.initAll();
-        } else if (typeof mod.init === 'function') {
-          mod.init();
-        }
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-renderer.js
-var category_renderer = __webpack_require__(8134);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-tree-search.js
-var category_tree_search = __webpack_require__(1234);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/category/category-sheet.js
-var category_sheet = __webpack_require__(6410);
-;// ./src/assets/scripts-mo/ui/category/index.js
-/**
- * @file scripts-mo/ui/category/index.js
- * @description 카테고리 UI 관련 모듈 통합 관리
- */
-
-
-
-(function (window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['CategorySheet', 'CategoryTreeSearch'];
-  window.UI.category = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-product.js
-var filter_product = __webpack_require__(2014);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/filter/filter-mapage.js
-var filter_mapage = __webpack_require__(2624);
-;// ./src/assets/scripts-mo/ui/filter/index.js
-/**
- * @file scripts-mo/ui/filter/index.js
- * @description 필터 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['FilterProduct', 'FilterMypage'];
-  window.UI.filter = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/cart-order/cart.js
-var cart = __webpack_require__(9459);
-;// ./src/assets/scripts-mo/ui/cart-order/order.js
-/**
- * @file scripts-mo/ui/cart-order/order.js
- * @description 주문/결제(주문서) 페이지 UI 기능
- * - 배송 방법 탭 전환 (택배/퀵배송/화물)
- * - 화물 선택 시 노출/비노출 영역 제어 (data-freight-visible, data-freight-hidden)
- * - 결제수단 탭 전환 (vm-payment-tab / vm-payment-tab-panel)
- * - 결제수단 라디오와 패널 매칭 (vm-payment-item / vm-payment-panel)
- * - 결제수단 토글 클릭 시 해당 패널 활성화 (vm-payment-item-toggle)
- * - 결제 카드/계좌 리스트 Swiper (data-swiper-type="payment")
- */
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) {
-    console.log('[order] jQuery not found');
-    return;
-  }
-  window.UI = window.UI || {};
-  var EVENT_NS = '.uiOrder';
-  var ROOT_SEL = '.vm-cart-order';
-  var METHOD_BTN_SEL = '.vm-shipping-method-btn';
-  var METHOD_PANEL_SEL = '.vm-shipping-panel';
-  var FREIGHT_VISIBLE_SEL = '[data-freight-visible="false"]';
-  var FREIGHT_HIDDEN_SEL = '[data-freight-hidden="false"]';
-  var INIT_KEY = 'uiOrderInit';
-  var TOGGLE_DELEGATE_KEY = 'uiOrderToggleDelegate';
-
-  // 결제수단 (모바일 vm-*)
-  var PAYMENT_TAB_SEL = '.vm-payment-tab[role="tab"]';
-  var PAYMENT_TAB_PANEL_SEL = '.vm-payment-tab-panel[role="tabpanel"]';
-  var PAYMENT_ITEM_SEL = '.vm-payment-item';
-  var PAYMENT_ITEM_TOGGLE_SEL = '.vm-payment-item-toggle';
-  var PAYMENT_RADIO_SEL = '.vm-payment-item input[type="radio"][aria-controls]';
-  var PAYMENT_PANEL_SEL = '.vm-payment-panel';
-  var PAYMENT_METHOD_SEL = '.vm-payment-method';
-
-  // 결제 카드/계좌 Swiper
-  var PAYMENT_SWIPER_SEL = '.vm-card-list.js-swiper[data-swiper-type="payment"]';
-  var SWIPER_DATA_KEY = 'uiPaymentSwiper';
-  var PAYMENT_SWIPER_OPTIONS = {
-    slidesPerView: 'auto',
-    spaceBetween: 12,
-    speed: 500,
-    slidesOffsetAfter: 50,
-    breakpoints: {
-      768: {
-        slidesOffsetAfter: 280
-      }
-    },
-    a11y: false,
-    on: {
-      init: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
-      },
-      slideChangeTransitionEnd: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
-      }
-    }
-  };
-  var METHOD_FREIGHT = 'freight';
-  var ID_TAB_SIMPLE_ACCOUNT = 'tab-simple-account';
-  var ID_TAB_SIMPLE_CARD = 'tab-simple-card';
-  var ID_PAY_SIMPLE = 'pay-simple';
-  var ID_PANEL_CREDIT = 'panel-credit';
-  var ID_TAX_INVOICE_BATCH = 'tax-invoice-batch';
-  function getScope(root) {
-    if (!root) return $(ROOT_SEL);
-    var $el = $(root);
-    if (!$el.length) return $el;
-    return $el.find(ROOT_SEL).addBack().filter(ROOT_SEL);
-  }
-
-  /**
-   * 배송 방법 탭 클릭 시 해당 패널만 활성화
-   */
-  function bindShippingMethodTabs($scope) {
-    var $btns = $scope.find(METHOD_BTN_SEL);
-    var $panels = $scope.find(METHOD_PANEL_SEL);
-    if (!$btns.length || !$panels.length) return;
-    $btns.off('click' + EVENT_NS);
-    $btns.on('click' + EVENT_NS, function () {
-      var method = $(this).data('method');
-      if (!method) return;
-      $btns.removeClass('is-active');
-      $(this).addClass('is-active');
-      $panels.removeClass('is-active');
-      $panels.filter('[data-panel="' + method + '"]').addClass('is-active');
-      updateFreightVisibility($scope, method);
-    });
-  }
-
-  /**
-   * 화물 선택 시 data-freight-visible 영역 노출, data-freight-hidden 영역 비노출
-   */
-  function updateFreightVisibility($scope, method) {
-    var isFreight = method === METHOD_FREIGHT;
-    $scope.find(FREIGHT_VISIBLE_SEL).toggle(isFreight);
-    $scope.find(FREIGHT_HIDDEN_SEL).toggle(!isFreight);
-  }
-  function bindFreightVisibility($scope) {
-    var $activeBtn = $scope.find(METHOD_BTN_SEL + '.is-active');
-    var method = $activeBtn.length ? $activeBtn.data('method') : '';
-    updateFreightVisibility($scope, method);
-  }
-
-  /**
-   * 결제수단 탭 클릭 시 해당 탭패널만 활성화 (간편결제 내 카드/계좌 탭)
-   */
-  function setPaymentTabState($scope, $tab) {
-    if (!$tab || !$tab.length) return;
-    var tabId = $tab.attr('id');
-    var controlsId = $tab.attr('aria-controls');
-    var $tablist = $tab.closest('[role="tablist"]');
-    var $parentPanel = $tablist.closest(PAYMENT_PANEL_SEL);
-    if (!$tablist.length || !$parentPanel.length) return;
-    var $tabs = $tablist.find(PAYMENT_TAB_SEL);
-    var $panels = $parentPanel.find(PAYMENT_TAB_PANEL_SEL);
-    $tabs.each(function () {
-      var $t = $(this);
-      $t.removeClass('is-active');
-      $t.attr('aria-selected', 'false');
-      $t.attr('aria-expanded', 'false');
-    });
-    $tab.addClass('is-active');
-    $tab.attr('aria-selected', 'true');
-    $panels.each(function () {
-      $(this).removeClass('is-active');
-    });
-    if (controlsId) {
-      var $targetPanel = $scope.find('#' + controlsId);
-      if ($targetPanel.length) {
-        $targetPanel.addClass('is-active');
-        $tab.attr('aria-expanded', 'true');
-        var currentLabelledBy = $targetPanel.attr('aria-labelledby');
-        if (!currentLabelledBy || currentLabelledBy !== tabId) {
-          $targetPanel.attr('aria-labelledby', tabId);
-        }
-        // 노출된 패널 안의 payment 스와이퍼는 초기화 시 숨겨져 있었을 수 있으므로 크기 재계산
-        $targetPanel.find(PAYMENT_SWIPER_SEL).each(function () {
-          var instance = $(this).data(SWIPER_DATA_KEY);
-          if (instance && typeof instance.update === 'function') instance.update();
-        });
-      }
-    }
-  }
-
-  /**
-   * 결제수단 라디오 변경 시 해당 패널만 활성화 (간편결제/카드/계좌이체/무통장/여신)
-   */
-  function setPaymentPanelState($scope, $radio) {
-    if (!$radio || !$radio.length) return;
-    var controlsId = $radio.attr('aria-controls');
-    if (!controlsId) return;
-    var radioId = $radio.attr('id');
-    var $item = $radio.closest(PAYMENT_ITEM_SEL);
-    var $methodWrap = $item.closest(PAYMENT_METHOD_SEL);
-    if (!$item.length || !$methodWrap.length) return;
-    var $allPanels = $methodWrap.find(PAYMENT_PANEL_SEL);
-
-    // 간편결제 탭이 '계좌'일 때 다른 결제수단 선택 시 카드 탭으로 전환
-    var $tabSimpleAccount = $scope.find('#' + ID_TAB_SIMPLE_ACCOUNT);
-    if ($tabSimpleAccount.length && $tabSimpleAccount.hasClass('is-active')) {
-      if (radioId !== ID_PAY_SIMPLE) {
-        var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
-        if ($tabSimpleCard.length) {
-          setPaymentTabState($scope, $tabSimpleCard);
-        }
-      }
-    }
-    $allPanels.each(function () {
-      $(this).removeClass('is-active');
-    });
-    $methodWrap.find(PAYMENT_RADIO_SEL).attr('aria-expanded', 'false');
-    var $targetPanel = $methodWrap.find('#' + controlsId);
-    if ($targetPanel.length) {
-      $targetPanel.addClass('is-active');
-      $radio.attr('aria-expanded', 'true');
-      var currentLabelledBy = $targetPanel.attr('aria-labelledby');
-      if (!currentLabelledBy || currentLabelledBy !== radioId) {
-        $targetPanel.attr('aria-labelledby', radioId);
-      }
-      // 여신결제 패널 활성화 시 세금계산서 '일괄 발급' 선택 (유지되도록 매번 설정)
-      if (controlsId === ID_PANEL_CREDIT) {
-        var $taxBatch = $targetPanel.find('.vits-tax #' + ID_TAX_INVOICE_BATCH);
-        if ($taxBatch.length) $taxBatch.prop('checked', true);
-      }
-    } else {
-      $radio.attr('aria-expanded', 'false');
-    }
-  }
-
-  /**
-   * 결제 카드/계좌 리스트 Swiper 초기화
-   */
-  function initPaymentSwipers($scope) {
-    if (typeof swiper_bundle/* default */.A === 'undefined') return;
-    var $containers = $scope.find(PAYMENT_SWIPER_SEL);
-    if (!$containers.length) return;
-    $containers.each(function () {
-      if ($(this).data(SWIPER_DATA_KEY)) return;
-      if (!this.querySelector('.swiper-wrapper')) return;
-      var prevEl = this.querySelector('.swiper-button-prev');
-      var nextEl = this.querySelector('.swiper-button-next');
-      var $el = $(this);
-      if (!this.classList.contains('swiper')) this.classList.add('swiper');
-      var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
-      if (prevEl && nextEl) {
-        options.navigation = {
-          nextEl: nextEl,
-          prevEl: prevEl,
-          disabledClass: 'swiper-button-disabled'
-        };
-      }
-      try {
-        var instance = new swiper_bundle/* default */.A(this, options);
-        $el.data(SWIPER_DATA_KEY, instance);
-        this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
-          slide.addEventListener('click', function () {
-            instance.slideTo(index);
-          });
-        });
-      } catch (e) {
-        console.warn('[order] Payment swiper init failed', e);
-      }
-    });
-  }
-
-  /**
-   * 결제수단 탭/라디오 이벤트 바인딩 및 초기 상태
-   */
-  function bindPayment($scope) {
-    var $payment = $scope.find('.vm-payment');
-    if (!$payment.length) return;
-
-    // 초기: 간편결제 카드 탭 활성화
-    var $tabSimpleCard = $scope.find('#' + ID_TAB_SIMPLE_CARD);
-    if ($tabSimpleCard.length && !$tabSimpleCard.hasClass('is-active')) {
-      setPaymentTabState($scope, $tabSimpleCard);
-    }
-
-    // 탭 aria-expanded 초기화
-    $scope.find(PAYMENT_TAB_SEL).each(function () {
-      var $tab = $(this);
-      var isActive = $tab.hasClass('is-active');
-      var controlsId = $tab.attr('aria-controls');
-      if (controlsId) {
-        var $panel = $scope.find('#' + controlsId);
-        var isPanelActive = $panel.length && $panel.hasClass('is-active');
-        $tab.attr('aria-expanded', isActive && isPanelActive ? 'true' : 'false');
-      } else {
-        $tab.attr('aria-expanded', 'false');
-      }
-    });
-    $scope.find(PAYMENT_TAB_SEL + '.is-active').each(function () {
-      setPaymentTabState($scope, $(this));
-    });
-
-    // 라디오 aria-expanded 초기화 후 체크된 항목 기준으로 패널 활성화
-    $scope.find(PAYMENT_RADIO_SEL).each(function () {
-      var $radio = $(this);
-      var controlsId = $radio.attr('aria-controls');
-      var isChecked = $radio.is(':checked');
-      if (controlsId) {
-        var $panel = $scope.find('#' + controlsId);
-        var isPanelActive = $panel.length && $panel.hasClass('is-active');
-        $radio.attr('aria-expanded', isChecked && isPanelActive ? 'true' : 'false');
-      } else {
-        $radio.attr('aria-expanded', 'false');
-      }
-    });
-    $scope.find(PAYMENT_RADIO_SEL + ':checked').each(function () {
-      setPaymentPanelState($scope, $(this));
-    });
-
-    // 결제수단 탭 클릭
-    $scope.off('click' + EVENT_NS, PAYMENT_TAB_SEL);
-    $scope.on('click' + EVENT_NS, PAYMENT_TAB_SEL, function (e) {
-      e.preventDefault();
-      setPaymentTabState($scope, $(this));
-    });
-
-    // 결제수단 라디오 변경
-    $scope.off('change' + EVENT_NS, PAYMENT_RADIO_SEL);
-    $scope.on('change' + EVENT_NS, PAYMENT_RADIO_SEL, function () {
-      setPaymentPanelState($scope, $(this));
-    });
-
-    // 결제수단 토글 클릭 시 해당 패널 활성화
-    if (!$(document).data(TOGGLE_DELEGATE_KEY)) {
-      $(document).data(TOGGLE_DELEGATE_KEY, true);
-      $(document).on('click' + EVENT_NS, ROOT_SEL + ' ' + PAYMENT_ITEM_TOGGLE_SEL, function (e) {
-        e.preventDefault();
-        var $toggle = $(this);
-        var $scope = $toggle.closest(ROOT_SEL);
-        if (!$scope.length) return;
-        var $item = $toggle.closest(PAYMENT_ITEM_SEL);
-        var $radio = $item.find('input[type="radio"][aria-controls]');
-        if ($radio.length) {
-          $radio.prop('checked', true);
-          setPaymentPanelState($scope, $radio);
-        }
-      });
-    }
-
-    // 결제 카드/계좌 Swiper 초기화
-    initPaymentSwipers($scope);
-  }
-
-  /**
-   * 주문서 영역 초기화 (배송 탭, 화물 노출, 결제수단)
-   */
-  function bindRoot($scope) {
-    if ($scope.data(INIT_KEY)) return;
-    $scope.data(INIT_KEY, true);
-    bindShippingMethodTabs($scope);
-    bindFreightVisibility($scope);
-    bindPayment($scope);
-  }
-  window.UI.order = {
-    init: function (root) {
-      var $scope = getScope(root);
-      if (!$scope.length) return;
-      $scope.each(function () {
-        bindRoot($(this));
-      });
-      console.log('[order] order page initialized');
-    }
-  };
-  console.log('[order] module loaded');
-})(window.jQuery, window);
-;// ./src/assets/scripts-mo/ui/cart-order/index.js
-/**
- * @file scripts-mo/ui/cart-order/index.js
- * @description 장바구니/주문 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['cart', 'order'];
-  window.UI.cartOrder = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/brand/brand-sheet.js
-var brand_sheet = __webpack_require__(8844);
-;// ./src/assets/scripts-mo/ui/brand/index.js
-/**
- * @file scripts-mo/ui/brand/index.js
- * @description 브랜드 UI 모듈 통합
- */
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['brandSheet'];
-  window.UI.brand = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window[name];
-        if (typeof mod.init === 'function') mod.init();
-      });
-    }
-  };
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-rank.js
-var search_rank = __webpack_require__(8307);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/search/search-suggest.js
-var search_suggest = __webpack_require__(6823);
-;// ./src/assets/scripts-mo/ui/search/index.js
-/**
- * @file scripts-mo/ui/search/index.js
- * @description 검색 UI 모듈 통합
- */
-
-
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var modules = ['searchRank', 'searchSuggest'];
-  window.UI.search = {
-    init: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.init === 'function') mod.init();
-      });
-    },
-    destroy: function () {
-      modules.forEach(function (name) {
-        var mod = window.UI[name];
-        if (mod && typeof mod.destroy === 'function') mod.destroy();
-      });
-    }
-  };
-})(window.jQuery || window.$, window);
-;// ./src/assets/scripts-mo/core/ui.js
-/**
- * @file scripts-mo/core/ui.js
- * @description 모바일 UI 모듈 진입점
- * @note import 순서가 의존성에 영향 — 임의 재정렬 금지
- */
-
-
-
-
-
-
-
-
-
-
-
-(function ($, window) {
-  'use strict';
-
-  window.UI = window.UI || {};
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search'];
-  window.UI.init = function () {
-    modules.forEach(function (name) {
-      var mod = window.UI[name];
-      if (mod && typeof mod.init === 'function') mod.init();
-    });
-  };
-
-  // DOM 준비 후 자동 초기화
-  $(document).ready(function () {
-    window.UI.init();
-  });
-})(window.jQuery, window);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/core/common.js
-var common = __webpack_require__(6023);
-;// ./src/assets/scripts-mo/index.js
-/**
- * @file mobile/index.js
- * @description 모바일 번들 엔트리(진입점)
- * @note
- *  - core 모듈은 utils → ui → common 순서로 포함
- *  - index.js는 짧게 유지(엔트리 역할만)
- *  - 기능 추가/삭제는 core/ui.js에서 관리
- */
-
-
-
-console.log('[mobile/index] entry 실행');
-;// ./src/app-mo.js
-// 모바일 전용
-
-
-// 공통 (PC와 동일)
-
-
-
-
-
-
-
-// 모바일 전용
-
-
-
-
-
-/***/ }),
-
 /***/ 9459:
 /***/ (function() {
 
@@ -9333,7 +9340,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766,979], function() { return __webpack_require__(9348); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,817,152,486,133,766,979], function() { return __webpack_require__(2735); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
