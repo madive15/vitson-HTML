@@ -2024,13 +2024,20 @@
       display: block;
       min-height: fn.rem(32);
     }
+
+    &::after,
+    &::before {
+      display: none;
+    }
   }
 }
 
+/* stylelint-disable no-descending-specificity */
 .ci .header-cont p::before,
 .ci .header-cont p::after {
   content: none;
 }
+/* stylelint-enable no-descending-specificity */
 
 .vitsonpay-btn {
   @include mx.flex($align: center, $justify: center);
