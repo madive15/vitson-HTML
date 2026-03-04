@@ -1,0 +1,119 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 탭 정의
+  var tabs = [
+    { id: 'all',    label: '전체' },
+    { id: 'season', label: '시즌 기획전' },
+    { id: 'brand',  label: '브랜드 기획전' },
+    { id: 'event',  label: '특별 할인 이벤트' },
+    { id: 'etc',  label: '문장이 긴 버전의 기획전 제목입니다 문장이 긴 버전의 기획전 제목입니다 문장이 긴 버전의 기획전 제목입니다 문장이 긴 버전의 기획전 제목입니다 문장이 긴 버전의 기획전 제목입니다' },
+  ];
+
+  // 기획전 배너 데이터 (실제로는 서버에서 내려줄 영역)
+  var promoItems = [
+    {
+      category: 'season',
+      title: '온종일 따뜻한 핫팩 기획전',
+      image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20260123_170039048_02.jpg',
+      link: '/exhibition/detail?id=1001'
+    },
+    {
+      category: 'brand',
+      title: 'Milwaukee Brand Week',
+      image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20251028_135552413_03.jpg',
+      link: '/exhibition/detail?id=1002'
+    },
+    {
+      category: 'etc',
+      title: 'Premium Sit-Stand Desk 기획전',
+      image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20260223_140854817.jpg',
+      link: '/exhibition/detail?id=1003'
+    },
+    {
+      category: 'event',
+      title: '특별 할인 이벤트 배너',
+      image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20260211_135955527.jpg',
+      link: '/exhibition/detail?id=1004'
+    },
+    {
+      category: 'brand',
+      title: '브랜드 기획전 배너',
+      image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20260212_100907237.jpg',
+      link: '/exhibition/detail?id=1005'
+    }
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '기획전 목록'}) %>
+  <body class="vm-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vm-wrapper">
+      <div class="vm-wrap wrap-promo">
+        <div class="vm-content-wrap">
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'main' }) %>
+
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-promo">
+              <div class="vm-promo-main" data-tab-scope>
+                <!-- 탭 메뉴 -->
+                <div class="vm-promo-main-tab">
+                  <div class="promo-tab-list" role="tablist">
+                    <% for (var i = 0; i < tabs.length; i++) { %>
+                    <button
+                      type="button"
+                      class="promo-tab-btn<%= i === 0 ? ' is-active' : '' %>"
+                      role="tab"
+                      data-tab-btn
+                      data-tab-target="<%= tabs[i].id %>"
+                      aria-selected="<%= i === 0 ? 'true' : 'false' %>"
+                      tabindex="<%= i === 0 ? '0' : '-1' %>"
+                      aria-controls="panel-<%= tabs[i].id %>"
+                    >
+                      <span class="text"><%= tabs[i].label %></span>
+                    </button>
+                    <% } %>
+                  </div>
+                </div>
+
+                <!-- 탭 패널 -->
+                <% for (var i = 0; i < tabs.length; i++) { %> <% // 전체 탭은 모든 배너, 나머지는 category 매칭 필터 var
+                filtered = tabs[i].id === 'all' ? promoItems : promoItems.filter(function(item) { return item.category
+                === tabs[i].id; }); %>
+                <div
+                  class="vm-promo-main-panel<%= i === 0 ? ' is-active' : '' %>"
+                  role="tabpanel"
+                  data-tab-panel="<%= tabs[i].id %>"
+                  id="panel-<%= tabs[i].id %>"
+                >
+                  <div class="promo-banner-list">
+                    <% for (var j = 0; j < filtered.length; j++) { %>
+                    <a href="<%= filtered[j].link %>" class="promo-banner-link">
+                      <img
+                        src="<%= filtered[j].image %>"
+                        alt="<%= filtered[j].title %>"
+                        class="promo-banner-img"
+                        loading="lazy"
+                      />
+                    </a>
+                    <% } %>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </main>
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { type:'tab-bar', currentTab:'mypage' }) %>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

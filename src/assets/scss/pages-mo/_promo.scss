@@ -1,0 +1,155 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_promo.scss
+// - 모바일 기획전 목록 / 상세 페이지
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:math';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+// 검색 페이지 - 기본배경
+.vm-wrap.wrap-promo {
+  .vm-content-wrap {
+    background: color.$color-white;
+  }
+}
+
+// 기획전 목록
+.vm-promo-main {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+  padding: var.$mo-section-gap var.$mo-gutter map.get(var.$unit, 52);
+
+  &-tab {
+    .promo-tab {
+      &-list {
+        @include mx.flex(flex, row, flex-start, flex-start, wrap);
+        gap: map.get(var.$unit, 4);
+      }
+
+      &-btn {
+        @include button.btn-reset;
+        min-width: fn.rem(54);
+        height: map.get(var.$unit, 40);
+        padding: 2px var.$mo-gutter 0;
+        border-radius: map.get(var.$radius, 'sm');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+        .text {
+          @include typo.typography('b4s', $color: map.get(color.$text-colors, 'secondary'));
+          display: block;
+          max-height: 1.3em * 2;
+          overflow: hidden;
+        }
+
+        &.is-active {
+          background: map.get(color.$layout-surf, 'primary');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-surf, 'primary');
+
+          .text {
+            color: color.$color-white;
+          }
+        }
+      }
+    }
+  }
+
+  &-panel {
+    .promo-banner {
+      &-list {
+        @include mx.flex(flex, column);
+        gap: var.$mo-gutter;
+      }
+
+      &-link {
+        @include mx.img-fit;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        border-radius: map.get(var.$radius, 'md');
+      }
+    }
+  }
+}
+
+// 기획전 상세
+.vm-promo-detail {
+  @include mx.flex(flex, column);
+  gap: var.$mo-section-gap;
+
+  &-visual {
+    @include mx.img-fit;
+    width: 100%;
+  }
+
+  &-menus {
+    @include mx.flex;
+    gap: map.get(var.$unit, 8);
+    padding-bottom: var.$mo-gutter;
+    margin-bottom: var.$mo-gutter * -1;
+    overflow: auto hidden;
+
+    .promo-detail-menu-btn {
+      @include button.btn-reset;
+      @include mx.flex(flex, row, flex-start, center);
+      flex-shrink: 0;
+      height: fn.rem(30);
+      padding: 0 map.get(var.$unit, 12);
+      background: map.get(color.$neutral-colors, '9');
+      border-radius: fn.rem(30);
+
+      .text {
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'muted'));
+      }
+
+      &:first-of-type {
+        margin-left: var.$mo-gutter;
+      }
+
+      &:last-of-type {
+        margin-right: var.$mo-gutter;
+      }
+
+      &.is-active {
+        background: map.get(color.$brand-colors, 'primary');
+
+        .text {
+          color: color.$color-white;
+        }
+      }
+    }
+  }
+
+  &-products {
+    .vm-product {
+      &-list {
+        padding-top: 0;
+      }
+
+      &-items {
+        padding-top: 0;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // 기본
+  &.detail-default {
+    padding-top: map.get(var.$unit, 8);
+  }
+
+  // 산업군
+  &.detail-industry {
+    padding-top: map.get(var.$unit, 20);
+
+    .vm-promo-detail-visual {
+      padding: 0 map.get(var.$unit, 12);
+    }
+  }
+}

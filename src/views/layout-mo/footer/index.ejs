@@ -1,5 +1,6 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
+<% var showFooter = typeof showFooter !== 'undefined' ? showFooter : false; %>
 <%
   const datakendo = [
     { ID: 1, ProductName: "Beds" },
@@ -10,6 +11,7 @@
   ];
 %>
 
+<% if (showFooter) { %>
 <footer class="vm-footer" data-toggle-scope>
   <div class="vm-footer-cs">
     <div class="vm-footer-cs-title">
@@ -156,3 +158,4 @@
     </div>
   </section>
 </footer>
+<% } %>

@@ -20,6 +20,7 @@
   const _addDataForm = _l.addDataForm || '';
   const _addDataInput = _l.addDataInput || '';
   const _hasClear = _l.hasClear === true;
+  const _value = _l.value || '';
 %>
 
 <div class="vits-input-search vits-validation<% if (_addClassName) { %> <%= _addClassName %><% } %>">
@@ -41,6 +42,7 @@
       autocomplete="off"
       enterkeyhint="search"
       placeholder="<%= _placeholder %>"
+      value="<%= _value %>"
       data-search-input
       <% if (_addDataInput) { %>data-<%= _addDataInput %><% } %>
       <% if (_validationId) { %>aria-describedby="<%= _validationId %>"<% } %>

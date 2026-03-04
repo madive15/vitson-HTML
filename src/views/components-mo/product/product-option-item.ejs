@@ -52,12 +52,8 @@ const _isMember_opt = (typeof isMember !== 'undefined') ? isMember : true;
         </div>
 
         <!-- prettier-ignore -->
+        <!-- [D] 회원 가격 => is-normal 클래스 추가 -->
         <% if (_isMember_opt) { %>
-        <% if (isSoldout_opt) { %>
-        <div class="product-price is-soldout">
-          <p class="product-price-alt">일시품절</p>
-        </div>
-        <% } else { %>
         <div class="product-price is-normal">
           <% if (showOrigin_opt) { %>
           <div class="price-origin-label">
@@ -71,7 +67,14 @@ const _isMember_opt = (typeof isMember !== 'undefined') ? isMember : true;
             <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma_opt(d_opt.salePrice) %>원</p>
           </div>
         </div>
-        <% } %> <% } %>
+        <% } else { %>
+        <!-- [D] 비회원 가격 => is-guest 클래스 추가 -->
+        <div class="product-price is-guest">
+          <div class="price-guest-text">
+            <p class="price-guest-text-title">회원 전용 혜택가</p>
+          </div>
+        </div>
+        <% } %>
       </div>
 
       <!-- prettier-ignore -->
@@ -90,6 +93,18 @@ const _isMember_opt = (typeof isMember !== 'undefined') ? isMember : true;
         <% if (d_opt.freeShipYn === 'Y') { %>
         <div class="product-cta"><%- include(`${_src}/views/components-mo/product/product-promo-badge.ejs`) %></div>
         <% } %>
+      </div>
+      <% } %>
+
+      <!-- prettier-ignore -->
+      <% if (!_isMember_opt) { %>
+      <div class="product-price is-guest">
+        <div class="price-guest-action">
+          <button class="price-login-button">
+            <span class="icon"><i class="ic ic-lock-close" aria-hidden="true"></i></span>
+            <span class="text">로그인하고 가격 확인</span>
+          </button>
+        </div>
       </div>
       <% } %>
     </div>

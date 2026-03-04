@@ -12,7 +12,10 @@
     const j = Math.floor(Math.random() * (i + 1));
     [_all[i], _all[j]] = [_all[j], _all[i]];
   }
-  const _products = _all.slice(0, 20);
+  const _products = _all.slice(0, 20).map((item, index) => ({
+    ...item,
+    stockYn: index === 1 ? 'N' : item.stockYn
+  }));
   const _recommendProducts = _all.slice(20, 30);
 
   // 초기 카테고리 경로 (퍼블 확인용)

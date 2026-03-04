@@ -14,10 +14,39 @@
 @use '@/assets/scss/layout/list' as list;
 @use '@/assets/scss/components-mo/product' as product;
 
+@mixin common-search-bdb {
+  @include mx.border('bottom', fn.rem(8), $color: map.get(color.$layout-surf, 'sunken'));
+}
+
+@mixin common-search-product-recommend {
+  .product-recommend {
+    &-title {
+      font-size: fn.rem(16);
+      font-weight: 500;
+      color: color.$color-black;
+    }
+
+    &-list {
+      gap: map.get(var.$unit, 12);
+
+      > li {
+        flex-basis: fn.rem(148);
+      }
+    }
+  }
+}
+
 // 검색 페이지 - 기본배경
 .vm-wrap.wrap-search {
   .vm-content-wrap {
     background: color.$color-white;
+  }
+
+  &:has(.vm-search-result) {
+    // 툴바 스티키
+    .vm-product-toolbar {
+      top: map.get(var.$mo-header, 'search-bar');
+    }
   }
 }
 
@@ -52,7 +81,7 @@
   .vm-search {
     &-keywords {
       @include mx.flex(flex, column);
-      @include mx.border('bottom', fn.rem(8), $color: map.get(color.$layout-surf, 'sunken'));
+      @include common-search-bdb;
       gap: map.get(var.$unit, 32);
       padding: var.$mo-section-gap 0;
     }
@@ -184,6 +213,7 @@
 
     &-recommend {
       .vm-product-inline-recommend {
+        @include common-search-product-recommend;
         width: 100%;
         padding: 0;
         margin: 0;
@@ -194,18 +224,11 @@
             padding-left: var.$mo-gutter;
           }
 
-          &-title {
-            font-size: fn.rem(16);
-            font-weight: 500;
-            color: color.$color-black;
-          }
-
           &-body {
             padding-bottom: 0;
           }
 
           &-list {
-            gap: map.get(var.$unit, 12);
             padding-bottom: var.$mo-section-gap;
 
             > li {
@@ -277,6 +300,94 @@
             color: map.get(color.$text-status, 'brand');
           }
         }
+      }
+    }
+  }
+}
+
+// 검색 결과
+.vm-search-result {
+  &-recommend {
+    @include common-search-bdb;
+
+    /* stylelint-disable no-descending-specificity */
+    .vm-product-inline-recommend {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+
+      .product-recommend {
+        &-head {
+          padding-right: var.$mo-gutter;
+          padding-left: var.$mo-gutter;
+        }
+
+        &-list {
+          padding-bottom: map.get(var.$unit, 20);
+        }
+      }
+    }
+
+    // 추천 상품
+    &.recommend-default {
+      .vm-product-inline-recommend {
+        @include common-search-product-recommend;
+      }
+    }
+
+    // 함께 보면 좋아요
+    &.recommend-like {
+      .product-price.is-guest {
+        .price-login-button .text {
+          font-size: fn.rem(11);
+        }
+      }
+    }
+    /* stylelint-enable no-descending-specificity */
+  }
+
+  // 필터
+  .vm-filter-product {
+    @include mx.border('top', $color: map.get(color.$layout-border, 'quaternary'));
+    @include common-search-bdb;
+  }
+}
+
+// 연관 검색어
+.vm-related-keyword {
+  @include mx.flex(flex, column);
+  @include common-search-bdb;
+  gap: map.get(var.$unit, 20);
+  padding: var.$mo-section-gap 0;
+
+  &-title {
+    @include typo.typography('b2m', $color: #000);
+    width: 100%;
+    padding: 0 var.$mo-gutter;
+  }
+
+  &-scroll {
+    @include mx.flex;
+    gap: fn.rem(6);
+    padding-bottom: var.$mo-gutter;
+    margin-bottom: var.$mo-gutter * -1;
+    overflow: auto hidden;
+
+    .keyword-link {
+      @include mx.flex(flex, row, flex-start, center);
+      flex-shrink: 0;
+      min-height: fn.rem(30);
+      padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'sm');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
+
+      &:first-of-type {
+        margin-left: var.$mo-gutter;
+      }
+
+      &:last-of-type {
+        margin-right: var.$mo-gutter;
       }
     }
   }

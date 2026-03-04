@@ -1,0 +1,11 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<div class="vm-related-keyword">
+  <strong class="vm-related-keyword-title">연관 검색어</strong>
+  <div class="vm-related-keyword-scroll">
+    <% keywords.forEach(function(keyword) { %>
+      <a href="/search?keyword=<%= encodeURIComponent(keyword) %>" class="keyword-link"><%= keyword %></a>
+    <% }); %>
+  </div>
+</div>

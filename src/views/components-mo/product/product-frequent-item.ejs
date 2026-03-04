@@ -77,7 +77,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         </a>
 
         <!-- prettier-ignore -->
-        <% if (!isSoldout) { %>
+        <!-- < % if (!isSoldout) { %> -->
         <div class="product-price is-normal">
           <% if (showOrigin) { %>
           <div class="price-origin-label">
@@ -91,11 +91,11 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             <p class="price-sale"><span class="sr-only">할인판매가</span><%= comma(d.salePrice) %>원</p>
           </div>
         </div>
-        <% } else { %>
+        <!-- < % } else { %>
         <div class="product-price is-soldout">
           <div class="product-price-alt">일시품절</div>
         </div>
-        <% } %>
+        < % } %> -->
 
         <!-- prettier-ignore -->
         <% if (_showExtra) { %>
@@ -121,7 +121,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       </div>
     </li>
 
-    <% if (!(_showFrequent && isSoldout)) { %>
+    <!-- < % if (!(_showFrequent && isSoldout)) { %> -->
     <li class="frequent-card-layout-right">
       <div class="frequent-card-actions">
         <div class="product-actions">
@@ -132,6 +132,6 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         </div>
       </div>
     </li>
-    <% } %>
+    <!-- < % } %> -->
   </ul>
 </div>

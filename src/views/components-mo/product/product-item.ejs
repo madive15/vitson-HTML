@@ -42,11 +42,11 @@ const isLike = ctx === 'like';
 const isCompare = ctx === 'compare';
 
 /* ── 카드 상태 클래스 ── */
-const stateClass = isGuest ? ' is-guest' : isSoldout ? ' is-soldout' : '';
+const stateClass = (isGuest ? ' is-guest' : '') + (isSoldout ? ' is-soldout' : '');
 
 /* ── 피처 플래그 ── */
 const showCheckbox = (typeof _showCheckbox !== 'undefined') ? _showCheckbox : false;
-const _showLoginBtn = (typeof showLoginBtn !== 'undefined') ? showLoginBtn : false;
+const _showLoginBtn = !isMember;
 
 const _showModel = (typeof d.showModel !== 'undefined') ? d.showModel : true;
 const _showSpec = (typeof d.showSpec !== 'undefined') ? d.showSpec : true;
@@ -95,10 +95,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       <div class="product-info">
         <a href="#!">
           <div class="product-summary">
-            <p class="product-name">
-              <span class="sr-only">상품명</span><% if (isSoldout) { %><span style="color: red">일시품절</span><% }
-              %><%= d.productNm %>
-            </p>
+            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
             <% if (_showSpec) { %>
             <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
             <% } %>
@@ -126,14 +123,14 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         <div class="product-price is-guest">
           <div class="price-guest-text">
             <p class="price-guest-text-title">회원 전용 혜택가</p>
-            <p class="price-guest-text-desc">(1개만 사도 <span class="point-color">무료배송</span>)</p>
+            <!-- <p class="price-guest-text-desc">(1개만 사도 <span class="point-color">무료배송</span>)</p> -->
           </div>
         </div>
         <% } %>
       </div>
 
       <!-- prettier-ignore -->
-      <% if (_showExtra) { %>
+      <!-- < % if (_showExtra) { %> -->
       <div class="product-extra">
         <!-- prettier-ignore -->
         <%
@@ -158,7 +155,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         </div>
         <% } %>
       </div>
-      <% } %>
+      <!-- < % } %> -->
 
       <!-- prettier-ignore -->
       <% if (_showLoginBtn) { %>

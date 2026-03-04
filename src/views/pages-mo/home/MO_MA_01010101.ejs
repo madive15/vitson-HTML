@@ -1,0 +1,1679 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '메인'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-home">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'main'
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-home">
+              <style>
+                [data-ui='banner-tab'] .tab-area .swiper-slide-thumb-active {
+                  color: #fff !important;
+                  background: #e74c3c !important;
+                  border-color: #e74c3c !important;
+                }
+                [data-ui='banner-visual'] .swiper-slide {
+                  aspect-ratio: 313 / 174;
+                  transform: scale(0.86);
+                  transition: transform 0.3s;
+                }
+
+                [data-ui='banner-visual'] .swiper-slide-active {
+                  transform: scale(1.15);
+                  z-index: 1;
+                }
+              </style>
+
+              <!-- S: 비주얼 배너 -->
+              <section
+                data-ui="banner-visual"
+                data-autoplay="3000"
+                data-speed="300"
+                data-space-between="8"
+                style="position: relative; margin-bottom: 40px"
+              >
+                <div class="swiper">
+                  <div class="swiper-wrapper">
+                    <div
+                      class="swiper-slide"
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #e74c3c;
+                      "
+                    >
+                      <a href="#!">비주얼 1</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #3498db;
+                      "
+                    >
+                      <a href="#!">비주얼 2</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #2ecc71;
+                      "
+                    >
+                      <a href="#!">비주얼 3</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 20px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #9b59b6;
+                      "
+                    >
+                      <a href="#!">비주얼 4</a>
+                    </div>
+                  </div>
+                </div>
+                <div style="position: absolute; bottom: 12px; right: 12px; display: flex; gap: 4px; z-index: 10">
+                  <button
+                    type="button"
+                    data-role="prev"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border: none;
+                      border-radius: 50%;
+                      background: rgba(0, 0, 0, 0.4);
+                      color: #fff;
+                      font-size: 14px;
+                      cursor: pointer;
+                    "
+                  >
+                    &#8249;
+                  </button>
+                  <button
+                    type="button"
+                    data-role="next"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border: none;
+                      border-radius: 50%;
+                      background: rgba(0, 0, 0, 0.4);
+                      color: #fff;
+                      font-size: 14px;
+                      cursor: pointer;
+                    "
+                  >
+                    &#8250;
+                  </button>
+                  <button
+                    type="button"
+                    data-role="toggle-play"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border: none;
+                      border-radius: 50%;
+                      background: rgba(0, 0, 0, 0.4);
+                      color: #fff;
+                      font-size: 14px;
+                      cursor: pointer;
+                    "
+                  >
+                    II
+                  </button>
+                </div>
+              </section>
+              <!-- E: 비주얼 배너 -->
+
+              <!-- S: 탭형 배너 (세로 리스트) -->
+              <section data-ui="banner-tab" style="margin-bottom: 40px">
+                <div class="tab-area" style="background: #fff; padding: 12px 0">
+                  <div class="swiper">
+                    <div class="swiper-wrapper">
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        전체
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        사무용품
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        생활용품
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        조명
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        전선/케이블
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        식음료
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="content-area">
+                  <div class="swiper">
+                    <div class="swiper-wrapper">
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fff3f3">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            border-bottom: 1px solid #eee;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #e74c3c;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 A-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >24,900원</span
+                            ></span
+                          ></a
+                        >
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            border-bottom: 1px solid #eee;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #c0392b;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 A-2</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >18,500원</span
+                            ></span
+                          ></a
+                        >
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #e74c3c;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 A-3</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >32,000원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f0f8ff">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            border-bottom: 1px solid #eee;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #3498db;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 B-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >15,000원</span
+                            ></span
+                          ></a
+                        >
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #2980b9;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 B-2</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >22,000원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f0fff0">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #2ecc71;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 C-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >9,900원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fdf5e6">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            border-bottom: 1px solid #eee;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #f39c12;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 D-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >45,000원</span
+                            ></span
+                          ></a
+                        >
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #e67e22;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 D-2</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >38,000원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f5f0ff">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #9b59b6;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 E-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >12,500원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fff5f5">
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            border-bottom: 1px solid #eee;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #e74c3c;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 F-1</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >5,500원</span
+                            ></span
+                          ></a
+                        >
+                        <a
+                          href="#!"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 0;
+                            text-decoration: none;
+                            color: inherit;
+                          "
+                          ><span
+                            style="
+                              width: 80px;
+                              height: 80px;
+                              border-radius: 8px;
+                              flex-shrink: 0;
+                              display: block;
+                              background: #c0392b;
+                            "
+                          ></span
+                          ><span
+                            ><span style="font-size: 13px; font-weight: 600; color: #333; display: block">상품 F-2</span
+                            ><span
+                              style="font-size: 14px; font-weight: 700; color: #e74c3c; margin-top: 4px; display: block"
+                              >8,900원</span
+                            ></span
+                          ></a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- E: 탭형 배너 (세로 리스트) -->
+
+              <!-- S: 탭형 배너 (가로 상품 + 탭 자동 전환) -->
+              <section data-ui="banner-tab" data-type="hscroll" style="margin-bottom: 40px">
+                <div class="tab-area" style="background: #fff; padding: 12px 0">
+                  <div class="swiper">
+                    <div class="swiper-wrapper">
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        400타입
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        제일전기공업
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        식음료/탕비실용품
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        조명기구
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        공구/안전
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        전선/케이블
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        배관자재
+                      </div>
+                      <div
+                        class="swiper-slide"
+                        style="
+                          width: auto;
+                          padding: 8px 16px;
+                          font-size: 13px;
+                          font-weight: 600;
+                          border: 1px solid #ddd;
+                          border-radius: 20px;
+                          text-align: center;
+                          cursor: pointer;
+                          white-space: nowrap;
+                        "
+                      >
+                        측정공구
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="content-area">
+                  <div class="swiper">
+                    <div class="swiper-wrapper">
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fff3f3">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #e74c3c;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >24,900원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #c0392b;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >18,500원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #d35400;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 3</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >32,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #e74c3c;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 4</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >15,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #c0392b;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 5</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >28,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #e74c3c;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >400타입 6</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >9,900원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f0f8ff">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #3498db;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >전기공업 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >45,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #2980b9;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >전기공업 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >38,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #2471a3;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >전기공업 3</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >22,000원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f0fff0">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #2ecc71;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >식음료 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >5,500원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #27ae60;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >식음료 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >8,900원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fdf5e6">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #f39c12;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >조명 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >45,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #e67e22;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >조명 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >38,000원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f5f0ff">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #9b59b6;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >공구 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >12,500원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #8e44ad;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >공구 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >19,800원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fff0f0">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #e74c3c;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >전선 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >15,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #c0392b;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >전선 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >22,000원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #f0f0f0">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #7f8c8d;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >배관 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >35,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #95a5a6;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >배관 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >28,000원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="swiper-slide" style="min-height: 200px; padding: 16px; background: #fffff0">
+                        <div data-role="inner-swiper" style="overflow: hidden">
+                          <div class="swiper">
+                            <div class="swiper-wrapper">
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #f1c40f;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >측정 1</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >89,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #f39c12;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >측정 2</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >65,000원</span
+                                  ></a
+                                >
+                              </div>
+                              <div class="swiper-slide" style="width: 140px">
+                                <a href="#!" style="text-decoration: none; color: inherit"
+                                  ><span
+                                    style="
+                                      width: 140px;
+                                      height: 140px;
+                                      border-radius: 8px;
+                                      display: block;
+                                      background: #f1c40f;
+                                    "
+                                  ></span
+                                  ><span
+                                    style="
+                                      font-size: 12px;
+                                      font-weight: 600;
+                                      color: #333;
+                                      margin-top: 8px;
+                                      display: block;
+                                    "
+                                    >측정 3</span
+                                  ><span
+                                    style="
+                                      font-size: 13px;
+                                      font-weight: 700;
+                                      color: #e74c3c;
+                                      margin-top: 4px;
+                                      display: block;
+                                    "
+                                    >42,000원</span
+                                  ></a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- E: 탭형 배너 (가로 상품 + 탭 자동 전환) -->
+
+              <!-- S: peek형 배너 (1.2) -->
+              <section
+                data-ui="banner-peek"
+                data-slides-per-view="1.2"
+                data-space-between="12"
+                style="padding: 0 0 0 16px; margin-bottom: 40px"
+              >
+                <div class="swiper">
+                  <div class="swiper-wrapper">
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #e67e22;
+                      "
+                    >
+                      <a href="#!">peek 1</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #16a085;
+                      "
+                    >
+                      <a href="#!">peek 2</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #8e44ad;
+                      "
+                    >
+                      <a href="#!">peek 3</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #2c3e50;
+                      "
+                    >
+                      <a href="#!">peek 4</a>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- E: peek형 배너 (1.2) -->
+
+              <!-- S: peek형 배너 (1.4) -->
+              <section
+                data-ui="banner-peek"
+                data-slides-per-view="1.4"
+                data-space-between="16"
+                style="padding: 0 0 0 16px; margin-bottom: 40px"
+              >
+                <div class="swiper">
+                  <div class="swiper-wrapper">
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #1abc9c;
+                      "
+                    >
+                      <a href="#!">peek A</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #e74c3c;
+                      "
+                    >
+                      <a href="#!">peek B</a>
+                    </div>
+                    <div
+                      class="swiper-slide"
+                      style="
+                        height: 180px;
+                        border-radius: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px;
+                        font-weight: 700;
+                        color: #fff;
+                        background: #3498db;
+                      "
+                    >
+                      <a href="#!">peek C</a>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <!-- E: peek형 배너 (1.4) -->
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'home' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>

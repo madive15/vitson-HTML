@@ -12,8 +12,21 @@
     const j = Math.floor(Math.random() * (i + 1));
     [_all[i], _all[j]] = [_all[j], _all[i]];
   }
-  const _products = _all.slice(0, 20);
-  const _recommendProducts = _all.slice(20, 30);
+  const _products = _all.slice(0, 20).map((item, index) => ({
+    ...item,
+    stockYn: index === 1 ? 'N' : item.stockYn
+  }));
+
+  const _recommendProducts = _all.slice(20, 30).map((item, index) => ({
+    ...item,
+    stockYn: index === 2 ? 'N' : item.stockYn
+  }));
+
+  // 추천 상품
+  const _searchRecommendProducts = _all.slice(20, 30).map((item, index) => ({
+    ...item,
+    stockYn: index === 3 ? 'N' : item.stockYn
+  }));
 
   // 초기 카테고리 경로 (퍼블 확인용)
   const _categoryPath = {
@@ -75,7 +88,7 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '카테고리 상품목록'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '검색결과-회원용'}) %>
   <body class="vm-scope">
     <!-- S: Skip Navigation -->
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
@@ -84,38 +97,72 @@
     <!-- S: vm-wrapper -->
     <section class="vm-wrapper">
       <!-- S: vm-wrap -->
-      <div class="vm-wrap wrap-category">
+      <div class="vm-wrap wrap-search">
         <!-- S: vm-content-wrap -->
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'nav-bar', title: _currentCategoryNm 
+            type: 'search-bar', 
+            value: '접착테이프' 
           }) %>
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
+            <!-- 연관 검색어 -->
             <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components-mo/breadcrumb/index.ejs`, { 
-              type: 'list',
-              items: _categoryNames
+            <%- include(`${_src}/views/components-mo/search/related-keyword.ejs`, {
+              keywords: [
+                '피복아크봉',
+                '용접봉',
+                'CR-13',
+                '조선전재',
+                'TIG 용접봉',
+                '스테인리스 용접봉',
+                '알루미늄 용접봉',
+                '고려용접봉',
+                '플럭스 코어드 와이어',
+                '아크 용접기'
+              ]
             }) %>
 
-            <div class="vm-main-content main-content-category">
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
-                type: 'product',
-                items: [
-                  { label: '브랜드', name: 'ck-brand', filters: _filterBrand },
-                  { label: '공통', name: 'ck-common', filters: _filterCommon },
-                  { label: '속성', name: 'ck-attr', filters: _filterAttr }
-                ]
-              }) %>
+            <div class="vm-main-content main-content-search">
+              <div class="vm-search-result">
+                <!-- 추천상품 -->
+                <div class="vm-search-result-recommend recommend-default">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
+                    title:'추천 상품',
+                    showTooltip:false, 
+                    products: _searchRecommendProducts 
+                  }) %>
+                </div>
 
-              <!-- prettier-ignore -->
-              <%- include(`${_src}/views/components-mo/product/index.ejs`, {
-                products: _products,
-                recommendProducts: _recommendProducts
-              }) %>
+                <!-- 함께보면 좋아요 -->
+                <div class="vm-search-result-recommend recommend-like">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
+                    products:_recommendProducts 
+                  }) %>
+                </div>
+
+                <!-- 필터 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/filter/index.ejs`, { 
+                  type: 'product',
+                  items: [
+                    { label: '브랜드', name: 'ck-brand', filters: _filterBrand },
+                    { label: '공통', name: 'ck-common', filters: _filterCommon },
+                    { label: '속성', name: 'ck-attr', filters: _filterAttr }
+                  ]
+                }) %>
+
+                <!-- 상품 리스트 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/product/index.ejs`, {
+                  products: _products,
+                  recommendProducts: [],
+                }) %>
+              </div>
             </div>
           </main>
           <!-- E: vm-main -->
