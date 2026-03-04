@@ -1,0 +1,105 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 기획전 상세 데이터 (실제로는 서버에서 내려줄 영역)
+  const promoDetail = {
+    title: 'Milwaukee Brand Week',
+    image: 'https://vitsonimg.co.kr/images/isvm/upload/exhibition/KakaoTalk_20251028_135552413_03.jpg'
+  };
+
+  // 기획전 내 카테고리 메뉴
+  const promoMenus = [
+    { id: 'all',       label: '전체' },
+    { id: 'combo',     label: '콤보세트' },
+    { id: 'drill',     label: '드릴' },
+    { id: 'impact',    label: '임팩트/화스닝' },
+    { id: 'handtool',  label: '수공구' },
+    { id: 'powertool', label: '전동공구' },
+    { id: 'safety',    label: '안전용품' }
+  ];
+
+  // 퍼블 확인용 mock 데이터
+  var mockData = require(`${_src}/../public/resources/mock/products.json`);
+  var _all = mockData.products.slice();
+  for (var i = _all.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = _all[i]; _all[i] = _all[j]; _all[j] = temp;
+  }
+  var _products = _all.slice(0, 20);
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '산업군 추천상품-비회원용'}) %>
+  <body class="vm-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vm-wrapper">
+      <div class="vm-wrap wrap-promo">
+        <div class="vm-content-wrap">
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'main' }) %>
+
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-promo">
+              <div class="vm-promo-detail detail-industry">
+                <!-- 기획전 비주얼 배너 -->
+                <div class="vm-promo-detail-visual">
+                  <img src="<%= promoDetail.image %>" alt="<%= promoDetail.title %>" class="promo-detail-img" />
+                </div>
+
+                <!-- 카테고리 메뉴 -->
+                <div class="vm-promo-detail-menus" data-scroll-buttons>
+                  <% for (var i = 0; i < promoMenus.length; i++) { %>
+                  <button
+                    type="button"
+                    class="promo-detail-menu-btn<%= i === 0 ? ' is-active' : '' %>"
+                    data-filter-btn
+                    data-category="<%= promoMenus[i].id %>"
+                  >
+                    <span class="text"><%= promoMenus[i].label %></span>
+                  </button>
+                  <% } %>
+                </div>
+
+                <!-- 상품 리스트 -->
+                <div class="vm-promo-detail-products">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/index.ejs`, {
+                    products: _products,
+                    recommendProducts: [],
+                    showToolbar: false,
+                    memberYn: 'N',
+                  }) %>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { type:'tab-bar', currentTab:'mypage' }) %>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // 기획전 상세 — 카테고리 메뉴 활성 전환 (퍼블 산출물용)
+      (function () {
+        var wrap = document.querySelector('.vm-promo-detail-menus');
+        if (!wrap) return;
+
+        wrap.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-filter-btn]');
+          if (!btn) return;
+
+          wrap.querySelectorAll('[data-filter-btn]').forEach(function (el) {
+            el.classList.remove('is-active');
+          });
+          btn.classList.add('is-active');
+        });
+      })();
+    </script>
+  </body>
+</html>

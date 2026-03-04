@@ -1,0 +1,82 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 퍼블 확인용 mock 데이터
+  var mockData = require(`${_src}/../public/resources/mock/products.json`);
+  var _all = mockData.products.slice();
+  for (var i = _all.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = _all[i]; _all[i] = _all[j]; _all[j] = temp;
+  }
+  const _products = _all.slice(0, 20).map((item, index) => ({
+    ...item,
+    stockYn: index === 1 ? 'N' : item.stockYn
+  }));
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '최근본상품-회원용'}) %>
+  <body class="vm-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vm-wrapper">
+      <div class="vm-wrap wrap-history">
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'nav-bar',
+            title: '최근 본 상품'
+          }) %>
+
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-history">
+              <div class="vm-history-detail">
+                <!-- 상품 리스트 - 회원용 -->
+                <div class="vm-history-detail-products">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/index.ejs`, {
+                    products: _products,
+                    recommendProducts: [],
+                    showToolbar: false
+                  }) %>
+                </div>
+
+                <!-- 상품 리스트 - 비회원용 -->
+                <div class="vm-history-detail-products" style="display: none">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/product/index.ejs`, {
+                    products: _products,
+                    recommendProducts: [],
+                    showToolbar: false,
+                    memberYn: 'N',
+                  }) %>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { type:'tab-bar', currentTab:'mypage' }) %>
+      </div>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('member') !== 'N') return;
+
+        var els = document.querySelectorAll('.vm-history-detail-products');
+        els[0].style.display = 'none';
+        els[1].style.display = '';
+      })();
+    </script>
+  </body>
+</html>

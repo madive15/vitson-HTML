@@ -1,6 +1,9 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
 <!-- prettier-ignore -->
+<% var _value = typeof value !== 'undefined' ? value : ''; %>
+
+<!-- prettier-ignore -->
 <% if (type === 'main') { %>
   <%- include('./main.ejs') %>
 <% } else if (type === 'nav-bar') { %>
@@ -12,5 +15,5 @@
 <% } else if (type === 'nav-bar-logo') { %>
   <%- include('./nav-bar-logo.ejs') %>
 <% } else if (type === 'search-bar') { %>
-  <%- include('./search-bar.ejs') %>
+  <%- include('./search-bar.ejs', { value: _value }) %>
 <% } %>

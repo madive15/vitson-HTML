@@ -10,10 +10,10 @@
     const j = Math.floor(Math.random() * (i + 1));
     [_all[i], _all[j]] = [_all[j], _all[i]];
   }
-  const _recommendProducts = _all.slice(20, 30).map(item => ({
+  
+  const _recommendProducts = _all.slice(20, 30).map((item, index) => ({
     ...item,
-    showModel: false,
-    showSpec: false
+    stockYn: index === 2 ? 'N' : item.stockYn
   }));
 %>
 
@@ -141,7 +141,7 @@
                 <div class="vm-search-recommend">
                   <!-- prettier-ignore -->
                   <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
-                    title:'추천상품',
+                    title:'추천 상품',
                     showTooltip:false, 
                     products:_recommendProducts 
                   }) %>

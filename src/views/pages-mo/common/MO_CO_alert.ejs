@@ -39,6 +39,15 @@
                 >
                   <span class="text">공통 알림 모달 (버튼 한개만)</span>
                 </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="terms"
+                  onclick="VmKendoWindow.open('modal3')"
+                >
+                  <span class="text">공통 바텀시트</span>
+                </button>
               </section>
             </div>
           </main>
@@ -56,7 +65,7 @@
         <% const modal1 = { 
           id: 'modal1', 
           variant: 'center',
-          className: 'modal-center',
+          className: 'modal-center modal-center-common',
           title: '비츠온엠알오',                  
           contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_alert.ejs`,
           buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, { text: '확인', variant: 'primary', action: 'close' }] 
@@ -68,13 +77,29 @@
         <% const modal2 = { 
           id: 'modal2', 
           variant: 'center',
-          className: 'modal-center',
+          className: 'modal-center modal-center-common',
           title: '비츠온엠알오',                  
           contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_alert.ejs`,
           buttons: [{ text: '확인', variant: 'primary', action: 'close' }] 
           }; 
         %> 
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+
+        <!-- prettier-ignore -->
+        <% const modal3 = { 
+          id: 'modal3', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet bottom-sheet-common',
+          title: '비츠온엠알오',                  
+          contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_bottom.ejs`,
+          imageSrc: 'https://vitsonmro.com/resources/img/mro/mobile/vitsonmro_app_ban.jpg',
+          buttons: [
+            { text: '오늘 그만 보기', variant: 'secondary', action: 'close' },
+            { text: '닫기', variant: 'primary', action: 'close' },
+          ] 
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
 
         <!-- E: 팝업 영역 -->
       </div>

@@ -325,6 +325,30 @@
             &-extra {
               gap: map.get(var.$unit, 2);
             }
+
+            &-price.is-guest {
+              .price-login-button {
+                gap: 0;
+                padding: 0;
+
+                .text {
+                  font-size: fn.rem(11);
+                  letter-spacing: -0.02em;
+                }
+              }
+            }
+
+            &-body {
+              &:has(.product-price.is-guest) {
+                .product-extra {
+                  order: 2;
+                }
+
+                .product-price.is-guest:has(.price-login-button) {
+                  margin-top: fn.rem(6) * -1;
+                }
+              }
+            }
           }
         }
       }
