@@ -139,7 +139,7 @@ module.exports = (dirPath, scssOptions) => ({
           name: 'base-mo',
           type: 'css/mini-extract',
           enforce: true,
-          priority: 45
+          priority: 39
         },
         layoutMoCss: {
           test: /[\\/]scss[\\/](layout-mo|components-mo)[\\/]/,
@@ -147,7 +147,7 @@ module.exports = (dirPath, scssOptions) => ({
           type: 'css/mini-extract',
           chunks: 'all',
           enforce: true,
-          priority: 35
+          priority: 29
         },
         pagesMoCss: {
           test: /[\\/]scss[\\/]pages-mo[\\/]/,
@@ -155,7 +155,7 @@ module.exports = (dirPath, scssOptions) => ({
           type: 'css/mini-extract',
           chunks: 'all',
           enforce: true,
-          priority: 25
+          priority: 19
         }
       }
     }
