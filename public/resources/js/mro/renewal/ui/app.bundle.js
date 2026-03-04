@@ -8928,6 +8928,14 @@
       var today = new Date();
       opts.min = new Date(today.getFullYear(), today.getMonth(), 1);
     }
+
+    // appendTo 옵션 → popup.appendTo로 매핑
+    var appendTo = opts.appendTo || null;
+    delete opts.appendTo;
+    if (appendTo) {
+      opts.popup = opts.popup || {};
+      opts.popup.appendTo = window.jQuery(appendTo);
+    }
     $el.kendoDatePicker(opts);
     var inst = $el.data('kendoDatePicker');
     if (inst) {
