@@ -2988,7 +2988,892 @@
 
 /***/ }),
 
-/***/ 4262:
+/***/ 4305:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/overflow-menu.js
+ * @description 오버플로 메뉴 (더보기 등)
+ * @scope [data-vm-overflow-menu]
+ * @state .is-open — 메뉴 열림
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiOverflowMenu';
+  var ROOT = '[data-vm-overflow-menu]';
+  var TRIGGER = '[data-vm-overflow-trigger]';
+  var LIST = '[data-vm-overflow-list]';
+  var CLS_OPEN = 'is-open';
+  var _bound = false;
+  function close($root) {
+    $root.removeClass(CLS_OPEN);
+    $root.find(TRIGGER).attr('aria-expanded', 'false');
+  }
+  function closeAll() {
+    $(ROOT + '.' + CLS_OPEN).each(function () {
+      close($(this));
+    });
+  }
+  function open($root) {
+    closeAll();
+    $root.addClass(CLS_OPEN);
+    $root.find(TRIGGER).attr('aria-expanded', 'true');
+  }
+  function toggle($root) {
+    if ($root.hasClass(CLS_OPEN)) {
+      close($root);
+    } else {
+      open($root);
+    }
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+    var $doc = $(document);
+
+    // 트리거 클릭
+    $doc.on('click' + NS, TRIGGER, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle($(this).closest(ROOT));
+    });
+
+    // 메뉴 항목 클릭 → 닫기
+    $doc.on('click' + NS, LIST + ' a, ' + LIST + ' button', function () {
+      close($(this).closest(ROOT));
+    });
+
+    // 외부 클릭 → 닫기
+    $doc.on('mousedown' + NS + ' touchstart' + NS, function (e) {
+      if (!$(e.target).closest(ROOT).length) {
+        closeAll();
+      }
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    closeAll();
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.overflowMenu = {
+    init: init,
+    destroy: destroy,
+    close: close,
+    closeAll: closeAll
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 4387:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/kendo/kendo-window.js
+ * @description 모바일 Kendo Window 초기화 모듈
+ * @variant 'bottomsheet' — 하단에서 슬라이드 업 (CSS 애니메이션)
+ * @variant 'slide-right' — 오른쪽에서 슬라이드 인 (풀스크린)
+ * @variant 'slide-left'  — 왼쪽에서 슬라이드 인 (풀스크린)
+ *
+ * VmKendoWindow.open('myWindow');
+ * VmKendoWindow.close('myWindow');
+ * VmKendoWindow.refresh('myWindow');
+ * VmKendoWindow.initAll();
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  var NS = '.uiKendoWindow';
+  var BODY_LOCK_CLASS = 'is-kendo-window-open';
+  var DEBOUNCE_DELAY = 80;
+  var ANIMATION_TIMEOUT = 500;
+  var scrollY = 0;
+  var openedWindows = [];
+  var contentObservers = {};
+  var debounceTimers = {};
+  function lockBody() {
+    if ($('body').hasClass(BODY_LOCK_CLASS)) return;
+    scrollY = window.pageYOffset || 0;
+    $('body').addClass(BODY_LOCK_CLASS).css({
+      position: 'fixed',
+      top: -scrollY + 'px',
+      left: 0,
+      right: 0,
+      overflow: 'hidden'
+    });
+  }
+  function unlockBody() {
+    if (!$('body').hasClass(BODY_LOCK_CLASS)) return;
+    $('body').removeClass(BODY_LOCK_CLASS).css({
+      position: '',
+      top: '',
+      left: '',
+      right: '',
+      overflow: ''
+    });
+    window.scrollTo(0, scrollY);
+  }
+  function checkScroll(id) {
+    var $el = $('#' + id);
+    $el.find('[data-scroll-check]').each(function () {
+      $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
+    });
+  }
+
+  // collapse 높이 모드 재판별
+  function refreshCollapse(id) {
+    if (window.UI && window.UI.collapse && window.UI.collapse.refresh) {
+      window.UI.collapse.refresh('#' + id);
+    }
+  }
+  function refresh(id) {
+    clearTimeout(debounceTimers[id]);
+    debounceTimers[id] = setTimeout(function () {
+      var $el = $('#' + id);
+      var inst = $el.data('kendoWindow');
+      if (!inst) return;
+      checkScroll(id);
+      var $kw = $el.closest('.k-window');
+      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright') && !$kw.hasClass('is-slideleft')) {
+        inst.center();
+      }
+    }, DEBOUNCE_DELAY);
+  }
+  function observeContent(id) {
+    if (!window.MutationObserver) return;
+    if (contentObservers[id]) return;
+    var $el = $('#' + id);
+    var $content = $el.find('.vm-modal-content');
+    if (!$content.length) return;
+    var obs = new MutationObserver(function () {
+      refresh(id);
+    });
+    obs.observe($content[0], {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'hidden', 'style']
+    });
+    contentObservers[id] = obs;
+  }
+  function disconnectContent(id) {
+    if (contentObservers[id]) {
+      contentObservers[id].disconnect();
+      delete contentObservers[id];
+    }
+    clearTimeout(debounceTimers[id]);
+    delete debounceTimers[id];
+  }
+
+  // 슬라이드 닫힘 애니메이션 + 안전장치
+  function closeWithAnimation($kw, inst) {
+    $kw.addClass('is-closing');
+    var closed = false;
+    function done() {
+      if (closed) return;
+      closed = true;
+      $kw.removeClass('is-closing');
+      inst.close();
+    }
+    $kw.one('animationend', done);
+    setTimeout(done, ANIMATION_TIMEOUT);
+  }
+  function initOne(el) {
+    var $el = $(el);
+    if ($el.data('kendoWindow')) return;
+    var id = $el.attr('id');
+    var variant = $el.attr('data-variant');
+    var isBottom = variant === 'bottomsheet';
+    var isSlide = variant === 'slide-right' || variant === 'slide-left';
+    var isSlideLeft = variant === 'slide-left';
+    var noAnimation = isBottom || isSlide;
+    var opts = {
+      title: false,
+      visible: false,
+      modal: true,
+      pinned: true,
+      draggable: false,
+      resizable: false,
+      actions: [],
+      animation: noAnimation ? false : undefined,
+      open: function () {
+        console.log('kendo open id:', id);
+        lockBody();
+        if (openedWindows.indexOf(id) === -1) {
+          openedWindows.push(id);
+        }
+        observeContent(id);
+        console.log('trigger kendo:open with:', id, typeof id);
+        $(document).trigger('kendo:open', [id]);
+      },
+      close: function () {
+        disconnectContent(id);
+        var idx = openedWindows.indexOf(id);
+        if (idx > -1) openedWindows.splice(idx, 1);
+        if (openedWindows.length === 0) {
+          unlockBody();
+        }
+
+        // 닫힘 이벤트 발행
+        $(document).trigger('kendo:close', [id]);
+      }
+    };
+    $el.kendoWindow(opts);
+    var $kw = $el.closest('.k-window');
+    if (isBottom) {
+      $kw.addClass('is-bottomsheet');
+    }
+    if (isSlide) {
+      $kw.addClass(isSlideLeft ? 'is-slideleft' : 'is-slideright');
+    }
+  }
+  function initAll(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find('[data-ui="kendo-window"]').each(function () {
+      initOne(this);
+    });
+  }
+  function open(id) {
+    var $el = $('#' + id);
+    if (!$el.length) return;
+    var inst = $el.data('kendoWindow');
+    if (!inst) {
+      initOne($el[0]);
+      inst = $el.data('kendoWindow');
+    }
+    if (inst) {
+      var $kw = $el.closest('.k-window');
+      var isBottom = $kw.hasClass('is-bottomsheet');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
+      if (!isBottom && !isSlide) inst.center();
+
+      // 슬라이드 팝업은 마지막 하나만 유지
+      if (isSlide) {
+        openedWindows.slice().forEach(function (winId) {
+          if (winId === id) return;
+          var $w = $('#' + winId).closest('.k-window');
+          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
+            close(winId);
+          }
+        });
+      }
+      inst.open();
+
+      // 바텀시트: 하단 고정 + 슬라이드 업
+      if (isBottom) {
+        $kw.css({
+          top: 'auto',
+          left: '0',
+          bottom: '0',
+          width: '100%',
+          position: 'fixed'
+        });
+        $kw.addClass('is-opening');
+        $kw.one('animationend', function () {
+          $kw.removeClass('is-opening');
+          refreshCollapse(id);
+        });
+      }
+
+      // 슬라이드: 풀스크린
+      if (isSlide) {
+        $kw.css({
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          width: '100%',
+          height: '100%',
+          position: 'fixed'
+        });
+        $kw.addClass('is-opening');
+        $kw.one('animationend', function () {
+          $kw.removeClass('is-opening');
+          refreshCollapse(id);
+        });
+      }
+
+      // 렌더 후 스크롤 체크 (다음 프레임)
+      setTimeout(function () {
+        checkScroll(id);
+      }, 0);
+    }
+  }
+  function close(id) {
+    var $el = $('#' + id);
+    var inst = $el.data('kendoWindow');
+    if (inst) {
+      var $kw = $el.closest('.k-window');
+      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
+      $el.find('.vm-modal-content').removeClass('has-scroll');
+
+      // 슬라이드만 애니메이션 후 close
+      if (isSlide) {
+        closeWithAnimation($kw, inst);
+        return;
+      }
+      inst.close();
+    }
+  }
+
+  // 딤 클릭 시 닫기
+  $(document).on('click' + NS, '.k-overlay', function () {
+    var ids = openedWindows.slice();
+    ids.forEach(function (winId) {
+      close(winId);
+    });
+  });
+  window.VmKendoWindow = {
+    initAll: initAll,
+    open: open,
+    close: close,
+    refresh: refresh
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 4714:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/bottom-tab-bar.js
+ * @description 하단 탭바 액션 위임 + 카테고리 풀팝업 제어
+ * @scope .bottom-tab-bar
+ *
+ * @mapping
+ *  [data-action]  → 페이지 이동이 아닌 액션 트리거 버튼
+ *
+ * @events
+ *  tabBar:{action명} (document) — 액션 버튼 클릭 시 발행
+ *
+ * @note
+ *  - 카테고리 풀팝업 열기/닫기(토글) 직접 제어
+ *  - 풀팝업 내부 탭 전환 시 팝업 헤더 타이틀 동기화
+ *  - 카테고리 선택 시 해당 카테고리 페이지로 이동
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiBottomTabBar';
+  var SCOPE = '.bottom-tab-bar';
+  var FULL_POPUP = '.category-full-popup';
+  var POPUP_ID = 'categoryFullPopup';
+  var CAT_SCOPE = '[data-category-sheet]';
+  var OPEN_DELAY = 300;
+  var SEL_BREADCRUMB = '[data-ui="breadcrumb"]';
+
+  // 풀팝업 내부 카테고리 상태
+  var _state = {
+    path: {
+      depth1Id: '',
+      depth2Id: '',
+      depth3Id: ''
+    },
+    browseD1: ''
+  };
+  var _scopeBound = false;
+  var _bound = false;
+
+  // 풀팝업 열림 여부
+  function isPopupOpen() {
+    var $popup = $(FULL_POPUP);
+    return $popup.length && $popup.closest('.k-window').is(':visible');
+  }
+
+  // 풀팝업 안의 카테고리 스코프
+  function $catScope() {
+    return $('#' + POPUP_ID).find(CAT_SCOPE);
+  }
+
+  // 카테고리 선택 확정 → 페이지 이동
+  function onCommit(path) {
+    // 브레드크럼 있으면 바텀시트와 동일하게 처리 (브레드크럼 갱신 + 팝업 닫기)
+    if ($(SEL_BREADCRUMB).length) {
+      if (window.CategorySheet && window.CategorySheet.commitFromPopup) {
+        window.CategorySheet.commitFromPopup(path);
+      }
+      window.VmKendoWindow.close(POPUP_ID);
+      return;
+    }
+
+    // 브레드크럼 없으면 페이지 이동
+    var lastDepth = path.depth3Id || path.depth2Id || path.depth1Id;
+    if (lastDepth) {
+      window.location.href = '/category/' + lastDepth;
+    }
+  }
+
+  // 풀팝업 카테고리 렌더 + 이벤트 바인딩
+  function openCategoryPopup() {
+    if (!window.VmKendoWindow || !window.CategoryRenderer) return;
+    var R = window.CategoryRenderer;
+
+    // 바텀시트 경로 동기화
+    if (window.CategorySheet) {
+      var sheetPath = window.CategorySheet.getPath();
+      if (sheetPath.depth1Id) {
+        _state.path = sheetPath;
+        _state.browseD1 = sheetPath.depth1Id;
+      }
+    }
+
+    // 팝업 먼저 열기 — 즉시 반응
+    window.VmKendoWindow.open(POPUP_ID);
+
+    // 콘텐츠는 팝업 안에서 비동기 렌더
+    R.loadTree(function () {
+      var $scope = $catScope();
+      if (!$scope.length) return;
+      if (!_scopeBound) {
+        R.bindScopeEvents($scope, _state, onCommit);
+        _scopeBound = true;
+      }
+      var tree = R.getTree();
+      if (!_state.path.depth1Id && tree.length) {
+        _state.browseD1 = tree[0].categoryCode;
+      } else {
+        _state.browseD1 = _state.path.depth1Id;
+      }
+      R.renderDepth1($scope, _state.path, _state.browseD1);
+      if (!_state.path.depth1Id && tree.length) {
+        $scope.find('[data-depth1-item]').first().addClass('is-current');
+        R.renderSub($scope, _state.browseD1, _state.path);
+      }
+      if (window.UI && window.UI.tab) {
+        var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
+        if ($tabScope.length) {
+          var $popup = $('#' + POPUP_ID);
+          var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
+          $popup.removeAttr('data-request-tab');
+          window.UI.tab.activate($tabScope, requestTab);
+        }
+      }
+      setTimeout(function () {
+        if (_state.path.depth1Id) {
+          R.scrollToActive($scope);
+        } else {
+          $scope.find('[data-depth1-panel]').scrollTop(0);
+          $scope.find('[data-sub-panel]').scrollTop(0);
+        }
+      }, OPEN_DELAY);
+    });
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // GNB 브랜드 → 브랜드탭으로 카테고리 팝업 열기
+    $(document).on('click' + NS, '[data-action="open-brand-sheet"]', function (e) {
+      e.preventDefault();
+      if (!window.VmKendoWindow) return;
+      if (isPopupOpen()) {
+        window.VmKendoWindow.close(POPUP_ID);
+        return;
+      }
+      $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
+      openCategoryPopup();
+    });
+
+    // 액션 버튼 클릭 → 풀팝업 열기/토글
+    $(document).on('click' + NS, SCOPE + ' [data-action]', function (e) {
+      e.preventDefault();
+      var action = $(this).data('action');
+      if (!action) return;
+      // 카테고리 액션
+      if (action === 'open-category-sheet') {
+        if (!window.VmKendoWindow) return;
+        // 바텀시트 열려있으면 닫고 풀팝업 열기
+        var $sheet = $('#categorySheet');
+        var sheetInst = $sheet.data('kendoWindow');
+        if (sheetInst && $sheet.is(':visible')) {
+          window.VmKendoWindow.close('categorySheet');
+        }
+        // 풀팝업 토글
+        if (isPopupOpen()) {
+          window.VmKendoWindow.close(POPUP_ID);
+          return;
+        }
+        openCategoryPopup();
+        return;
+      }
+
+      // 그 외 액션은 이벤트 발행
+      $(document).trigger('tabBar:' + action);
+    });
+
+    // 풀팝업 내부 탭 전환 → 팝업 타이틀 갱신
+    $(document).on('tab:change' + NS, FULL_POPUP + ' [data-tab-scope]', function (e, target, $btn) {
+      var title = $btn.find('.text').text();
+      $(this).closest(FULL_POPUP).find('.vm-modal-title').text(title);
+    });
+
+    // 바텀시트 카테고리 선택 → 풀팝업 상태 동기화
+    $(document).on('category:change' + NS, function (e, data) {
+      if (data && data.path) {
+        _state.path = $.extend({}, data.path);
+        _state.browseD1 = data.path.depth1Id;
+      }
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    var $scope = $catScope();
+    if ($scope.length && window.CategoryRenderer) {
+      window.CategoryRenderer.unbindScopeEvents($scope);
+    }
+    _state = {
+      path: {
+        depth1Id: '',
+        depth2Id: '',
+        depth3Id: ''
+      },
+      browseD1: ''
+    };
+    _scopeBound = false;
+    _bound = false;
+  }
+  window.UI.bottomTabBar = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5332:
+/***/ (function() {
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiTab';
+  var SCOPE = '[data-tab-scope]';
+  var BTN = '[data-tab-btn]';
+  var PANEL = '[data-tab-panel]';
+  var ACTIVE = 'is-active';
+  var PEEK = 40;
+  var _bound = false;
+
+  // 활성 탭 버튼이 보이도록 스크롤 보정
+  function scrollToBtn($scope, $btn) {
+    var $tabList = $scope.find('[role="tablist"]');
+    if (!$tabList.length || !$tabList[0].scrollWidth) return;
+    var wrap = $tabList[0];
+    var btn = $btn[0];
+    var $btns = $tabList.find(BTN);
+    var btnLeft = btn.offsetLeft;
+    var btnRight = btnLeft + btn.offsetWidth;
+    var wrapLeft = wrap.scrollLeft;
+    var wrapRight = wrapLeft + wrap.offsetWidth;
+    if (btn === $btns.last()[0]) {
+      $tabList.animate({
+        scrollLeft: wrap.scrollWidth
+      }, 200);
+    } else if (btn === $btns.first()[0]) {
+      $tabList.animate({
+        scrollLeft: 0
+      }, 200);
+    } else if (btnLeft < wrapLeft) {
+      $tabList.animate({
+        scrollLeft: btnLeft - PEEK
+      }, 200);
+    } else if (btnRight > wrapRight) {
+      $tabList.animate({
+        scrollLeft: btnRight - wrap.offsetWidth + PEEK
+      }, 200);
+    }
+  }
+
+  // 탭 전환
+  function activate($scope, target) {
+    // 모든 버튼 비활성
+    $scope.find(BTN).each(function () {
+      var $btn = $(this);
+      $btn.removeClass(ACTIVE);
+      $btn.attr('aria-selected', 'false');
+      $btn.attr('tabindex', '-1');
+    });
+
+    // 모든 패널 비활성
+    $scope.find(PANEL).each(function () {
+      $(this).removeClass(ACTIVE).attr('hidden', '');
+    });
+
+    // 대상 버튼 활성
+    var $activeBtn = $scope.find(BTN + '[data-tab-target="' + target + '"]');
+    $activeBtn.addClass(ACTIVE);
+    $activeBtn.attr('aria-selected', 'true');
+    $activeBtn.attr('tabindex', '0');
+
+    // 대상 패널 활성
+    var $activePanel = $scope.find(PANEL + '[data-tab-panel="' + target + '"]');
+    $activePanel.addClass(ACTIVE).removeAttr('hidden');
+
+    // 스크롤 보정
+    scrollToBtn($scope, $activeBtn);
+
+    // 탭 전환 이벤트 발행
+    $scope.trigger('tab:change', [target, $activeBtn]);
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 탭 클릭
+    $(document).on('click' + NS, BTN, function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var target = $btn.data('tabTarget');
+      if (!target) return;
+      activate($scope, target);
+    });
+
+    // 키보드 좌우 화살표 이동
+    $(document).on('keydown' + NS, BTN, function (e) {
+      var key = e.keyCode;
+      if (key !== 37 && key !== 39) return;
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var $tabs = $scope.find(BTN);
+      var idx = $tabs.index($btn);
+      var len = $tabs.length;
+
+      // 좌: 이전, 우: 다음 (순환)
+      var nextIdx = key === 37 ? (idx - 1 + len) % len : (idx + 1) % len;
+      var $next = $tabs.eq(nextIdx);
+      $next.focus();
+      $next.trigger('click');
+    });
+  }
+  function init() {
+    bind();
+
+    // URL 파라미터 기반 탭 딥링크 (?tab=tab2)
+    var urlTab = new URLSearchParams(window.location.search).get('tab');
+
+    // 초기 활성 탭 설정
+    $(SCOPE).each(function () {
+      var $scope = $(this);
+      var $activeBtn;
+
+      // URL 파라미터 우선
+      if (urlTab) {
+        $activeBtn = $scope.find(BTN + '[data-tab-target="' + urlTab + '"]');
+      }
+
+      // URL 매칭 없으면 is-active 기준
+      if (!$activeBtn || !$activeBtn.length) {
+        $activeBtn = $scope.find(BTN + '.' + ACTIVE);
+      }
+
+      // 그것도 없으면 첫 번째 자동 활성
+      if (!$activeBtn.length) {
+        $activeBtn = $scope.find(BTN).first();
+      }
+      var target = $activeBtn.data('tabTarget');
+      if (target) activate($scope, target);
+    });
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.tab = {
+    init: init,
+    destroy: destroy,
+    activate: activate
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5365:
+/***/ (function() {
+
+/**
+ * @file voice-blob.js
+ * @description AI 음성인식 Lottie 애니메이션 제어
+ * @scope [data-voice-blob-anim]
+ * @option {string} data-voice-blob-anim — Lottie JSON 파일 경로 (URL)
+ * @state instance — dotlottie-wc 플레이어 인스턴스
+ */
+
+// voice-blob.json import 제거 — URL 직접 참조로 전환
+(function ($) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var instance = null;
+  var CDN_URL = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js';
+  function init() {
+    var $container = $('[data-voice-blob-anim]');
+    if (!$container.length || instance) return;
+    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
+
+    // data-voice-blob-anim 속성값으로 JSON 경로 주입 (마크업에서 관리)
+    var animSrc = $container.data('voice-blob-anim');
+    if (!animSrc) return;
+    var script = document.createElement('script');
+    script.type = 'module';
+    script.src = CDN_URL;
+    script.onload = function () {
+      customElements.whenDefined('dotlottie-wc').then(function () {
+        if (instance) return;
+        var player = document.createElement('dotlottie-wc');
+
+        // data prop 대신 src 속성 사용 — 서버 환경에서 안정적
+        player.setAttribute('src', animSrc);
+        player.setAttribute('loop', '');
+        player.setAttribute('autoplay', '');
+        player.useFrameInterpolation = false;
+        player.style.width = '100%';
+        player.style.height = '100%';
+        $container[0].innerHTML = '';
+        $container[0].appendChild(player);
+        instance = player;
+      });
+    };
+    document.head.appendChild(script);
+  }
+  function destroy() {
+    if (!instance) return;
+    instance.remove();
+    instance = null;
+  }
+  window.UI.voiceBlob = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery);
+
+/***/ }),
+
+/***/ 5487:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/product/product-view-toggle.js
+ * @description 상품 목록 뷰 전환 (thumb ↔ list)
+ * @scope [data-ui="product-list"]
+ * @a11y aria-pressed(true → 리스트형 활성), aria-label 동적 전환
+ * @events click → [data-ui="product-view-toggle"], productViewChange (발행)
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiProductViewToggle';
+  var SCOPE = '[data-ui="product-list"]';
+  var BTN = '[data-ui="product-view-toggle"]';
+  var ITEMS = '[data-ui="product-items"]';
+  var VIEW = {
+    THUMB: 'view-thumb',
+    LIST: 'view-list'
+  };
+  var LABEL = {
+    THUMB: '썸네일형 전환',
+    LIST: '리스트형 전환'
+  };
+  var _bound = false;
+  function bindEvents() {
+    if (_bound) return;
+    _bound = true;
+    $(document).on('click' + NS, BTN, function () {
+      var $btn = $(this);
+      var $list = $btn.closest(SCOPE).find(ITEMS);
+      var toList = $btn.hasClass(VIEW.THUMB);
+      $btn.toggleClass(VIEW.THUMB, !toList).toggleClass(VIEW.LIST, toList).attr({
+        'aria-label': toList ? LABEL.THUMB : LABEL.LIST,
+        'aria-pressed': String(toList)
+      });
+      $list.toggleClass(VIEW.THUMB, !toList).toggleClass(VIEW.LIST, toList);
+
+      // 뷰 변경 알림 (배너 위치 재계산 등)
+      $(document).trigger('productViewChange');
+    });
+  }
+  window.UI.productViewToggle = {
+    init: function () {
+      bindEvents();
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5723:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/sticky-observer.js
+ * @description data-ui="sticky" 요소의 스티키 상태 감지 → is-sticky 클래스 토글
+ * @scope [data-ui="sticky"]
+ * @state is-sticky: 요소가 스티키 상태일 때 추가
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var STICKY = '[data-ui="sticky"]';
+  var ACTIVE = 'is-sticky';
+
+  // 개별 요소에 sentinel 삽입 + observer 등록
+  function observe($el) {
+    if ($el.data('sticky-bound')) return;
+    $el.data('sticky-bound', true);
+    var sentinel = $('<div>').css({
+      height: 0,
+      margin: 0,
+      padding: 0
+    });
+    sentinel.insertBefore($el);
+
+    // sticky top 값만큼 rootMargin 보정
+    var topOffset = parseInt($el.css('top'), 10) || 0;
+    var observer = new IntersectionObserver(function (entries) {
+      $el.toggleClass(ACTIVE, !entries[0].isIntersecting);
+    }, {
+      threshold: 0,
+      rootMargin: '-' + topOffset + 'px 0px 0px 0px'
+    });
+    observer.observe(sentinel[0]);
+  }
+  window.UI.stickyObserver = {
+    init: function () {
+      $(STICKY).each(function () {
+        observe($(this));
+      });
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 5841:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3057,72 +3942,8 @@ var auth = __webpack_require__(689);
 var survey_detail = __webpack_require__(1151);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/footer.js
 var footer = __webpack_require__(6840);
-;// ./src/assets/scripts-mo/ui/common/voice-blob.json
-var voice_blob_namespaceObject = /*#__PURE__*/JSON.parse('{"v":"4.8.0","meta":{"g":"custom","a":"","k":"","d":"","tc":""},"fr":60,"ip":0,"op":1958,"w":1000,"h":1000,"nm":"voice-blob","ddd":0,"assets":[{"id":"mic_all","layers":[{"ty":4,"nm":"mic-svg","sr":1,"ks":{"o":{"a":0,"k":85,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[40,40,0],"ix":2},"a":{"a":0,"k":[27,27,0],"ix":1},"s":{"a":0,"k":[80,80,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[-0.9261999999999997,0],[0,-0.9263000000000012],[-2.1944000000000017,-2.1123999999999974],[-3.133800000000001,0],[-2.197099999999999,2.114699999999999],[-0.00019999999999953388,2.958400000000001],[-0.9262999999999977,0],[0,-0.9263000000000012],[2.8370999999999995,-2.730799999999995],[3.3688000000000002,-0.36410000000000053],[0,0],[0,0],[0,-0.9262000000000015],[0.9263000000000048,0],[0,0],[0,0.9263000000000048],[-0.9263000000000012,0],[0,0],[0,0],[2.4344,2.3430999999999997],[0.00020000000000131024,3.8904999999999994]],"o":[[0,-0.9263000000000012],[0.9262999999999995,0],[0.00019999999999953388,2.958400000000001],[2.197099999999999,2.114699999999999],[3.133800000000001,0],[2.1944000000000017,-2.1123999999999974],[0,-0.9263000000000012],[0.9262000000000015,0],[-0.00009999999999621423,3.8904999999999994],[-2.4344000000000037,2.3430999999999997],[0,0],[0,0],[0.9263000000000048,0],[0,0.9263000000000048],[0,0],[-0.9263000000000012,0],[0,-0.9262000000000015],[0,0],[0,0],[-3.3688000000000002,-0.36410000000000053],[-2.8370999999999995,-2.730799999999995],[0,0]],"v":[[11.7397,24.9892],[13.4168,23.3121],[15.0939,24.9892],[18.5087,32.9111],[26.8335,36.2243],[35.1583,32.9111],[38.5731,24.9892],[40.2502,23.3121],[41.9272,24.9892],[37.484,35.3285],[28.5106,39.4851],[28.5106,43.6041],[34.4999,43.6041],[36.177,45.2812],[34.4999,46.9583],[19.1671,46.9583],[17.49,45.2812],[19.1671,43.6041],[25.1564,43.6041],[25.1564,39.4851],[16.183,35.3285],[11.7397,24.9892]],"c":true},"ix":2},"nm":"Path 1"},{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[0.7570999999999977,0.7286000000000001],[1.1004000000000005,0],[0.7592999999999996,-0.7309000000000001],[0.00009999999999976694,-1.0016999999999996],[0,0],[-0.7570000000000014,-0.7286000000000001],[-1.1004000000000005,0],[-0.7593000000000032,0.7307999999999986],[-0.00009999999999976694,1.0015999999999998],[0,0]],"o":[[0,-1.0016999999999996],[-0.7593000000000032,-0.7309000000000001],[-1.1005000000000003,0],[-0.7571000000000012,0.7286000000000001],[0,0],[0.00019999999999953388,1.0015999999999998],[0.7592999999999996,0.7307999999999986],[1.1004000000000005,0],[0.7569999999999979,-0.7286000000000001],[0,0],[0,0]],"v":[[30.9066,13.9194],[29.7356,11.2155],[26.8335,10.0625],[23.9314,11.2155],[22.7603,13.9194],[22.7603,24.9892],[23.9314,27.6931],[26.8335,28.8461],[29.7356,27.6931],[30.9066,24.9892],[30.9066,13.9194]],"c":true},"ix":2},"nm":"Path 2"},{"ty":"sh","d":1,"ks":{"a":0,"k":{"i":[[0,0],[1.3993000000000038,-1.346899999999998],[1.9495000000000005,0],[1.3973000000000013,1.3449000000000026],[0.0002000000000030866,1.933399999999999],[0,0],[-1.3993000000000002,1.3469799999999985],[-1.9495000000000005,0],[-1.3972999999999978,-1.3449400000000011],[-0.00010000000000331966,-1.933399999999999],[0,0]],"o":[[-0.0002000000000066393,1.933399999999999],[-1.3972999999999978,1.3449000000000026],[-1.9495000000000005,0],[-1.3993000000000002,-1.346899999999998],[0,0],[0.00010000000000331966,-1.933399999999999],[1.3973000000000013,-1.3449400000000011],[1.9495000000000005,0],[1.3993000000000038,1.3469799999999985],[0,0],[0,0]],"v":[[34.2608,24.9892],[32.0629,30.1105],[26.8335,32.2003],[21.6041,30.1105],[19.4062,24.9892],[19.4062,13.9194],[21.6041,8.79812],[26.8335,6.70831],[32.0629,8.79812],[34.2608,13.9194],[34.2608,24.9892]],"c":true},"ix":2},"nm":"Path 3"},{"ty":"fl","c":{"a":0,"k":[1,1,1,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"bm":0,"nm":"Fill"},{"ty":"tr","p":{"a":0,"k":[0,0],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7}}],"nm":"mic-group","bm":0}],"ip":0,"op":1958,"st":0,"bm":0}],"w":80,"h":80,"nm":"mic-all","fr":25}],"layers":[{"ddd":0,"ind":50,"ty":0,"nm":"mic-icon","sr":1,"refId":"mic_all","w":80,"h":80,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[40,40,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[492,492,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[354,354,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[492,492,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[492,492,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":1,"ty":4,"nm":"cyan","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,0,0.898,1,1,0,0.898,1,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-381,-242],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-85.638,-294.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[283.245,-192.931],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[254.979,-122.575],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[246.063,109.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[54.886,324.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-265.166,223.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-381,-242]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[257,56],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[227.919,282.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-380.881,339.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-405.198,-155.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[-64.749,-440.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[276.814,-350.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[257,56]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":2,"ty":4,"nm":"pink","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,1,0,0.494,1,1,0,0.494,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[307,86],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[277.919,312.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-330.881,369.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-355.198,-125.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[-14.748999999999995,-410.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[326.814,-320.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[307,86]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-431,-272],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-135.638,-324.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[233.245,-222.931],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[204.979,-152.575],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[196.063,79.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[4.886000000000003,294.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-315.166,193.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-431,-272]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":3,"ty":4,"nm":"lpink","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[46,46,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":90,"s":[64,64,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.9,0.9,0.9],"y":[0,0,0]}},{"t":162,"s":[64,64,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":2,"k":{"a":0,"k":[0,1,0.835,1,1,1,0.835,1,0,100,1,0],"ix":9}},"s":{"a":1,"k":[{"i":{"x":0.667,"y":0.545},"o":{"x":0.333,"y":0},"t":0,"s":[-501,-142],"to":[28.5,8.833],"ti":[-96.653,-13.969]},{"i":{"x":0.667,"y":0.857},"o":{"x":0.333,"y":0.234},"t":147,"s":[-205.638,-194.985],"to":[86.802,12.545],"ti":[-43.351,-31.61]},{"i":{"x":0.603,"y":0.615},"o":{"x":0.333,"y":0.2},"t":243,"s":[163.245,-92.93100000000001],"to":[6.905,5.035],"ti":[1.997,-12.979]},{"i":{"x":0.606,"y":0.375},"o":{"x":0.25,"y":0.248},"t":270,"s":[134.979,-22.575000000000003],"to":[-5.796,37.659],"ti":[29.078,-87.405]},{"i":{"x":0.684,"y":0.802},"o":{"x":0.323,"y":0.485},"t":354,"s":[126.06299999999999,209.623],"to":[-39.315,118.177],"ti":[50.859,2.444]},{"i":{"x":0.709,"y":0.353},"o":{"x":0.363,"y":0.246},"t":456,"s":[-65.114,424.031],"to":[-21.733,-1.044],"ti":[64.012,136.687]},{"i":{"x":0.833,"y":1},"o":{"x":0.438,"y":0.683},"t":588,"s":[-385.166,323.744],"to":[-46.778,-99.888],"ti":[-28.5,-8.833]},{"t":714,"s":[-501,-142]}],"ix":5},"e":{"a":1,"k":[{"i":{"x":0.668,"y":0.474},"o":{"x":0.346,"y":0},"t":0,"s":[377,-44],"to":[-25.638,11.379],"ti":[61.901,-31.102]},{"i":{"x":0.629,"y":0.579},"o":{"x":0.309,"y":0.187},"t":129,"s":[347.919,182.755],"to":[-194.78,97.867],"ti":[-2.233,38.085]},{"i":{"x":0.559,"y":0.435},"o":{"x":0.246,"y":0.259},"t":258,"s":[-260.881,239.106],"to":[5.617,-95.785],"ti":[-72.224,174.392]},{"i":{"x":0.595,"y":0.797},"o":{"x":0.269,"y":0.406},"t":354,"s":[-285.198,-255.364],"to":[64.072,-154.71],"ti":[-39.495,19.921]},{"i":{"x":0.805,"y":0.442},"o":{"x":0.525,"y":0.246},"t":456,"s":[55.251000000000005,-540.534],"to":[4.434,-2.237],"ti":[-78.106,-123.079]},{"i":{"x":0.667,"y":1},"o":{"x":0.374,"y":0.858},"t":588,"s":[396.814,-450.76],"to":[68.29,107.611],"ti":[106.313,-47.184]},{"t":714,"s":[377,-44]}],"ix":6},"t":2,"nm":"Gradient Fill","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":201,"ty":4,"nm":"pulse-2","sr":1,"ks":{"o":{"a":0,"k":19,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[94,94,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1.065]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[47,47,100],"i":{"x":[0.1,0.1,0.1],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,-0.114]}},{"t":126,"s":[94,94,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":162,"s":[94,94,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"st","c":{"a":0,"k":[1,0.823528992896,0,1],"ix":3},"o":{"a":0,"k":0,"ix":4},"w":{"a":0,"k":5,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":3,"k":{"a":0,"k":[0,0,0.898,1,0.5,1,0.835,1,1,1,0,0.494],"ix":9}},"s":{"a":0,"k":[0,-422],"ix":5},"e":{"a":0,"k":[0,414],"ix":6},"t":1,"nm":"Gradient Fill 1","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0},{"ddd":0,"ind":202,"ty":4,"nm":"pulse-3","sr":1,"ks":{"o":{"a":0,"k":12,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[500,500,0],"ix":2},"a":{"a":0,"k":[8,-57,0],"ix":1},"s":{"a":1,"k":[{"t":0,"s":[119,119,100],"i":{"x":[0.833,0.833,0.833],"y":[1,1,1]},"o":{"x":[0.39,0.39,0.39],"y":[0,0,0]}},{"t":46,"s":[27,27,100],"i":{"x":[0,0,0],"y":[1,1,1]},"o":{"x":[0.167,0.167,0.167],"y":[0,0,0]}},{"t":162,"s":[119,119,100]}],"ix":6,"x":"var $bm_rt;\\n$bm_rt = loopOut();"}},"ao":0,"shapes":[{"ty":"gr","it":[{"d":1,"ty":"el","s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":61,"s":[686,686]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":121,"s":[646,646]},{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":187,"s":[686,686]},{"t":239,"s":[646,646]}],"ix":2},"p":{"a":0,"k":[0,0],"ix":3},"nm":"Ellipse Path 1","mn":"ADBE Vector Shape - Ellipse","hd":false},{"ty":"st","c":{"a":0,"k":[1,0.823528992896,0,1],"ix":3},"o":{"a":0,"k":0,"ix":4},"w":{"a":0,"k":5,"ix":5},"lc":1,"lj":1,"ml":4,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"gf","o":{"a":0,"k":100,"ix":10},"r":1,"bm":0,"g":{"p":3,"k":{"a":0,"k":[0,0,0.898,1,0.5,1,0.835,1,1,1,0,0.494],"ix":9}},"s":{"a":0,"k":[0,-422],"ix":5},"e":{"a":0,"k":[0,414],"ix":6},"t":1,"nm":"Gradient Fill 1","mn":"ADBE Vector Graphic - G-Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[8,-57],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"Ellipse 1","np":3,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":1958,"st":0,"bm":0}],"markers":[]}');
-;// ./src/assets/scripts-mo/ui/common/voice-blob.js
-/**
- * @file voice-blob.js
- * @description AI 음성인식 Lottie 애니메이션 제어
- * @scope [data-voice-blob-anim]
- * @state instance — dotlottie-wc 플레이어 인스턴스
- */
- // 이건 유지
-
-(function ($) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var instance = null;
-
-  // 로티 애니메이션 초기화
-  function init() {
-    var $container = $('[data-voice-blob-anim]');
-    if (!$container.length || instance) return;
-
-    // 모바일 디바이스에서만 실행
-    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
-    if (!voice_blob_namespaceObject) return;
-
-    // CDN 동적 로드 (모바일에서만 다운로드)
-    var CDN_URL = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js';
-    var script = document.createElement('script');
-    script.type = 'module';
-    script.src = CDN_URL;
-    script.onload = function () {
-      // Web Component 등록 완료까지 대기
-      customElements.whenDefined('dotlottie-wc').then(function () {
-        if (instance) return;
-        var player = document.createElement('dotlottie-wc');
-        player.data = voice_blob_namespaceObject;
-        player.setAttribute('loop', '');
-        player.setAttribute('autoplay', '');
-        player.setAttribute('layout', JSON.stringify({
-          fit: 'contain',
-          align: [0.5, 0.5]
-        }));
-        player.useFrameInterpolation = false;
-        player.style.width = '100%';
-        player.style.height = '100%';
-        $container[0].innerHTML = '';
-        $container[0].appendChild(player);
-        instance = player;
-      });
-    };
-    document.head.appendChild(script);
-  }
-
-  // 인스턴스 제거
-  function destroy() {
-    if (!instance) return;
-    instance.remove();
-    instance = null;
-  }
-  window.UI.voiceBlob = {
-    init: init,
-    destroy: destroy
-  };
-})(window.jQuery);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/voice-blob.js
+var voice_blob = __webpack_require__(5365);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/bottom-tab-bar.js
 var bottom_tab_bar = __webpack_require__(4714);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/chip-button.js
@@ -4406,829 +5227,6 @@ console.log('[mobile/index] entry 실행');
 
 
 
-
-/***/ }),
-
-/***/ 4305:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/common/overflow-menu.js
- * @description 오버플로 메뉴 (더보기 등)
- * @scope [data-vm-overflow-menu]
- * @state .is-open — 메뉴 열림
- */
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var NS = '.uiOverflowMenu';
-  var ROOT = '[data-vm-overflow-menu]';
-  var TRIGGER = '[data-vm-overflow-trigger]';
-  var LIST = '[data-vm-overflow-list]';
-  var CLS_OPEN = 'is-open';
-  var _bound = false;
-  function close($root) {
-    $root.removeClass(CLS_OPEN);
-    $root.find(TRIGGER).attr('aria-expanded', 'false');
-  }
-  function closeAll() {
-    $(ROOT + '.' + CLS_OPEN).each(function () {
-      close($(this));
-    });
-  }
-  function open($root) {
-    closeAll();
-    $root.addClass(CLS_OPEN);
-    $root.find(TRIGGER).attr('aria-expanded', 'true');
-  }
-  function toggle($root) {
-    if ($root.hasClass(CLS_OPEN)) {
-      close($root);
-    } else {
-      open($root);
-    }
-  }
-  function bind() {
-    if (_bound) return;
-    _bound = true;
-    var $doc = $(document);
-
-    // 트리거 클릭
-    $doc.on('click' + NS, TRIGGER, function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggle($(this).closest(ROOT));
-    });
-
-    // 메뉴 항목 클릭 → 닫기
-    $doc.on('click' + NS, LIST + ' a, ' + LIST + ' button', function () {
-      close($(this).closest(ROOT));
-    });
-
-    // 외부 클릭 → 닫기
-    $doc.on('mousedown' + NS + ' touchstart' + NS, function (e) {
-      if (!$(e.target).closest(ROOT).length) {
-        closeAll();
-      }
-    });
-  }
-  function init() {
-    bind();
-  }
-  function destroy() {
-    closeAll();
-    $(document).off(NS);
-    _bound = false;
-  }
-  window.UI.overflowMenu = {
-    init: init,
-    destroy: destroy,
-    close: close,
-    closeAll: closeAll
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 4387:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/kendo/kendo-window.js
- * @description 모바일 Kendo Window 초기화 모듈
- * @variant 'bottomsheet' — 하단에서 슬라이드 업 (CSS 애니메이션)
- * @variant 'slide-right' — 오른쪽에서 슬라이드 인 (풀스크린)
- * @variant 'slide-left'  — 왼쪽에서 슬라이드 인 (풀스크린)
- *
- * VmKendoWindow.open('myWindow');
- * VmKendoWindow.close('myWindow');
- * VmKendoWindow.refresh('myWindow');
- * VmKendoWindow.initAll();
- */
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  var NS = '.uiKendoWindow';
-  var BODY_LOCK_CLASS = 'is-kendo-window-open';
-  var DEBOUNCE_DELAY = 80;
-  var ANIMATION_TIMEOUT = 500;
-  var scrollY = 0;
-  var openedWindows = [];
-  var contentObservers = {};
-  var debounceTimers = {};
-  function lockBody() {
-    if ($('body').hasClass(BODY_LOCK_CLASS)) return;
-    scrollY = window.pageYOffset || 0;
-    $('body').addClass(BODY_LOCK_CLASS).css({
-      position: 'fixed',
-      top: -scrollY + 'px',
-      left: 0,
-      right: 0,
-      overflow: 'hidden'
-    });
-  }
-  function unlockBody() {
-    if (!$('body').hasClass(BODY_LOCK_CLASS)) return;
-    $('body').removeClass(BODY_LOCK_CLASS).css({
-      position: '',
-      top: '',
-      left: '',
-      right: '',
-      overflow: ''
-    });
-    window.scrollTo(0, scrollY);
-  }
-  function checkScroll(id) {
-    var $el = $('#' + id);
-    $el.find('[data-scroll-check]').each(function () {
-      $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
-    });
-  }
-
-  // collapse 높이 모드 재판별
-  function refreshCollapse(id) {
-    if (window.UI && window.UI.collapse && window.UI.collapse.refresh) {
-      window.UI.collapse.refresh('#' + id);
-    }
-  }
-  function refresh(id) {
-    clearTimeout(debounceTimers[id]);
-    debounceTimers[id] = setTimeout(function () {
-      var $el = $('#' + id);
-      var inst = $el.data('kendoWindow');
-      if (!inst) return;
-      checkScroll(id);
-      var $kw = $el.closest('.k-window');
-      if (!$kw.hasClass('is-bottomsheet') && !$kw.hasClass('is-slideright') && !$kw.hasClass('is-slideleft')) {
-        inst.center();
-      }
-    }, DEBOUNCE_DELAY);
-  }
-  function observeContent(id) {
-    if (!window.MutationObserver) return;
-    if (contentObservers[id]) return;
-    var $el = $('#' + id);
-    var $content = $el.find('.vm-modal-content');
-    if (!$content.length) return;
-    var obs = new MutationObserver(function () {
-      refresh(id);
-    });
-    obs.observe($content[0], {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['class', 'hidden', 'style']
-    });
-    contentObservers[id] = obs;
-  }
-  function disconnectContent(id) {
-    if (contentObservers[id]) {
-      contentObservers[id].disconnect();
-      delete contentObservers[id];
-    }
-    clearTimeout(debounceTimers[id]);
-    delete debounceTimers[id];
-  }
-
-  // 슬라이드 닫힘 애니메이션 + 안전장치
-  function closeWithAnimation($kw, inst) {
-    $kw.addClass('is-closing');
-    var closed = false;
-    function done() {
-      if (closed) return;
-      closed = true;
-      $kw.removeClass('is-closing');
-      inst.close();
-    }
-    $kw.one('animationend', done);
-    setTimeout(done, ANIMATION_TIMEOUT);
-  }
-  function initOne(el) {
-    var $el = $(el);
-    if ($el.data('kendoWindow')) return;
-    var id = $el.attr('id');
-    var variant = $el.attr('data-variant');
-    var isBottom = variant === 'bottomsheet';
-    var isSlide = variant === 'slide-right' || variant === 'slide-left';
-    var isSlideLeft = variant === 'slide-left';
-    var noAnimation = isBottom || isSlide;
-    var opts = {
-      title: false,
-      visible: false,
-      modal: true,
-      pinned: true,
-      draggable: false,
-      resizable: false,
-      actions: [],
-      animation: noAnimation ? false : undefined,
-      open: function () {
-        console.log('kendo open id:', id);
-        lockBody();
-        if (openedWindows.indexOf(id) === -1) {
-          openedWindows.push(id);
-        }
-        observeContent(id);
-        console.log('trigger kendo:open with:', id, typeof id);
-        $(document).trigger('kendo:open', [id]);
-      },
-      close: function () {
-        disconnectContent(id);
-        var idx = openedWindows.indexOf(id);
-        if (idx > -1) openedWindows.splice(idx, 1);
-        if (openedWindows.length === 0) {
-          unlockBody();
-        }
-
-        // 닫힘 이벤트 발행
-        $(document).trigger('kendo:close', [id]);
-      }
-    };
-    $el.kendoWindow(opts);
-    var $kw = $el.closest('.k-window');
-    if (isBottom) {
-      $kw.addClass('is-bottomsheet');
-    }
-    if (isSlide) {
-      $kw.addClass(isSlideLeft ? 'is-slideleft' : 'is-slideright');
-    }
-  }
-  function initAll(root) {
-    var $root = root ? $(root) : $(document);
-    $root.find('[data-ui="kendo-window"]').each(function () {
-      initOne(this);
-    });
-  }
-  function open(id) {
-    var $el = $('#' + id);
-    if (!$el.length) return;
-    var inst = $el.data('kendoWindow');
-    if (!inst) {
-      initOne($el[0]);
-      inst = $el.data('kendoWindow');
-    }
-    if (inst) {
-      var $kw = $el.closest('.k-window');
-      var isBottom = $kw.hasClass('is-bottomsheet');
-      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
-      if (!isBottom && !isSlide) inst.center();
-
-      // 슬라이드 팝업은 마지막 하나만 유지
-      if (isSlide) {
-        openedWindows.slice().forEach(function (winId) {
-          if (winId === id) return;
-          var $w = $('#' + winId).closest('.k-window');
-          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
-            close(winId);
-          }
-        });
-      }
-      inst.open();
-
-      // 바텀시트: 하단 고정 + 슬라이드 업
-      if (isBottom) {
-        $kw.css({
-          top: 'auto',
-          left: '0',
-          bottom: '0',
-          width: '100%',
-          position: 'fixed'
-        });
-        $kw.addClass('is-opening');
-        $kw.one('animationend', function () {
-          $kw.removeClass('is-opening');
-          refreshCollapse(id);
-        });
-      }
-
-      // 슬라이드: 풀스크린
-      if (isSlide) {
-        $kw.css({
-          top: '0',
-          left: '0',
-          right: '0',
-          bottom: '0',
-          width: '100%',
-          height: '100%',
-          position: 'fixed'
-        });
-        $kw.addClass('is-opening');
-        $kw.one('animationend', function () {
-          $kw.removeClass('is-opening');
-          refreshCollapse(id);
-        });
-      }
-
-      // 렌더 후 스크롤 체크 (다음 프레임)
-      setTimeout(function () {
-        checkScroll(id);
-      }, 0);
-    }
-  }
-  function close(id) {
-    var $el = $('#' + id);
-    var inst = $el.data('kendoWindow');
-    if (inst) {
-      var $kw = $el.closest('.k-window');
-      var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
-      $el.find('.vm-modal-content').removeClass('has-scroll');
-
-      // 슬라이드만 애니메이션 후 close
-      if (isSlide) {
-        closeWithAnimation($kw, inst);
-        return;
-      }
-      inst.close();
-    }
-  }
-
-  // 딤 클릭 시 닫기
-  $(document).on('click' + NS, '.k-overlay', function () {
-    var ids = openedWindows.slice();
-    ids.forEach(function (winId) {
-      close(winId);
-    });
-  });
-  window.VmKendoWindow = {
-    initAll: initAll,
-    open: open,
-    close: close,
-    refresh: refresh
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 4714:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/common/bottom-tab-bar.js
- * @description 하단 탭바 액션 위임 + 카테고리 풀팝업 제어
- * @scope .bottom-tab-bar
- *
- * @mapping
- *  [data-action]  → 페이지 이동이 아닌 액션 트리거 버튼
- *
- * @events
- *  tabBar:{action명} (document) — 액션 버튼 클릭 시 발행
- *
- * @note
- *  - 카테고리 풀팝업 열기/닫기(토글) 직접 제어
- *  - 풀팝업 내부 탭 전환 시 팝업 헤더 타이틀 동기화
- *  - 카테고리 선택 시 해당 카테고리 페이지로 이동
- */
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var NS = '.uiBottomTabBar';
-  var SCOPE = '.bottom-tab-bar';
-  var FULL_POPUP = '.category-full-popup';
-  var POPUP_ID = 'categoryFullPopup';
-  var CAT_SCOPE = '[data-category-sheet]';
-  var OPEN_DELAY = 300;
-  var SEL_BREADCRUMB = '[data-ui="breadcrumb"]';
-
-  // 풀팝업 내부 카테고리 상태
-  var _state = {
-    path: {
-      depth1Id: '',
-      depth2Id: '',
-      depth3Id: ''
-    },
-    browseD1: ''
-  };
-  var _scopeBound = false;
-  var _bound = false;
-
-  // 풀팝업 열림 여부
-  function isPopupOpen() {
-    var $popup = $(FULL_POPUP);
-    return $popup.length && $popup.closest('.k-window').is(':visible');
-  }
-
-  // 풀팝업 안의 카테고리 스코프
-  function $catScope() {
-    return $('#' + POPUP_ID).find(CAT_SCOPE);
-  }
-
-  // 카테고리 선택 확정 → 페이지 이동
-  function onCommit(path) {
-    // 브레드크럼 있으면 바텀시트와 동일하게 처리 (브레드크럼 갱신 + 팝업 닫기)
-    if ($(SEL_BREADCRUMB).length) {
-      if (window.CategorySheet && window.CategorySheet.commitFromPopup) {
-        window.CategorySheet.commitFromPopup(path);
-      }
-      window.VmKendoWindow.close(POPUP_ID);
-      return;
-    }
-
-    // 브레드크럼 없으면 페이지 이동
-    var lastDepth = path.depth3Id || path.depth2Id || path.depth1Id;
-    if (lastDepth) {
-      window.location.href = '/category/' + lastDepth;
-    }
-  }
-
-  // 풀팝업 카테고리 렌더 + 이벤트 바인딩
-  function openCategoryPopup() {
-    if (!window.VmKendoWindow || !window.CategoryRenderer) return;
-    var R = window.CategoryRenderer;
-
-    // 바텀시트 경로 동기화
-    if (window.CategorySheet) {
-      var sheetPath = window.CategorySheet.getPath();
-      if (sheetPath.depth1Id) {
-        _state.path = sheetPath;
-        _state.browseD1 = sheetPath.depth1Id;
-      }
-    }
-
-    // 팝업 먼저 열기 — 즉시 반응
-    window.VmKendoWindow.open(POPUP_ID);
-
-    // 콘텐츠는 팝업 안에서 비동기 렌더
-    R.loadTree(function () {
-      var $scope = $catScope();
-      if (!$scope.length) return;
-      if (!_scopeBound) {
-        R.bindScopeEvents($scope, _state, onCommit);
-        _scopeBound = true;
-      }
-      var tree = R.getTree();
-      if (!_state.path.depth1Id && tree.length) {
-        _state.browseD1 = tree[0].categoryCode;
-      } else {
-        _state.browseD1 = _state.path.depth1Id;
-      }
-      R.renderDepth1($scope, _state.path, _state.browseD1);
-      if (!_state.path.depth1Id && tree.length) {
-        $scope.find('[data-depth1-item]').first().addClass('is-current');
-        R.renderSub($scope, _state.browseD1, _state.path);
-      }
-      if (window.UI && window.UI.tab) {
-        var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
-        if ($tabScope.length) {
-          var $popup = $('#' + POPUP_ID);
-          var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
-          $popup.removeAttr('data-request-tab');
-          window.UI.tab.activate($tabScope, requestTab);
-        }
-      }
-      setTimeout(function () {
-        if (_state.path.depth1Id) {
-          R.scrollToActive($scope);
-        } else {
-          $scope.find('[data-depth1-panel]').scrollTop(0);
-          $scope.find('[data-sub-panel]').scrollTop(0);
-        }
-      }, OPEN_DELAY);
-    });
-  }
-  function bind() {
-    if (_bound) return;
-    _bound = true;
-
-    // GNB 브랜드 → 브랜드탭으로 카테고리 팝업 열기
-    $(document).on('click' + NS, '[data-action="open-brand-sheet"]', function (e) {
-      e.preventDefault();
-      if (!window.VmKendoWindow) return;
-      if (isPopupOpen()) {
-        window.VmKendoWindow.close(POPUP_ID);
-        return;
-      }
-      $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
-      openCategoryPopup();
-    });
-
-    // 액션 버튼 클릭 → 풀팝업 열기/토글
-    $(document).on('click' + NS, SCOPE + ' [data-action]', function (e) {
-      e.preventDefault();
-      var action = $(this).data('action');
-      if (!action) return;
-      // 카테고리 액션
-      if (action === 'open-category-sheet') {
-        if (!window.VmKendoWindow) return;
-        // 바텀시트 열려있으면 닫고 풀팝업 열기
-        var $sheet = $('#categorySheet');
-        var sheetInst = $sheet.data('kendoWindow');
-        if (sheetInst && $sheet.is(':visible')) {
-          window.VmKendoWindow.close('categorySheet');
-        }
-        // 풀팝업 토글
-        if (isPopupOpen()) {
-          window.VmKendoWindow.close(POPUP_ID);
-          return;
-        }
-        openCategoryPopup();
-        return;
-      }
-
-      // 그 외 액션은 이벤트 발행
-      $(document).trigger('tabBar:' + action);
-    });
-
-    // 풀팝업 내부 탭 전환 → 팝업 타이틀 갱신
-    $(document).on('tab:change' + NS, FULL_POPUP + ' [data-tab-scope]', function (e, target, $btn) {
-      var title = $btn.find('.text').text();
-      $(this).closest(FULL_POPUP).find('.vm-modal-title').text(title);
-    });
-
-    // 바텀시트 카테고리 선택 → 풀팝업 상태 동기화
-    $(document).on('category:change' + NS, function (e, data) {
-      if (data && data.path) {
-        _state.path = $.extend({}, data.path);
-        _state.browseD1 = data.path.depth1Id;
-      }
-    });
-  }
-  function init() {
-    bind();
-  }
-  function destroy() {
-    $(document).off(NS);
-    var $scope = $catScope();
-    if ($scope.length && window.CategoryRenderer) {
-      window.CategoryRenderer.unbindScopeEvents($scope);
-    }
-    _state = {
-      path: {
-        depth1Id: '',
-        depth2Id: '',
-        depth3Id: ''
-      },
-      browseD1: ''
-    };
-    _scopeBound = false;
-    _bound = false;
-  }
-  window.UI.bottomTabBar = {
-    init: init,
-    destroy: destroy
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 5332:
-/***/ (function() {
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var NS = '.uiTab';
-  var SCOPE = '[data-tab-scope]';
-  var BTN = '[data-tab-btn]';
-  var PANEL = '[data-tab-panel]';
-  var ACTIVE = 'is-active';
-  var PEEK = 40;
-  var _bound = false;
-
-  // 활성 탭 버튼이 보이도록 스크롤 보정
-  function scrollToBtn($scope, $btn) {
-    var $tabList = $scope.find('[role="tablist"]');
-    if (!$tabList.length || !$tabList[0].scrollWidth) return;
-    var wrap = $tabList[0];
-    var btn = $btn[0];
-    var $btns = $tabList.find(BTN);
-    var btnLeft = btn.offsetLeft;
-    var btnRight = btnLeft + btn.offsetWidth;
-    var wrapLeft = wrap.scrollLeft;
-    var wrapRight = wrapLeft + wrap.offsetWidth;
-    if (btn === $btns.last()[0]) {
-      $tabList.animate({
-        scrollLeft: wrap.scrollWidth
-      }, 200);
-    } else if (btn === $btns.first()[0]) {
-      $tabList.animate({
-        scrollLeft: 0
-      }, 200);
-    } else if (btnLeft < wrapLeft) {
-      $tabList.animate({
-        scrollLeft: btnLeft - PEEK
-      }, 200);
-    } else if (btnRight > wrapRight) {
-      $tabList.animate({
-        scrollLeft: btnRight - wrap.offsetWidth + PEEK
-      }, 200);
-    }
-  }
-
-  // 탭 전환
-  function activate($scope, target) {
-    // 모든 버튼 비활성
-    $scope.find(BTN).each(function () {
-      var $btn = $(this);
-      $btn.removeClass(ACTIVE);
-      $btn.attr('aria-selected', 'false');
-      $btn.attr('tabindex', '-1');
-    });
-
-    // 모든 패널 비활성
-    $scope.find(PANEL).each(function () {
-      $(this).removeClass(ACTIVE).attr('hidden', '');
-    });
-
-    // 대상 버튼 활성
-    var $activeBtn = $scope.find(BTN + '[data-tab-target="' + target + '"]');
-    $activeBtn.addClass(ACTIVE);
-    $activeBtn.attr('aria-selected', 'true');
-    $activeBtn.attr('tabindex', '0');
-
-    // 대상 패널 활성
-    var $activePanel = $scope.find(PANEL + '[data-tab-panel="' + target + '"]');
-    $activePanel.addClass(ACTIVE).removeAttr('hidden');
-
-    // 스크롤 보정
-    scrollToBtn($scope, $activeBtn);
-
-    // 탭 전환 이벤트 발행
-    $scope.trigger('tab:change', [target, $activeBtn]);
-  }
-  function bind() {
-    if (_bound) return;
-    _bound = true;
-
-    // 탭 클릭
-    $(document).on('click' + NS, BTN, function (e) {
-      e.preventDefault();
-      var $btn = $(this);
-      var $scope = $btn.closest(SCOPE);
-      if (!$scope.length) return;
-      var target = $btn.data('tabTarget');
-      if (!target) return;
-      activate($scope, target);
-    });
-
-    // 키보드 좌우 화살표 이동
-    $(document).on('keydown' + NS, BTN, function (e) {
-      var key = e.keyCode;
-      if (key !== 37 && key !== 39) return;
-      var $btn = $(this);
-      var $scope = $btn.closest(SCOPE);
-      if (!$scope.length) return;
-      var $tabs = $scope.find(BTN);
-      var idx = $tabs.index($btn);
-      var len = $tabs.length;
-
-      // 좌: 이전, 우: 다음 (순환)
-      var nextIdx = key === 37 ? (idx - 1 + len) % len : (idx + 1) % len;
-      var $next = $tabs.eq(nextIdx);
-      $next.focus();
-      $next.trigger('click');
-    });
-  }
-  function init() {
-    bind();
-
-    // URL 파라미터 기반 탭 딥링크 (?tab=tab2)
-    var urlTab = new URLSearchParams(window.location.search).get('tab');
-
-    // 초기 활성 탭 설정
-    $(SCOPE).each(function () {
-      var $scope = $(this);
-      var $activeBtn;
-
-      // URL 파라미터 우선
-      if (urlTab) {
-        $activeBtn = $scope.find(BTN + '[data-tab-target="' + urlTab + '"]');
-      }
-
-      // URL 매칭 없으면 is-active 기준
-      if (!$activeBtn || !$activeBtn.length) {
-        $activeBtn = $scope.find(BTN + '.' + ACTIVE);
-      }
-
-      // 그것도 없으면 첫 번째 자동 활성
-      if (!$activeBtn.length) {
-        $activeBtn = $scope.find(BTN).first();
-      }
-      var target = $activeBtn.data('tabTarget');
-      if (target) activate($scope, target);
-    });
-  }
-  function destroy() {
-    $(document).off(NS);
-    _bound = false;
-  }
-  window.UI.tab = {
-    init: init,
-    destroy: destroy,
-    activate: activate
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 5487:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/product/product-view-toggle.js
- * @description 상품 목록 뷰 전환 (thumb ↔ list)
- * @scope [data-ui="product-list"]
- * @a11y aria-pressed(true → 리스트형 활성), aria-label 동적 전환
- * @events click → [data-ui="product-view-toggle"], productViewChange (발행)
- */
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var NS = '.uiProductViewToggle';
-  var SCOPE = '[data-ui="product-list"]';
-  var BTN = '[data-ui="product-view-toggle"]';
-  var ITEMS = '[data-ui="product-items"]';
-  var VIEW = {
-    THUMB: 'view-thumb',
-    LIST: 'view-list'
-  };
-  var LABEL = {
-    THUMB: '썸네일형 전환',
-    LIST: '리스트형 전환'
-  };
-  var _bound = false;
-  function bindEvents() {
-    if (_bound) return;
-    _bound = true;
-    $(document).on('click' + NS, BTN, function () {
-      var $btn = $(this);
-      var $list = $btn.closest(SCOPE).find(ITEMS);
-      var toList = $btn.hasClass(VIEW.THUMB);
-      $btn.toggleClass(VIEW.THUMB, !toList).toggleClass(VIEW.LIST, toList).attr({
-        'aria-label': toList ? LABEL.THUMB : LABEL.LIST,
-        'aria-pressed': String(toList)
-      });
-      $list.toggleClass(VIEW.THUMB, !toList).toggleClass(VIEW.LIST, toList);
-
-      // 뷰 변경 알림 (배너 위치 재계산 등)
-      $(document).trigger('productViewChange');
-    });
-  }
-  window.UI.productViewToggle = {
-    init: function () {
-      bindEvents();
-    }
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 5723:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/common/sticky-observer.js
- * @description data-ui="sticky" 요소의 스티키 상태 감지 → is-sticky 클래스 토글
- * @scope [data-ui="sticky"]
- * @state is-sticky: 요소가 스티키 상태일 때 추가
- */
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var STICKY = '[data-ui="sticky"]';
-  var ACTIVE = 'is-sticky';
-
-  // 개별 요소에 sentinel 삽입 + observer 등록
-  function observe($el) {
-    if ($el.data('sticky-bound')) return;
-    $el.data('sticky-bound', true);
-    var sentinel = $('<div>').css({
-      height: 0,
-      margin: 0,
-      padding: 0
-    });
-    sentinel.insertBefore($el);
-
-    // sticky top 값만큼 rootMargin 보정
-    var topOffset = parseInt($el.css('top'), 10) || 0;
-    var observer = new IntersectionObserver(function (entries) {
-      $el.toggleClass(ACTIVE, !entries[0].isIntersecting);
-    }, {
-      threshold: 0,
-      rootMargin: '-' + topOffset + 'px 0px 0px 0px'
-    });
-    observer.observe(sentinel[0]);
-  }
-  window.UI.stickyObserver = {
-    init: function () {
-      $(STICKY).each(function () {
-        observe($(this));
-      });
-    }
-  };
-})(window.jQuery, window);
 
 /***/ }),
 
@@ -9858,7 +9856,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,817,133,486,766,979], function() { return __webpack_require__(4262); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,817,133,486,766,979], function() { return __webpack_require__(5841); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
