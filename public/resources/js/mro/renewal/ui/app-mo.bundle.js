@@ -2609,7 +2609,386 @@
 
 /***/ }),
 
-/***/ 3041:
+/***/ 3064:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/form/input.js
+ * @description input 공통: 값 유무에 따른 상태 클래스 토글
+ * @scope .vits-input 컴포넌트 내부 input만 적용(전역 영향 없음)
+ *
+ * @state
+ *  - root.is-filled: input에 값이 있을 때 토글
+ *
+ * @maintenance
+ *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
+ *  - compositionend 직후 input 중복 발생 방지(debounce flag)
+ *
+ * @note 모바일 대응
+ *  - compositionend 직후 input 중복 발생 방지(삼성키보드 등)
+ *  - 브라우저 자동완성(autofill) 시 input/change 미발생 대응(CSS animation 트리거)
+ *  - 자동완성 감지용 CSS 필요:
+ *    @keyframes onAutoFillStart { from { opacity: 1; } to { opacity: 1; } }
+ *    input:-webkit-autofill { animation-name: onAutoFillStart; }
+ */
+
+(function ($, window, document) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  window.UI.input = window.UI.input || {};
+  var MODULE_KEY = 'input';
+  var NS = '.' + MODULE_KEY;
+  var ROOT = '.vits-input';
+  var INPUT = ROOT + ' input';
+
+  // compositionend 직후 input 무시 간격(ms)
+  var COMPOSE_DEBOUNCE = 50;
+
+  // is-filled 토글
+  function syncFilled($root, $input) {
+    $root.toggleClass('is-filled', $input.val().length > 0);
+  }
+
+  // 단일 input 초기 동기화
+  function initOne($input) {
+    if (!$input || !$input.length) return;
+    var $root = $input.closest(ROOT);
+    if (!$root.length) return;
+    syncFilled($root, $input);
+  }
+
+  // 이벤트 바인딩(위임 1회, init 재호출 대비)
+  function bindOnce() {
+    $(document).off(NS);
+
+    // IME 조합 시작
+    $(document).on('compositionstart' + NS, INPUT, function () {
+      $(this).data('isComposing', true);
+    });
+
+    // IME 조합 완료
+    $(document).on('compositionend' + NS, INPUT, function () {
+      var $input = $(this);
+      $input.data('isComposing', false);
+      $input.data('compEndAt', Date.now());
+      initOne($input);
+    });
+
+    // 입력 이벤트
+    $(document).on('input' + NS, INPUT, function () {
+      var $input = $(this);
+
+      // compositionend 직후 중복 input 무시
+      var compEndAt = $input.data('compEndAt') || 0;
+      if (compEndAt && Date.now() - compEndAt < COMPOSE_DEBOUNCE) return;
+      if ($input.data('isComposing')) return;
+      var $root = $input.closest(ROOT);
+      if (!$root.length) return;
+      syncFilled($root, $input);
+    });
+
+    // JS 값 변경, 자동완성 후 동기화
+    $(document).on('change' + NS, INPUT, function () {
+      initOne($(this));
+    });
+
+    // 자동완성 감지 — autofill 시 input/change가 안 발생하는 브라우저 대응
+    $(document).on('animationstart' + NS, INPUT, function (e) {
+      if (e.originalEvent.animationName === 'onAutoFillStart') {
+        initOne($(this));
+      }
+    });
+  }
+
+  // root 범위 초기화(부분 렌더 지원)
+  function initAll(root) {
+    var $scope = root ? $(root) : $(document);
+    $scope.find(INPUT).each(function () {
+      initOne($(this));
+    });
+  }
+  window.UI.input = {
+    init: function (root) {
+      if (!window.UI.input.__bound) {
+        bindOnce();
+        window.UI.input.__bound = true;
+      }
+      initAll(root);
+    },
+    destroy: function () {
+      $(document).off(NS);
+      window.UI.input.__bound = false;
+    }
+  };
+})(window.jQuery || window.$, window, document);
+
+/***/ }),
+
+/***/ 3198:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/option-box.js
+ * @description data-속성 기반 옵션 선택 박스 (모바일)
+ * @scope [data-ui="option-box"]
+ *
+ * @mapping
+ *   [data-option-trigger] — 열기/닫기 버튼
+ *   [data-option-trigger] .text — 선택된 값 표시
+ *   [data-option-list] — 옵션 목록 (열림/닫힘 대상)
+ *   [data-select-value] — 옵션 버튼 (클릭 시 선택)
+ *
+ * @state
+ *   is-open — 옵션 목록 열림
+ *   is-selected — 선택된 옵션 항목
+ *
+ * @events
+ *   option-box:select — 옵션 선택 시 발생 (detail: { value, text })
+ *
+ * @a11y aria-expanded 제어
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var NS = '.uiOptionBox';
+  var SCOPE = '[data-ui="option-box"]';
+  var TRIGGER = '[data-option-trigger]';
+  var LIST = '[data-option-list]';
+  var OPTION_BTN = '[data-select-value]';
+  var OPEN = 'is-open';
+  var SELECTED = 'is-selected';
+  var _bound = false;
+  function openList($scope) {
+    $scope.find(LIST).addClass(OPEN);
+    $scope.find(TRIGGER).attr('aria-expanded', 'true');
+  }
+  function closeList($scope) {
+    $scope.find(LIST).removeClass(OPEN);
+    $scope.find(TRIGGER).attr('aria-expanded', 'false');
+  }
+  function bind() {
+    if (_bound) return;
+    _bound = true;
+
+    // 트리거 클릭 — 열기/닫기
+    $(document).on('click' + NS, TRIGGER, function (e) {
+      e.preventDefault();
+      var $scope = $(this).closest(SCOPE);
+      if (!$scope.length) return;
+      if ($scope.find(LIST).hasClass(OPEN)) {
+        closeList($scope);
+      } else {
+        openList($scope);
+      }
+    });
+
+    // 옵션 선택
+    $(document).on('click' + NS, OPTION_BTN, function () {
+      var $btn = $(this);
+      var $scope = $btn.closest(SCOPE);
+      if (!$scope.length) return;
+      var value = $btn.attr('data-select-value');
+
+      // 선택 상태 갱신
+      $scope.find(OPTION_BTN).removeClass(SELECTED);
+      $btn.addClass(SELECTED);
+
+      // 트리거 텍스트 갱신
+      var $trigger = $scope.find(TRIGGER + ' .text');
+      if ($trigger.length) {
+        $trigger.html($btn.html());
+      }
+
+      // 닫기
+      closeList($scope);
+
+      // 커스텀 이벤트
+      $scope.trigger('option-box:select', {
+        value: value,
+        text: $trigger.text()
+      });
+    });
+
+    // 외부 클릭 시 닫기
+    $(document).on('mousedown' + NS + ' touchstart' + NS, function (e) {
+      $(SCOPE).each(function () {
+        var $scope = $(this);
+        if (!$scope.find(LIST).hasClass(OPEN)) return;
+        if ($(e.target).closest($scope).length) return;
+        closeList($scope);
+      });
+    });
+  }
+  function init() {
+    bind();
+  }
+  function destroy() {
+    $(document).off(NS);
+    _bound = false;
+  }
+  window.UI.optionBox = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
+/***/ 3474:
+/***/ (function() {
+
+/**
+ * @file scroll-buttons.js
+ * @description 수평 스크롤 버튼 그룹 — 활성 버튼 자동 스크롤 및 상태 관리
+ * @scope [data-scroll-buttons]
+ * @option data-peek {number} 잘린 버튼 노출 여백 (기본 40px)
+ * @state .is-active — 선택된 버튼
+ * @events scrollbuttons:change — 버튼 변경 시 발생, detail: {$btn}
+ * @note SKIP 셀렉터([data-range-picker-toggle])는 preventDefault 제외
+ */
+(function (window) {
+  'use strict';
+
+  var $ = window.jQuery;
+  var DATA_KEY = 'scrollButtons';
+  var TOUCH_SUPPORTED = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var clickEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
+  var Selector = {
+    SCOPE: '[data-scroll-buttons]',
+    BTN: 'button, a',
+    SKIP: '[data-range-picker-toggle]'
+  };
+  var ClassName = {
+    ACTIVE: 'is-active'
+  };
+  function init(el) {
+    var $scope = $(el);
+    if ($scope.data(DATA_KEY)) return;
+    var peek = parseInt($scope.attr('data-peek') || 40, 10);
+    var $btns = $scope.find(Selector.BTN);
+    var handlers = [];
+
+    // 활성 버튼이 보이도록 스크롤 위치 보정
+    function scrollToBtn($btn) {
+      var wrap = $scope[0];
+      var btn = $btn[0];
+      var btnLeft = btn.offsetLeft;
+      var btnRight = btnLeft + btn.offsetWidth;
+      var wrapLeft = wrap.scrollLeft;
+      var wrapRight = wrapLeft + wrap.offsetWidth;
+      if (btn === $btns.last()[0]) {
+        // 마지막 버튼은 끝까지
+        $scope.animate({
+          scrollLeft: wrap.scrollWidth
+        }, 200);
+      } else if (btn === $btns.first()[0]) {
+        // 첫 번째 버튼은 처음으로
+        $scope.animate({
+          scrollLeft: 0
+        }, 200);
+      } else if (btnLeft < wrapLeft) {
+        // 왼쪽으로 잘린 경우
+        $scope.animate({
+          scrollLeft: btnLeft - peek
+        }, 200);
+      } else if (btnRight > wrapRight) {
+        // 오른쪽으로 잘린 경우
+        $scope.animate({
+          scrollLeft: btnRight - wrap.offsetWidth + peek
+        }, 200);
+      }
+    }
+
+    // 버튼 활성 상태 전환 및 이벤트 발행
+    function setActive($btn) {
+      var scrollOnly = $scope.is('[data-scroll-only]');
+      if (!scrollOnly) {
+        $btns.removeClass(ClassName.ACTIVE);
+        $btn.addClass(ClassName.ACTIVE);
+        $scope.trigger('scrollbuttons:change', [{
+          $btn: $btn
+        }]);
+      }
+      scrollToBtn($btn);
+    }
+
+    // 터치 스크롤과 탭을 구분하는 핸들러 생성
+    function createHandler(btn) {
+      var isSkip = $(btn).is(Selector.SKIP);
+      var touchStartX = 0;
+      var moved = false;
+      btn.addEventListener('touchstart', function (e) {
+        touchStartX = e.touches[0].clientX;
+        moved = false;
+      }, {
+        passive: true
+      });
+      btn.addEventListener('touchmove', function (e) {
+        if (Math.abs(e.touches[0].clientX - touchStartX) > 5) {
+          moved = true;
+        }
+      }, {
+        passive: true
+      });
+      return function (e) {
+        if (moved) return;
+        var scrollOnly = $scope.is('[data-scroll-only]');
+        if (!isSkip && !scrollOnly) {
+          e.preventDefault();
+        }
+        setActive($(btn));
+      };
+    }
+
+    // 모든 버튼 바인딩 — SKIP 대상은 preventDefault 제외
+    $btns.each(function () {
+      var handler = createHandler(this);
+      this.addEventListener(clickEvent, handler, {
+        passive: false
+      });
+      handlers.push({
+        el: this,
+        handler: handler
+      });
+    });
+    var instance = {
+      setActive: setActive,
+      destroy: function () {
+        handlers.forEach(function (item) {
+          item.el.removeEventListener(clickEvent, item.handler);
+        });
+        handlers = [];
+        $scope.removeData(DATA_KEY);
+      }
+    };
+    $scope.data(DATA_KEY, instance);
+  }
+  function initAll(root) {
+    var $root = root ? $(root) : $(document);
+    $root.find(Selector.SCOPE).each(function () {
+      init(this);
+    });
+  }
+  function getInstance(selector) {
+    return $(selector).data(DATA_KEY) || null;
+  }
+  window.scrollButtons = {
+    init: init,
+    initAll: initAll,
+    getInstance: getInstance
+  };
+  $(function () {
+    initAll();
+  });
+})(window);
+
+/***/ }),
+
+/***/ 4262:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2687,6 +3066,7 @@ var voice_blob_namespaceObject = /*#__PURE__*/JSON.parse('{"v":"4.8.0","meta":{"
  * @scope [data-voice-blob-anim]
  * @state instance — dotlottie-wc 플레이어 인스턴스
  */
+ // 이건 유지
 
 (function ($) {
   'use strict';
@@ -2699,26 +3079,37 @@ var voice_blob_namespaceObject = /*#__PURE__*/JSON.parse('{"v":"4.8.0","meta":{"
   function init() {
     var $container = $('[data-voice-blob-anim]');
     if (!$container.length || instance) return;
-    if (!voice_blob_namespaceObject) return;
-    __webpack_require__.e(/* import() */ 96).then(__webpack_require__.bind(__webpack_require__, 3640)).then(function () {
-      if (instance) return;
-      var player = document.createElement('dotlottie-wc');
 
-      // JSON 데이터 직접 전달 (빌드 시 URL 의존 제거)
-      player.data = voice_blob_namespaceObject;
-      player.setAttribute('loop', '');
-      player.setAttribute('autoplay', '');
-      player.setAttribute('layout', JSON.stringify({
-        fit: 'contain',
-        align: [0.5, 0.5]
-      }));
-      player.useFrameInterpolation = false;
-      player.style.width = '100%';
-      player.style.height = '100%';
-      $container[0].innerHTML = '';
-      $container[0].appendChild(player);
-      instance = player;
-    });
+    // 모바일 디바이스에서만 실행
+    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
+    if (!voice_blob_namespaceObject) return;
+
+    // CDN 동적 로드 (모바일에서만 다운로드)
+    var CDN_URL = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js';
+    var script = document.createElement('script');
+    script.type = 'module';
+    script.src = CDN_URL;
+    script.onload = function () {
+      // Web Component 등록 완료까지 대기
+      customElements.whenDefined('dotlottie-wc').then(function () {
+        if (instance) return;
+        var player = document.createElement('dotlottie-wc');
+        player.data = voice_blob_namespaceObject;
+        player.setAttribute('loop', '');
+        player.setAttribute('autoplay', '');
+        player.setAttribute('layout', JSON.stringify({
+          fit: 'contain',
+          align: [0.5, 0.5]
+        }));
+        player.useFrameInterpolation = false;
+        player.style.width = '100%';
+        player.style.height = '100%';
+        $container[0].innerHTML = '';
+        $container[0].appendChild(player);
+        instance = player;
+      });
+    };
+    document.head.appendChild(script);
   }
 
   // 인스턴스 제거
@@ -3512,18 +3903,34 @@ var search_suggest = __webpack_require__(6823);
 ;// ./src/assets/scripts-mo/ui/home/home-swiper-visual.js
 /**
  * @file scripts-mo/ui/home/home-swiper-visual.js
- * @description 홈 비주얼 배너 Swiper
+ * @description 홈 비주얼 배너 Swiper (coverflow 기반, 수동 복제로 loop 보정)
  * @scope [data-ui="banner-visual"]
- * @option data-autoplay, data-speed, data-space-between
+ * @option data-autoplay, data-speed
  */
 
 (function ($) {
   'use strict';
 
   var SCOPE = '[data-ui="banner-visual"]';
+  // loop 안정성을 위한 최소 슬라이드 수
+  var MIN_SLIDES = 9;
   function getInt(el, name) {
     var val = el.getAttribute('data-' + name);
     return val ? parseInt(val, 10) : null;
+  }
+
+  // 슬라이드 수동 복제 (원본 부족 시 loop 보정)
+  function cloneSlides($wrapper) {
+    var $originals = $wrapper.children('.swiper-slide');
+    var originalCount = $originals.length;
+    if (originalCount >= MIN_SLIDES) return originalCount;
+    var needed = Math.ceil((MIN_SLIDES - originalCount) / originalCount);
+    for (var i = 0; i < needed; i++) {
+      $originals.each(function () {
+        $wrapper.append($(this).clone().attr('data-cloned', 'true'));
+      });
+    }
+    return originalCount;
   }
   function init() {
     $(SCOPE).each(function (idx, el) {
@@ -3531,17 +3938,32 @@ var search_suggest = __webpack_require__(6823);
       if ($root.data('init')) return;
       var swiperEl = $root.find('> .swiper')[0];
       if (!swiperEl) return;
+      var $wrapper = $(swiperEl).find('.swiper-wrapper');
+      var slideCount = $wrapper.children('.swiper-slide').length;
+
+      // 슬라이드 1개 이하면 Swiper 불필요
+      if (slideCount < 2) return;
+
+      // 복제 후 원본 슬라이드 수 저장
+      var originalCount = cloneSlides($wrapper);
+      $root.data('originalCount', originalCount);
       var config = {
-        slidesPerView: 1.32,
+        effect: 'coverflow',
         centeredSlides: true,
+        slidesPerView: 'auto',
         loop: true,
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        preventClicks: true,
-        preventClicksPropagation: true,
-        spaceBetween: getInt(el, 'space-between') || 0,
-        speed: getInt(el, 'speed') || 300
+        speed: getInt(el, 'speed') || 300,
+        coverflowEffect: {
+          rotate: 0,
+          stretch: 20,
+          depth: 0,
+          modifier: 1,
+          scale: 0.8,
+          slideShadows: false
+        }
       };
       var autoplayVal = getInt(el, 'autoplay');
       if (autoplayVal) {
@@ -3552,18 +3974,18 @@ var search_suggest = __webpack_require__(6823);
       }
       var swiper = new swiper_bundle/* default */.A(swiperEl, config);
 
-      // nav 버튼
-      $root.on('click', '[data-role]', function () {
+      // nav 버튼 (이벤트 위임)
+      $root.on('click.bannerVisual', '[data-role]', function () {
         var role = $(this).attr('data-role');
         if (role === 'prev') swiper.slidePrev();
         if (role === 'next') swiper.slideNext();
         if (role === 'toggle-play') {
           if (swiper.autoplay.running) {
             swiper.autoplay.stop();
-            $(this).text('play');
+            $(this).addClass('is-play').attr('aria-label', '재생');
           } else {
             swiper.autoplay.start();
-            $(this).text('II');
+            $(this).removeClass('is-play').attr('aria-label', '일시정지');
           }
         }
       });
@@ -3578,7 +4000,11 @@ var search_suggest = __webpack_require__(6823);
       if (swiperEl && swiperEl.swiper) {
         swiperEl.swiper.destroy(true, true);
       }
-      $root.removeData('init');
+
+      // 복제 슬라이드 제거
+      $(swiperEl).find('[data-cloned="true"]').remove();
+      $root.off('.bannerVisual');
+      $root.removeData('init originalCount');
     });
   }
   window.UI = window.UI || {};
@@ -3888,6 +4314,30 @@ var search_suggest = __webpack_require__(6823);
     }
   };
 })(window.jQuery, window);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/header/header-button.js
+var header_button = __webpack_require__(7451);
+;// ./src/assets/scripts-mo/ui/header/index.js
+/**
+ * @file scripts-mo/ui/header/index.js
+ * @description 헤더 UI 모듈 통합
+ */
+
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var modules = ['headerButton'];
+  window.UI.header = {
+    init: function () {
+      modules.forEach(function (name) {
+        var mod = window[name];
+        if (typeof mod.init === 'function') mod.init();
+      });
+    }
+  };
+})(window.jQuery, window);
 ;// ./src/assets/scripts-mo/core/ui.js
 /**
  * @file scripts-mo/core/ui.js
@@ -3906,11 +4356,12 @@ var search_suggest = __webpack_require__(6823);
 
 
 
+
 (function ($, window) {
   'use strict';
 
   window.UI = window.UI || {};
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search', 'home'];
+  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search', 'home', 'header'];
   window.UI.init = function () {
     modules.forEach(function (name) {
       var mod = window.UI[name];
@@ -3955,382 +4406,6 @@ console.log('[mobile/index] entry 실행');
 
 
 
-
-/***/ }),
-
-/***/ 3064:
-/***/ (function() {
-
-/**
- * @file scripts/ui/form/input.js
- * @description input 공통: 값 유무에 따른 상태 클래스 토글
- * @scope .vits-input 컴포넌트 내부 input만 적용(전역 영향 없음)
- *
- * @state
- *  - root.is-filled: input에 값이 있을 때 토글
- *
- * @maintenance
- *  - init 재호출을 고려해 바인딩은 네임스페이스로 off/on 처리(중복 방지)
- *  - compositionend 직후 input 중복 발생 방지(debounce flag)
- *
- * @note 모바일 대응
- *  - compositionend 직후 input 중복 발생 방지(삼성키보드 등)
- *  - 브라우저 자동완성(autofill) 시 input/change 미발생 대응(CSS animation 트리거)
- *  - 자동완성 감지용 CSS 필요:
- *    @keyframes onAutoFillStart { from { opacity: 1; } to { opacity: 1; } }
- *    input:-webkit-autofill { animation-name: onAutoFillStart; }
- */
-
-(function ($, window, document) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  window.UI.input = window.UI.input || {};
-  var MODULE_KEY = 'input';
-  var NS = '.' + MODULE_KEY;
-  var ROOT = '.vits-input';
-  var INPUT = ROOT + ' input';
-
-  // compositionend 직후 input 무시 간격(ms)
-  var COMPOSE_DEBOUNCE = 50;
-
-  // is-filled 토글
-  function syncFilled($root, $input) {
-    $root.toggleClass('is-filled', $input.val().length > 0);
-  }
-
-  // 단일 input 초기 동기화
-  function initOne($input) {
-    if (!$input || !$input.length) return;
-    var $root = $input.closest(ROOT);
-    if (!$root.length) return;
-    syncFilled($root, $input);
-  }
-
-  // 이벤트 바인딩(위임 1회, init 재호출 대비)
-  function bindOnce() {
-    $(document).off(NS);
-
-    // IME 조합 시작
-    $(document).on('compositionstart' + NS, INPUT, function () {
-      $(this).data('isComposing', true);
-    });
-
-    // IME 조합 완료
-    $(document).on('compositionend' + NS, INPUT, function () {
-      var $input = $(this);
-      $input.data('isComposing', false);
-      $input.data('compEndAt', Date.now());
-      initOne($input);
-    });
-
-    // 입력 이벤트
-    $(document).on('input' + NS, INPUT, function () {
-      var $input = $(this);
-
-      // compositionend 직후 중복 input 무시
-      var compEndAt = $input.data('compEndAt') || 0;
-      if (compEndAt && Date.now() - compEndAt < COMPOSE_DEBOUNCE) return;
-      if ($input.data('isComposing')) return;
-      var $root = $input.closest(ROOT);
-      if (!$root.length) return;
-      syncFilled($root, $input);
-    });
-
-    // JS 값 변경, 자동완성 후 동기화
-    $(document).on('change' + NS, INPUT, function () {
-      initOne($(this));
-    });
-
-    // 자동완성 감지 — autofill 시 input/change가 안 발생하는 브라우저 대응
-    $(document).on('animationstart' + NS, INPUT, function (e) {
-      if (e.originalEvent.animationName === 'onAutoFillStart') {
-        initOne($(this));
-      }
-    });
-  }
-
-  // root 범위 초기화(부분 렌더 지원)
-  function initAll(root) {
-    var $scope = root ? $(root) : $(document);
-    $scope.find(INPUT).each(function () {
-      initOne($(this));
-    });
-  }
-  window.UI.input = {
-    init: function (root) {
-      if (!window.UI.input.__bound) {
-        bindOnce();
-        window.UI.input.__bound = true;
-      }
-      initAll(root);
-    },
-    destroy: function () {
-      $(document).off(NS);
-      window.UI.input.__bound = false;
-    }
-  };
-})(window.jQuery || window.$, window, document);
-
-/***/ }),
-
-/***/ 3198:
-/***/ (function() {
-
-/**
- * @file scripts-mo/ui/common/option-box.js
- * @description data-속성 기반 옵션 선택 박스 (모바일)
- * @scope [data-ui="option-box"]
- *
- * @mapping
- *   [data-option-trigger] — 열기/닫기 버튼
- *   [data-option-trigger] .text — 선택된 값 표시
- *   [data-option-list] — 옵션 목록 (열림/닫힘 대상)
- *   [data-select-value] — 옵션 버튼 (클릭 시 선택)
- *
- * @state
- *   is-open — 옵션 목록 열림
- *   is-selected — 선택된 옵션 항목
- *
- * @events
- *   option-box:select — 옵션 선택 시 발생 (detail: { value, text })
- *
- * @a11y aria-expanded 제어
- */
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  window.UI = window.UI || {};
-  var NS = '.uiOptionBox';
-  var SCOPE = '[data-ui="option-box"]';
-  var TRIGGER = '[data-option-trigger]';
-  var LIST = '[data-option-list]';
-  var OPTION_BTN = '[data-select-value]';
-  var OPEN = 'is-open';
-  var SELECTED = 'is-selected';
-  var _bound = false;
-  function openList($scope) {
-    $scope.find(LIST).addClass(OPEN);
-    $scope.find(TRIGGER).attr('aria-expanded', 'true');
-  }
-  function closeList($scope) {
-    $scope.find(LIST).removeClass(OPEN);
-    $scope.find(TRIGGER).attr('aria-expanded', 'false');
-  }
-  function bind() {
-    if (_bound) return;
-    _bound = true;
-
-    // 트리거 클릭 — 열기/닫기
-    $(document).on('click' + NS, TRIGGER, function (e) {
-      e.preventDefault();
-      var $scope = $(this).closest(SCOPE);
-      if (!$scope.length) return;
-      if ($scope.find(LIST).hasClass(OPEN)) {
-        closeList($scope);
-      } else {
-        openList($scope);
-      }
-    });
-
-    // 옵션 선택
-    $(document).on('click' + NS, OPTION_BTN, function () {
-      var $btn = $(this);
-      var $scope = $btn.closest(SCOPE);
-      if (!$scope.length) return;
-      var value = $btn.attr('data-select-value');
-
-      // 선택 상태 갱신
-      $scope.find(OPTION_BTN).removeClass(SELECTED);
-      $btn.addClass(SELECTED);
-
-      // 트리거 텍스트 갱신
-      var $trigger = $scope.find(TRIGGER + ' .text');
-      if ($trigger.length) {
-        $trigger.html($btn.html());
-      }
-
-      // 닫기
-      closeList($scope);
-
-      // 커스텀 이벤트
-      $scope.trigger('option-box:select', {
-        value: value,
-        text: $trigger.text()
-      });
-    });
-
-    // 외부 클릭 시 닫기
-    $(document).on('mousedown' + NS + ' touchstart' + NS, function (e) {
-      $(SCOPE).each(function () {
-        var $scope = $(this);
-        if (!$scope.find(LIST).hasClass(OPEN)) return;
-        if ($(e.target).closest($scope).length) return;
-        closeList($scope);
-      });
-    });
-  }
-  function init() {
-    bind();
-  }
-  function destroy() {
-    $(document).off(NS);
-    _bound = false;
-  }
-  window.UI.optionBox = {
-    init: init,
-    destroy: destroy
-  };
-})(window.jQuery, window);
-
-/***/ }),
-
-/***/ 3474:
-/***/ (function() {
-
-/**
- * @file scroll-buttons.js
- * @description 수평 스크롤 버튼 그룹 — 활성 버튼 자동 스크롤 및 상태 관리
- * @scope [data-scroll-buttons]
- * @option data-peek {number} 잘린 버튼 노출 여백 (기본 40px)
- * @state .is-active — 선택된 버튼
- * @events scrollbuttons:change — 버튼 변경 시 발생, detail: {$btn}
- * @note SKIP 셀렉터([data-range-picker-toggle])는 preventDefault 제외
- */
-(function (window) {
-  'use strict';
-
-  var $ = window.jQuery;
-  var DATA_KEY = 'scrollButtons';
-  var TOUCH_SUPPORTED = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  var clickEvent = TOUCH_SUPPORTED ? 'touchend' : 'click';
-  var Selector = {
-    SCOPE: '[data-scroll-buttons]',
-    BTN: 'button',
-    SKIP: '[data-range-picker-toggle]'
-  };
-  var ClassName = {
-    ACTIVE: 'is-active'
-  };
-  function init(el) {
-    var $scope = $(el);
-    if ($scope.data(DATA_KEY)) return;
-    var peek = parseInt($scope.attr('data-peek') || 40, 10);
-    var $btns = $scope.find(Selector.BTN);
-    var handlers = [];
-
-    // 활성 버튼이 보이도록 스크롤 위치 보정
-    function scrollToBtn($btn) {
-      var wrap = $scope[0];
-      var btn = $btn[0];
-      var btnLeft = btn.offsetLeft;
-      var btnRight = btnLeft + btn.offsetWidth;
-      var wrapLeft = wrap.scrollLeft;
-      var wrapRight = wrapLeft + wrap.offsetWidth;
-      if (btn === $btns.last()[0]) {
-        // 마지막 버튼은 끝까지
-        $scope.animate({
-          scrollLeft: wrap.scrollWidth
-        }, 200);
-      } else if (btn === $btns.first()[0]) {
-        // 첫 번째 버튼은 처음으로
-        $scope.animate({
-          scrollLeft: 0
-        }, 200);
-      } else if (btnLeft < wrapLeft) {
-        // 왼쪽으로 잘린 경우
-        $scope.animate({
-          scrollLeft: btnLeft - peek
-        }, 200);
-      } else if (btnRight > wrapRight) {
-        // 오른쪽으로 잘린 경우
-        $scope.animate({
-          scrollLeft: btnRight - wrap.offsetWidth + peek
-        }, 200);
-      }
-    }
-
-    // 버튼 활성 상태 전환 및 이벤트 발행
-    function setActive($btn) {
-      $btns.removeClass(ClassName.ACTIVE);
-      $btn.addClass(ClassName.ACTIVE);
-      scrollToBtn($btn);
-      $scope.trigger('scrollbuttons:change', [{
-        $btn: $btn
-      }]);
-    }
-
-    // 터치 스크롤과 탭을 구분하는 핸들러 생성
-    function createHandler(btn) {
-      var isSkip = $(btn).is(Selector.SKIP);
-      var touchStartX = 0;
-      var moved = false;
-      btn.addEventListener('touchstart', function (e) {
-        touchStartX = e.touches[0].clientX;
-        moved = false;
-      }, {
-        passive: true
-      });
-      btn.addEventListener('touchmove', function (e) {
-        if (Math.abs(e.touches[0].clientX - touchStartX) > 5) {
-          moved = true;
-        }
-      }, {
-        passive: true
-      });
-      return function (e) {
-        // 수평 스크롤 중 touchend 무시
-        if (moved) return;
-        if (!isSkip) {
-          e.preventDefault();
-        }
-        setActive($(btn));
-      };
-    }
-
-    // 모든 버튼 바인딩 — SKIP 대상은 preventDefault 제외
-    $btns.each(function () {
-      var handler = createHandler(this);
-      this.addEventListener(clickEvent, handler, {
-        passive: false
-      });
-      handlers.push({
-        el: this,
-        handler: handler
-      });
-    });
-    var instance = {
-      setActive: setActive,
-      destroy: function () {
-        handlers.forEach(function (item) {
-          item.el.removeEventListener(clickEvent, item.handler);
-        });
-        handlers = [];
-        $scope.removeData(DATA_KEY);
-      }
-    };
-    $scope.data(DATA_KEY, instance);
-  }
-  function initAll(root) {
-    var $root = root ? $(root) : $(document);
-    $root.find(Selector.SCOPE).each(function () {
-      init(this);
-    });
-  }
-  function getInstance(selector) {
-    return $(selector).data(DATA_KEY) || null;
-  }
-  window.scrollButtons = {
-    init: init,
-    initAll: initAll,
-    getInstance: getInstance
-  };
-  $(function () {
-    initAll();
-  });
-})(window);
 
 /***/ }),
 
@@ -4799,7 +4874,10 @@ console.log('[mobile/index] entry 실행');
       if (window.UI && window.UI.tab) {
         var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
         if ($tabScope.length) {
-          window.UI.tab.activate($tabScope, 'categoryTab');
+          var $popup = $('#' + POPUP_ID);
+          var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
+          $popup.removeAttr('data-request-tab');
+          window.UI.tab.activate($tabScope, requestTab);
         }
       }
       setTimeout(function () {
@@ -4815,6 +4893,18 @@ console.log('[mobile/index] entry 실행');
   function bind() {
     if (_bound) return;
     _bound = true;
+
+    // GNB 브랜드 → 브랜드탭으로 카테고리 팝업 열기
+    $(document).on('click' + NS, '[data-action="open-brand-sheet"]', function (e) {
+      e.preventDefault();
+      if (!window.VmKendoWindow) return;
+      if (isPopupOpen()) {
+        window.VmKendoWindow.close(POPUP_ID);
+        return;
+      }
+      $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
+      openCategoryPopup();
+    });
 
     // 액션 버튼 클릭 → 풀팝업 열기/토글
     $(document).on('click' + NS, SCOPE + ' [data-action]', function (e) {
@@ -6519,6 +6609,76 @@ console.log('[mobile/index] entry 실행');
     }
   };
 })(window.jQuery || window.$, window);
+
+/***/ }),
+
+/***/ 7451:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/header/header-button.js
+ * @description 헤더 버튼 뱃지 카운트 관리
+ * @scope [data-header-badge="count"]
+ *
+ * @state is-hidden (뱃지 숨김), is-single/is-double/is-over (자릿수)
+ *
+ * @note
+ *   - init 시 MutationObserver로 .num 텍스트 변경 자동 감지
+ *   - 99 초과 시 99+ 표시, 0이면 뱃지 숨김
+ */
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  var SEL = {
+    badge: '[data-header-badge="count"]',
+    num: '.num'
+  };
+  var CLS = {
+    hidden: 'is-hidden',
+    single: 'is-single',
+    double: 'is-double',
+    over: 'is-over'
+  };
+  var MAX_COUNT = 99;
+  var _observers = [];
+  function syncBadge($badge, $num) {
+    var text = $.trim($num.text());
+    var raw = text === MAX_COUNT + '+' ? MAX_COUNT + 1 : parseInt(text, 10) || 0;
+    var display = raw > MAX_COUNT ? MAX_COUNT + '+' : String(raw);
+    if (text !== display) {
+      $num.text(display);
+    }
+    $badge.toggleClass(CLS.single, raw > 0 && raw < 10).toggleClass(CLS.double, raw >= 10 && raw <= MAX_COUNT).toggleClass(CLS.over, raw > MAX_COUNT).toggleClass(CLS.hidden, raw === 0);
+  }
+  function init() {
+    $(SEL.badge).each(function () {
+      var $badge = $(this);
+      var $num = $badge.find(SEL.num);
+      if (!$num.length) return;
+      syncBadge($badge, $num);
+      var observer = new MutationObserver(function () {
+        syncBadge($badge, $num);
+      });
+      observer.observe($num[0], {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+      _observers.push(observer);
+    });
+  }
+  function destroy() {
+    _observers.forEach(function (obs) {
+      obs.disconnect();
+    });
+    _observers = [];
+  }
+  window.headerButton = {
+    init: init,
+    destroy: destroy
+  };
+})(window.jQuery, window);
 
 /***/ }),
 
@@ -9627,28 +9787,9 @@ console.log('[mobile/index] entry 실행');
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		// Since all referenced chunks are already included
-/******/ 		// in this file, this function is empty here.
-/******/ 		__webpack_require__.e = function() { return Promise.resolve(); };
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -9660,6 +9801,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			605: 0,
+/******/ 			96: 0,
 /******/ 			152: 0,
 /******/ 			817: 0,
 /******/ 			133: 0,
@@ -9716,7 +9858,7 @@ console.log('[mobile/index] entry 실행');
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,817,133,486,766,979], function() { return __webpack_require__(3041); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96,152,817,133,486,766,979], function() { return __webpack_require__(4262); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

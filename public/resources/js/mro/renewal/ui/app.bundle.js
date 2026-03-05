@@ -11472,6 +11472,7 @@ if (document.body?.dataset?.guide === 'true') {
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			524: 0,
+/******/ 			96: 0,
 /******/ 			152: 0,
 /******/ 			133: 0,
 /******/ 			237: 0
@@ -11486,7 +11487,7 @@ if (document.body?.dataset?.guide === 'true') {
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if(!/^(133|152|237)$/.test(chunkId)) {
+/******/ 						if(/^(395|524|979)$/.test(chunkId)) {
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise(function(resolve, reject) { installedChunkData = installedChunks[chunkId] = [resolve, reject]; });
 /******/ 							promises.push(installedChunkData[2] = promise);
