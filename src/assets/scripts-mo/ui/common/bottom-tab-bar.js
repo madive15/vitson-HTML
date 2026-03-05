@@ -110,7 +110,10 @@
       if (window.UI && window.UI.tab) {
         var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
         if ($tabScope.length) {
-          window.UI.tab.activate($tabScope, 'categoryTab');
+          var $popup = $('#' + POPUP_ID);
+          var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
+          $popup.removeAttr('data-request-tab');
+          window.UI.tab.activate($tabScope, requestTab);
         }
       }
 
@@ -128,6 +131,20 @@
   function bind() {
     if (_bound) return;
     _bound = true;
+
+    // GNB 브랜드 → 브랜드탭으로 카테고리 팝업 열기
+    $(document).on('click' + NS, '[data-action="open-brand-sheet"]', function (e) {
+      e.preventDefault();
+      if (!window.VmKendoWindow) return;
+
+      if (isPopupOpen()) {
+        window.VmKendoWindow.close(POPUP_ID);
+        return;
+      }
+
+      $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
+      openCategoryPopup();
+    });
 
     // 액션 버튼 클릭 → 풀팝업 열기/토글
     $(document).on('click' + NS, SCOPE + ' [data-action]', function (e) {

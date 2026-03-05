@@ -1,0 +1,234 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_home.scss
+// - 모바일 메인 페이지
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:math';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+
+$visual-width: 86.7%; // 360px 기준 312px 비율
+$visual-btn: fn.rem(18);
+
+@mixin home-divider {
+  @include mx.border('bottom', fn.rem(8), $color: map.get(color.$layout-surf, 'sunken'));
+}
+
+@mixin home-inner-scroll-x($pd) {
+  width: 100%;
+  padding: $pd;
+  overflow: auto hidden;
+}
+
+// 기본 배경색
+.vm-wrap.wrap-home {
+  .vm-content-wrap {
+    background: color.$color-white;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+// 비쥬얼 배너
+.vm-home-visual {
+  position: relative;
+
+  // 1개 일 떄
+  .vm-home-swiper:not(.swiper-initialized) {
+    .home-swiper {
+      &-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+
+      &-slide {
+        width: calc(100% - (var.$mo-gutter * 2));
+      }
+    }
+  }
+
+  .home-swiper {
+    /* stylelint-disable-next-line no-descending-specificity */
+    &-slide {
+      // coverflow가 scale 처리하므로 CSS transform 불필요
+      width: $visual-width;
+      aspect-ratio: 312 / 174;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    &-control {
+      @include mx.position(absolute, $bottom: 0, $left: 50%);
+      @include mx.flex(flex, row, flex-end, center);
+      z-index: var.$zindex-base;
+      gap: map.get(var.$unit, 8);
+      width: $visual-width;
+      padding: 0 map.get(var.$unit, 12) fn.rem(10) 0;
+      transform: translateX(-50%);
+
+      button {
+        @include button.btn-reset;
+
+        &.toggle-autoplay {
+          @include mx.flex(flex, row, center, center);
+          @include icon.pse-icon(before, 14, 0, 0, color.$color-white, 'pause');
+          flex-shrink: 0;
+          width: $visual-btn;
+          height: $visual-btn;
+          padding: map.get(var.$unit, 2);
+          margin: map.get(var.$unit, 2) * -1;
+          color: color.$color-white;
+          background: rgb(color.$color-white, 20%);
+          border-radius: 50%;
+
+          &.is-play::before {
+            mask-image: url('/public/resources/img/mro/renewal/ic/ic-arrow-down-fill.svg');
+            transform: rotate(-90deg) scale(0.7);
+          }
+        }
+      }
+    }
+
+    &-nav {
+      @include mx.flex;
+      gap: fn.rem(5);
+      width: fn.rem(45);
+      height: $visual-btn;
+      padding: 0 map.get(var.$unit, 2);
+      background: rgb(color.$color-white, 20%);
+      border-radius: $visual-btn;
+
+      button {
+        @include mx.flex(flex, row, center, center);
+        flex: 1 0 $visual-btn;
+        padding: map.get(var.$unit, 2);
+        margin: map.get(var.$unit, 2) * -1;
+
+        .icon {
+          @include icon.ic-size(fn.rem(14));
+          color: color.$color-white;
+        }
+      }
+    }
+  }
+}
+
+// 자주 찾는 메뉴
+.vm-home-frequent-menus {
+  @include home-divider;
+  position: relative;
+  padding: var.$mo-gutter 0 0;
+
+  .frequent-menu {
+    &-list {
+      @include mx.flex;
+      @include home-inner-scroll-x((0 var.$mo-gutter map.get(var.$unit, 20)));
+      gap: var.$mo-section-gap;
+      width: 100%;
+      overflow: auto hidden;
+    }
+
+    &-item {
+      flex-shrink: 0;
+
+      &:first-of-type {
+        padding-left: var.$mo-gutter;
+      }
+
+      &:last-of-type {
+        padding-right: var.$mo-gutter;
+      }
+    }
+
+    &-link {
+      @include mx.flex(flex, column, center, center);
+      gap: map.get(var.$unit, 4);
+      width: fn.rem(55);
+
+      /* stylelint-disable no-descending-specificity */
+      .icon {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      }
+
+      .text {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        white-space: nowrap;
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+  }
+}
+
+// 추천상품 - 초특가 제안
+.vm-home-recommend {
+  @include mx.flex(flex, column);
+  position: relative;
+  gap: var.$mo-gutter;
+  padding: map.get(var.$unit, 20) 0 map.get(var.$unit, 32);
+
+  .recommend {
+    &-head {
+      @include mx.flex(flex, row, flex-start, center);
+      position: relative;
+      z-index: var.$zindex-base + 1;
+      gap: var.$mo-gutter;
+      padding: 0 var.$mo-gutter;
+
+      &-title {
+        @include typo.typography('b2b', $color: map.get(color.$neutral-colors, '1'));
+        flex-grow: 1;
+        min-width: 0;
+
+        .point-color {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
+
+      &-more {
+        @include icon.ic-size(map.get(var.$unit, 20));
+        display: block;
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+
+    &-list {
+      @include mx.flex;
+      @include home-inner-scroll-x(var.$mo-gutter);
+      gap: map.get(var.$unit, 20);
+
+      > li {
+        flex: 0 0 fn.rem(140);
+        width: fn.rem(140);
+      }
+
+      .vm-product-card {
+        @include mx.flex(flex, column);
+
+        .product-info {
+          margin-top: map.get(var.$unit, 4) * -1;
+        }
+      }
+    }
+  }
+
+  @include mx.scroll-gradient-overflow;
+}
+
+[data-ui='banner-tab'] .tab-area .swiper-slide-thumb-active {
+  color: #fff !important;
+  background: #e74c3c !important;
+  border-color: #e74c3c !important;
+}

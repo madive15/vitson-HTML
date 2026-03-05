@@ -2015,19 +2015,21 @@
 }
 
 /* === 비츠온페이 로고 리뉴얼 변경 === */
-.ci .header-cont.vitsonpay-header-cont {
-  p {
-    @include mx.flex($align: center, $justify: center);
-    min-height: fn.rem(60);
+.ci .ci-area {
+  @include mx.flex(flex, row, space-between, center);
 
-    img {
-      display: block;
-      min-height: fn.rem(32);
-    }
+  .header-tit {
+    .header-cont {
+      .cst-text {
+        @include mx.flex($align: center, $justify: center);
+        @include mx.background('logo/logo-vitsonpay.svg', $size: auto fn.rem(32));
+        min-height: fn.rem(60);
 
-    &::after,
-    &::before {
-      display: none;
+        &::after,
+        &::before {
+          display: none;
+        }
+      }
     }
   }
 }

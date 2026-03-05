@@ -4,8 +4,8 @@
 <% var _value = typeof value !== 'undefined' ? value : ''; %>
 
 <!-- prettier-ignore -->
-<% if (type === 'main') { %>
-  <%- include('./main.ejs') %>
+<% if (type === 'main-bar') { %>
+  <%- include('./main-bar.ejs', { ...locals }) %>
 <% } else if (type === 'nav-bar') { %>
   <%- include('./nav-bar.ejs', { title: title }) %>
 <% } else if (type === 'nav-bar-step') { %>

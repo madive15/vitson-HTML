@@ -15,6 +15,7 @@ import '../ui/cart-order/index.js';
 import '../ui/brand/index.js';
 import '../ui/search/index.js';
 import '../ui/home/index.js';
+import '../ui/header/index.js';
 
 (function ($, window) {
   'use strict';
@@ -32,7 +33,8 @@ import '../ui/home/index.js';
     'cart-order',
     'brand',
     'search',
-    'home'
+    'home',
+    'header'
   ];
 
   window.UI.init = function () {

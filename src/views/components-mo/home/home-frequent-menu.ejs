@@ -1,0 +1,27 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+// include 시 전달받은 slides 목데이터
+const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+%>
+
+<section class="vm-home-frequent-menus">
+  <h2 class="sr-only">자주 찾는 메뉴 바로가기</h2>
+
+  <ul class="frequent-menu-list" data-scroll-buttons data-scroll-only>
+    <% menus.forEach(function(menu) { %>
+      <li class="frequent-menus-item">
+        <a 
+          href="<%= menu.href %>"
+          class="frequent-menu-link"
+          <%= menu.target ? 'target="' + menu.target + '" rel="noopener noreferrer"' : '' %>
+        >
+          <span class="icon">
+            <img src="<%= imgBase %>/<%= menu.img %>" alt="" />
+          </span>
+          <span class="text"><%= menu.name %></span>
+        </a>
+      </li>
+    <% }); %>
+  </ul>
+</section>

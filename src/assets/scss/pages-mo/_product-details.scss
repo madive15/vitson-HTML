@@ -341,17 +341,7 @@
         }
       }
 
-      &.is-overflow::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        width: fn.rem(78);
-        pointer-events: none;
-        content: '';
-        background: linear-gradient(to right, #fff0, #fff 90%);
-      }
+      @include mx.scroll-gradient-overflow;
     }
 
     // 상세정보, 제원정보 및 고시정보, 관련 및 연관상품

@@ -433,3 +433,18 @@
     background: #a8a8a8;
   }
 }
+
+// 스크롤 그라데이션
+@mixin scroll-gradient-overflow {
+  &.is-overflow::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: fn.rem(78);
+    pointer-events: none;
+    content: '';
+    background: linear-gradient(to right, #fff0, #fff 90%);
+  }
+}
