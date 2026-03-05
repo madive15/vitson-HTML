@@ -19,6 +19,7 @@
 
   @include icon.ic-size(fn.rem(28));
   display: block;
+  flex-shrink: 0;
   color: map.get(color.$icon-neutral, 'primary');
 }
 
@@ -38,79 +39,119 @@
       @include mx.border('bottom', $width: 8px, $color: map.get(color.$layout-surf, 'sunken'));
     }
 
-    .vm-header {
-      &-back {
-        @include icon.ic-size(fn.rem(28));
-        color: map.get(color.$icon-neutral, 'primary');
+    &.header-main-bar {
+      z-index: map.get(var.$mo-zindex, 'header-main');
+      flex-direction: column;
+      padding: 0 0 map.get(var.$unit, 8);
+    }
+  }
+
+  &-back {
+    @include icon.ic-size(fn.rem(28));
+    color: map.get(color.$icon-neutral, 'primary');
+  }
+
+  &-title {
+    @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+    @include mx.ellipsis-single;
+
+    .vits-tooltip {
+      &-trigger .icon {
+        width: fn.rem(14);
+        height: fn.rem(14);
       }
 
-      &-title {
-        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
-        @include mx.ellipsis-single;
+      &-content {
+        top: fn.rem(38); // 아이콘 28 + 여백 10 (header 총 높이 48)
+        left: var.$mo-gutter;
+      }
+    }
+  }
 
-        .vits-tooltip {
-          &-trigger .icon {
-            width: fn.rem(14);
-            height: fn.rem(14);
-          }
+  &-desc {
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    padding-top: map.get(var.$unit, 4);
+  }
 
-          &-content {
-            top: fn.rem(38); // 아이콘 28 + 여백 10 (header 총 높이 48)
-            left: var.$mo-gutter;
-          }
-        }
+  &-actions {
+    @include mx.flex(flex, row, flex-start, center);
+    gap: map.get(var.$unit, 8);
+    margin-left: auto;
+  }
+
+  &-btn {
+    position: relative;
+
+    .badge {
+      $badge-count: fn.rem(15);
+
+      @include mx.border('all', $color: color.$color-white);
+
+      &.dot {
+        @include mx.position(absolute, 0, 0);
+        width: map.get(var.$unit, 8);
+        height: map.get(var.$unit, 8);
+        background: map.get(color.$icon-colors, 'primary');
+        border-radius: 50%;
       }
 
-      &-desc {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-        padding-top: map.get(var.$unit, 4);
-      }
+      &.count {
+        @include mx.position(absolute, -1px);
+        @include mx.flex(flex, row, center, center);
+        width: max-content;
+        min-width: $badge-count;
+        height: $badge-count;
+        padding: 0 map.get(var.$unit, 4);
+        background: map.get(color.$brand-colors, '100');
+        border-radius: $badge-count;
 
-      &-actions {
-        @include mx.flex(flex, row, flex-start, center);
-        gap: map.get(var.$unit, 12);
-        margin-left: auto;
-      }
-
-      &-btn {
-        position: relative;
-
-        &:is(a) {
-          @include nav-bar-common-btn('a');
+        .num {
+          @include typo.typography('b5b', $color: color.$color-white);
+          line-height: $badge-count;
         }
 
-        &:is(button) {
-          @include nav-bar-common-btn('button');
+        &.is-single {
+          left: var.$mo-gutter;
         }
 
-        &.is-active::after {
-          @include mx.position(absolute, 0, 0);
-          z-index: var.$zindex-base;
-          width: map.get(var.$unit, 8);
-          height: map.get(var.$unit, 8);
-          content: '';
-          background: map.get(color.$icon-colors, 'primary');
-          border-radius: 50%;
-          box-shadow: inset 0 0 0 1px color.$color-white;
+        &.is-double {
+          left: map.get(var.$unit, 12);
         }
 
-        // 상품상세 - 장바구니 버튼
-        &.btn-cart {
-          position: relative;
-
-          .badge {
-            @include mx.position(absolute, 2px, -2px);
-            @include mx.flex(flex, row, center, center);
-            @include typo.typography('b4r', $color: color.$color-white);
-            width: max-content;
-            min-width: fn.rem(15);
-            height: fn.rem(15);
-            padding: 0 map.get(var.$unit, 4);
-            background: map.get(color.$brand-colors, '100');
-            border-radius: fn.rem(15);
-          }
+        &.is-over {
+          left: fn.rem(10);
         }
       }
+    }
+
+    &:is(a) {
+      @include nav-bar-common-btn('a');
+    }
+
+    &:is(button) {
+      @include nav-bar-common-btn('button');
+    }
+
+    &.is-active::after {
+      @include mx.position(absolute, 0, 0);
+      z-index: var.$zindex-base;
+      width: map.get(var.$unit, 8);
+      height: map.get(var.$unit, 8);
+      content: '';
+      background: map.get(color.$icon-colors, 'primary');
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px color.$color-white;
+    }
+  }
+
+  &-logo {
+    display: block;
+    width: fn.rem(110);
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
     }
   }
 
@@ -175,6 +216,7 @@
   }
 
   &:has(.vm-header-desc) {
+    /* stylelint-disable-next-line no-descending-specificity */
     .vm-header-actions {
       align-self: flex-start;
     }
@@ -239,6 +281,97 @@
           right: map.get(var.$unit, 36);
           background: map.get(color.$gray-shades, '40');
         }
+      }
+    }
+  }
+
+  &.header-main-bar {
+    .header-main {
+      &-top {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 8);
+        width: 100%;
+        height: map.get(var.$mo-header, 'main-bar-top');
+        padding: map.get(var.$unit, 12) 0;
+
+        &-bar {
+          @include mx.flex(flex, row, space-between, center);
+          padding: 0 var.$mo-gutter;
+        }
+      }
+
+      &-search {
+        padding: 0 var.$mo-gutter;
+
+        .vits-input-searchform {
+          height: map.get(var.$unit, 40);
+
+          .input-search {
+            padding-right: map.get(var.$unit, 36);
+            padding-left: map.get(var.$unit, 12);
+            font-size: fn.rem(14);
+
+            &-btn {
+              right: map.get(var.$unit, 8);
+              width: map.get(var.$unit, 20);
+              height: map.get(var.$unit, 20);
+              color: map.get(color.$icon-neutral, 'tertiary');
+            }
+          }
+        }
+      }
+
+      &-gnb {
+        @include mx.flex;
+        width: 100%;
+        height: map.get(var.$mo-header, 'main-bar-gnb');
+        transition: height 0.3s;
+
+        .gnb {
+          &-list,
+          &-item {
+            @include mx.flex;
+            height: 100%;
+          }
+
+          &-list {
+            gap: map.get(var.$unit, 20);
+            padding: 0 var.$mo-gutter;
+            overflow: auto hidden;
+          }
+
+          &-item {
+            flex-shrink: 0;
+          }
+
+          &-link {
+            @include mx.flex(flex, row, flex-start, center);
+            gap: map.get(var.$unit, 2);
+
+            &:is(button) {
+              @include button.btn-reset;
+            }
+
+            .icon {
+              @include icon.ic-size(var.$mo-gutter);
+              margin-top: fn.rem(1);
+              color: map.get(color.$layout-surf, 'dark');
+            }
+
+            .text {
+              @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
+              line-height: fn.rem(18);
+            }
+          }
+        }
+      }
+    }
+
+    &.is-sticky {
+      padding-bottom: 0 !important;
+
+      .header-main-gnb {
+        height: 0;
       }
     }
   }

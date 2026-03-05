@@ -1,0 +1,61 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // include 시 전달받은 slides 목데이터
+  const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+%>
+
+<!-- prettier-ignore -->
+<section
+  class="vm-home-visual"
+  data-ui="banner-visual"
+  data-autoplay="3000"
+  data-speed="300"
+>
+  <div class="swiper vm-home-swiper">
+    <div class="swiper-wrapper home-swiper-wrapper">
+      <% slides.forEach(function(slide) { %>
+      <div class="swiper-slide home-swiper-slide">
+        <a href="<%= slide.href %>">
+          <img src="<%= imgBase %>/<%= slide.img %>" alt="<%= slide.alt %>" />
+        </a>
+      </div>
+      <% }); %>
+    </div>
+
+    <% if (slides.length > 1) { %>
+    <div class="home-swiper-control">
+      <div class="home-swiper-nav">
+        <button
+          type="button"
+          class="home-swiper-prev"
+          data-role="prev"
+          aria-label="이전"
+        >
+          <span class="icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-left' }) %>
+          </span>
+        </button>
+        <button
+          type="button"
+          class="home-swiper-next"
+          data-role="next"
+          aria-label="다음"
+        >
+          <span class="icon">
+            <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+          </span>
+        </button>
+      </div>
+      <button
+        type="button"
+        data-role="toggle-play"
+        class="toggle-autoplay"
+        aria-label="자동 재생"
+      >
+        <span class="icon"></span>
+      </button>
+    </div>
+    <% } %>
+  </div>
+</section>

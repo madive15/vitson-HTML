@@ -1,0 +1,56 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  var gnbList = [
+    { id: 'brand', label: '브랜드', tag: 'button', icon: true, action: 'open-brand-sheet' },
+    { id: 'deal', label: '초특가', href: '#!' },
+    { id: 'lighting', label: '비츠온조명', href: '#!' },
+    { id: 'original', label: '비츠온 오리지널', href: '#!' },
+    { id: 'plan', label: '기획전', href: '#!' }
+  ];
+%>
+
+<header class="vm-header header-main-bar" data-ui="sticky">
+  <div class="header-main-top">
+    <div class="header-main-top-bar">
+      <%- include('./header-logo.ejs') %>
+
+      <div class="vm-header-actions">
+        <%- include('./header-button.ejs', { button: 'alarm', alarm: (typeof alarm !== 'undefined') ? alarm : false })
+        %> <%- include('./header-button.ejs', { button: 'cart', count: (typeof count !== 'undefined') ? count : 0 }) %>
+      </div>
+    </div>
+
+    <div class="header-main-search">
+      <!-- prettier-ignore -->
+      <%- include(`${_src}/views/components/form/input-search.ejs`, {
+        idPrefix: 'archive-search',
+        action: '#!',
+        name: 'archive-search',
+        placeholder: '찾으시는 질문을 검색해보세요',
+        addClassName: 'theme-gray',
+        hasClear: true
+      }) %>
+    </div>
+  </div>
+  <nav class="header-main-gnb">
+    <ul class="gnb-list" data-scroll-buttons data-scroll-only>
+      <% gnbList.forEach(function(item) { %>
+      <li class="gnb-item">
+        <% if (item.tag === 'button') { %>
+        <button type="button" class="gnb-link" data-action="<%- item.action %>">
+          <% if (item.icon) { %>
+          <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'label' }) %> </span>
+          <% } %>
+          <span class="text"><%= item.label %></span>
+        </button>
+        <% } else { %>
+        <a href="<%= item.href %>" class="gnb-link">
+          <span class="text"><%= item.label %></span>
+        </a>
+        <% } %>
+      </li>
+      <% }) %>
+    </ul>
+  </nav>
+</header>

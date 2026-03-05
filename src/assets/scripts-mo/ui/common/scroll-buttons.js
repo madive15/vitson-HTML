@@ -17,7 +17,7 @@
 
   var Selector = {
     SCOPE: '[data-scroll-buttons]',
-    BTN: 'button',
+    BTN: 'button, a',
     SKIP: '[data-range-picker-toggle]'
   };
 
@@ -59,10 +59,13 @@
 
     // 버튼 활성 상태 전환 및 이벤트 발행
     function setActive($btn) {
-      $btns.removeClass(ClassName.ACTIVE);
-      $btn.addClass(ClassName.ACTIVE);
+      var scrollOnly = $scope.is('[data-scroll-only]');
+      if (!scrollOnly) {
+        $btns.removeClass(ClassName.ACTIVE);
+        $btn.addClass(ClassName.ACTIVE);
+        $scope.trigger('scrollbuttons:change', [{$btn: $btn}]);
+      }
       scrollToBtn($btn);
-      $scope.trigger('scrollbuttons:change', [{$btn: $btn}]);
     }
 
     // 터치 스크롤과 탭을 구분하는 핸들러 생성
@@ -91,9 +94,9 @@
       );
 
       return function (e) {
-        // 수평 스크롤 중 touchend 무시
         if (moved) return;
-        if (!isSkip) {
+        var scrollOnly = $scope.is('[data-scroll-only]');
+        if (!isSkip && !scrollOnly) {
           e.preventDefault();
         }
         setActive($(btn));

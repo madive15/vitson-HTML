@@ -1,0 +1,26 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<section 
+  class="vm-home-recommend product-deal"
+  data-scroll-overflow-gradient
+  data-scroll-target="[data-ui='recommend-deal']"
+>
+  <div class="recommend-head">
+    <h2 class="recommend-head-title">
+      비츠온만의 <span class="point-color">초특가 제안</span>
+    </h2>
+    <% if (typeof dealHref !== 'undefined' && dealHref) { %>
+    <a href="#!" class="recommend-head-more">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+    </a>
+    <% } %>
+  </div>
+  <ul class="recommend-list" data-ui='recommend-deal'>
+    <% products.forEach(function(item) { %>
+      <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+        item: item,
+      }) %>
+    <% }); %>
+  </ul>
+</section>

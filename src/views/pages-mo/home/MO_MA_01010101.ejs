@@ -1,6 +1,13 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 
+<%
+const _homeData = require(`${_src}/../public/resources/mock/home-data.js`);
+const _slides = _homeData.slides;
+const _menus = _homeData.menus;
+const _dealProducts = _homeData.getDealProducts(_public);
+%>
+
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
   <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '메인'}) %>
@@ -17,150 +24,36 @@
         <div class="vm-content-wrap">
           <!-- prettier-ignore -->
           <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
-            type: 'main'
+            type: 'main-bar',
+            alarm: true,
+            count: 100
           }) %>
 
           <!-- S: vm-main -->
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-home">
-              <style>
-                [data-ui='banner-tab'] .tab-area .swiper-slide-thumb-active {
-                  color: #fff !important;
-                  background: #e74c3c !important;
-                  border-color: #e74c3c !important;
-                }
-                [data-ui='banner-visual'] .swiper-slide {
-                  aspect-ratio: 313 / 174;
-                  transform: scale(0.86);
-                  transition: transform 0.3s;
-                }
+              <section class="vm-home-section">
+                <h2 class="sr-only">비츠온앰알오 모바일 메인</h2>
 
-                [data-ui='banner-visual'] .swiper-slide-active {
-                  transform: scale(1.15);
-                  z-index: 1;
-                }
-              </style>
+                <!-- 비쥬얼 배너 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-visual.ejs`, {
+                  slides: _slides
+                }) %>
 
-              <!-- S: 비주얼 배너 -->
-              <section
-                data-ui="banner-visual"
-                data-autoplay="3000"
-                data-speed="300"
-                data-space-between="8"
-                style="position: relative; margin-bottom: 40px"
-              >
-                <div class="swiper">
-                  <div class="swiper-wrapper">
-                    <div
-                      class="swiper-slide"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #e74c3c;
-                      "
-                    >
-                      <a href="#!">비주얼 1</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #3498db;
-                      "
-                    >
-                      <a href="#!">비주얼 2</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #2ecc71;
-                      "
-                    >
-                      <a href="#!">비주얼 3</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 20px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #9b59b6;
-                      "
-                    >
-                      <a href="#!">비주얼 4</a>
-                    </div>
-                  </div>
-                </div>
-                <div style="position: absolute; bottom: 12px; right: 12px; display: flex; gap: 4px; z-index: 10">
-                  <button
-                    type="button"
-                    data-role="prev"
-                    style="
-                      width: 32px;
-                      height: 32px;
-                      border: none;
-                      border-radius: 50%;
-                      background: rgba(0, 0, 0, 0.4);
-                      color: #fff;
-                      font-size: 14px;
-                      cursor: pointer;
-                    "
-                  >
-                    &#8249;
-                  </button>
-                  <button
-                    type="button"
-                    data-role="next"
-                    style="
-                      width: 32px;
-                      height: 32px;
-                      border: none;
-                      border-radius: 50%;
-                      background: rgba(0, 0, 0, 0.4);
-                      color: #fff;
-                      font-size: 14px;
-                      cursor: pointer;
-                    "
-                  >
-                    &#8250;
-                  </button>
-                  <button
-                    type="button"
-                    data-role="toggle-play"
-                    style="
-                      width: 32px;
-                      height: 32px;
-                      border: none;
-                      border-radius: 50%;
-                      background: rgba(0, 0, 0, 0.4);
-                      color: #fff;
-                      font-size: 14px;
-                      cursor: pointer;
-                    "
-                  >
-                    II
-                  </button>
-                </div>
+                <!-- 자주 찾는 메뉴 바로가기 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-frequent-menu.ejs`, {
+                  menus: _menus
+                }) %>
+
+                <!-- 초특가 제안 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-deal.ejs`, {
+                  products: _dealProducts,
+                  dealHref: '#!'
+                }) %>
               </section>
-              <!-- E: 비주얼 배너 -->
 
               <!-- S: 탭형 배너 (세로 리스트) -->
               <section data-ui="banner-tab" style="margin-bottom: 40px">
@@ -1656,7 +1549,7 @@
           </main>
           <!-- E: vm-main -->
 
-          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`, { showFooter: true }) %>
         </div>
         <!-- E: vm-content-wrap -->
 
