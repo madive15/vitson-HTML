@@ -22,8 +22,6 @@
     var $container = $('[data-voice-blob-anim]');
     if (!$container.length || instance) return;
 
-    if (!/Mobi|Android/i.test(navigator.userAgent)) return;
-
     // data-voice-blob-anim 속성값으로 JSON 경로 주입 (마크업에서 관리)
     var animSrc = $container.data('voice-blob-anim');
     if (!animSrc) return;
