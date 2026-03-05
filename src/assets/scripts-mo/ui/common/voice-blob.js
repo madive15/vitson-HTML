@@ -2,10 +2,11 @@
  * @file voice-blob.js
  * @description AI 음성인식 Lottie 애니메이션 제어
  * @scope [data-voice-blob-anim]
+ * @option {string} data-voice-blob-anim — Lottie JSON 파일 경로 (URL)
  * @state instance — dotlottie-wc 플레이어 인스턴스
  */
-import voiceBlobData from './voice-blob.json'; // 이건 유지
 
+// voice-blob.json import 제거 — URL 직접 참조로 전환
 (function ($) {
   'use strict';
 
@@ -15,38 +16,32 @@ import voiceBlobData from './voice-blob.json'; // 이건 유지
 
   var instance = null;
 
-  // 로티 애니메이션 초기화
+  var CDN_URL = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js';
+
   function init() {
     var $container = $('[data-voice-blob-anim]');
     if (!$container.length || instance) return;
 
-    // 모바일 디바이스에서만 실행
     if (!/Mobi|Android/i.test(navigator.userAgent)) return;
 
-    if (!voiceBlobData) return;
+    // data-voice-blob-anim 속성값으로 JSON 경로 주입 (마크업에서 관리)
+    var animSrc = $container.data('voice-blob-anim');
+    if (!animSrc) return;
 
-    // CDN 동적 로드 (모바일에서만 다운로드)
-    var CDN_URL = 'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js';
     var script = document.createElement('script');
     script.type = 'module';
     script.src = CDN_URL;
+
     script.onload = function () {
-      // Web Component 등록 완료까지 대기
       customElements.whenDefined('dotlottie-wc').then(function () {
         if (instance) return;
 
         var player = document.createElement('dotlottie-wc');
 
-        player.data = voiceBlobData;
+        // data prop 대신 src 속성 사용 — 서버 환경에서 안정적
+        player.setAttribute('src', animSrc);
         player.setAttribute('loop', '');
         player.setAttribute('autoplay', '');
-        player.setAttribute(
-          'layout',
-          JSON.stringify({
-            fit: 'contain',
-            align: [0.5, 0.5]
-          })
-        );
         player.useFrameInterpolation = false;
         player.style.width = '100%';
         player.style.height = '100%';
@@ -60,7 +55,6 @@ import voiceBlobData from './voice-blob.json'; // 이건 유지
     document.head.appendChild(script);
   }
 
-  // 인스턴스 제거
   function destroy() {
     if (!instance) return;
     instance.remove();

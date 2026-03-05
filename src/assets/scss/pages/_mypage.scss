@@ -2571,7 +2571,9 @@
 
   &-info {
     @include mx.flex(flex, column, flex-start, stretch);
+    flex-grow: 1;
     gap: map.get(var.$unit, 8);
+    min-width: 0;
 
     .product {
       &-header {
@@ -2596,6 +2598,7 @@
 
       &-label {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
+        flex-shrink: 0;
       }
 
       &-value {
