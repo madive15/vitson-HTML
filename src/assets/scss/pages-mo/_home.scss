@@ -348,6 +348,11 @@ $visual-btn: fn.rem(18);
   @include mx.flex(flex, column);
   gap: var.$mo-gutter;
 
+  // Swiper wrapper GPU 레이어 승격 — 터치 시 첫 프레임 지연 방지
+  .swiper-wrapper {
+    will-change: transform;
+  }
+
   .tab-swiper {
     &-head {
       @include mx.flex(flex, row, flex-start, center);
@@ -382,6 +387,7 @@ $visual-btn: fn.rem(18);
     &-menus {
       .swiper {
         padding: 0 var.$mo-gutter;
+        touch-action: pan-y;
 
         &-slide {
           @include mx.flex(flex, row, flex-start, center);
@@ -442,6 +448,7 @@ $visual-btn: fn.rem(18);
     &-content {
       .swiper {
         padding: 0 var.$mo-gutter;
+        touch-action: pan-y;
 
         .tab-product-list {
           @include mx.flex(flex, column);
@@ -480,7 +487,7 @@ $visual-btn: fn.rem(18);
       @include mx.flex(flex, row, center, center);
       @include mx.border('all', $color: map.get(color.$layout-border, 'brand'));
       @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand'));
-      z-index: var.$zindex-base;
+      z-index: map.get(var.$mo-zindex, 'home-rank-icon');
       width: fn.rem(22);
       height: fn.rem(22);
       background: color.$color-white;
@@ -505,6 +512,7 @@ $visual-btn: fn.rem(18);
     // inner Swiper에 패딩 적용
     [data-role='inner-swiper'] .swiper {
       padding: 0 var.$mo-gutter;
+      touch-action: pan-y;
 
       .swiper-slide {
         width: auto;

@@ -53,11 +53,11 @@ import Swiper from 'swiper/bundle';
 
       function getStretch() {
         var w = window.innerWidth;
-        if (w < 480) return 20; // 모바일
-        if (w < 768) return 30; // 모바일
-        if (w < 1024) return 50; // 태블릿
-        if (w < 1280) return 70; // 태블릿
-        return 100; // 데스크탑
+        if (w < 480) return 20;
+        if (w < 768) return 30;
+        if (w < 1024) return 50;
+        if (w < 1280) return 70;
+        return 100;
       }
 
       var config = {
@@ -68,7 +68,17 @@ import Swiper from 'swiper/bundle';
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        speed: getInt(el, 'speed') || 300,
+        speed: getInt(el, 'speed') || 250,
+        // 터치 반응 개선
+        threshold: 2,
+        touchRatio: 1.5,
+        longSwipesRatio: 0.3,
+        longSwipesMs: 200,
+        // 터치 이벤트 최적화
+        touchStartPreventDefault: false,
+        passiveListeners: true,
+        followFinger: true,
+        resistanceRatio: 0,
         coverflowEffect: {
           rotate: 0,
           stretch: getStretch(),
@@ -76,6 +86,15 @@ import Swiper from 'swiper/bundle';
           modifier: 1,
           scale: 0.8,
           slideShadows: false
+        },
+        on: {
+          // 가시 범위 슬라이드만 will-change 부여 (GPU 부하 경감)
+          setTranslate: function () {
+            this.slides.forEach(function (slide) {
+              var progress = Math.abs(slide.progress);
+              slide.style.willChange = progress < 3 ? 'transform' : 'auto';
+            });
+          }
         }
       };
 
