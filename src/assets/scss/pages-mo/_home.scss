@@ -133,11 +133,9 @@ $visual-btn: fn.rem(18);
 
   .frequent-menu {
     &-list {
-      @include mx.flex;
+      @include mx.flex(flex, row, space-between);
       @include home-inner-scroll-x((0 var.$mo-gutter map.get(var.$unit, 20)));
       gap: var.$mo-section-gap;
-      width: 100%;
-      overflow: auto hidden;
     }
 
     &-item {
@@ -172,7 +170,102 @@ $visual-btn: fn.rem(18);
   }
 }
 
-// 추천상품 - 초특가 제안
+// 카테고리 메뉴
+.vm-home-category-menus {
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 12);
+  padding: var.$mo-section-gap var.$mo-gutter;
+  background: #fee4e4;
+
+  .category-menu {
+    &-title {
+      @include typo.typography('h4b', $color: map.get(color.$neutral-colors, '1'));
+
+      .point-color {
+        color: map.get(color.$text-status, 'brand');
+      }
+    }
+
+    &-items {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-box {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+      padding: var.$mo-gutter;
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    &-head {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 2);
+      text-align: center;
+
+      .title {
+        @include typo.typography('b3b', $color: map.get(color.$text-colors, 'primary'));
+      }
+
+      .desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+
+    &-body {
+      @include mx.flex($justify: space-between);
+      gap: map.get(var.$unit, 8);
+      padding: 0 map.get(var.$unit, 2);
+    }
+
+    &-link {
+      $link-width: calc((100% - (map.get(var.$unit, 8) * 3)) / 4);
+
+      @include mx.flex(flex, column, center, center);
+      flex: 0 0 $link-width;
+      gap: fn.rem(6);
+      width: $link-width;
+      max-width: fn.rem(264);
+
+      /* stylelint-disable no-descending-specificity */
+      .icon {
+        @include mx.img-fit;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      }
+
+      .text {
+        @include typo.typography('m1m');
+        text-align: center;
+        white-space: nowrap;
+      }
+      /* stylelint-enable no-descending-specificity */
+    }
+  }
+}
+
+// 기획전 배너
+.vm-home-promo-banner {
+  .promo-banner-link {
+    @include mx.img-fit;
+    display: block;
+  }
+}
+
+// 자주 구매한 상품 & 많이 찾는 카테고리
+.vm-home-popular {
+  padding: map.get(var.$unit, 32) 0 map.get(var.$unit, 36);
+
+  // 자주 구매한 상품
+  .vm-home-recommend.product-frequent {
+    padding-top: 0;
+    padding-bottom: map.get(var.$unit, 40);
+  }
+}
+
+// 추천상품
+// - 초특가 제안(product-deal), 레전드(product-legend)
 .vm-home-recommend {
   @include mx.flex(flex, column);
   position: relative;
@@ -200,14 +293,17 @@ $visual-btn: fn.rem(18);
       &-more {
         @include icon.ic-size(map.get(var.$unit, 20));
         display: block;
+        flex-shrink: 0;
         color: map.get(color.$icon-neutral, 'secondary');
       }
     }
 
     &-list {
       @include mx.flex;
-      @include home-inner-scroll-x(var.$mo-gutter);
+      @include home-inner-scroll-x((0 var.$mo-gutter));
       gap: map.get(var.$unit, 20);
+      padding-bottom: map.get(var.$unit, 12);
+      margin-bottom: map.get(var.$unit, 12) * -1;
 
       > li {
         flex: 0 0 fn.rem(140);
@@ -225,10 +321,210 @@ $visual-btn: fn.rem(18);
   }
 
   @include mx.scroll-gradient-overflow;
+
+  // 레전드
+  &.product-legend {
+    @include home-divider;
+    padding-top: map.get(var.$unit, 32);
+
+    .recommend-list {
+      // 상품 카드 너비(140) * 5 + 열 gap(16) * 4 = 764
+      @include mx.mq($max: 764) {
+        display: grid;
+        grid-template-columns: repeat(5, fn.rem(140));
+        grid-auto-flow: row;
+        gap: map.get(var.$unit, 12) map.get(var.$unit, 16);
+
+        > li {
+          flex: unset; // flex: 0 0 140px 해제
+        }
+      }
+    }
+  }
 }
 
-[data-ui='banner-tab'] .tab-area .swiper-slide-thumb-active {
-  color: #fff !important;
-  background: #e74c3c !important;
-  border-color: #e74c3c !important;
+// 탭형 스와이프
+.vm-home-tab-swiper {
+  @include mx.flex(flex, column);
+  gap: var.$mo-gutter;
+
+  .tab-swiper {
+    &-head {
+      @include mx.flex(flex, row, flex-start, center);
+      position: relative;
+      z-index: var.$zindex-base + 1;
+      gap: var.$mo-gutter;
+      padding: 0 var.$mo-gutter;
+
+      &-title {
+        @include typo.typography('h4b', $color: map.get(color.$text-colors, 'primary'));
+        flex-grow: 1;
+        min-width: 0;
+
+        .point-color {
+          color: map.get(color.$brand-colors, 'primary');
+        }
+      }
+
+      &-more {
+        @include icon.ic-size(map.get(var.$unit, 20));
+        display: block;
+        flex-shrink: 0;
+        color: map.get(color.$icon-neutral, 'secondary');
+      }
+    }
+
+    &-body {
+      @include mx.flex(flex, column);
+      gap: var.$mo-gutter;
+    }
+
+    &-menus {
+      .swiper {
+        padding: 0 var.$mo-gutter;
+
+        &-slide {
+          @include mx.flex(flex, row, flex-start, center);
+          gap: map.get(var.$unit, 4);
+          width: auto;
+          min-width: 0;
+          max-width: 100%;
+          height: fn.rem(30);
+          padding: 0 map.get(var.$unit, 8);
+          overflow: hidden;
+          background: map.get(color.$layout-surf, 'sunken');
+          border-radius: fn.rem(30);
+
+          .tab {
+            &-num {
+              @include mx.flex(flex, row, center, center);
+              @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
+              flex-shrink: 0;
+              width: fn.rem(18);
+              height: fn.rem(18);
+              background: transparent;
+              border-radius: 50%;
+              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+            }
+
+            &-name {
+              @include typo.typography('b4s', $color: map.get(color.$text-colors, 'muted'));
+              @include mx.ellipsis-single;
+              display: block;
+              min-width: 0;
+              max-width: 100%;
+            }
+          }
+
+          &.swiper-slide-thumb-active {
+            background: map.get(color.$layout-surf, 'brand');
+
+            .tab-num {
+              color: map.get(color.$layout-surf, 'brand');
+              background: color.$color-white;
+              box-shadow: none;
+            }
+
+            .tab-name {
+              color: color.$color-white;
+            }
+          }
+        }
+      }
+
+      // 탭 메뉴 그라데이션 — data-role 있을 때만
+      [data-role='menu-overflow'] {
+        @include mx.scroll-gradient-overflow;
+        position: relative;
+      }
+    }
+
+    &-content {
+      .swiper {
+        padding: 0 var.$mo-gutter;
+
+        .tab-product-list {
+          @include mx.flex(flex, column);
+          gap: map.get(var.$unit, 12);
+
+          .vm-product-card {
+            gap: map.get(var.$unit, 12);
+          }
+        }
+      }
+
+      // 콘텐츠 그라데이션
+      [data-role='content-overflow'] {
+        @include mx.scroll-gradient-overflow;
+        position: relative;
+      }
+    }
+  }
+
+  // 상품 슬라이드 — 가로형 공통
+  .tab-swiper-product {
+    @include mx.flex;
+
+    > li {
+      flex: 0 0 fn.rem(140);
+      width: fn.rem(140);
+    }
+
+    .vm-product-card {
+      @include mx.flex(flex, column);
+    }
+
+    // 랭킹 뱃지
+    .product-rank {
+      @include mx.position(absolute, 4px, $left: 4px);
+      @include mx.flex(flex, row, center, center);
+      @include mx.border('all', $color: map.get(color.$layout-border, 'brand'));
+      @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand'));
+      z-index: var.$zindex-base;
+      width: fn.rem(22);
+      height: fn.rem(22);
+      background: color.$color-white;
+      border-radius: 50%;
+    }
+  }
+
+  // 1번 랭킹 배경색
+  [data-role='inner-swiper'] .swiper-slide:first-of-type .product-rank {
+    color: color.$color-white;
+    background: map.get(color.$layout-surf, 'brand');
+    border-color: map.get(color.$layout-surf, 'brand');
+  }
+
+  // ── 가로형(hscroll) ──
+  &[data-type='hscroll'] {
+    // 콘텐츠 Swiper — 패딩 제거 (옆 슬라이드 노출 방지)
+    .tab-swiper-content > .swiper {
+      padding: 0;
+    }
+
+    // inner Swiper에 패딩 적용
+    [data-role='inner-swiper'] .swiper {
+      padding: 0 var.$mo-gutter;
+
+      .swiper-slide {
+        width: auto;
+      }
+    }
+  }
+
+  // 가로형 - 랭킹 버전
+  &.swiper-tab-ranked {
+    padding-top: map.get(var.$unit, 32);
+    padding-bottom: map.get(var.$unit, 32);
+
+    .tab-swiper-head,
+    .tab-swiper-menus > .swiper {
+      padding-right: map.get(var.$unit, 20);
+      padding-left: map.get(var.$unit, 20);
+    }
+
+    [data-role='inner-swiper'] .swiper {
+      padding: 0 map.get(var.$unit, 20);
+    }
+  }
 }

@@ -524,6 +524,44 @@ $mo-product-gap: map.get(var.$unit, 8);
   }
 }
 
+// 메인 - 장바구니 담기 버튼 있을 떼
+.vm-product-item:has(.product-frequent-actions) {
+  position: relative;
+
+  .product {
+    &-body {
+      padding-top: map.get(var.$unit, 32);
+    }
+
+    &-thumb {
+      border-top-right-radius: map.get(var.$radius, 'sm');
+    }
+  }
+
+  // 구매 횟수
+  .product-purchase-count {
+    @include mx.position(absolute, 0, 0);
+    @include mx.flex(flex, row, flex-start, center);
+    @include typo.typography('m1s', $color: color.$color-white);
+    z-index: map.get(var.$mo-zindex, 'home-purchase-count');
+    height: fn.rem(21);
+    padding: 0 map.get(var.$unit, 8);
+    background: map.get(color.$layout-surf, 'primary');
+    border-radius: map.get(var.$radius, 'sm');
+  }
+
+  // 장바구니 담기 버튼
+  .product-frequent-actions {
+    @include mx.position(absolute, fn.rem(144), $left: 0);
+    z-index: map.get(var.$mo-zindex, 'home-frequent-btn');
+    width: 100%;
+
+    [class*='vits-btn-'] {
+      width: 100%;
+    }
+  }
+}
+
 // 마이페이지용 상품 카드
 .vm-product-mypage-card {
   position: relative;

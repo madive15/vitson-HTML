@@ -1,0 +1,29 @@
+<!-- prettier-ignore -->
+<%
+  const _src = srcPath;
+  const _public = publicPath;
+  const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+%>
+
+<section class="vm-home-category-menus">
+  <h2 class="category-menu-title">당신에게 맞는 <span class="point-color">쇼핑 시작하기</span></h2>
+
+  <div class="category-menu-items">
+    <% categoryMenus.forEach(function(group) { %>
+    <div class="category-menu-box">
+      <div class="category-menu-head">
+        <p class="title"><%= group.title %></p>
+        <p class="desc"><%= group.desc %></p>
+      </div>
+      <div class="category-menu-body">
+        <% group.items.forEach(function(item) { %>
+        <a href="<%= item.href %>" class="category-menu-link">
+          <span class="icon"><img src="<%= imgBase %>/<%= item.img %>" alt="" /></span>
+          <span class="text"><%= item.name %></span>
+        </a>
+        <% }); %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</section>

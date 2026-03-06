@@ -448,3 +448,24 @@
     background: linear-gradient(to right, #fff0, #fff 90%);
   }
 }
+
+// 미디어쿼리
+@mixin mq($max: null, $min: null) {
+  @if $max and $min {
+    @media screen and (min-width: #{$min}px) and (max-width: #{$max}px) {
+      @content;
+    }
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $max {
+    @media screen and (max-width: #{$max}px) {
+      @content;
+    }
+  }
+  // stylelint-disable-next-line at-rule-empty-line-before
+  @else if $min {
+    @media screen and (min-width: #{$min}px) {
+      @content;
+    }
+  }
+}

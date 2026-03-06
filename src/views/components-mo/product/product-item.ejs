@@ -57,6 +57,12 @@ const _showCart = (typeof showCart !== 'undefined') ? showCart : (isMember && !i
 const _showCompareBtn = (typeof showCompareBtn !== 'undefined') ? showCompareBtn : (isMember && !isFrequent && !isLike && !isCompare);
 const showPromo = isMember && !isCompare;
 
+// 자주구매 전용 — 구매횟수 + 장바구니 버튼
+const _showFrequentActions = isFrequent && isMember;
+
+// 랭킹
+const _showRank = (typeof showRank !== 'undefined') ? showRank : false;
+
 /* ── 가격 노출 규칙 ── */
 const rate = Number(d.discountRate) || 0;
 const showRate = rate > 0.4;
@@ -67,7 +73,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 %>
 
 <li class="vm-product-item" data-ui="product-item">
-  <div class="vm-product-card<%= stateClass %>">
+  <a href="#!" class="vm-product-card<%= stateClass %>">
     <!-- prettier-ignore -->
     <% if (showCheckbox) { %>
     <div class="product-check">
@@ -79,9 +85,16 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     <% } %>
 
     <div class="product-thumb">
-      <a href="#!">
-        <img src="<%= d.imageUrl %>" alt="<%= d.productNm %>" loading="lazy" />
-      </a>
+      <img src="<%= d.imageUrl %>" alt="<%= d.productNm %>" loading="lazy" />
+
+      <% if (_showFrequentActions && d.purchaseCount > 0) { %>
+      <div class="product-purchase-count"><span class="sr-only">구매횟수</span><%= d.purchaseCount %>회 구매</div>
+      <% } %>
+
+      <!-- prettier-ignore -->
+      <% if (_showRank) { %>
+      <span class="product-rank"><span class="sr-only">순위</span><%= d.rank %></span>
+      <% } %>
     </div>
 
     <div class="product-body">
@@ -93,14 +106,12 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       </div>
 
       <div class="product-info">
-        <a href="#!">
-          <div class="product-summary">
-            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
-            <% if (_showSpec) { %>
-            <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
-            <% } %>
-          </div>
-        </a>
+        <div class="product-summary">
+          <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
+          <% if (_showSpec) { %>
+          <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
+          <% } %>
+        </div>
 
         <!-- prettier-ignore -->
         <!-- [D] 회원 가격 => is-normal 클래스 추가 -->
@@ -169,5 +180,20 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       </div>
       <% } %>
     </div>
+  </a>
+
+  <% if (_showFrequentActions) { %>
+  <div class="product-frequent-actions">
+    <!-- prettier-ignore -->
+    <%- include(`${_src}/views/components/button/button.ejs`, {
+        size:'xs', 
+        variant: 'outline-tertiary', 
+        text: '장바구니 담기',
+        iconLeft: true,
+        iconName: 'ic-bag-on',
+        disabled: isSoldout,
+        href: ''
+      }) %>
   </div>
+  <% } %>
 </li>

@@ -1,0 +1,66 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const _ranked = typeof ranked !== 'undefined' && ranked;
+  const _autoplay = typeof speed !== 'undefined' ? speed : null;
+  const _menuSpaceBetween = typeof menuSpaceBetween !== 'undefined' ? menuSpaceBetween : 8;
+  const _contentSpaceBetween = typeof contentSpaceBetween !== 'undefined' ? contentSpaceBetween : 0;
+%>
+
+<section
+  class="vm-home-tab-swiper<%= _ranked ? ' swiper-tab-ranked' : '' %>"
+  data-ui="banner-tab"
+  data-type="hscroll"
+  data-menu-space-between="<%= _menuSpaceBetween %>"
+  data-content-space-between="<%= _contentSpaceBetween %>"
+  <% if (_autoplay) { %>data-autoplay="<%= _autoplay %>"<% } %>
+>
+  <div class="tab-swiper-head">
+    <h2 class="tab-swiper-head-title"><%- title %></h2>
+    <% if (typeof href !== 'undefined' && href) { %>
+    <a href="<%= href %>" class="tab-swiper-head-more">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+    </a>
+    <% } %>
+  </div>
+  <div class="tab-swiper-body">
+    <div class="tab-swiper-menus">
+      <div class="swiper" data-role="menu-overflow">
+        <div class="swiper-wrapper">
+          <% tabs.forEach(function(tab) { %>
+          <div class="swiper-slide">
+            <span class="tab-name"><%= tab.tabName %></span>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+    <div class="tab-swiper-content">
+      <div class="swiper" data-role="content-overflow">
+        <div class="swiper-wrapper">
+          <% tabs.forEach(function(tab) { %>
+          <div class="swiper-slide">
+            <div data-role="inner-swiper">
+              <div class="swiper">
+                <div class="swiper-wrapper">
+                  <% tab.products.forEach(function(product) { %>
+                  <div class="swiper-slide">
+                    <ul class="tab-swiper-product">
+                      <!-- prettier-ignore -->
+                      <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                        item: product,
+                        showRank: true
+                      }) %>
+                    </ul>
+                  </div>
+                  <% }); %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -51,6 +51,15 @@ import Swiper from 'swiper/bundle';
       var originalCount = cloneSlides($wrapper);
       $root.data('originalCount', originalCount);
 
+      function getStretch() {
+        var w = window.innerWidth;
+        if (w < 480) return 20; // 모바일
+        if (w < 768) return 30; // 모바일
+        if (w < 1024) return 50; // 태블릿
+        if (w < 1280) return 70; // 태블릿
+        return 100; // 데스크탑
+      }
+
       var config = {
         effect: 'coverflow',
         centeredSlides: true,
@@ -62,7 +71,7 @@ import Swiper from 'swiper/bundle';
         speed: getInt(el, 'speed') || 300,
         coverflowEffect: {
           rotate: 0,
-          stretch: 20,
+          stretch: getStretch(),
           depth: 0,
           modifier: 1,
           scale: 0.8,
@@ -76,6 +85,16 @@ import Swiper from 'swiper/bundle';
       }
 
       var swiper = new Swiper(swiperEl, config);
+
+      // resize 시 stretch 값 업데이트
+      var resizeTimer;
+      $(window).on('resize.bannerVisual' + idx, function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          swiper.params.coverflowEffect.stretch = getStretch();
+          swiper.update();
+        }, 100);
+      });
 
       // nav 버튼 (이벤트 위임)
       $root.on('click.bannerVisual', '[data-role]', function () {
@@ -110,6 +129,7 @@ import Swiper from 'swiper/bundle';
       // 복제 슬라이드 제거
       $(swiperEl).find('[data-cloned="true"]').remove();
 
+      $(window).off('resize.bannerVisual' + idx);
       $root.off('.bannerVisual');
       $root.removeData('init originalCount');
     });

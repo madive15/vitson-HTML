@@ -2,24 +2,23 @@
 <!-- prettier-ignore -->
 
 <section 
-  class="vm-home-recommend product-deal"
+  class="vm-home-recommend product-<%= type %>"
   data-scroll-overflow-gradient
-  data-scroll-target="[data-ui='recommend-deal']"
+  data-scroll-target="[data-ui='recommend-<%= type %>']"
 >
   <div class="recommend-head">
-    <h2 class="recommend-head-title">
-      비츠온만의 <span class="point-color">초특가 제안</span>
-    </h2>
-    <% if (typeof dealHref !== 'undefined' && dealHref) { %>
-    <a href="#!" class="recommend-head-more">
+    <h2 class="recommend-head-title"><%- title %></h2>
+    <% if (typeof href !== 'undefined' && href) { %>
+    <a href="<%= href %>" class="recommend-head-more">
       <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
     </a>
     <% } %>
   </div>
-  <ul class="recommend-list" data-ui='recommend-deal'>
+  <ul class="recommend-list" data-ui="recommend-<%= type %>">
     <% products.forEach(function(item) { %>
       <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
         item: item,
+        cardContext: type === 'frequent' ? 'frequent' : 'default'
       }) %>
     <% }); %>
   </ul>

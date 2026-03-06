@@ -243,9 +243,11 @@
   <% } %>
   <div class="card-content">
     <div class="card-thumb">
-      <div class="product-thumb">
-        <img src="<%= productImg %>" alt="" />
-      </div>
+      <a href="#!">
+        <div class="product-thumb">
+          <img src="<%= productImg %>" alt="" />
+        </div>
+      </a>
     </div>
     <div class="card-info">
       <% if (cardType === '1') { %>
@@ -273,7 +275,7 @@
       <% } %>
       <p class="card-name">
         <span class="product-brand"><span class="sr-only">브랜드</span><%= productBrand %></span>
-        <span class="product-name"><span class="sr-only">상품명</span><%= productName %></span>
+        <a href="#!" class="product-name"><span class="sr-only">상품명</span><%= productName %></a>
       </p>
       <p class="product-spec"><%= productSpec %></p>
       <% } else { %>
@@ -282,7 +284,7 @@
         <p class="product-code"><span class="sr-only">상품코드</span><%= productCode %></p>
       </div>
       <div class="card-title">
-        <p class="product-name"><span class="sr-only">상품명</span><%= productName %></p>
+        <a href="#!" class="product-name"><span class="sr-only">상품명</span><%= productName %></a>
       </div>
       <p class="product-spec"><%= productSpec %></p>
       <% } %>
