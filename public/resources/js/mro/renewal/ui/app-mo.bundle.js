@@ -4769,11 +4769,11 @@ var search_suggest = __webpack_require__(6823);
       $root.data('originalCount', originalCount);
       function getStretch() {
         var w = window.innerWidth;
-        if (w < 480) return 20; // 모바일
-        if (w < 768) return 30; // 모바일
-        if (w < 1024) return 50; // 태블릿
-        if (w < 1280) return 70; // 태블릿
-        return 100; // 데스크탑
+        if (w < 480) return 20;
+        if (w < 768) return 30;
+        if (w < 1024) return 50;
+        if (w < 1280) return 70;
+        return 100;
       }
       var config = {
         effect: 'coverflow',
@@ -4783,7 +4783,17 @@ var search_suggest = __webpack_require__(6823);
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        speed: getInt(el, 'speed') || 300,
+        speed: getInt(el, 'speed') || 250,
+        // 터치 반응 개선
+        threshold: 2,
+        touchRatio: 1.5,
+        longSwipesRatio: 0.3,
+        longSwipesMs: 200,
+        // 터치 이벤트 최적화
+        touchStartPreventDefault: false,
+        passiveListeners: true,
+        followFinger: true,
+        resistanceRatio: 0,
         coverflowEffect: {
           rotate: 0,
           stretch: getStretch(),
@@ -4791,6 +4801,15 @@ var search_suggest = __webpack_require__(6823);
           modifier: 1,
           scale: 0.8,
           slideShadows: false
+        },
+        on: {
+          // 가시 범위 슬라이드만 will-change 부여 (GPU 부하 경감)
+          setTranslate: function () {
+            this.slides.forEach(function (slide) {
+              var progress = Math.abs(slide.progress);
+              slide.style.willChange = progress < 3 ? 'transform' : 'auto';
+            });
+          }
         }
       };
       var autoplayVal = getInt(el, 'autoplay');
@@ -4871,15 +4890,14 @@ var search_suggest = __webpack_require__(6823);
   'use strict';
 
   var SCOPE = '[data-ui="banner-tab"]';
-  var NS = '.bannerTab';
   var DEFAULT_SWIPE_THRESHOLD = 40;
   var CLS_OVERFLOW = 'is-overflow';
   var TAB_GUTTER = 20;
+  // 드래그 중 탭 클릭 오발 방지 임계값(px)
+  var TAP_THRESHOLD = 5;
 
-  // 공통 옵션
+  // 공통 옵션 — observer 제거(동적 슬라이드 변경 없음)
   var commonOpts = {
-    observer: true,
-    observeParents: true,
     preventClicks: true,
     preventClicksPropagation: false
   };
@@ -4901,7 +4919,7 @@ var search_suggest = __webpack_require__(6823);
     var slide = slides[idx];
     if (!slide) return;
     if (idx === 0) {
-      tabSwiper.translateTo(0, 300);
+      tabSwiper.translateTo(0, 200);
       return;
     }
     var containerWidth = tabSwiper.el.clientWidth;
@@ -4912,7 +4930,9 @@ var search_suggest = __webpack_require__(6823);
     var maxTranslate = tabSwiper.maxTranslate();
     var minTranslate = tabSwiper.minTranslate();
     var target = Math.max(maxTranslate, Math.min(minTranslate, -centerOffset));
-    tabSwiper.translateTo(target, 300);
+
+    // 탭 이동 애니메이션 200ms로 경량화
+    tabSwiper.translateTo(target, 200);
   }
 
   // Swiper 오버플로 그라데이션 바인딩
@@ -4927,7 +4947,7 @@ var search_suggest = __webpack_require__(6823);
     });
   }
 
-  // 탭 Swiper 생성 — 세로·가로 공통
+  // 탭 Swiper 생성 — freeMode로 자유 드래그, 경계에서 터치 해제
   function createTabSwiper(el, spaceBetween) {
     return new swiper_bundle/* default */.A(el, {
       slidesPerView: 'auto',
@@ -4935,12 +4955,43 @@ var search_suggest = __webpack_require__(6823);
       slidesOffsetBefore: 0,
       slidesOffsetAfter: 0,
       watchSlidesProgress: true,
-      observer: true,
-      observeParents: true
+      freeMode: true,
+      touchReleaseOnEdges: true
     });
   }
 
-  // ── 세로형(list) 초기화 ──
+  // 탭 클릭(pointerup) 바인딩 — click보다 빠른 응답
+  function bindTabTaps(tabSwiper, contentSwiper, isLoop) {
+    var handlers = [];
+    for (var i = 0; i < tabSwiper.slides.length; i++) {
+      (function (idx) {
+        var handler = function () {
+          // 드래그 중 오발 방지
+          if (Math.abs(tabSwiper.touches.diff) > TAP_THRESHOLD) return;
+          if (isLoop) {
+            contentSwiper.slideToLoop(idx);
+          } else {
+            contentSwiper.slideTo(idx);
+          }
+        };
+        tabSwiper.slides[idx].addEventListener('pointerup', handler);
+        handlers.push({
+          el: tabSwiper.slides[idx],
+          fn: handler
+        });
+      })(i);
+    }
+    return handlers;
+  }
+
+  // 탭 클릭 해제
+  function unbindTabTaps(handlers) {
+    for (var i = 0; i < handlers.length; i++) {
+      handlers[i].el.removeEventListener('pointerup', handlers[i].fn);
+    }
+  }
+
+  // 세로형(list) 초기화
   function initList($root, el) {
     var tabEl = $root.find('.tab-swiper-menus > .swiper')[0];
     var contentEl = $root.find('.tab-swiper-content > .swiper')[0];
@@ -4964,16 +5015,8 @@ var search_suggest = __webpack_require__(6823);
       }
     }));
 
-    // 탭 클릭
-    $(tabSwiper.slides).each(function (i, slide) {
-      $(slide).on('click' + NS, function () {
-        if (contentSwiper.autoplay && contentSwiper.autoplay.running) {
-          contentSwiper.autoplay.stop();
-          contentSwiper.autoplay.start();
-        }
-        contentSwiper.slideToLoop(i);
-      });
-    });
+    // 탭 클릭 — pointerup으로 빠른 응답
+    var tapHandlers = bindTabTaps(tabSwiper, contentSwiper, true);
     var autoplayVal = getInt(el, 'autoplay');
     if (autoplayVal) {
       contentSwiper.params.autoplay = {
@@ -4984,9 +5027,10 @@ var search_suggest = __webpack_require__(6823);
     }
     $root.data('tabSwiper', tabSwiper);
     $root.data('contentSwiper', contentSwiper);
+    $root.data('tapHandlers', tapHandlers);
   }
 
-  // ── 가로형(hscroll) 초기화 ──
+  // 가로형(hscroll) 초기화
   function initHscroll($root, el) {
     var tabEl = $root.find('.tab-swiper-menus > .swiper')[0];
     var contentEl = $root.find('.tab-swiper-content > .swiper')[0];
@@ -5007,11 +5051,9 @@ var search_suggest = __webpack_require__(6823);
         swiper: tabSwiper
       },
       on: {
+        // 전환 시작 시점에 탭 동기화 + inner 리셋 (전환 완료 대기 불필요)
         slideChange: function (swiper) {
           syncTabActive(tabSwiper, swiper.activeIndex);
-        },
-        // 콘텐츠 전환 완료 후 inner Swiper 첫 항목 리셋
-        slideChangeTransitionEnd: function (swiper) {
           var targetInner = innerSwipers[swiper.activeIndex];
           if (targetInner) targetInner.slideTo(0, 0);
         }
@@ -5029,8 +5071,6 @@ var search_suggest = __webpack_require__(6823);
         slidesPerView: 'auto',
         spaceBetween: innerSpaceBetween,
         nested: true,
-        observer: true,
-        observeParents: true,
         preventClicks: true,
         preventClicksPropagation: false,
         on: {
@@ -5049,14 +5089,14 @@ var search_suggest = __webpack_require__(6823);
             if (totalTabs <= 1) return;
             var currentIdx = contentSwiper.activeIndex;
 
-            // 왼쪽 스와이프 + 시작·끝 모두 끝 상태 → 다음 탭 (마지막이면 첫 번째로)
+            // 왼쪽 스와이프 + 시작·끝 모두 끝 상태 → 다음 탭
             if (diff > swipeThreshold && wasAtEnd && swiper.isEnd) {
               var next = (currentIdx + 1) % totalTabs;
               contentSwiper.slideTo(next);
               syncTabActive(tabSwiper, next);
             }
 
-            // 오른쪽 스와이프 + 시작·끝 모두 처음 상태 → 이전 탭 (첫 번째면 마지막으로)
+            // 오른쪽 스와이프 + 시작·끝 모두 처음 상태 → 이전 탭
             if (diff < -swipeThreshold && wasAtBeginning && swiper.isBeginning) {
               var prev = (currentIdx - 1 + totalTabs) % totalTabs;
               contentSwiper.slideTo(prev);
@@ -5071,15 +5111,12 @@ var search_suggest = __webpack_require__(6823);
       innerSwipers.push(inner);
     });
 
-    // 탭 클릭
-    $(tabSwiper.slides).each(function (i, slide) {
-      $(slide).on('click' + NS, function () {
-        contentSwiper.slideTo(i);
-      });
-    });
+    // 탭 클릭 — pointerup으로 빠른 응답
+    var tapHandlers = bindTabTaps(tabSwiper, contentSwiper, false);
     $root.data('tabSwiper', tabSwiper);
     $root.data('contentSwiper', contentSwiper);
     $root.data('innerSwipers', innerSwipers);
+    $root.data('tapHandlers', tapHandlers);
   }
   function init() {
     $(SCOPE).each(function (idx, el) {
@@ -5098,7 +5135,10 @@ var search_suggest = __webpack_require__(6823);
     $(SCOPE).each(function (idx, el) {
       var $root = $(el);
       if (!$root.data('init')) return;
-      $root.find('.tab-swiper-menus .swiper-slide').off(NS);
+
+      // pointerup 핸들러 해제
+      var tapHandlers = $root.data('tapHandlers') || [];
+      unbindTabTaps(tapHandlers);
 
       // 그라데이션 클래스 제거
       $root.find('[data-role="menu-overflow"]').removeClass(CLS_OVERFLOW);
@@ -5114,6 +5154,7 @@ var search_suggest = __webpack_require__(6823);
       $root.removeData('tabSwiper');
       $root.removeData('contentSwiper');
       $root.removeData('innerSwipers');
+      $root.removeData('tapHandlers');
       $root.removeData('init');
     });
   }
