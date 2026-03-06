@@ -62,19 +62,17 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     </li>
 
     <li class="frequent-card-layout-center">
-      <div class="frequent-card-info">
+      <a href="#!" class="frequent-card-info">
         <div class="product-meta">
           <p class="product-brand"><span class="sr-only">브랜드</span><%= d.brandNm %></p>
           <% if (d.modelNm) { %>
           <p class="product-model"><span class="sr-only">모델명</span><%= d.modelNm %></p>
           <% } %>
         </div>
-        <a href="#!">
-          <div class="product-summary">
-            <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
-            <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
-          </div>
-        </a>
+        <div class="product-summary">
+          <p class="product-name"><span class="sr-only">상품명</span><%= d.productNm %></p>
+          <p class="product-spec"><span class="sr-only">규격</span><%= d.standard %></p>
+        </div>
 
         <!-- prettier-ignore -->
         <!-- < % if (!isSoldout) { %> -->
@@ -118,7 +116,7 @@ const comma = (n) => String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
           <% } %>
         </div>
         <% } %>
-      </div>
+      </a>
     </li>
 
     <!-- < % if (!(_showFrequent && isSoldout)) { %> -->
