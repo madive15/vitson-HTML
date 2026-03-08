@@ -2,20 +2,18 @@
 // base/_scrollbar.scss (vits scope skin)
 // - 적용 범위:
 //   1) 문서 스크롤: html.vits-scope, body.vits-scope
-//   2) 내부 스크롤: .vits-scrollbar 클래스가 직접 적용된 요소
+//   2) .vits-scope 하위 모든 요소 (운영 전역 bare 셀렉터 덮어쓰기)
+//   3) 개별 스타일 필요 시: .vits-scrollbar 클래스로 변수 오버라이드
 // -----------------------------------------------------------------------------
 // - 목적:
 //   - 스크롤바 "시각 스타일"만 CSS로 커스텀한다.
 //   - 스크롤 이벤트 제어, 가상 스크롤, JS 개입은 하지 않는다.
 // -----------------------------------------------------------------------------
-// - 기본 정책:
-//   - 문서(body) 스크롤은 자동 적용
-//   - overflow(auto/scroll)가 걸린 내부 스크롤 컨테이너는
-//     반드시 .vits-scrollbar 클래스를 직접 부여해야 적용된다.
-// -----------------------------------------------------------------------------
 // - 주의:
-//   - 모든 overflow 요소에 전역으로 덮어씌우지 않는다.
-//   - 스크롤바 스킨 적용 범위는 명시적으로 관리한다.
+//   - 운영 전역 bare ::-webkit-scrollbar가 존재하므로
+//     .vits-scope 내부는 * 셀렉터로 강제 덮어쓴다.
+//   - 내부 스크롤 컨테이너별 개별 스타일이 필요하면
+//     .vits-scrollbar 클래스로 변수만 오버라이드한다.
 // -----------------------------------------------------------------------------
 // - 페이지별 톤 변경:
 //   - wrapper에서 CSS 변수만 덮어쓰는 방식으로 처리
@@ -23,27 +21,23 @@
 
 @use '@/assets/scss/base/colors' as color;
 
+// 변수 선언
 html.vits-scope,
 body.vits-scope {
-  overscroll-behavior: none;
-}
-
-// 변수 선언 + 문서 스크롤바
-html.vits-scope,
-body.vits-scope,
-.vits-scrollbar,
-.has-scroll,
-.vits-modal-inner * {
-  // thumb만 보이게(트랙/레일 숨김)
-  // size = 간격(6) + thumb(8) + 간격(6)
   --vits-scrollbar-size: 20px;
   --vits-scrollbar-gap: 6px;
   --vits-scrollbar-radius: 100px;
   --vits-scrollbar-track: transparent;
   --vits-scrollbar-thumb: #c1c1c1;
   --vits-scrollbar-thumb-hover: #a8a8a8;
+  overscroll-behavior: none;
+}
 
-  // Firefox 전용 (webkit 미지원 브라우저 폴백)
+// 운영 전역 bare ::-webkit-scrollbar 덮어쓰기
+// .vits-scope 자신(html/body) + 하위 모든 요소
+.vits-scope,
+.vits-scope * {
+  // Firefox 폴백
   @supports not selector(::-webkit-scrollbar) {
     scrollbar-color: var(--vits-scrollbar-thumb) transparent;
     scrollbar-width: thin;
@@ -86,32 +80,3 @@ body.vits-scope,
     background: transparent;
   }
 }
-
-/* -----------------------------------------------------------------------------
- * 페이지별 톤 변경이 필요할 때(값만 덮어쓰기)
- * - 규칙(셀렉터/속성)은 body.vits-scope에서 고정
- * - 값은 wrapper에서 변경(가이드 기준 유지)
- * --------------------------------------------------------------------------- */
-/*
-   - 주문서: 더 얇게 + 붉은 톤
-.vits-wrapper.vits-wrapper-order {
-  --vits-scrollbar-size: 6px;
-  --vits-scrollbar-radius: 4px;
-  --vits-scrollbar-track: transparent;
-
-  --vits-scrollbar-thumb: rgba(255, 120, 120, 0.35);
-  --vits-scrollbar-thumb-hover: rgba(255, 120, 120, 0.50);
-  --vits-scrollbar-thumb-active: rgba(255, 120, 120, 0.65);
-}
-
-   - 대시보드: 기본 두께 + 푸른 톤
-.vits-wrapper.vits-wrapper-dashboard {
-  --vits-scrollbar-size: 8px;
-  --vits-scrollbar-radius: 4px;
-  --vits-scrollbar-track: transparent;
-
-  --vits-scrollbar-thumb: rgba(80, 160, 255, 0.35);
-  --vits-scrollbar-thumb-hover: rgba(80, 160, 255, 0.50);
-  --vits-scrollbar-thumb-active: rgba(80, 160, 255, 0.65);
-}
-*/

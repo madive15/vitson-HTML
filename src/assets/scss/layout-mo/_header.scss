@@ -32,7 +32,7 @@
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
     min-height: map.get(var.$mo-header, 'nav-bar');
-    padding: map.get(var.$unit, 12) var.$mo-gutter map.get(var.$unit, 12) fn.rem(7);
+    padding: 0 var.$mo-gutter 0 fn.rem(7);
     background: color.$color-white;
 
     &.header-rule {
@@ -42,7 +42,27 @@
     &.header-main-bar {
       z-index: map.get(var.$mo-zindex, 'header-main');
       flex-direction: column;
-      padding: 0 0 map.get(var.$unit, 8);
+      padding: 0;
+    }
+
+    // nav-bar-logo: 로고만 노출 (로그인/인증 등)
+    &.header-nav-bar-logo {
+      padding-left: var.$mo-gutter;
+      box-shadow: map.get(var.$box-shadow, 'elevation_1');
+    }
+
+    &.header-search-bar {
+      height: map.get(var.$mo-header, 'search-bar');
+
+      .vits-input-search-form {
+        height: map.get(var.$unit, 44);
+      }
+    }
+
+    &.header-mypage-bar {
+      .vm-header-actions {
+        gap: map.get(var.$unit, 12);
+      }
     }
   }
 
@@ -209,9 +229,11 @@
     flex-grow: 1;
     gap: var.$mo-gutter;
     min-width: 0;
+    padding-right: map.get(var.$unit, 8);
+    padding-left: map.get(var.$unit, 4);
 
-    .btn-mic {
-      flex-shrink: 0;
+    .vits-input-search {
+      width: 100%;
     }
   }
 
@@ -224,65 +246,6 @@
 
   &.header-product-bar {
     height: map.get(var.$mo-header, 'product-bar');
-  }
-
-  // nav-bar-logo: 로고만 노출 (로그인/인증 등)
-  &.header-nav-bar-logo {
-    box-shadow: map.get(var.$box-shadow, 'elevation_1');
-
-    .vm-header-home {
-      width: fn.rem(84);
-      margin-left: fn.rem(9);
-
-      @include mx.img-fit(contain);
-    }
-  }
-
-  &.header-search-bar {
-    padding-top: fn.rem(10) !important;
-    padding-bottom: fn.rem(10) !important;
-
-    .vits-input-search {
-      flex-grow: 1;
-      min-width: 0;
-      height: map.get(var.$unit, 44);
-      background: map.get(color.$layout-surf, 'sunken');
-      border-radius: map.get(var.$radius, 'md');
-
-      &-form {
-        height: 100%;
-        background: transparent;
-        border-radius: 0;
-        box-shadow: none !important;
-
-        input[type='search'] {
-          padding-right: map.get(var.$unit, 36);
-          padding-left: map.get(var.$unit, 12);
-          font-size: fn.rem(13);
-          font-weight: 400;
-
-          &::placeholder {
-            color: map.get(color.$text-colors, 'muted');
-          }
-        }
-
-        .input-search-btn {
-          right: map.get(var.$unit, 8);
-          width: map.get(var.$unit, 20);
-          height: map.get(var.$unit, 20);
-          color: map.get(color.$icon-neutral, 'tertiary');
-
-          .text {
-            @include mx.sr-only;
-          }
-        }
-
-        .input-clear-btn {
-          right: map.get(var.$unit, 36);
-          background: map.get(color.$gray-shades, '40');
-        }
-      }
-    }
   }
 
   &.header-main-bar {
@@ -322,9 +285,12 @@
       }
 
       &-gnb {
+        $gnb-pb: map.get(var.$unit, 8);
+
         @include mx.flex;
+        position: relative;
         width: 100%;
-        height: map.get(var.$mo-header, 'main-bar-gnb');
+        height: map.get(var.$mo-header, 'main-bar-gnb') + $gnb-pb;
         transition: height 0.3s;
 
         .gnb {
@@ -335,18 +301,21 @@
           }
 
           &-list {
+            @include mx.hidden-scrollbar;
             gap: map.get(var.$unit, 20);
             padding: 0 var.$mo-gutter;
             overflow: auto hidden;
           }
 
           &-item {
+            position: relative;
             flex-shrink: 0;
           }
 
           &-link {
             @include mx.flex(flex, row, flex-start, center);
             gap: map.get(var.$unit, 2);
+            padding-bottom: $gnb-pb !important;
 
             &:is(button) {
               @include button.btn-reset;
@@ -362,7 +331,26 @@
               @include typo.typography('b3s', $color: map.get(color.$text-colors, 'primary'));
               line-height: fn.rem(18);
             }
+
+            &.is-active {
+              .text {
+                font-weight: 700;
+                color: map.get(color.$text-status, 'brand');
+              }
+
+              &::after {
+                @include mx.position(absolute, $bottom: 0, $left: (fn.rem(5) * -1));
+                width: calc(100% + fn.rem(10));
+                height: fn.rem(2);
+                content: '';
+                background: map.get(color.$layout-surf, 'brand');
+              }
+            }
           }
+        }
+
+        &:has(.gnb-link.is-active) {
+          box-shadow: inset 0 -1px 0 0 map.get(color.$layout-border, 'quinary');
         }
       }
     }
@@ -373,6 +361,13 @@
       .header-main-gnb {
         height: 0;
       }
+    }
+  }
+
+  &.header-alarm-bar {
+    .vm-header-actions .btn-setting {
+      width: map.get(var.$unit, 32);
+      height: map.get(var.$unit, 32);
     }
   }
 }

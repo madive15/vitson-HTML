@@ -121,6 +121,14 @@
       }
     };
 
+    // 초기 로드 시 활성 버튼이 있으면 스크롤 위치 보정
+    var $activeBtn = $btns.filter('.' + ClassName.ACTIVE);
+    if ($activeBtn.length) {
+      setTimeout(function () {
+        scrollToBtn($activeBtn.first());
+      }, 0);
+    }
+
     $scope.data(DATA_KEY, instance);
   }
 

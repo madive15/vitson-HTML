@@ -469,3 +469,12 @@
     }
   }
 }
+
+// 시안 기준 비율 자동 계산 후 콘텐츠 영역에 적용
+@mixin content-area-offset($header-key, $design-height, $design-offset, $direction: 'top') {
+  $ratio: math.div($design-offset, $design-height);
+  $header-h: if($header-key != '', map.get(var.$mo-header, $header-key), 0px);
+  padding-#{$direction}: calc(
+    (var(--vh, 1dvh) * 100 - #{$header-h} - #{map.get(var.$mo-bottom-bar, 'tab-bar')}) * #{$ratio}
+  );
+}

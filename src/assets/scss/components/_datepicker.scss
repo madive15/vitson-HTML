@@ -670,6 +670,17 @@ $vits-datepicker-single-sizes: (
             }
           }
         }
+
+        // disablePast: 오늘 이전 날짜 비활성
+        &.k-state-disabled {
+          pointer-events: none;
+
+          .k-link {
+            color: map.get(color.$text-colors, 'muted');
+            cursor: default;
+            background: transparent;
+          }
+        }
       }
     }
   }
@@ -721,3 +732,13 @@ $vits-datepicker-single-sizes: (
   }
 }
 /* stylelint-enable no-descending-specificity */
+
+.k-animation-container,
+.k-child-animation-container {
+  display: block !important;
+  overflow: visible !important;
+
+  .k-calendar-td.k-empty {
+    display: none !important;
+  }
+}

@@ -1,7 +1,10 @@
 <% const _src = srcPath; const _public = publicPath; %>
 
 <!-- prettier-ignore -->
-<% var _value = typeof value !== 'undefined' ? value : ''; %>
+<% 
+  const _value = typeof value !== 'undefined' ? value : ''; 
+  const _title = typeof title !== 'undefined' ? title : '';
+%>
 
 <!-- prettier-ignore -->
 <% if (type === 'main-bar') { %>
@@ -10,10 +13,18 @@
   <%- include('./nav-bar.ejs', { title: title }) %>
 <% } else if (type === 'nav-bar-step') { %>
   <%- include('./nav-bar-step.ejs') %>
-<% } else if (type === 'product-bar') { %>
-  <%- include('./product-bar.ejs') %>
 <% } else if (type === 'nav-bar-logo') { %>
   <%- include('./nav-bar-logo.ejs') %>
+<% } else if (type === 'product-bar') { %>
+  <%- include('./product-bar.ejs') %>
 <% } else if (type === 'search-bar') { %>
   <%- include('./search-bar.ejs', { value: _value }) %>
+<% } else if (type === 'alarm-bar') { %>
+  <%- include('./alarm-bar.ejs', { title: title }) %>
+<% } else if (type === 'recent-bar') { %>
+  <%- include('./recent-bar.ejs', { title: _title }) %>
+<% } else if (type === 'mypage-bar') { %>
+  <%- include('./mypage-bar.ejs', { title: _title }) %>
+<% } else if (type === 'order-bar') { %>
+  <%- include('./order-bar.ejs', { title: _title }) %>
 <% } %>

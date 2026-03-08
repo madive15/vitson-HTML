@@ -1,18 +1,19 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-  var _info = typeof overviewInfo !== 'undefined' ? overviewInfo : {};
-  var _brand = _info.brand || '';
-  var _brandHref = _info.brandHref || '#!';
-  var _title = _info.title || '';
-  var _originalPrice = _info.originalPrice || '';
-  var _discountRate = _info.discountRate || '';
-  var _discountPrice = _info.discountPrice || '';
-  var _isLiked = typeof _info.isLiked !== 'undefined' ? _info.isLiked : false;
-  var _isMember = typeof isMember !== 'undefined' ? isMember : true;
-  var _briefItems = typeof briefItems !== 'undefined' ? briefItems : [];
-  var _briefDesc = typeof briefDesc !== 'undefined' ? briefDesc : [];
-  var _optionCount = typeof optionCount !== 'undefined' ? optionCount : 0;
+  const _info = typeof overviewInfo !== 'undefined' ? overviewInfo : {};
+  const _brand = _info.brand || '';
+  const _brandHref = _info.brandHref || '#!';
+  const _title = _info.title || '';
+  const _spec = overviewInfo.spec || ''
+  const _originalPrice = _info.originalPrice || '';
+  const _discountRate = _info.discountRate || '';
+  const _discountPrice = _info.discountPrice || '';
+  const _isLiked = typeof _info.isLiked !== 'undefined' ? _info.isLiked : false;
+  const _isMember = typeof isMember !== 'undefined' ? isMember : true;
+  const _briefItems = typeof briefItems !== 'undefined' ? briefItems : [];
+  const _briefDesc = typeof briefDesc !== 'undefined' ? briefDesc : [];
+  const _optionCount = typeof optionCount !== 'undefined' ? optionCount : 0;
 %>
 
 <div class="overview-info">
@@ -27,7 +28,10 @@
         }) %>
       </p>
       <div class="overview-header">
-        <p class="overview-title"><%= _title %></p>
+        <div class="overview-header-info">
+          <p class="overview-title"><%= _title %></p>
+          <p class="overview-spec"><%= _spec %></p>
+        </div>
 
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components-mo/product/product-like-btn.ejs`, {

@@ -61,15 +61,25 @@
         }
 
         &-header {
-          @include mx.flex(flex, row, flex-start, center);
+          @include mx.flex(flex, row, flex-start, flex-start);
           gap: var.$mo-gutter;
+
+          &-info {
+            @include mx.flex(flex, column);
+            flex-grow: 1;
+            gap: map.get(var.$unit, 4);
+            min-width: 0;
+          }
         }
 
         &-title {
           @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
           @include mx.ellipsis-multi;
-          flex-grow: 1;
-          min-width: 0;
+        }
+
+        &-spec {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include mx.ellipsis-multi;
         }
 
         &-labels {

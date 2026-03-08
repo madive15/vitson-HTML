@@ -1,0 +1,42 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+%>
+
+<section
+  class="vm-home-peek-swiper peek-product"
+  data-ui="banner-peek"
+  data-slides-per-view="1.1"
+  data-space-between="16"
+  data-overflow-gradient="true"
+>
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <% brands.forEach(function(brand) { %>
+      <div class="swiper-slide">
+        <div class="peek-product-item">
+          <div class="peek-product-head">
+            <figure class="peek-product-visual">
+              <img src="<%= imgBase %>/<%= brand.bgImg %>" alt="" />
+              <figcaption><img src="<%= imgBase %>/<%= brand.logoImg %>" alt="<%= brand.name %>" /></figcaption>
+            </figure>
+            <div class="peek-product-info">
+              <p class="name"><%= brand.name %></p>
+              <p class="desc"><%= brand.desc %></p>
+            </div>
+          </div>
+          <div class="peek-product-body">
+            <ul class="peek-product-list view-list">
+              <!-- prettier-ignore -->
+              <% brand.products.forEach(function(product) { %> 
+                <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { item: product, showExtra: false }) %> 
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>

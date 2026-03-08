@@ -1,0 +1,32 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+%>
+
+<section class="vm-home-promo-brand">
+  <div class="promo-brand-head">
+    <h2 class="promo-brand-head-title"><%- title %></h2>
+    <% if (typeof href !== 'undefined' && href) { %>
+    <a href="<%= href %>" class="promo-brand-head-more">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-right' }) %>
+    </a>
+    <% } %>
+  </div>
+  <div class="promo-brand-body">
+    <%- include(`${_src}/views/components-mo/home/home-swiper-peek-product.ejs`, { brands: brands }) %>
+  </div>
+  <div class="promo-brand-footer">
+    <% banners.forEach(function(banner) { %>
+    <a href="<%= banner.href %>" class="promo-brand-banner theme-<%= banner.theme %>">
+      <div class="icon">
+        <img src="<%= imgBase %>/<%= banner.img %>" alt="" />
+      </div>
+      <div class="promo-brand-banner-name">
+        <p class="title"><%= banner.title %></p>
+        <p class="desc"><%= banner.desc %></p>
+      </div>
+    </a>
+    <% }); %>
+  </div>
+</section>

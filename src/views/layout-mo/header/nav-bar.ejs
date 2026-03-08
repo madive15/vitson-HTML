@@ -1,13 +1,6 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-const defaultActions = [
-  { iconName: 'magnifying-glass', href: '#!', label: '검색' },
-  { iconName: 'bag', href: '#!', label: '장바구니' },
-  { iconName: 'menu', data: { popupTarget: '#gnb-menu' }, label: '메뉴' },
-];
-
-const headerActions = typeof actions !== 'undefined' ? actions : defaultActions;
 const hasDesc = typeof desc !== 'undefined' && desc;
 const hasTitleTooltip = typeof titleTooltip !== 'undefined' && titleTooltip;
 const headerRootClass = typeof rootClass !== 'undefined' ? rootClass : '';
@@ -16,12 +9,10 @@ const headerRootClass = typeof rootClass !== 'undefined' ? rootClass : '';
 <!-- prettier-ignore -->
 <header class="vm-header header-nav-bar<%= headerRootClass ? ' ' + headerRootClass : '' %>" 
   data-vits-header>
-  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/icon.ejs`, {
-      iconName: 'arrow-left' 
-    }) %>
-  </a>
+  <!-- prettier-ignore -->
+  <%- include('./header-button.ejs', { 
+    button: 'back' })
+  %> 
   
  <% if (hasTitleTooltip) { %>
   <div class="vm-header-title" data-header-title>
@@ -43,24 +34,15 @@ const headerRootClass = typeof rootClass !== 'undefined' ? rootClass : '';
 <% } %>
 
   <div class="vm-header-actions">
-    <% headerActions.forEach((item) => { %>
-      <% if (item.href) { %>
-        <a href="<%= item.href %>"
-          class="vm-header-btn<%= item.active ? ' is-active' : '' %>"
-          aria-label="<%= item.label %>">
-          <%- include(`${_src}/views/components/icon.ejs`, { iconName: item.iconName }) %>
-        </a>
-      <% } else { %>
-        <button type="button"
-          class="vm-header-btn<%= item.active ? ' is-active' : '' %>"
-          aria-label="<%= item.label %>"
-          <%= item.data
-            ? Object.entries(item.data).map(([k, v]) =>
-              ` data-${k.replace(/([A-Z])/g, '-$1').toLowerCase()}="${v}"`).join('')
-            : '' %>>
-          <%- include(`${_src}/views/components/icon.ejs`, { iconName: item.iconName }) %>
-        </button>
-      <% } %>
-    <% }); %>
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'search' })
+    %> 
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'cart',
+      count: 3
+    })
+    %> 
   </div>
 </header>

@@ -1,27 +1,24 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 
-<!-- 
-  back:   { label: '뒤로가기', icon: 'arrow-left', badge: false },
-  close:  { label: '닫기', icon: 'close',      badge: false },
-  share:  { label: '공유', icon: 'share',      badge: false },
-  like:   { label: '좋아요',   icon: 'heart',      badge: false },
-  alarm:  { label: '알림',     icon: 'bell',       badge: 'dot',   href: '/alarm' },
-  search: { label: '검색',     icon: 'search',     badge: false,   href: '/search' }
--->
-
 <%
   // 버튼 정의 맵
   // tag: 생략 시 href 유무로 자동 결정 (href 있으면 a, 없으면 button)
   // badge: 'count' (숫자) | 'dot' (점) | false (없음)
   var btnMap = {  
     cart: { label: '장바구니', icon: 'cart', badge: 'count', href: '/cart' },
-    alarm: { label: '알림', icon: 'bell', badge: 'dot', href: '/alarm' }
+    alarm: { label: '알림', icon: 'bell', badge: 'dot', href: '/alarm' },
+    close: { label: '닫기', icon: 'x', badge: false },
+    back: { label: '뒤로가기', icon: 'arrow-left', badge: false },
+    setting: { label: '설정', icon: 'setting', badge: false },
+    search: { label: '검색',  icon: 'magnifying-glass', badge: false, href: '/search' },
+    voice: { label: '음성 검색', icon: 'mic', badge: false, href: '/voice-search' },
   };
 
   var btn = btnMap[button];
   var btnHref = (typeof href !== 'undefined') ? href : (btn.href || '');
   var tag = btnHref ? 'a' : 'button';
+  var btnAttrs = (typeof attrs !== 'undefined' && attrs) ? attrs : {};
 %>
 
 <% if (btn) { %>
@@ -30,6 +27,7 @@
     <% if (tag === 'button') { %>type="button"<% } %>
     class="vm-header-btn btn-<%= button %>"
     aria-label="<%= btn.label %>"
+    <% Object.keys(btnAttrs).forEach(function(key) { %> <%= key %>="<%= btnAttrs[key] %>"<% }); %>
   >
     <%- include(`${_src}/views/components/icon.ejs`, { iconName: btn.icon }) %>
     <% if (btn.badge === 'count') { %>

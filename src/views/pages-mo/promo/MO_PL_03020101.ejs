@@ -30,14 +30,21 @@
 
 <!DOCTYPE html>
 <html lang="ko" class="vm-scope">
-  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '기획전 상세'}) %>
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '기획전 상세(비회원)'}) %>
   <body class="vm-scope">
     <a href="#skipNav" class="skip-nav">본문 바로가기</a>
 
     <section class="vm-wrapper">
       <div class="vm-wrap wrap-promo">
         <div class="vm-content-wrap">
-          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { type: 'main-bar' }) %>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'main-bar',
+            alarm: true,
+            count: 100,
+            currentGnb: 'plan',
+            hasGnb: false
+          }) %>
 
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-promo">
