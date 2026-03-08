@@ -1,7 +1,10 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
-  var gnbList = [
+  const _hasGnb = typeof hasGnb !== 'undefined' ? hasGnb : true;
+  const _currentGnb = typeof currentGnb !== 'undefined' ? currentGnb : '';
+
+  const gnbList = [
     { id: 'brand', label: '브랜드', tag: 'button', icon: true, action: 'open-brand-sheet' },
     { id: 'deal', label: '초특가', href: '#!' },
     { id: 'lighting', label: '비츠온조명', href: '#!' },
@@ -16,8 +19,16 @@
       <%- include('./header-logo.ejs') %>
 
       <div class="vm-header-actions">
-        <%- include('./header-button.ejs', { button: 'alarm', alarm: (typeof alarm !== 'undefined') ? alarm : false })
-        %> <%- include('./header-button.ejs', { button: 'cart', count: (typeof count !== 'undefined') ? count : 0 }) %>
+        <!-- prettier-ignore -->
+        <%- include('./header-button.ejs', { 
+          button: 'alarm', alarm: (typeof alarm !== 'undefined') ? alarm : false })
+        %> 
+        <%- include('./header-button.ejs', { 
+          button: 'cart', count: (typeof count !== 'undefined') ? count : 0 }) 
+        %>
+        <%- include('./header-button.ejs', { 
+          button: 'close', attrs: { 'data-action': 'close-category-popup', 'hidden': '' } }) 
+        %>
       </div>
     </div>
 
@@ -33,19 +44,25 @@
       }) %>
     </div>
   </div>
+
+  <% if (_hasGnb) { %>
   <nav class="header-main-gnb">
     <ul class="gnb-list" data-scroll-buttons data-scroll-only>
       <% gnbList.forEach(function(item) { %>
       <li class="gnb-item">
         <% if (item.tag === 'button') { %>
-        <button type="button" class="gnb-link" data-action="<%- item.action %>">
+        <button
+          type="button"
+          class="gnb-link<%= _currentGnb === item.id ? ' is-active' : '' %>"
+          data-action="<%- item.action %>"
+        >
           <% if (item.icon) { %>
           <span class="icon"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'label' }) %> </span>
           <% } %>
           <span class="text"><%= item.label %></span>
         </button>
         <% } else { %>
-        <a href="<%= item.href %>" class="gnb-link">
+        <a href="<%= item.href %>" class="gnb-link<%= _currentGnb === item.id ? ' is-active' : '' %>">
           <span class="text"><%= item.label %></span>
         </a>
         <% } %>
@@ -53,4 +70,5 @@
       <% }) %>
     </ul>
   </nav>
+  <% } %>
 </header>

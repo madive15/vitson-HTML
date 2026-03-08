@@ -2,32 +2,28 @@
 <!-- prettier-ignore -->
 
 <header class="vm-header header-product-bar">
-  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
-    <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/icon.ejs`, {
-      iconName: 'arrow-left' 
-    }) %>
-  </a>
+  <!-- prettier-ignore -->
+  <%- include('./header-button.ejs', { 
+    button: 'back' })
+  %> 
   
   <div class="vm-header-search">
     <!-- prettier-ignore -->
-    <%- include(`${_src}/views/components/form/input-text.ejs`, {
-      id: 'receiver-name',
-      name: 'receiverName',
-      label: '받는 사람',
-      placeholder: '테스트 헤더 상세용',
-      required: true,
-      rootClass: 'size-l',
+    <%- include(`${_src}/views/components/form/input-search.ejs`, {
+      idPrefix: 'product-search',
+      action: '#!',
+      name: 'product-search',
+      placeholder: '무엇이든 비츠온에서 찾아보세요',
+      addClassName: 'theme-gray size-l',
+      hasClear: true
     }) %>
-
-    <button type="button" class="vm-header-btn btn-mic" aria-label="음성 검색">
-      <%- include(`${_src}/views/components/icon.ejs`, { iconName: "mic" }) %>
-    </button>
   </div>
   <div class="vm-header-actions">
-    <button type="button" class="vm-header-btn btn-cart" aria-label="장바구니">
-      <%- include(`${_src}/views/components/icon.ejs`, { iconName: "bag" }) %>
-      <span class="badge">99+</span>
-    </button>
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'cart',
+      count: 3
+    })
+    %>
   </div>
 </header>

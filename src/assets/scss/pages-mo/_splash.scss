@@ -1,0 +1,94 @@
+// -----------------------------------------------------------------------------
+// pages-mo/_splash.scss
+// - 모바일 스플래시 페이지
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+
+$splash-colors: (
+  '01': map.get(color.$layout-status, 'info-bg-sub'),
+  '02': map.get(color.$layout-status, 'brand-bg-sub'),
+  '03': map.get(color.$label-step, 'processing')
+);
+
+@keyframes vm-splash-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(fn.rem(12));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-content-my-splash {
+  @include mx.flex(flex, column);
+}
+
+.vm-splash {
+  @include mx.flex(flex, row, center, center);
+  @include mx.content-area-offset('', 686, 100, 'bottom');
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background: color.$color-white;
+
+  &-inner {
+    @include mx.flex(flex, column);
+    gap: var.$mo-gutter;
+    text-align: center;
+  }
+
+  &-text {
+    @include typo.typography('b1r', $color: map.get(color.$text-colors, 'primary'));
+    opacity: 0;
+    animation: vm-splash-fade-up 0.5s ease forwards;
+
+    .point-text {
+      font-weight: 700;
+    }
+  }
+
+  &-logo {
+    width: fn.rem(200);
+    opacity: 0;
+    animation: vm-splash-fade-up 0.5s ease 0.3s forwards;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  @each $key, $bg in $splash-colors {
+    &.splash-main#{$key} {
+      background: $bg;
+    }
+  }
+
+  &.splash-main03 {
+    .vm-splash-text {
+      color: color.$color-white;
+    }
+
+    .vm-splash-logo {
+      .logo-vitson {
+        fill: color.$color-white;
+      }
+
+      .logo-mro-sub,
+      .logo-mro {
+        fill: map.get(color.$layout-surf, 'dark');
+      }
+    }
+  }
+}

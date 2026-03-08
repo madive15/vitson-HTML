@@ -75,7 +75,8 @@
 }
 
 .vm-wrap {
-  $mypage-bg-sections: 'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry', 'support';
+  $mypage-bg-sections:
+    'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry', 'support', 'alarm';
 
   @each $section in $mypage-bg-sections {
     &.wrap-my-#{$section} .vm-content-wrap {
@@ -3629,6 +3630,105 @@
   /* stylelint-disable-next-line no-descending-specificity */
   .vm-content-wrap {
     background: color.$color-white;
+  }
+}
+
+// 알림 내역
+.vm-mypage-alarm {
+  position: relative;
+  padding: var.$mo-section-gap var.$mo-gutter map.get(var.$unit, 52);
+  box-shadow: map.get(var.$box-shadow, 'elevation_-1');
+
+  .alarm {
+    &-message-list {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
+    }
+
+    &-message-item {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 8);
+      padding: map.get(var.$unit, 20) var.$mo-gutter;
+    }
+
+    &-title {
+      @include typo.typography('b3s');
+    }
+
+    &-desc,
+    &-text {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-desc {
+      @include mx.ellipsis-single;
+    }
+
+    &-date {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    }
+
+    &-image {
+      @include mx.img-fit;
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: map.get(var.$radius, 'md');
+    }
+
+    // 상세
+    &-message-detail {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 20);
+      padding: map.get(var.$unit, 20) var.$mo-gutter;
+
+      &-item {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-actions {
+        @include mx.flex(flex, row, flex-end);
+      }
+    }
+  }
+
+  &-empty {
+    @include mx.content-area-offset('nav-bar', 614.5, 175.5);
+  }
+
+  // 세팅
+  &.alarm-setting {
+    padding: map.get(var.$unit, 32) map.get(var.$unit, 32) map.get(var.$unit, 52);
+
+    .alarm-setting {
+      &-item {
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 12);
+      }
+
+      &-label {
+        @include typo.typography('b2r');
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      &-head {
+        @include mx.border('bottom', $color: map.get(color.$layout-surf, 'secondary'));
+        padding-bottom: map.get(var.$unit, 32);
+        margin-bottom: map.get(var.$unit, 32);
+
+        [class*='-label'] {
+          font-size: fn.rem(18);
+          font-weight: 600;
+        }
+      }
+
+      &-body {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 36);
+      }
+    }
   }
 }
 

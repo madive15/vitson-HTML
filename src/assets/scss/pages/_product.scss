@@ -934,6 +934,12 @@
       .info-inner li {
         @include mx.flex($direction: column);
         gap: map.get(var.$unit, 8);
+
+        .product-spec {
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          @include mx.ellipsis-multi;
+          padding-bottom: map.get(var.$unit, 8);
+        }
       }
 
       .product-name {

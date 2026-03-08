@@ -1,0 +1,27 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<% const _title = (typeof title !== 'undefined' && title) ? title : '마이페이지'; %>
+
+<header class="vm-header header-mypage-bar">
+  <!-- prettier-ignore -->
+  <%- include('./header-button.ejs', { 
+    button: 'back' })
+  %>
+
+  <p class="vm-header-title" data-header-title><%= _title %></p>
+
+  <div class="vm-header-actions">
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'search' })
+    %>
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'alarm' })
+    %>
+    <!-- prettier-ignore -->
+    <%- include('./header-button.ejs', { 
+      button: 'cart' })
+    %>
+  </div>
+</header>

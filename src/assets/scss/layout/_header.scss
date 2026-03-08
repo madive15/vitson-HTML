@@ -948,10 +948,18 @@ $brand-scroll-common: map.get(var.$unit, 24);
           height: fn.rem(690);
 
           &-col {
+            // 카테고리 패널 — background-position 14px 기준에 맞춤
+            --vits-scrollbar-size: 14px;
+            --vits-scrollbar-gap: 3px;
             overflow: hidden auto;
 
             &:not(:last-of-type) {
               @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+            }
+
+            // 스크롤 있을 때만 링크 오른쪽 1px 여백
+            &.is-scrollable .gnb-category-link {
+              margin-right: 1px;
             }
           }
 
@@ -959,12 +967,13 @@ $brand-scroll-common: map.get(var.$unit, 24);
             flex: 0 0 fn.rem(220);
           }
 
+          /* stylelint-disable-next-line no-descending-specificity */
           &-link {
             @include mx.flex(flex, row, flex-start, center);
             position: relative;
             display: block;
             min-height: map.get(var.$unit, 40);
-            padding: fn.rem(10) 0 fn.rem(10) map.get(var.$unit, 16);
+            padding: fn.rem(10) map.get(var.$unit, 8) fn.rem(10) map.get(var.$unit, 16);
             overflow: hidden;
 
             .text {

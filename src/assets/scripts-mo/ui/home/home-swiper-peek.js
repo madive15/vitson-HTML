@@ -3,7 +3,7 @@
  * @description 홈 peek형 배너 Swiper
  * @scope [data-ui="banner-peek"]
  * @option data-slides-per-view, data-space-between, data-loop, data-autoplay,
- *         data-speed, data-centered-slides
+ *         data-speed, data-centered-slides, data-overflow-gradient
  */
 import Swiper from 'swiper/bundle';
 
@@ -11,6 +11,7 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   var SCOPE = '[data-ui="banner-peek"]';
+  var CLS_OVERFLOW = 'is-overflow';
 
   function getInt(el, name) {
     var val = el.getAttribute('data-' + name);
@@ -24,6 +25,15 @@ import Swiper from 'swiper/bundle';
 
   function getBool(el, name) {
     return el.getAttribute('data-' + name) === 'true';
+  }
+
+  // Swiper 끝 미도달 시 오른쪽 그라데이션 표시
+  function bindOverflow(swiper, $target) {
+    if (!$target.length) return;
+    $target.toggleClass(CLS_OVERFLOW, !swiper.isEnd);
+    swiper.on('slideChange', function () {
+      $target.toggleClass(CLS_OVERFLOW, !swiper.isEnd);
+    });
   }
 
   function init() {
@@ -50,7 +60,12 @@ import Swiper from 'swiper/bundle';
       var speedVal = getInt(el, 'speed');
       if (speedVal) config.speed = speedVal;
 
-      new Swiper(swiperEl, config);
+      var swiperInstance = new Swiper(swiperEl, config);
+
+      // 그라데이션 바인딩
+      if (getBool(el, 'overflow-gradient')) {
+        bindOverflow(swiperInstance, $root);
+      }
 
       $root.data('init', true);
     });
@@ -64,6 +79,8 @@ import Swiper from 'swiper/bundle';
       if (swiperEl && swiperEl.swiper) {
         swiperEl.swiper.destroy(true, true);
       }
+
+      $root.removeClass(CLS_OVERFLOW);
       $root.removeData('init');
     });
   }

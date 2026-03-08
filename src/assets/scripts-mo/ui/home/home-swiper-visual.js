@@ -1,6 +1,6 @@
 /**
  * @file scripts-mo/ui/home/home-swiper-visual.js
- * @description 홈 비주얼 배너 Swiper (coverflow 기반, 수동 복제로 loop 보정)
+ * @description 홈 비주얼 배너 Swiper (slide + CSS scale 기반 카드 캐러셀)
  * @scope [data-ui="banner-visual"]
  * @option data-autoplay, data-speed
  */
@@ -10,7 +10,7 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   var SCOPE = '[data-ui="banner-visual"]';
-  // loop 안정성을 위한 최소 슬라이드 수
+  // loop 안정성을 위한 최소 슬라이드 수 (Swiper 11 버그 대응)
   var MIN_SLIDES = 9;
 
   function getInt(el, name) {
@@ -18,7 +18,7 @@ import Swiper from 'swiper/bundle';
     return val ? parseInt(val, 10) : null;
   }
 
-  // 슬라이드 수동 복제 (원본 부족 시 loop 보정)
+  // 슬라이드 수동 복제 (원본 3개 → 9개, loop + centeredSlides 버그 대응)
   function cloneSlides($wrapper) {
     var $originals = $wrapper.children('.swiper-slide');
     var originalCount = $originals.length;
@@ -51,51 +51,19 @@ import Swiper from 'swiper/bundle';
       var originalCount = cloneSlides($wrapper);
       $root.data('originalCount', originalCount);
 
-      function getStretch() {
-        var w = window.innerWidth;
-        if (w < 480) return 20;
-        if (w < 768) return 30;
-        if (w < 1024) return 50;
-        if (w < 1280) return 70;
-        return 100;
-      }
-
       var config = {
-        effect: 'coverflow',
-        centeredSlides: true,
-        slidesPerView: 'auto',
+        speed: getInt(el, 'speed') || 600,
         loop: true,
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        spaceBetween: -10,
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        speed: getInt(el, 'speed') || 250,
-        // 터치 반응 개선
         threshold: 2,
-        touchRatio: 1.5,
-        longSwipesRatio: 0.3,
-        longSwipesMs: 200,
-        // 터치 이벤트 최적화
         touchStartPreventDefault: false,
         passiveListeners: true,
-        followFinger: true,
-        resistanceRatio: 0,
-        coverflowEffect: {
-          rotate: 0,
-          stretch: getStretch(),
-          depth: 0,
-          modifier: 1,
-          scale: 0.8,
-          slideShadows: false
-        },
-        on: {
-          // 가시 범위 슬라이드만 will-change 부여 (GPU 부하 경감)
-          setTranslate: function () {
-            this.slides.forEach(function (slide) {
-              var progress = Math.abs(slide.progress);
-              slide.style.willChange = progress < 3 ? 'transform' : 'auto';
-            });
-          }
-        }
+        grabCursor: true
       };
 
       var autoplayVal = getInt(el, 'autoplay');
@@ -104,16 +72,6 @@ import Swiper from 'swiper/bundle';
       }
 
       var swiper = new Swiper(swiperEl, config);
-
-      // resize 시 stretch 값 업데이트
-      var resizeTimer;
-      $(window).on('resize.bannerVisual' + idx, function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function () {
-          swiper.params.coverflowEffect.stretch = getStretch();
-          swiper.update();
-        }, 100);
-      });
 
       // nav 버튼 (이벤트 위임)
       $root.on('click.bannerVisual', '[data-role]', function () {
@@ -148,7 +106,6 @@ import Swiper from 'swiper/bundle';
       // 복제 슬라이드 제거
       $(swiperEl).find('[data-cloned="true"]').remove();
 
-      $(window).off('resize.bannerVisual' + idx);
       $root.off('.bannerVisual');
       $root.removeData('init originalCount');
     });

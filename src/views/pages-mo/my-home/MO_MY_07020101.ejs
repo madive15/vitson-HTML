@@ -1,0 +1,104 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  // 퍼블 확인용 알림 상세 mock 데이터
+  var _alarmDetail = {
+    title: '[아라쇼] 애니다이아몬드 멀티커터',
+    date: '2027-01-01',
+    desc: '(광고) 더러운 곰팡이와 오염원 완벽 차단!? 다양한 색상으로 고급 인테리어까지! 깔끔한 줄눈 보수제, 지금 아라쇼에서 만나보세요!??',
+    image: {
+       src: `${_public}/resources/img/mro/renewal/temp/temp-ex01.jpg`,
+      alt: '갑자기 찾아온 한파 대비 온종일 따뜻한 핫팩 기획전'
+    }
+  };
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '마이페이지'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-alarm">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'alarm-bar', title: '알림 내역' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-alarm">
+              <section class="vm-mypage-alarm">
+                <h2 class="sr-only">알림 메세지 상세</h2>
+
+                <div class="alarm-message-detail vm-mypage-round-box">
+                  <div class="alarm-message-detail-item">
+                    <p class="alarm-title"><%= _alarmDetail.title %></p>
+                    <p class="alarm-date"><%= _alarmDetail.date %></p>
+                    <p class="alarm-text"><%= _alarmDetail.desc %></p>
+                    <% if (_alarmDetail.image) { %>
+                    <a href="#!" class="alarm-image">
+                      <img src="<%= _alarmDetail.image.src %>" alt="<%= _alarmDetail.image.alt %>" />
+                    </a>
+                    <% } %>
+                  </div>
+
+                  <div class="alarm-message-detail-actions">
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components/button/button.ejs`, {
+                      href: '#!',
+                      size:'sm', 
+                      variant: 'outline-tertiary', 
+                      text: '목록'
+                    }) %>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+
+        // ?empty : 알림 없음 상태 전환
+        if (params.get('type') === 'empty') {
+          var list = document.querySelector('.alarm-message-list');
+          var empty = document.querySelector('.vm-mypage-alarm-empty');
+          if (list) list.style.display = 'none';
+          if (empty) empty.style.display = '';
+        }
+      })();
+    </script>
+  </body>
+</html>

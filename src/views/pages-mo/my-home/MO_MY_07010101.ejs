@@ -1,0 +1,99 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  // 퍼블 확인용 알림 mock 데이터
+  var _alarmList = [
+    { title: '[46156] 2단 원통파 A타입(싱글락)(A)', desc: '(광고) 더러운 곰팡이와 오염원 완벽 차단!? 다양한 색상으로...', date: '2027-01-01' },
+    { title: '[31042] LED 평판등 50W 직하형', desc: '주문하신 상품이 출고되었습니다. 배송 예정일은 1월 3일입니다.', date: '2027-01-02' },
+    { title: '[28873] 크레토스 인버터 용접기 CT-200', desc: '장바구니에 담긴 상품의 가격이 변동되었습니다. 지금 확인해보세요.', date: '2027-01-03' },
+    { title: '[55210] 고무발포 페어관 25mm', desc: '(광고) 겨울철 동파 방지 필수템! 배관 보온재 특가 진행중', date: '2027-01-04' },
+    { title: '[19384] 3M 전기절연테이프 #33+', desc: '고객님이 찜한 상품이 재입고되었습니다.', date: '2027-01-05' }
+  ];
+%>
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '마이페이지'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-my-alarm">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'alarm-bar', title: '알림 내역' 
+          }) %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-my-alarm">
+              <section class="vm-mypage-alarm">
+                <h2 class="sr-only">알림 메세지 목록</h2>
+
+                <!-- [D] 알림 1건 이상 -->
+                <div class="alarm-message-list">
+                  <% _alarmList.forEach(function(item) { %>
+                  <a href="#!" class="alarm-message-item vm-mypage-round-box">
+                    <p class="alarm-title"><%= item.title %></p>
+                    <p class="alarm-desc"><%= item.desc %></p>
+                    <p class="alarm-date"><%= item.date %></p>
+                  </a>
+                  <% }); %>
+                </div>
+
+                <!-- [D] 알림 없을 때 -->
+                <div class="vm-mypage-alarm-empty" style="display: none">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/empty-state.ejs`, {
+                    iconName: 'info',
+                    title: '도착한 알림이 없습니다',
+                  }) %>
+                </div>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: 'mypage' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+
+        // ?empty : 알림 없음 상태 전환
+        if (params.get('type') === 'empty') {
+          var list = document.querySelector('.alarm-message-list');
+          var empty = document.querySelector('.vm-mypage-alarm-empty');
+          if (list) list.style.display = 'none';
+          if (empty) empty.style.display = '';
+        }
+      })();
+    </script>
+  </body>
+</html>

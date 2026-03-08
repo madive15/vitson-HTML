@@ -4,15 +4,21 @@
 <%
 const _homeData = require(`${_src}/../public/resources/mock/home-data.js`);
 const _slides = _homeData.slides;
+
 const _menus = _homeData.menus;
 const _categoryMenus = _homeData.categoryMenus;
+
 const _promoBanner = _homeData.promoBanner;
+const _peekBanners = _homeData.peekBanners;
 
 const _dealProducts = _homeData.getDealProducts(_public);
 const _frequentProducts = _homeData.getFrequentProducts();
 const _legendProducts = _homeData.getLegendProducts();
 const _popularCategories = _homeData.getPopularCategories();
 const _categoryBestProducts = _homeData.getCategoryBestProducts();
+const _flashDealProducts = _homeData.getFlashDealProducts();
+
+const _brandExhibition = _homeData.brandExhibition;
 %>
 
 <!DOCTYPE html>
@@ -92,6 +98,12 @@ const _categoryBestProducts = _homeData.getCategoryBestProducts();
                     title: '지금 많이 찾으시는 <span class="point-color">카테고리</span>' }) %>
                 </div>
 
+                <!-- 오늘의 행사  -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-swiper-peek-banner.ejs`, {
+                  banners: _peekBanners,
+                  title: '<span class="point-color">오늘의 행사</span> 놓치지 마세요' }) %>
+
                 <!-- 카테고리 BEST -->
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components-mo/home/home-banner-tab-hscroll.ejs`, {
@@ -116,147 +128,23 @@ const _categoryBestProducts = _homeData.getCategoryBestProducts();
                   type: 'legend',
                   products: _legendProducts,
                   title: '비츠온 <span class="point-color">레전드</span>' }) %>
-              </section>
 
-              <!-- S: peek형 배너 (1.2) -->
-              <section
-                data-ui="banner-peek"
-                data-slides-per-view="1.2"
-                data-space-between="12"
-                style="padding: 0 0 0 16px; margin-bottom: 40px"
-              >
-                <div class="swiper">
-                  <div class="swiper-wrapper">
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #e67e22;
-                      "
-                    >
-                      <a href="#!">peek 1</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #16a085;
-                      "
-                    >
-                      <a href="#!">peek 2</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #8e44ad;
-                      "
-                    >
-                      <a href="#!">peek 3</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #2c3e50;
-                      "
-                    >
-                      <a href="#!">peek 4</a>
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <!-- E: peek형 배너 (1.2) -->
+                <!-- 브랜드 기획전 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-promo-brand.ejs`, {
+                  href: "#!",
+                  banners: _brandExhibition.banners,
+                  brands: _brandExhibition.brands,
+                  title: '비츠온 <span class="point-color">Pick 브랜드</span>' }) %>
 
-              <!-- S: peek형 배너 (1.4) -->
-              <section
-                data-ui="banner-peek"
-                data-slides-per-view="1.4"
-                data-space-between="16"
-                style="padding: 0 0 0 16px; margin-bottom: 40px"
-              >
-                <div class="swiper">
-                  <div class="swiper-wrapper">
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #1abc9c;
-                      "
-                    >
-                      <a href="#!">peek A</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #e74c3c;
-                      "
-                    >
-                      <a href="#!">peek B</a>
-                    </div>
-                    <div
-                      class="swiper-slide"
-                      style="
-                        height: 180px;
-                        border-radius: 12px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px;
-                        font-weight: 700;
-                        color: #fff;
-                        background: #3498db;
-                      "
-                    >
-                      <a href="#!">peek C</a>
-                    </div>
-                  </div>
-                </div>
+                <!-- 반짝특가 -->
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components-mo/home/home-banner-tab-hscroll.ejs`, {
+                tabs: _flashDealProducts,
+                menuSpaceBetween: 8,
+                contentSpaceBetween: 20,
+                title: '비츠온 <span class="point-color">반짝특가</span>' }) %>
               </section>
-              <!-- E: peek형 배너 (1.4) -->
             </div>
           </main>
           <!-- E: vm-main -->

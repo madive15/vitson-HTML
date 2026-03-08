@@ -1,0 +1,22 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  const _name = typeof name !== 'undefined' ? name : '';
+  const _value = typeof value !== 'undefined' ? value : '';
+  const _checkboxType = typeof checkboxType !== 'undefined' ? checkboxType : '';
+  const _disabled = typeof disabled !== 'undefined' ? disabled : false;
+  const _checked = typeof checked !== 'undefined' ? checked : false;
+%>
+<label class="vits-checkbox-toggle">
+  <input
+    type="checkbox"
+    name="<%= _name %>"
+    value="<%= _value %>"
+    <% if (_checkboxType === 'all') { %>data-checkbox-all<% } %>
+    <% if (_checkboxType === 'item') { %>data-checkbox-item<% } %>
+    <% if (_disabled) { %>disabled<% } %>
+    <% if (_checked) { %>checked<% } %>
+    <% if (typeof label !== 'undefined' && label) { %>aria-label="<%= label %>"<% } %>
+  />
+</label>

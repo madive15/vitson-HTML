@@ -192,7 +192,11 @@ import Swiper from 'swiper/bundle';
           slideChange: function (swiper) {
             syncTabActive(tabSwiper, swiper.activeIndex);
             var targetInner = innerSwipers[swiper.activeIndex];
-            if (targetInner) targetInner.slideTo(0, 0);
+            if (targetInner) {
+              targetInner.slideTo(0, 0);
+              // 탭 전환 후 그라데이션 상태 재평가
+              $contentOverflow.toggleClass(CLS_OVERFLOW, !targetInner.isEnd);
+            }
           }
         }
       })
