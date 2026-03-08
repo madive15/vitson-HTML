@@ -2965,6 +2965,14 @@
         $scope.removeData(DATA_KEY);
       }
     };
+
+    // 초기 로드 시 활성 버튼이 있으면 스크롤 위치 보정
+    var $activeBtn = $btns.filter('.' + ClassName.ACTIVE);
+    if ($activeBtn.length) {
+      setTimeout(function () {
+        scrollToBtn($activeBtn.first());
+      }, 0);
+    }
     $scope.data(DATA_KEY, instance);
   }
   function initAll(root) {
@@ -3359,6 +3367,8 @@
  *  - 카테고리 풀팝업 열기/닫기(토글) 직접 제어
  *  - 풀팝업 내부 탭 전환 시 팝업 헤더 타이틀 동기화
  *  - 카테고리 선택 시 해당 카테고리 페이지로 이동
+ *  - GNB 브랜드 버튼으로 열 때 래퍼에 from-gnb 클래스 추가
+ *  - 홈 화면(.wrap-home)에서 바텀탭바 카테고리로 열 때도 from-gnb 추가
  */
 (function ($, window) {
   'use strict';
@@ -3370,6 +3380,7 @@
   var FULL_POPUP = '.category-full-popup';
   var POPUP_ID = 'categoryFullPopup';
   var CAT_SCOPE = '[data-category-sheet]';
+  // Kendo Window open 애니메이션 완료 후 스크롤 보정용 지연
   var OPEN_DELAY = 300;
   var SEL_BREADCRUMB = '[data-ui="breadcrumb"]';
 
@@ -3431,11 +3442,23 @@
     // 팝업 먼저 열기 — 즉시 반응
     window.VmKendoWindow.open(POPUP_ID);
 
+    // GNB 브랜드 또는 홈 카테고리 경유 시 래퍼에 from-gnb 클래스 추가
+    var $popupEl = $('#' + POPUP_ID);
+    var win = $popupEl.data('kendoWindow');
+    if (win && win.wrapper && $popupEl.data('fromGnb')) {
+      win.wrapper.addClass('from-gnb');
+      // 헤더 닫기 버튼 노출
+      $('.header-main-bar .btn-close').removeAttr('hidden');
+      $popupEl.removeData('fromGnb');
+    }
+
     // 콘텐츠는 팝업 안에서 비동기 렌더
     R.loadTree(function () {
       var $scope = $catScope();
       if (!$scope.length) return;
       if (!_scopeBound) {
+        // 팝업 DOM이 잔류할 경우 대비 — 방어적 unbind 후 재바인딩
+        R.unbindScopeEvents($scope);
         R.bindScopeEvents($scope, _state, onCommit);
         _scopeBound = true;
       }
@@ -3482,6 +3505,8 @@
         return;
       }
       $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
+      // GNB 브랜드에서 열었음을 표시
+      $('#' + POPUP_ID).data('fromGnb', true);
       openCategoryPopup();
     });
 
@@ -3490,6 +3515,7 @@
       e.preventDefault();
       var action = $(this).data('action');
       if (!action) return;
+
       // 카테고리 액션
       if (action === 'open-category-sheet') {
         if (!window.VmKendoWindow) return;
@@ -3504,6 +3530,10 @@
           window.VmKendoWindow.close(POPUP_ID);
           return;
         }
+        // 홈에서 열 때 GNB와 동일하게 from-gnb 표시
+        if ($('.wrap-home').length) {
+          $('#' + POPUP_ID).data('fromGnb', true);
+        }
         openCategoryPopup();
         return;
       }
@@ -3516,6 +3546,25 @@
     $(document).on('tab:change' + NS, FULL_POPUP + ' [data-tab-scope]', function (e, target, $btn) {
       var title = $btn.find('.text').text();
       $(this).closest(FULL_POPUP).find('.vm-modal-title').text(title);
+    });
+
+    // 헤더 닫기 버튼 → 풀팝업 닫기
+    $(document).on('click' + NS, '.header-main-bar .btn-close', function (e) {
+      e.preventDefault();
+      if (isPopupOpen()) {
+        window.VmKendoWindow.close(POPUP_ID);
+      }
+    });
+
+    // 풀팝업 닫힐 때 from-gnb 제거
+    $(document).on('kendo:close' + NS, function (e, id) {
+      if (id !== POPUP_ID) return;
+      var win = $('#' + POPUP_ID).data('kendoWindow');
+      if (win && win.wrapper) {
+        win.wrapper.removeClass('from-gnb');
+        // 헤더 닫기 버튼 숨김
+        $('.header-main-bar .btn-close').attr('hidden', '');
+      }
     });
 
     // 바텀시트 카테고리 선택 → 풀팝업 상태 동기화
@@ -4723,7 +4772,7 @@ var search_suggest = __webpack_require__(6823);
 ;// ./src/assets/scripts-mo/ui/home/home-swiper-visual.js
 /**
  * @file scripts-mo/ui/home/home-swiper-visual.js
- * @description 홈 비주얼 배너 Swiper (coverflow 기반, 수동 복제로 loop 보정)
+ * @description 홈 비주얼 배너 Swiper (slide + CSS scale 기반 카드 캐러셀)
  * @scope [data-ui="banner-visual"]
  * @option data-autoplay, data-speed
  */
@@ -4732,14 +4781,14 @@ var search_suggest = __webpack_require__(6823);
   'use strict';
 
   var SCOPE = '[data-ui="banner-visual"]';
-  // loop 안정성을 위한 최소 슬라이드 수
+  // loop 안정성을 위한 최소 슬라이드 수 (Swiper 11 버그 대응)
   var MIN_SLIDES = 9;
   function getInt(el, name) {
     var val = el.getAttribute('data-' + name);
     return val ? parseInt(val, 10) : null;
   }
 
-  // 슬라이드 수동 복제 (원본 부족 시 loop 보정)
+  // 슬라이드 수동 복제 (원본 3개 → 9개, loop + centeredSlides 버그 대응)
   function cloneSlides($wrapper) {
     var $originals = $wrapper.children('.swiper-slide');
     var originalCount = $originals.length;
@@ -4767,50 +4816,19 @@ var search_suggest = __webpack_require__(6823);
       // 복제 후 원본 슬라이드 수 저장
       var originalCount = cloneSlides($wrapper);
       $root.data('originalCount', originalCount);
-      function getStretch() {
-        var w = window.innerWidth;
-        if (w < 480) return 20;
-        if (w < 768) return 30;
-        if (w < 1024) return 50;
-        if (w < 1280) return 70;
-        return 100;
-      }
       var config = {
-        effect: 'coverflow',
-        centeredSlides: true,
-        slidesPerView: 'auto',
+        speed: getInt(el, 'speed') || 600,
         loop: true,
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        spaceBetween: -10,
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        speed: getInt(el, 'speed') || 250,
-        // 터치 반응 개선
         threshold: 2,
-        touchRatio: 1.5,
-        longSwipesRatio: 0.3,
-        longSwipesMs: 200,
-        // 터치 이벤트 최적화
         touchStartPreventDefault: false,
         passiveListeners: true,
-        followFinger: true,
-        resistanceRatio: 0,
-        coverflowEffect: {
-          rotate: 0,
-          stretch: getStretch(),
-          depth: 0,
-          modifier: 1,
-          scale: 0.8,
-          slideShadows: false
-        },
-        on: {
-          // 가시 범위 슬라이드만 will-change 부여 (GPU 부하 경감)
-          setTranslate: function () {
-            this.slides.forEach(function (slide) {
-              var progress = Math.abs(slide.progress);
-              slide.style.willChange = progress < 3 ? 'transform' : 'auto';
-            });
-          }
-        }
+        grabCursor: true
       };
       var autoplayVal = getInt(el, 'autoplay');
       if (autoplayVal) {
@@ -4820,16 +4838,6 @@ var search_suggest = __webpack_require__(6823);
         };
       }
       var swiper = new swiper_bundle/* default */.A(swiperEl, config);
-
-      // resize 시 stretch 값 업데이트
-      var resizeTimer;
-      $(window).on('resize.bannerVisual' + idx, function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function () {
-          swiper.params.coverflowEffect.stretch = getStretch();
-          swiper.update();
-        }, 100);
-      });
 
       // nav 버튼 (이벤트 위임)
       $root.on('click.bannerVisual', '[data-role]', function () {
@@ -4860,7 +4868,6 @@ var search_suggest = __webpack_require__(6823);
 
       // 복제 슬라이드 제거
       $(swiperEl).find('[data-cloned="true"]').remove();
-      $(window).off('resize.bannerVisual' + idx);
       $root.off('.bannerVisual');
       $root.removeData('init originalCount');
     });
@@ -5055,7 +5062,11 @@ var search_suggest = __webpack_require__(6823);
         slideChange: function (swiper) {
           syncTabActive(tabSwiper, swiper.activeIndex);
           var targetInner = innerSwipers[swiper.activeIndex];
-          if (targetInner) targetInner.slideTo(0, 0);
+          if (targetInner) {
+            targetInner.slideTo(0, 0);
+            // 탭 전환 후 그라데이션 상태 재평가
+            $contentOverflow.toggleClass(CLS_OVERFLOW, !targetInner.isEnd);
+          }
         }
       }
     }));
@@ -5170,13 +5181,14 @@ var search_suggest = __webpack_require__(6823);
  * @description 홈 peek형 배너 Swiper
  * @scope [data-ui="banner-peek"]
  * @option data-slides-per-view, data-space-between, data-loop, data-autoplay,
- *         data-speed, data-centered-slides
+ *         data-speed, data-centered-slides, data-overflow-gradient
  */
 
 (function ($) {
   'use strict';
 
   var SCOPE = '[data-ui="banner-peek"]';
+  var CLS_OVERFLOW = 'is-overflow';
   function getInt(el, name) {
     var val = el.getAttribute('data-' + name);
     return val ? parseInt(val, 10) : null;
@@ -5187,6 +5199,15 @@ var search_suggest = __webpack_require__(6823);
   }
   function getBool(el, name) {
     return el.getAttribute('data-' + name) === 'true';
+  }
+
+  // Swiper 끝 미도달 시 오른쪽 그라데이션 표시
+  function bindOverflow(swiper, $target) {
+    if (!$target.length) return;
+    $target.toggleClass(CLS_OVERFLOW, !swiper.isEnd);
+    swiper.on('slideChange', function () {
+      $target.toggleClass(CLS_OVERFLOW, !swiper.isEnd);
+    });
   }
   function init() {
     $(SCOPE).each(function (idx, el) {
@@ -5211,7 +5232,12 @@ var search_suggest = __webpack_require__(6823);
       };
       var speedVal = getInt(el, 'speed');
       if (speedVal) config.speed = speedVal;
-      new swiper_bundle/* default */.A(swiperEl, config);
+      var swiperInstance = new swiper_bundle/* default */.A(swiperEl, config);
+
+      // 그라데이션 바인딩
+      if (getBool(el, 'overflow-gradient')) {
+        bindOverflow(swiperInstance, $root);
+      }
       $root.data('init', true);
     });
   }
@@ -5223,6 +5249,7 @@ var search_suggest = __webpack_require__(6823);
       if (swiperEl && swiperEl.swiper) {
         swiperEl.swiper.destroy(true, true);
       }
+      $root.removeClass(CLS_OVERFLOW);
       $root.removeData('init');
     });
   }

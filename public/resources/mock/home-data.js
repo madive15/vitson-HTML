@@ -49,13 +49,87 @@ module.exports = {
     img: 'home-promo-banner.png',
     alt: '온종일 따뜻한 핫팩 기획전'
   },
+  peekBanners: [
+    {href: '#!', img: 'home-peek-event01.png', alt: '공구 베스트 기획전'},
+    {href: '#!', img: 'home-peek-event02.png', alt: '생활 용품 할인 기획전'},
+    {href: '#!', img: 'home-peek-event03.png', alt: '생활 용품 할인 기획전'}
+  ],
+  brandExhibition: {
+    banners: [
+      {
+        href: '#!',
+        img: 'home-promo-brand-icon01.png',
+        title: '법인 추가 할인 혜택',
+        desc: '법인이시라면? 추가할인을 받아보세요',
+        theme: 'green'
+      },
+      {
+        href: '#!',
+        img: 'home-promo-brand-icon02.png',
+        title: '대량 구매 견적 문의',
+        desc: '문의주시면 친절한 상담 도와드리겠습니다',
+        theme: 'blue'
+      }
+    ],
+    brands: (function () {
+      var brandList = [
+        {
+          name: '3M',
+          desc: '모든 기업의 발전을 도모하는 3M 기술',
+          bgImg: 'home-promo-brand01.png',
+          logoImg: 'home-promo-brand01-logo.svg',
+          href: '#!'
+        },
+        {
+          name: '디월트',
+          desc: '프로가 찾는 공구, 현장 필수템 디월트',
+          bgImg: 'home-promo-brand01.png',
+          logoImg: 'home-promo-brand01-logo.svg',
+          href: '#!'
+        },
+        {
+          name: '케이텔',
+          desc: '피난유도등부터 비상조명까지, 현장이 선택한 안전조명',
+          bgImg: 'home-promo-brand01.png',
+          logoImg: 'home-promo-brand01-logo.svg',
+          href: '#!'
+        },
+        {
+          name: '보쉬',
+          desc: '전문가가 선택하는 고품질 전동공구 브랜드',
+          bgImg: 'home-promo-brand01.png',
+          logoImg: 'home-promo-brand01-logo.svg',
+          href: '#!'
+        }
+      ];
+      var shuffled = _all.slice().sort(function () {
+        return Math.random() - 0.5;
+      });
+      var pos = 0;
+
+      return brandList.map(function (brand) {
+        var items = [];
+        for (var j = 0; j < 3; j++) {
+          items.push(shuffled[(pos + j) % shuffled.length]);
+        }
+        pos += 3;
+
+        return Object.assign({}, brand, {
+          products: items.map(function (p) {
+            return Object.assign({}, p, {showSpec: false, showModel: false});
+          })
+        });
+      });
+    })()
+  },
   getDealProducts: function (publicPath) {
     const imgs = dealImages.map((img) => `${publicPath}/resources/img/mro/renewal/temp/${img}`);
     return _all.slice(0, 10).map((item, i) => ({
       ...item,
       imageUrl: imgs[Math.floor(Math.random() * imgs.length)],
       stockYn: i === 1 ? 'N' : item.stockYn,
-      showSpec: false
+      showSpec: false,
+      showModel: false
     }));
   },
   getFrequentProducts: function () {
@@ -65,14 +139,16 @@ module.exports = {
       .map((item, i) => ({
         ...item,
         stockYn: i === 1 ? 'N' : item.stockYn,
-        showSpec: false
+        showSpec: false,
+        showModel: false
       }));
   },
   getLegendProducts: function () {
     return _all.slice(10, 20).map((item, i) => ({
       ...item,
       stockYn: i === 1 ? 'N' : item.stockYn,
-      showSpec: false
+      showSpec: false,
+      showModel: false
     }));
   },
   getPopularCategories: function () {
@@ -98,7 +174,7 @@ module.exports = {
       return Object.assign({}, item, {
         tabName: parts[parts.length - 1],
         products: _all.slice(i * 3, i * 3 + 3).map(function (p) {
-          return Object.assign({}, p, {showSpec: false});
+          return Object.assign({}, p, {showSpec: false, showModel: false});
         })
       });
     });
@@ -137,7 +213,42 @@ module.exports = {
         products: items.map(function (p, j) {
           return Object.assign({}, p, {
             rank: j + 1,
-            showSpec: false
+            showSpec: false,
+            showModel: false
+          });
+        })
+      };
+    });
+  },
+  getFlashDealProducts: function (publicPath) {
+    // 반짝특가용 썸네일 4종 랜덤 배정
+    var flashImages = ['temp-home-hot-04.jpg', 'temp-home-hot-05.jpg', 'temp-home-hot-06.jpg', 'temp-home-hot-07.jpg'];
+    var names = ['사무용품', '생활용품', '조명', '전선/케이블'];
+    var shuffled = _all.slice().sort(function () {
+      return Math.random() - 0.5;
+    });
+    var pos = 0;
+
+    return names.map(function (name) {
+      var count = 5;
+      var items = [];
+      for (var j = 0; j < count; j++) {
+        items.push(shuffled[(pos + j) % shuffled.length]);
+      }
+      pos += count;
+
+      return {
+        tabName: name,
+        products: items.map(function (p, j) {
+          return Object.assign({}, p, {
+            imageUrl:
+              publicPath +
+              '/resources/img/mro/renewal/temp/' +
+              flashImages[Math.floor(Math.random() * flashImages.length)],
+            // 카테고리별 두 번째 상품만 일시품절 처리
+            stockYn: j === 1 ? 'N' : 'Y',
+            showSpec: false,
+            showModel: false
           });
         })
       };

@@ -58,11 +58,25 @@
 <!-- prettier-ignore -->
 
 <header class="vm-header header-search-bar">
-  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
-    <!-- prettier-ignore -->
+  <!-- prettier-ignore -->
+  
+<!-- prettier-ignore -->
+
+
+
+
+  <button
+    
+    type="button"
+    class="vm-header-btn btn-back"
+    aria-label="뒤로가기"
+    
+  >
     <i class="ic ic-arrow-left" aria-hidden="true"></i>
 
-  </a>
+    
+  </button>
+ 
   
   <div class="vm-header-search">
     <!-- prettier-ignore -->
@@ -71,28 +85,28 @@
 <!-- prettier-ignore -->
 
 
-<div class="vits-input-search vits-validation">
+<div class="vits-input-search vits-validation theme-gray size-l">
   <form
     class="vits-input-search-form"
     role="search"
-    action="/search"
+    action="#!"
     method="get"
     data-search-form
   >
-    <label for="search-searchKeyword" class="sr-only">검색어</label>
+    <label for="product-search-searchKeyword" class="sr-only">검색어</label>
 
     <input
       type="search"
-      id="search-searchKeyword"
+      id="product-search-searchKeyword"
       class="input-search"
-      name="keyword"
+      name="product-search"
       autocomplete="off"
       enterkeyhint="search"
-      placeholder="찾고싶은 상품을 검색해보세요."
+      placeholder="무엇이든 비츠온에서 찾아보세요"
       value=""
       data-search-input
-      data-search-input
-      aria-describedby="search-searchKeyword-validation"
+      
+      aria-describedby="product-search-searchKeyword-validation"
       aria-invalid="false"
     />
 
@@ -106,26 +120,60 @@
     <button type="submit" class="input-search-btn" aria-label="검색">
       <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
 
-       <span class="text">검색</span>
+      
     </button>
   </form>
 
   <div class="input-validation" hidden>
-    <p id="search-searchKeyword-validation" aria-live="polite"></p>
+    <p id="product-search-searchKeyword-validation" aria-live="polite"></p>
   </div>
 </div>
-
-    <button type="button" class="vm-header-btn btn-mic" aria-label="음성 검색">
-      <i class="ic ic-mic" aria-hidden="true"></i>
-
-    </button>
   </div>
-   <div class="vm-header-actions">
-    <button type="button" class="vm-header-btn btn-cart" aria-label="장바구니">
-      <i class="ic ic-bag" aria-hidden="true"></i>
+  <div class="vm-header-actions">
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
 
-      <span class="badge">99+</span>
-    </button>
+
+
+
+  <a
+    href="/voice-search"
+    
+    class="vm-header-btn btn-voice"
+    aria-label="음성 검색"
+    
+  >
+    <i class="ic ic-mic" aria-hidden="true"></i>
+
+    
+  </a>
+
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
+
+
+
+
+  <a
+    href="/cart"
+    
+    class="vm-header-btn btn-cart"
+    aria-label="장바구니"
+    
+  >
+    <i class="ic ic-cart" aria-hidden="true"></i>
+
+    
+      
+      
+        
+        <span class="badge count" data-header-badge="count" aria-hidden="true"><span class="num">3</span></span>
+      
+    
+  </a>
+
   </div>
 </header>
 
@@ -198,7 +246,7 @@
         
       </li>
       
-      <li class="tab-bar-item">
+      <li class="tab-bar-item is-active">
         
         <a href="#!" class="link">
           <span class="icon icon-search"></span>
@@ -225,7 +273,7 @@
         
       </li>
       
-      <li class="tab-bar-item is-active">
+      <li class="tab-bar-item">
         
         <a href="#!" class="link">
           <span class="icon icon-mypage"></span>

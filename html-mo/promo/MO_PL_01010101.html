@@ -42,6 +42,7 @@
     <section class="vm-wrapper">
       <div class="vm-wrap wrap-promo">
         <div class="vm-content-wrap">
+          <!-- prettier-ignore -->
           
 
 <!-- prettier-ignore -->
@@ -66,17 +67,9 @@
 
 
       <div class="vm-header-actions">
+        <!-- prettier-ignore -->
         
 <!-- prettier-ignore -->
-
-<!-- 
-  back:   { label: '뒤로가기', icon: 'arrow-left', badge: false },
-  close:  { label: '닫기', icon: 'close',      badge: false },
-  share:  { label: '공유', icon: 'share',      badge: false },
-  like:   { label: '좋아요',   icon: 'heart',      badge: false },
-  alarm:  { label: '알림',     icon: 'bell',       badge: 'dot',   href: '/alarm' },
-  search: { label: '검색',     icon: 'search',     badge: false,   href: '/search' }
--->
 
 
 
@@ -86,25 +79,20 @@
     
     class="vm-header-btn btn-alarm"
     aria-label="알림"
+    
   >
     <i class="ic ic-bell" aria-hidden="true"></i>
 
     
       
       
+        <span class="badge dot" data-header-badge="dot" aria-label="새 알림 있음"></span>
+      
     
   </a>
  
+        
 <!-- prettier-ignore -->
-
-<!-- 
-  back:   { label: '뒤로가기', icon: 'arrow-left', badge: false },
-  close:  { label: '닫기', icon: 'close',      badge: false },
-  share:  { label: '공유', icon: 'share',      badge: false },
-  like:   { label: '좋아요',   icon: 'heart',      badge: false },
-  alarm:  { label: '알림',     icon: 'bell',       badge: 'dot',   href: '/alarm' },
-  search: { label: '검색',     icon: 'search',     badge: false,   href: '/search' }
--->
 
 
 
@@ -114,14 +102,36 @@
     
     class="vm-header-btn btn-cart"
     aria-label="장바구니"
+    
   >
     <i class="ic ic-cart" aria-hidden="true"></i>
 
     
       
       
+        
+        <span class="badge count" data-header-badge="count" aria-hidden="true"><span class="num">99+</span></span>
+      
     
   </a>
+
+        
+<!-- prettier-ignore -->
+
+
+
+
+  <button
+    
+    type="button"
+    class="vm-header-btn btn-close"
+    aria-label="닫기"
+     data-action="close-category-popup" hidden=""
+  >
+    <i class="ic ic-x" aria-hidden="true"></i>
+
+    
+  </button>
 
       </div>
     </div>
@@ -178,12 +188,18 @@
 </div>
     </div>
   </div>
+
+  
   <nav class="header-main-gnb">
     <ul class="gnb-list" data-scroll-buttons data-scroll-only>
       
       <li class="gnb-item">
         
-        <button type="button" class="gnb-link" data-action="open-brand-sheet">
+        <button
+          type="button"
+          class="gnb-link"
+          data-action="open-brand-sheet"
+        >
           
           <span class="icon"> <i class="ic ic-label" aria-hidden="true"></i>
  </span>
@@ -219,7 +235,7 @@
       
       <li class="gnb-item">
         
-        <a href="#!" class="gnb-link">
+        <a href="#!" class="gnb-link is-active">
           <span class="text">기획전</span>
         </a>
         
@@ -227,6 +243,7 @@
       
     </ul>
   </nav>
+  
 </header>
 
 

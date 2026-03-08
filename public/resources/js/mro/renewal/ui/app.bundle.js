@@ -8677,6 +8677,7 @@
  * 단일 DatePicker 초기화 모듈
  * - 월 이동 애니메이션 제거
  * - 요일명(Sun~Sat) 완전 고정 (왕복 이동 포함)
+ * - disablePast 옵션: 오늘 이전 날짜 선택 불가 (셀은 표시)
  * - ESLint no-unused-vars 완전 대응
  */
 
@@ -8709,8 +8710,7 @@
     if ($el.data('kendoDatePicker')) return;
     var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
     var $calendarWrap = null;
-    var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]'); // 2026-02-03 추가
-
+    var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]');
     function getCalendar() {
       var inst = $el.data('kendoDatePicker');
       return inst && inst.dateView && inst.dateView.calendar;
@@ -8827,11 +8827,7 @@
       });
     }
 
-    /**
-     * 🔥 핵심 함수
-     * Calendar DOM 재렌더링이 끝난 "뒤"에
-     * 요일명을 무조건 다시 적용
-     */
+    // Calendar DOM 재렌더링 후 요일명 재적용
     function forceApplyDayNames() {
       scheduleDayNameApply();
       window.setTimeout(scheduleDayNameApply, 0);
@@ -8895,14 +8891,14 @@
       }
     }
 
-    // 2026-02-03 추가 - 값 선택 시 래퍼에 is-selected 클래스 토글
+    // 값 선택 시 래퍼에 is-selected 클래스 토글
     function updateSelectedState() {
       if (!$wrapper.length) return;
       var inst = $el.data('kendoDatePicker');
       $wrapper.toggleClass('is-selected', !!(inst && inst.value()));
     }
 
-    /* 옵션 */
+    /* 기본 옵션 */
     opts.format = opts.format || 'yyyy.MM.dd';
     opts.culture = opts.culture || 'ko-KR';
     opts.footer = false;
@@ -8924,9 +8920,68 @@
       forceApplyYearViewMonthNames();
       updatePrevNavState();
     };
-    if (!opts.min) {
-      var today = new Date();
-      opts.min = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    // 다른 달 날짜도 표시 (빈칸 방지)
+    opts.month = opts.month || {};
+    if (!opts.month.empty) {
+      opts.month.empty = '<span class="k-other-month">#= data.value #</span>';
+    }
+
+    // disablePast: 오늘 이전 날짜 선택 불가 + 셀은 표시
+    if (opts.disablePast) {
+      delete opts.disablePast;
+      var todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0);
+
+      // Kendo disableDates 콜백
+      opts.disableDates = function (date) {
+        if (!date) return false;
+        var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return d < todayMidnight;
+      };
+
+      // 비활성 셀 스타일 적용 (open, navigate 공용)
+      var applyPastDisabledStyle = function () {
+        window.setTimeout(function () {
+          var inst = $el.data('kendoDatePicker');
+          if (!inst || !inst.dateView || !inst.dateView.calendar) return;
+          var $cal = inst.dateView.calendar.element;
+          $cal.find('td[role="gridcell"] .k-link[data-value]').each(function () {
+            var $link = window.jQuery(this);
+            var parts = $link.attr('data-value').split('/');
+            // data-value 형식: "YYYY/M(0-based)/D"
+            var cellDate = new Date(+parts[0], +parts[1], +parts[2]);
+            var $td = $link.closest('td');
+            if (cellDate < todayMidnight) {
+              $td.addClass('k-state-disabled');
+              $link.attr('aria-disabled', 'true');
+              // 중복 바인딩 방지
+              $link.off('click.disablePast').on('click.disablePast', function (ev) {
+                ev.preventDefault();
+                ev.stopImmediatePropagation();
+              });
+            } else {
+              // 월 이동 시 이전에 붙은 클래스 제거
+              $td.removeClass('k-state-disabled');
+              $link.removeAttr('aria-disabled').off('click.disablePast');
+            }
+          });
+        }, 0);
+      };
+
+      // open 시 적용
+      var origOpen = opts.open;
+      opts.open = function (e) {
+        if (origOpen) origOpen.call(this, e);
+        applyPastDisabledStyle();
+      };
+
+      // navigate(월 이동) 시에도 적용
+      var origNavigate = opts.calendar.navigate;
+      opts.calendar.navigate = function () {
+        origNavigate.call(this);
+        applyPastDisabledStyle();
+      };
     }
 
     // appendTo 옵션 → popup.appendTo로 매핑
@@ -8950,7 +9005,6 @@
             animation: false
           });
         } catch {
-          // eslint-disable-next-line no-unused-vars
           // no-op
         }
       }
@@ -8962,12 +9016,10 @@
         forceApplyYearViewMonthNames();
         updatePrevNavState();
       });
-
-      // 2026-02-03 추가 - 날짜 선택/변경 시 is-selected 토글
       inst.bind('change', function () {
         updateSelectedState();
       });
-      updateSelectedState(); // 2026-02-03 추가 - 초기값 대응
+      updateSelectedState();
     }
     if (parseBool($el.attr('data-open')) && inst) {
       window.setTimeout(function () {

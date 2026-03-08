@@ -57,57 +57,103 @@
 <!-- prettier-ignore -->
 
 <header class="vm-header header-product-bar">
-  <a href="#!" class="vm-header-back" aria-label="이전 페이지">
-    <!-- prettier-ignore -->
+  <!-- prettier-ignore -->
+  
+<!-- prettier-ignore -->
+
+
+
+
+  <button
+    
+    type="button"
+    class="vm-header-btn btn-back"
+    aria-label="뒤로가기"
+    
+  >
     <i class="ic ic-arrow-left" aria-hidden="true"></i>
 
-  </a>
+    
+  </button>
+ 
   
   <div class="vm-header-search">
     <!-- prettier-ignore -->
     
 
-<div class="vits-input size-l ">
-  <div class="input-item">
-    <label for="receiver-name" class="sr-only">받는 사람</label>
+<!-- prettier-ignore -->
+
+
+<div class="vits-input-search vits-validation theme-gray size-l">
+  <form
+    class="vits-input-search-form"
+    role="search"
+    action="#!"
+    method="get"
+    data-search-form
+  >
+    <label for="product-search-searchKeyword" class="sr-only">검색어</label>
 
     <input
-      type="product-bar"
-      name="receiverName"
-      id="receiver-name"
-      placeholder="테스트 헤더 상세용"
+      type="search"
+      id="product-search-searchKeyword"
+      class="input-search"
+      name="product-search"
+      autocomplete="off"
+      enterkeyhint="search"
+      placeholder="무엇이든 비츠온에서 찾아보세요"
+      value=""
+      data-search-input
       
-      
-      
-      required
-      
-      
-
-      
-      
-      
+      aria-describedby="product-search-searchKeyword-validation"
+      aria-invalid="false"
     />
-    
-  </div>
 
-  <!-- Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="receiver-name-validation" aria-live="polite"></p>
+    
+    <button type="button" class="input-clear-btn" data-search-clear hidden aria-label="검색어 지우기">
+      <i class="ic ic-x" aria-hidden="true"></i>
+
+    </button>
+    
+
+    <button type="submit" class="input-search-btn" aria-label="검색">
+      <i class="ic ic-magnifying-glass" aria-hidden="true"></i>
+
+      
+    </button>
+  </form>
+
+  <div class="input-validation" hidden>
+    <p id="product-search-searchKeyword-validation" aria-live="polite"></p>
   </div>
 </div>
-
-    <button type="button" class="vm-header-btn btn-mic" aria-label="음성 검색">
-      <i class="ic ic-mic" aria-hidden="true"></i>
-
-    </button>
   </div>
   <div class="vm-header-actions">
-    <button type="button" class="vm-header-btn btn-cart" aria-label="장바구니">
-      <i class="ic ic-bag" aria-hidden="true"></i>
+    <!-- prettier-ignore -->
+    
+<!-- prettier-ignore -->
 
-      <span class="badge">99+</span>
-    </button>
+
+
+
+  <a
+    href="/cart"
+    
+    class="vm-header-btn btn-cart"
+    aria-label="장바구니"
+    
+  >
+    <i class="ic ic-cart" aria-hidden="true"></i>
+
+    
+      
+      
+        
+        <span class="badge count" data-header-badge="count" aria-hidden="true"><span class="num">3</span></span>
+      
+    
+  </a>
+
   </div>
 </header>
 
