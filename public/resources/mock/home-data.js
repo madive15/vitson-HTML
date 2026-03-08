@@ -220,7 +220,7 @@ module.exports = {
       };
     });
   },
-  getFlashDealProducts: function () {
+  getFlashDealProducts: function (publicPath) {
     // 반짝특가용 썸네일 4종 랜덤 배정
     var flashImages = ['temp-home-hot-04.jpg', 'temp-home-hot-05.jpg', 'temp-home-hot-06.jpg', 'temp-home-hot-07.jpg'];
     var names = ['사무용품', '생활용품', '조명', '전선/케이블'];
@@ -241,7 +241,10 @@ module.exports = {
         tabName: name,
         products: items.map(function (p, j) {
           return Object.assign({}, p, {
-            imageUrl: '/resources/img/mro/renewal/temp/' + flashImages[Math.floor(Math.random() * flashImages.length)],
+            imageUrl:
+              publicPath +
+              '/resources/img/mro/renewal/temp/' +
+              flashImages[Math.floor(Math.random() * flashImages.length)],
             // 카테고리별 두 번째 상품만 일시품절 처리
             stockYn: j === 1 ? 'N' : 'Y',
             showSpec: false,

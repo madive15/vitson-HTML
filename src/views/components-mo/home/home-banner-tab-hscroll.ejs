@@ -1,6 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
+  const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y';
   const _ranked = typeof ranked !== 'undefined' && ranked;
   const _autoplay = typeof speed !== 'undefined' ? speed : null;
   const _menuSpaceBetween = typeof menuSpaceBetween !== 'undefined' ? menuSpaceBetween : 8;
@@ -49,7 +50,8 @@
                       <!-- prettier-ignore -->
                       <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
                         item: product,
-                        showRank: _ranked
+                        showRank: _ranked,
+                        memberYn: _memberYn
                       }) %>
                     </ul>
                   </div>
