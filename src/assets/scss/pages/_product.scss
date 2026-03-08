@@ -1490,12 +1490,11 @@
 
       &-body {
         @include mx.flex($direction: column);
-        @include mx.ellipsis-single;
         flex: 1;
         gap: map.get(var.$unit, 4);
         min-width: 0; // 말줄임 등 대비
 
-        [class*='coupon-item-'] {
+        [class*='coupon-item-']:not(.coupon-item-period) {
           @include mx.ellipsis-single;
         }
 
@@ -1504,7 +1503,7 @@
         }
 
         .coupon-item-period {
-          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+          @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'), $tracking: -0.02em);
         }
 
         .coupon-item-desc {
