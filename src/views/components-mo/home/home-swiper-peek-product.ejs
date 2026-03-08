@@ -2,6 +2,7 @@
 <!-- prettier-ignore -->
 <%
   const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+  const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y';
 %>
 
 <section
@@ -30,7 +31,11 @@
             <ul class="peek-product-list view-list">
               <!-- prettier-ignore -->
               <% brand.products.forEach(function(product) { %> 
-                <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { item: product, showExtra: false }) %> 
+                <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                  item: product, 
+                  showExtra: false, 
+                  memberYn: _memberYn 
+                }) %> 
               <% }); %>
             </ul>
           </div>

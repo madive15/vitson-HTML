@@ -1,6 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <%
+  const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y';
   const _numbered = typeof numbered !== 'undefined' && numbered;
   const _autoplay = typeof speed !== 'undefined' ? speed : null;
   const _menuSpaceBetween = typeof menuSpaceBetween !== 'undefined' ? menuSpaceBetween : 8;
@@ -45,7 +46,7 @@
           <div class="swiper-slide">
             <ul class="tab-product-list view-list">
               <% tab.products.forEach(function(product) { %>
-                <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { item: product }) %>
+                <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { item: product, memberYn: _memberYn }) %>
               <% }); %>
             </ul>
           </div>

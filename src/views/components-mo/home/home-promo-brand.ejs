@@ -2,6 +2,7 @@
 <!-- prettier-ignore -->
 <%
   const imgBase = `${_public}/resources/img/mro/renewal/home-mo`;
+  const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y';
 %>
 
 <section class="vm-home-promo-brand">
@@ -14,7 +15,8 @@
     <% } %>
   </div>
   <div class="promo-brand-body">
-    <%- include(`${_src}/views/components-mo/home/home-swiper-peek-product.ejs`, { brands: brands }) %>
+    <%- include(`${_src}/views/components-mo/home/home-swiper-peek-product.ejs`, { brands: brands, memberYn: _memberYn
+    }) %>
   </div>
   <div class="promo-brand-footer">
     <% banners.forEach(function(banner) { %>
