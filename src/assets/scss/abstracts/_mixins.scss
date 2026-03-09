@@ -125,11 +125,11 @@
 }
 
 /* flex */
-@mixin flex($flex: flex, $direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
-  display: $flex;
-  flex-flow: $direction $wrap;
-  align-items: $align;
-  justify-content: $justify;
+@mixin flex($flex: flex, $direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap, $important: false) {
+  display: $flex #{if($important, '!important', '')};
+  flex-flow: $direction $wrap #{if($important, '!important', '')};
+  align-items: $align #{if($important, '!important', '')};
+  justify-content: $justify #{if($important, '!important', '')};
 }
 
 /* ---------------------------------------------------------------------------
