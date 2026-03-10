@@ -3517,15 +3517,16 @@
     // 팝업 먼저 열기 — 즉시 반응
     window.VmKendoWindow.open(POPUP_ID);
 
+    // 26-03-10 [주석처리] 메인/서브 구분 없이 동일 UI — fromGnb 분기 제거
     // GNB 브랜드 또는 홈 카테고리 경유 시 래퍼에 from-gnb 클래스 추가
-    var $popupEl = $('#' + POPUP_ID);
-    var win = $popupEl.data('kendoWindow');
-    if (win && win.wrapper && $popupEl.data('fromGnb')) {
-      win.wrapper.addClass('from-gnb');
-      // 헤더 닫기 버튼 노출
-      $('.header-main-bar .btn-close').removeAttr('hidden');
-      $popupEl.removeData('fromGnb');
-    }
+    // var $popupEl = $('#' + POPUP_ID);
+    // var win = $popupEl.data('kendoWindow');
+    // if (win && win.wrapper && $popupEl.data('fromGnb')) {
+    //   win.wrapper.addClass('from-gnb');
+    //   // 헤더 닫기 버튼 노출
+    //   $('.header-main-bar .btn-close').removeAttr('hidden');
+    //   $popupEl.removeData('fromGnb');
+    // }
 
     // 콘텐츠는 팝업 안에서 비동기 렌더
     R.loadTree(function () {
@@ -3580,8 +3581,9 @@
         return;
       }
       $('#' + POPUP_ID).attr('data-request-tab', 'brandTab');
+      // 26-03-10 [주석처리] fromGnb 불필요
       // GNB 브랜드에서 열었음을 표시
-      $('#' + POPUP_ID).data('fromGnb', true);
+      // $('#' + POPUP_ID).data('fromGnb', true);
       openCategoryPopup();
     });
 
@@ -3605,10 +3607,11 @@
           window.VmKendoWindow.close(POPUP_ID);
           return;
         }
+        // 26-03-10 [주석처리] fromGnb 불필요
         // 홈에서 열 때 GNB와 동일하게 from-gnb 표시
-        if ($('.wrap-home').length) {
-          $('#' + POPUP_ID).data('fromGnb', true);
-        }
+        // if ($('.wrap-home').length) {
+        //   $('#' + POPUP_ID).data('fromGnb', true);
+        // }
         openCategoryPopup();
         return;
       }
@@ -3631,16 +3634,17 @@
       }
     });
 
+    // 26-03-10 [주석처리] fromGnb 제거 로직 불필요
     // 풀팝업 닫힐 때 from-gnb 제거
-    $(document).on('kendo:close' + NS, function (e, id) {
-      if (id !== POPUP_ID) return;
-      var win = $('#' + POPUP_ID).data('kendoWindow');
-      if (win && win.wrapper) {
-        win.wrapper.removeClass('from-gnb');
-        // 헤더 닫기 버튼 숨김
-        $('.header-main-bar .btn-close').attr('hidden', '');
-      }
-    });
+    // $(document).on('kendo:close' + NS, function (e, id) {
+    //   if (id !== POPUP_ID) return;
+    //   var win = $('#' + POPUP_ID).data('kendoWindow');
+    //   if (win && win.wrapper) {
+    //     win.wrapper.removeClass('from-gnb');
+    //     // 헤더 닫기 버튼 숨김
+    //     $('.header-main-bar .btn-close').attr('hidden', '');
+    //   }
+    // });
 
     // 바텀시트 카테고리 선택 → 풀팝업 상태 동기화
     $(document).on('category:change' + NS, function (e, data) {

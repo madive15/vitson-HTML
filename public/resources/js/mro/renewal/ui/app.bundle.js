@@ -4272,6 +4272,11 @@
           $icon.toggleClass('ic-arrow-down', !nextOpen);
           $icon.toggleClass('ic-arrow-up', nextOpen);
         }
+
+        // static 높이 변경됨 → scroll max-height 재계산
+        if (window.UI.stickyOverflow) {
+          window.UI.stickyOverflow.update();
+        }
       }
       $(discountItemSelector).each(function () {
         var $item = $(this);
@@ -7711,6 +7716,90 @@
 
 /***/ }),
 
+/***/ 7414:
+/***/ (function() {
+
+/**
+ * @file scripts/ui/sticky-overflow.js
+ * @description 스티키 컨테이너 내 제외 영역 높이를 계산하여 CSS 변수로 전달
+ * @scope [data-sticky-overflow="root"]
+ * @mapping
+ *   root    → 스티키 컨테이너 (CSS 변수 --sticky-overflow-offset 세팅 대상)
+ *   exclude → 제외 영역 (합산하여 offset 계산)
+ * @note 스크롤 영역의 max-height 적용은 CSS에서 처리
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) {
+    console.log('[sticky-overflow] jQuery not found');
+    return;
+  }
+  window.UI = window.UI || {};
+  var ATTR = 'data-sticky-overflow';
+  var ROOT_SEL = '[' + ATTR + '="root"]';
+  var EXCLUDE_SEL = '[' + ATTR + '="exclude"]';
+  var DEFAULT_GAP = 20;
+  var instances = [];
+  var resizeTimer = null;
+  function calc(root) {
+    var $root = $(root);
+    var stickyTop = parseInt(getComputedStyle(root).top, 10) || 0;
+    var gap = parseInt($root.attr(ATTR + '-gap'), 10) || DEFAULT_GAP;
+
+    // exclude 영역 높이 합산
+    var excludeH = 0;
+    $root.find(EXCLUDE_SEL).each(function () {
+      excludeH += $(this).outerHeight(true);
+    });
+    root.style.setProperty('--sticky-overflow-offset', stickyTop + excludeH + gap + 'px');
+
+    // 패널 스크롤 발생 여부 체크
+    $root.find('[data-payment-panel]').each(function () {
+      if (this.scrollHeight > this.clientHeight) {
+        this.classList.add('is-scrollable');
+      } else {
+        this.classList.remove('is-scrollable');
+      }
+    });
+  }
+  function updateAll() {
+    for (var i = 0; i < instances.length; i++) {
+      calc(instances[i]);
+    }
+  }
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateAll, 100);
+  }
+  window.UI.stickyOverflow = {
+    init: function () {
+      this.destroy();
+      $(ROOT_SEL).each(function () {
+        instances.push(this);
+      });
+      if (!instances.length) return;
+      updateAll();
+      $(window).on('resize.stickyOverflow', onResize);
+    },
+    update: function () {
+      updateAll();
+    },
+    destroy: function () {
+      $(window).off('resize.stickyOverflow');
+      clearTimeout(resizeTimer);
+      for (var i = 0; i < instances.length; i++) {
+        instances[i].style.removeProperty('--sticky-overflow-offset');
+      }
+      instances = [];
+    }
+  };
+  console.log('[sticky-overflow] module loaded');
+})(window.jQuery || window.$, window);
+
+/***/ }),
+
 /***/ 7478:
 /***/ (function() {
 
@@ -10638,6 +10727,8 @@ var support_ui = __webpack_require__(2064);
   };
   console.log('[home-ui] module loaded');
 })(window.jQuery || window.$, window);
+// EXTERNAL MODULE: ./src/assets/scripts/ui/sticky-overflow.js
+var sticky_overflow = __webpack_require__(7414);
 ;// ./src/assets/scripts/core/ui.js
 /**
  * scripts/core/ui.js
@@ -10650,6 +10741,7 @@ var support_ui = __webpack_require__(2064);
  *  - UI.init에는 “초기화 호출”만 둔다(기능 구현/옵션/페이지 분기 로직 금지)
  *  - import 순서가 의존성에 영향을 줄 수 있으므로 임의 재정렬 금지
  */
+
 
 
 
@@ -10727,6 +10819,7 @@ var support_ui = __webpack_require__(2064);
     if (window.UI.mypageSupport && window.UI.mypageSupport.init) window.UI.mypageSupport.init();
     if (window.UI.homeUi && window.UI.homeUi.init) window.UI.homeUi.init();
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
+    if (window.UI.stickyOverflow && window.UI.stickyOverflow.init) window.UI.stickyOverflow.init();
     if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
   console.log('[core/ui] loaded');
