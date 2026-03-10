@@ -37,7 +37,8 @@
         var $toggle = $item.find('.discount-toggle').first();
         var $info = $item.find('.discount-info').first();
         var $detail = $item.find('.discount-info-detail').first();
-        var $icon = $toggle.find('.ic').first();
+        // 26-03-10 MU-566, 서버 인라인 스타일 아이콘이므로 클래스 토글 불필요 — 삭제
+        // var $icon = $toggle.find('.ic').first();
         var nextActive = !!isActive;
 
         if (!$toggle.length || !$info.length || !$detail.length) return;
@@ -46,10 +47,11 @@
         $toggle.attr('aria-expanded', nextActive ? 'true' : 'false');
         $detail.attr('aria-hidden', nextActive ? 'true' : 'false');
 
-        if ($icon.length) {
-          $icon.toggleClass('ic-arrow-down', !nextActive);
-          $icon.toggleClass('ic-arrow-up', nextActive);
-        }
+        // 26-03-10 MU-566, 서버 인라인 스타일 아이콘이므로 클래스 토글 불필요 — 삭제
+        // if ($icon.length) {
+        //   $icon.toggleClass('ic-arrow-down', !nextActive);
+        //   $icon.toggleClass('ic-arrow-up', nextActive);
+        // }
       }
 
       function setShippingState($wrap, method) {
