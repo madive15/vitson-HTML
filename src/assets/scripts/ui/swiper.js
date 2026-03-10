@@ -435,12 +435,40 @@ import Swiper from 'swiper/bundle';
 
       // payment 타입인 경우 슬라이드 클릭 시 선택 처리
       if (type === 'payment') {
-        const slides = el.querySelectorAll('.swiper-slide');
+        var slides = el.querySelectorAll('.swiper-slide');
+
         slides.forEach(function (slide, index) {
           slide.addEventListener('click', function () {
-            // 클릭된 슬라이드의 인덱스로 이동하여 swiper-slide-active 클래스가 자동으로 적용되도록 함
+            slides.forEach(function (s) {
+              s.classList.remove('is-selected');
+            });
+            slide.classList.add('is-selected');
             swiperInstance.slideTo(index);
           });
+        });
+
+        var trimSnap = function () {
+          if (!swiperInstance.width || !swiperInstance.snapGrid.length) return;
+          var grid = swiperInstance.snapGrid;
+          // 마지막 2개 스냅 차이가 슬라이드 크기보다 작으면 빈 공간 스냅이므로 제거
+          if (grid.length >= 2) {
+            var last = grid[grid.length - 1];
+            var prev = grid[grid.length - 2];
+            var slideSize = swiperInstance.slides[0] ? swiperInstance.slides[0].swiperSlideSize : 0;
+            if (slideSize && last - prev < slideSize * 0.5) {
+              swiperInstance.snapGrid = grid.slice(0, -1);
+              swiperInstance.slidesGrid = swiperInstance.snapGrid.slice();
+            }
+          }
+        };
+
+        trimSnap();
+        swiperInstance.on('breakpointChange', function () {
+          // breakpoint 변경 후 Swiper가 재계산하므로 다음 틱에서 실행
+          setTimeout(trimSnap, 0);
+        });
+        swiperInstance.on('resize', function () {
+          setTimeout(trimSnap, 0);
         });
       }
       // tab 타입인 경우 탭 버튼 클릭 시 active 상태 전환
