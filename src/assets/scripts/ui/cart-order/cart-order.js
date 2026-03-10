@@ -123,6 +123,12 @@
 
         var nextOpen = !!isOpen;
 
+        // 토글 텍스트 전환
+        var $text = $toggle.find('.text').first();
+        if ($text.length) {
+          $text.text(nextOpen ? '상품금액 닫기' : '상품금액 자세히');
+        }
+
         // hidden/aria-hidden 토글
         if (nextOpen) {
           $price.removeAttr('hidden');
@@ -427,6 +433,22 @@
         .off('change.cartOrderPaymentRadio', paymentRadioSelector)
         .on('change.cartOrderPaymentRadio', paymentRadioSelector, function () {
           setPaymentPanelState($(this));
+        });
+
+      // 결제수단 셀렉트 → 패널 전환
+      var paymentSelectHidden = '[data-select-id="payment-method"] [data-vits-select-hidden]';
+
+      $(document)
+        .off('change.cartOrderPaymentSelect', paymentSelectHidden)
+        .on('change.cartOrderPaymentSelect', paymentSelectHidden, function () {
+          var value = $(this).val();
+          var $method = $(this).closest('.vits-payment-method');
+          var $panels = $method.find('[data-payment-panel]');
+
+          $panels.removeClass('is-active');
+
+          var $target = $panels.filter('[data-payment-panel="' + value + '"]');
+          if ($target.length) $target.addClass('is-active');
         });
     }
   };

@@ -67,7 +67,7 @@
       <!-- 상품 카드 -->
       <!-- [D]일시 품절 일때 is-sold-out 클래스 추가 -->
       <!-- prettier-ignore -->
-      <% for (let i = 0; i < 3; i++) { %>
+      <% for (let i = 0; i < 4; i++) { %>
       <div class="<%= i === 0 ? 'vits-cart-item is-sold-out' : 'vits-cart-item' %>">
         <!-- 상단 영역 -->
         <div class="vits-cart-item-top">
@@ -123,7 +123,10 @@
               </div>
 
               <div class="vits-cart-item-name">
-                <span class="name-text">더블 OPP 접착테이프 투명 (초강력 접착제)</span>
+                <span class="name-text"
+                  ><%= i === 1 ? '단일상품 - ' : i === 2 ? '조장상품 - ' : i === 3 ? '단위 여러개 - ' : '' %>더블 OPP
+                  접착테이프 투명 (초강력 접착제)</span
+                >
               </div>
 
               <div class="vits-cart-item-option">
@@ -147,21 +150,65 @@
 
             <!-- 수량조절 -->
             <div class="vits-cart-item-quantity">
+              <% if (i !== 2) { %>
+              <!-- [D] 조장상품 일 때, 민노출 -->
               <div class="unit-control">
+                <!-- 26-03-09 MU-652, 기존 단위 선택 UI 백업 -->
                 <!-- [D] 26-02-02 is-active 시 클래스 추가 -->
-                <!-- 낱개  -->
+                <!-- 낱개  -- >
                 <button type="button" class="unit-control-btn is-active" aria-label="낱개(1)">
                   <span class="unit-text">낱개(1)</span>
                 </button>
-                <!-- 대포장 -->
+                <! -- 대포장 -- >
                 <button type="button" class="unit-control-btn" aria-label="대포장(250)">
                   <span class="unit-text">대포장(250)</span>
                 </button>
                 <button type="button" class="unit-control-input" aria-label="길이">
                   <input type="text" id="" class="unit-input" value="12" />
                   <span class="unit-text">BOX</span>
-                </button>
+                </button> -->
+
+                <!-- 26-03-09 MU-652, 단위 선택 UI 구조 변경 -->
+                <% if (i === 1) { %>
+                <!-- 단위상품일 때  -->
+                <div class="unit-control-single">
+                  <span class="unit-control-text">소포장(40)</span>
+                </div>
+                <% } %>
+
+                <!-- prettier-ignore -->
+                <% if (i === 3) { %>
+                <!-- 단위 여러개 일 때  -->
+                <div class="unit-control-select">
+                  <!-- 동적 셀렉트 -->
+                  <div class="vits-select vits-select-disabled" data-vits-select data-select-id="unit-select">
+                    <button
+                      type="button"
+                      class="vits-select-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded="false"
+                      data-vits-select-trigger
+                      disabled
+                    >
+                      <span class="vits-select-value" data-vits-select-value data-placeholder="선택하세요"
+                        >선택하세요</span
+                      >
+
+                      <span class="vits-select-icon" aria-hidden="true">
+                        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+                      </span>
+                    </button>
+
+                    <!-- 동적 렌더링 영역 — UI.select.setOptions()로 주입 -->
+                    <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list></ul>
+
+                    <input type="hidden" name="dynamicDemo" value="" data-vits-select-hidden />
+                  </div>
+                </div>
+                <% } %>
               </div>
+              <% } %>
+
               <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
                 type: 'horiz', 
@@ -172,6 +219,9 @@
                 step: 1,
                 unit: 'BOX'
               }) %>
+
+              <% if (i === 2) { %>
+              <!-- 조장상품 일 때, 노출 -->
               <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/button/button.ejs`, {
                 size: 'xs',
@@ -179,6 +229,7 @@
                 text: '추가',
                 className: 'unit-add-btn',
               }) %>
+              <% } %>
             </div>
           </div>
 
@@ -272,3 +323,16 @@
     </div>
   </div>
 </div>
+
+<script>
+  // 동적 옵션 주입 예시
+  document.addEventListener('DOMContentLoaded', function () {
+    var $select = $('[data-select-id="unit-select"]');
+    UI.select.setOptions($select, [
+      {value: '001', text: '낱개 (1)'},
+      {value: '002', text: '소포장 (40)'},
+      {value: '003', text: '대포장 (250)'}
+    ]);
+    UI.select.setValue($select, '002');
+  });
+</script>

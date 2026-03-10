@@ -4,7 +4,7 @@
  * 단일 DatePicker 초기화 모듈
  * - 월 이동 애니메이션 제거
  * - 요일명(Sun~Sat) 완전 고정 (왕복 이동 포함)
- * - disablePast 옵션: 오늘 이전 날짜 선택 불가 (셀은 표시)
+ * - disablePast 옵션: 오늘 이전 날짜 선택 불가 (월 이동·Observer 재렌더 시에도 유지)
  * - ESLint no-unused-vars 완전 대응
  */
 
@@ -51,6 +51,9 @@
     var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
     var $calendarWrap = null;
     var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]');
+
+    // disablePast 활성 시 할당 — Observer 콜백에서도 참조
+    var applyPastDisabledStyle = null;
 
     function getCalendar() {
       var inst = $el.data('kendoDatePicker');
@@ -229,6 +232,8 @@
         scheduleDayNameApply();
         scheduleHeaderMonthApply();
         scheduleYearViewMonthApply();
+        // Observer DOM 재조작 후 과거 날짜 비활성 스타일 재적용
+        if (applyPastDisabledStyle) applyPastDisabledStyle();
       });
       dayNameObserver.observe(target, {childList: true, subtree: true, characterData: true});
     }
@@ -319,8 +324,9 @@
         return d < todayMidnight;
       };
 
-      // 비활성 셀 스타일 적용 (open, navigate 공용)
-      var applyPastDisabledStyle = function () {
+      // 비활성 셀 스타일 적용 (open, navigate, Observer 공용)
+      // setTimeout: Kendo DOM 교체 완료 대기
+      applyPastDisabledStyle = function () {
         window.setTimeout(function () {
           var inst = $el.data('kendoDatePicker');
           if (!inst || !inst.dateView || !inst.dateView.calendar) return;
