@@ -8274,7 +8274,15 @@ console.log('[mobile/index] entry 실행');
     return findPortalList($root);
   }
 
-  // portal list 닫기
+  // 현재 페이지 스크롤 오프셋 반환
+  function getScrollOffset() {
+    return {
+      top: window.pageYOffset || document.documentElement.scrollTop,
+      left: window.pageXOffset || document.documentElement.scrollLeft
+    };
+  }
+
+  // portal list 닫기 (원위치 복귀)
   function closePortal($root) {
     var $list = findPortalList($root);
     if (!$list.length) return;
@@ -8282,6 +8290,7 @@ console.log('[mobile/index] entry 실행');
       position: '',
       top: '',
       left: '',
+      bottom: '',
       minWidth: '',
       maxHeight: '',
       zIndex: ''
@@ -8362,34 +8371,41 @@ console.log('[mobile/index] entry 실행');
     listEl.style.overflowY = 'auto';
   }
 
-  // portal 모드 열기
+  // portal 모드 열기 (absolute 기준, 페이지 좌표)
   function openPortal($root) {
     var $trigger = $root.find(TRIGGER);
     var $list = $root.find(LIST);
     if (!$trigger.length || !$list.length) return;
     var rect = $trigger[0].getBoundingClientRect();
+    var scroll = getScrollOffset();
     var customMaxH = $root.attr('data-max-height');
     if (customMaxH && /^\d+$/.test(customMaxH)) {
       customMaxH = customMaxH + 'px';
     }
+
+    // body에 absolute로 append, 페이지 좌표 기준
     $list.data(DATA_PORTAL_ORIGIN, $root).addClass(CLS_PORTAL_LIST).css({
-      position: 'fixed',
-      left: rect.left + 'px',
+      position: 'absolute',
+      left: rect.left + scroll.left + 'px',
       minWidth: rect.width + 'px',
       zIndex: Z_INDEX_PORTAL
     }).appendTo('body');
-    var listH = $list.outerHeight();
+
+    // 뷰포트 기준 여백 계산 (dropup 판단용)
     var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
     var spaceAbove = rect.top - GUTTER;
+    var listH = $list.outerHeight();
     var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
     var calcMaxH;
     var maxH;
     if (shouldDropUp) {
       calcMaxH = Math.max(spaceAbove, MIN_H) + 'px';
       maxH = customMaxH || calcMaxH;
+      // absolute에서 bottom은 body.scrollHeight 기준
+      var bodyH = document.body.scrollHeight;
       $list.css({
         top: '',
-        bottom: window.innerHeight - rect.top + PORTAL_GAP + 'px',
+        bottom: bodyH - (rect.top + scroll.top) + PORTAL_GAP + 'px',
         maxHeight: maxH
       });
       $root.addClass(CLS_DROPUP);
@@ -8397,7 +8413,7 @@ console.log('[mobile/index] entry 실행');
       calcMaxH = Math.max(spaceBelow, MIN_H) + 'px';
       maxH = customMaxH || calcMaxH;
       $list.css({
-        top: rect.bottom + PORTAL_GAP + 'px',
+        top: rect.bottom + scroll.top + PORTAL_GAP + 'px',
         bottom: '',
         maxHeight: maxH
       });
@@ -8520,31 +8536,6 @@ console.log('[mobile/index] entry 실행');
     }
   }
 
-  // portal 위치 갱신
-  function updatePortalPosition($root) {
-    if (!$root || !$root.length) return;
-    var $trigger = $root.find(TRIGGER);
-    var $list = findPortalList($root);
-    if (!$trigger.length || !$list.length) return;
-    var rect = $trigger[0].getBoundingClientRect();
-    var isDropUp = $root.hasClass(CLS_DROPUP);
-    if (isDropUp) {
-      $list.css({
-        left: rect.left + 'px',
-        minWidth: rect.width + 'px',
-        top: '',
-        bottom: window.innerHeight - rect.top + PORTAL_GAP + 'px'
-      });
-    } else {
-      $list.css({
-        left: rect.left + 'px',
-        minWidth: rect.width + 'px',
-        top: rect.bottom + PORTAL_GAP + 'px',
-        bottom: ''
-      });
-    }
-  }
-
   // 스코프 캐시 구축
   function buildScopeCache(scopeKey, $container) {
     $container.find(ROOT).each(function () {
@@ -8617,28 +8608,28 @@ console.log('[mobile/index] entry 실행');
       handleOptionClick($(this));
     });
 
-    // 스크롤 감지 (capture phase)
+    // 스크롤 감지 — portal이 특정 컨테이너 내부일 때만 닫기 (capture phase)
     document.addEventListener('scroll', function (e) {
       var $scrolled = $(e.target);
+      // portal list 내부 스크롤은 무시
       if ($scrolled.closest(LIST).length || $scrolled.hasClass(CLS_PORTAL_LIST)) return;
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+          // k-window(모달) 또는 data-scroll-auto-hidden 내부 스크롤이면 닫기
           if (scope.openRoot.closest('.k-window').length || scope.openRoot.closest('[data-scroll-auto-hidden]').length) {
             closeOpenedInScope(k);
-          } else {
-            updatePortalPosition(scope.openRoot);
           }
         }
       });
     }, true);
 
-    // 리사이즈
+    // 리사이즈 — portal 열려있으면 닫기 (뷰포트 변경 시 좌표 틀어짐 방지)
     $(window).on('resize' + NS, function () {
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-          updatePortalPosition(scope.openRoot);
+          closeOpenedInScope(k);
         }
       });
     });
