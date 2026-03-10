@@ -4245,6 +4245,12 @@
         if (!$toggle.length || !$price.length) return;
         var nextOpen = !!isOpen;
 
+        // 토글 텍스트 전환
+        var $text = $toggle.find('.text').first();
+        if ($text.length) {
+          $text.text(nextOpen ? '상품금액 닫기' : '상품금액 자세히');
+        }
+
         // hidden/aria-hidden 토글
         if (nextOpen) {
           $price.removeAttr('hidden');
@@ -4517,6 +4523,17 @@
       // 결제수단 라디오 버튼 변경 이벤트
       $(document).off('change.cartOrderPaymentRadio', paymentRadioSelector).on('change.cartOrderPaymentRadio', paymentRadioSelector, function () {
         setPaymentPanelState($(this));
+      });
+
+      // 결제수단 셀렉트 → 패널 전환
+      var paymentSelectHidden = '[data-select-id="payment-method"] [data-vits-select-hidden]';
+      $(document).off('change.cartOrderPaymentSelect', paymentSelectHidden).on('change.cartOrderPaymentSelect', paymentSelectHidden, function () {
+        var value = $(this).val();
+        var $method = $(this).closest('.vits-payment-method');
+        var $panels = $method.find('[data-payment-panel]');
+        $panels.removeClass('is-active');
+        var $target = $panels.filter('[data-payment-panel="' + value + '"]');
+        if ($target.length) $target.addClass('is-active');
       });
     }
   };
@@ -8677,7 +8694,7 @@
  * 단일 DatePicker 초기화 모듈
  * - 월 이동 애니메이션 제거
  * - 요일명(Sun~Sat) 완전 고정 (왕복 이동 포함)
- * - disablePast 옵션: 오늘 이전 날짜 선택 불가 (셀은 표시)
+ * - disablePast 옵션: 오늘 이전 날짜 선택 불가 (월 이동·Observer 재렌더 시에도 유지)
  * - ESLint no-unused-vars 완전 대응
  */
 
@@ -8711,6 +8728,9 @@
     var opts = parseJsonSafe($el.attr('data-opt') || '{}') || {};
     var $calendarWrap = null;
     var $wrapper = $el.closest('[data-ui="kendo-datepicker-single"]');
+
+    // disablePast 활성 시 할당 — Observer 콜백에서도 참조
+    var applyPastDisabledStyle = null;
     function getCalendar() {
       var inst = $el.data('kendoDatePicker');
       return inst && inst.dateView && inst.dateView.calendar;
@@ -8853,6 +8873,8 @@
         scheduleDayNameApply();
         scheduleHeaderMonthApply();
         scheduleYearViewMonthApply();
+        // Observer DOM 재조작 후 과거 날짜 비활성 스타일 재적용
+        if (applyPastDisabledStyle) applyPastDisabledStyle();
       });
       dayNameObserver.observe(target, {
         childList: true,
@@ -8940,8 +8962,9 @@
         return d < todayMidnight;
       };
 
-      // 비활성 셀 스타일 적용 (open, navigate 공용)
-      var applyPastDisabledStyle = function () {
+      // 비활성 셀 스타일 적용 (open, navigate, Observer 공용)
+      // setTimeout: Kendo DOM 교체 완료 대기
+      applyPastDisabledStyle = function () {
         window.setTimeout(function () {
           var inst = $el.data('kendoDatePicker');
           if (!inst || !inst.dateView || !inst.dateView.calendar) return;
@@ -9479,12 +9502,37 @@ var swiper_bundle = __webpack_require__(7111);
 
       // payment 타입인 경우 슬라이드 클릭 시 선택 처리
       if (type === 'payment') {
-        const slides = el.querySelectorAll('.swiper-slide');
+        var slides = el.querySelectorAll('.swiper-slide');
         slides.forEach(function (slide, index) {
           slide.addEventListener('click', function () {
-            // 클릭된 슬라이드의 인덱스로 이동하여 swiper-slide-active 클래스가 자동으로 적용되도록 함
+            slides.forEach(function (s) {
+              s.classList.remove('is-selected');
+            });
+            slide.classList.add('is-selected');
             swiperInstance.slideTo(index);
           });
+        });
+        var trimSnap = function () {
+          if (!swiperInstance.width || !swiperInstance.snapGrid.length) return;
+          var grid = swiperInstance.snapGrid;
+          // 마지막 2개 스냅 차이가 슬라이드 크기보다 작으면 빈 공간 스냅이므로 제거
+          if (grid.length >= 2) {
+            var last = grid[grid.length - 1];
+            var prev = grid[grid.length - 2];
+            var slideSize = swiperInstance.slides[0] ? swiperInstance.slides[0].swiperSlideSize : 0;
+            if (slideSize && last - prev < slideSize * 0.5) {
+              swiperInstance.snapGrid = grid.slice(0, -1);
+              swiperInstance.slidesGrid = swiperInstance.snapGrid.slice();
+            }
+          }
+        };
+        trimSnap();
+        swiperInstance.on('breakpointChange', function () {
+          // breakpoint 변경 후 Swiper가 재계산하므로 다음 틱에서 실행
+          setTimeout(trimSnap, 0);
+        });
+        swiperInstance.on('resize', function () {
+          setTimeout(trimSnap, 0);
         });
       }
       // tab 타입인 경우 탭 버튼 클릭 시 active 상태 전환
