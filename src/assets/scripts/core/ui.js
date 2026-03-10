@@ -41,6 +41,7 @@ import '../ui/kendo/kendo.js';
 import '../ui/auth-ui.js';
 import '../ui/support-ui.js';
 import '../ui/home-ui.js';
+import '../ui/sticky-overflow.js';
 
 (function (window) {
   'use strict';
@@ -87,6 +88,7 @@ import '../ui/home-ui.js';
     if (window.UI.mypageSupport && window.UI.mypageSupport.init) window.UI.mypageSupport.init();
     if (window.UI.homeUi && window.UI.homeUi.init) window.UI.homeUi.init();
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
+    if (window.UI.stickyOverflow && window.UI.stickyOverflow.init) window.UI.stickyOverflow.init();
     if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
 

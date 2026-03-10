@@ -62,6 +62,8 @@
   }
 }
 
+$panel-common-height: map.get(var.$unit, 16);
+
 /* 최상위 class: vits-main-cart-order */
 .vits-main-cart-order {
   min-width: 1024px;
@@ -1000,8 +1002,11 @@
   /* ===간편결제 탭=== */
   &-tabs {
     @include mx.flex;
+    position: sticky;
+    top: $panel-common-height;
+    z-index: var.$zindex-cart-order-sticky;
     padding: map.get(var.$unit, 2);
-    background-color: map.get(color.$layout-surf, 'sunken');
+    background: map.get(color.$layout-surf, 'sunken');
     border-radius: map.get(var.$radius, 'sm');
   }
 
@@ -1275,11 +1280,29 @@
 
 /* ===하위 패널 (radio 연결)=== */
 .vits-payment-panel {
+  position: relative;
   display: none;
+  max-height: calc(100vh - var(--sticky-overflow-offset, 421px));
   padding: map.get(var.$unit, 16) map.get(var.$unit, 32) 0;
+  padding: 0 map.get(var.$unit, 32);
+  overflow-y: auto;
+
+  &::before {
+    @include mx.position(sticky, 0);
+    z-index: var.$zindex-cart-order-sticky;
+    display: block;
+    width: 100%;
+    height: $panel-common-height;
+    content: '';
+    background: color.$color-white;
+  }
 
   &.is-active {
     display: block;
+  }
+
+  &.is-scrollable {
+    padding-right: map.get(var.$unit, 12);
   }
 
   .payment-tab-panel-inner {

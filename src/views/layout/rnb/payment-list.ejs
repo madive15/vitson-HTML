@@ -1,7 +1,8 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <section class="vits-payment">
   <!-- 결제정보 -->
-  <div class="vits-payment-summary">
+  <!-- 26-03-09 MU-652, data-sticky-overflow="exclude" 추가 -->
+  <div class="vits-payment-summary" data-sticky-overflow="exclude">
     <h2 class="vits-payment-title">결제정보</h2>
     <!-- [D] 결제금액 정보 영역 : 구조 수정 (추가 및 수정) 02.27 -->
     <div class="vits-payment-total">
@@ -363,10 +364,10 @@
 
   <!-- 26-03-09 MU-652, 결제수단 선택 셀렉트 방식으로 변경 -->
   <div class="vits-payment-method">
-    <h2 class="vits-payment-title">결제수단 선택하기</h2>
+    <h2 class="vits-payment-title" data-sticky-overflow="exclude">결제수단 선택하기</h2>
 
     <!-- 결제수단 셀렉트 -->
-    <div class="vits-payment-select">
+    <div class="vits-payment-select" data-sticky-overflow="exclude">
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/form/select.ejs`, {
       id: 'payment-method',
@@ -676,7 +677,7 @@
     </div>
 
     <!-- 동의 체크박스 -->
-    <div class="vits-payment-agree">
+    <div class="vits-payment-agree" data-sticky-overflow="exclude">
       <!-- prettier-ignore -->
       <%- include(`${_src}/views/components/form/input-checkbox-single.ejs`, {
         datas: [

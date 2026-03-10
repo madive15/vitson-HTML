@@ -149,6 +149,11 @@
           $icon.toggleClass('ic-arrow-down', !nextOpen);
           $icon.toggleClass('ic-arrow-up', nextOpen);
         }
+
+        // static 높이 변경됨 → scroll max-height 재계산
+        if (window.UI.stickyOverflow) {
+          window.UI.stickyOverflow.update();
+        }
       }
 
       $(discountItemSelector).each(function () {
