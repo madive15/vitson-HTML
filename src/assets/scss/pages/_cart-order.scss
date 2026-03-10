@@ -1203,6 +1203,22 @@ $panel-common-height: map.get(var.$unit, 16);
         @include mx.flex($direction: column);
         flex: 1;
         gap: map.get(var.$unit, 8);
+
+        &.type-row {
+          flex-direction: row;
+          gap: map.get(var.$unit, 16);
+
+          .vits-form-label {
+            flex-shrink: 0;
+            align-self: center;
+          }
+
+          .vits-form-select {
+            flex-grow: 1;
+            width: auto;
+            min-width: 0;
+          }
+        }
       }
 
       .vits-form-label {
@@ -1379,9 +1395,10 @@ $panel-common-height: map.get(var.$unit, 16);
 
       // 입금자명 입력 필드
       &-input {
-        @include mx.flex(flex, column);
-        gap: fn.rem(10);
+        @include mx.flex(flex, row, flex-start, center);
+        gap: map.get(var.$unit, 20);
 
+        /* stylelint-disable-next-line no-descending-specificity */
         .vits-form-label {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
           min-width: fn.rem(74);
