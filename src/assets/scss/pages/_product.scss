@@ -1833,3 +1833,40 @@ body.is-option-modal-open {
 /* e.===modal kendo window -다른 규격찾기 팝업 === */
 
 /* stylelint-enable no-descending-specificity */
+
+/* ===modal kendo window -카달로그보기 팝업 === */
+.vits-catalog-view {
+  @include mx.flex(flex, column);
+  gap: map.get(var.$unit, 12);
+
+  &-btn {
+    @include button.btn-reset;
+    @include mx.flex(flex, row, flex-start, center);
+    width: 100%;
+    min-height: fn.rem(68);
+    padding: map.get(var.$unit, 8) map.get(var.$unit, 16);
+    text-align: left;
+    background: color.$color-white;
+    border-radius: map.get(var.$radius, 'md');
+    box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+    transition:
+      background 0.2s ease-in-out,
+      box-shadow 0.3s ease-in-out;
+
+    .text {
+      @include typo.typography('b2s', $color: map.get(color.$text-colors, 'primary'));
+      @include mx.ellipsis-multi;
+    }
+
+    &:hover {
+      background: map.get(color.$layout-surf, 'raised');
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+    }
+
+    &:focus-visible,
+    &:active {
+      background: map.get(color.$layout-surf, 'raised');
+      box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
+    }
+  }
+}
