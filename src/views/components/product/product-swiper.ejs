@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 <%# 
   ====================================
-  SWIPER 상품 카드 컴포넌트
+  상품 카드 컴포넌트
   ====================================
   
   [사용 가능한 파라미터]
@@ -103,8 +103,8 @@
   const showOriginPrice = productData.discountRate > 0;
   
   // 가격 표시 조건
-  const showPrice = productData.isMember && productData.inStock;
-  const showSoldOut = productData.isMember && !productData.inStock;
+  const showPrice = productData.isMember;
+  // const showSoldOut = productData.isMember && !productData.inStock;
   const showGuestPrice = !productData.isMember;
   
   // 장바구니 버튼 표시 조건
@@ -152,9 +152,8 @@
     </div>
 
     <div class="product-price">
-      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
-      <!-- < % if (showPrice) { %> -->
-      <!-- 가격 노출 (회원 & 판매중) -->
+      <% if (showPrice) { %>
+      <!-- 가격 노출 (회원) -->
       <div class="vits-price-box is-normal">
         <% if (showOriginPrice) { %>
         <div class="price-origin-label">
@@ -171,20 +170,18 @@
           </div>
         </div>
       </div>
-      <!-- < % } %> -->
+      <% } %>
 
-      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
       <!-- < % if (showSoldOut) { %>
-      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-      < % } %>  -->
+      < % } %> -->
 
       <% if (showGuestPrice) { %>
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">
           <p class="price-guest-text-title">회원 전용 혜택가</p>
-          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+          <p class="price-guest-text-desc">(1개만 사도 <strong>무료배송</strong>)</p>
         </div>
         <div class="price-guest-action">
           <button class="price-login-button">
@@ -196,14 +193,14 @@
       <% } %>
     </div>
 
-    <% if (productData.isMember && (productData.flags.today || productData.flags.tomorrow || productData.flags.hot ||
+    <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot || (productData.isMember &&
     productData.promoBadge)) { %>
-    <!-- 배지 영역 (회원만) -->
+    <!-- 배지 영역 -->
     <div class="product-extra">
       <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot) { %> <%-
       include(`${_src}/views/components/label/product-flags.ejs`, productData.flags) %> <% } %> <% if
-      (productData.promoBadge) { %> <%- include(`${_src}/views/components/label/product-promo-badge.ejs`,
-      productData.promoBadge) %> <% } %>
+      (productData.isMember && productData.promoBadge) { %> <%-
+      include(`${_src}/views/components/label/product-promo-badge.ejs`, productData.promoBadge) %> <% } %>
     </div>
     <% } %>
   </div>
