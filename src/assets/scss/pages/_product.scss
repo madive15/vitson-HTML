@@ -1207,6 +1207,12 @@
 
     @include mx.border(bottom, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
 
+    @include mx.pc-sm {
+      width: calc(100% + (var.$tablet-gutter * 2));
+      padding: 0 var.$tablet-gutter;
+      margin: 0 (var.$tablet-gutter * -1);
+    }
+
     .tab-show-price {
       max-width: 1280px;
       height: 0;
