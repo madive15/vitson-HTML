@@ -150,7 +150,7 @@
         <!-- 품목 테이블 -->
         <table class="estimate-items">
           <colgroup>
-            <col class="estimate-item-col-no">
+            <!-- 26-03-11 MU-710 세액, 합계 칼럼 삭제로 기존 소스 백업 <col class="estimate-item-col-no">
             <col class="estimate-item-col-name">
             <col class="estimate-item-col-narrow">
             <col class="estimate-item-col-narrow">
@@ -159,56 +159,70 @@
             <col class="estimate-item-col-num">
             <col class="estimate-item-col-tax">
             <col class="estimate-item-col-num">
-            <col class="estimate-item-col-narrow">
+            <col class="estimate-item-col-narrow"> -->
+            <col style="width: 40px;">
+            <col style="width: 60px;">
+            <col style="width: 130px;">
+            <col style="width: 100px;">
+            <col style="width: 38px;">
+            <col style="width: 40px;" span="2">
+            <col style="width: 12px;">
+            <col style="width: 74px;">
+            <col style="width: 26px;">
+            <col style="width: 54px;">
+            <col style="width: 100px;">
+            <col style="width: 40px;">
           </colgroup>
           <thead>
             <tr>
               <th>순번</th>
-              <th>품명 및 규격</th>
+              <th colspan="4">품명 및 규격</th>
               <th>수량</th>
               <th>단위</th>
-              <th>단가</th>
-              <th>할인</th>
+              <th colspan="2">단가</th>
+              <th colspan="2">할인</th>
               <th>공급가액</th>
-              <th>세액</th>
-              <th>합계</th>
+              <!-- 26-03-11 MU-710 세액, 합계 칼럼 삭제 <th>세액</th>
+              <th>합계</th> -->
               <th>비고</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="estimate-cell-c">1</td>
-              <td class="estimate-cell-l estimate-cell-spec">
+              <td class="estimate-cell-l estimate-cell-spec" colspan="4">
                 <span class="estimate-code">(P-001234)</span>
                 <span class="estimate-name">OPP테이프 OPP테이프상품명 2줄 이상일 경우, 아래로 줄바꿈. 상품규격 영역, 1줄 이상일 경우 아래로 줄바꿈되어 보여짐</span>
                 <span class="estimate-spec">6(150mm) 15W ★주광★ 6.5K</span>
               </td>
               <td class="estimate-cell-r">25</td>
               <td class="estimate-cell-r">조</td>
-              <td class="estimate-cell-r">999,999,999</td>
-              <td class="estimate-cell-r">-</td>
+              <td class="estimate-cell-r" colspan="2">999,999,999</td>
+              <td class="estimate-cell-r" colspan="2">-</td>
               <td class="estimate-cell-r">99,999,999</td>
-              <td class="estimate-cell-r">9,999,999</td>
-              <td class="estimate-cell-r">22,222,222</td>
+              <!-- 26-03-11 MU-710 세액, 합계 칼럼 삭제 <td class="estimate-cell-r">9,999,999</td>
+              <td class="estimate-cell-r">22,222,222</td> -->
               <td class="estimate-cell-r">-</td>
             </tr>
             <tr>
               <td class="estimate-cell-c">2</td>
-              <td class="estimate-cell-l estimate-cell-spec">
+              <td class="estimate-cell-l estimate-cell-spec" colspan="4">
                 <span class="estimate-code">(P-001234)</span>
                 <span class="estimate-name">다운라이트 LED 슬림 (방습형)</span>
                 <span class="estimate-spec">W 6(150mm) 15W ★주광★ 6.5K</span>
               </td>
               <td class="estimate-cell-r">25</td>
               <td class="estimate-cell-r">조</td>
+              <td class="estimate-cell-r" colspan="2">999,999,999</td>
+              <td class="estimate-cell-r" colspan="2">-</td>
               <td class="estimate-cell-r">999,999,999</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">999,999,999</td>
-              <td class="estimate-cell-r">9,999,999</td>
-              <td class="estimate-cell-r">222,222,222</td>
+              <!-- 26-03-11 MU-710 세액, 합계 칼럼 삭제 <td class="estimate-cell-r">9,999,999</td>
+              <td class="estimate-cell-r">222,222,222</td> -->
               <td class="estimate-cell-r">-</td>
             </tr>
-            <tr class="estimate-items-total">
+
+            <!-- 26-03-11 MU-710 마크업 변경으로 기존 소스 백업 -->
+            <!-- <tr class="estimate-items-total">
               <td class="estimate-cell-c">합계</td>
               <td class="estimate-cell-l">-</td>
               <td class="estimate-cell-r">-</td>
@@ -219,8 +233,20 @@
               <td class="estimate-cell-r">9,999,999</td>
               <td class="estimate-cell-r">222,222,222</td>
               <td class="estimate-cell-r">-</td>
-            </tr>
+            </tr> -->
           </tbody>
+
+          <!-- 26-03-11 MU-710 합계 추가 -->
+          <tfoot>
+            <tr>
+              <th colspan="2">공급가액</th>
+              <td class="estimate-cell-r">99,999,999</td>
+              <th>부가세</th>
+              <td colspan="4" class="estimate-cell-r">99,999,999</td>
+              <th colspan="2" class="estimate-font-w600">합계</th>
+              <td colspan="3" class="estimate-cell-r estimate-font-w600">1,999,999,999</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
