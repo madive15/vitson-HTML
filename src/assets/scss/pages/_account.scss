@@ -211,6 +211,10 @@
     border-top: 0;
   }
 
+  tfoot.docs-total td {
+    padding: 0;
+  }
+
   &-actions {
     @include mx.flex($align: center, $justify: center);
   }
@@ -229,6 +233,57 @@
     &:hover {
       background-color: map.get(color.$layout-surf, 'sunken');
       border-color: map.get(color.$layout-border, 'secondary');
+    }
+  }
+
+  // 거래명세서 합계
+  .docs-total-summary {
+    @include mx.flex;
+    @include mx.border('top', $color: map.get(color.$layout-border, 'quaternary'));
+    height: fn.rem(42);
+
+    dt,
+    dd {
+      @include mx.flex($align: center);
+      @include typo.typography('b4r');
+      height: 100%;
+      padding: map.get(var.$unit, 4);
+    }
+
+    dt {
+      @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+      flex: 0 0 fn.rem(100);
+      justify-content: center;
+      width: fn.rem(100);
+      text-align: center;
+      background: map.get(color.$layout-surf, 'sunken');
+
+      &.docs-total {
+        font-weight: 600;
+      }
+    }
+
+    dd {
+      justify-content: flex-end;
+      text-align: right;
+
+      &:not(.docs-total) {
+        flex: 0 0 fn.rem(130);
+        width: fn.rem(130);
+      }
+
+      &.docs-total {
+        flex-grow: 1;
+        min-width: 0;
+        padding-right: map.get(var.$unit, 12);
+        font-size: fn.rem(16);
+        font-weight: 600;
+        color: map.get(color.$text-status, 'brand');
+      }
+
+      &:not(:last-of-type) {
+        @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+      }
     }
   }
 }
