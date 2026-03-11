@@ -60240,9 +60240,12 @@
                     <h2 class="title">MD가 꼼꼼히 고른 <span class="primary">추천 상품</span></h2>
                   </div>
                   <div class="vits-banner-swiper">
-                    
+                    <!-- prettier-ignore -->
+
 <!-- 상품상세 페이지 swiper (상품품모든case) :  vits-product-swiper-items > vits-product-slide -->
-<div class="swiper-container vits-swiper js-swiper" data-swiper-type="card" data-desktop="5" >
+<!-- 26-03-10 MU-714, vits-product-list view-thumb 추가 -->
+<!-- prettier-ignore -->
+<div class="swiper-container vits-swiper vits-product-list view-thumb js-swiper" data-swiper-type="card" data-desktop="5" >
   <ul class="swiper-wrapper vits-product-slide">
     <li class="swiper-slide">
       
@@ -60281,7 +60284,34 @@
     </div>
 
     <div class="product-price">
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
         
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">
@@ -60341,7 +60371,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -60359,7 +60390,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -60436,7 +60475,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -60454,7 +60494,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -60531,7 +60579,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -60547,7 +60596,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -60616,10 +60673,28 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -60688,7 +60763,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -60706,7 +60782,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -60775,10 +60859,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -60855,10 +60963,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -61410,9 +61542,12 @@
       </div>
       <div class="vits-banner-swiper">
         <!-- prettier-ignore -->
-        
+        <!-- prettier-ignore -->
+
 <!-- 상품상세 페이지 swiper (상품품모든case) :  vits-product-swiper-items > vits-product-slide -->
-<div class="swiper-container vits-swiper js-swiper" data-swiper-type="card" data-desktop="5" >
+<!-- 26-03-10 MU-714, vits-product-list view-thumb 추가 -->
+<!-- prettier-ignore -->
+<div class="swiper-container vits-swiper vits-product-list view-thumb js-swiper" data-swiper-type="card" data-desktop="5" >
   <ul class="swiper-wrapper vits-product-slide">
     <li class="swiper-slide">
       
@@ -61451,7 +61586,34 @@
     </div>
 
     <div class="product-price">
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
         
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">
@@ -61511,7 +61673,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -61529,7 +61692,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -61606,7 +61777,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -61624,7 +61796,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -61701,7 +61881,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -61717,7 +61898,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -61786,10 +61975,28 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -61858,7 +62065,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -61876,7 +62084,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -61945,10 +62161,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -62025,10 +62265,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -62090,9 +62354,12 @@
       </div>
       <div class="vits-banner-swiper">
         <!-- prettier-ignore -->
-        
+        <!-- prettier-ignore -->
+
 <!-- 상품상세 페이지 swiper (상품품모든case) :  vits-product-swiper-items > vits-product-slide -->
-<div class="swiper-container vits-swiper js-swiper" data-swiper-type="slim" data-desktop="6" >
+<!-- 26-03-10 MU-714, vits-product-list view-thumb 추가 -->
+<!-- prettier-ignore -->
+<div class="swiper-container vits-swiper vits-product-list view-thumb js-swiper" data-swiper-type="slim" data-desktop="6" >
   <ul class="swiper-wrapper vits-product-slide">
     <li class="swiper-slide">
       
@@ -62131,7 +62398,34 @@
     </div>
 
     <div class="product-price">
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
         
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">
@@ -62191,7 +62485,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -62209,7 +62504,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -62286,7 +62589,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -62304,7 +62608,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -62381,7 +62693,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -62397,7 +62710,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -62466,10 +62787,28 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -62538,7 +62877,8 @@
     </div>
 
     <div class="product-price">
-      
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         
@@ -62556,7 +62896,15 @@
           </div>
         </div>
       </div>
-        
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
+      <div class="product-price-alt is-soldout">일시품절</div>
+      < % }   -->
+
+      
     </div>
 
     
@@ -62625,10 +62973,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     
@@ -62705,10 +63077,34 @@
     </div>
 
     <div class="product-price">
-       
-      <!-- 일시품절 -->
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) {  -->
+      <!-- 가격 노출 (회원 & 판매중) -->
+      <div class="vits-price-box is-normal">
+        
+        <div class="price-origin-label">
+          <span class="sr-only">표준단가(정상가)</span>999,999,999원
+        </div>
+        
+
+        <div class="price-sale-row">
+          
+          <div class="price-rate"><span class="sr-only">할인율</span>99%</div>
+          
+          <div class="price-sale">
+            <span class="sr-only">공급단가(판매가)</span>999,999,999원
+          </div>
+        </div>
+      </div>
+      <!-- < % }  -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { 
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-       
+      < % }   -->
+
+      
     </div>
 
     

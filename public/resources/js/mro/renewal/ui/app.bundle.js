@@ -3483,6 +3483,24 @@
     });
   }
 
+  // 현재 페이지 스크롤 오프셋 반환 (iOS 바운스 클램핑)
+  function getScrollOffset() {
+    var docEl = document.documentElement;
+    var maxTop = docEl.scrollHeight - docEl.clientHeight;
+    var maxLeft = docEl.scrollWidth - docEl.clientWidth;
+    var rawTop = window.pageYOffset || docEl.scrollTop;
+    var rawLeft = window.pageXOffset || docEl.scrollLeft;
+    return {
+      top: Math.max(0, Math.min(rawTop, maxTop)),
+      left: Math.max(0, Math.min(rawLeft, maxLeft))
+    };
+  }
+
+  // visualViewport 기준 뷰포트 높이 (소프트 키보드 대응)
+  function getViewportHeight() {
+    return window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  }
+
   // portal list 닫기 (원위치 복귀)
   function closePortal($root) {
     var $list = $('body').children(LIST).filter(function () {
@@ -3542,14 +3560,6 @@
     return window;
   }
 
-  // 현재 페이지 스크롤 오프셋 반환
-  function getScrollOffset() {
-    return {
-      top: window.pageYOffset || document.documentElement.scrollTop,
-      left: window.pageXOffset || document.documentElement.scrollLeft
-    };
-  }
-
   // 오픈 직전 dropup/최대높이 계산 (일반 모드)
   function applyDropDirection($root) {
     if (!$root || !$root.length) return;
@@ -3561,9 +3571,11 @@
     var listEl = $list.get(0);
     if (!triggerEl || !listEl) return;
     var scroller = getScrollParent(triggerEl);
+    // visualViewport 기준 뷰포트 높이 사용
+    var viewH = getViewportHeight();
     var cRect = scroller === window ? {
       top: 0,
-      bottom: window.innerHeight
+      bottom: viewH
     } : scroller.getBoundingClientRect();
     var tRect = triggerEl.getBoundingClientRect();
     var spaceBelow = cRect.bottom - tRect.bottom;
@@ -3603,8 +3615,9 @@
       zIndex: 99999
     }).appendTo('body');
 
-    // 뷰포트 기준 여백 계산 (dropup 판단용)
-    var spaceBelow = window.innerHeight - rect.bottom - GUTTER;
+    // visualViewport 기준 여백 계산
+    var vh = getViewportHeight();
+    var spaceBelow = vh - rect.bottom - GUTTER;
     var spaceAbove = rect.top - GUTTER;
     var listH = $list.outerHeight();
     var shouldDropUp = spaceBelow < listH && spaceAbove > spaceBelow;
@@ -3980,7 +3993,6 @@
       Object.keys(scopes).forEach(function (k) {
         var scope = scopes[k];
         if (scope && scope.openRoot && isPortal(scope.openRoot)) {
-          // k-window(모달) 내부 스크롤이면 닫기
           if (scope.openRoot.closest('.k-window').length) {
             closeOpenedInScope(k);
           }
@@ -3997,6 +4009,28 @@
         }
       });
     });
+
+    // 화면 회전 — 모든 열린 셀렉트 닫기
+    $(window).on('orientationchange' + NS, function () {
+      Object.keys(scopes).forEach(function (k) {
+        var scope = scopes[k];
+        if (scope && scope.openRoot) {
+          closeOpenedInScope(k);
+        }
+      });
+    });
+
+    // 소프트 키보드 등 뷰포트 크기 변경 시 portal 닫기
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', function () {
+        Object.keys(scopes).forEach(function (k) {
+          var scope = scopes[k];
+          if (scope && scope.openRoot && isPortal(scope.openRoot)) {
+            closeOpenedInScope(k);
+          }
+        });
+      });
+    }
   }
 
   // 스코프 초기화
@@ -4031,7 +4065,6 @@
 
   // Public API
 
-  // 초기화 (이벤트는 1회만 바인딩)
   window.UI.select.init = function (root) {
     if (!window.UI.select.__bound) {
       bind();
@@ -4039,18 +4072,12 @@
     }
     init(root);
   };
-
-  // 캐시 정리
   window.UI.select.destroy = function (root) {
     destroy(root);
   };
-
-  // 전체 캐시 정리
   window.UI.select.destroyAll = function () {
     destroyAll();
   };
-
-  // 동적 옵션 주입
   window.UI.select.setOptions = function ($root, items) {
     $root = $($root).closest(ROOT);
     if (!$root.length) return;
@@ -4061,28 +4088,20 @@
     resetToPlaceholder($root, true);
     enableWithOptions($root, items);
   };
-
-  // 선택 초기화
   window.UI.select.reset = function ($root) {
     $root = $($root).closest(ROOT);
     if (!$root.length) return;
     resetToPlaceholder($root, true);
   };
-
-  // 값 세팅
   window.UI.select.setValue = function ($root, value) {
     $root = $($root).closest(ROOT);
     if (!$root.length) return false;
     return setSelectedByValue($root, value);
   };
-
-  // 값 조회
   window.UI.select.getValue = function ($root) {
     $root = $($root).closest(ROOT);
     return $root.length ? getHiddenVal($root) : '';
   };
-
-  // disabled 토글
   window.UI.select.setDisabled = function ($root, disabled) {
     $root = $($root).closest(ROOT);
     if ($root.length) setDisabled($root, disabled);
@@ -9423,7 +9442,7 @@ var swiper_bundle = __webpack_require__(7111);
     },
     card: {
       slidesPerView: 5,
-      spaceBetween: 27.5,
+      spaceBetween: 20,
       speed: 400,
       breakpoints: {
         0: {
