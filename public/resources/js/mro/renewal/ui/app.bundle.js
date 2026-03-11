@@ -3315,6 +3315,9 @@
       btn.addEventListener('click', () => {
         const iconSpan = btn.querySelector('.ic');
         if (!iconSpan) return;
+
+        // 각 버튼 소속 .vits-input 컨테이너에서 input 탐색
+        const inputEl = btn.closest('.vits-input')?.querySelector('input');
         const isOpen = btn.classList.contains('is-eye-open');
         if (isOpen) {
           btn.classList.remove('is-eye-open');
@@ -3322,12 +3325,14 @@
           iconSpan.classList.remove('ic-eye-show');
           iconSpan.classList.add('ic-eye-hide');
           btn.setAttribute('aria-label', '비밀번호 표시');
+          if (inputEl) inputEl.type = 'password';
         } else {
           btn.classList.remove('is-eye-close');
           btn.classList.add('is-eye-open');
           iconSpan.classList.remove('ic-eye-hide');
           iconSpan.classList.add('ic-eye-show');
           btn.setAttribute('aria-label', '비밀번호 숨기기');
+          if (inputEl) inputEl.type = 'text';
         }
       });
     });
