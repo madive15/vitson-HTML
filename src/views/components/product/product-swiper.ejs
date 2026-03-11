@@ -152,7 +152,8 @@
     </div>
 
     <div class="product-price">
-      <% if (showPrice) { %>
+      <!-- 26-03-10 MU-714, 가격 조건없이 노출 -->
+      <!-- < % if (showPrice) { %> -->
       <!-- 가격 노출 (회원 & 판매중) -->
       <div class="vits-price-box is-normal">
         <% if (showOriginPrice) { %>
@@ -170,10 +171,15 @@
           </div>
         </div>
       </div>
-      <% } %> <% if (showSoldOut) { %>
-      <!-- 일시품절 -->
+      <!-- < % } %> -->
+
+      <!-- 26-03-10 MU-714, 유닛 적용 - 일시품절 제거 -->
+      <!-- < % if (showSoldOut) { %>
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-      <% } %> <% if (showGuestPrice) { %>
+      < % } %>  -->
+
+      <% if (showGuestPrice) { %>
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">

@@ -94,14 +94,8 @@
     }
 
     &-code {
-      @include mx.flex(flex, row, center, center);
-      @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
       @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
       flex-shrink: 0;
-      height: map.get(var.$unit, 16);
-      padding: 0 map.get(var.$unit, 4);
-      margin-top: 1px;
-      background: color.$color-white;
     }
 
     &-title {
@@ -109,7 +103,7 @@
     }
 
     &-brand {
-      @include typo.typography('b3s', $color: map.get(color.$text-colors, 'tertiary'));
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
     }
 
     &-name {
@@ -340,7 +334,7 @@
             .product {
               &-meta {
                 @include mx.flex(flex, column);
-                gap: map.get(var.$unit, 4);
+                gap: map.get(var.$unit, 12);
               }
 
               &-date {
@@ -359,11 +353,15 @@
                 margin: map.get(var.$unit, 8) 0;
               }
 
-              &-code span {
-                @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
-                @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
-                display: inline-block;
-                padding: 0 map.get(var.$unit, 4);
+              &-code {
+                @include mx.flex(inline-flex);
+
+                span {
+                  @include typo.typography('b5r', $color: map.get(color.$text-colors, 'tertiary'));
+                  @include mx.border('all', $color: map.get(color.$layout-border, 'tertiary'));
+                  display: inline-block;
+                  padding: 0 map.get(var.$unit, 4);
+                }
               }
 
               &-name {
@@ -1014,6 +1012,42 @@
         @include mx.flex(flex, row, center, center);
         width: 100%;
         min-height: fn.rem(358);
+      }
+
+      &.type-detail {
+        .mypage-record-line {
+          .product-identity {
+            display: grid;
+            grid-template-areas:
+              'recordBrand recordCode'
+              'recordName recordName';
+            grid-template-columns: minmax(0, 1fr) auto;
+            width: 100%;
+
+            .product {
+              &-code {
+                grid-area: recordCode;
+              }
+
+              &-title {
+                display: contents;
+              }
+
+              &-brand {
+                grid-area: recordBrand;
+              }
+
+              &-name {
+                @include mx.ellipsis-multi;
+                grid-area: recordName;
+              }
+            }
+          }
+
+          .product-subinfo {
+            margin-top: map.get(var.$unit, 4) * -1;
+          }
+        }
       }
     }
 
@@ -2268,7 +2302,7 @@
 
   &-info {
     @include mx.flex(flex, column);
-    gap: map.get(var.$unit, 8);
+    gap: map.get(var.$unit, 2);
   }
 
   &-thumb {
@@ -2459,6 +2493,7 @@
       }
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     &:has(.vits-claim-request-chekbox) {
       @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
       max-height: fn.rem(400);
@@ -2532,6 +2567,7 @@
     padding: 0 map.get(var.$unit, 32);
   }
 
+  /* stylelint-disable-next-line no-duplicate-selectors */
   &-chekbox {
     .claim-request-product {
       &-list {
@@ -2583,8 +2619,12 @@
 
       /* stylelint-disable-next-line no-descending-specificity */
       &-meta {
-        @include mx.flex(flex, row, flex-start, center);
+        @include mx.flex(flex, row-reverse, flex-end, center);
         gap: map.get(var.$unit, 8);
+      }
+
+      &-spec {
+        margin-top: fn.rem(6) * -1;
       }
     }
   }

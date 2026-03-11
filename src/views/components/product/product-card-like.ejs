@@ -132,8 +132,7 @@
     </div>
 
     <div class="product-price">
-      <% if (productData.inStock) { %>
-      <!-- 가격 노출 -->
+      <!-- 가격 노출 (품절 여부 무관) -->
       <div class="vits-price-box is-normal">
         <% if (showOriginPrice) { %>
         <div class="price-origin-label">
@@ -150,10 +149,10 @@
           </div>
         </div>
       </div>
-      <% } else { %>
-      <!-- 일시품절 -->
+
+      <!-- < % if (!productData.inStock) { %>
       <div class="product-price-alt is-soldout">일시품절</div>
-      <% } %>
+      < % } %> -->
     </div>
 
     <!-- prettier-ignore -->
