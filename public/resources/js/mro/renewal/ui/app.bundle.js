@@ -7821,7 +7821,7 @@
  * @description
  *  - 썸네일: 최대 3개 표시 (CSS max-height로 제한)
  *  - 패널: recent 클릭 시 토글, 썸네일/외부/닫기 클릭 시 닫힘
- *  - TOP 버튼: threshold 이상에서 스크롤 올릴 때 표시
+ *  - TOP 버튼: 100px 이상 스크롤 시 표시
  * @policy
  *  - init(): 멱등성 보장, 기존 스코프는 UI 갱신
  *  - refresh($scope): 특정 스코프 갱신 (미바인딩 시 init)
@@ -7862,8 +7862,9 @@
   };
   var INTERNAL = {
     THROTTLE_DELAY: 100,
-    THRESHOLD_RATIO: 0.12,
-    TOP_SCROLL_DURATION: 300
+    // THRESHOLD_RATIO: 0.12, // [제거됨] 뷰포트 비율 대신 고정값 사용
+    TOP_SCROLL_DURATION: 300,
+    TOP_THRESHOLD: 100
   };
   var EVENT_NS = '.uiFloating';
   var isWindowScrollBound = false;
@@ -8034,7 +8035,7 @@
     }, INTERNAL.TOP_SCROLL_DURATION);
   }
 
-  // TOP 버튼 표시/숨김 상태 업데이트 (스크롤 방향 기반)
+  // TOP 버튼 표시/숨김 상태 업데이트
   function updateTopButtonState() {
     cleanupDisconnectedScopes();
     if (!hasTopButtonScope()) {
@@ -8042,20 +8043,27 @@
       return;
     }
     var scrollY = $(window).scrollTop();
-    var threshold = $(window).height() * INTERNAL.THRESHOLD_RATIO;
+    var threshold = INTERNAL.TOP_THRESHOLD;
     for (var i = 0; i < activeScopes.length; i++) {
       var $scope = activeScopes[i];
       var els = getEls($scope);
       if (!els || !els.$top.length) continue;
-      var lastY = $scope.data(DATA_KEY.LAST_SCROLL_Y) || 0;
-      if (scrollY <= threshold) {
-        els.$top.removeClass(STATE.VISIBLE);
-      } else if (scrollY < lastY) {
-        els.$top.addClass(STATE.VISIBLE);
-      } else if (scrollY > lastY) {
-        els.$top.removeClass(STATE.VISIBLE);
-      }
-      $scope.data(DATA_KEY.LAST_SCROLL_Y, scrollY);
+
+      // [기존] 스크롤 방향 기반 표시/숨김
+      // var lastY = $scope.data(DATA_KEY.LAST_SCROLL_Y) || 0;
+      //
+      // if (scrollY <= threshold) {
+      //   els.$top.removeClass(STATE.VISIBLE);
+      // } else if (scrollY < lastY) {
+      //   els.$top.addClass(STATE.VISIBLE);
+      // } else if (scrollY > lastY) {
+      //   els.$top.removeClass(STATE.VISIBLE);
+      // }
+      //
+      // $scope.data(DATA_KEY.LAST_SCROLL_Y, scrollY);
+
+      // threshold 이상이면 항상 표시
+      els.$top.toggleClass(STATE.VISIBLE, scrollY > threshold);
     }
   }
 
