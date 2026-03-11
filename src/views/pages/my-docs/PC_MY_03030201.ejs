@@ -114,14 +114,14 @@
                               { width: 50, label: '일자' },
                               { width: 100, label: '주문번호' },
                               { width: 50, label: '구분' },
-                              { width: 140, label: '상품명(적요)' },
+                              { width: "auto", label: '상품명(적요)' }, // 26-03-11 MU-711 width auto 변경
                               { width: 40, label: '수량' },
                               { width: 40, label: '단위' },
                               { width: 80, label: '단가' },
                               { width: 70, label: '할인금액' },
                               { width: 80, label: '공급가'},
-                              { width: 70, label: '부가세'},
-                              { width: 120, label: '청구금액'},
+                              // { width: 70, label: '부가세'}, 26-03-11 MU-711 부가세 칼럼 삭제
+                              // { width: 120, label: '청구금액'}, 26-03-11 MU-711 청구금액 칼럼 삭제
                             ]
                           }) %>
 
@@ -134,7 +134,7 @@
                               cells: [ 
                                 { text: '1' },
                                 { text: '12/03', className: 'docs-text' },
-                                { text: 'ORD230001', className: 'docs-text-lf' },
+                                { text: 'ORD230001', className: '' }, // 26-03-11 MU-711 docs-text-lf 클래스 삭제
                                 { text: '매출' , className: 'docs-text' },
                                 { text: '컨커 시리즈 컨셉트고급 무용산 1종(비즈파크) 프리미엄 에디션 특별 한정판 고급 사무용품', className: 'docs-text-lf' },
                                 { text: '20' , className: 'docs-text' },
@@ -142,8 +142,8 @@
                                 { text: '3,899원', className: 'docs-text' },
                                 { text: '-' , className: 'docs-text' },
                                 { text: '77,980원', className: 'docs-text' },
-                                { text: '7,798원', className: 'docs-text' },
-                                { text: '85,778원', className: 'total-amount'}
+                                //{ text: '7,798원', className: 'docs-text' }, 26-03-11 MU-711 부가세 칼럼 삭제
+                                //{ text: '85,778원', className: 'total-amount'} 26-03-11 MU-711 청구금액 칼럼 삭제
                               ] 
                             }) %>
                             <!-- prettier-ignore-->
@@ -153,7 +153,7 @@
                               cells: [ 
                                 { text: '2' },
                                 { text: '12/03', className: 'docs-text' },
-                                { text: 'ORD230001', className: 'docs-text-lf' },
+                                { text: 'ORD230001', className: '' }, // 26-03-11 MU-711 docs-text-lf 클래스 삭제
                                 { text: '반품' , className: 'docs-text point' },
                                 { text: '무선 마우스 로지텍 MX Master 3', className: 'docs-text-lf' },
                                 { text: '15' , className: 'docs-text' },
@@ -161,13 +161,15 @@
                                 { text: '3,899원', className: 'docs-text' },
                                 { text: '-' , className: 'docs-text' },
                                 { text: '77,980원', className: 'docs-text point' },
-                                { text: '7,798원', className: 'docs-text point' },
-                                { text: '85,778원', className: 'total-amount'}
+                                // { text: '7,798원', className: 'docs-text point' }, 26-03-11 MU-711 부가세 칼럼 삭제
+                                //{ text: '85,778원', className: 'total-amount'} 26-03-11 MU-711 청구금액 칼럼 삭제
                               ] 
                             }) %>
+
+                            <!-- 26-03-11 MU-711 합계행 구조 변경으로 기존 원본 소스 백업 -->
                             <!-- 합계 행 -->
                             <!-- prettier-ignore-->
-                            <%- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                            <!-- < %- include(`${_src}/views/components/table/tbody-row.ejs`, { 
                               type: 'docs', 
                               rowClass: 'docs-total-row',
                               cells: [ 
@@ -177,8 +179,24 @@
                                 { text: '213,655원', className: 'docs-text' },
                                 { text: '2,350,196원', tdClass: 'docs-td-amount', className: 'total-amount' }
                               ] 
-                            }) %>
+                            }) %> -->
                           </tbody>
+
+                          <!-- 26-03-11 MU-711 합계행 추가 -->
+                          <tfoot class="docs-total">
+                            <tr>
+                              <td colspan="10">
+                                <dl class="docs-total-summary">
+                                  <dt>공급가액</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt>부가세</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt class="docs-total">합계</dt>
+                                  <dd class="docs-total">1,999,999,999원</dd>
+                                </dl>
+                              </td>
+                            </tr>
+                          </tfoot>
                         </table>
                       </div>
 
