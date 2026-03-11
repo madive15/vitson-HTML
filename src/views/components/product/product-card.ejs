@@ -186,15 +186,19 @@
           </div>
         </div>
       </div>
-      <% } %> <% if (showSoldOut) { %>
-      <!-- 일시품절 -->
+      <% } %>
+
+      <!-- < % if (showSoldOut) { %>
+      <! -- 일시품절 -- >
       <div class="product-price-alt is-soldout">일시품절</div>
-      <% } %> <% if (showGuestPrice) { %>
+      < % } %>  -->
+
+      <% if (showGuestPrice) { %>
       <!-- 비회원 가격 -->
       <div class="product-price-alt is-guest">
         <div class="price-guest-text">
           <p class="price-guest-text-title">회원 전용 혜택가</p>
-          <p class="price-guest-text-desc">(1개만 사도 무료배송)</p>
+          <p class="price-guest-text-desc">(1개만 사도 <strong>무료배송</strong>)</p>
         </div>
         <div class="price-guest-action">
           <button class="price-login-button">
@@ -206,14 +210,14 @@
       <% } %>
     </div>
 
-    <% if (productData.isMember && (productData.flags.today || productData.flags.tomorrow || productData.flags.hot ||
+    <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot || (productData.isMember &&
     productData.promoBadge)) { %>
-    <!-- 배지 영역 (회원만) -->
+    <!-- 배지 영역 -->
     <div class="product-extra">
       <% if (productData.flags.today || productData.flags.tomorrow || productData.flags.hot) { %> <%-
       include(`${_src}/views/components/label/product-flags.ejs`, productData.flags) %> <% } %> <% if
-      (productData.promoBadge) { %> <%- include(`${_src}/views/components/label/product-promo-badge.ejs`,
-      productData.promoBadge) %> <% } %>
+      (productData.isMember && productData.promoBadge) { %> <%-
+      include(`${_src}/views/components/label/product-promo-badge.ejs`, productData.promoBadge) %> <% } %>
     </div>
     <% } %>
   </div>

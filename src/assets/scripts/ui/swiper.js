@@ -290,7 +290,7 @@ import Swiper from 'swiper/bundle';
     },
     card: {
       slidesPerView: 5,
-      spaceBetween: 27.5,
+      spaceBetween: 20,
       speed: 400,
       breakpoints: {
         0: {slidesPerView: 4},

@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <%
   const _src = srcPath;
   const _public = publicPath;
@@ -5,7 +6,9 @@
   const _swiperType = typeof swiperType !== 'undefined' ? swiperType : 'card';
 %>
 <!-- 상품상세 페이지 swiper (상품품모든case) :  vits-product-swiper-items > vits-product-slide -->
-<div class="swiper-container vits-swiper js-swiper" data-swiper-type="<%= _swiperType %>" data-desktop="<%= _desktop %>" >
+<!-- 26-03-10 MU-714, vits-product-list view-thumb 추가 -->
+<!-- prettier-ignore -->
+<div class="swiper-container vits-swiper vits-product-list view-thumb js-swiper" data-swiper-type="<%= _swiperType %>" data-desktop="<%= _desktop %>" >
   <ul class="swiper-wrapper vits-product-slide">
     <li class="swiper-slide">
       <%- include(`${_src}/views/components/product/product-swiper.ejs`, {
