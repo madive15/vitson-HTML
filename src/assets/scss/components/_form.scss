@@ -801,6 +801,14 @@ $textarea-size: (
     font-size: fn.rem(14);
     font-weight: 400;
   }
+
+  &.is-invalid p {
+    color: map.get(color.$text-status, 'brand');
+  }
+
+  &.is-valid p {
+    color: map.get(color.$text-status, 'success');
+  }
 }
 
 /* textarea disabled - box 스타일은 validation 블록 이후에 배치 (no-descending-specificity) */
