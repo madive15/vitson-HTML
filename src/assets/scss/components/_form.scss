@@ -792,6 +792,17 @@ $textarea-size: (
   }
 }
 
+/* 개발 대응 추가 */
+/* stylelint-disable-next-line no-descending-specificity */
+.validation-message {
+  padding-top: map.get(var.$unit, 4);
+
+  p {
+    font-size: fn.rem(14);
+    font-weight: 400;
+  }
+}
+
 /* textarea disabled - box 스타일은 validation 블록 이후에 배치 (no-descending-specificity) */
 .vits-textarea-box:has(textarea:disabled) .vits-textarea {
   cursor: not-allowed;
