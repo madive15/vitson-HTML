@@ -60283,7 +60283,7 @@
   
   <col width="50" />
   
-  <col width="140" />
+  <col width="auto" />
   
   <col width="40" />
   
@@ -60294,10 +60294,6 @@
   <col width="70" />
   
   <col width="80" />
-  
-  <col width="70" />
-  
-  <col width="120" />
   
 </colgroup>
 <thead>
@@ -60373,20 +60369,6 @@
       
     </th>
     
-    
-    <th scope="col">
-      
-        부가세
-      
-    </th>
-    
-    
-    <th scope="col">
-      
-        청구금액
-      
-    </th>
-    
   </tr>
 </thead>
 
@@ -60442,7 +60424,7 @@
       >
         
           <span
-             class="docs-text-lf"
+            
           >
             ORD230001
           </span>
@@ -60555,36 +60537,6 @@
         
       </td>
     
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="docs-text"
-          >
-            7,798원
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="total-amount"
-          >
-            85,778원
-          </span>
-        
-        
-      </td>
-    
   </tr>
 
 <!-- 공지 상단 고정 행 (type=noticeFixed) -->
@@ -60639,7 +60591,7 @@
       >
         
           <span
-             class="docs-text-lf"
+            
           >
             ORD230001
           </span>
@@ -60752,135 +60704,43 @@
         
       </td>
     
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="docs-text point"
-          >
-            7,798원
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="total-amount"
-          >
-            85,778원
-          </span>
-        
-        
-      </td>
-    
   </tr>
 
 <!-- 공지 상단 고정 행 (type=noticeFixed) -->
 
 
+
+                            <!-- 26-03-11 MU-711 합계행 구조 변경으로 기존 원본 소스 백업 -->
                             <!-- 합계 행 -->
                             <!-- prettier-ignore-->
-                            <!-- prettier-ignore -->
-
-
-
-
-<!-- 계정 목록 행 -->
-
-  <!-- prettier-ignore -->
-  
-  <tr class="docs-table-row docs-total-row">
-    
-      
-      <td
-         colspan="8"
-         class="docs-total-label"
-      >
-        
-          <span
-            
-          >
-            합계
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="docs-text"
-          >
-            0원
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="docs-text"
-          >
-            2,136,541원
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-        
-      >
-        
-          <span
-             class="docs-text"
-          >
-            213,655원
-          </span>
-        
-        
-      </td>
-    
-      
-      <td
-        
-         class="docs-td-amount"
-      >
-        
-          <span
-             class="total-amount"
-          >
-            2,350,196원
-          </span>
-        
-        
-      </td>
-    
-  </tr>
-
-<!-- 공지 상단 고정 행 (type=noticeFixed) -->
-
-
+                            <!-- < %- include(`${_src}/views/components/table/tbody-row.ejs`, { 
+                              type: 'docs', 
+                              rowClass: 'docs-total-row',
+                              cells: [ 
+                                { text: '합계', colspan: 8, tdClass: 'docs-total-label' },
+                                { text: '0원', className: 'docs-text' },
+                                { text: '2,136,541원', className: 'docs-text' },
+                                { text: '213,655원', className: 'docs-text' },
+                                { text: '2,350,196원', tdClass: 'docs-td-amount', className: 'total-amount' }
+                              ] 
+                            })  -->
                           </tbody>
+
+                          <!-- 26-03-11 MU-711 합계행 추가 -->
+                          <tfoot class="docs-total">
+                            <tr>
+                              <td colspan="10">
+                                <dl class="docs-total-summary">
+                                  <dt>공급가액</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt>부가세</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt class="docs-total">합계</dt>
+                                  <dd class="docs-total">1,999,999,999원</dd>
+                                </dl>
+                              </td>
+                            </tr>
+                          </tfoot>
                         </table>
                       </div>
 
