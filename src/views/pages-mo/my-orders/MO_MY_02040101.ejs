@@ -4,28 +4,44 @@
   // 폴더 목록 mock 데이터
   const _folders = [
     {
-      folderName: '총무관리 1팀 폴더',
-      owner: '총무 관리 123팀',
-      itemCount: 3,
-      date: '2025-12-24'
+      name: 'folder',
+      value: '1',
+      href: '/mypage/favorites/1',
+      title: '총무관리 1팀 폴더',
+      count: 3,
+      desc: '총무 관리 123팀',
+      date: '2025-12-24',
+      checked: false
     },
     {
-      folderName: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신',
-      owner: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신',
-      itemCount: 3,
-      date: '2025-12-24'
+      name: 'folder2',
+      value: '2',
+      href: '/mypage/favorites/2',
+      title: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신',
+      count: 3,
+      desc: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구신',
+      date: '2025-12-24',
+      checked: false
     },
     {
-      folderName: '총무관리 1팀 폴더',
-      owner: '총무 관리 123팀',
-      itemCount: 3,
-      date: '2025-12-24'
+      name: 'folder3',
+      value: '3',
+      href: '/mypage/favorites/3',
+      title: '총무관리 1팀 폴더',
+      count: 3,
+      desc: '총무 관리 123팀',
+      date: '2025-12-24',
+      checked: false
     },
     {
-      folderName: '총무관리 1팀 폴더',
-      owner: '총무 관리 123팀',
-      itemCount: 3,
-      date: '2025-12-24'
+      name: 'folder4',
+      value: '4',
+      href: '/mypage/favorites/4',
+      title: '총무관리 1팀 폴더',
+      count: 3,
+      desc: '총무 관리 123팀',
+      date: '2025-12-24',
+      checked: false
     }
   ];
 %>
@@ -48,14 +64,18 @@
               <%- include(`${_src}/views/components-mo/product/product-list-toolbar.ejs`, { toolbarType: 'checkbox',
               listType: 'folder' }) %>
 
-              <ul class="vm-product-list-folder">
-                <% _folders.forEach((folder) => { %>
-                <li>
-                  <%- include(`${_src}/views/components-mo/form/checkbox-folder.ejs`, { folderName: folder.folderName,
-                  owner: folder.owner, itemCount: folder.itemCount, date: folder.date }) %>
-                </li>
-                <% }); %>
-              </ul>
+              <!-- 테스트 서버 기준으로 Kendo ListView 클래스(k-listview, k-listview-bordered, k-selectable) 반영 -->
+              <div class="vm-favorites-folder-list k-listview k-listview-bordered k-selectable">
+                <!-- 테스트 서버 기준 Kendo ListView 내부 래퍼(.k-listview-content) 구조 반영 -->
+                <div class="k-listview-content" role="listbox">
+                  <% _folders.forEach((folder) => { %>
+                  <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                  <div class="favorites-folder-list-item k-listview-item">
+                    <%- include(`${_src}/views/components-mo/form/favorites-folder-grid.ejs`, folder) %>
+                  </div>
+                  <% }); %>
+                </div>
+              </div>
             </div>
           </main>
 

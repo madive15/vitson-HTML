@@ -1073,6 +1073,85 @@ $mo-product-gap: map.get(var.$unit, 8);
   box-shadow: map.get(var.$box-shadow, 'elevation_-1');
 }
 
+// 좋아요 폴더 리스트
+.vm-favorites-folder-list {
+  display: grid;
+  padding: map.get(var.$unit, 20) var.$mo-gutter;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: map.get(var.$box-shadow, 'elevation_-1');
+
+  @include mx.mq($max: 767) {
+    grid-template-columns: 1fr;
+    gap: map.get(var.$unit, 12);
+  }
+
+  @include mx.mq($min: 768) {
+    grid-template-columns: repeat(auto-fill, minmax(fn.rem(340), 1fr));
+    gap: map.get(var.$unit, 24);
+  }
+
+  .k-listview-content {
+    display: contents !important;
+  }
+
+  .favorites-folder-list-item {
+    height: 100%;
+  }
+}
+
+// 좋아요 폴더 아이템
+.vm-favorites-folder-grid {
+  @include mx.flex(flex, row, flex-start, flex-start);
+  gap: map.get(var.$unit, 12);
+  height: 100%;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .vits-checkbox-item {
+    flex-shrink: 0;
+  }
+
+  .folder {
+    &-link {
+      @include mx.flex(flex, column);
+      flex-grow: 1;
+      gap: map.get(var.$unit, 8);
+      min-width: 0;
+      height: 100%;
+      padding: map.get(var.$unit, 12) var.$mo-gutter;
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'lg');
+    }
+
+    &-content {
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 2);
+
+      .content-title {
+        @include typo.typography('b3s');
+      }
+
+      .content-desc {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+
+    &-meta {
+      @include mx.flex(flex, row, flex-start, flex-start, wrap);
+      gap: 0 map.get(var.$unit, 8);
+      margin-top: auto;
+
+      .content-count {
+        @include typo.typography('b4s', $color: map.get(color.$text-status, 'brand-sub'));
+      }
+
+      .content-date {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      }
+    }
+  }
+}
+
 // 다른 규격 상품 아이템
 .vm-product-option-item {
   .vm-product-card {
