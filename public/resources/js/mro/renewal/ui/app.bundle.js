@@ -876,7 +876,6 @@
  *  - aria-expanded만 제어(aria-controls는 마크업 선택)
  *  - (선택) data-aria-label-base가 있으면 aria-label을 "... 열기/닫기"로 동기화
  * @maintenance
- *  - 페이지별 분기 금지(동작 동일, 표현/스타일은 CSS에서만 처리)
  *  - closeAll은 스코프 내부만 정리(외부 클릭/그룹 전환에 공용)
  */
 
@@ -909,6 +908,13 @@
     $box.data(GROUP_EXCEPT_KEY, isGroupExcept);
     $btn.attr('aria-expanded', 'true');
     syncAriaLabel($btn);
+
+    // 내부 스크롤 유무에 따라 has-scroll 클래스 토글
+    var scrollEl = $box.find('.info-view-text')[0];
+    if (scrollEl) {
+      var hasScroll = scrollEl.scrollHeight > scrollEl.clientHeight;
+      $box.toggleClass('has-scroll', hasScroll);
+    }
   }
 
   // close: 패널 닫기 + 버튼 aria-expanded(false) 갱신
@@ -918,6 +924,7 @@
     $box.removeData(GROUP_EXCEPT_KEY);
     $btn.attr('aria-expanded', 'false');
     syncAriaLabel($btn);
+    $box.removeClass('has-scroll');
   }
 
   // closeAll: 스코프 내 열린 패널/버튼을 일괄 닫기(그룹/외부클릭)
