@@ -1,10 +1,15 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
-<% const catPath = (typeof categoryPath !== 'undefined' && categoryPath) ? categoryPath : {}; %>
+<% const _base = srcPath.includes('vitson-HTML') ? '/vitson-HTML' : ''; %>
+<%
+  const catPath = (typeof categoryPath !== 'undefined' && categoryPath) ? categoryPath : {};
+%>
 
+<!-- [26-03-12] data-tree-url: 퍼블 목업용 경로, 실서버에서는 비우거나 속성 제거 -->
 <div
   class="vm-category-sheet"
   data-category-sheet
+  data-tree-url="<%- _base %>/public/resources/mock/category.json"
   data-depth1="<%= catPath.depth1Id || '' %>"
   data-depth2="<%= catPath.depth2Id || '' %>"
   data-depth3="<%= catPath.depth3Id || '' %>"
@@ -18,3 +23,25 @@
     </div>
   </div>
 </div>
+
+<%#
+<!--
+  [26-03-12] 카테고리 렌더러 실서버 연동 예시
+  <script>
+    var $scope = $('[data-category-sheet]');
+    var path = { depth1Id: '', depth2Id: '', depth3Id: '' };
+    var state = { path: path, browseD1: '' };
+
+    // 1. API 데이터 주입 — { categoryCode, categoryNm, categoryList[] } 트리 배열
+    CategoryRenderer.setTree(apiResponseData);
+
+    // 2. 렌더
+    CategoryRenderer.renderDepth1($scope, path, path.depth1Id);
+
+    // 3. 이벤트 바인딩
+    CategoryRenderer.bindScopeEvents($scope, state, function (selected) {
+      // selected = { depth1Id, depth2Id, depth3Id }
+    });
+  </script>
+-->
+%>
