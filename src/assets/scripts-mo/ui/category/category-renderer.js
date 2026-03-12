@@ -8,7 +8,8 @@
 
   if (!$) return;
 
-  var TREE_URL = '/public/resources/mock/category.json';
+  // [26-03-12] data-tree-url 속성으로 대체, loadTree 참고
+  // var TREE_URL = '/public/resources/mock/category.json';
   var SLIDE_DURATION = 200;
 
   var CLS = {
@@ -71,8 +72,17 @@
     // 첫 번째 요청만 fetch
     if (_treeCallbacks.length > 1) return;
 
-    var base = window.location.pathname.indexOf('/vitson-HTML') === 0 ? '/vitson-HTML' : '';
-    $.getJSON(base + TREE_URL)
+    // [26-03-12] 마크업 data-tree-url 기반으로 변경 — 실서버 mock fetch 방지
+    var url = $('[data-category-sheet]').attr('data-tree-url') || '';
+    if (!url) {
+      _treeLoaded = true;
+      for (var i = 0; i < _treeCallbacks.length; i++) {
+        _treeCallbacks[i](_tree);
+      }
+      _treeCallbacks = [];
+      return;
+    }
+    $.getJSON(url)
       .done(function (data) {
         _tree = Array.isArray(data) ? data : data.tree || [];
         _treeLoaded = true;
@@ -89,6 +99,12 @@
 
   function getTree() {
     return _tree;
+  }
+
+  // [26-03-12] 실서버용 — 외부 API 데이터 주입
+  function setTree(data) {
+    _tree = Array.isArray(data) ? data : data.tree || [];
+    _treeLoaded = true;
   }
 
   // 경로 기준 노드 조회
@@ -370,6 +386,7 @@
 
   window.CategoryRenderer = {
     loadTree: loadTree,
+    setTree: setTree, // [26-03-12] 실서버용 데이터 주입
     getTree: getTree,
     renderDepth1: renderDepth1,
     renderSub: renderSub,
