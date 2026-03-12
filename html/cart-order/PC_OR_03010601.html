@@ -22108,8 +22108,7 @@
 
 </button>
 
-
-                    
+ 
 
 
 <button
@@ -22683,17 +22682,23 @@
         if (section) {
           section.classList.add('order-slip');
         }
-        
+
         // order-page-title > h1 텍스트 변경
         const orderTitle = document.querySelector('.order-page-title > h1');
         if (orderTitle) {
           orderTitle.textContent = '주문실패';
         }
-        
+
         // vits-empty-state-title 텍스트 변경
         const emptyStateTitle = document.querySelector('.vits-empty-state-title');
         if (emptyStateTitle) {
           emptyStateTitle.textContent = '주문이 실패 되었습니다.';
+        }
+
+        // 26-03-12 MU-641, 주문 실패 시 아이콘 변경 (ic-box → ic-info)
+        const icon = document.querySelector('.vits-empty-state-icon .ic');
+        if (icon) {
+          icon.classList.replace('ic-box', 'ic-info');
         }
       }
     </script>
