@@ -18,7 +18,7 @@
   max-width: 100vw;
 
   &-value {
-    @include typo.typography('b3r', map.get(color.$text-colors, 'tertiary'));
+    @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
     @include mx.ellipsis-single;
     min-width: 0;
     max-width: 100vw;
@@ -181,6 +181,8 @@
     .vits-select {
       &-trigger {
         height: fn.rem(44);
+        padding-right: map.get(var.$unit, 16);
+        padding-left: map.get(var.$unit, 16);
       }
 
       &-option {
