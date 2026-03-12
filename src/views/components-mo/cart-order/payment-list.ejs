@@ -200,10 +200,11 @@
       </button>
 
       <div id="panel-card" class="vm-payment-panel" aria-labelledby="pay-card">
+        <!-- 26-03-12 MU-824 - 안내 문구(text: '신용카드 결제가 가능합니다.') 삭제 -->
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
           type: 'b-warning',
-          text: '신용카드 결제가 가능합니다.',
+          text: '',
           importantItems: [
             {
               text: '신용카드 결제시 ',
@@ -256,13 +257,14 @@
         <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
       </button>
       <div id="panel-bank" class="vm-payment-panel" aria-labelledby="pay-bank">
+        <!-- 26-03-12 MU-824 - 안내 문구 수정 -->
         <!-- prettier-ignore -->
         <%- include(`${_src}/views/components/alerts/alerts-order.ejs`, {
             type: 'b-warning',
             importantItems: [
-              { text: '주문 후 영업일 ', strong: ' 5일 내에 입금 확인이 되지 않으면 ', after: ' 주문이 자동 취소됩니다.' },
-              { text: '입금 확인 상태에서는 ', strong: ' 부분 취소 불가능 합니다. ', after: '' },
-              { text: '주문자명과 입금자명이 다르더라도 ', strong: ' 정확한 금액 입금시 입금 확인 정상 처리 ', after: '됩니다.' }
+              { strong: '영업일 5일 내 입금 미확인시 ', after: '주문 취소됩니다.' },
+              { text: '주문자명과 입금자명 달라도 ', strong: '금액 일치하면 입금 확인가능', after: '합니다.' },
+              { text: '입금 확인 후에는 ', strong: ' 부분 취소 불가능', after: '합니다.' }
             ]
           }) %>
 

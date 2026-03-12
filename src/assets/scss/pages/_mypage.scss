@@ -89,8 +89,13 @@
     }
 
     &-identity {
-      @include mx.flex(flex, row, flex-start, flex-start);
+      @include mx.flex(flex, column, flex-start, flex-start);
       gap: map.get(var.$unit, 8);
+
+      .product-brand {
+        padding-right: map.get(var.$unit, 4);
+        font-size: fn.rem(14);
+      }
     }
 
     &-code {
