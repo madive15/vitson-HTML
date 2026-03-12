@@ -1,4 +1,7 @@
 
+<!-- prettier-ignore -->
+
+
 <!DOCTYPE html>
 <!-- 
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -60030,7 +60033,13 @@
                     </div>
 
                     <div class="vits-mypage-panel">
-                      <section class="vits-mypage-favorites type-folder-list" data-checkbox-scope>
+                      
+
+                      <!-- 26-03-12 MU-443 - [백업] 기존 type-folder-list 구조 (원복 필요 시 참고) -->
+                      
+
+                      <!-- 26-03-12 MU-443 - 신규: type-folder-grid -->
+                      <section class="vits-mypage-favorites type-folder-grid" data-checkbox-scope>
                         <h3 class="sr-only">좋아요 폴더 리스트</h3>
 
                         <!-- 상단 툴바 -->
@@ -60212,18 +60221,21 @@
 
                         <!-- 리스트 -->
                         <div class="favorites-folder-list-box">
-                          <ul class="favorites-folder-list">
-                            <li class="favorites-folder-list-item">
-                              <!-- prettier-ignore -->
+                          <!-- 테스트 서버 기준으로 Kendo ListView 클래스(k-listview, k-listview-bordered, k-selectable) 반영 -->
+                          <div class="favorites-folder-list k-listview k-listview-bordered k-selectable">
+                            <!-- 테스트 서버 기준 Kendo ListView 내부 래퍼(.k-listview-content) 구조 반영 -->
+                            <div class="k-listview-content" role="listbox">
                               
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                
+                                <!-- prettier-ignore -->
+                                
 <!-- prettier-ignore -->
 
-<div class="vits-favorites-folder-item">
-  <!-- 26-02-24 label 태그 => div로 변경 -->
-  <div class="folder-label">
-    <!-- 26-02-24 input => checkbox-item.ejs 로 변경 -->
-    <!-- prettier-ignore -->
-    
+<div class="vits-favorites-folder-grid">
+  <!-- prettier-ignore -->
+  
 <!-- prettier-ignore -->
 
 
@@ -60242,34 +60254,32 @@
   
 </label>
 
-    <!-- 26-02-24 a태그로 랩핑 -->
-    <a href="#!" class="folder-link">
-      <span class="folder-content">
-        <b class="content-title">
-          <span class="title-name">자주 구매 목록</span>
-          <span class="title-count">12개</span>
-        </b>
-        
-        <span class="content-desc">사무용품 관련 폴더</span>
-        
-      </span>
-      <span class="folder-date">2025-12-24</span>
-    </a>
-  </div>
+  <a href="/mypage/favorites/1" class="folder-link">
+    <div class="folder-content">
+      <p class="content-title">
+        <span class="title-name">자주 구매 목록</span>
+        <span class="title-count">12개</span>
+      </p>
+      
+      <p class="content-desc">사무용품 관련 폴더</p>
+      
+    </div>
+    <p class="folder-date">2025-12-24</p>
+  </a>
 </div>
 
-                            </li>
-                            <li class="favorites-folder-list-item">
-                              <!-- prettier-ignore -->
+                              </div>
                               
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                
+                                <!-- prettier-ignore -->
+                                
 <!-- prettier-ignore -->
 
-<div class="vits-favorites-folder-item">
-  <!-- 26-02-24 label 태그 => div로 변경 -->
-  <div class="folder-label">
-    <!-- 26-02-24 input => checkbox-item.ejs 로 변경 -->
-    <!-- prettier-ignore -->
-    
+<div class="vits-favorites-folder-grid">
+  <!-- prettier-ignore -->
+  
 <!-- prettier-ignore -->
 
 
@@ -60288,32 +60298,30 @@
   
 </label>
 
-    <!-- 26-02-24 a태그로 랩핑 -->
-    <a href="#!" class="folder-link">
-      <span class="folder-content">
-        <b class="content-title">
-          <span class="title-name">상세 내용 없어요 타이틀만 있어요</span>
-          <span class="title-count">2개</span>
-        </b>
-        
-      </span>
-      <span class="folder-date">2025-12-24</span>
-    </a>
-  </div>
+  <a href="/mypage/favorites/2" class="folder-link">
+    <div class="folder-content">
+      <p class="content-title">
+        <span class="title-name">상세 내용 없어요 타이틀만 있어요</span>
+        <span class="title-count">2개</span>
+      </p>
+      
+    </div>
+    <p class="folder-date">2025-12-24</p>
+  </a>
 </div>
 
-                            </li>
-                            <li class="favorites-folder-list-item">
-                              <!-- prettier-ignore -->
+                              </div>
                               
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                
+                                <!-- prettier-ignore -->
+                                
 <!-- prettier-ignore -->
 
-<div class="vits-favorites-folder-item">
-  <!-- 26-02-24 label 태그 => div로 변경 -->
-  <div class="folder-label">
-    <!-- 26-02-24 input => checkbox-item.ejs 로 변경 -->
-    <!-- prettier-ignore -->
-    
+<div class="vits-favorites-folder-grid">
+  <!-- prettier-ignore -->
+  
 <!-- prettier-ignore -->
 
 
@@ -60332,24 +60340,112 @@
   
 </label>
 
-    <!-- 26-02-24 a태그로 랩핑 -->
-    <a href="#!" class="folder-link">
-      <span class="folder-content">
-        <b class="content-title">
-          <span class="title-name">말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요</span>
-          <span class="title-count">2개</span>
-        </b>
-        
-        <span class="content-desc">상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다</span>
-        
-      </span>
-      <span class="folder-date">2025-12-24</span>
-    </a>
-  </div>
+  <a href="/mypage/favorites/3" class="folder-link">
+    <div class="folder-content">
+      <p class="content-title">
+        <span class="title-name">말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30</span>
+        <span class="title-count">+100개</span>
+      </p>
+      
+      <p class="content-desc">상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입</p>
+      
+    </div>
+    <p class="folder-date">2025-12-24</p>
+  </a>
 </div>
 
-                            </li>
-                          </ul>
+                              </div>
+                              
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                
+                                <!-- prettier-ignore -->
+                                
+<!-- prettier-ignore -->
+
+<div class="vits-favorites-folder-grid">
+  <!-- prettier-ignore -->
+  
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-xl">
+  <input
+    type="checkbox"
+    name="folder4"
+    value="4"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+  <a href="/mypage/favorites/4" class="folder-link">
+    <div class="folder-content">
+      <p class="content-title">
+        <span class="title-name">월간 소모품 관리</span>
+        <span class="title-count">8개</span>
+      </p>
+      
+      <p class="content-desc">정기 구매 예정 품목 모음</p>
+      
+    </div>
+    <p class="folder-date">2026-03-12</p>
+  </a>
+</div>
+
+                              </div>
+                              
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                
+                                <!-- prettier-ignore -->
+                                
+<!-- prettier-ignore -->
+
+<div class="vits-favorites-folder-grid">
+  <!-- prettier-ignore -->
+  
+<!-- prettier-ignore -->
+
+
+<label class="vits-checkbox-item size-xl">
+  <input
+    type="checkbox"
+    name="folder5"
+    value="5"
+    
+    data-checkbox-item
+    
+    
+    
+  />
+  <span class="icon" aria-hidden="true"></span>
+  
+</label>
+
+  <a href="/mypage/favorites/5" class="folder-link">
+    <div class="folder-content">
+      <p class="content-title">
+        <span class="title-name">긴급 요청 확인용 폴더</span>
+        <span class="title-count">100개</span>
+      </p>
+      
+      <p class="content-desc">빠른 확인이 필요한 품목</p>
+      
+    </div>
+    <p class="folder-date">2026-03-12</p>
+  </a>
+</div>
+
+                              </div>
+                              
+                            </div>
+                          </div>
 
                           <div class="vits-mypage-favorites-pagination">
                             
