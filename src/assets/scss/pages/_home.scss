@@ -1285,7 +1285,12 @@
   }
 
   &-item-arrow {
+    position: relative;
+    z-index: var.$zindex-base;
+    box-sizing: content-box;
     flex-shrink: 0;
+    padding: map.get(var.$unit, 12);
+    margin: (map.get(var.$unit, 12) * -1);
 
     @include icon.ic-size(fn.rem(28));
   }

@@ -145,12 +145,15 @@ $brand-scroll-common: map.get(var.$unit, 24);
       }
 
       &-num {
-        @include typo.typography('b3sb', $color: map.get(color.$brand-colors, 'primary'));
+        @include typo.typography('b3s', $color: map.get(color.$brand-colors, 'primary'));
+        flex-shrink: 0;
       }
 
       &-word {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'default'));
         @include mx.ellipsis-single;
+        flex-grow: 1;
+        min-width: 0;
       }
 
       &-btn {
