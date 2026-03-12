@@ -155,12 +155,16 @@
       // 토글 영역 내부
       .coupon-item-info-view {
         @include mx.position(absolute, 30px, 16px, 0, 152px);
+        z-index: var.$zindex-base;
+        overflow: hidden;
 
         .info-view-text {
           @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
           width: 100%;
-          padding: map.get(var.$unit, 12) map.get(var.$unit, 24) map.get(var.$unit, 12) map.get(var.$unit, 12);
-          overflow: hidden !important;
+          max-height: fn.rem(80);
+          padding: map.get(var.$unit, 12) fn.rem(28) map.get(var.$unit, 12) map.get(var.$unit, 12);
+          overflow: hidden auto;
+          line-height: 1.5;
           white-space: normal;
           background-color: map.get(color.$layout-surf, 'base');
           border: 1px solid map.get(color.$layout-border, 'secondary');
@@ -177,6 +181,16 @@
         .icon {
           @include icon.ic-size(fn.rem(16));
           color: map.get(color.$icon-neutral, 'primary');
+        }
+
+        &.has-scroll {
+          .info-view-text {
+            padding-right: map.get(var.$unit, 24);
+          }
+
+          button[type='button'] {
+            right: map.get(var.$unit, 24);
+          }
         }
       }
 
