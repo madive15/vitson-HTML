@@ -2053,6 +2053,10 @@
     width: 100%;
 
     .toolbar {
+      &-select {
+        padding: 0 map.get(var.$unit, 32);
+      }
+
       &-actions {
         @include mx.flex(flex, row, flex-start, center);
         gap: map.get(var.$unit, 12);
@@ -2084,6 +2088,11 @@
         }
       }
     }
+
+    // 좋아요
+    &.type-like {
+      padding: 0 map.get(var.$unit, 32);
+    }
   }
 
   &-pagination {
@@ -2109,21 +2118,13 @@
     @include mx.flex(flex, column);
     gap: map.get(var.$unit, 20);
 
-    $folder-item: calc((100% - (map.get(var.$unit, 20 * 2))) / 3);
-
     .favorites-folder-list {
-      @include mx.flex(flex, row, flex-start, flex-start, wrap);
-      gap: map.get(var.$unit, 20);
-      width: 100%;
+      @include mx.flex(flex, column);
+      gap: map.get(var.$unit, 12);
 
       &-box {
         @include mx.flex(flex, column);
         gap: map.get(var.$unit, 40);
-      }
-
-      &-item {
-        flex: 0 0 $folder-item;
-        width: $folder-item;
       }
     }
   }
@@ -2133,9 +2134,15 @@
 .vits-favorites-folder-item {
   .folder {
     &-label {
-      @include mx.flex(flex, column, flex-start, flex-start);
+      @include mx.flex(flex, row, flex-start, center);
       position: relative;
-      gap: map.get(var.$unit, 8);
+      gap: map.get(var.$unit, 20);
+      height: fn.rem(92);
+      padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
+      user-select: none;
+      background: map.get(color.$layout-surf, 'base');
+      border-radius: map.get(var.$radius, 'lg');
+      transition: box-shadow 0.25s;
 
       > input {
         @include mx.sr-only;
@@ -2143,13 +2150,10 @@
     }
 
     &-link {
-      @include mx.flex(flex, column, flex-start, flex-start);
-      gap: map.get(var.$unit, 4);
-      width: 100%;
-      height: fn.rem(183);
-      padding: map.get(var.$unit, 24) map.get(var.$unit, 32);
-      background: color.$color-white;
-      border-radius: map.get(var.$radius, 'lg');
+      @include mx.flex(flex, row, flex-start, center);
+      flex-grow: 1;
+      gap: map.get(var.$unit, 20);
+      min-width: 0;
     }
 
     &-icon {
@@ -2163,41 +2167,39 @@
 
     &-content {
       @include mx.flex(flex, column);
+      flex: 1 1 auto;
       gap: map.get(var.$unit, 4);
-      width: 100%;
+      min-width: 0;
 
       .content {
         &-title {
-          @include mx.flex(flex, row, flex-start, flex-start);
+          @include mx.flex;
           gap: map.get(var.$unit, 12);
-          width: 100%;
-          height: fn.rem(69);
 
           .title-name {
             @include typo.typography('b1s');
-            @include mx.ellipsis-multi(1.3, 3);
-            flex-grow: 1;
+            @include mx.ellipsis-single;
             min-width: 0;
           }
 
           .title-count {
-            @include typo.typography('b1s', $color: map.get(color.$text-status, 'brand-sub'));
+            @include typo.typography('b1s', $color: map.get(color.$text-status, 'info-soft'));
             flex-shrink: 0;
           }
         }
 
         &-desc {
           @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
-          @include mx.ellipsis-multi;
+          @include mx.ellipsis-single;
+          min-width: 0;
         }
       }
     }
 
     &-date {
-      @include typo.typography('b3r');
+      @include typo.typography('b3s');
       flex-shrink: 0;
-      width: 100%;
-      margin-top: auto;
+      margin-left: auto;
     }
   }
 
@@ -2205,6 +2207,12 @@
     .folder-icon {
       @include mx.background('ic/ic-check-on.svg', map.get(color.$layout-surf, 'brand'));
       border-color: map.get(color.$layout-surf, 'brand');
+    }
+  }
+
+  @include mx.common-mouse-event {
+    .folder-label {
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
     }
   }
 }
