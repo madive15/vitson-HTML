@@ -181,103 +181,36 @@
         <!-- 안내 문구 -->
         <div class="vm-shipping-guide">
           <ul>
-            <li>선택하신 택배로 배송되는 것을 원칙으로 합니다.</li>
-            <li class="is-warning">단, 비츠영업용 차량으로 직배송될 수도 있습니다.</li>
+            <!-- 26-03-12 MU-824 - 안내 문구 삭제 -->
+            <!-- <li>선택하신 택배로 배송되는 것을 원칙으로 합니다.</li>
+            <li class="is-warning">단, 비츠영업용 차량으로 직배송될 수도 있습니다.</li> -->
             <li>발송 마감 시간은 16시입니다.</li>
           </ul>
         </div>
 
+        <!-- 26-03-12 MU-824 - 택배사 선택 삭제 -->
         <!-- 택배사 선택 -->
-        <div class="vm-shipping-form">
+        <!-- <div class="vm-shipping-form">
           <div class="vm-form-row">
             <label class="vm-form-label">택배사 선택</label>
             <div class="vm-form-field">
-              <!-- prettier-ignore -->
-              
-
-
-
-
-<div
-  class="vits-select"
-  data-vits-select
-   data-select-id="shipping-carrier" 
-  
-  
-  
->
-  <button
-    type="button"
-    class="vits-select-trigger"
-    aria-haspopup="listbox"
-    aria-expanded="false"
-    data-vits-select-trigger
-    
-  >
-    <span
-      class="vits-select-value"
-      data-vits-select-value
-      data-placeholder="선택"
-    >선택</span>
-
-    <span class="vits-select-icon" aria-hidden="true">
-      <i class="ic ic-arrow-down" aria-hidden="true"></i>
-
-    </span>
-  </button>
-
-  <ul class="vits-select-list" role="listbox" tabindex="-1" data-vits-select-list>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="한진 택배"
-           
-        aria-selected="false"
-        
-      >한진 택배</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="로젠 택배"
-           
-        aria-selected="false"
-        
-      >로젠 택배</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="롯데 택배"
-           
-        aria-selected="false"
-        
-      >롯데 택배</li>
-    
-      <li
-        class="vits-select-option"
-        role="option"
-        tabindex="-1"
-        data-value="경동 택배"
-           
-        aria-selected="false"
-        
-      >경동 택배</li>
-    
-  </ul>
-
-  
-    <input type="hidden" name="shippingCarrier" value="선택" data-vits-select-hidden />
-  
-</div>
-
+              <! -- prettier-ignore -- >
+              < %- include(`${_src}/views/components/form/select.ejs`, {
+                id: 'shipping-carrier',
+                name: 'shippingCarrier',
+                placeholder: '선택',
+                options: [
+                  { value: '한진 택배', text: '한진 택배' },
+                  { value: '로젠 택배', text: '로젠 택배' },
+                  { value: '롯데 택배', text: '롯데 택배' },
+                  { value: '경동 택배', text: '경동 택배' },
+                ],
+                value: (typeof sort !== 'undefined' && sort !== null) ? String(sort) : '선택',
+                disabled: false
+              }) % >
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- ================= 퀵배송 ================= -->
@@ -1660,13 +1593,12 @@
       </button>
 
       <div id="panel-card" class="vm-payment-panel" aria-labelledby="pay-card">
+        <!-- 26-03-12 MU-824 - 안내 문구(text: '신용카드 결제가 가능합니다.') 삭제 -->
         <!-- prettier-ignore -->
         <!-- prettier-ignore -->
 
 
 <div class="vits-order-alerts type-b-warning">
-  
-    <p class="alerts-text">신용카드 결제가 가능합니다.</p>
   
   
   
@@ -1824,6 +1756,7 @@
 
       </button>
       <div id="panel-bank" class="vm-payment-panel" aria-labelledby="pay-bank">
+        <!-- 26-03-12 MU-824 - 안내 문구 수정 -->
         <!-- prettier-ignore -->
         <!-- prettier-ignore -->
 
@@ -1839,7 +1772,7 @@
           <span class="alerts-icon" aria-hidden="true"></span>
         
         
-          주문 후 영업일 <strong> 5일 내에 입금 확인이 되지 않으면 </strong> 주문이 자동 취소됩니다.
+          <strong>영업일 5일 내 입금 미확인시 </strong>주문 취소됩니다.
         
       </p>
     
@@ -1849,7 +1782,7 @@
           <span class="alerts-icon" aria-hidden="true"></span>
         
         
-          입금 확인 상태에서는 <strong> 부분 취소 불가능 합니다. </strong>
+          주문자명과 입금자명 달라도 <strong>금액 일치하면 입금 확인가능</strong>합니다.
         
       </p>
     
@@ -1859,7 +1792,7 @@
           <span class="alerts-icon" aria-hidden="true"></span>
         
         
-          주문자명과 입금자명이 다르더라도 <strong> 정확한 금액 입금시 입금 확인 정상 처리 </strong>됩니다.
+          입금 확인 후에는 <strong> 부분 취소 불가능</strong>합니다.
         
       </p>
     
