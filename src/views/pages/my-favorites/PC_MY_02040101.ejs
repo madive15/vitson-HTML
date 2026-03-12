@@ -1,4 +1,59 @@
 <% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  const folderList = [
+    {
+      name: 'folder',
+      value: '1',
+      href: '/mypage/favorites/1',
+      title: '자주 구매 목록',
+      count: 12,
+      desc: '사무용품 관련 폴더',
+      date: '2025-12-24',
+      checked: false
+    },
+    {
+      name: 'folder2',
+      value: '2',
+      href: '/mypage/favorites/2',
+      title: '상세 내용 없어요 타이틀만 있어요',
+      count: 2,
+      date: '2025-12-24',
+      checked: false
+    },
+    {
+      name: 'folder3',
+      value: '3',
+      href: '/mypage/favorites/3',
+      title: '말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요 말줄임 테스트 입니다 긴 폴더명일 때 말줄임 최대 30자로 적용되어 있어요',
+      count: 101,
+      desc: '상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다 상세내용도 최대 30자 이지만 말줄임 확인용 테스트 입니다',
+      date: '2025-12-24',
+      checked: false
+    },
+    {
+      name: 'folder4',
+      value: '4',
+      href: '/mypage/favorites/4',
+      title: '월간 소모품 관리',
+      count: 8,
+      desc: '정기 구매 예정 품목 모음',
+      date: '2026-03-12',
+      checked: false
+    },
+    {
+      name: 'folder5',
+      value: '5',
+      href: '/mypage/favorites/5',
+      title: '긴급 요청 확인용 폴더',
+      count: 100,
+      desc: '빠른 확인이 필요한 품목',
+      date: '2026-03-12',
+      checked: false
+    }
+  ];
+%>
+
 <!DOCTYPE html>
 <!-- 
   [D] vits-scope: 스크롤바 커스텀 범위 제한(운영 전역 scrollbar 충돌 방지)
@@ -37,6 +92,17 @@
                     </div>
 
                     <div class="vits-mypage-panel">
+                      <%#
+                      <!-- 
+                        26-03-12 MU-443 - 좋아요 폴더 마크업 변경 
+                          - 기존: type-folder-list → 신규: type-folder-grid 
+                          - 개발 우선순위 변경 가능성을 고려해 기존 구조는 임시 백업 
+                          - 현재는 type-folder-grid 기준으로 적용
+                      -->
+                      %>
+
+                      <!-- 26-03-12 MU-443 - [백업] 기존 type-folder-list 구조 (원복 필요 시 참고) -->
+                      <% if (false) { %>
                       <section class="vits-mypage-favorites type-folder-list" data-checkbox-scope>
                         <h3 class="sr-only">좋아요 폴더 리스트</h3>
 
@@ -89,6 +155,47 @@
                               }) %>
                             </li>
                           </ul>
+
+                          <div class="vits-mypage-favorites-pagination">
+                            <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1,
+                            isPrevDisabled: true }) %>
+                          </div>
+                        </div>
+                      </section>
+                      <% } %>
+
+                      <!-- 26-03-12 MU-443 - 신규: type-folder-grid -->
+                      <section class="vits-mypage-favorites type-folder-grid" data-checkbox-scope>
+                        <h3 class="sr-only">좋아요 폴더 리스트</h3>
+
+                        <!-- 상단 툴바 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-toolbar.ejs`, { 
+                          showFolder: true }) %>
+
+                        <!-- 정렬/카운트 -->
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-meta.ejs`, {
+                            pageType: 'like', isProduct: false }) %>
+
+                        <!-- 리스트 -->
+                        <div class="favorites-folder-list-box">
+                          <!-- 테스트 서버 기준으로 Kendo ListView 클래스(k-listview, k-listview-bordered, k-selectable) 반영 -->
+                          <div class="favorites-folder-list k-listview k-listview-bordered k-selectable">
+                            <!-- 테스트 서버 기준 Kendo ListView 내부 래퍼(.k-listview-content) 구조 반영 -->
+                            <div class="k-listview-content" role="listbox">
+                              <% folderList.forEach(function(item) { %>
+                              <!-- 테스트 서버 기준 Kendo ListView 아이템 클래스(k-listview-item) 반영 -->
+                              <div class="favorites-folder-list-item k-listview-item">
+                                <%#
+                                <!-- 26-03-12 MU-443 - 좋아요 폴더 마크업 변경 신규 컴포넌트 -->
+                                %>
+                                <!-- prettier-ignore -->
+                                <%- include(`${_src}/views/components/pg-my-favorites/my-favorites-folder-grid.ejs`, item) %>
+                              </div>
+                              <% }) %>
+                            </div>
+                          </div>
 
                           <div class="vits-mypage-favorites-pagination">
                             <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1,
