@@ -28,8 +28,8 @@ html.vm-scope body {
   }
   /* stylelint-enable no-descending-specificity */
 
-  // 운영 ::selection 제거
-  input::selection {
+  // autofill 상태에서만 selection 투명 처리
+  input:-webkit-autofill::selection {
     color: inherit !important;
     background-color: transparent !important;
   }
