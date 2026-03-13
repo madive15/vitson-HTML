@@ -530,19 +530,27 @@
           .input-unit {
             @include mx.flex($align: baseline, $justify: space-between);
             @include mx.border(all, 1px, solid, $color: map.get(color.$layout-border, 'tertiary'));
+            position: relative;
+            box-sizing: border-box; /* [D] 운영 이슈 대응: height 계산 기준 고정 */
             min-width: 186px;
+            height: map.get(var.$unit, 44);
             padding: fn.rem(10) fn.rem(12);
             border-radius: map.get(var.$radius, sm);
 
             em {
+              @include typo.typography('b2r', $color: map.get(color.$text-colors, 'tertiary'));
+              flex-shrink: 0;
               font-style: normal;
-
-              @include typo.typography('b2r', $color: map.get(color.$text-colors, 'quaternary'));
             }
 
             input[type='text'] {
+              flex-grow: 1;
+              min-width: 0;
+              height: auto; /* [D] 운영 이슈 대응: input height:auto 유지 */
               padding-right: fn.rem(4);
+              margin-right: 0;
               font-size: fn.rem(16);
+              line-height: 1.3;
               text-align: right;
               border: 0;
 
@@ -559,6 +567,7 @@
 
         .vits-btn-lg {
           min-width: auto;
+          height: map.get(var.$unit, 44);
           padding: fn.rem(12) fn.rem(36);
           background-color: map.get(color.$gray-shades, '60');
           border-color: map.get(color.$gray-shades, '60');
