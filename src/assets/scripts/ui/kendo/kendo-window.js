@@ -157,6 +157,100 @@
     delete debounceTimers[id];
   }
 
+  // 모달 스크롤 시 DatePicker 닫힘 방지 — 인스턴스 _blur/_resize 오버라이드
+  function preventScrollClose(id) {
+    var $ = window.jQuery;
+    var $el = $('#' + id);
+
+    $el.find('[data-role="datepicker"]').each(function () {
+      var $input = $(this);
+      var dp = $input.data('kendoDatePicker');
+      if (!dp || !dp.dateView || !dp.dateView.popup || $input.data('__dpScrollFixed')) return;
+
+      var popup = dp.dateView.popup;
+
+      // _blur 오버라이드 — 팝업 열려있으면 무시
+      var origBlur = dp._blur;
+      dp._blur = function () {
+        if (popup.visible()) return;
+        return origBlur.apply(dp, arguments);
+      };
+
+      // popup._resize 오버라이드 — 팝업 열려있으면 무시
+      if (popup._resize) {
+        var origResize = popup._resize;
+        popup._resize = function () {
+          if (popup.visible()) return;
+          return origResize.apply(popup, arguments);
+        };
+      }
+
+      // 닫힐 때 k-animation-container 숨김 — input 위 겹침 방지
+      dp.bind('close', function () {
+        setTimeout(function () {
+          var $container = dp.dateView.div.closest('.k-animation-container');
+          if ($container.length) {
+            $container.css('display', 'none');
+          }
+        }, 0);
+      });
+
+      // 열릴 때 dropup 계산 — 아래 공간 부족 시 위로 열기
+      dp.bind('open', function () {
+        var $scrollParent = $input.closest('.vits-modal-content');
+        if (!$scrollParent.length) return;
+
+        var $dpWrapper = $input.closest('.vits-datepicker-single');
+        if (!$dpWrapper.length) return;
+
+        setTimeout(function () {
+          var calendarH = dp.dateView.div.outerHeight();
+          if (!calendarH) return;
+
+          var scrollRect = $scrollParent[0].getBoundingClientRect();
+          var wrapperRect = $dpWrapper[0].getBoundingClientRect();
+
+          var spaceBelow = scrollRect.bottom - wrapperRect.bottom;
+          var spaceAbove = wrapperRect.top - scrollRect.top;
+
+          if (spaceBelow < calendarH && spaceAbove > spaceBelow) {
+            var $animContainer = dp.dateView.div.closest('.k-animation-container');
+            if (!$animContainer.length) return;
+
+            $animContainer.css('visibility', 'hidden');
+
+            var hasAppendTo = dp.options.popup && dp.options.popup.appendTo;
+            var newTop;
+            var newLeft;
+
+            if (hasAppendTo) {
+              // appendTo가 있으면 부모 기준 상대 좌표
+              newTop = $dpWrapper[0].offsetTop - calendarH;
+              newLeft = parseFloat($animContainer.css('left'));
+            } else {
+              // appendTo가 없으면 body 기준 절대 좌표
+              newTop = wrapperRect.top + window.pageYOffset - calendarH;
+              newLeft = wrapperRect.left + window.pageXOffset;
+            }
+
+            $animContainer[0].style.cssText =
+              'display: block; position: absolute; top: ' +
+              newTop +
+              'px !important; left: ' +
+              newLeft +
+              'px; z-index: 10014;';
+
+            requestAnimationFrame(function () {
+              $animContainer.css('visibility', 'visible');
+            });
+          }
+        }, 0);
+      });
+
+      $input.data('__dpScrollFixed', true);
+    });
+  }
+
   function initOne(el) {
     var $ = window.jQuery;
     var $el = $(el);
@@ -268,6 +362,7 @@
 
       setTimeout(function () {
         checkScroll(id);
+        preventScrollClose(id);
       }, 0);
     }
   }

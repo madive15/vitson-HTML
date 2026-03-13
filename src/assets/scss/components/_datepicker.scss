@@ -513,7 +513,7 @@ $vits-datepicker-single-sizes: (
   &.k-calendar,
   &.k-calendar-container .k-calendar {
     padding: map.get(var.$unit, 20);
-    margin-left: (map.get(var.$unit, 12) * -1);
+    margin-left: (fn.rem(13) * -1);
     overflow: hidden;
     border: 1px solid map.get(color.$layout-border, 'primary');
     border-radius: map.get(var.$radius, 'md');
@@ -717,6 +717,11 @@ $vits-datepicker-single-sizes: (
       pointer-events: none;
       cursor: none;
     }
+  }
+
+  // 모달 안 datepicker — GPU 레이어 강제 생성으로 렌더링 갭 방지
+  .k-window & {
+    transform: translateZ(0);
   }
 
   &.is-selected {
