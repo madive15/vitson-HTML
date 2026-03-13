@@ -44,12 +44,14 @@
             </dd>
             <dt class="is-required has-gap">회수 의뢰일</dt>
             <dd>
+              <!-- 26-03-13 MU-859 모달 내 DatePicker 스크롤 대응 — appendTo 필수 -->
               <!-- prettier-ignore -->
               <%- include(`${_src}/views/components/kendo/kendo-datepicker-single.ejs`, {
                 id: 'testPickerSingle1',
                 name: 'singleDate1',
                 size: 's',
-                placeholder: '날짜를 입력해 주세요'
+                placeholder: '날짜를 입력해 주세요',
+                options: { appendTo: '.vits-claim-request' } // 모달 내 사용 시 appendTo 필수 — 스크롤 추종 + 닫힘 방지
               }) %>
             </dd>
             <dt>메모</dt>
