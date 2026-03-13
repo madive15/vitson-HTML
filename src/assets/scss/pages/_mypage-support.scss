@@ -765,8 +765,13 @@
         }
       }
 
-      .vits-chip-file ~ .vits-chip-file {
-        margin-left: fn.rem(12);
+      // .vits-chip-file ~ .vits-chip-file {
+      //   margin-left: fn.rem(12);
+      // }
+
+      &:has(> .vits-chip-file) {
+        @include mx.flex(flex, row, flex-start, flex-start, wrap);
+        gap: map.get(var.$unit, 12);
       }
     }
 

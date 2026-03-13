@@ -38,18 +38,24 @@
 </button>
 <% } else { %>
 <!-- 26-03-13 MU-826 static 타입: 외곽 div, X만 button -->
-<div class="vits-chip-file<%= _addClass ? ' ' + _addClass : '' %>">
-  <% if (_iconLeft) { %>
-  <span class="icon left"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: _iconLeft }) %> </span>
-  <% } %> <% if (_imgLeft) { %>
-  <span class="img">
-    <img src="<%= _imgLeft %>" alt="" aria-hidden="true" />
-  </span>
-  <% } %>
-  <span class="text name"><%= _name %></span>
-  <span class="text ext"><%= _ext %></span>
+<div class="vits-chip-file chip-file-static<%= _addClass ? ' ' + _addClass : '' %>">
+  <!-- [D] 레이어 열기 -->
+  <button type="button" class="vits-chip-file-btn file-name">
+    <% if (_iconLeft) { %>
+    <span class="icon left"> <%- include(`${_src}/views/components/icon.ejs`, { iconName: _iconLeft }) %> </span>
+    <% } %> <% if (_imgLeft) { %>
+    <span class="img">
+      <img src="<%= _imgLeft %>" alt="" aria-hidden="true" />
+    </span>
+    <% } %>
+    <span class="text name"><%= _name %></span>
+    <span class="text ext"><%= _ext %></span>
+  </button>
+  <!-- [D] 레이어 닫기 -->
   <% if (_removable) { %>
-  <button type="button" class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %></button>
+  <button type="button" class="vits-chip-file-btn file-delete">
+    <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %></span>
+  </button>
   <% } %>
 </div>
 <% } %>
