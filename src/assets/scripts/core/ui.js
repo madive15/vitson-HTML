@@ -25,7 +25,6 @@ import '../ui/floating.js';
 import '../ui/form/textarea.js';
 import '../ui/form/checkbox-total.js';
 import '../ui/header/header.js';
-import '../ui/footer.js';
 import '../ui/product/tab-scrollbar.js';
 import '../ui/form/select.js';
 import '../ui/form/input-search.js';
@@ -89,7 +88,6 @@ import '../ui/sticky-overflow.js';
     if (window.UI.homeUi && window.UI.homeUi.init) window.UI.homeUi.init();
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
     if (window.UI.stickyOverflow && window.UI.stickyOverflow.init) window.UI.stickyOverflow.init();
-    if (window.UI.footerBizInfo && window.UI.footerBizInfo.init) window.UI.footerBizInfo.init();
   };
 
   console.log('[core/ui] loaded');
