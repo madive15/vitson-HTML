@@ -9225,13 +9225,13 @@ var swiper_bundle = __webpack_require__(7111);
       }
     },
     faqTab: {
-      slidesPerView: '1',
+      slidesPerView: 'auto',
       spaceBetween: 10,
       speed: 400,
-      freeMode: false,
-      centeredSlides: true,
-      centeredSlidesBounds: true,
-      centerInsufficientSlides: true,
+      freeMode: true,
+      centeredSlides: false,
+      centeredSlidesBounds: false,
+      centerInsufficientSlides: false,
       watchSlidesProgress: true,
       allowTouchMove: false
     }
@@ -9318,6 +9318,13 @@ var swiper_bundle = __webpack_require__(7111);
       ['centeredSlides', 'centeredSlidesBounds', 'centerInsufficientSlides', 'watchSlidesProgress'].forEach(function (key) {
         if (preset[key] !== undefined) config[key] = preset[key];
       });
+
+      // faqTab: 공통 config의 slidesPerView 하드코딩(5) 대신 프리셋 값 적용
+      if (type === 'faqTab') {
+        config.slidesPerView = preset.slidesPerView;
+        config.freeMode = preset.freeMode;
+        config.allowTouchMove = preset.allowTouchMove;
+      }
       const swiperInstance = new swiper_bundle/* default */.A(el, config);
 
       // payment 타입인 경우 슬라이드 클릭 시 선택 처리
@@ -9357,16 +9364,81 @@ var swiper_bundle = __webpack_require__(7111);
       }
       // tab 타입인 경우 탭 버튼 클릭 시 active 상태 전환
       if (type === 'faqTab') {
-        const tabs = el.querySelectorAll('.support-tab');
+        var tabs = el.querySelectorAll('.support-tab');
+
+        // 모든 슬라이드가 컨테이너에 들어가는지 판단
+        var isAllVisible = function () {
+          var totalW = 0;
+          Array.prototype.forEach.call(swiperInstance.slides, function (slide) {
+            totalW += slide.offsetWidth;
+          });
+          totalW += (swiperInstance.slides.length - 1) * swiperInstance.params.spaceBetween;
+          return totalW <= el.offsetWidth;
+        };
+
+        // 화살표 상태 갱신
+        var updateFaqNav = function () {
+          // 전부 보이면 화살표 자체를 숨김
+          if (isAllVisible()) {
+            if (prevEl) prevEl.classList.add('swiper-button-disabled');
+            if (nextEl) nextEl.classList.add('swiper-button-disabled');
+            return;
+          }
+          var current = swiperInstance.translate;
+          var max = swiperInstance.maxTranslate();
+          if (prevEl) prevEl.classList.toggle('swiper-button-disabled', current >= -1);
+          if (nextEl) nextEl.classList.toggle('swiper-button-disabled', current <= max + 1);
+        };
+
+        // 이동 후 트랜지션 완료 시 화살표 갱신
+        var moveAndUpdate = function (idx) {
+          swiperInstance.slideTo(idx);
+          setTimeout(updateFaqNav, swiperInstance.params.speed + 50);
+        };
+
+        // 탭 클릭: active 전환 + 가려진 탭이면 보이는 위치로 이동
         tabs.forEach(function (tab, index) {
           tab.addEventListener('click', function () {
             tabs.forEach(function (t) {
               t.classList.remove('support-tab-active');
             });
             tab.classList.add('support-tab-active');
-            swiperInstance.slideTo(index);
+
+            // 가려진 탭만 보이는 위치로 이동
+            var slide = swiperInstance.slides[index];
+            if (!slide) return;
+            var rect = slide.getBoundingClientRect();
+            var containerRect = el.getBoundingClientRect();
+            var prevW = prevEl && !prevEl.classList.contains('swiper-button-disabled') ? prevEl.offsetWidth : 0;
+            var nextW = nextEl && !nextEl.classList.contains('swiper-button-disabled') ? nextEl.offsetWidth : 0;
+            var visibleLeft = containerRect.left + prevW;
+            var visibleRight = containerRect.right - nextW;
+            if (rect.left < visibleLeft) {
+              moveAndUpdate(Math.max(swiperInstance.activeIndex - 1, 0));
+            } else if (rect.right > visibleRight) {
+              moveAndUpdate(Math.min(swiperInstance.activeIndex + 1, swiperInstance.slides.length - 1));
+            }
           });
         });
+
+        // Swiper 기본 navigation 제거 후 한 칸씩 이동
+        if (swiperInstance.navigation) swiperInstance.navigation.destroy();
+        if (prevEl) {
+          prevEl.addEventListener('click', function () {
+            var target = Math.max(swiperInstance.activeIndex - 1, 0);
+            moveAndUpdate(target);
+          });
+        }
+        if (nextEl) {
+          nextEl.addEventListener('click', function () {
+            var lastIdx = swiperInstance.slides.length - 1;
+            var target = Math.min(swiperInstance.activeIndex + 1, lastIdx);
+            moveAndUpdate(target);
+          });
+        }
+
+        // 초기 화살표 상태
+        updateFaqNav();
       }
     });
   }
