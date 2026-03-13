@@ -234,7 +234,8 @@
   }
 
   .swiper-slide {
-    width: fn.rem(130) !important;
+    // width: fn.rem(130) !important;
+    width: auto;
     height: auto;
   }
 
@@ -246,6 +247,7 @@
       z-index: 1;
       width: fn.rem(200);
       height: 100%;
+      pointer-events: none;
       content: '';
       background: #fff;
       background: linear-gradient(
@@ -254,6 +256,10 @@
         rgb(255 255 255 / 78%) 50%,
         rgb(255 255 255 / 100%) 100%
       );
+    }
+
+    &:has(.swiper-button-next.swiper-button-disabled)::after {
+      display: none;
     }
   }
 
