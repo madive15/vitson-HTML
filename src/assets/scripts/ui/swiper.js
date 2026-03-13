@@ -328,13 +328,13 @@ import Swiper from 'swiper/bundle';
       }
     },
     faqTab: {
-      slidesPerView: 'auto',
+      slidesPerView: '1',
       spaceBetween: 10,
       speed: 400,
-      freeMode: true,
-      centeredSlides: false,
-      centeredSlidesBounds: false,
-      centerInsufficientSlides: false,
+      freeMode: false,
+      centeredSlides: true,
+      centeredSlidesBounds: true,
+      centerInsufficientSlides: true,
       watchSlidesProgress: true,
       allowTouchMove: false
     }
