@@ -285,17 +285,43 @@
       margin-right: map.get(var.$unit, 8);
       margin-left: 0;
     }
+  }
 
-    &:is(button) {
+  &-btn {
+    @include button.btn-reset;
+    height: 100%;
+
+    &.file-name {
+      @include mx.flex($align: center);
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    &.file-delete {
+      @include mx.flex(flex, row, center, center);
+      box-sizing: content-box;
+      flex-shrink: 0;
       width: map.get(var.$unit, 24);
       height: map.get(var.$unit, 24);
       padding: map.get(var.$unit, 4);
-      margin-right: (map.get(var.$unit, 4) * -1);
-      margin-left: map.get(var.$unit, 4);
+      margin: map.get(var.$unit, 4) * -1;
 
-      .ic {
-        display: block;
+      .icon {
+        margin: 0;
+
+        .ic {
+          display: block;
+        }
       }
+    }
+  }
+
+  &.chip-file-static {
+    gap: map.get(var.$unit, 4);
+    width: max-content;
+
+    &:has(.vits-chip-file-btn.file-delete) {
+      padding-right: map.get(var.$unit, 8);
     }
   }
 
