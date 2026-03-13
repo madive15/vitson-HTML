@@ -275,6 +275,7 @@
   }
 
   .icon {
+    @include button.btn-reset;
     @include icon.ic-size(map.get(var.$unit, 16));
     flex-shrink: 0;
     margin-left: map.get(var.$unit, 8);
@@ -283,6 +284,18 @@
     &.left {
       margin-right: map.get(var.$unit, 8);
       margin-left: 0;
+    }
+
+    &:is(button) {
+      width: map.get(var.$unit, 24);
+      height: map.get(var.$unit, 24);
+      padding: map.get(var.$unit, 4);
+      margin-right: (map.get(var.$unit, 4) * -1);
+      margin-left: map.get(var.$unit, 4);
+
+      .ic {
+        display: block;
+      }
     }
   }
 
