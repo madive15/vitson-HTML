@@ -371,3 +371,13 @@
     }
   }
 }
+
+// 개발 대응 - 검색 오버레이 레이아웃
+.vm-search-overlay {
+  @include mx.position(fixed, 0, 0, 0, 0);
+  z-index: map.get(var.$mo-zindex, 'search-overlay');
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow-y: auto;
+  background: color.$color-white;
+}

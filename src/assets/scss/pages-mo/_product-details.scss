@@ -203,11 +203,12 @@
                   dt {
                     @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
                     flex: 0 0 21.62%;
+                    max-width: var.$dl-label-max;
                   }
 
                   dd {
                     @include typo.typography('b4r');
-                    flex: 0 0 calc(100% - 21.62%);
+                    flex: 0 0 max(78.38%, calc(100% - var.$dl-label-max));
                   }
                 }
 
@@ -458,13 +459,14 @@
       dt {
         @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
         flex: 0 0 30.49%;
+        max-width: var.$dl-label-max;
         padding-left: fn.rem(18);
         background: map.get(color.$layout-surf, 'raised');
       }
 
       dd {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-        flex: 0 0 calc(100% - 30.49%);
+        flex: 0 0 max(69.51%, calc(100% - var.$dl-label-max));
         padding-left: var.$mo-gutter;
       }
       /* stylelint-enable no-descending-specificity */
@@ -563,6 +565,7 @@
         @include mx.flex(flex, row, flex-start, stretch, wrap);
         width: 100%;
 
+        /* stylelint-disable no-descending-specificity */
         dt,
         dd {
           @include mx.flex(flex, row, flex-start, flex-start);
@@ -573,13 +576,15 @@
         dt {
           @include typo.typography('b4s');
           flex: 0 0 30.49%;
+          max-width: var.$dl-label-max;
           background: map.get(color.$layout-surf, 'raised');
         }
 
         dd {
           @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-          flex: 0 0 calc(100% - 30.49%);
+          flex: 0 0 max(69.51%, calc(100% - var.$dl-label-max));
         }
+        /* stylelint-enable no-descending-specificity */
       }
 
       &-btn {

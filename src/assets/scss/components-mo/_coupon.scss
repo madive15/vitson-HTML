@@ -155,6 +155,7 @@
           dt {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
             flex: 0 0 45%;
+            max-width: var.$dl-label-max;
 
             &.price-total {
               font-weight: 600;
@@ -164,7 +165,7 @@
 
           dd {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-            flex: 0 0 55%;
+            flex: 0 0 max(55%, calc(100% - var.$dl-label-max));
             text-align: right;
 
             &.price-discount {
