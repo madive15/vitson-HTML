@@ -14,7 +14,7 @@
 
 .vm-footer {
   padding: map.get(var.$unit, 20) fn.rem(10) map.get(var.$unit, 52) var.$mo-gutter;
-  background: map.get(color.$label-step, 'confirmation');
+  background: map.get(color.$layout-surf, 'raised');
 
   &-cs {
     @include mx.flex(flex, column);
@@ -26,7 +26,7 @@
       width: 100%;
 
       p {
-        @include typo.typography('b2s', $color: color.$color-white);
+        @include typo.typography('b2s');
       }
     }
   }
@@ -37,7 +37,7 @@
     width: 100%;
 
     p {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+      @include typo.typography('b4r', $color: map.get(color.$gray-shades, '50'));
     }
   }
 
@@ -52,26 +52,26 @@
       height: fn.rem(30);
       padding: 0 map.get(var.$unit, 8);
       border-radius: map.get(var.$radius, 'sm');
-      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'secondary');
+      box-shadow: inset 0 0 0 1px map.get(color.$gray-shades, '40');
 
       .icon {
         @include icon.ic-size(map.get(var.$unit, 20));
-        color: map.get(color.$icon-neutral, 'tertiary');
+        color: map.get(color.$gray-shades, '40');
       }
 
       .text {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
+        @include typo.typography('b4r', $color: map.get(color.$gray-shades, '40'));
       }
     }
   }
 
   &-policy {
-    @include mx.divider('a', 1, 10, 16, map.get(color.$layout-border, 'secondary'), true);
+    @include mx.divider('a', 1, 10, 16, map.get(color.$layout-border, 'quaternary'), true);
     flex-wrap: wrap;
     margin-top: fn.rem(28);
 
     a {
-      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
 
       &.weight-bold {
         font-weight: 600;
@@ -83,10 +83,10 @@
     padding: map.get(var.$unit, 12) 0;
 
     &-corp {
-      @include mx.divider('a', 1, 10, 8, map.get(color.$layout-border, 'secondary'), true);
+      @include mx.divider('a', 1, 10, 8, map.get(color.$layout-border, 'tertiary'), true);
 
       .corp-link {
-        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'muted'));
+        @include typo.typography('b4s', $color: map.get(color.$text-colors, 'tertiary'));
       }
     }
 
@@ -102,22 +102,22 @@
 
         .detail-text {
           @include mx.flex(flex, row, flex-start, center, wrap);
-          @include typo.typography('m2r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include typo.typography('m2r', $color: map.get(color.$gray-shades, '50'));
           gap: map.get(var.$unit, 4);
         }
 
         .company-btn-lookup {
           @include button.btn-reset;
-          @include typo.typography('m2r', $color: map.get(color.$text-colors, 'tertiary'));
+          @include typo.typography('m2s', $color: map.get(color.$gray-shades, '50'));
           text-decoration: underline;
-          text-underline-offset: 4px;
+          text-underline-offset: 2px;
         }
       }
     }
   }
 
   &-copyright {
-    @include typo.typography('m2r', $color: map.get(color.$text-colors, 'tertiary'));
+    @include typo.typography('m2r', $color: map.get(color.$gray-shades, '50'));
   }
 
   /* 사업자정보조회 모달 팝업 */

@@ -18,7 +18,6 @@ import './option-box.js';
 import './step-tab.js';
 import './auth.js';
 import './survey-detail.js';
-import './footer.js';
 import './voice-blob.js';
 import './bottom-tab-bar.js';
 import './chip-button.js';
@@ -46,7 +45,6 @@ import './chip-button.js';
     'stepTab',
     'auth',
     'surveyDetail',
-    'footerBizInfo',
     'voiceBlob',
     'bottomTabBar',
     'chipButton'

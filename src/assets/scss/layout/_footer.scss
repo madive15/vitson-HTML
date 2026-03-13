@@ -13,9 +13,7 @@
 @use '@/assets/scss/components/button' as button;
 
 .vits-footer {
-  position: relative;
-  z-index: 0;
-  background: map.get(color.$layout-surf, 'footer');
+  background: map.get(color.$layout-surf, 'sunken');
 
   > .vits-inner {
     @include mx.flex(flex, row, flex-start, stretch);
@@ -24,18 +22,18 @@
 
   &-customer {
     padding: map.get(var.$unit, 12);
-    background: map.get(color.$layout-surf, 'primary');
+    background: #f8f8f8;
 
     .vits-inner {
       @include mx.flex(flex, row, flex-start, center, wrap);
 
       .footer-customer {
         &-title {
-          @include typo.typography('h4s', $color: map.get(color.$text-colors, 'inverse'));
+          @include typo.typography('h4s', $color: map.get(color.$text-colors, 'tertiary'));
         }
 
         &-tel {
-          @include typo.typography('h3s', $color: map.get(color.$text-colors, 'inverse'));
+          @include typo.typography('h3s', $color: map.get(color.$text-colors, 'tertiary'));
         }
 
         &-schedule {
@@ -53,11 +51,11 @@
 
           .icon {
             @include icon.ic-size(map.get(var.$unit, 20));
-            color: map.get(color.$icon-neutral, 'tertiary');
+            color: map.get(color.$icon-neutral, 'secondary');
           }
 
           .text {
-            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+            @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
           }
 
           &:is(button) {
@@ -88,7 +86,7 @@
 
   &-brand {
     width: fn.rem(144);
-    margin-right: fn.rem(84);
+    margin-right: fn.rem(80);
   }
 
   &-logo {
@@ -105,7 +103,7 @@
     gap: map.get(var.$unit, 56);
 
     .footer-link {
-      @include typo.typography('b3r', $color: color.$color-white);
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
 
       &.link-bold {
         font-weight: 700;
@@ -116,11 +114,11 @@
   &-info {
     > li {
       &:not(:has(.company-name)) {
-        @include mx.divider('p', 1, 12, 6, $color: map.get(color.$text-colors, 'tertiary'));
+        @include mx.divider('p', 1, 10, 4, $color: map.get(color.$layout-surf, 'secondary'));
       }
 
       &:has(.company-name) {
-        @include mx.divider('p', 1, 12, 12, $color: map.get(color.$text-colors, 'muted'));
+        @include mx.divider('p', 1, 12, 12, $color: map.get(color.$layout-surf, 'secondary'));
       }
 
       &:first-of-type {
@@ -135,7 +133,7 @@
     .company {
       &-name,
       &-email {
-        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'muted'));
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       }
 
       &-email {
@@ -145,7 +143,7 @@
 
       &-text {
         @include mx.flex(flex, row, flex-start, center);
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+        @include typo.typography('b4r', $color: map.get(color.$gray-shades, '50'));
         gap: map.get(var.$unit, 4);
       }
 
@@ -160,14 +158,16 @@
 
       &-btn-lookup {
         @include button.btn-reset;
-        @include mx.flex(inline-flex);
-        @include typo.typography('b3r', $color: map.get(color.$neutral-colors, '6'));
+        @include mx.flex(inline-flex, $align: flex-start);
+        @include typo.typography('b4r', $color: map.get(color.$gray-shades, '50'));
+        height: map.get(var.$unit, 16);
+        box-shadow: inset 0 -1px 0 0 map.get(color.$gray-shades, '50');
       }
     }
   }
 
   &-copyright {
-    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
+    @include typo.typography('b4r', $color: map.get(color.$text-colors, 'muted'));
   }
 
   &-utility {
@@ -182,6 +182,55 @@
       // dropdown
       .footer-familysite {
         width: fn.rem(178);
+
+        // [D] 디자인변경으로 수정
+        .vits-select.type-dark {
+          .vits-select {
+            &-trigger {
+              background: map.get(color.$layout-surf, 'sunken') !important;
+              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary') !important;
+            }
+
+            &-icon {
+              color: map.get(color.$icon-neutral, 'secondary') !important;
+            }
+
+            &-value {
+              color: map.get(color.$text-colors, 'tertiary') !important;
+            }
+
+            &-list {
+              padding: 1px;
+              background: map.get(color.$layout-surf, 'sunken');
+              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+            }
+
+            &-option {
+              height: map.get(var.$unit, 36);
+              color: map.get(color.$text-colors, 'tertiary');
+              background: transparent;
+
+              @include mx.common-mouse-event {
+                color: color.$color-white;
+                background: map.get(color.$gray-shades, '50');
+              }
+            }
+          }
+
+          &.vits-select-dropup {
+            .vits-select {
+              &-list {
+                top: unset;
+                bottom: 100%;
+                transform: translateY(0);
+              }
+            }
+
+            &.vits-select-open .vits-select-list {
+              transform: translateY(0);
+            }
+          }
+        }
       }
     }
   }
@@ -192,7 +241,7 @@
 
     .footer-sns {
       @include mx.flex(flex, row, center, center);
-      @include mx.border('all', $color: map.get(color.$layout-border, 'secondary'));
+      @include mx.border('all', $color: map.get(color.$icon-neutral, 'disabled'));
       position: relative;
       width: fn.rem(37);
       height: fn.rem(37);
@@ -203,7 +252,7 @@
         display: block;
         width: fn.rem(24);
         height: fn.rem(24);
-        color: map.get(color.$layout-border, 'secondary');
+        color: rgb(154 154 154 / 90%);
         background: currentcolor;
         mask: no-repeat center / fn.rem(24);
       }
@@ -225,6 +274,7 @@
           width: fn.rem(16);
           height: fn.rem(16);
           mask-image: url('/public/resources/img/mro/renewal/logo/logo-naver.svg');
+          mask-size: fn.rem(16);
         }
       }
     }
@@ -261,11 +311,11 @@
 
       &-desc {
         .title {
-          @include typo.typography('b5s', $color: map.get(color.$gray-shades, '60'));
+          @include typo.typography('b5s', $color: map.get(color.$gray-shades, '50'));
         }
 
         .text {
-          @include typo.typography('b5r', $color: map.get(color.$gray-shades, '60'));
+          @include typo.typography('b5r', $color: map.get(color.$gray-shades, '50'));
           margin-top: map.get(var.$unit, 4);
         }
       }
