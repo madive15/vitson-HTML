@@ -227,11 +227,12 @@
         dt {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
           flex: 0 0 27.03%;
+          max-width: var.$dl-label-max;
         }
 
         dd {
           @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-          flex: 0 0 calc(100% - 27.03% - 8px);
+          flex: 0 0 max(calc(100% - 27.03% - 8px), calc(100% - var.$dl-label-max - 8px));
 
           // 배송 준비중일 떄 - 수정 관련
           .shipping {
@@ -962,11 +963,12 @@
           dt {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
             flex: 0 0 32.43%;
+            max-width: var.$dl-label-max;
             padding-top: fn.rem(5);
           }
 
           dd {
-            flex: 0 0 67.57%;
+            flex: 0 0 max(67.57%, calc(100% - var.$dl-label-max));
 
             .vits-select {
               &,
@@ -1036,12 +1038,13 @@
               dt {
                 @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
                 flex: 0 0 32.43%;
+                max-width: var.$dl-label-max;
                 padding-top: fn.rem(5);
               }
 
               /* stylelint-disable-next-line no-descending-specificity */
               dd {
-                flex: 0 0 67.57%;
+                flex: 0 0 max(67.57%, calc(100% - var.$dl-label-max));
 
                 .vits-datepicker-single,
                 .vits-select,
@@ -1982,10 +1985,11 @@
 
           dt {
             flex: 0 0 27.03%;
+            max-width: var.$dl-label-max;
           }
 
           dd {
-            flex: 0 0 calc(100% - 27.03%);
+            flex: 0 0 max(72.97%, calc(100% - var.$dl-label-max));
             padding-left: map.get(var.$unit, 8);
             color: map.get(color.$text-colors, 'primary');
           }
@@ -2105,11 +2109,12 @@
           dt {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
             flex: 0 0 20.27%;
+            max-width: var.$dl-label-max;
           }
 
           dd {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-            flex: 0 0 calc(100% - 20.27%);
+            flex: 0 0 max(79.73%, calc(100% - var.$dl-label-max));
             padding-left: map.get(var.$unit, 4);
 
             &.info-name {
@@ -2664,7 +2669,8 @@
           /* stylelint-disable no-descending-specificity */
           dt {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
-            width: 20%;
+            flex: 0 0 30%;
+            max-width: var.$dl-label-max;
 
             &.price-total {
               font-weight: 600;
@@ -2674,7 +2680,7 @@
 
           dd {
             @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-            width: 80%;
+            flex: 0 0 max(70%, calc(100% - var.$dl-label-max));
             text-align: right;
 
             &.price-total {
@@ -3817,11 +3823,12 @@
     dt {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
       flex: 0 0 30.56%;
+      max-width: var.$dl-label-max;
     }
 
     dd {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
-      flex: 0 0 69.44%;
+      flex: 0 0 max(69.44%, calc(100% - var.$dl-label-max));
 
       .reason-box {
         @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
@@ -4163,6 +4170,7 @@
       }
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     dd {
       margin-top: map.get(var.$unit, 8);
     }
@@ -4307,10 +4315,11 @@ $credit-manager-fix-height: fn.rem(116);
 
       dt {
         flex: 0 0 40.24%;
+        max-width: var.$dl-label-max;
       }
 
       dd {
-        flex: 0 0 calc(100% - 40.24%);
+        flex: 0 0 max(59.76%, calc(100% - var.$dl-label-max));
         padding-left: map.get(var.$unit, 12);
       }
     }
@@ -4370,11 +4379,12 @@ $credit-manager-fix-height: fn.rem(116);
                 dt {
                   @include typo.typography('b3r', $color: map.get(color.$text-colors, 'primary'));
                   flex: 0 0 27.03%;
+                  max-width: var.$dl-label-max;
                 }
 
                 dd {
                   @include mx.flex(flex, column);
-                  flex: 0 0 calc(100% - 27.03%);
+                  flex: 0 0 max(72.97%, calc(100% - var.$dl-label-max));
                   gap: map.get(var.$unit, 8);
                   padding-left: map.get(var.$unit, 8);
                 }
