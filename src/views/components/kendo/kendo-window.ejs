@@ -43,12 +43,16 @@ const winOptStr = JSON.stringify(winOpt);
 
 // 26-03-13 MU-858 딤 클릭 닫기 여부 (기본 true)
 const winDimClose = (typeof dimClose !== 'undefined') ? dimClose : true;
+
+// 26-03-13 MU-862 최상위 클래스 추가
+const winClass = (typeof className !== 'undefined' && className) ? className : '';
 %>
 
 <!-- 26-03-13 MU-858 딤 클릭 닫기 제어 (data-dim-close="false) -->
+<!-- 26-03-13 MU-862 최상위 클래스 추가 -->
 <div 
   id="<%= winId %>"
-  class="vits-modal-inner"
+  class="vits-modal-inner<% if (winClass) { %> <%= winClass %><% } %>"
   data-ui="kendo-window"
   data-opt='<%= winOptStr %>'
   role="dialog"
