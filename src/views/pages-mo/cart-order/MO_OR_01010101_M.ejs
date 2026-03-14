@@ -99,12 +99,15 @@
           ]}; 
         %> 
           <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal2) %>
+
+        <!-- 26-03-13 MU-858 딤 클릭 닫기 방지(dimClose: false) -->
         <!-- prettier-ignore -->
         <% const modal3 = { 
           id: 'modal3', 
           variant: 'center',
           className: 'modal-center',
           title: '상품 추가', 
+          dimClose: false,
           contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_01010101_M_2.ejs`,
           buttons: [
             { text: '취소', variant: 'secondary', action: 'close' },
