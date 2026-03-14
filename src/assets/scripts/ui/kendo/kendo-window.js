@@ -204,8 +204,17 @@
         if (!$dpWrapper.length) return;
 
         setTimeout(function () {
+          var $animContainer = dp.dateView.div.closest('.k-animation-container');
+          if (!$animContainer.length) return;
+
+          // 깜빡임 방지 — 위치 계산 전 투명 처리
+          $animContainer.css({opacity: '0', transition: 'none'});
+
           var calendarH = dp.dateView.div.outerHeight();
-          if (!calendarH) return;
+          if (!calendarH) {
+            $animContainer.css({opacity: '', transition: ''});
+            return;
+          }
 
           var scrollRect = $scrollParent[0].getBoundingClientRect();
           var wrapperRect = $dpWrapper[0].getBoundingClientRect();
@@ -214,21 +223,14 @@
           var spaceAbove = wrapperRect.top - scrollRect.top;
 
           if (spaceBelow < calendarH && spaceAbove > spaceBelow) {
-            var $animContainer = dp.dateView.div.closest('.k-animation-container');
-            if (!$animContainer.length) return;
-
-            $animContainer.css('visibility', 'hidden');
-
             var hasAppendTo = dp.options.popup && dp.options.popup.appendTo;
             var newTop;
             var newLeft;
 
             if (hasAppendTo) {
-              // appendTo가 있으면 부모 기준 상대 좌표
               newTop = $dpWrapper[0].offsetTop - calendarH;
               newLeft = parseFloat($animContainer.css('left'));
             } else {
-              // appendTo가 없으면 body 기준 절대 좌표
               newTop = wrapperRect.top + window.pageYOffset - calendarH;
               newLeft = wrapperRect.left + window.pageXOffset;
             }
@@ -239,11 +241,12 @@
               'px !important; left: ' +
               newLeft +
               'px; z-index: 10014;';
-
-            requestAnimationFrame(function () {
-              $animContainer.css('visibility', 'visible');
-            });
           }
+
+          // 위치 확정 후 복원
+          requestAnimationFrame(function () {
+            $animContainer.css({opacity: '', transition: ''});
+          });
         }, 0);
       });
 
