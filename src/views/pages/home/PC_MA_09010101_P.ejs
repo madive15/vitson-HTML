@@ -1,0 +1,52 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!DOCTYPE html>
+<html lang="ko" class="vits-scope">
+  <%- include(`${_src}/views/layout/head.ejs`, {meta_title: '메인 팝업'}) %>
+  <body class="vits-scope">
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+
+    <section class="vits-wrapper">
+      <%- include(`${_src}/views/layout/header.ejs`) %>
+
+      <main id="skipNav" class="vits-main">
+        <div class="vits-wrap">
+          <div class="vits-grid">
+            <div class="vits-grid-main vits-main-plp">
+              <div class="vits-inner" style="padding: 100px 0">
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  onclick="VitsKendoWindow.open('mainModal')"
+                >
+                  <span class="text">메인 팝업 </span>
+                </button>
+
+                <!-- prettier-ignore -->
+                <% const mainModal = { 
+                  id: 'mainModal', 
+                  size: '1200',
+                  title: '메인 이벤트 팝업',
+                  className: "main-modal",
+                  contentPath: `${_src}/views/pages/kendo-window/home/kw-PC_MA_09010101_P.ejs`,
+                  contentData: { 
+                    imageSrc: `${_public}/resources/img/mro/renewal/temp/temp-main-modal.jpg`, 
+                    imageHref: '#!'
+                  },
+                  buttons: [
+                    { text: '24시간 동안 다시 열지 않음', variant: 'secondary', action: 'close' }, 
+                    { text: '닫기', variant: 'primary', action: 'close' }] 
+                  }; 
+                %> 
+                <%- include(`${_src}/views/components/kendo/kendo-window.ejs`, mainModal) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <%- include(`${_src}/views/layout/footer.ejs`) %>
+    </section>
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+  </body>
+</html>
