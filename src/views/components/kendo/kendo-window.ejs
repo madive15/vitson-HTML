@@ -40,8 +40,12 @@ const winContentData = (typeof contentData !== 'undefined' && contentData) ? con
 const winOpt = (typeof opt !== 'undefined' && opt) ? opt : {};
 if (winSize) winOpt.width = Number(winSize);
 const winOptStr = JSON.stringify(winOpt);
+
+// 26-03-13 MU-858 딤 클릭 닫기 여부 (기본 true)
+const winDimClose = (typeof dimClose !== 'undefined') ? dimClose : true;
 %>
 
+<!-- 26-03-13 MU-858 딤 클릭 닫기 제어 (data-dim-close="false) -->
 <div 
   id="<%= winId %>"
   class="vits-modal-inner"
@@ -51,6 +55,7 @@ const winOptStr = JSON.stringify(winOpt);
   aria-modal="true"
   aria-labelledby="<%= winId %>-title"
   <% const winDescribedBy = [winSubtitle ? `${winId}-subtitle` : '', winInfoTitle ? `${winId}-infotitle` : ''].filter(Boolean).join(' '); %>
+  <% if (!winDimClose) { %>data-dim-close="false"<% } %>
   <% if (winDescribedBy) { %>aria-describedby="<%= winDescribedBy %>"<% } %>
   style="display:none;"
 >

@@ -22,11 +22,13 @@
                 </button>
               </div>
 
+              <!-- 26-03-13 MU-858 딤 클릭 닫기 방지(dimClose: false) -->
               <!-- prettier-ignore -->
               <% const winModal = { 
                 id: 'unShippingAddressModal', 
                 size: '560', title: '배송지 등록/수정', 
                 opt: { draggable: true }, 
+                dimClose: false,
                 contentPath: `${_src}/views/pages/kendo-window/cart-order/kw-PC_CO_02020101_P.ejs` , 
                 buttons: [{ text: '취소', variant: 'secondary', action: 'close' }, 
                 { text: '배송지 저장', variant: 'primary', action: 'close' }] }; 

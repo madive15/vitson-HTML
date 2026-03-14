@@ -393,11 +393,14 @@
     });
   });
 
-  // 딤 클릭 시 닫기
+  //  dimClose 옵션으로 딤 클릭 닫기 제어
   window.jQuery(document).on('click', '.k-overlay', function () {
     var $ = window.jQuery;
     openedWindows.forEach(function (id) {
-      var inst = $('#' + id).data('kendoWindow');
+      var $el = $('#' + id);
+      if ($el.attr('data-dim-close') === 'false') return;
+
+      var inst = $el.data('kendoWindow');
       if (inst) inst.close();
     });
   });

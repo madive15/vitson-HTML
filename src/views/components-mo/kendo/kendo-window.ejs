@@ -15,14 +15,19 @@ const winFooterPath = (typeof footerPath !== 'undefined' && footerPath) ? footer
 const winFooterHtml = (typeof footerHtml !== 'undefined' && footerHtml) ? footerHtml : '';
 const winHasFooter = (typeof hasFooter !== 'undefined') ? hasFooter : (winButtons.length > 0 || !!winFooterPath || !!winFooterHtml);
 const winHeaderFilter = (typeof headerFilter !== 'undefined') ? !!headerFilter : false;
+
+// 26-03-13 MU-858 딤 클릭 닫기 여부 (기본 true)
+const winDimClose = (typeof dimClose !== 'undefined') ? dimClose : true;
 %>
 
+ <!-- 26-03-13 MU-858 : 딤 클릭 닫기 제어 -->
 <div
   id="<%= winId %>"
   class="vm-modal-inner<%= winClassName ? ' ' + winClassName : '' %>"
   data-ui="kendo-window"
   <% if (winVariant) { %>data-variant="<%= winVariant %>"<% } %>
   <% if (winHeaderFilter) { %>data-toggle-scope<% } %>
+   <% if (!winDimClose) { %>data-dim-close="false"<% } %>
   role="dialog"
   aria-modal="true"
   aria-labelledby="<%= winId %>-title"
