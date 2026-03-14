@@ -3407,10 +3407,11 @@
     }
   }
 
-  // 딤 클릭 시 닫기
+  // dimClose 옵션으로 딤 클릭 닫기 제어
   $(document).on('click' + NS, '.k-overlay', function () {
     var ids = openedWindows.slice();
     ids.forEach(function (winId) {
+      if ($('#' + winId).attr('data-dim-close') === 'false') return;
       close(winId);
     });
   });
