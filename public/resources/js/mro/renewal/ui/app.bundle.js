@@ -65,7 +65,7 @@
   function checkScroll(id) {
     var $ = window.jQuery;
     var $el = $('#' + id);
-    $el.find('[data-scroll-check]').each(function () {
+    $el.find('[data-scroll-check], .vits-modal-content').each(function () {
       $(this).toggleClass('has-scroll', this.scrollHeight > this.clientHeight);
     });
   }
