@@ -108,7 +108,7 @@
 
 // slide-right (오른쪽에서 외쪽으로 슬라이드 ex: 옵션 모달)
 [data-layer-box][data-layer-type='slide-right'] {
-  [class$="-panel"] {
+  [class$='-panel'] {
     position: fixed;
     top: 0;
     right: 0;
@@ -124,12 +124,12 @@
 }
 
 [data-layer-box][data-layer-type='slide-right'].is-open.is-active {
-  [class$="-dim"]{
+  [class$='-dim'] {
     transition: none;
     transform: none;
   }
 
-  [class$="-panel"] {
+  [class$='-panel'] {
     transition:
       transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
       opacity 0.3s ease,
@@ -139,10 +139,9 @@
 }
 
 [data-layer-box][data-layer-type='slide-right'].is-open.is-closing {
-  [class$="-panel"] {
+  [class$='-panel'] {
     transform: translateX(100%);
   }
-  
 }
 
 /* ===========================================================
@@ -230,13 +229,13 @@
     border-radius: map.get(var.$radius, 'sm');
   }
 
-  &-submit {
+  &-submit,
+  &-close {
     @include button.btn-reset;
     @include mx.flex(flex, row, center, center);
     @include typo.typography('b2b', $color: map.get(color.$text-colors, 'inverse'));
     height: map.get(var.$unit, 52);
     padding: 0 map.get(var.$unit, 20);
-    background: map.get(color.$layout-surf, 'primary');
     border-radius: map.get(var.$radius, 'md');
 
     &.is-disabled,
@@ -245,4 +244,15 @@
       background: map.get(color.$layout-surf, 'sunken');
     }
   }
+
+  /* stylelint-disable no-descending-specificity */
+  &-submit {
+    background: map.get(color.$brand-colors, 'primary');
+  }
+
+  &-close {
+    margin-left: map.get(var.$unit, 8);
+    background: map.get(color.$layout-surf, 'primary');
+  }
+  /* stylelint-enable no-descending-specificity */
 }
