@@ -410,9 +410,25 @@ body:not(.is-option-modal-open) {
           &-content {
             padding: 0;
 
-            .vits-main-modal-link {
-              @include mx.img-fit;
-              display: block;
+            .vits-main-modal {
+              &-content {
+                position: relative;
+              }
+
+              &-link {
+                @include mx.img-fit;
+                display: block;
+              }
+
+              &-close {
+                @include button.btn-reset;
+                @include mx.position(absolute, 14px, 14px);
+                @include icon.ic-size(map.get(var.$unit, 32));
+                z-index: var.$zindex-base;
+                box-sizing: content-box;
+                padding: fn.rem(7);
+                margin: fn.rem(7) * -1;
+              }
             }
           }
 

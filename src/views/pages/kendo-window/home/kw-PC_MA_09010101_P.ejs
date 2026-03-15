@@ -2,10 +2,16 @@
 <% 
   const _src = srcPath; 
   const _public = publicPath;
+  const _winId = typeof winId !== 'undefined' ? winId : '';
   const _imageSrc = typeof imageSrc !== 'undefined' ? imageSrc : `${_public}/resources/img/mro/renewal/temp/temp-ex01.jpg`;
   const _imageHref = typeof imageHref !== 'undefined' ? imageHref : '';
 %>
 
-<a href="<%= _imageHref %>" class="vits-main-modal-link">
-  <img src="<%= _imageSrc %>" alt="" />
-</a>
+<div class="vits-main-modal-content">
+  <a href="<%= _imageHref %>" class="vits-main-modal-link">
+    <img src="<%= _imageSrc %>" alt="" />
+  </a>
+  <button type="button" class="vits-main-modal-close"  onclick="VitsKendoWindow.close('<%= _winId %>')"  aria-label="닫기">
+    <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %> </span>
+  </button>
+</div>
