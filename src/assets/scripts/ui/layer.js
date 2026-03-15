@@ -275,6 +275,13 @@
     var target = $btn.data('layerTarget');
     if (!target) return;
 
+    // aria-expanded 누락 방어
+    if (!$btn.attr('aria-expanded')) {
+      var $initBox = findBoxByTarget(target);
+      $btn.attr('aria-expanded', $initBox.hasClass(OPEN) ? 'true' : 'false');
+      syncAriaLabel($btn);
+    }
+
     var $box = findBoxByTarget(target);
     if (!$box.length) return;
 
@@ -330,6 +337,19 @@
 
   window.UI.layer.init = function () {
     if (window.UI.layer.__bound) return;
+
+    // aria-expanded 누락 버튼 일괄 보충
+    $(SEL_BTN)
+      .filter(':not([aria-expanded])')
+      .each(function () {
+        var $btn = $(this);
+        var target = $btn.data('layerTarget');
+        if (!target) return;
+
+        var $box = findBoxByTarget(target);
+        $btn.attr('aria-expanded', $box.hasClass(OPEN) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      });
 
     bind();
     window.UI.layer.__bound = true;

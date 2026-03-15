@@ -61,12 +61,21 @@
       var isOpen = $root.hasClass(ACTIVE);
 
       $root.toggleClass(ACTIVE);
-      $btn.attr('aria-expanded', !isOpen);
+      $btn.attr('aria-expanded', !isOpen ? 'true' : 'false');
     });
   }
 
   function init() {
     bind();
+
+    // aria-expanded 누락 버튼 일괄 보충
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $btn = $root.find(BTN);
+      if ($btn.length && !$btn.attr('aria-expanded')) {
+        $btn.attr('aria-expanded', $root.hasClass(ACTIVE) ? 'true' : 'false');
+      }
+    });
 
     // ResizeObserver로 요소가 실제 크기를 갖는 시점에 넘침 체크
     $(ROOT).each(function () {

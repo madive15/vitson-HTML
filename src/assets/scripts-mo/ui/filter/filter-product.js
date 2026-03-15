@@ -389,12 +389,23 @@
     });
   }
 
-  // 공개 API
   function init() {
     if (!$(SCOPE).length) return;
     _applied = {};
     _lastAdded = null;
     _categoryChanged = false;
+
+    // aria-expanded 누락 토글 버튼 일괄 보충
+    $(SEL.popup)
+      .find(SEL.toggleBtn)
+      .each(function () {
+        var $btn = $(this);
+        if (!$btn.attr('aria-expanded')) {
+          var $body = $btn.closest('.filter-popup-section').find('.filter-popup-body');
+          $btn.attr('aria-expanded', $body.is(':visible') ? 'true' : 'false');
+        }
+      });
+
     bindEvents();
     updateUI();
   }

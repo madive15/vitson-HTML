@@ -57,6 +57,11 @@
       e.preventDefault();
       e.stopPropagation();
 
+      // aria-expanded 누락 방어
+      if (!$trigger.attr('aria-expanded')) {
+        $trigger.attr('aria-expanded', $content.hasClass(ACTIVE) ? 'true' : 'false');
+      }
+
       var isOpen = $content.hasClass(ACTIVE);
 
       // 다른 툴팁 모두 닫기
@@ -113,7 +118,21 @@
   window.UI.tooltip = {
     init: function () {
       $('[data-tooltip]').each(function () {
-        bindTooltip($(this));
+        var $tooltip = $(this);
+        var $trigger = $tooltip.find('.vits-tooltip-trigger');
+        var $content = $tooltip.find('.vits-tooltip-content');
+
+        // aria-expanded 누락 방어
+        if ($trigger.length && !$trigger.attr('aria-expanded')) {
+          $trigger.attr('aria-expanded', $content.hasClass(ACTIVE) ? 'true' : 'false');
+        }
+
+        // aria-hidden 누락 방어
+        if ($content.length && !$content.attr('aria-hidden')) {
+          $content.attr('aria-hidden', $content.hasClass(ACTIVE) ? 'false' : 'true');
+        }
+
+        bindTooltip($tooltip);
       });
 
       bindOutsideClick();

@@ -67,6 +67,12 @@
         var $item = $btn.closest(ITEM);
         if (!$item.length) return;
 
+        // aria-expanded 누락 방어
+        if (!$btn.attr('aria-expanded')) {
+          var $group = $item.find(GROUP).first();
+          $btn.attr('aria-expanded', $group.hasClass(ACTIVE) ? 'true' : 'false');
+        }
+
         toggleItem($item, $btn);
       });
 
@@ -77,6 +83,11 @@
 
         var $chip = $(this);
         if ($chip.is(':disabled')) return;
+
+        // aria-pressed 누락 방어
+        if (!$chip.attr('aria-pressed')) {
+          $chip.attr('aria-pressed', $chip.hasClass(CHIP_ACTIVE) ? 'true' : 'false');
+        }
 
         var isActive = $chip.hasClass(CHIP_ACTIVE);
         $chip.toggleClass(CHIP_ACTIVE, !isActive);
@@ -107,7 +118,21 @@
   }
 
   window.UI.filterExpand.init = function () {
-    // 필터 아이템 토글 이벤트(문서 위임) 바인딩
+    // aria 속성 누락 일괄 보충
+    $(BTN)
+      .filter(':not([aria-expanded])')
+      .each(function () {
+        var $btn = $(this);
+        var $group = $btn.closest(ITEM).find(GROUP).first();
+        $btn.attr('aria-expanded', $group.hasClass(ACTIVE) ? 'true' : 'false');
+      });
+
+    $(CHIP)
+      .filter(':not([aria-pressed])')
+      .each(function () {
+        $(this).attr('aria-pressed', $(this).hasClass(CHIP_ACTIVE) ? 'true' : 'false');
+      });
+
     bind();
     syncModalScrollLock();
   };
