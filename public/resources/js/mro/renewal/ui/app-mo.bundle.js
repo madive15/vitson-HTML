@@ -1747,13 +1747,20 @@
       resetInlineScroll();
     });
   }
-
-  // 공개 API
   function init() {
     if (!$(SCOPE).length) return;
     _applied = {};
     _lastAdded = null;
     _categoryChanged = false;
+
+    // aria-expanded 누락 토글 버튼 일괄 보충
+    $(SEL.popup).find(SEL.toggleBtn).each(function () {
+      var $btn = $(this);
+      if (!$btn.attr('aria-expanded')) {
+        var $body = $btn.closest('.filter-popup-section').find('.filter-popup-body');
+        $btn.attr('aria-expanded', $body.is(':visible') ? 'true' : 'false');
+      }
+    });
     bindEvents();
     updateUI();
   }
@@ -2899,6 +2906,14 @@
     });
   }
   function init() {
+    // aria-expanded 누락 트리거 일괄 보충
+    $(SCOPE).each(function () {
+      var $scope = $(this);
+      var $trigger = $scope.find(TRIGGER);
+      if ($trigger.length && !$trigger.attr('aria-expanded')) {
+        $trigger.attr('aria-expanded', $scope.find(LIST).hasClass(OPEN) ? 'true' : 'false');
+      }
+    });
     bind();
   }
   function destroy() {
@@ -3137,6 +3152,14 @@
     });
   }
   function init() {
+    // aria-expanded 누락 트리거 일괄 보충
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $trigger = $root.find(TRIGGER);
+      if ($trigger.length && !$trigger.attr('aria-expanded')) {
+        $trigger.attr('aria-expanded', $root.hasClass(CLS_OPEN) ? 'true' : 'false');
+      }
+    });
     bind();
   }
   function destroy() {
@@ -8482,11 +8505,20 @@ console.log('[mobile/index] entry 실행');
       if (!$root.length) return;
       var isOpen = $root.hasClass(ACTIVE);
       $root.toggleClass(ACTIVE);
-      $btn.attr('aria-expanded', !isOpen);
+      $btn.attr('aria-expanded', !isOpen ? 'true' : 'false');
     });
   }
   function init() {
     bind();
+
+    // aria-expanded 누락 버튼 일괄 보충
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $btn = $root.find(BTN);
+      if ($btn.length && !$btn.attr('aria-expanded')) {
+        $btn.attr('aria-expanded', $root.hasClass(ACTIVE) ? 'true' : 'false');
+      }
+    });
 
     // ResizeObserver로 요소가 실제 크기를 갖는 시점에 넘침 체크
     $(ROOT).each(function () {
@@ -8992,6 +9024,13 @@ console.log('[mobile/index] entry 실행');
       if (!$scope.length) return;
       var target = $btn.data('toggleTarget');
       if (!target) return;
+
+      // aria-expanded 누락 방어
+      if (!$btn.attr('aria-expanded')) {
+        var $initBox = $scope.find('[data-toggle-box="' + target + '"]');
+        $btn.attr('aria-expanded', $initBox.hasClass(ACTIVE) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      }
       var $box = $scope.find('[data-toggle-box="' + target + '"]');
       if (!$box.length) return;
       var isOpen = $box.hasClass(ACTIVE);
@@ -9022,6 +9061,18 @@ console.log('[mobile/index] entry 실행');
     });
   }
   function init() {
+    // aria-expanded 누락 버튼 일괄 보충
+    $('[data-toggle-scope]').each(function () {
+      var $scope = $(this);
+      $scope.find('[data-toggle-btn]:not([aria-expanded])').each(function () {
+        var $btn = $(this);
+        var target = $btn.data('toggleTarget');
+        if (!target) return;
+        var $box = $scope.find('[data-toggle-box="' + target + '"]');
+        $btn.attr('aria-expanded', $box.hasClass(ACTIVE) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      });
+    });
     bind();
   }
   function destroy() {
@@ -9589,6 +9640,9 @@ console.log('[mobile/index] entry 실행');
 
     // 초기 접근성 상태 보장
     $trigger.attr('aria-expanded', 'false');
+    if (!$content.attr('aria-hidden')) {
+      $content.attr('aria-hidden', $content.hasClass(ACTIVE) ? 'false' : 'true');
+    }
     $trigger.on('click' + NS, function (e) {
       e.preventDefault();
       e.stopPropagation();

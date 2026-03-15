@@ -896,6 +896,13 @@
     var $btn = $(this);
     var target = $btn.data('layerTarget');
     if (!target) return;
+
+    // aria-expanded 누락 방어
+    if (!$btn.attr('aria-expanded')) {
+      var $initBox = findBoxByTarget(target);
+      $btn.attr('aria-expanded', $initBox.hasClass(OPEN) ? 'true' : 'false');
+      syncAriaLabel($btn);
+    }
     var $box = findBoxByTarget(target);
     if (!$box.length) return;
     var isOpen = $box.hasClass(OPEN);
@@ -933,6 +940,16 @@
   }
   window.UI.layer.init = function () {
     if (window.UI.layer.__bound) return;
+
+    // aria-expanded 누락 버튼 일괄 보충
+    $(SEL_BTN).filter(':not([aria-expanded])').each(function () {
+      var $btn = $(this);
+      var target = $btn.data('layerTarget');
+      if (!target) return;
+      var $box = findBoxByTarget(target);
+      $btn.attr('aria-expanded', $box.hasClass(OPEN) ? 'true' : 'false');
+      syncAriaLabel($btn);
+    });
     bind();
     window.UI.layer.__bound = true;
 
@@ -1075,6 +1092,13 @@
       var $btn = $(this);
       var target = $btn.data('toggleTarget');
       if (!target) return;
+
+      // aria-expanded 누락 방어
+      if (!$btn.attr('aria-expanded')) {
+        var $initBox = $scope.find('[data-toggle-box="' + target + '"]');
+        $btn.attr('aria-expanded', $initBox.hasClass(ACTIVE) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      }
       var $box = $scope.find('[data-toggle-box="' + target + '"]');
       if (!$box.length) return;
       var isOpen = $box.hasClass(ACTIVE);
@@ -1097,7 +1121,18 @@
     // init: [data-toggle-scope]별로 이벤트 위임 바인딩
     init: function () {
       $('[data-toggle-scope]').each(function () {
-        bindScope($(this));
+        var $scope = $(this);
+
+        // aria-expanded 누락 버튼 일괄 보충
+        $scope.find('[data-toggle-btn]:not([aria-expanded])').each(function () {
+          var $btn = $(this);
+          var target = $btn.data('toggleTarget');
+          if (!target) return;
+          var $box = $scope.find('[data-toggle-box="' + target + '"]');
+          $btn.attr('aria-expanded', $box.hasClass(ACTIVE) ? 'true' : 'false');
+          syncAriaLabel($btn);
+        });
+        bindScope($scope);
       });
       console.log('[toggle] init');
     }
@@ -2751,6 +2786,9 @@
     });
 
     // 초기 동기화
+    if (!els.$input.attr('aria-expanded')) {
+      els.$input.attr('aria-expanded', 'false');
+    }
     syncClearBtn($scope);
     if (els.$recentWrap.length) syncRecentClearBtn($scope);
     state.bound = true;
@@ -5059,12 +5097,23 @@
       var $btn = $(this);
       var $item = $btn.closest(ITEM);
       if (!$item.length) return;
+
+      // aria-expanded 누락 방어
+      if (!$btn.attr('aria-expanded')) {
+        var $group = $item.find(GROUP).first();
+        $btn.attr('aria-expanded', $group.hasClass(ACTIVE) ? 'true' : 'false');
+      }
       toggleItem($item, $btn);
     });
     $(document).off('click' + NS, CHIP).on('click' + NS, CHIP, function (e) {
       e.preventDefault();
       var $chip = $(this);
       if ($chip.is(':disabled')) return;
+
+      // aria-pressed 누락 방어
+      if (!$chip.attr('aria-pressed')) {
+        $chip.attr('aria-pressed', $chip.hasClass(CHIP_ACTIVE) ? 'true' : 'false');
+      }
       var isActive = $chip.hasClass(CHIP_ACTIVE);
       $chip.toggleClass(CHIP_ACTIVE, !isActive);
       $chip.attr('aria-pressed', !isActive ? 'true' : 'false');
@@ -5084,7 +5133,15 @@
     });
   }
   window.UI.filterExpand.init = function () {
-    // 필터 아이템 토글 이벤트(문서 위임) 바인딩
+    // aria 속성 누락 일괄 보충
+    $(BTN).filter(':not([aria-expanded])').each(function () {
+      var $btn = $(this);
+      var $group = $btn.closest(ITEM).find(GROUP).first();
+      $btn.attr('aria-expanded', $group.hasClass(ACTIVE) ? 'true' : 'false');
+    });
+    $(CHIP).filter(':not([aria-pressed])').each(function () {
+      $(this).attr('aria-pressed', $(this).hasClass(CHIP_ACTIVE) ? 'true' : 'false');
+    });
     bind();
     syncModalScrollLock();
   };
@@ -10918,6 +10975,11 @@ if (document.body?.dataset?.guide === 'true') {
     $trigger.on('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+
+      // aria-expanded 누락 방어
+      if (!$trigger.attr('aria-expanded')) {
+        $trigger.attr('aria-expanded', $content.hasClass(ACTIVE) ? 'true' : 'false');
+      }
       var isOpen = $content.hasClass(ACTIVE);
 
       // 다른 툴팁 모두 닫기
@@ -10973,7 +11035,20 @@ if (document.body?.dataset?.guide === 'true') {
   window.UI.tooltip = {
     init: function () {
       $('[data-tooltip]').each(function () {
-        bindTooltip($(this));
+        var $tooltip = $(this);
+        var $trigger = $tooltip.find('.vits-tooltip-trigger');
+        var $content = $tooltip.find('.vits-tooltip-content');
+
+        // aria-expanded 누락 방어
+        if ($trigger.length && !$trigger.attr('aria-expanded')) {
+          $trigger.attr('aria-expanded', $content.hasClass(ACTIVE) ? 'true' : 'false');
+        }
+
+        // aria-hidden 누락 방어
+        if ($content.length && !$content.attr('aria-hidden')) {
+          $content.attr('aria-hidden', $content.hasClass(ACTIVE) ? 'false' : 'true');
+        }
+        bindTooltip($tooltip);
       });
       bindOutsideClick();
       bindEscKey();
