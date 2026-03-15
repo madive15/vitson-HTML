@@ -71,6 +71,15 @@
   }
 
   function init() {
+    // aria-expanded 누락 트리거 일괄 보충
+    $(ROOT).each(function () {
+      var $root = $(this);
+      var $trigger = $root.find(TRIGGER);
+      if ($trigger.length && !$trigger.attr('aria-expanded')) {
+        $trigger.attr('aria-expanded', $root.hasClass(CLS_OPEN) ? 'true' : 'false');
+      }
+    });
+
     bind();
   }
 

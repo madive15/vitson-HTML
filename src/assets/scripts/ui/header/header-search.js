@@ -516,6 +516,9 @@
     });
 
     // 초기 동기화
+    if (!els.$input.attr('aria-expanded')) {
+      els.$input.attr('aria-expanded', 'false');
+    }
     syncClearBtn($scope);
     if (els.$recentWrap.length) syncRecentClearBtn($scope);
 

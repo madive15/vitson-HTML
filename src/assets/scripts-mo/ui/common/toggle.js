@@ -97,6 +97,13 @@
       var target = $btn.data('toggleTarget');
       if (!target) return;
 
+      // aria-expanded 누락 방어
+      if (!$btn.attr('aria-expanded')) {
+        var $initBox = $scope.find('[data-toggle-box="' + target + '"]');
+        $btn.attr('aria-expanded', $initBox.hasClass(ACTIVE) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      }
+
       var $box = $scope.find('[data-toggle-box="' + target + '"]');
       if (!$box.length) return;
 
@@ -134,6 +141,20 @@
   }
 
   function init() {
+    // aria-expanded 누락 버튼 일괄 보충
+    $('[data-toggle-scope]').each(function () {
+      var $scope = $(this);
+      $scope.find('[data-toggle-btn]:not([aria-expanded])').each(function () {
+        var $btn = $(this);
+        var target = $btn.data('toggleTarget');
+        if (!target) return;
+
+        var $box = $scope.find('[data-toggle-box="' + target + '"]');
+        $btn.attr('aria-expanded', $box.hasClass(ACTIVE) ? 'true' : 'false');
+        syncAriaLabel($btn);
+      });
+    });
+
     bind();
   }
 

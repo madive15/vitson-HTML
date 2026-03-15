@@ -49,6 +49,9 @@
 
     // 초기 접근성 상태 보장
     $trigger.attr('aria-expanded', 'false');
+    if (!$content.attr('aria-hidden')) {
+      $content.attr('aria-hidden', $content.hasClass(ACTIVE) ? 'false' : 'true');
+    }
 
     $trigger.on('click' + NS, function (e) {
       e.preventDefault();
