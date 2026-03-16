@@ -772,6 +772,52 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
       }
     }
   }
+
+  &.bottom-sheet-main {
+    .vm-modal {
+      &-header {
+        @include mx.sr-only;
+      }
+
+      &-content {
+        padding: var.$mo-section-gap var.$mo-section-gap fn.rem(10);
+
+        .vm-main-modal {
+          &-content {
+            position: relative;
+          }
+
+          &-link {
+            @include mx.img-fit;
+            display: block;
+
+            img {
+              border-radius: map.get(var.$radius, 'md');
+            }
+          }
+
+          &-close {
+            @include button.btn-reset;
+            @include mx.position(absolute, 0, 0);
+            @include icon.ic-size(map.get(var.$unit, 32));
+            z-index: var.$zindex-base;
+          }
+        }
+      }
+
+      &-footer {
+        padding: fn.rem(10) var.$mo-section-gap var.$mo-section-gap;
+
+        [class*='vm-modal-btn-'] {
+          flex: 1 1 0;
+        }
+      }
+
+      &-buttons {
+        gap: map.get(var.$unit, 12);
+      }
+    }
+  }
 }
 
 // 카테고리 풀 팝업

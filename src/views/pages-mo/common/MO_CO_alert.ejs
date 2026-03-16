@@ -48,6 +48,15 @@
                 >
                   <span class="text">공통 바텀시트</span>
                 </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="terms"
+                  onclick="VmKendoWindow.open('modalMain')"
+                >
+                  <span class="text">메인 팝업</span>
+                </button>
               </section>
             </div>
           </main>
@@ -100,6 +109,26 @@
           }; 
         %> 
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal3) %>
+
+        <!-- prettier-ignore -->
+        <% const modalMain = { 
+          id: 'modalMain', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet bottom-sheet-main',
+          title: '비츠온엠알오',                  
+          contentPath: `${_src}/views/pages-mo/kendo-window/common/kw-MO_CO_main.ejs`,
+          contentData: { 
+            winId: 'modalMain',
+            imageSrc: 'https://vitsonmro.com/resources/img/mro/mobile/vitsonmro_app_ban.jpg',
+            imageHref: '#!'
+          },
+          buttons: [
+            { text: '오늘 그만 보기', variant: 'secondary', action: 'close' },
+            { text: '닫기', variant: 'primary', action: 'close' },
+          ] 
+          }; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modalMain) %>
 
         <!-- E: 팝업 영역 -->
       </div>
