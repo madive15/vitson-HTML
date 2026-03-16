@@ -130,7 +130,9 @@ body.vits-scope {
   @include mx.full-height; // wrapper 최소 높이 확보(모바일 주소창 변동 대응)
 
   // 'inner-column' 페이지에서만 세로 레이아웃/높이 채움
-  &:has(.vits-grid > .vits-inner.inner-column > .vits-grid-area) {
+  &:has(.vits-grid > .vits-inner.inner-column > .vits-grid-area),
+  &:has(.vits-inner.inner-column) {
+    /* stylelint-disable no-descending-specificity */
     .vits-wrap,
     .vits-grid,
     .vits-grid > .vits-inner {
@@ -151,5 +153,6 @@ body.vits-scope {
       flex: 1 1 auto;
       min-height: 0;
     }
+    /* stylelint-enable no-descending-specificity */
   }
 }
