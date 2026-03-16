@@ -180,6 +180,17 @@
 
     $el.kendoWindow(opts);
 
+    // 초기화 시점에 이미 열려 있으면 lockBody + observer 적용
+    var inst = $el.data('kendoWindow');
+    if (inst && inst.wrapper.is(':visible')) {
+      lockBody();
+      if (openedWindows.indexOf(id) === -1) {
+        openedWindows.push(id);
+      }
+      observeContent(id);
+      checkScroll(id);
+    }
+
     var $kw = $el.closest('.k-window');
 
     if (isBottom) {
