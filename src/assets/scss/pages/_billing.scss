@@ -524,6 +524,10 @@ $bill-color: map.get(color.$text-status, 'brand');
       @include typo.typography('b4s', $color: map.get(color.$text-colors, 'default'));
     }
   }
+
+  &-print-footer {
+    display: none;
+  }
 }
 
 /* ---------------------------------  
@@ -573,6 +577,26 @@ $bill-color: map.get(color.$text-status, 'brand');
     .vits-docs-header,
     .vits-docs-notice {
       display: none;
+    }
+
+    // 모든 페이지 하단에 로고 고정
+    .vits-print-frame-watermark {
+      position: fixed;
+      right: 24px;
+      bottom: 32px;
+      left: 24px;
+      padding: 20px 0 0;
+    }
+
+    // 워터마크 겹침 방지용 tfoot 여백
+    .estimate-print-footer {
+      display: table-footer-group;
+
+      td {
+        height: 84px;
+        padding: 0;
+        border: none;
+      }
     }
   }
 }
