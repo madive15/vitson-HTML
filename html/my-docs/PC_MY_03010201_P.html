@@ -60334,23 +60334,7 @@
               <td class="estimate-cell-r">-</td>
             </tr>
 
-            <!-- 26-03-11 MU-710 마크업 변경으로 기존 소스 백업 -->
-            <!-- <tr class="estimate-items-total">
-              <td class="estimate-cell-c">합계</td>
-              <td class="estimate-cell-l">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">999,999,999</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">999,999,999</td>
-              <td class="estimate-cell-r">9,999,999</td>
-              <td class="estimate-cell-r">222,222,222</td>
-              <td class="estimate-cell-r">-</td>
-            </tr> -->
-          </tbody>
-
-          <!-- 26-03-11 MU-710 합계 추가 -->
-          <tfoot>
+            <!-- 26-03-16 [D] 합계 (tbody 내부 — tfoot 시 인쇄 매 페이지 반복되므로 변경) -->
             <tr>
               <th colspan="2">공급가액</th>
               <td class="estimate-cell-r">99,999,999</td>
@@ -60358,6 +60342,13 @@
               <td colspan="4" class="estimate-cell-r">99,999,999</td>
               <th colspan="2" class="estimate-font-w600">합계</th>
               <td colspan="3" class="estimate-cell-r estimate-font-w600">1,999,999,999</td>
+            </tr>
+          </tbody>
+
+          <!-- 26-03-16 [D] 인쇄 시 워터마크 겹침 방지용 빈 여백 (tfoot은 매 페이지 반복) -->
+          <tfoot class="estimate-print-footer" aria-hidden="true">
+            <tr>
+              <td colspan="13"></td>
             </tr>
           </tfoot>
         </table>
@@ -60619,23 +60610,7 @@
               <td class="estimate-cell-r">-</td>
             </tr>
 
-            <!-- 26-03-11 MU-710 마크업 변경으로 기존 소스 백업 -->
-            <!-- <tr class="estimate-items-total">
-              <td class="estimate-cell-c">합계</td>
-              <td class="estimate-cell-l">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">-</td>
-              <td class="estimate-cell-r">1,999,999,999</td>
-              <td class="estimate-cell-r">9,999,999</td>
-              <td class="estimate-cell-r">222,222,222</td>
-              <td class="estimate-cell-r">-</td>
-            </tr> -->
-          </tbody>
-
-          <!-- 26-03-11 MU-710 합계 추가 -->
-          <tfoot>
+            <!-- 26-03-16 합계 (tbody 내부 — tfoot 시 인쇄 매 페이지 반복되므로 변경) -->
             <tr>
               <th colspan="2">공급가액</th>
               <td class="estimate-cell-r">99,999,999</td>
@@ -60643,6 +60618,13 @@
               <td colspan="4" class="estimate-cell-r">99,999,999</td>
               <th colspan="2" class="estimate-font-w600">합계</th>
               <td colspan="3" class="estimate-cell-r estimate-font-w600">1,999,999,999</td>
+            </tr>
+          </tbody>
+
+          <!-- 26-03-16 [D] 인쇄 시 워터마크 겹침 방지용 빈 여백 (tfoot은 매 페이지 반복) -->
+          <tfoot class="estimate-print-footer" aria-hidden="true">
+            <tr>
+              <td colspan="13"></td>
             </tr>
           </tfoot>
         </table>
