@@ -271,6 +271,19 @@
     }
     $el.kendoWindow(finalOpts);
 
+    // 초기화 시점에 이미 열려 있으면 부가 처리
+    // lockBody·openedWindows·observeContent는 open 콜백에서 처리됨
+    var inst = $el.data('kendoWindow');
+    if (inst && inst.wrapper.is(':visible')) {
+      lockBody();
+      if (openedWindows.indexOf(id) === -1) {
+        openedWindows.push(id);
+      }
+      observeContent(id);
+      checkScroll(id);
+      preventScrollClose(id);
+    }
+
     // draggable일 때 클래스 추가
     if (finalOpts.draggable) {
       $el.closest('.k-window').addClass('is-draggable');
