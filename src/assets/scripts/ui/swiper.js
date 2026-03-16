@@ -347,6 +347,9 @@ import Swiper from 'swiper/bundle';
     }
 
     document.querySelectorAll('.js-swiper').forEach(function (el) {
+      if (el.dataset.swiperInited) return;
+      el.dataset.swiperInited = 'true';
+
       const type = el.dataset.swiperType;
       if (!SWIPER_PRESETS[type]) return;
 
