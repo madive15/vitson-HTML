@@ -12,10 +12,6 @@
 @use '@/assets/scss/base/colors' as color;
 
 // --- 믹스인 ---
-@mixin vh-full {
-  min-height: calc(var(--vh) * 100);
-}
-
 @mixin bottom-bar-spacing($property: padding-bottom, $bottom-bar-h: 0) {
   #{$property}: calc(#{$bottom-bar-h} + var(--safe-bottom));
 }
@@ -47,19 +43,21 @@ html.vm-scope body {
   height: 100%;
   padding: 0;
   margin: 0;
+  overflow: hidden;
   overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
 }
 
 // --- 전체 래퍼 (운영 영역, 클래스 추가 불가) ---
 .vm-wrapper {
   position: relative;
+  height: 100%;
 }
 
 // --- 제어 래퍼 (1depth 스코프, 상태 클래스 대상) ---
 .vm-wrap {
   @include mx.flex(flex, column);
-  @include vh-full;
+  height: 100%;
+  overflow: hidden;
 
   // 스크롤 잠금
   &.is-locked {
@@ -69,8 +67,6 @@ html.vm-scope body {
   }
 
   // 바텀바 타입별 여백 자동 생성
-  // ⚠️ 바텀바 추가 시 $mo-bottom-bar 맵에 키 추가하면 자동 반영
-  // ⚠️ 클래스 네이밍: bottom-{타입} (예: bottom-tab-bar, bottom-action-bar)
   @each $type, $height in var.$mo-bottom-bar {
     &:has(.bottom-#{$type}) {
       .vm-content-wrap {
@@ -81,10 +77,12 @@ html.vm-scope body {
 }
 
 // --- 콘텐츠 래퍼 (header + main + footer) ---
-// ⚠️ overflow: hidden 금지 — sticky 컨텍스트가 깨짐
 .vm-content-wrap {
   flex: 1 1 auto;
+  min-height: 0;
   padding-top: var(--safe-top);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: map.get(color.$layout-surf, 'sunken');
 
   @include mx.flex(flex, column);
@@ -116,6 +114,7 @@ html.vm-scope body {
 
 // --- 하단 고정 그룹 ---
 .vm-bottom-bar {
-  @include mx.position(fixed, $right: 0, $bottom: 0, $left: 0);
+  position: relative;
   z-index: map.get(var.$mo-zindex, 'bottom-bar');
+  flex-shrink: 0;
 }
