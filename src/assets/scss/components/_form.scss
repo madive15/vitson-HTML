@@ -877,6 +877,7 @@ $textarea-size: (
         @include mx.sr-only;
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       .icon {
         @include icon.ic-size(map.get(var.$unit, 32));
         color: map.get(color.$icon-neutral, 'primary');
@@ -897,6 +898,14 @@ $textarea-size: (
     .ic {
       color: map.get(color.$icon-neutral, 'tertiary');
       transition: color 0.2s;
+
+      &.ic-eye-hide {
+        mask-image: url('/public/resources/img/mro/renewal/ic/ic-eye-show.svg');
+      }
+
+      &.ic-eye-show {
+        mask-image: url('/public/resources/img/mro/renewal/ic/ic-eye-hide.svg');
+      }
     }
 
     @include mx.common-mouse-event {
