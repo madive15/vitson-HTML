@@ -330,13 +330,13 @@
 
   <% if (hasActions) { %>
   <div class="card-actions">
+    <% if (hasCart) { %>
     <div class="actions-util">
-      <% if (hasCart) { %>
       <button type="button" class="btn-cart" aria-label="장바구니">
         <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'bag' }) %>
       </button>
-      <% } %>
     </div>
+    <% } %>
     <div class="actions-order">
       <% if (_order && _order.buttons) { _order.buttons.forEach(function(btn) { %>
       <!-- prettier-ignore -->
