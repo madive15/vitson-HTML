@@ -1314,12 +1314,12 @@
     var $target = $root.find('[data-tab-section="' + targetId + '"]');
     if (!$target.length) return;
     var baseline = getBaseline(state);
-    var sectionTop = $target[0].getBoundingClientRect().top + window.pageYOffset;
-    var targetY = Math.max(sectionTop - baseline, 0);
+    var scrollRoot = $root.closest('.vm-content-wrap')[0];
+    var targetY = Math.max($target[0].offsetTop - baseline, 0);
 
     // 클릭 보호
     state.clickLock = true;
-    window.scrollTo({
+    scrollRoot.scrollTo({
       top: targetY,
       behavior: 'auto'
     });
@@ -1338,7 +1338,8 @@
     $root.on('click' + NS, BTN, function () {
       scrollToSection($root, state, $(this).data('tab-target'));
     });
-    $(window).on('scroll' + NS, function () {
+    var scrollRoot = $root.closest('.vm-content-wrap');
+    scrollRoot.on('scroll' + NS, function () {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
@@ -1391,6 +1392,7 @@
     var state = $root.data(DATA_KEY);
     if (!state) return;
     $root.off(NS);
+    $root.closest('.vm-content-wrap').off(NS);
     $(window).off(NS);
     if (window.visualViewport) {
       $(window.visualViewport).off(NS);
