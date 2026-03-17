@@ -71,36 +71,41 @@
                   }) %>
                   </div>
                   <!-- S: 장바구니 item -->
+                  <!-- 26-03-17 MU-938 데이터 변경 -->
                   <!-- prettier-ignore -->
                   <%
                     const cartItems = [
-                      {
+                      { // 여러 단위 — 수량 텍스트 + [수량변경] 버튼
+                        type: 'multi-unit', qty: { value: 55, unit: '갑' }, // 추가
                         isSoldout: false,
-                        qtyButton: { text: '55 갑', iconName: 'ic-arrow-down', iconRight: true },
+                        // qtyButton: { text: '55 갑', iconName: 'ic-arrow-down', iconRight: true }, 삭제
                         price: {originTaxfree: '비과세', origin: null, rate: null, price: '1,224,900원', vat: null, isSoldout: false},
                         summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
                       },
-                      {
+                      { // 단일 — 수량 텍스트 + [수량변경] 버튼
+                        type: 'single', qty: { value: 1, unit: '개' }, // 추가
                         isSoldout: false,
-                        qtyStepper: {type: 'horiz', variant: 'vm-cart-quantity', name: 'quantity', value: 1, min: 1, max: 10, step: 1, required: false},
+                        // qtyStepper: {type: 'horiz', variant: 'vm-cart-quantity', name: 'quantity', value: 1, min: 1, max: 10, step: 1, required: false}, 삭제
                         price: {originTaxfree: null, origin: '32,000원', rate: '30%', price: '1,224,900원', vat: '(VAT별도)', isSoldout: false},
                         summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
                       },
-                      {
+                      { // 조장상품 — 규격 텍스트 + [상품추가] 버튼
+                        type: 'bundle', qty: { text: '2M / 3EA' }, // 추가
                         isSoldout: false,
-                        qtyButtons: [
-                          { text: '상품추가' },
-                          { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
-                        ],
+                        // qtyButtons: [
+                        //   { text: '상품추가' },
+                        //   { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
+                        // ], 삭제
                         price: {originTaxfree: '비과세', origin: null, rate: null, price: '1,224,900원', vat: null, isSoldout: false},
                         summary: {productPrice: '1,030,000원', discountPrice: '-30,000원', shippingPrice: '103,000원', totalPrice: '1,138,000원'},
                       },
-                      {
+                      { // 조장상품 + 품절
+                        type: 'bundle', qty: { text: '2M / 3EA' }, // 추가
                         isSoldout: true,
-                        qtyButtons: [
-                          { text: '상품추가' },
-                          { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
-                        ],
+                        // qtyButtons: [
+                        //   { text: '상품추가' },
+                        //   { text: '2M / 3EA', iconName: 'ic-arrow-down', iconRight: true }
+                        // ], 삭제
                         price: { originTaxfree: null, origin: null, rate: null, price: '일시품절', vat: null, isSoldout: true },
                         summary: null,
                       }
@@ -143,8 +148,11 @@
                           <a href="#!">
                             <div class="product-summary">
                               <p class="product-name">
-                                <span class="sr-only">상품명</span>A4용지 Double A를 사용하시면 문서의 보관 기간이
-                                늘어납니다.
+                                <span class="sr-only">상품명</span>
+                                <!-- 화면산출용 유형 구분 -->
+                                <% if (item.type === 'single') { %>단일 - <% } else if (item.type === 'multi-unit') {
+                                %>여러개단위 - <% } else if (item.type === 'bundle') { %>조장 - <% } %>A4용지 Double A를
+                                사용하시면 문서의 보관 기간이 늘어납니다.
                               </p>
                               <p class="product-spec"><span class="sr-only">규격</span>80g(1BOX/5권 2500매)</p>
                             </div>
@@ -170,10 +178,12 @@
 
                     <!-- S: 수량 및 가격 -->
                     <div class="cart-item-price">
+                      <!-- 26-03-17 MU-938 기존 코드 백업 -->
+                      <%#
                       <div class="cart-item-qty">
-                        <% if (item.qtyStepper) { %>
+                        < % if (item.qtyStepper) { % >
                         <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
+                        < %- include(`${_src}/views/components/form/input-quantity-stepper.ejs`, {
                             type: item.qtyStepper.type,
                             variant: item.qtyStepper.variant,
                             name: item.qtyStepper.name,
@@ -182,29 +192,55 @@
                             max: item.qtyStepper.max,
                             step: item.qtyStepper.step,
                             required: item.qtyStepper.required
-                          }) %>
-                        <% } else if (item.qtyButtons && item.qtyButtons.length) { %>
-                          <% item.qtyButtons.forEach((btn) => { %>
+                          }) % >
+                        < % } else if (item.qtyButtons && item.qtyButtons.length) { % >
+                          < % item.qtyButtons.forEach((btn) => { % >
                         <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                        < %- include(`${_src}/views/components/button/button.ejs`, {
                               size: 'xs',
                               variant: 'outline-tertiary',
                               iconName: btn.iconName,
                               iconRight: btn.iconRight,
                               text: btn.text,
-                            }) %>
-                          <% }); %>
-                        <% } else if (item.qtyButton) { %>
+                            }) % >
+                          < % }); % >
+                        < % } else if (item.qtyButton) { % >
                         <!-- prettier-ignore -->
-                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                        < %- include(`${_src}/views/components/button/button.ejs`, {
                             size: 'xs',
                             variant: 'outline-tertiary',
                             iconName: item.qtyButton.iconName,
                             iconRight: item.qtyButton.iconRight,
                             text: item.qtyButton.text,
-                          }) %>
+                          }) % >
+                        < % } % >
+                      </div>
+                      %>
+
+                      <!-- S: 26-03-17 MU-938 수량 변경 -->
+                      <div class="cart-item-qty">
+                        <% if (item.type === 'single' || item.type === 'multi-unit') { %>
+                        <!-- 단일/여러 단위: 수량 + [수량변경] -->
+                        <span class="qty-display"><%= item.qty.value %><%= item.qty.unit %></span>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xs',
+                          variant: 'outline-tertiary',
+                          text: '수량변경',
+                        }) %>
+                        <% } else if (item.type === 'bundle') { %>
+                        <!-- 조장상품: 규격 + [상품추가] -->
+                        <span class="qty-display"><%= item.qty.text %></span>
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/button/button.ejs`, {
+                          size: 'xs',
+                          variant: 'outline-tertiary',
+                          text: '상품추가',
+                        }) %>
                         <% } %>
                       </div>
+                      <!-- E: 26-03-17 MU-938 수량 변경 -->
+
                       <div class="cart-item-price-info">
                         <div class="price-group">
                           <% if (item.price.originTaxfree) { %>
