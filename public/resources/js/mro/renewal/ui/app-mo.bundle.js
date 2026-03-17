@@ -7700,7 +7700,7 @@ console.log('[mobile/index] entry 실행');
       });
 
       // 마지막 아이템(딜레이 가장 긴)의 transitionend 한 번만 감지
-      var $lastInCol = $scope.find('[data-rank-item]:last-child').first();
+      var $lastInCol = $scope.find('[data-rank-item]:last-child').last();
       $lastInCol.one('transitionend' + NS, function (e) {
         if (e.originalEvent.propertyName !== 'transform') {
           // transform 아닌 이벤트면 다시 한 번 대기
