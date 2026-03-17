@@ -249,6 +249,11 @@
   }
 
   &.header-main-bar {
+    top: calc(#{map.get(var.$mo-header, 'main-bar-top')} * -1);
+    z-index: map.get(var.$mo-zindex, 'header-main');
+    flex-direction: column;
+    padding: 0;
+
     .header-main {
       &-top {
         @include mx.flex(flex, column);
@@ -256,6 +261,7 @@
         width: 100%;
         height: map.get(var.$mo-header, 'main-bar-top');
         padding: map.get(var.$unit, 12) 0;
+        background: color.$color-white;
 
         &-bar {
           @include mx.flex(flex, row, space-between, center);
@@ -265,6 +271,14 @@
 
       &-search {
         padding: 0 var.$mo-gutter;
+        visibility: visible;
+        opacity: 1;
+        transition:
+          opacity 0.15s ease-out,
+          visibility 0.15s ease-out;
+
+        // GPU 레이어 승격 — will-change 대신 translateZ 힌트
+        transform: translateZ(0);
 
         .vits-input-searchform {
           height: map.get(var.$unit, 40);
@@ -291,7 +305,7 @@
         position: relative;
         width: 100%;
         height: map.get(var.$mo-header, 'main-bar-gnb') + $gnb-pb;
-        transition: height 0.3s;
+        background: color.$color-white;
 
         .gnb {
           &-list,
@@ -355,11 +369,24 @@
       }
     }
 
-    &.is-sticky {
-      padding-bottom: 0 !important;
+    // 최상단: 전부 노출
+    &.is-top {
+      top: 0;
+    }
 
-      .header-main-gnb {
+    // 스크롤 업: top-bar + GNB 노출, search 숨김
+    &.is-show-top {
+      top: 0;
+
+      .header-main-top {
+        height: map.get(var.$mo-header, 'main-bar-top-bar');
+      }
+
+      .header-main-search {
         height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
       }
     }
   }
