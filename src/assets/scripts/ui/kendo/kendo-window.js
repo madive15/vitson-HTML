@@ -278,6 +278,12 @@
           openedWindows.push(id);
         }
         observeContent(id);
+
+        // Kendo .open() 직접 호출에도 부가 처리 보장
+        setTimeout(function () {
+          checkScroll(id);
+          preventScrollClose(id);
+        }, 0);
       },
       close: function () {
         disconnectContent(id);
@@ -369,6 +375,13 @@
           openedWindows.push(id);
         }
         observeContent(id);
+
+        // 콜백 교체 시에도 부가 처리 보장
+        setTimeout(function () {
+          checkScroll(id);
+          preventScrollClose(id);
+        }, 0);
+
         options.onOpen.call(inst);
       });
     }
