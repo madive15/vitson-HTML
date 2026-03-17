@@ -546,7 +546,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     @include typo.typography('m1s', $color: color.$color-white);
     z-index: map.get(var.$mo-zindex, 'home-purchase-count');
     height: fn.rem(21);
-    padding: 0 map.get(var.$unit, 8);
+    padding: 0 $mo-product-gap;
     background: map.get(color.$layout-surf, 'primary');
     border-radius: map.get(var.$radius, 'sm');
   }
@@ -565,12 +565,13 @@ $mo-product-gap: map.get(var.$unit, 8);
 
 // 마이페이지용 상품 카드
 .vm-product-mypage-card {
+  @include mx.flex;
   position: relative;
+  gap: $mo-product-gap;
 
   .card {
     &-checkbox {
-      @include mx.position(absolute, 0, $left: 0);
-      z-index: var.$zindex-base;
+      flex-shrink: 0;
     }
 
     &-thumb {
@@ -587,6 +588,7 @@ $mo-product-gap: map.get(var.$unit, 8);
 
     &-info {
       flex-grow: 1;
+      align-self: center;
       min-width: 0;
 
       .product-spec {
@@ -598,7 +600,9 @@ $mo-product-gap: map.get(var.$unit, 8);
 
     &-content {
       @include mx.flex(flex, row, flex-start, flex-start);
+      flex-grow: 1;
       gap: $mo-product-gap;
+      min-width: 0;
     }
 
     &-badges {
@@ -657,8 +661,8 @@ $mo-product-gap: map.get(var.$unit, 8);
     }
 
     &-price-info {
-      @include mx.flex(flex, row, space-between, center);
-      gap: $mo-product-gap;
+      @include mx.flex(flex, row, space-between, center, wrap);
+      gap: map.get(var.$unit, 2) $mo-product-gap;
       margin-top: $mo-product-gap;
 
       .product-price {
@@ -673,7 +677,7 @@ $mo-product-gap: map.get(var.$unit, 8);
         }
 
         &-qty {
-          @include mx.flex(flex, row, space-between, center);
+          @include mx.flex(flex, row, space-between, center, wrap);
           gap: fn.rem(10);
 
           &-label {
@@ -694,7 +698,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     &-return-qty {
       @include mx.flex(flex, row, space-between, center);
       gap: $mo-product-gap;
-      margin-top: map.get(var.$unit, 8);
+      margin-top: $mo-product-gap;
 
       .product-return {
         &-label {
@@ -755,12 +759,6 @@ $mo-product-gap: map.get(var.$unit, 8);
       }
     }
   }
-
-  .status-cancel & {
-    .card-content {
-      align-items: center;
-    }
-  }
 }
 
 // 자주구매 상품 카드
@@ -771,7 +769,7 @@ $mo-product-gap: map.get(var.$unit, 8);
   .frequent-card {
     &-item {
       @include mx.flex(flex, row, flex-start, flex-start);
-      gap: map.get(var.$unit, 8);
+      gap: $mo-product-gap;
     }
 
     &-layout {
@@ -849,7 +847,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     &-actions {
       @include common-action-btn(28, map.get(color.$icon-neutral, 'secondary'));
       @include mx.flex(flex, row, flex-end, center);
-      gap: map.get(var.$unit, 8);
+      gap: $mo-product-gap;
 
       [class*='action-btn-'] {
         position: relative;
@@ -1052,7 +1050,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     /* stylelint-disable-next-line no-descending-specificity */
     &:has(.vits-checkbox-item) {
       @include mx.flex(flex, row);
-      gap: map.get(var.$unit, 8);
+      gap: $mo-product-gap;
 
       .vits-checkbox-item {
         flex-shrink: 0;
@@ -1116,7 +1114,7 @@ $mo-product-gap: map.get(var.$unit, 8);
     &-link {
       @include mx.flex(flex, column);
       flex-grow: 1;
-      gap: map.get(var.$unit, 8);
+      gap: $mo-product-gap;
       min-width: 0;
       height: 100%;
       padding: map.get(var.$unit, 12) var.$mo-gutter;
@@ -1139,7 +1137,7 @@ $mo-product-gap: map.get(var.$unit, 8);
 
     &-meta {
       @include mx.flex(flex, row, flex-start, flex-start, wrap);
-      gap: 0 map.get(var.$unit, 8);
+      gap: 0 $mo-product-gap;
       margin-top: auto;
 
       .content-count {
