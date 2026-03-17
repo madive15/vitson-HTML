@@ -26,15 +26,6 @@
               <button
                 type="button"
                 class="vits-btn-md vits-btn-outline-secondary"
-                onclick="VmKendoWindow.open('modal')"
-              >
-                <span class="text">옵션/수량 변경 - 수량입력</span>
-              </button>
-
-              <br />
-              <button
-                type="button"
-                class="vits-btn-md vits-btn-outline-secondary"
                 onclick="VmKendoWindow.open('modal2')"
               >
                 <span class="text">옵션/수량 변경 - 단위</span>
@@ -73,19 +64,6 @@
         <!-- E: vm-bottom-group -->
 
         <!-- S: 팝업 영역 -->
-        <!-- prettier-ignore -->
-        <% const modal = { 
-          id: 'modal', 
-          variant: 'bottomsheet',
-          className: 'modal-bottom-sheet',
-          title: '옵션/수량 변경', 
-          contentPath: `${_src}/views/pages-mo/kendo-window/cart-order/kw-MO_OR_01010101_M.ejs`,
-          buttons: [
-            { text: '취소', variant: 'secondary', action: 'close' },
-            { text: '변경하기', variant: 'primary', action: 'close' },
-          ]}; 
-        %> 
-        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
         <!-- prettier-ignore -->
         <% const modal2 = { 
           id: 'modal2', 

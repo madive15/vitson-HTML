@@ -580,6 +580,30 @@ $panel-common-height: map.get(var.$unit, 16);
       font-weight: 700;
     }
   }
+
+  // 바로구매
+  &:has(.vits-cart-body .vits-cart-list .vits-cart-item:only-of-type) {
+    .vits-cart-header {
+      @include mx.flex(flex, row, flex-start, center);
+
+      .vits-cart-toolbar-right {
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+    }
+
+    .vits-cart-body {
+      padding-top: map.get(var.$unit, 16);
+
+      .vits-cart-item-top {
+        display: none;
+      }
+
+      .vits-cart-item-main {
+        padding-top: map.get(var.$unit, 24);
+      }
+    }
+  }
 }
 
 /* ===배송정보=== */
