@@ -75,8 +75,12 @@
 }
 
 .vm-wrap {
+  &[class*='wrap-my-'] {
+    background: map.get(color.$layout-surf, 'mypage');
+  }
+
   $mypage-bg-sections:
-    'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry', 'support', 'alarm';
+    'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry', 'support', 'alarm', 'orders';
 
   @each $section in $mypage-bg-sections {
     &.wrap-my-#{$section} .vm-content-wrap {
@@ -86,6 +90,8 @@
 
   // 마이페이지 > 신용관리 > 전자서명 페이지 예외 배경
   &.wrap-my-credit:has(.contract-esign, .consent-esign) {
+    background: color.$color-white;
+
     .vm-content-wrap {
       background: color.$color-white;
     }
@@ -99,13 +105,10 @@
   @each $step in 2, 3 {
     &:has(.vm-claim-request.step-#{$step}.is-active) {
       background: color.$color-white;
-    }
-  }
 
-  &:has(.vm-claim-request.step-3.is-active) {
-    .vm-content-wrap {
-      padding-bottom: calc(map.get(var.$mo-bottom-bar, 'step-bar-price') + var(--safe-bottom));
-      background: color.$color-white;
+      .vm-content-wrap {
+        background: color.$color-white;
+      }
     }
   }
 }

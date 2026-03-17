@@ -19,6 +19,7 @@
   @each $type, $height in var.$mo-bottom-bar {
     .bottom-#{$type} {
       min-height: calc(#{$height} + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
     }
   }
 
@@ -474,8 +475,7 @@
         position: relative;
         z-index: (var.$zindex-base + 1);
         gap: map.get(var.$unit, 8);
-        padding: map.get(var.$unit, 12) var.$mo-gutter
-          calc(#{map.get(var.$unit, 12)} + env(safe-area-inset-bottom, 0px));
+        padding: map.get(var.$unit, 12) var.$mo-gutter;
         background: color.$color-white;
 
         // 좋아요

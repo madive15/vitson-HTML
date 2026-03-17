@@ -11,11 +11,6 @@
 @use '@/assets/scss/abstracts/mixins' as mx;
 @use '@/assets/scss/base/colors' as color;
 
-// --- 믹스인 ---
-@mixin bottom-bar-spacing($property: padding-bottom, $bottom-bar-h: 0) {
-  #{$property}: calc(#{$bottom-bar-h} + var(--safe-bottom));
-}
-
 // --- CSS 변수 (런타임) ---
 :root {
   --vh: 1vh;
@@ -58,21 +53,13 @@ html.vm-scope body {
   @include mx.flex(flex, column);
   height: 100%;
   overflow: hidden;
+  background: map.get(color.$layout-surf, 'sunken');
 
   // 스크롤 잠금
   &.is-locked {
     @include mx.position(fixed, 0, 0, 0, 0);
     overflow: hidden;
     touch-action: none;
-  }
-
-  // 바텀바 타입별 여백 자동 생성
-  @each $type, $height in var.$mo-bottom-bar {
-    &:has(.bottom-#{$type}) {
-      .vm-content-wrap {
-        @include bottom-bar-spacing(padding-bottom, $height);
-      }
-    }
   }
 }
 
@@ -86,6 +73,11 @@ html.vm-scope body {
   background: map.get(color.$layout-surf, 'sunken');
 
   @include mx.flex(flex, column);
+
+  // 내부 콘텐츠가 뷰포트보다 짧아도 푸터를 하단에 유지
+  > * {
+    flex-shrink: 0;
+  }
 }
 
 // --- 헤더 ---
@@ -98,12 +90,10 @@ html.vm-scope body {
   @include mx.flex(flex, column);
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 0;
 
   &-content {
     flex: 1 1 auto;
     min-width: 0;
-    min-height: 0;
   }
 }
 
