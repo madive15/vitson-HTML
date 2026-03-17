@@ -135,10 +135,50 @@
 
   function initOne(el) {
     var $el = $(el);
-
-    if ($el.data('kendoWindow')) return;
-
     var id = $el.attr('id');
+
+    // 이미 초기화된 인스턴스에도 open/close 콜백 보강
+    if ($el.data('kendoWindow')) {
+      var existInst = $el.data('kendoWindow');
+
+      if (!$el.data('__vmWindowBound')) {
+        existInst.bind('open', function () {
+          lockBody();
+          if (openedWindows.indexOf(id) === -1) {
+            openedWindows.push(id);
+          }
+          observeContent(id);
+          setTimeout(function () {
+            checkScroll(id);
+          }, 0);
+          $(document).trigger('kendo:open', [id]);
+        });
+
+        existInst.bind('close', function () {
+          disconnectContent(id);
+          var idx = openedWindows.indexOf(id);
+          if (idx > -1) openedWindows.splice(idx, 1);
+          if (openedWindows.length === 0) {
+            unlockBody();
+          }
+          $(document).trigger('kendo:close', [id]);
+        });
+
+        $el.data('__vmWindowBound', true);
+
+        if (existInst.wrapper.is(':visible')) {
+          lockBody();
+          if (openedWindows.indexOf(id) === -1) {
+            openedWindows.push(id);
+          }
+          observeContent(id);
+          checkScroll(id);
+        }
+      }
+
+      return;
+    }
+
     var variant = $el.attr('data-variant');
     var isBottom = variant === 'bottomsheet';
     var isSlide = variant === 'slide-right' || variant === 'slide-left';
@@ -162,7 +202,6 @@
         }
         observeContent(id);
 
-        // Kendo .open() 직접 호출에도 스크롤 체크 보장
         setTimeout(function () {
           checkScroll(id);
         }, 0);
@@ -179,14 +218,12 @@
           unlockBody();
         }
 
-        // 닫힘 이벤트 발행
         $(document).trigger('kendo:close', [id]);
       }
     };
 
     $el.kendoWindow(opts);
 
-    // 초기화 시점에 이미 열려 있으면 lockBody + observer 적용
     var inst = $el.data('kendoWindow');
     if (inst && inst.wrapper.is(':visible')) {
       lockBody();
@@ -316,6 +353,33 @@
       close(winId);
     });
   });
+
+  // 전역 방어 — data-ui 없이 초기화된 Kendo Window도 body lock/unlock 보장
+  if (window.MutationObserver) {
+    new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var added = mutations[i].addedNodes;
+        for (var j = 0; j < added.length; j++) {
+          var node = added[j];
+          if (!node || node.nodeType !== 1) continue;
+          if (node.classList && node.classList.contains('k-overlay')) {
+            lockBody();
+          }
+        }
+
+        var removed = mutations[i].removedNodes;
+        for (var k = 0; k < removed.length; k++) {
+          var rNode = removed[k];
+          if (!rNode || rNode.nodeType !== 1) continue;
+          if (rNode.classList && rNode.classList.contains('k-overlay')) {
+            if (openedWindows.length === 0 && !document.querySelector('.k-overlay')) {
+              unlockBody();
+            }
+          }
+        }
+      }
+    }).observe(document.body, {childList: true, subtree: true});
+  }
 
   window.VmKendoWindow = {
     initAll: initAll,
