@@ -3317,6 +3317,11 @@
           openedWindows.push(id);
         }
         observeContent(id);
+
+        // Kendo .open() 직접 호출에도 스크롤 체크 보장
+        setTimeout(function () {
+          checkScroll(id);
+        }, 0);
         console.log('trigger kendo:open with:', id, typeof id);
         $(document).trigger('kendo:open', [id]);
       },
