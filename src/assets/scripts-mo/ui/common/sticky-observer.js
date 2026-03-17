@@ -18,6 +18,7 @@
   // 개별 요소에 sentinel 삽입 + observer 등록
   function observe($el) {
     if ($el.data('sticky-bound')) return;
+    if ($el.hasClass('header-main-bar')) return;
     $el.data('sticky-bound', true);
 
     var sentinel = $('<div>').css({height: 0, margin: 0, padding: 0});

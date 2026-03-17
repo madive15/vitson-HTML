@@ -4,6 +4,7 @@
  */
 
 import './header-button.js';
+import './sticky-header.js';
 
 (function ($, window) {
   'use strict';
@@ -12,7 +13,7 @@ import './header-button.js';
 
   window.UI = window.UI || {};
 
-  var modules = ['headerButton'];
+  var modules = ['headerButton', 'stickyHeader'];
 
   window.UI.header = {
     init: function () {
