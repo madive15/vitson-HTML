@@ -83,7 +83,6 @@
   .vm-search {
     &-keywords {
       @include mx.flex(flex, column);
-      @include common-search-bdb;
       gap: map.get(var.$unit, 32);
       padding: var.$mo-section-gap 0;
     }
@@ -93,26 +92,43 @@
 
     &-rank {
       &-list {
-        @include mx.flex;
-        gap: map.get(var.$unit, 8);
-        padding: 0 var.$mo-gutter var.$mo-section-gap;
-        margin-bottom: var.$mo-section-gap * -1;
-        overflow: auto hidden;
+        @include mx.flex(flex, column);
+        width: calc(100vw - (var.$mo-gutter * 2));
+        margin: 0 auto;
+        border-radius: map.get(var.$radius, 'md');
+        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
       }
 
       &-col {
         @include mx.flex(flex, column);
-        flex: 0 0 59.44%;
-        width: 59.44%;
         padding: map.get(var.$unit, 8);
         overflow: hidden;
-        border-radius: map.get(var.$radius, 'md');
-        box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
 
-        // 순차 딜레이
+        &:first-of-type {
+          padding-bottom: 0;
+
+          .vm-search-rank-link:last-of-type {
+            box-shadow: inset 0 -1px 0 0 map.get(color.$layout-surf, 'sunken');
+          }
+        }
+
+        &:last-of-type {
+          padding-top: 0;
+        }
+
+        // 순차 딜레이 (col 내부 1~5)
         @for $i from 1 through 5 {
           .vm-search-rank-link:nth-child(#{$i}) .vm-search-rank-flip {
             transition-delay: $rank-stagger-delay * ($i - 1);
+          }
+        }
+
+        // 두 번째 col: 5개만큼 오프셋 추가
+        &:nth-child(2) {
+          @for $i from 1 through 5 {
+            .vm-search-rank-link:nth-child(#{$i}) .vm-search-rank-flip {
+              transition-delay: $rank-stagger-delay * ($i - 1 + 5);
+            }
           }
         }
       }
