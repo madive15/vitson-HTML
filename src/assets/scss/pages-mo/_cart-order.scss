@@ -209,6 +209,7 @@
       }
 
       .product-thumb {
+        flex-shrink: 0;
         width: fn.rem(92);
         height: fn.rem(92);
       }
@@ -224,6 +225,16 @@
       gap: map.get(var.$unit, 8);
 
       @include quantity-stepper-h32;
+
+      .qty-display {
+        @include mx.flex($align: center);
+        @include typo.typography(
+          'b4r',
+          $color: map.get(color.$button-ghost-tertiary, 'ghost-on_surf-tertiary-default')
+        );
+        min-height: fn.rem(28);
+        padding: 0 map.get(var.$unit, 12);
+      }
     }
 
     &-price {
@@ -232,6 +243,7 @@
 
       .cart-item-price-info {
         @include mx.flex(flex, column, flex-end, flex-end);
+        flex-shrink: 0;
         text-align: right;
 
         .price-group {
@@ -303,7 +315,7 @@
 /* 주문 금액 요약 */
 .cart-summary {
   width: 100%;
-  padding: 0 map.get(var.$unit, 12) map.get(var.$unit, 8);
+  padding: 0 var.$mo-gutter map.get(var.$unit, 8);
 
   .summary-list {
     @include mx.flex(flex, column, flex-start, flex-start);
@@ -459,6 +471,7 @@
 
     .product {
       &-thumb {
+        flex-shrink: 0;
         width: fn.rem(60);
         height: fn.rem(60);
       }
@@ -484,7 +497,11 @@
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 16);
     width: 100%;
-    padding: 0 map.get(var.$unit, 12);
+    padding: 0;
+
+    .vits-btn-scoped-info {
+      width: 100%;
+    }
   }
 
   .vm-order-cell {
@@ -494,6 +511,10 @@
 
     .guide-text {
       @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+      @include mx.text-wrap-safe;
+    }
+
+    .order-cell {
       flex-shrink: 0;
     }
   }
@@ -501,29 +522,37 @@
   /* 길이 입력 (unit-control) */
   .unit-control {
     @include mx.flex(flex, row, flex-end, center);
+    position: relative;
     gap: fn.rem(6);
+    width: fn.rem(102);
 
     .unit-control-input {
       @include button.btn-reset;
       @include mx.flex(flex, row, flex-start, center);
       gap: fn.rem(4);
+      width: 100%;
       min-height: fn.rem(32);
-      padding: 0 map.get(var.$unit, 12);
+      padding: 0;
       color: map.get(color.$text-colors, 'primary');
       background-color: map.get(color.$layout-surf, 'base');
       border: 1px solid map.get(color.$layout-border, 'quaternary');
       border-radius: map.get(var.$radius, 'sm');
 
       .unit-input {
-        width: fn.rem(57);
+        @include typo.typography('b3r', $color: map.get(color.$text-colors, 'tertiary'));
+        width: 100%;
+        padding-right: map.get(var.$unit, 32);
         color: map.get(color.$text-colors, 'tertiary');
         text-align: center;
         border: 0;
       }
+    }
 
-      .unit-text {
-        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'tertiary'));
-      }
+    .unit-text {
+      @include mx.position(absolute, 50%, 0);
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      padding-right: map.get(var.$unit, 12);
+      transform: translateY(-50%);
     }
   }
 
