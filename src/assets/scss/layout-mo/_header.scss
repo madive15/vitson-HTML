@@ -249,9 +249,10 @@
   }
 
   &.header-main-bar {
-    top: calc(#{map.get(var.$mo-header, 'main-bar-top')} * -1);
+    top: 0;
     z-index: map.get(var.$mo-zindex, 'header-main');
     flex-direction: column;
+    min-height: 0;
     padding: 0;
 
     .header-main {
@@ -259,8 +260,7 @@
         @include mx.flex(flex, column);
         gap: map.get(var.$unit, 8);
         width: 100%;
-        height: map.get(var.$mo-header, 'main-bar-top');
-        padding: map.get(var.$unit, 12) 0;
+        padding: map.get(var.$unit, 12) 0 0;
         background: color.$color-white;
 
         &-bar {
@@ -271,14 +271,6 @@
 
       &-search {
         padding: 0 var.$mo-gutter;
-        visibility: visible;
-        opacity: 1;
-        transition:
-          opacity 0.15s ease-out,
-          visibility 0.15s ease-out;
-
-        // GPU 레이어 승격 — will-change 대신 translateZ 힌트
-        transform: translateZ(0);
 
         .vits-input-searchform {
           height: map.get(var.$unit, 40);
@@ -368,33 +360,33 @@
         }
       }
     }
-
-    // 최상단: 전부 노출
-    &.is-top {
-      top: 0;
-    }
-
-    // 스크롤 업: top-bar + GNB 노출, search 숨김
-    &.is-show-top {
-      top: 0;
-
-      .header-main-top {
-        height: map.get(var.$mo-header, 'main-bar-top-bar');
-      }
-
-      .header-main-search {
-        height: 0;
-        overflow: hidden;
-        visibility: hidden;
-        opacity: 0;
-      }
-    }
   }
 
   &.header-alarm-bar {
     .vm-header-actions .btn-setting {
       width: map.get(var.$unit, 32);
       height: map.get(var.$unit, 32);
+    }
+  }
+}
+
+// .vm-content-wrap 클래스 기반 헤더 top 제어
+.vm-content-wrap {
+  &.is-scrolled {
+    .header-main-search {
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+  }
+
+  &.is-hide-top {
+    .header-main-top {
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      visibility: hidden;
     }
   }
 }
@@ -407,4 +399,67 @@
   padding-bottom: env(safe-area-inset-bottom);
   overflow-y: auto;
   background: color.$color-white;
+}
+
+// 메인헤더 body 스크롤 테스트
+.vm-wrap.test {
+  height: auto;
+  overflow: visible;
+
+  .vm-content-wrap {
+    flex: none;
+    height: auto;
+    padding-top: fn.rem(146);
+    overflow-y: visible;
+    -webkit-overflow-scrolling: auto;
+
+    > .vm-header.header-main-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: top 0.25s ease-out;
+      transform: translateZ(0);
+    }
+  }
+
+  .vm-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform 0.3s ease-out;
+  }
+
+  &.is-hide-top .vm-bottom-bar {
+    transform: translateY(100%);
+  }
+
+  // 스크롤 업: top-bar + gnb
+  &.is-scrolled:not(.is-hide-top, .is-top) .vm-content-wrap > .header-main-bar {
+    top: 0;
+  }
+
+  // 스크롤 다운: gnb만
+  &.is-scrolled.is-hide-top .vm-content-wrap > .header-main-bar {
+    top: calc(#{map.get(var.$mo-header, 'main-bar-top-bar')} * -1);
+  }
+
+  // 최상단: 전부 보임
+  /* stylelint-disable-next-line no-descending-specificity */
+  &.is-top .vm-content-wrap > .header-main-bar {
+    top: 0;
+  }
+}
+
+html.vm-scope.is-body-scroll,
+html.vm-scope.is-body-scroll body {
+  height: auto;
+  overflow: auto;
+  overscroll-behavior: auto;
+}
+
+html.vm-scope.is-body-scroll .vm-wrapper {
+  height: auto;
 }
