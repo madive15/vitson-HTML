@@ -72,27 +72,6 @@
                 </div>
                 <!-- E: 썸네일 + 주요 정보 -->
 
-                <!-- S: 유사상품 -->
-                <div
-                  class="detail-recommend"
-                  data-scroll-overflow-gradient
-                  data-scroll-target="[data-ui='product-items']"
-                >
-                  <p class="detail-recommend-title">놓치면 아쉬운 <span class="point-color">유사상품</span></p>
-                  <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
-                    <% _products2.forEach(function(item) { %>
-                    <!-- prettier-ignore -->
-                    <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
-                      item: item,
-                      showLike: false,
-                      showCart: false,
-                      showCompareBtn: false
-                    }) %>
-                    <% }); %>
-                  </ul>
-                </div>
-                <!-- E: 유사상품 -->
-
                 <!-- S: 추천상품 -->
                 <div
                   class="detail-recommend"
@@ -215,6 +194,27 @@
                     <h3 class="detail-tab-panel-title">관련 및 연관상품</h3>
 
                     <div class="content-panel03">
+                      <!-- S: 26-03-18 MU-960 유사상품 -->
+                      <div
+                        class="detail-recommend"
+                        data-scroll-overflow-gradient
+                        data-scroll-target="[data-ui='product-items']"
+                      >
+                        <p class="detail-recommend-title">놓치면 아쉬운 <span class="point-color">유사상품</span></p>
+                        <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
+                          <% _products2.forEach(function(item) { %>
+                          <!-- prettier-ignore -->
+                          <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                            item: item,
+                            showLike: false,
+                            showCart: false,
+                            showCompareBtn: false
+                          }) %>
+                          <% }); %>
+                        </ul>
+                      </div>
+                      <!-- E: 26-03-18 MU-960 유사상품 -->
+
                       <!-- S: 이런 상품은 어때요? -->
                       <div
                         class="detail-recommend"
