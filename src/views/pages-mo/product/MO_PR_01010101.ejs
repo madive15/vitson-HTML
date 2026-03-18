@@ -11,6 +11,7 @@
     [_all[i], _all[j]] = [_all[j], _all[i]];
   }
   const _products = _all.slice(29, 39);
+  const _products2 = _all.slice(29, 31);
 
   const _mock = require(`${_src}/../public/resources/mock/product-detail.json`);
   const _thumbImages = _mock.thumbImages;
@@ -70,6 +71,27 @@
                   <!-- E: 주요 정보 -->
                 </div>
                 <!-- E: 썸네일 + 주요 정보 -->
+
+                <!-- S: 유사상품 -->
+                <div
+                  class="detail-recommend"
+                  data-scroll-overflow-gradient
+                  data-scroll-target="[data-ui='product-items']"
+                >
+                  <p class="detail-recommend-title">놓치면 아쉬운 <span class="point-color">유사상품</span></p>
+                  <ul class="vm-product-items view-thumb detail-recommend-list" data-ui="product-items">
+                    <% _products2.forEach(function(item) { %>
+                    <!-- prettier-ignore -->
+                    <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
+                      item: item,
+                      showLike: false,
+                      showCart: false,
+                      showCompareBtn: false
+                    }) %>
+                    <% }); %>
+                  </ul>
+                </div>
+                <!-- E: 유사상품 -->
 
                 <!-- S: 추천상품 -->
                 <div
