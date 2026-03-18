@@ -191,10 +191,17 @@
 
       .input-search-btn {
         right: var.$mo-gutter;
+        color: map.get(color.$icon-neutral, 'tertiary');
       }
 
       .input-clear-btn {
         background: map.get(color.$gray-shades, '40');
+      }
+
+      &:has(.input-clear-btn:not([hidden])) {
+        .input-search-btn {
+          color: map.get(color.$icon-neutral, 'primary');
+        }
       }
     }
 
@@ -217,7 +224,6 @@
           right: map.get(var.$unit, 8);
           width: map.get(var.$unit, 20);
           height: map.get(var.$unit, 20);
-          color: map.get(color.$icon-neutral, 'tertiary');
         }
       }
     }
