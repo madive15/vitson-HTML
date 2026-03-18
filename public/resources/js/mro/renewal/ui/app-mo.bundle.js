@@ -6579,184 +6579,174 @@ console.log('[mobile/index] entry 실행');
 /***/ 6760:
 /***/ (function() {
 
-/**
- * @file scripts-mo/ui/header/sticky-header.js
- * @description 메인 헤더 스크롤 동작
- * @scope .header-main-bar[data-ui="sticky"]
- * @state
- *   is-top       : 최상단 → 전부 노출
- *   is-show-top  : 스크롤 업 → top-bar+GNB 노출, search 숨김
- *   (없음)       : 기본 → sticky 음수 top, GNB만 걸림
- * @note
- *   - rAF 배칭으로 DOM 조작 최소화
- *   - THRESHOLD(5px) 미만 미세 움직임 무시 → 떨림 방지
- *   - touch: window (iOS Chrome 대응)
- *   - scroll/wheel: .vm-content-wrap
- */
-
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   var SELECTOR = '.header-main-bar[data-ui="sticky"]';
   var SCROLL_WRAP = '.vm-content-wrap';
+  var CLS_SCROLLED = 'is-scrolled';
+  var CLS_HIDE_TOP = 'is-hide-top';
   var CLS_TOP = 'is-top';
-  var CLS_SHOW_TOP = 'is-show-top';
-  // 방향 전환 최소 이동량 (px) — 미세 떨림 무시
+  var CLS_BODY_SCROLL = 'is-body-scroll';
   var THRESHOLD = 5;
-  var el = null;
   var scrollEl = null;
+  var wrapEl = null;
+  var headerEl = null;
+  var searchEl = null;
+  var isBodyScroll = false;
   var direction = 'none';
-  var rafId = 0;
-  var dirty = false;
-
-  // touch 누적 거리
-  var touchAccum = 0;
-  var touchLastY = 0;
-
-  // scroll 누적 거리
-  var scrollAccum = 0;
   var lastScrollY = 0;
-
-  // rAF 콜백 — 프레임당 최대 1회 DOM 조작
-  function flush() {
-    rafId = 0;
-    if (!dirty) return;
-    dirty = false;
-    var scrollY = scrollEl.scrollTop;
-    var cl = el.classList;
-    if (scrollY <= 0) {
-      cl.add(CLS_TOP);
-      cl.remove(CLS_SHOW_TOP);
-      direction = 'none';
-      return;
+  var accumUp = 0;
+  var accumDown = 0;
+  var scrolledLocked = false;
+  function getScrollY() {
+    if (isBodyScroll) {
+      return window.pageYOffset || document.documentElement.scrollTop;
     }
-    cl.remove(CLS_TOP);
-    if (direction === 'up') {
-      cl.add(CLS_SHOW_TOP);
-    } else {
-      cl.remove(CLS_SHOW_TOP);
-    }
+    return scrollEl.scrollTop;
   }
-  function scheduleUpdate() {
-    dirty = true;
-    if (!rafId) {
-      rafId = requestAnimationFrame(flush);
-    }
-  }
-
-  // 방향 판정 — threshold 초과 시에만 전환
-  function resolveDirection(accum) {
-    var newDir = accum > 0 ? 'down' : 'up';
-    if (newDir === direction) return;
-    direction = newDir;
-    scheduleUpdate();
-  }
-
-  // touch 핸들러
-  function onTouchStart(e) {
-    if (e.touches[0]) {
-      touchLastY = e.touches[0].clientY;
-      touchAccum = 0;
-    }
-  }
-  function onTouchMove(e) {
-    if (!e.touches[0]) return;
-    var y = e.touches[0].clientY;
-    var delta = touchLastY - y;
-    touchLastY = y;
-    if (delta === 0) return;
-
-    // 최상단 체크
-    if (scrollEl.scrollTop <= 0) {
-      if (direction !== 'none') {
-        direction = 'none';
-        scheduleUpdate();
+  function hideSearchAfterTransition() {
+    if (!headerEl) return;
+    function handler() {
+      headerEl.removeEventListener('transitionend', handler);
+      if (searchEl && wrapEl.classList.contains(CLS_SCROLLED)) {
+        searchEl.style.display = 'none';
       }
-      touchAccum = 0;
-      return;
     }
-
-    // 같은 방향이면 누적, 반대 방향이면 리셋
-    if (touchAccum > 0 && delta > 0 || touchAccum < 0 && delta < 0) {
-      touchAccum += delta;
-    } else {
-      touchAccum = delta;
-    }
-    if (Math.abs(touchAccum) >= THRESHOLD) {
-      resolveDirection(touchAccum);
-    }
+    headerEl.addEventListener('transitionend', handler);
   }
-
-  // scroll/wheel 핸들러
   function onScroll() {
-    var y = scrollEl.scrollTop;
+    var y = getScrollY();
+    var cl = wrapEl.classList;
     if (y <= 0) {
-      if (direction !== 'none') {
-        direction = 'none';
-        scheduleUpdate();
+      if (isBodyScroll) {
+        if (y < 0) return;
+        cl.remove(CLS_HIDE_TOP);
+        cl.add(CLS_TOP);
+        if (searchEl) searchEl.style.display = '';
+      } else {
+        if (scrolledLocked) {
+          lastScrollY = 0;
+          return;
+        }
+        cl.remove(CLS_SCROLLED);
+        cl.remove(CLS_HIDE_TOP);
       }
+      direction = 'none';
       lastScrollY = 0;
-      scrollAccum = 0;
+      accumUp = 0;
+      accumDown = 0;
+      return;
+    }
+    if (isBodyScroll && cl.contains(CLS_TOP)) {
+      cl.remove(CLS_TOP);
+      cl.add(CLS_HIDE_TOP);
+      direction = 'down';
+      accumUp = 0;
+      accumDown = 0;
+      lastScrollY = y;
+      hideSearchAfterTransition();
+      return;
+    }
+    scrolledLocked = false;
+    if (!cl.contains(CLS_SCROLLED)) {
+      cl.add(CLS_SCROLLED);
+      cl.add(CLS_HIDE_TOP);
+      direction = 'down';
+      accumUp = 0;
+      accumDown = 0;
+      lastScrollY = y;
+      if (!isBodyScroll) scrolledLocked = true;
       return;
     }
     var delta = y - lastScrollY;
     lastScrollY = y;
     if (delta === 0) return;
-    if (scrollAccum > 0 && delta > 0 || scrollAccum < 0 && delta < 0) {
-      scrollAccum += delta;
+    if (delta > 0) {
+      accumDown += delta;
+      accumUp = 0;
     } else {
-      scrollAccum = delta;
+      accumUp += Math.abs(delta);
+      accumDown = 0;
     }
-    if (Math.abs(scrollAccum) >= THRESHOLD) {
-      resolveDirection(scrollAccum);
+    if (direction !== 'down' && accumDown >= THRESHOLD) {
+      direction = 'down';
+      cl.add(CLS_HIDE_TOP);
+      lastScrollY = getScrollY();
+      accumUp = 0;
+      accumDown = 0;
+    } else if (direction !== 'up' && accumUp >= THRESHOLD) {
+      direction = 'up';
+      cl.remove(CLS_HIDE_TOP);
+      lastScrollY = getScrollY();
+      accumUp = 0;
+      accumDown = 0;
     }
+  }
+  function reset() {
+    if (isBodyScroll) {
+      window.removeEventListener('scroll', onScroll);
+      document.documentElement.classList.remove(CLS_BODY_SCROLL);
+    } else if (scrollEl) {
+      scrollEl.removeEventListener('scroll', onScroll);
+    }
+    if (wrapEl) {
+      wrapEl.classList.remove(CLS_SCROLLED);
+      wrapEl.classList.remove(CLS_HIDE_TOP);
+      wrapEl.classList.remove(CLS_TOP);
+    }
+    if (searchEl) searchEl.style.display = '';
+    scrollEl = null;
+    wrapEl = null;
+    headerEl = null;
+    searchEl = null;
+    isBodyScroll = false;
+    direction = 'none';
+    accumUp = 0;
+    accumDown = 0;
+    lastScrollY = 0;
+    scrolledLocked = false;
   }
   window.stickyHeader = {
     init: function () {
-      var $el = $(SELECTOR);
-      if (!$el.length) return;
-      el = $el[0];
+      headerEl = $(SELECTOR)[0];
+      if (!headerEl) return;
+      searchEl = headerEl.querySelector('.header-main-search');
+      var $test = $('.vm-wrap.test');
+
+      // case 2: body 스크롤 (.vm-wrap.test)
+      if ($test.length) {
+        document.documentElement.classList.add(CLS_BODY_SCROLL);
+        isBodyScroll = true;
+        wrapEl = $test[0];
+        scrollEl = null;
+        lastScrollY = window.pageYOffset || 0;
+        accumUp = 0;
+        accumDown = 0;
+        scrolledLocked = false;
+        wrapEl.classList.add(CLS_TOP);
+        window.addEventListener('scroll', onScroll, {
+          passive: true
+        });
+        return;
+      }
+
+      // case 1: 내부 컨테이너 스크롤 (기존)
+      isBodyScroll = false;
       scrollEl = $(SCROLL_WRAP)[0];
       if (!scrollEl) return;
+      wrapEl = scrollEl;
       lastScrollY = scrollEl.scrollTop || 0;
-      scrollAccum = 0;
-      touchAccum = 0;
-      if (lastScrollY <= 0) {
-        el.classList.add(CLS_TOP);
-      }
-      window.addEventListener('touchstart', onTouchStart, {
-        passive: true
-      });
-      window.addEventListener('touchmove', onTouchMove, {
-        passive: true
-      });
+      accumUp = 0;
+      accumDown = 0;
+      scrolledLocked = false;
       scrollEl.addEventListener('scroll', onScroll, {
-        passive: true
-      });
-      scrollEl.addEventListener('wheel', onScroll, {
         passive: true
       });
     },
     destroy: function () {
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      }
-      if (scrollEl) {
-        scrollEl.removeEventListener('scroll', onScroll);
-        scrollEl.removeEventListener('wheel', onScroll);
-      }
-      if (el) {
-        el.classList.remove(CLS_TOP);
-        el.classList.remove(CLS_SHOW_TOP);
-      }
-      el = null;
-      scrollEl = null;
-      dirty = false;
-      direction = 'none';
+      reset();
     }
   };
 })(window.jQuery, window);
