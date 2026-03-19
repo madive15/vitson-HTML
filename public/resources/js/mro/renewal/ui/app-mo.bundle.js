@@ -17,7 +17,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[checkbox-total] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -80,13 +79,11 @@
       $('[data-checkbox-scope]').each(function () {
         bindScope($(this));
       });
-      console.log('[checkbox-total] init');
     },
     destroy: function () {
       $('[data-checkbox-scope]').each(function () {
         unbindScope($(this));
       });
-      console.log('[checkbox-total] destroy');
     },
     refresh: function ($scope) {
       if (!$scope || !$scope.length) return;
@@ -98,7 +95,6 @@
       $scope.data('checkbox-callback', callback);
     }
   };
-  console.log('[checkbox-total] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -4475,7 +4471,6 @@ var cart = __webpack_require__(9459);
   'use strict';
 
   if (!$) {
-    console.log('[order] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -4792,10 +4787,8 @@ var cart = __webpack_require__(9459);
       $scope.each(function () {
         bindRoot($(this));
       });
-      console.log('[order] order page initialized');
     }
   };
-  console.log('[order] module loaded');
 })(window.jQuery, window);
 ;// ./src/assets/scripts-mo/ui/cart-order/index.js
 /**
@@ -5473,7 +5466,6 @@ var common = __webpack_require__(6023);
 
 
 
-console.log('[mobile/index] entry 실행');
 ;// ./src/app-mo.js
 // 모바일 전용
 
@@ -7360,7 +7352,6 @@ console.log('[mobile/index] entry 실행');
     disableMaxDates();
     removeEmptyRows();
     updateSelectedState();
-    console.log('[' + DATA_UI + '] initialized:', elId || 'anonymous');
   }
 
   // 초기화
@@ -7422,7 +7413,6 @@ console.log('[mobile/index] entry 실행');
       if (window.jQuery) autoBindStart();
     });
   }
-  console.log('[' + DATA_UI + '] loaded');
 })(window);
 
 /***/ }),
@@ -9641,7 +9631,6 @@ console.log('[mobile/index] entry 실행');
   'use strict';
 
   if (!$) {
-    console.log('[cart] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -9770,10 +9759,8 @@ console.log('[mobile/index] entry 실행');
         }
       });
       bindResize();
-      console.log('[cart] quantity stepper initialized');
     }
   };
-  console.log('[cart] module loaded');
 })(window.jQuery, window);
 
 /***/ }),

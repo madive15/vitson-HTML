@@ -597,6 +597,10 @@
       window.setTimeout(function () {
         copyRow(state.dom.$rowA, nextItem);
         resetTrackWithoutBounce(state.dom);
+
+        // [data-rank-current]의 data-word 동기화(테스트서버 속성 반영)
+        var $current = state.$scope.find(SEL.CURRENT).first();
+        if ($current.length) $current.attr('data-word', nextItem.word || '');
         state.idx = nextIdx;
         state.animating = false;
       }, state.duration);
@@ -623,6 +627,10 @@
       copyRow(state.dom.$rowA, state.items[0]);
       copyRow(state.dom.$rowB, state.items[1] || state.items[0]);
       resetTrackWithoutBounce(state.dom);
+
+      // 초기 data-word 동기화
+      var $current = state.$scope.find(SEL.CURRENT).first();
+      if ($current.length) $current.attr('data-word', state.items[0].word || '');
       start();
     }
     return {
@@ -691,7 +699,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[layer] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -955,16 +962,13 @@
 
     // 초기 상태에 열린 레이어가 있으면 body lock 동기화
     syncBodyLock();
-    console.log('[layer] init');
   };
   window.UI.layer.destroy = function () {
     if (!window.UI.layer.__bound) return;
     unbind();
     window.UI.layer.__bound = false;
-    console.log('[layer] destroy');
   };
   window.UI.layer.closeAll = closeAll;
-  console.log('[layer] module loaded');
 })(window.jQuery || window.$, window, document);
 
 /***/ }),
@@ -993,7 +997,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[toggle] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -1134,10 +1137,8 @@
         });
         bindScope($scope);
       });
-      console.log('[toggle] init');
     }
   };
-  console.log('[toggle] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -1165,7 +1166,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[stepTab] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -1218,11 +1218,9 @@
     $scope[0].dispatchEvent(event);
     if (isLast) {
       $scope.find('[data-step-tab="' + currentStep + '"]').removeClass(ACTIVE).addClass(DONE);
-      console.log('[stepTab] 모든 스텝 완료');
       return;
     }
     activateStep($scope, nextStep);
-    console.log('[stepTab] step ' + currentStep + ' → ' + nextStep);
   }
   function bindScope($scope) {
     $scope.on('click', '[data-step-complete]', function (e) {
@@ -1235,7 +1233,6 @@
       $('[data-step-scope]').each(function () {
         bindScope($(this));
       });
-      console.log('[stepTab] init');
     },
     complete: function (scopeId) {
       var $scope = getScope(scopeId);
@@ -1248,14 +1245,12 @@
       if (!$scope.length) return;
       $scope.find('[data-step-tab]').removeClass(DONE);
       activateStep($scope, 1);
-      console.log('[stepTab] reset');
     },
     getCurrentStep: function (scopeId) {
       var $scope = getScope(scopeId);
       return $scope.length ? getCurrentStep($scope) : null;
     }
   };
-  console.log('[stepTab] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -1281,7 +1276,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[tab-scrollbar] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -1545,7 +1539,6 @@
     updateTabBar($tabBtns.filter('.is-active'));
   }
   $(initTabScrollbar);
-  console.log('[tab-scrollbar] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -1835,7 +1828,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[support-ui] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -2018,7 +2010,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[scroll-boundary] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -2078,7 +2069,6 @@
 
       // 요소 자체 리사이즈(컨텐츠/레이아웃 변화) 대응
       bindResizeObserver($targets);
-      console.log('[scroll-boundary] init');
     },
     // refresh: 필요 시 외부에서 강제 갱신(동적 렌더링 대응)
     refresh: function () {
@@ -2087,10 +2077,8 @@
       $targets.each(function () {
         updateOne($(this));
       });
-      console.log('[scroll-boundary] refresh');
     }
   };
-  console.log('[scroll-boundary] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -2322,7 +2310,6 @@
   'use strict';
 
   if (!$) {
-    console.warn('[headerSearch] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -3187,7 +3174,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[checkbox-total] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -3222,10 +3208,8 @@
       $('[data-checkbox-scope]').each(function () {
         bindScope($(this));
       });
-      console.log('[checkbox-total] init');
     }
   };
-  console.log('[checkbox-total] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -3244,7 +3228,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[quantity-stepper] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -3367,10 +3350,8 @@
         bindRoot($(this));
       });
       bindResize();
-      console.log('[quantity-stepper] init');
     }
   };
-  console.log('[quantity-stepper] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -3387,7 +3368,7 @@
   'use strict';
 
   if (!$) {
-    console.log('[auth-ui] jQuery not found');
+    return;
   }
   window.UI = window.UI || {};
   const initAuthTabs = (root = document) => {
@@ -3484,7 +3465,6 @@
       initPasswordToggle(el);
     }
   };
-  console.log('[auth-ui] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -3514,7 +3494,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[select] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -4306,7 +4285,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[cart-order] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -4695,7 +4673,6 @@
       });
     }
   };
-  console.log('[cart-order] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -7393,8 +7370,6 @@
     disableMaxDates(); // 2026-02-13 추가
     removeEmptyRows(); // 2026-02-10 추가
     updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
-
-    console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }
 
   // ============================================
@@ -7410,7 +7385,6 @@
   }
   function initAll(root) {
     if (!ensureKendoAvailable()) {
-      console.warn('[kendo-range-picker] Kendo UI not available');
       return;
     }
     var $root = root ? window.jQuery(root) : window.jQuery(document);
@@ -7467,7 +7441,6 @@
       }
     });
   }
-  console.log('[kendo-range-picker] loaded');
 })(window);
 
 /***/ }),
@@ -7502,7 +7475,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[modal] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -7861,7 +7833,6 @@
 
     // 초기 상태에 열린 레이어가 있으면 body lock 동기화
     syncBodyLock();
-    console.log('[modal] init');
   };
   window.UI.modal.destroy = function () {
     if (!window.UI.modal.__bound) return;
@@ -7876,11 +7847,8 @@
 
     // (선택) 변수 자체는 남겨도 무방하지만, 테스트/페이지 전환에서 흔적 제거가 필요하면 해제
     // document.documentElement.style.removeProperty('--vh');
-
-    console.log('[modal] destroy');
   };
   window.UI.modal.closeAll = closeAll;
-  console.log('[modal] module loaded');
 })(window.jQuery || window.$, window, document);
 
 /***/ }),
@@ -7902,7 +7870,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[sticky-overflow] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -7964,7 +7931,6 @@
       instances = [];
     }
   };
-  console.log('[sticky-overflow] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -8639,11 +8605,9 @@
   'use strict';
 
   if (!$) {
-    console.log('[common] jQuery not found (window.jQuery/window.$ undefined)');
     return;
   }
   $(function () {
-    console.log('[common] DOM ready');
     if (window.UI && window.UI.init) window.UI.init();
 
     // pre-wrap 요소의 선행 공백·줄바꿈 제거
@@ -9654,7 +9618,6 @@ var swiper_bundle = __webpack_require__(7111);
   'use strict';
 
   if (!$) {
-    console.log('[swiper-test] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -9676,7 +9639,6 @@ var swiper_bundle = __webpack_require__(7111);
     // [정석] 컨테이너 바로 아래 wrapper 필수
     var $swiperWrapper = $container.children('.swiper-wrapper').first();
     if (!$swiperWrapper.length) {
-      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
       return;
     }
 
@@ -9763,7 +9725,6 @@ var swiper_bundle = __webpack_require__(7111);
     try {
       var swiperInstance = new swiper_bundle/* default */.A($container[0], finalOptions);
       $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
-      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
     } catch (e) {
       console.error('[swiper-test] Initialization failed', e);
     }
@@ -9778,7 +9739,6 @@ var swiper_bundle = __webpack_require__(7111);
     if (instance && typeof instance.destroy === 'function') {
       instance.destroy(true, true);
       $wrapper.removeData(SWIPER_INSTANCE_KEY);
-      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
     }
   }
   window.UI.swiperTest = {
@@ -9786,13 +9746,11 @@ var swiper_bundle = __webpack_require__(7111);
       $('[data-swiper-options]').each(function () {
         initSwiper($(this));
       });
-      console.log('[swiper-test] init');
     },
     destroy: function () {
       $('[data-swiper-options]').each(function () {
         destroySwiper($(this));
       });
-      console.log('[swiper-test] destroy');
     },
     reinit: function (selector) {
       var $target = typeof selector === 'string' ? $(selector) : selector;
@@ -9803,7 +9761,6 @@ var swiper_bundle = __webpack_require__(7111);
       });
     }
   };
-  console.log('[swiper-test] module loaded');
 })(window.jQuery || window.$, window);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/chip-button.js
 var chip_button = __webpack_require__(2755);
@@ -9903,10 +9860,8 @@ var kendo_window = __webpack_require__(238);
         window.VitsKendoWindow.initAll(document);
         window.VitsKendoWindow.autoBindStart(document.body);
       }
-      console.log('[kendo] all modules initialized');
     }
   };
-  console.log('[kendo] loaded');
 })(window);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/auth-ui.js
 var auth_ui = __webpack_require__(4593);
@@ -10675,7 +10630,6 @@ var support_ui = __webpack_require__(2064);
       reinitMainBannerSwiper();
     }
   };
-  console.log('[home-ui] module loaded');
 })(window.jQuery || window.$, window);
 // EXTERNAL MODULE: ./src/assets/scripts/ui/sticky-overflow.js
 var sticky_overflow = __webpack_require__(7414);
@@ -10770,7 +10724,6 @@ var sticky_overflow = __webpack_require__(7414);
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
     if (window.UI.stickyOverflow && window.UI.stickyOverflow.init) window.UI.stickyOverflow.init();
   };
-  console.log('[core/ui] loaded');
 })(window);
 // EXTERNAL MODULE: ./src/assets/scripts/core/common.js
 var common = __webpack_require__(7538);
@@ -10790,7 +10743,6 @@ var common = __webpack_require__(7538);
 
 
 
-console.log('[index] entry 실행');
 ;// ./src/app.js
 
 
@@ -10833,7 +10785,6 @@ if (document.body?.dataset?.guide === 'true') {
   'use strict';
 
   if (!$) {
-    console.log('[period-btn] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -10851,7 +10802,6 @@ if (document.body?.dataset?.guide === 'true') {
       var $btn = $(this);
       var value = $btn.data('value');
       if (!value) {
-        console.warn('[period-btn] data-value is required');
         return;
       }
 
@@ -10860,7 +10810,6 @@ if (document.body?.dataset?.guide === 'true') {
 
       // 클릭한 버튼만 활성화
       $btn.attr('aria-pressed', 'true');
-      console.log('[period-btn] selected:', groupName, value);
 
       // 외부 콜백 (옵션)
       if (window.UI.PeriodBtn.onSelect) {
@@ -10877,7 +10826,6 @@ if (document.body?.dataset?.guide === 'true') {
       $('[data-ui="period-btn-group"]').each(function () {
         bindGroup($(this));
       });
-      console.log('[period-btn] init');
     },
     /**
      * @purpose 특정 그룹에서 특정 값으로 선택
@@ -10888,14 +10836,12 @@ if (document.body?.dataset?.guide === 'true') {
     setValue: function (groupName, value) {
       var $group = $('[data-ui="period-btn-group"][data-group="' + groupName + '"]');
       if (!$group.length) {
-        console.warn('[period-btn] group not found:', groupName);
         return;
       }
       $group.find(BTN_SELECTOR).attr('aria-pressed', 'false');
       var $btn = $group.find(BTN_SELECTOR + '[data-value="' + value + '"]');
       if ($btn.length) {
         $btn.attr('aria-pressed', 'true');
-        console.log('[period-btn] setValue:', groupName, value);
       }
     },
     /**
@@ -10914,7 +10860,6 @@ if (document.body?.dataset?.guide === 'true') {
      */
     onSelect: null
   };
-  console.log('[period-btn] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
@@ -10938,7 +10883,6 @@ if (document.body?.dataset?.guide === 'true') {
   'use strict';
 
   if (!$) {
-    console.log('[tooltip] jQuery not found');
     return;
   }
   window.UI = window.UI || {};
@@ -11054,10 +10998,8 @@ if (document.body?.dataset?.guide === 'true') {
       });
       bindOutsideClick();
       bindEscKey();
-      console.log('[tooltip] init');
     }
   };
-  console.log('[tooltip] module loaded');
 })(window.jQuery || window.$, window);
 
 /***/ }),
