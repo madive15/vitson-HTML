@@ -3199,31 +3199,30 @@
   var BODY_LOCK_CLASS = 'is-kendo-window-open';
   var DEBOUNCE_DELAY = 80;
   var ANIMATION_TIMEOUT = 500;
-  var scrollY = 0;
+  var savedScrollTop = 0;
   var openedWindows = [];
   var contentObservers = {};
   var debounceTimers = {};
+
+  // vm-content-wrap 내부 스크롤 구조에서는 body fixed 불필요
+  // 스크롤 위치만 저장하고 overflow 잠금
   function lockBody() {
     if ($('body').hasClass(BODY_LOCK_CLASS)) return;
-    scrollY = window.pageYOffset || 0;
-    $('body').addClass(BODY_LOCK_CLASS).css({
-      position: 'fixed',
-      top: -scrollY + 'px',
-      left: 0,
-      right: 0,
-      overflow: 'hidden'
-    });
+    var $scroll = $('.vm-content-wrap');
+    savedScrollTop = $scroll.length ? $scroll[0].scrollTop : 0;
+    $('body').addClass(BODY_LOCK_CLASS);
+    $scroll.css('overflow-y', 'hidden');
   }
   function unlockBody() {
     if (!$('body').hasClass(BODY_LOCK_CLASS)) return;
-    $('body').removeClass(BODY_LOCK_CLASS).css({
-      position: '',
-      top: '',
-      left: '',
-      right: '',
-      overflow: ''
-    });
-    window.scrollTo(0, scrollY);
+    var $scroll = $('.vm-content-wrap');
+    $('body').removeClass(BODY_LOCK_CLASS);
+    $scroll.css('overflow-y', '');
+
+    // 스크롤 위치 복원
+    if ($scroll.length) {
+      $scroll[0].scrollTop = savedScrollTop;
+    }
   }
   function checkScroll(id) {
     var $el = $('#' + id);
@@ -3998,7 +3997,6 @@
   // 개별 요소에 sentinel 삽입 + observer 등록
   function observe($el) {
     if ($el.data('sticky-bound')) return;
-    if ($el.hasClass('header-main-bar')) return;
     $el.data('sticky-bound', true);
     var sentinel = $('<div>').css({
       height: 0,
@@ -4008,7 +4006,9 @@
     sentinel.insertBefore($el);
 
     // sticky top 값만큼 rootMargin 보정
-    var topOffset = parseInt($el.css('top'), 10) || 0;
+    var rawTop = parseInt($el.css('top'), 10) || 0;
+    // 양수 top만 rootMargin 보정, 음수 top은 보정 불필요
+    var topOffset = rawTop > 0 ? rawTop : 0;
     var observer = new IntersectionObserver(function (entries) {
       $el.toggleClass(ACTIVE, !entries[0].isIntersecting);
     }, {
@@ -5391,8 +5391,6 @@ var search_suggest = __webpack_require__(6823);
 })(window.jQuery, window);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/header/header-button.js
 var header_button = __webpack_require__(7451);
-// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/header/sticky-header.js
-var sticky_header = __webpack_require__(6760);
 ;// ./src/assets/scripts-mo/ui/header/index.js
 /**
  * @file scripts-mo/ui/header/index.js
@@ -5400,13 +5398,12 @@ var sticky_header = __webpack_require__(6760);
  */
 
 
-
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['headerButton', 'stickyHeader'];
+  var modules = ['headerButton'];
   window.UI.header = {
     init: function () {
       modules.forEach(function (name) {
@@ -6495,183 +6492,6 @@ var common = __webpack_require__(6023);
     eachForm(root, destroyOne);
   };
 })(window.jQuery || window.$, window, document);
-
-/***/ }),
-
-/***/ 6760:
-/***/ (function() {
-
-(function ($, window) {
-  'use strict';
-
-  if (!$) return;
-  var SELECTOR = '.header-main-bar[data-ui="sticky"]';
-  var SCROLL_WRAP = '.vm-content-wrap';
-  var CLS_SCROLLED = 'is-scrolled';
-  var CLS_HIDE_TOP = 'is-hide-top';
-  var CLS_TOP = 'is-top';
-  var CLS_BODY_SCROLL = 'is-body-scroll';
-  var THRESHOLD = 5;
-  var scrollEl = null;
-  var wrapEl = null;
-  var headerEl = null;
-  var searchEl = null;
-  var isBodyScroll = false;
-  var direction = 'none';
-  var lastScrollY = 0;
-  var accumUp = 0;
-  var accumDown = 0;
-  var scrolledLocked = false;
-  function getScrollY() {
-    if (isBodyScroll) {
-      return window.pageYOffset || document.documentElement.scrollTop;
-    }
-    return scrollEl.scrollTop;
-  }
-  function hideSearchAfterTransition() {
-    if (!headerEl) return;
-    function handler() {
-      headerEl.removeEventListener('transitionend', handler);
-      if (searchEl && wrapEl.classList.contains(CLS_SCROLLED)) {
-        searchEl.style.display = 'none';
-      }
-    }
-    headerEl.addEventListener('transitionend', handler);
-  }
-  function onScroll() {
-    var y = getScrollY();
-    var cl = wrapEl.classList;
-    if (y <= 0) {
-      if (isBodyScroll) {
-        if (y < 0) return;
-        cl.remove(CLS_HIDE_TOP);
-        cl.add(CLS_TOP);
-        if (searchEl) searchEl.style.display = '';
-      } else {
-        if (scrolledLocked) {
-          lastScrollY = 0;
-          return;
-        }
-        cl.remove(CLS_SCROLLED);
-        cl.remove(CLS_HIDE_TOP);
-      }
-      direction = 'none';
-      lastScrollY = 0;
-      accumUp = 0;
-      accumDown = 0;
-      return;
-    }
-    if (isBodyScroll && cl.contains(CLS_TOP)) {
-      cl.remove(CLS_TOP);
-      cl.add(CLS_HIDE_TOP);
-      direction = 'down';
-      accumUp = 0;
-      accumDown = 0;
-      lastScrollY = y;
-      hideSearchAfterTransition();
-      return;
-    }
-    scrolledLocked = false;
-    if (!cl.contains(CLS_SCROLLED)) {
-      cl.add(CLS_SCROLLED);
-      cl.add(CLS_HIDE_TOP);
-      direction = 'down';
-      accumUp = 0;
-      accumDown = 0;
-      lastScrollY = y;
-      if (!isBodyScroll) scrolledLocked = true;
-      return;
-    }
-    var delta = y - lastScrollY;
-    lastScrollY = y;
-    if (delta === 0) return;
-    if (delta > 0) {
-      accumDown += delta;
-      accumUp = 0;
-    } else {
-      accumUp += Math.abs(delta);
-      accumDown = 0;
-    }
-    if (direction !== 'down' && accumDown >= THRESHOLD) {
-      direction = 'down';
-      cl.add(CLS_HIDE_TOP);
-      lastScrollY = getScrollY();
-      accumUp = 0;
-      accumDown = 0;
-    } else if (direction !== 'up' && accumUp >= THRESHOLD) {
-      direction = 'up';
-      cl.remove(CLS_HIDE_TOP);
-      lastScrollY = getScrollY();
-      accumUp = 0;
-      accumDown = 0;
-    }
-  }
-  function reset() {
-    if (isBodyScroll) {
-      window.removeEventListener('scroll', onScroll);
-      document.documentElement.classList.remove(CLS_BODY_SCROLL);
-    } else if (scrollEl) {
-      scrollEl.removeEventListener('scroll', onScroll);
-    }
-    if (wrapEl) {
-      wrapEl.classList.remove(CLS_SCROLLED);
-      wrapEl.classList.remove(CLS_HIDE_TOP);
-      wrapEl.classList.remove(CLS_TOP);
-    }
-    if (searchEl) searchEl.style.display = '';
-    scrollEl = null;
-    wrapEl = null;
-    headerEl = null;
-    searchEl = null;
-    isBodyScroll = false;
-    direction = 'none';
-    accumUp = 0;
-    accumDown = 0;
-    lastScrollY = 0;
-    scrolledLocked = false;
-  }
-  window.stickyHeader = {
-    init: function () {
-      headerEl = $(SELECTOR)[0];
-      if (!headerEl) return;
-      searchEl = headerEl.querySelector('.header-main-search');
-      var $test = $('.vm-wrap.test');
-
-      // case 2: body 스크롤 (.vm-wrap.test)
-      if ($test.length) {
-        document.documentElement.classList.add(CLS_BODY_SCROLL);
-        isBodyScroll = true;
-        wrapEl = $test[0];
-        scrollEl = null;
-        lastScrollY = window.pageYOffset || 0;
-        accumUp = 0;
-        accumDown = 0;
-        scrolledLocked = false;
-        wrapEl.classList.add(CLS_TOP);
-        window.addEventListener('scroll', onScroll, {
-          passive: true
-        });
-        return;
-      }
-
-      // case 1: 내부 컨테이너 스크롤 (기존)
-      isBodyScroll = false;
-      scrollEl = $(SCROLL_WRAP)[0];
-      if (!scrollEl) return;
-      wrapEl = scrollEl;
-      lastScrollY = scrollEl.scrollTop || 0;
-      accumUp = 0;
-      accumDown = 0;
-      scrolledLocked = false;
-      scrollEl.addEventListener('scroll', onScroll, {
-        passive: true
-      });
-    },
-    destroy: function () {
-      reset();
-    }
-  };
-})(window.jQuery, window);
 
 /***/ }),
 
