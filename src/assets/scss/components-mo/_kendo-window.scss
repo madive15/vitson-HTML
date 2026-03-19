@@ -405,6 +405,16 @@
   }
 }
 
+@keyframes vm-slide-down {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
 .vm-scope {
   // 기본 모달 — 화면 중앙
   .k-window:has(.vm-modal-header) {
@@ -433,6 +443,10 @@
 
     &.is-opening {
       animation: vm-slide-up 0.35s ease forwards;
+    }
+
+    &.is-closing {
+      animation: vm-slide-down 0.3s ease forwards;
     }
   }
 

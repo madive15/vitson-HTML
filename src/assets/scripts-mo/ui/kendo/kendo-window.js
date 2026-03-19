@@ -155,13 +155,11 @@
       actions: [],
       animation: noAnimation ? false : undefined,
       open: function () {
-        console.log('kendo open id:', id);
         lockBody();
         if (openedWindows.indexOf(id) === -1) {
           openedWindows.push(id);
         }
         observeContent(id);
-        console.log('trigger kendo:open with:', id, typeof id);
         $(document).trigger('kendo:open', [id]);
       },
       close: function () {
@@ -197,6 +195,22 @@
     $root.find('[data-ui="kendo-window"]').each(function () {
       initOne(this);
     });
+  }
+
+  // open 함수 밖 (모듈 스코프)
+  function playOpenAnimation($kw, id) {
+    $kw.addClass('is-opening');
+    var done = false;
+
+    var onEnd = function () {
+      if (done) return;
+      done = true;
+      $kw.removeClass('is-opening');
+      refreshCollapse(id);
+    };
+
+    $kw.one('animationend', onEnd);
+    setTimeout(onEnd, ANIMATION_TIMEOUT);
   }
 
   function open(id) {
@@ -239,11 +253,8 @@
           width: '100%',
           position: 'fixed'
         });
-        $kw.addClass('is-opening');
-        $kw.one('animationend', function () {
-          $kw.removeClass('is-opening');
-          refreshCollapse(id);
-        });
+
+        playOpenAnimation($kw, id);
       }
 
       // 슬라이드: 풀스크린
@@ -257,11 +268,8 @@
           height: '100%',
           position: 'fixed'
         });
-        $kw.addClass('is-opening');
-        $kw.one('animationend', function () {
-          $kw.removeClass('is-opening');
-          refreshCollapse(id);
-        });
+
+        playOpenAnimation($kw, id);
       }
 
       // 렌더 후 스크롤 체크 (다음 프레임)
@@ -278,11 +286,12 @@
     if (inst) {
       var $kw = $el.closest('.k-window');
       var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
+      var isBottom = $kw.hasClass('is-bottomsheet');
 
       $el.find('.vm-modal-content').removeClass('has-scroll');
 
       // 슬라이드만 애니메이션 후 close
-      if (isSlide) {
+      if (isSlide || isBottom) {
         closeWithAnimation($kw, inst);
         return;
       }
