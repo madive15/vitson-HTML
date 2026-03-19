@@ -7,7 +7,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[cart] jQuery not found');
     return;
   }
 
@@ -162,9 +161,6 @@
         }
       });
       bindResize();
-      console.log('[cart] quantity stepper initialized');
     }
   };
-
-  console.log('[cart] module loaded');
 })(window.jQuery, window);

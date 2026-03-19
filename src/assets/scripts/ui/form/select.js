@@ -20,7 +20,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[select] jQuery not found');
     return;
   }
 

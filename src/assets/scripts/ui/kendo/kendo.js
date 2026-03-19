@@ -27,10 +27,6 @@ import './kendo-window.js';
         window.VitsKendoWindow.initAll(document);
         window.VitsKendoWindow.autoBindStart(document.body);
       }
-
-      console.log('[kendo] all modules initialized');
     }
   };
-
-  console.log('[kendo] loaded');
 })(window);

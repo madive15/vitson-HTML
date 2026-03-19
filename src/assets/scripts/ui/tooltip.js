@@ -14,7 +14,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[tooltip] jQuery not found');
     return;
   }
 
@@ -137,10 +136,6 @@
 
       bindOutsideClick();
       bindEscKey();
-
-      console.log('[tooltip] init');
     }
   };
-
-  console.log('[tooltip] module loaded');
 })(window.jQuery || window.$, window);

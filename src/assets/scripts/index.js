@@ -13,5 +13,3 @@
 import './core/utils.js';
 import './core/ui.js';
 import './core/common.js';
-
-console.log('[index] entry 실행');

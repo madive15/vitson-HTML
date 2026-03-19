@@ -21,7 +21,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[scroll-boundary] jQuery not found');
     return;
   }
 
@@ -90,8 +89,6 @@
 
       // 요소 자체 리사이즈(컨텐츠/레이아웃 변화) 대응
       bindResizeObserver($targets);
-
-      console.log('[scroll-boundary] init');
     },
 
     // refresh: 필요 시 외부에서 강제 갱신(동적 렌더링 대응)
@@ -102,9 +99,6 @@
       $targets.each(function () {
         updateOne($(this));
       });
-      console.log('[scroll-boundary] refresh');
     }
   };
-
-  console.log('[scroll-boundary] module loaded');
 })(window.jQuery || window.$, window);

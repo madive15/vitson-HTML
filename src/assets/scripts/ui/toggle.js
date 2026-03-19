@@ -19,7 +19,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[toggle] jQuery not found');
     return;
   }
 
@@ -176,10 +175,6 @@
 
         bindScope($scope);
       });
-
-      console.log('[toggle] init');
     }
   };
-
-  console.log('[toggle] module loaded');
 })(window.jQuery || window.$, window);

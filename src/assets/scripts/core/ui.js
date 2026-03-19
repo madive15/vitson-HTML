@@ -89,6 +89,4 @@ import '../ui/sticky-overflow.js';
     if (window.UI.header && window.UI.header.init) window.UI.header.init();
     if (window.UI.stickyOverflow && window.UI.stickyOverflow.init) window.UI.stickyOverflow.init();
   };
-
-  console.log('[core/ui] loaded');
 })(window);

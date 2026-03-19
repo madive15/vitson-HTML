@@ -17,7 +17,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[period-btn] jQuery not found');
     return;
   }
 
@@ -40,7 +39,6 @@
       var value = $btn.data('value');
 
       if (!value) {
-        console.warn('[period-btn] data-value is required');
         return;
       }
 
@@ -49,8 +47,6 @@
 
       // 클릭한 버튼만 활성화
       $btn.attr('aria-pressed', 'true');
-
-      console.log('[period-btn] selected:', groupName, value);
 
       // 외부 콜백 (옵션)
       if (window.UI.PeriodBtn.onSelect) {
@@ -68,7 +64,6 @@
       $('[data-ui="period-btn-group"]').each(function () {
         bindGroup($(this));
       });
-      console.log('[period-btn] init');
     },
 
     /**
@@ -80,7 +75,6 @@
     setValue: function (groupName, value) {
       var $group = $('[data-ui="period-btn-group"][data-group="' + groupName + '"]');
       if (!$group.length) {
-        console.warn('[period-btn] group not found:', groupName);
         return;
       }
 
@@ -88,7 +82,6 @@
       var $btn = $group.find(BTN_SELECTOR + '[data-value="' + value + '"]');
       if ($btn.length) {
         $btn.attr('aria-pressed', 'true');
-        console.log('[period-btn] setValue:', groupName, value);
       }
     },
 
@@ -109,6 +102,4 @@
      */
     onSelect: null
   };
-
-  console.log('[period-btn] module loaded');
 })(window.jQuery || window.$, window);

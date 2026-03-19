@@ -13,12 +13,10 @@
   'use strict';
 
   if (!$) {
-    console.log('[common] jQuery not found (window.jQuery/window.$ undefined)');
     return;
   }
 
   $(function () {
-    console.log('[common] DOM ready');
     if (window.UI && window.UI.init) window.UI.init();
 
     // pre-wrap 요소의 선행 공백·줄바꿈 제거

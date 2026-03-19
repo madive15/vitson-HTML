@@ -594,8 +594,6 @@
     disableMaxDates(); // 2026-02-13 추가
     removeEmptyRows(); // 2026-02-10 추가
     updateSelectedState(); // 2026-02-03 추가 - 초기값이 있을 경우 대응
-
-    console.log('[kendo-range-picker] initialized:', $el.attr('id') || 'anonymous');
   }
 
   // ============================================
@@ -613,7 +611,6 @@
 
   function initAll(root) {
     if (!ensureKendoAvailable()) {
-      console.warn('[kendo-range-picker] Kendo UI not available');
       return;
     }
 
@@ -674,6 +671,4 @@
       }
     });
   }
-
-  console.log('[kendo-range-picker] loaded');
 })(window);

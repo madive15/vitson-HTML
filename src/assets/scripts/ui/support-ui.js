@@ -14,7 +14,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[support-ui] jQuery not found');
     return;
   }
 

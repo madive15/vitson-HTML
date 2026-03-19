@@ -18,7 +18,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[stepTab] jQuery not found');
     return;
   }
 
@@ -87,12 +86,10 @@
         .find('[data-step-tab="' + currentStep + '"]')
         .removeClass(ACTIVE)
         .addClass(DONE);
-      console.log('[stepTab] 모든 스텝 완료');
       return;
     }
 
     activateStep($scope, nextStep);
-    console.log('[stepTab] step ' + currentStep + ' → ' + nextStep);
   }
 
   function bindScope($scope) {
@@ -107,7 +104,6 @@
       $('[data-step-scope]').each(function () {
         bindScope($(this));
       });
-      console.log('[stepTab] init');
     },
 
     complete: function (scopeId) {
@@ -123,7 +119,6 @@
 
       $scope.find('[data-step-tab]').removeClass(DONE);
       activateStep($scope, 1);
-      console.log('[stepTab] reset');
     },
 
     getCurrentStep: function (scopeId) {
@@ -131,6 +126,4 @@
       return $scope.length ? getCurrentStep($scope) : null;
     }
   };
-
-  console.log('[stepTab] module loaded');
 })(window.jQuery || window.$, window);
