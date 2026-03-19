@@ -264,12 +264,16 @@ $modal-widths: (
 
   // 컨텐츠
   &-content {
-    @include mx.border('bottom', map.get(var.$unit, 4), $color: color.$color-white);
     flex: 1 1 auto;
     min-width: 0;
-    padding: map.get(var.$unit, 4) map.get(var.$unit, 32) 0;
+    padding: map.get(var.$unit, 4) map.get(var.$unit, 32) map.get(var.$unit, 2);
     overflow: hidden auto;
     background: color.$color-white;
+
+    &:has(.vits-claim-request-total) {
+      @include mx.border('bottom', map.get(var.$unit, 4), $color: color.$color-white);
+      padding-bottom: 0;
+    }
 
     /* [legacy] k-window 전환 전 코드 - 추후 제거
     &-inner {
