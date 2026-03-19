@@ -37,9 +37,11 @@
     <% if (_scope) { %>
     <div class="coupon-scope" data-expand>
       <p class="coupon-scope-text" data-expand-text>적용대상 : <%= _scope %></p>
+      <%# 26-03-19 MU-1055 JS(expand.js)에서 넘침 감지 시 버튼 동적 생성 — 마크업에서 제거 %> <%#
       <button type="button" class="coupon-scope-toggle" data-expand-btn aria-expanded="false" hidden>
-        <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) %>
+        < %- include(`${_src}/views/components/icon.ejs`, { iconName: 'arrow-down' }) % >
       </button>
+      %>
     </div>
     <% } %>
   </div>
