@@ -54,7 +54,9 @@ $visual-btn: fn.rem(18);
 }
 
 // 기본 배경색
-.vm-wrap.wrap-home {
+.vm-wrap:has(.main-content-home) {
+  background: color.$color-white;
+
   .vm-content-wrap {
     background: color.$color-white;
   }
@@ -697,7 +699,7 @@ $visual-btn: fn.rem(18);
 /* stylelint-disable-next-line scss/dollar-variable-pattern */
 $_gnb-popup-top: calc(#{map.get(var.$mo-header, 'main-bar-top')} + #{map.get(var.$unit, 12)});
 
-.vm-scope:has(.wrap-home) {
+.vm-scope:has(.main-content-home) {
   .k-window.from-gnb:has(.category-full-popup) {
     top: $_gnb-popup-top !important;
     box-shadow: none;

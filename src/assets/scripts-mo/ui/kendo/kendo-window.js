@@ -21,37 +21,35 @@
   var DEBOUNCE_DELAY = 80;
   var ANIMATION_TIMEOUT = 500;
 
-  var scrollY = 0;
+  var savedScrollTop = 0;
   var openedWindows = [];
   var contentObservers = {};
   var debounceTimers = {};
 
+  // vm-content-wrap 내부 스크롤 구조에서는 body fixed 불필요
+  // 스크롤 위치만 저장하고 overflow 잠금
   function lockBody() {
     if ($('body').hasClass(BODY_LOCK_CLASS)) return;
 
-    scrollY = window.pageYOffset || 0;
-    $('body')
-      .addClass(BODY_LOCK_CLASS)
-      .css({
-        position: 'fixed',
-        top: -scrollY + 'px',
-        left: 0,
-        right: 0,
-        overflow: 'hidden'
-      });
+    var $scroll = $('.vm-content-wrap');
+    savedScrollTop = $scroll.length ? $scroll[0].scrollTop : 0;
+
+    $('body').addClass(BODY_LOCK_CLASS);
+    $scroll.css('overflow-y', 'hidden');
   }
 
   function unlockBody() {
     if (!$('body').hasClass(BODY_LOCK_CLASS)) return;
 
-    $('body').removeClass(BODY_LOCK_CLASS).css({
-      position: '',
-      top: '',
-      left: '',
-      right: '',
-      overflow: ''
-    });
-    window.scrollTo(0, scrollY);
+    var $scroll = $('.vm-content-wrap');
+
+    $('body').removeClass(BODY_LOCK_CLASS);
+    $scroll.css('overflow-y', '');
+
+    // 스크롤 위치 복원
+    if ($scroll.length) {
+      $scroll[0].scrollTop = savedScrollTop;
+    }
   }
 
   function checkScroll(id) {

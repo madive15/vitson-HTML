@@ -279,6 +279,19 @@
         <!-- E: vm-bottom-group -->
 
         <!-- S: 팝업 영역 -->
+        <!-- prettier-ignore -->
+        <% const modal = { 
+          id: 'modal', 
+          variant: 'bottomsheet',
+          className: 'modal-bottom-sheet',
+          title: '좋아요 담기', 
+          subtitle: '선택한 상품을 다른 좋아요 폴더에 추가하세요.',
+          contentPath: `${_src}/views/pages-mo/kendo-window/category/kw-MO_CA_01040201_P.ejs`,
+          buttons: [
+            { text: '담기', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
         <!-- E: 팝업 영역 -->
       </div>
       <!-- E: vm-wrap -->
