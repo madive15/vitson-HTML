@@ -75,21 +75,19 @@
 }
 
 .vm-wrap {
-  &[class*='wrap-my-'] {
-    background: map.get(color.$layout-surf, 'mypage');
-  }
-
   $mypage-bg-sections:
     'home', 'coupon', 'shipping', 'pay', 'credit', 'account', 'survey', 'docs', 'inquiry', 'support', 'alarm', 'orders';
 
-  @each $section in $mypage-bg-sections {
-    &.wrap-my-#{$section} .vm-content-wrap {
+  &:has([class*='main-content-my-']) {
+    background: map.get(color.$layout-surf, 'mypage');
+
+    .vm-content-wrap {
       background: map.get(color.$layout-surf, 'mypage');
     }
   }
 
   // 마이페이지 > 신용관리 > 전자서명 페이지 예외 배경
-  &.wrap-my-credit:has(.contract-esign, .consent-esign) {
+  &:has(.main-content-my-credit .contract-esign, .consent-esign) {
     background: color.$color-white;
 
     .vm-content-wrap {
@@ -111,32 +109,34 @@
       }
     }
   }
-}
 
-.wrap-my-orders .vm-main {
-  background: map.get(color.$layout-surf, 'mypage');
+  &:has(.main-content-my-orders) {
+    .vm-main {
+      background: map.get(color.$layout-surf, 'mypage');
 
-  &:has(.vits-empty-state-content) {
-    @include mx.flex(flex, column);
+      &:has(.vits-empty-state-content) {
+        @include mx.flex(flex, column);
 
-    .main-content-my-orders {
-      @include mx.flex(flex, column);
+        .main-content-my-orders {
+          @include mx.flex(flex, column);
 
-      .vm-mypage-filter {
-        flex-shrink: 0;
+          .vm-mypage-filter {
+            flex-shrink: 0;
+          }
+
+          .vits-empty-state {
+            flex-grow: 1;
+            min-width: 0;
+            min-height: 0;
+          }
+        }
       }
 
-      .vits-empty-state {
-        flex-grow: 1;
-        min-width: 0;
-        min-height: 0;
+      &:has(.vm-claim-request.step-2.is-active),
+      &:has(.vm-claim-request.step-3.is-active) {
+        background: color.$color-white;
       }
     }
-  }
-
-  &:has(.vm-claim-request.step-2.is-active),
-  &:has(.vm-claim-request.step-3.is-active) {
-    background: color.$color-white;
   }
 }
 
@@ -3201,7 +3201,7 @@
 }
 
 // 대량 구매 문의 상세, 배경색 변경
-.vm-wrap.wrap-my-inquiry:has(.vm-mypage-inquiry.inquiry-detail) {
+.vm-wrap:has(.vm-mypage-inquiry.inquiry-detail) {
   .vm-content-wrap {
     background: color.$color-white;
   }
@@ -3362,7 +3362,7 @@
 }
 
 // FAQ, 공지사항 탭
-.vm-wrap.wrap-my-support:has(.vm-mypage-support-tab.tab-faq) {
+.vm-wrap:has(.vm-mypage-support-tab.tab-faq) {
   /* stylelint-disable-next-line no-descending-specificity */
   .vm-content-wrap {
     background: color.$color-white;
@@ -3669,7 +3669,7 @@
   }
 }
 
-.vm-wrap.wrap-my-support:has(.support-archive-post) {
+.vm-wrap:has(.support-archive-post) {
   /* stylelint-disable-next-line no-descending-specificity */
   .vm-content-wrap {
     background: color.$color-white;
