@@ -11,7 +11,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[checkbox-total] jQuery not found');
     return;
   }
 
@@ -93,14 +92,12 @@
       $('[data-checkbox-scope]').each(function () {
         bindScope($(this));
       });
-      console.log('[checkbox-total] init');
     },
 
     destroy: function () {
       $('[data-checkbox-scope]').each(function () {
         unbindScope($(this));
       });
-      console.log('[checkbox-total] destroy');
     },
 
     refresh: function ($scope) {
@@ -114,6 +111,4 @@
       $scope.data('checkbox-callback', callback);
     }
   };
-
-  console.log('[checkbox-total] module loaded');
 })(window.jQuery || window.$, window);

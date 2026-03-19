@@ -12,7 +12,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[sticky-overflow] jQuery not found');
     return;
   }
 
@@ -89,6 +88,4 @@
       instances = [];
     }
   };
-
-  console.log('[sticky-overflow] module loaded');
 })(window.jQuery || window.$, window);

@@ -25,7 +25,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[layer] jQuery not found');
     return;
   }
 
@@ -356,8 +355,6 @@
 
     // 초기 상태에 열린 레이어가 있으면 body lock 동기화
     syncBodyLock();
-
-    console.log('[layer] init');
   };
 
   window.UI.layer.destroy = function () {
@@ -365,11 +362,7 @@
 
     unbind();
     window.UI.layer.__bound = false;
-
-    console.log('[layer] destroy');
   };
 
   window.UI.layer.closeAll = closeAll;
-
-  console.log('[layer] module loaded');
 })(window.jQuery || window.$, window, document);

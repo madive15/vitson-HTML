@@ -32,7 +32,6 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   if (!$) {
-    console.log('[swiper-test] jQuery not found');
     return;
   }
 
@@ -56,7 +55,6 @@ import Swiper from 'swiper/bundle';
     // [정석] 컨테이너 바로 아래 wrapper 필수
     var $swiperWrapper = $container.children('.swiper-wrapper').first();
     if (!$swiperWrapper.length) {
-      console.warn('[swiper-test] .swiper-wrapper not found in', $wrapper[0]);
       return;
     }
 
@@ -145,7 +143,6 @@ import Swiper from 'swiper/bundle';
     try {
       var swiperInstance = new Swiper($container[0], finalOptions);
       $wrapper.data(SWIPER_INSTANCE_KEY, swiperInstance);
-      console.log('[swiper-test] initialized:', $wrapper.attr('class'));
     } catch (e) {
       console.error('[swiper-test] Initialization failed', e);
     }
@@ -160,7 +157,6 @@ import Swiper from 'swiper/bundle';
     if (instance && typeof instance.destroy === 'function') {
       instance.destroy(true, true);
       $wrapper.removeData(SWIPER_INSTANCE_KEY);
-      console.log('[swiper-test] destroyed:', $wrapper.attr('class'));
     }
   }
 
@@ -169,14 +165,12 @@ import Swiper from 'swiper/bundle';
       $('[data-swiper-options]').each(function () {
         initSwiper($(this));
       });
-      console.log('[swiper-test] init');
     },
 
     destroy: function () {
       $('[data-swiper-options]').each(function () {
         destroySwiper($(this));
       });
-      console.log('[swiper-test] destroy');
     },
 
     reinit: function (selector) {
@@ -188,6 +182,4 @@ import Swiper from 'swiper/bundle';
       });
     }
   };
-
-  console.log('[swiper-test] module loaded');
 })(window.jQuery || window.$, window);

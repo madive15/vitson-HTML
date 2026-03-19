@@ -13,7 +13,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[cart-order] jQuery not found');
     return;
   }
 
@@ -459,6 +458,4 @@
         });
     }
   };
-
-  console.log('[cart-order] module loaded');
 })(window.jQuery || window.$, window);

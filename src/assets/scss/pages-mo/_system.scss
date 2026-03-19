@@ -1,0 +1,62 @@
+/* -----------------------------------------------------------------------------
+ * pages-mo/_system.scss
+ * - 모바일 오류 페이지에서 사용
+ * ----------------------------------------------------------------------------- */
+
+@use 'sass:map';
+@use '@/assets/scss/abstracts/variables' as var;
+@use '@/assets/scss/abstracts/mixins' as mx;
+@use '@/assets/scss/abstracts/functions' as fn;
+@use '@/assets/scss/base/colors' as color;
+@use '@/assets/scss/base/typography' as typo;
+@use '@/assets/scss/components/icon' as icon;
+@use '@/assets/scss/components/button' as button;
+@use '@/assets/scss/components/form' as form;
+
+.vm-wrap.wrap-system {
+  &,
+  .vm-content-wrap {
+    background: map.get(color.$layout-surf, 'mypage');
+  }
+}
+
+.vm-system {
+  &-section {
+    @include mx.flex(flex, column, flex-start, center);
+    padding: 0 var.$mo-gutter;
+
+    @include mx.content-area-offset('', 732, 198.5);
+
+    .vits-empty-state {
+      padding-right: 0;
+      padding-left: 0;
+
+      &-text {
+        gap: map.get(var.$unit, 8);
+      }
+
+      &-desc {
+        font-size: fn.rem(11);
+      }
+    }
+  }
+
+  &-notice {
+    @include mx.flex(flex, row, center, center, wrap);
+    gap: map.get(var.$unit, 4) fn.rem(10);
+    width: 100%;
+    max-width: fn.rem(320);
+    padding: map.get(var.$unit, 20);
+    background: map.get(color.$layout-status, 'info-bg-sub');
+    border-radius: map.get(var.$radius, 'md');
+
+    .text {
+      @include typo.typography('b3r', $color: map.get(color.$text-colors, 'secondary'));
+
+      strong {
+        font-weight: 600;
+        color: map.get(color.$text-colors, 'primary');
+      }
+    }
+  }
+}

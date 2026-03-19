@@ -7,7 +7,7 @@
   'use strict';
 
   if (!$) {
-    console.log('[auth-ui] jQuery not found');
+    return;
   }
 
   window.UI = window.UI || {};
@@ -115,6 +115,4 @@
       initPasswordToggle(el);
     }
   };
-
-  console.log('[auth-ui] module loaded');
 })(window.jQuery || window.$, window);

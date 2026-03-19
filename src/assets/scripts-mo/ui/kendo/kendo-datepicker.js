@@ -621,8 +621,6 @@
     disableMaxDates();
     removeEmptyRows();
     updateSelectedState();
-
-    console.log('[' + DATA_UI + '] initialized:', elId || 'anonymous');
   }
 
   // 초기화
@@ -688,6 +686,4 @@
       if (window.jQuery) autoBindStart();
     });
   }
-
-  console.log('[' + DATA_UI + '] loaded');
 })(window);

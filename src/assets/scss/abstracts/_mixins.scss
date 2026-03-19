@@ -476,6 +476,10 @@
   padding-#{$direction}: calc(
     (var(--vh, 1dvh) * 100 - #{$header-h} - #{map.get(var.$mo-bottom-bar, 'tab-bar')}) * #{$ratio}
   );
+
+  @media (orientation: landscape) and (height <= 767px) {
+    padding-#{$direction}: 0;
+  }
 }
 
 // select sub width 100%

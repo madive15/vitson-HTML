@@ -25,7 +25,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[modal] jQuery not found');
     return;
   }
 
@@ -460,8 +459,6 @@
 
     // 초기 상태에 열린 레이어가 있으면 body lock 동기화
     syncBodyLock();
-
-    console.log('[modal] init');
   };
 
   window.UI.modal.destroy = function () {
@@ -478,11 +475,7 @@
 
     // (선택) 변수 자체는 남겨도 무방하지만, 테스트/페이지 전환에서 흔적 제거가 필요하면 해제
     // document.documentElement.style.removeProperty('--vh');
-
-    console.log('[modal] destroy');
   };
 
   window.UI.modal.closeAll = closeAll;
-
-  console.log('[modal] module loaded');
 })(window.jQuery || window.$, window, document);

@@ -804,6 +804,4 @@ import Swiper from 'swiper/bundle';
       reinitMainBannerSwiper();
     }
   };
-
-  console.log('[home-ui] module loaded');
 })(window.jQuery || window.$, window);

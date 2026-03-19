@@ -16,7 +16,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[tab-scrollbar] jQuery not found');
     return;
   }
 
@@ -314,5 +313,4 @@
   }
 
   $(initTabScrollbar);
-  console.log('[tab-scrollbar] module loaded');
 })(window.jQuery || window.$, window);

@@ -15,7 +15,6 @@ import Swiper from 'swiper/bundle';
   'use strict';
 
   if (!$) {
-    console.log('[order] jQuery not found');
     return;
   }
 
@@ -364,10 +363,6 @@ import Swiper from 'swiper/bundle';
       $scope.each(function () {
         bindRoot($(this));
       });
-
-      console.log('[order] order page initialized');
     }
   };
-
-  console.log('[order] module loaded');
 })(window.jQuery, window);

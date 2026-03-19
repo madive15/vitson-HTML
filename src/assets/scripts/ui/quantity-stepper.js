@@ -9,7 +9,6 @@
   'use strict';
 
   if (!$) {
-    console.log('[quantity-stepper] jQuery not found');
     return;
   }
 
@@ -158,9 +157,6 @@
         bindRoot($(this));
       });
       bindResize();
-      console.log('[quantity-stepper] init');
     }
   };
-
-  console.log('[quantity-stepper] module loaded');
 })(window.jQuery || window.$, window);

@@ -217,6 +217,11 @@
       window.setTimeout(function () {
         copyRow(state.dom.$rowA, nextItem);
         resetTrackWithoutBounce(state.dom);
+
+        // [data-rank-current]의 data-word 동기화(테스트서버 속성 반영)
+        var $current = state.$scope.find(SEL.CURRENT).first();
+        if ($current.length) $current.attr('data-word', nextItem.word || '');
+
         state.idx = nextIdx;
         state.animating = false;
       }, state.duration);
@@ -251,6 +256,9 @@
       copyRow(state.dom.$rowB, state.items[1] || state.items[0]);
       resetTrackWithoutBounce(state.dom);
 
+      // 초기 data-word 동기화
+      var $current = state.$scope.find(SEL.CURRENT).first();
+      if ($current.length) $current.attr('data-word', state.items[0].word || '');
       start();
     }
 

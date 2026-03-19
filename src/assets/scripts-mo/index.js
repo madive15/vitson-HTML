@@ -9,5 +9,3 @@
 import './core/utils.js';
 import './core/ui.js';
 import './core/common.js';
-
-console.log('[mobile/index] entry 실행');

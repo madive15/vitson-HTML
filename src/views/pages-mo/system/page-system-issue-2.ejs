@@ -1,0 +1,84 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<!DOCTYPE html>
+<html lang="ko" class="vm-scope">
+  <%- include(`${_src}/views/layout-mo/header/head.ejs`, {meta_title: '시스템 오류'}) %>
+  <body class="vm-scope">
+    <!-- S: Skip Navigation -->
+    <a href="#skipNav" class="skip-nav">본문 바로가기</a>
+    <!-- E: Skip Navigation -->
+
+    <!-- S: vm-wrapper -->
+    <section class="vm-wrapper">
+      <!-- S: vm-wrap -->
+      <div class="vm-wrap wrap-system">
+        <!-- S: vm-content-wrap -->
+        <div class="vm-content-wrap">
+          <%# [D] 오류페이지 - header 없음 %>
+          <!-- prettier-ignore -->
+          <%# < %- include(`${_src}/views/layout-mo/header/index.ejs`, { 
+            type: 'mypage-bar', 
+            alarm: true,
+          }) % > %>
+
+          <!-- S: vm-main -->
+          <main id="skipNav" class="vm-main">
+            <div class="vm-main-content main-content-system">
+              <section class="vm-system-section">
+                <!-- prettier-ignore -->
+                <% const buttonHtml = include(`${_src}/views/components/button/button.ejs`, {
+                  href: "#!",
+                  size: 'xl',
+                  variant: 'secondary',
+                  text: '메인으로 돌아가기',
+                  iconLeft: true,
+                  iconName: 'ic-arrow-left'
+                }) 
+                %> 
+                <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                  iconName: 'info', 
+                  title: '오류가 발생했습니다.', 
+                  desc: '잠시 후 다시 시도해주시거나 관리자에 문의해주세요.', 
+                  buttonHtml: buttonHtml }) %>
+              </section>
+            </div>
+          </main>
+          <!-- E: vm-main -->
+
+          <%- include(`${_src}/views/layout-mo/footer/index.ejs`) %>
+        </div>
+        <!-- E: vm-content-wrap -->
+
+        <!-- S: vm-bottom-group -->
+        <!-- prettier-ignore -->
+        <%- include(`${_src}/views/layout-mo/bottom-bar/index.ejs`, { 
+          type: 'tab-bar', currentTab: '' 
+        }) %>
+        <!-- E: vm-bottom-group -->
+
+        <!-- S: 팝업 영역 -->
+        <!-- E: 팝업 영역 -->
+      </div>
+      <!-- E: vm-wrap -->
+    </section>
+    <!-- E: vm-wrapper -->
+
+    <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+
+        // ?type02 : 프로필 타입2 전환
+        if (params.has('type02')) {
+          var type01 = document.querySelector('.profile-type01');
+          var type02 = document.querySelector('.profile-type02');
+          if (type01) type01.classList.add('is-hidden');
+          if (type02) type02.classList.remove('is-hidden');
+        }
+      })();
+    </script>
+  </body>
+</html>

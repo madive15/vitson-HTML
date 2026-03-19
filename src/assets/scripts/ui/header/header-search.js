@@ -23,7 +23,6 @@
   'use strict';
 
   if (!$) {
-    console.warn('[headerSearch] jQuery not found');
     return;
   }
 
