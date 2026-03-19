@@ -233,48 +233,10 @@
   function initOne(el) {
     var $ = window.jQuery;
     var $el = $(el);
-    var id = $el.attr('id');
-
-    // 이미 초기화된 인스턴스에도 open/close 콜백 보강
-    if ($el.data('kendoWindow')) {
-      var existInst = $el.data('kendoWindow');
-      if (!$el.data('__vitsWindowBound')) {
-        existInst.bind('open', function () {
-          lockBody();
-          if (openedWindows.indexOf(id) === -1) {
-            openedWindows.push(id);
-          }
-          observeContent(id);
-          setTimeout(function () {
-            checkScroll(id);
-            preventScrollClose(id);
-          }, 0);
-        });
-        existInst.bind('close', function () {
-          disconnectContent(id);
-          var idx = openedWindows.indexOf(id);
-          if (idx > -1) openedWindows.splice(idx, 1);
-          if (openedWindows.length === 0) {
-            unlockBody();
-          }
-        });
-        $el.data('__vitsWindowBound', true);
-
-        // 이미 열려 있으면 즉시 처리
-        if (existInst.wrapper.is(':visible')) {
-          lockBody();
-          if (openedWindows.indexOf(id) === -1) {
-            openedWindows.push(id);
-          }
-          observeContent(id);
-          checkScroll(id);
-          preventScrollClose(id);
-        }
-      }
-      return;
-    }
+    if ($el.data('kendoWindow')) return;
     var optRaw = $el.attr('data-opt') || '{}';
     var opts = parseJsonSafe(optRaw) || {};
+    var id = $el.attr('id');
     var defaultOpts = {
       title: false,
       visible: false,
@@ -289,12 +251,6 @@
           openedWindows.push(id);
         }
         observeContent(id);
-
-        // Kendo .open() 직접 호출에도 부가 처리 보장
-        setTimeout(function () {
-          checkScroll(id);
-          preventScrollClose(id);
-        }, 0);
       },
       close: function () {
         disconnectContent(id);
@@ -314,18 +270,6 @@
       };
     }
     $el.kendoWindow(finalOpts);
-
-    // 초기화 시점에 이미 열려 있으면 부가 처리
-    var inst = $el.data('kendoWindow');
-    if (inst && inst.wrapper.is(':visible')) {
-      lockBody();
-      if (openedWindows.indexOf(id) === -1) {
-        openedWindows.push(id);
-      }
-      observeContent(id);
-      checkScroll(id);
-      preventScrollClose(id);
-    }
 
     // draggable일 때 클래스 추가
     if (finalOpts.draggable) {
@@ -375,12 +319,6 @@
           openedWindows.push(id);
         }
         observeContent(id);
-
-        // 콜백 교체 시에도 부가 처리 보장
-        setTimeout(function () {
-          checkScroll(id);
-          preventScrollClose(id);
-        }, 0);
         options.onOpen.call(inst);
       });
     }
@@ -424,36 +362,6 @@
       if (inst) inst.close();
     });
   });
-
-  // 전역 방어 — data-ui 없이 초기화된 Kendo Window도 body lock/unlock 보장
-  if (window.MutationObserver) {
-    new MutationObserver(function (mutations) {
-      for (var i = 0; i < mutations.length; i++) {
-        var added = mutations[i].addedNodes;
-        for (var j = 0; j < added.length; j++) {
-          var node = added[j];
-          if (!node || node.nodeType !== 1) continue;
-          if (node.classList && node.classList.contains('k-overlay')) {
-            lockBody();
-          }
-        }
-        var removed = mutations[i].removedNodes;
-        for (var k = 0; k < removed.length; k++) {
-          var rNode = removed[k];
-          if (!rNode || rNode.nodeType !== 1) continue;
-          if (rNode.classList && rNode.classList.contains('k-overlay')) {
-            // 다른 열린 윈도우가 없을 때만 unlock
-            if (openedWindows.length === 0 && !document.querySelector('.k-overlay')) {
-              unlockBody();
-            }
-          }
-        }
-      }
-    }).observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  }
   window.VitsKendoWindow = {
     initAll: initAll,
     autoBindStart: autoBindStart,
