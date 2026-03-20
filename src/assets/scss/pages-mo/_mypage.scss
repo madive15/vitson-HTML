@@ -350,8 +350,18 @@
         flex-direction: column;
         gap: 0;
 
-        .actions-util:empty {
-          display: none;
+        .card-actions {
+          .actions-util:empty {
+            display: none;
+          }
+
+          .actions-order .vits-btn-xs {
+            min-height: map.get(var.$unit, 32);
+
+            .text {
+              font-size: fn.rem(14);
+            }
+          }
         }
       }
 

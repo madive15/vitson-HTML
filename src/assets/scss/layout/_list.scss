@@ -844,14 +844,16 @@ $list-directions: (
 // 썸네일형 카드 변형 오버라이드
 .vits-swiper.js-swiper:has(.vits-product-card-swiper),
 .vits-swiper.js-swiper:has(.vits-base-swiper-card) {
-  // hover 시 하단 그림자 짤림 방지
-  padding-bottom: fn.rem(40);
-  margin-bottom: fn.rem(-56);
-
   .swiper-slide {
     padding: 6px 6px 16px;
     cursor: default;
   }
+}
+
+.vits-swiper.js-swiper:has(.vits-product-card-swiper) {
+  // hover 시 하단 그림자 짤림 방지
+  padding-bottom: fn.rem(40);
+  margin-bottom: fn.rem(-56);
 }
 
 /* stylelint-disable-next-line no-duplicate-selectors */
