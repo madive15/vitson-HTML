@@ -176,7 +176,7 @@ text swiper - 추후 삭제 예정
   &-section {
     @include mx.flex(flex, column, flex-start, flex-start);
     gap: map.get(var.$unit, 20);
-    padding: map.get(var.$unit, 32) map.get(var.$unit, 32) fn.rem(14);
+    padding: map.get(var.$unit, 32);
     background: map.get(color.$layout-status, 'brand-bg-default');
     border-radius: map.get(var.$radius, 'lg');
   }
@@ -249,10 +249,29 @@ text swiper - 추후 삭제 예정
   &-container.vits-swiper.js-swiper {
     flex-flow: row nowrap;
 
-    .vits-base-swiper {
-      &-slide {
-        background: color.$color-white;
-        border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
+    .vits-base-swiper-slide {
+      background: color.$color-white;
+      border-radius: map.get(var.$radius, 'md');
+
+      // hover 효과 (view-list에서도 동작)
+      &:hover {
+        .vits-base-swiper-card {
+          &::after {
+            @include mx.position(absolute, -6px, -6px, -16px, -6px);
+            z-index: var.$zindex-base;
+            width: auto;
+            height: auto;
+            pointer-events: none;
+            content: '';
+            border-radius: map.get(var.$radius, 'md');
+            box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
+          }
+
+          &:active::after {
+            z-index: var.$zindex-base * -1;
+            background-color: map.get(color.$layout-status, 'brand-bg-sub');
+          }
+        }
       }
     }
 
@@ -315,23 +334,6 @@ text swiper - 추후 삭제 예정
 
           @include list.common-promo-freeship;
         }
-      }
-
-      // hover 효과 (view-list에서도 동작)
-      &:hover::after {
-        @include mx.position(absolute, -6px, -6px, -14px, -6px);
-        z-index: var.$zindex-base;
-        width: auto;
-        height: auto;
-        pointer-events: none;
-        content: '';
-        border-radius: map.get(var.$radius, 'md') map.get(var.$radius, 'md') 0 0;
-        box-shadow: inset 0 0 0 2px map.get(color.$layout-border, 'brand');
-      }
-
-      &:active::after {
-        z-index: var.$zindex-base * -1;
-        background-color: map.get(color.$layout-status, 'brand-bg-sub');
       }
 
       &.is-guest {
