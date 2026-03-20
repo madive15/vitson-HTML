@@ -1452,3 +1452,47 @@
     }
   }
 }
+
+/* === 개인정보 취급방침 === */
+/* stylelint-disable-next-line selector-class-pattern */
+.k-window .vits-terms_wrap {
+  padding: map.get(var.$unit, 16);
+  background: map.get(color.$layout-surf, 'raised');
+  border-radius: map.get(var.$radius, 'lg');
+
+  .terms {
+    &_wrap {
+      p {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        line-height: 1.5;
+
+        & + p {
+          margin-top: map.get(var.$unit, 2);
+        }
+      }
+    }
+
+    &_title,
+    &_list li {
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+      line-height: 1.5;
+    }
+
+    &_title {
+      margin: map.get(var.$unit, 24) 0 map.get(var.$unit, 8);
+      font-size: fn.rem(14);
+      font-weight: 600;
+      color: map.get(color.$text-colors, 'primary');
+    }
+
+    &_list li {
+      margin: map.get(var.$unit, 8) 0 map.get(var.$unit, 8) map.get(var.$unit, 16);
+      text-indent: (map.get(var.$unit, 16) * -1);
+
+      /* stylelint-disable-next-line selector-class-pattern */
+      .line_table2 {
+        width: 100% !important;
+      }
+    }
+  }
+}

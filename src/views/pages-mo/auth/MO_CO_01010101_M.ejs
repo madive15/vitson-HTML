@@ -66,6 +66,15 @@
                 >
                   <span class="text">isvm계정전환 > 매출처 이용 동의 상세보기</span>
                 </button>
+                <br />
+                <button
+                  type="button"
+                  class="vits-btn-md vits-btn-outline-secondary"
+                  data-terms-type="marketing-customer"
+                  onclick="VmKendoWindow.open('modal6')"
+                >
+                  <span class="text">개인정보 취급방침</span>
+                </button>
               </section>
             </div>
           </main>
@@ -144,6 +153,19 @@
           ]}; 
         %> 
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal5) %>
+        <!-- prettier-ignore -->
+        <% const modal6 = { 
+          id: 'modal6', 
+          variant: 'center',
+          className: 'modal-center',
+          title: '개인정보 취급방침', 
+          contentPath: `${_src}/views/pages-mo/kendo-window/auth/kw-MO_CO_01010101_M.ejs`,
+          contentData: { termsType: 'term' },
+          buttons: [
+            { text: '확인', variant: 'primary', action: 'close' },
+          ]}; 
+        %> 
+        <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal6) %>
         <!-- E: 팝업 영역 -->
       </div>
       <!-- E: vm-wrap -->

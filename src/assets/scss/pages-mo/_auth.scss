@@ -1270,6 +1270,64 @@
     & + .vm-signup-terms-section {
       margin-top: map.get(var.$unit, 24);
     }
+
+    // 개인정보 취급방침
+    .terms {
+      &_wrap {
+        p {
+          @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+          @include mx.text-wrap-safe;
+          line-height: 1.5;
+
+          & + p {
+            margin-top: map.get(var.$unit, 2);
+          }
+        }
+      }
+
+      &_title,
+      &_list li {
+        @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
+        @include mx.text-wrap-safe;
+        line-height: 1.5;
+      }
+
+      &_title {
+        margin: map.get(var.$unit, 16) 0 map.get(var.$unit, 4);
+        font-size: fn.rem(13);
+        font-weight: 600;
+        color: map.get(color.$text-colors, 'primary');
+      }
+
+      &_list li {
+        margin: 0 0 0 map.get(var.$unit, 8);
+        text-indent: (map.get(var.$unit, 8) * -1);
+
+        /* stylelint-disable-next-line selector-class-pattern */
+        .line_table2 {
+          @include mx.text-wrap-safe;
+          width: 100% !important;
+
+          tr:first-child td {
+            background: map.get(color.$layout-surf, 'mypage');
+          }
+
+          td {
+            padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
+            line-height: 1.4;
+            vertical-align: top;
+
+            &:first-child {
+              width: 35%;
+            }
+
+            &:last-child {
+              width: 65%;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
