@@ -146,6 +146,20 @@
           window.UI.select.init();
         }
       })();
+
+      // ?type=empty 일 때 empty 상태 전환
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') === 'empty') {
+          var listEl = document.querySelector('[data-plp-view-list]');
+          var paginationEl = document.querySelector('.vits-product-pagination');
+          var emptyEl = document.querySelector('[data-plp-empty]');
+
+          if (listEl) listEl.style.display = 'none';
+          if (paginationEl) paginationEl.style.display = 'none';
+          if (emptyEl) emptyEl.style.display = '';
+        }
+      })();
     </script>
   </body>
 </html>
