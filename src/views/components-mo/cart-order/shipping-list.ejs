@@ -161,6 +161,20 @@
         <p class="vm-receiver-view-name">메가존 (홍길동)</p>
         <p class="vm-receiver-view-phone">02-222-2222</p>
         <p class="vm-receiver-view-address">(54366) 서울특별시 강남구 테헤란로 123</p>
+
+        <!-- 26-03-23 MU-1104 배송메모 추가 -->
+        <div class="vm-form-row">
+          <label class="vm-form-label">배송 메모</label>
+          <div class="vm-form-field">
+            <!-- prettier-ignore -->
+            <%- include(`${_src}/views/components/form/textarea.ejs`, {
+            id: 'receiver-memo',
+            name: 'receiverMemo',
+            placeholder: '배송 시 요청사항을 입력하세요.',
+            rootClass: 'size-default'
+          }) %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
