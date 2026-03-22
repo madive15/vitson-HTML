@@ -463,6 +463,30 @@
       };
     }
 
+    // claim-request-pickup: 스크롤 시 캘린더 닫힘 방지
+    if ($el.closest('.claim-request-pickup').length) {
+      var isPickupCalendarOpen = false;
+      var origOptsClose = opts.close;
+      opts.close = function (e) {
+        if (isPickupCalendarOpen && !inst._userClose) {
+          e.preventDefault();
+          return;
+        }
+        isPickupCalendarOpen = false;
+        if (origOptsClose) origOptsClose.call(this, e);
+      };
+      var origOptsOpenScroll = opts.open;
+      opts.open = function (e) {
+        // input 토글: close 직후 재open 차단
+        if (inst._blockOpen) {
+          e.preventDefault();
+          return;
+        }
+        isPickupCalendarOpen = true;
+        if (origOptsOpenScroll) origOptsOpenScroll.call(this, e);
+      };
+    }
+
     // appendTo 옵션 → popup.appendTo로 매핑
     var appendTo = opts.appendTo || null;
     delete opts.appendTo;
@@ -491,10 +515,75 @@
         }
       }
 
+      // 반품신청 회수 의뢰일(.claim-request-pickup) 내부 datepicker 전용 분기
+      var isInClaimPickup = $el.closest('.claim-request-pickup').length > 0;
+
+      // 반품신청 회수 의뢰일: 첫 open 위치 깨짐 + 이동 보임 방지
+      // — inst 생성 직후 보이지 않게 열었다 닫아서 DOM 생성 + 클래스 선적용
+      if (isInClaimPickup) {
+        inst._userClose = true;
+        inst.open();
+        var pickupInitPopup = inst.dateView && inst.dateView.popup;
+        var $pickupInitContainer =
+          pickupInitPopup && pickupInitPopup.wrapper ? pickupInitPopup.wrapper.closest('.k-animation-container') : null;
+        if ($pickupInitContainer && $pickupInitContainer.length) {
+          $pickupInitContainer.addClass('vits-datepicker-single-container');
+          $pickupInitContainer[0].style.setProperty('transition', 'none', 'important');
+          $pickupInitContainer[0].style.removeProperty('width');
+          $pickupInitContainer[0].style.removeProperty('left');
+        }
+        inst.close();
+        inst._userClose = false;
+      }
+
       inst.bind('open', function () {
         disableCalendarAnimation();
 
-        // 팝업 렌더링 전 숨김 — 위치·텍스트 보정 중 깜빡임 방지
+        // claim-request-pickup 전용: 이 datepicker의 k-animation-container만 대상
+        if (isInClaimPickup) {
+          // 이 datepicker의 popup wrapper → k-animation-container 참조
+          var pickupPopup = inst.dateView && inst.dateView.popup;
+          var $pickupContainer =
+            pickupPopup && pickupPopup.wrapper ? pickupPopup.wrapper.closest('.k-animation-container') : null;
+
+          if ($pickupContainer && $pickupContainer.length) {
+            // 위치 보정 완료 전까지 이 datepicker 캘린더만 숨기기
+            $pickupContainer[0].style.setProperty('transition', 'none', 'important');
+            $pickupContainer[0].style.visibility = 'hidden';
+          }
+
+          // 동기: 즉시 처리 가능한 것 먼저
+          ensureDayNameObserver();
+          applyDayNamesImmediate();
+          applyHeaderMonthImmediate();
+          applyYearViewMonthNamesImmediate();
+          updatePrevNavState();
+          if (applyPastDisabledStyle) applyPastDisabledStyle();
+
+          // 비동기: Kendo inline style 덮어쓰기 끝난 후 이 datepicker 위치 보정
+          addTimeout(
+            setTimeout(function () {
+              var pickupPopup2 = inst.dateView && inst.dateView.popup;
+              var $pickupContainer2 =
+                pickupPopup2 && pickupPopup2.wrapper ? pickupPopup2.wrapper.closest('.k-animation-container') : null;
+
+              if ($pickupContainer2 && $pickupContainer2.length) {
+                // 이 datepicker 캘린더에만 클래스 부여 + Kendo inline 제거 → CSS 적용
+                $pickupContainer2.addClass('vits-datepicker-single-container');
+                $pickupContainer2[0].style.removeProperty('width');
+                $pickupContainer2[0].style.removeProperty('left');
+                // 위치 보정 완료 후 이 datepicker 캘린더만 보이기
+                requestAnimationFrame(function () {
+                  $pickupContainer2[0].style.setProperty('transition', 'none', 'important');
+                  $pickupContainer2[0].style.visibility = '';
+                });
+              }
+            }, MOBILE_TIMEOUT_DELAY)
+          );
+          return;
+        }
+
+        // 기본 동작: claim-request-pickup 외 모든 datepicker (원본 그대로)
         var $wrap = resolveCalendarWrap();
         var $container = $wrap ? $wrap.closest('.k-animation-container') : null;
         if ($container && $container.length) {
@@ -520,7 +609,55 @@
         );
       });
 
+      // 반품신청 회수 의뢰일: 스크롤 시 캘린더가 input 따라가도록 위치 업데이트
+      if (isInClaimPickup) {
+        var $pickupScrollParent = $el.closest('.vm-content-wrap');
+        if ($pickupScrollParent.length) {
+          $pickupScrollParent.on('scroll', function () {
+            if (!inst.dateView || !inst.dateView.popup) return;
+            var pickupPopupInst = inst.dateView.popup;
+            if (pickupPopupInst.visible && pickupPopupInst.visible()) {
+              pickupPopupInst.position();
+            }
+          });
+        }
+      }
+
+      // 반품신청 회수 의뢰일: 외부 클릭 시 캘린더 닫힘 허용
+      if (isInClaimPickup) {
+        window.jQuery(document).on('mousedown touchstart', function (e) {
+          if (!inst.dateView || !inst.dateView.popup) return;
+          var popupInst = inst.dateView.popup;
+          if (!popupInst.visible || !popupInst.visible()) return;
+          var $target = window.jQuery(e.target);
+          if ($target.closest('.k-animation-container').length) return;
+          // input 영역 클릭 시 토글 — 열려있으면 닫기만
+          if ($target.closest('.vits-datepicker-single').length) {
+            inst._userClose = true;
+            inst.close();
+            inst._userClose = false;
+            // close 직후 Kendo가 다시 open하는 것 방지 — 짧은 시간 open 차단
+            inst._blockOpen = true;
+            addTimeout(
+              setTimeout(function () {
+                inst._blockOpen = false;
+              }, 200)
+            );
+            return;
+          }
+          inst._userClose = true;
+          inst.close();
+          inst._userClose = false;
+        });
+      }
+
       inst.bind('change', function () {
+        // claim-request-pickup: 날짜 선택 시에는 닫히도록 허용
+        if (isInClaimPickup) {
+          inst._userClose = true;
+          inst.close();
+          inst._userClose = false;
+        }
         updateSelectedState();
       });
 

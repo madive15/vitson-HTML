@@ -107,6 +107,24 @@
       observer.observe($text[0]);
       _observers.push(observer);
     });
+
+    // 서버 환경 렌더 지연 대응 — 초기 체크 보강
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        $(ROOT).each(function () {
+          checkOverflow($(this));
+        });
+      });
+    });
+
+    // 웹폰트 로딩 후 재체크
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        $(ROOT).each(function () {
+          checkOverflow($(this));
+        });
+      });
+    }
   }
 
   function destroy() {

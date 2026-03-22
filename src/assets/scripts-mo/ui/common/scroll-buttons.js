@@ -70,7 +70,7 @@
 
     // 터치 스크롤과 탭을 구분하는 핸들러 생성
     function createHandler(btn) {
-      var isSkip = $(btn).is(Selector.SKIP);
+      // var isSkip = $(btn).is(Selector.SKIP);
       var touchStartX = 0;
       var moved = false;
 
@@ -93,12 +93,13 @@
         {passive: true}
       );
 
-      return function (e) {
+      return function () {
         if (moved) return;
-        var scrollOnly = $scope.is('[data-scroll-only]');
-        if (!isSkip && !scrollOnly) {
-          e.preventDefault();
-        }
+        // [2026-03-22] 개발 요청: click 이벤트 기반 API 호출 차단 방지를 위해 preventDefault 제거
+        // var scrollOnly = $scope.is('[data-scroll-only]');
+        // if (!isSkip && !scrollOnly) {
+        //   e.preventDefault();
+        // }
         setActive($(btn));
       };
     }
