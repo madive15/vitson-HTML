@@ -8965,6 +8965,46 @@
           // no-op
         }
       }
+
+      // 반품신청 모달 내부: 팝업 따닥 방지 (MutationObserver + opacity)
+      if ($el.closest('.vits-claim-request').length) {
+        var dateViewPopup = inst.dateView && inst.dateView.popup;
+        var $popupAnimWrap = dateViewPopup && dateViewPopup.wrapper ? dateViewPopup.wrapper.closest('.k-animation-container') : null;
+        if ($popupAnimWrap && $popupAnimWrap.length) {
+          // display 변경 감지 → 즉시 숨기기
+          var popupObserver = new MutationObserver(function () {
+            var display = $popupAnimWrap.css('display');
+            if (display !== 'none' && !$popupAnimWrap.hasClass('is-popup-ready')) {
+              $popupAnimWrap[0].style.opacity = '0';
+            }
+          });
+          popupObserver.observe($popupAnimWrap[0], {
+            attributes: true,
+            attributeFilter: ['style']
+          });
+        }
+
+        // MutationObserver가 숨긴 팝업을 다시 보여주는 역할
+        // 아래 두 번째 activate 바인딩과 중복이지만, 양쪽 모두 있어야 타이밍이 맞음
+        inst.bind('activate', function () {
+          var popup = inst.popup || inst.dateView && inst.dateView.popup;
+          if (!popup || !popup.wrapper) return;
+          var $animWrap = popup.wrapper.closest('.k-animation-container');
+          if (!$animWrap.length) return;
+          $animWrap.addClass('is-popup-ready');
+          $animWrap[0].style.opacity = '1';
+        });
+        inst.bind('close', function () {
+          if ($popupAnimWrap && $popupAnimWrap.length) {
+            $popupAnimWrap.removeClass('is-popup-ready');
+          }
+        });
+      }
+
+      // 반품신청 모달 내부 datepicker: 팝업 열림 시 따닥 방지
+      // open/activate 이벤트가 위 .vits-claim-request 블록과 중복 바인딩됨
+      // — 중복 제거 시 opacity 복원 타이밍이 깨져 따닥 현상 재발하므로 유지
+      var isInClaimRequest = $el.closest('.vits-claim-request').length > 0;
       inst.bind('open', function () {
         disableCalendarAnimation();
         ensureDayNameObserver();
@@ -8972,7 +9012,27 @@
         forceApplyHeaderMonth();
         forceApplyYearViewMonthNames();
         updatePrevNavState();
+        if (isInClaimRequest) {
+          var popup = inst.popup || inst.dateView && inst.dateView.popup;
+          if (!popup || !popup.wrapper) return;
+          var $animWrap = popup.wrapper.closest('.k-animation-container');
+          if (!$animWrap.length) return;
+
+          // 즉시 숨기기
+          $animWrap[0].style.cssText += '; opacity: 0 !important;';
+        }
       });
+
+      // activate: Kendo 애니메이션 완전 종료 후 발생
+      if (isInClaimRequest) {
+        inst.bind('activate', function () {
+          var popup = inst.popup || inst.dateView && inst.dateView.popup;
+          if (!popup || !popup.wrapper) return;
+          var $animWrap = popup.wrapper.closest('.k-animation-container');
+          if (!$animWrap.length) return;
+          $animWrap[0].style.cssText += '; opacity: 1 !important; transition: none !important;';
+        });
+      }
       inst.bind('change', function () {
         updateSelectedState();
       });
