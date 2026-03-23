@@ -5,6 +5,7 @@
 import './home-swiper-visual';
 import './home-swiper-tab';
 import './home-swiper-peek';
+import './home-recommend-legend';
 
 (function ($, window) {
   'use strict';
@@ -13,7 +14,7 @@ import './home-swiper-peek';
 
   window.UI = window.UI || {};
 
-  var modules = ['homeSwiperVisual', 'homeSwiperTab', 'homeSwiperPeek'];
+  var modules = ['homeSwiperVisual', 'homeSwiperTab', 'homeSwiperPeek', 'homeRecommendLegend'];
 
   window.UI.home = {
     init: function () {
