@@ -131,6 +131,11 @@
     gap: map.get(var.$unit, 40);
     padding-bottom: fn.rem(6);
   }
+
+  // nodata
+  &:has(.vits-empty-state) {
+    padding-top: fn.rem(100);
+  }
 }
 
 /* 기획전 상세 상품목록 */
@@ -150,6 +155,10 @@
           @include mx.flex(flex, row, center, center);
           @include typo.typography('h1b', $color: #101828);
           height: map.get(var.$unit, 48);
+
+          &:empty {
+            display: none;
+          }
         }
       }
 

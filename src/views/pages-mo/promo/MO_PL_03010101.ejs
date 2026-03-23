@@ -45,6 +45,7 @@
 
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-promo">
+              <!-- [D] 상품이 있을 떄 -->
               <div class="vm-promo-detail detail-default">
                 <!-- 기획전 비주얼 배너 -->
                 <div class="vm-promo-detail-visual">
@@ -75,6 +76,20 @@
                   }) %>
                 </div>
               </div>
+
+              <!-- [D] 상품이 없을 떄 -->
+              <div class="vm-promo-detail detail-default" style="display: none">
+                <!-- 기획전 비주얼 배너 -->
+                <div class="vm-promo-detail-visual">
+                  <img src="<%= promoDetail.image %>" alt="<%= promoDetail.title %>" class="promo-detail-img" />
+                </div>
+
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                  iconName: 'document-paper', 
+                  title: '등록된 상품이 없습니다',
+                }) %>
+              </div>
             </div>
           </main>
 
@@ -102,6 +117,17 @@
           });
           btn.classList.add('is-active');
         });
+
+        // ?type=empty 일 때 empty 상태 전환
+        (function () {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get('type') === 'empty') {
+            var sections = document.querySelectorAll('.vm-promo-detail');
+            // sections[0]: 상품 있음, sections[1]: 상품 없음
+            if (sections[0]) sections[0].style.display = 'none';
+            if (sections[1]) sections[1].style.display = '';
+          }
+        })();
       })();
     </script>
   </body>

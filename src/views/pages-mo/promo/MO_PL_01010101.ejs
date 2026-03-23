@@ -64,6 +64,7 @@
 
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-promo">
+              <!-- [D] 기획전 있을 떄 -->
               <div class="vm-promo-main" data-tab-scope>
                 <!-- 탭 메뉴 -->
                 <div class="vm-promo-main-tab">
@@ -110,6 +111,15 @@
                 </div>
                 <% } %>
               </div>
+
+              <!-- [D] 기획전 없을 떄 -->
+              <div class="vm-promo-main" data-tab-scope style="display: none">
+                <!-- prettier-ignore -->
+                <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                    iconName: 'document-paper', 
+                    title: '기획전 정보가 없습니다',
+                  }) %>
+              </div>
             </div>
           </main>
 
@@ -121,5 +131,18 @@
     </section>
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // ?type=empty 일 때 empty 상태 전환
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') === 'empty') {
+          var sections = document.querySelectorAll('.vm-promo-main');
+          // sections[0]: 기획전 있음, sections[1]: 기획전 없음
+          if (sections[0]) sections[0].style.display = 'none';
+          if (sections[1]) sections[1].style.display = '';
+        }
+      })();
+    </script>
   </body>
 </html>
