@@ -608,7 +608,9 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
       .vm-modal {
         /* stylelint-disable-next-line no-descending-specificity */
         &-inner {
-          max-height: calc(var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom));
+          max-height: calc(
+            var(--vh, 1dvh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')} - var(--safe-bottom)
+          ) !important;
         }
 
         @if $target == '.my-shipment-popup' {
