@@ -144,7 +144,7 @@ module.exports = {
       }));
   },
   getLegendProducts: function () {
-    return _all.slice(10, 20).map((item, i) => ({
+    return _all.slice(10, 23).map((item, i) => ({
       ...item,
       stockYn: i === 1 ? 'N' : item.stockYn,
       showSpec: false,
