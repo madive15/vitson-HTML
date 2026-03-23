@@ -92,3 +92,29 @@
     </div>
   </div>
 </div>
+
+<!-- [D] 테스트서버 대응 — vits-select-list-ul에 옵션 동적 주입 (로컬 확인용) -->
+<script>
+(function () {
+  document.querySelectorAll('.product-return-select .vits-select').forEach(function (selectEl) {
+    var list = selectEl.querySelector('.vits-select-list-ul');
+    if (!list || list.children.length > 0) return;
+
+    // 같은 카드의 수량 값에서 max 추출
+    var card = selectEl.closest('.vm-product-mypage-card');
+    var qtyEl = card ? card.querySelector('.product-price-qty-value') : null;
+    var max = 0;
+
+    if (qtyEl) {
+      max = parseInt(qtyEl.textContent, 10) || 0;
+    }
+
+    var html = '';
+    for (var i = 0; i <= max; i++) {
+      html += '<li class="vits-select-option" data-value="' + i + '">' + i + '</li>';
+    }
+
+    list.innerHTML = html;
+  });
+})();
+</script>

@@ -203,6 +203,62 @@
             updateAction();
           });
         }
+
+        // [D] 테스트서버 셀렉트 토글 (로컬 확인용)
+        $(document).on('click', '.vits-select-trigger', function (e) {
+          e.stopPropagation();
+          const $trigger = $(this);
+          const $select = $trigger.closest('.vits-select');
+          const $list = $select.find('.vits-select-list-ul');
+
+          // 다른 select 닫기
+          $('.vits-select.is-open').not($select).removeClass('is-open is-dropup');
+
+          // 열려있으면 닫기
+          if ($select.hasClass('is-open')) {
+            $select.removeClass('is-open is-dropup');
+            return;
+          }
+
+          // dropup 판단
+          var GUTTER = 8;
+          var listEl = $list[0];
+
+          $list.css({display: 'block', visibility: 'hidden'});
+          var naturalH = listEl.scrollHeight;
+          $list.css({display: '', visibility: ''});
+
+          var scroller = $trigger.closest('.vm-content-wrap')[0] || document.documentElement;
+          var viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+          var cRect =
+            scroller === document.documentElement ? {top: 0, bottom: viewH} : scroller.getBoundingClientRect();
+
+          var tRect = $trigger[0].getBoundingClientRect();
+          var spaceBelow = cRect.bottom - tRect.bottom - GUTTER;
+          var spaceAbove = tRect.top - cRect.top - GUTTER;
+
+          var shouldDropUp = spaceBelow < naturalH && spaceAbove > spaceBelow;
+
+          $select.toggleClass('is-dropup', shouldDropUp);
+          $select.addClass('is-open');
+        });
+
+        // 옵션 선택
+        $(document).on('click', '.vits-select-option', function (e) {
+          e.stopPropagation();
+          const $option = $(this);
+          const $select = $option.closest('.vits-select');
+
+          $select.find('.vits-select-value').text($option.text());
+          $select.find('[data-vits-select-hidden]').val($option.attr('data-value'));
+          $option.addClass('vits-select-selected').siblings().removeClass('vits-select-selected');
+          $select.removeClass('is-open is-dropup');
+        });
+
+        // 바깥 클릭 닫기
+        $(document).on('click', function () {
+          $('.vits-select.is-open').removeClass('is-open is-dropup');
+        });
       })();
     </script>
   </body>
