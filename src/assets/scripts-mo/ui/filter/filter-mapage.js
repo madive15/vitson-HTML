@@ -42,7 +42,7 @@
     deliveryRoot: '[data-select-id="vm-order-delivery"]',
     cancelStatusRoot: '[data-select-id="vm-cancel-status"]',
     datePicker: '#vm-order-daterange',
-    searchInput: '#vm-order-search-searchKeyword',
+    searchInput: '#my-orders-search-searchKeyword',
     dim: '.vm-mypage-filter-dim',
     resetBtn: '.actions-reset',
     searchBtn: '.actions-search'

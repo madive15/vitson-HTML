@@ -1,0 +1,153 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+<%
+  // 일반 배송
+  var normalFields = [
+    { id: 'ipt-delivery-normal01', label: '배송지명', placeholder: '예: 집, 회사', required: true },
+    { id: 'ipt-delivery-normal02', label: '받는 사람', placeholder: '이름을 입력해주세요', required: true },
+    { id: 'ipt-delivery-normal03', label: '휴대전화', placeholder: '010-0000-0000', required: true }
+  ];
+
+  // 화물 배송
+  var freightInfoFields = [
+    { id: 'ipt-delivery-freight01', label: '화물업체', placeholder: '화물 영업소 조회 시 자동입력', readonly: true },
+    { id: 'ipt-delivery-freight02', label: '영업소명', placeholder: '화물 영업소 조회 시 자동입력', readonly: true }
+  ];
+
+  var freightFields = [
+    { id: 'ipt-delivery-freight03', label: '배송지명', placeholder: '예: 집, 회사', required: true },
+    { id: 'ipt-delivery-freight04', label: '받는 사람', placeholder: '이름을 입력해주세요', required: true },
+    { id: 'ipt-delivery-freight05', label: '휴대전화', placeholder: '010-0000-0000', required: true }
+  ];
+%>
+
+<div class="vm-tab-section tab-radio" data-tab-scope>
+  <div class="tab-radio-group">
+    <ul class="vm-tab-menus" role="tablist">
+      <li class="vm-tab-menu">
+        <!-- prettier-ignore -->
+        <button 
+          type="button" 
+          data-tab-btn 
+          data-tab-target="tab1" 
+          role="tab" 
+          class="vm-tab-btn is-active">
+          <span class="text">일반 배송 (택배/퀵)</span>
+        </button>
+      </li>
+      <li class="vm-tab-menu">
+        <!-- prettier-ignore -->
+        <button 
+          type="button" 
+          data-tab-btn 
+          data-tab-target="tab2" 
+          role="tab" 
+          class="vm-tab-btn">
+          <span class="text">화물 배송 (지점 수령)</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="vm-tab-panel" data-tab-panel="tab1" role="tabpanel">
+      <div class="vm-add-shipping-address">
+        <form id="formDeliveryNormal" class="add-shipping-address-form">
+          <dl class="add-shipping-address-dl">
+            <!-- prettier-ignore -->
+            <% normalFields.forEach(function(field) { %>
+              <%- include(`${_src}/views/components-mo/mypage/dt-dd-input.ejs`, field) %>
+            <% }); %>
+
+            <dt class="is-required dt-address">주소</dt>
+            <dd class="dd-code">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                id: "ipt-delivery-normal-zip",
+                name: "ipt-delivery-normal-zip",
+                label: "주소",
+                placeholder: "우편번호",
+                required: true,
+                rootClass: "size-m"
+              }) %>
+
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size:'sm', 
+                variant: 'scoped-info', 
+                text: '주소 검색'
+              }) %>
+            </dd>
+            <dd class="dd-address">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                id: "ipt-delivery-normal-addr",
+                name: "ipt-delivery-normal-addr",
+                label: "주소",
+                value: "(54366) 서울특별시 강남구 테헤란로 123",
+                placeholder: "기본 주소",
+                required: true,
+                rootClass: "size-m"
+              }) %>
+            </dd>
+            <dd class="dd-address">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/input-text.ejs`, {
+                id: "ipt-delivery-normal-detail",
+                name: "ipt-delivery-normal-detail",
+                label: "주소",
+                placeholder: "상세 주소를 입력해주세요",
+                required: true,
+                rootClass: "size-m"
+              }) %>
+            </dd>
+            <dd class="dd-checkbox">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                name: 'ckb-normal',
+                value: 'ckb-normal',
+                size: 'm',
+                text: '대표 배송지로 설정'
+              }) %>
+            </dd>
+          </dl>
+        </form>
+      </div>
+    </div>
+
+    <div class="vm-tab-panel" data-tab-panel="tab2" role="tabpanel" hidden>
+      <div class="vm-add-shipping-address">
+        <form id="formDeliveryFreight" class="add-shipping-address-form form-freight">
+          <dl class="add-shipping-address-dl dl-freight01">
+            <!-- prettier-ignore -->
+            <% freightInfoFields.forEach(function(field) { %>
+              <%- include(`${_src}/views/components-mo/mypage/dt-dd-input.ejs`, field) %>
+            <% }); %>
+            <dd class="dd-freight01">
+              <p class="asterisk-text">화물 배송은 영업소 정보가 필요합니다.</p>
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/button/button.ejs`, {
+                size:'sm', 
+                variant: 'scoped-info', 
+                text: '영업소 조회'
+              }) %>
+            </dd>
+          </dl>
+          <dl class="add-shipping-address-dl dl-freight02">
+            <!-- prettier-ignore -->
+            <% freightFields.forEach(function(field) { %>
+              <%- include(`${_src}/views/components-mo/mypage/dt-dd-input.ejs`, field) %>
+            <% }); %>
+            <dd class="dd-checkbox">
+              <!-- prettier-ignore -->
+              <%- include(`${_src}/views/components/form/checkbox-item.ejs`, {
+                name: 'ckb-freight',
+                value: 'ckb-freight',
+                size: 'm',
+                text: '대표 배송지로 설정'
+              }) %>
+            </dd>
+          </dl>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
