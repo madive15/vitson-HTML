@@ -446,15 +446,18 @@ import Swiper from 'swiper/bundle';
   }
 
   /**
-   * 레전드 상품 Swiper 초기화 (Grid 모드)
+   * 레전드 상품 Swiper 초기화
+   * - PC(1280+): 5열 x 2행 = 10개씩 한 페이지
+   * - MO(<1280): 4열 x 2행 = 8개씩 한 페이지
+   * - 순서 유지:
+   *   1 2 3 4 5
+   *   6 7 8 9 10
+   * - 페이지 단위 이동 보장
+   * - 마지막 페이지는 빈칸 유지
    */
   function initLegendSwiper() {
     var containers = document.querySelectorAll('.js-home-product-legend-swiper');
-    if (!containers.length) {
-      return;
-    }
-
-    if (!Swiper) {
+    if (!containers.length || !Swiper) {
       return;
     }
 
@@ -463,69 +466,148 @@ import Swiper from 'swiper/bundle';
         return;
       }
 
-      // 슬라이드 개수 확인
-      var slides = container.querySelectorAll('.swiper-slide');
-      var slideCount = slides.length;
-
-      // 슬라이드가 1개 이하면 Swiper 미적용
-      if (slideCount <= 1) {
-        return;
-      }
-
-      // 이미 초기화된 경우 중복 실행 방지
-      var existingInstance = container[LEGEND_SWIPER_INSTANCE_KEY];
-      if (existingInstance && typeof existingInstance.destroy === 'function') {
-        return;
-      }
-
-      // 네비게이션 버튼 찾기 (상위 wrapper에서)
       var wrapper = container.closest('.legend-wrapper');
       var prevButton = wrapper ? wrapper.querySelector('.legend-nav-prev') : null;
       var nextButton = wrapper ? wrapper.querySelector('.legend-nav-next') : null;
+      var swiperWrapper = container.querySelector('.swiper-wrapper');
 
-      var options = {
-        slidesPerView: 5,
-        spaceBetween: 24,
-        speed: 500,
-        slidesPerGroup: 1,
-        grid: {
-          rows: 2,
-          fill: 'row'
-        },
-        watchSlidesProgress: true,
-        a11y: false,
-        breakpoints: {
-          0: {
-            slidesPerView: 4,
-            spaceBetween: 20,
-            slidesPerGroup: 1,
-            grid: {
-              rows: 2,
-              fill: 'row'
-            }
-          },
-          1280: {
-            slidesPerView: 5,
-            spaceBetween: 24,
-            slidesPerGroup: 1,
-            grid: {
-              rows: 2,
-              fill: 'row'
-            }
-          }
-        },
-        navigation: {
-          nextEl: nextButton,
-          prevEl: prevButton,
-          disabledClass: 'swiper-button-disabled'
+      if (!swiperWrapper) {
+        return;
+      }
+
+      function isDesktop() {
+        return window.innerWidth >= 1280;
+      }
+
+      function getCols() {
+        return isDesktop() ? 5 : 4;
+      }
+
+      function getRows() {
+        return 2;
+      }
+
+      function getPageSize() {
+        return getCols() * getRows(); // PC 10 / MO 8
+      }
+
+      function getGap() {
+        return isDesktop() ? 24 : 20;
+      }
+
+      function destroyLegendSwiper() {
+        var existingInstance = container[LEGEND_SWIPER_INSTANCE_KEY];
+        if (existingInstance && typeof existingInstance.destroy === 'function') {
+          existingInstance.destroy(true, true);
+          delete container[LEGEND_SWIPER_INSTANCE_KEY];
         }
-      };
+      }
 
-      try {
-        var instance = new Swiper(container, options);
-        container[LEGEND_SWIPER_INSTANCE_KEY] = instance;
-      } catch (e) {
-        void e;
+      function cacheOriginalSlides() {
+        if (container.__legendOriginalSlides) {
+          return;
+        }
+
+        var originalSlides = Array.prototype.slice.call(swiperWrapper.querySelectorAll('.swiper-slide'));
+
+        container.__legendOriginalSlides = originalSlides.map(function (slide) {
+          return slide.innerHTML;
+        });
+      }
+
+      function rebuildLegendPages() {
+        cacheOriginalSlides();
+
+        var originals = container.__legendOriginalSlides || [];
+        var cols = getCols();
+        var pageSize = getPageSize();
+        var gap = getGap();
+        var totalPages = Math.ceil(originals.length / pageSize);
+
+        swiperWrapper.innerHTML = '';
+
+        for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+          var pageSlide = document.createElement('div');
+          pageSlide.className = 'swiper-slide';
+
+          var pageGrid = document.createElement('div');
+          pageGrid.className = 'legend-page-grid';
+          pageGrid.style.display = 'grid';
+          pageGrid.style.gridTemplateColumns = 'repeat(' + cols + ', minmax(0, 1fr))';
+          pageGrid.style.columnGap = gap + 'px';
+          pageGrid.style.rowGap = gap + 'px';
+
+          for (var slotIndex = 0; slotIndex < pageSize; slotIndex++) {
+            var itemIndex = pageIndex * pageSize + slotIndex;
+            var cell = document.createElement('div');
+            cell.className = 'legend-page-cell';
+
+            if (originals[itemIndex]) {
+              cell.innerHTML = originals[itemIndex];
+            } else {
+              cell.innerHTML = '<div class="product-legend-item" aria-hidden="true"></div>';
+            }
+
+            pageGrid.appendChild(cell);
+          }
+
+          pageSlide.appendChild(pageGrid);
+          swiperWrapper.appendChild(pageSlide);
+        }
+      }
+
+      function initLegendInstance() {
+        rebuildLegendPages();
+
+        var totalPages = swiperWrapper.querySelectorAll('.swiper-slide').length;
+        if (!totalPages) {
+          return;
+        }
+
+        var options = {
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+          spaceBetween: 0,
+          speed: 500,
+          watchSlidesProgress: true,
+          a11y: false,
+          navigation: {
+            nextEl: nextButton,
+            prevEl: prevButton,
+            disabledClass: 'swiper-button-disabled'
+          }
+        };
+
+        try {
+          var instance = new Swiper(container, options);
+          container[LEGEND_SWIPER_INSTANCE_KEY] = instance;
+        } catch (e) {
+          void e;
+        }
+      }
+
+      destroyLegendSwiper();
+      initLegendInstance();
+
+      if (!container.__legendResizeBound) {
+        container.__legendResizeBound = true;
+
+        var resizeTimer;
+        var currentMode = isDesktop() ? 'desktop' : 'mobile';
+
+        window.addEventListener('resize', function () {
+          clearTimeout(resizeTimer);
+
+          resizeTimer = setTimeout(function () {
+            var nextMode = isDesktop() ? 'desktop' : 'mobile';
+
+            if (currentMode !== nextMode) {
+              currentMode = nextMode;
+              destroyLegendSwiper();
+              initLegendInstance();
+            }
+          }, 150);
+        });
       }
     });
   }

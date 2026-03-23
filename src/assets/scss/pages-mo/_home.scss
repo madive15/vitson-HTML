@@ -346,7 +346,7 @@ $visual-btn: fn.rem(18);
       // 상품 카드 너비(140) * 5 + 열 gap(16) * 4 = 764
       @include mx.mq($max: 764) {
         display: grid;
-        grid-template-columns: repeat(5, fn.rem(140));
+        grid-template-columns: repeat(var(--legend-cols, 5), fn.rem(140));
         grid-auto-flow: row;
         gap: map.get(var.$unit, 12) map.get(var.$unit, 16);
 
