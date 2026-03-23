@@ -47,15 +47,12 @@
 
         <!-- S: 팝업 영역 -->
         <!-- prettier-ignore -->
-        <% const footerHtml = include(`${_src}/views/components/pagination.ejs`, { 
-          type: 'default', current: 1, isPrevDisabled: true 
-        }); %>
         <% const modal = { 
           id: 'modal', 
           title: '화물 영업소 조회', 
-          className: 'modal-freight-search',
+          variant: 'slide-right',
+          className: 'delivery-place-popup',
           contentPath: `${_src}/views/pages-mo/kendo-window/mypage/kw-MO_CO_02020301_P.ejs`,
-          footerHtml: footerHtml
         }; %>
         <%- include(`${_src}/views/components-mo/kendo/kendo-window.ejs`, modal) %>
         <!-- E: 팝업 영역 -->

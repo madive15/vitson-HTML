@@ -45,14 +45,13 @@
               rootClass: 'size-l'
             }) %>
           </li>
-
-          <li class="vm-form-item">
-            <!-- prettier-ignore -->
-            <%- include(`${_src}/views/components/button/button.ejs`, {
-                size:'xl', variant: 'secondary', text: '조회하기'
-              }) %>
-          </li>
         </ul>
+        <div class="vm-form-actions">
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/button/button.ejs`, {
+            size:'xl', variant: 'secondary', text: '조회하기'
+          }) %>
+        </div>
       </div>
     </form>
   </div>
@@ -63,5 +62,8 @@
         <%- include(`${_src}/views/components-mo/mypage/freight-branch-item.ejs`, item) %>
       <% }); %>
     </ul>
+  </div>
+  <div class="vm-carrier-search-pagination">
+    <%- include(`${_src}/views/components/pagination.ejs`, { type: 'default', current: 1, isPrevDisabled: true }) %>
   </div>
 </div>

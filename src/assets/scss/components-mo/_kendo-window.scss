@@ -452,7 +452,7 @@
 
   // 슬라이드 라이트 — 풀스크린 (오른쪽에서 왼쪽)
   .k-window.is-slideright:has(.vm-modal-header) {
-    padding-bottom: calc(#{map.get(var.$mo-bottom-bar, 'tab-bar')} + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
     overflow: hidden;
     border-radius: 0;
 
@@ -863,6 +863,53 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
       flex-direction: column;
       min-height: 0;
       overflow: hidden;
+    }
+  }
+}
+
+// 배송지등록, 목록, 화물영업소 조회 풀 팝업
+.vm-scope .k-window.is-slideright {
+  /* stylelint-disable-next-line no-descending-specificity */
+  &:has(.delivery-place-popup, .vm-tab-section[class*='-radio']) {
+    background: map.get(color.$layout-surf, 'mypage');
+  }
+
+  .delivery-place-popup {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vm-modal-content {
+      background: map.get(color.$layout-surf, 'mypage');
+
+      .vm-freight-search,
+      .vm-address-select,
+      .vm-tab-section[class*='-radio'] {
+        padding: map.get(var.$unit, 12) 0 0;
+      }
+
+      .vm-freight-search {
+        .vm-freight-search-group {
+          .vm-form-item {
+            .vits-input .input-item {
+              height: map.get(var.$unit, 36);
+            }
+          }
+
+          .vm-form-actions {
+            [class*='vits-btn-'] {
+              width: 100%;
+              min-height: map.get(var.$unit, 52);
+            }
+          }
+        }
+
+        .vm-carrier-search-pagination {
+          @include mx.flex(flex, row, center, center);
+        }
+      }
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vm-modal-footer {
+      background: map.get(color.$layout-surf, 'mypage');
     }
   }
 }
