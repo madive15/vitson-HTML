@@ -45,6 +45,28 @@
             tomorrow: true,
             hot: true,
           }) %>
+
+        <!-- S: 26-03-23 MU-1075 수량할인 추가 -->
+        <div class="overview-label-discount">
+          <div class="vits-tooltip" data-tooltip="right">
+            <button type="button" class="vits-tooltip-trigger" aria-label="단가할인">
+              <span class="icon">
+                <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'line-graph' }) %>
+              </span>
+              <span class="text">단가할인</span>
+            </button>
+            <div class="vits-tooltip-content" role="tooltip" aria-hidden="true">
+              <ul class="vits-tooltip-list">
+                <li class="vits-tooltip-item">50개 이상 사면 <strong>1,543원</strong></li>
+                <li class="vits-tooltip-item">150개 이상 사면 <strong>1,522원</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <input type="hidden" id="largeOrderDcYn" value="N" />
+          <input type="hidden" id="timeSaleCode" value="" />
+        </div>
+        <!-- E: 26-03-23 MU-1075 수량할인 추가 -->
       </div>
     </div>
 
@@ -71,6 +93,7 @@
           iconName: 'ic-line-download'
         }) %>
       </div>
+
       <!-- E: 가격 (회원) -->
       <% } else { %>
       <!-- S: 가격 (비회원) -->

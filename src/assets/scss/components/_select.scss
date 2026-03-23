@@ -59,6 +59,20 @@
     @include mx.common-mouse-event {
       box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
     }
+
+    &:disabled {
+      background: map.get(color.$layout-surf, 'raised') !important;
+      border: 0 !important;
+      box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary') !important;
+
+      .vits-select-value {
+        color: map.get(color.$text-colors, 'muted') !important;
+      }
+
+      .vits-select-icon {
+        color: map.get(color.$icon-neutral, 'disabled') !important;
+      }
+    }
   }
 
   &-list {
@@ -149,6 +163,7 @@
         box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &-value {
         color: map.get(color.$text-colors, 'muted');
       }
