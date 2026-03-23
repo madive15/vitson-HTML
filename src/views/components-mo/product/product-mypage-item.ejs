@@ -312,8 +312,9 @@
       <div class="card-return-qty">
         <p class="product-return-label">반품 신청 수량</p>
         <div class="product-return-select">
+          <%# <!-- [D] 퍼블 원본 -->
           <!-- prettier-ignore -->
-          <%- include(`${_src}/views/components/form/select.ejs`, {
+          < %- include(`${_src}/views/components/form/select.ejs`, {
             id: 'return-qty-' + checkboxId,
             name: 'return-qty-' + checkboxId,
             placeholder: '수량',
@@ -321,7 +322,28 @@
             value: '1',
             disabled: false,
             portal: true,
-          }) %>
+          }) % > %>
+
+          <!-- [D] 테스트서버 마크업 — 옵션을 JS에서 동적 주입하므로 ul 비워둠 -->
+          <!-- 차이: vits-select-list → vits-select-list-ul, data-vits-select-trigger·접근성 속성 누락, 초기 is-open 상태 -->
+          <div class="vits-select"
+            data-vits-select
+            data-select-id="return-qty-<%= checkboxId %>"
+            data-vits-select-portal>
+
+            <button type="button" class="vits-select-trigger">
+              <span class="vits-select-value"
+                data-vits-select-value
+                data-placeholder="수량">수량</span>
+              <span class="vits-select-icon">
+                <i class="ic ic-arrow-down"></i>
+              </span>
+            </button>
+
+            <ul class="vits-select-list-ul" data-vits-select-list></ul>
+
+            <input type="hidden" name="returnQty" value="0" data-vits-select-hidden>
+          </div>
         </div>
       </div>
       <% } %>
