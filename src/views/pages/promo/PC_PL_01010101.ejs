@@ -124,6 +124,7 @@ const tabContents = {
             <!-- S: vits-grid-main -->
             <div class="vits-grid-main vits-main-promo">
               <div class="vits-inner">
+                <!-- [D] 기획전 있을 때 -->
                 <!-- S: 기획전 탭 -->
                 <div class="vits-promo-tab" data-vits-tab="promo-category">
                   <ul class="vits-promo-tab-nav" data-tab-nav role="tablist" aria-label="기획전 카테고리">
@@ -175,6 +176,15 @@ const tabContents = {
                   </div>
                 </div>
                 <!-- E: 기획전 탭 -->
+
+                <!-- [D] 기획전 없을 때 -->
+                <div class="vits-promo-tab" data-vits-tab="promo-category" style="display: none">
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                    iconName: 'document-paper', 
+                    title: '기획전 정보가 없습니다',
+                  }) %>
+                </div>
               </div>
             </div>
             <!-- E: vits-grid-main -->
@@ -190,5 +200,18 @@ const tabContents = {
     <!-- E: vits-wrapper -->
 
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
+
+    <script>
+      // ?type=empty 일 때 empty 상태 전환
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') === 'empty') {
+          var tabs = document.querySelectorAll('[data-vits-tab="promo-category"]');
+          // tabs[0]: 기획전 있음, tabs[1]: 기획전 없음(promo-empty)
+          if (tabs[0]) tabs[0].style.display = 'none';
+          if (tabs[1]) tabs[1].style.display = '';
+        }
+      })();
+    </script>
   </body>
 </html>

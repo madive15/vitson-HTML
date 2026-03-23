@@ -79,6 +79,7 @@ const tabItems = [
                         <% }) %>
                       </ul>
 
+                      <!-- [D] 상품이 있을 때 -->
                       <div class="promo-products-tab-content" data-tab-content>
                         <% tabItems.forEach((item) => { const isActive = item.id === activeId; %>
                         <div
@@ -96,6 +97,15 @@ const tabItems = [
                           }) %>
                         </div>
                         <% }) %>
+                      </div>
+
+                      <!-- [D] 상품이 없을 때 -->
+                      <div class="promo-products-tab-content" data-tab-content style="display: none">
+                        <!-- prettier-ignore -->
+                        <%- include(`${_src}/views/components/empty-state.ejs`, { 
+                          iconName: 'document-paper', 
+                          title: '등록된 상품이 없습니다',
+                        }) %>
                       </div>
                     </div>
                   </div>
@@ -138,6 +148,14 @@ const tabItems = [
           els.forEach(function (el) {
             el.style.display = 'none';
           });
+        }
+
+        // ?type=empty : 상품 없음 상태 전환
+        if (params.get('type') === 'empty') {
+          var contents = document.querySelectorAll('[data-tab-content]');
+          // contents[0]: 상품 있음, contents[1]: 상품 없음
+          if (contents[0]) contents[0].style.display = 'none';
+          if (contents[1]) contents[1].style.display = '';
         }
       })();
     </script>
