@@ -95,13 +95,13 @@
     }
   }
 
-  &:has(.vm-claim-request.step-1.is-active) {
+  &:has(.vm-header-step-button.is-current[data-step-nav='1']) {
     background: map.get(color.$layout-surf, 'sunken');
   }
 
   // step-2, step-3 공통
   @each $step in 2, 3 {
-    &:has(.vm-claim-request.step-#{$step}.is-active) {
+    &:has(.vm-header-step-button.is-current[data-step-nav='#{$step}']) {
       background: color.$color-white;
 
       .vm-content-wrap {

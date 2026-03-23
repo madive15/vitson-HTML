@@ -83,11 +83,64 @@
         }
 
         &-labels {
+          @include mx.flex($align: flex-end);
+          flex-grow: 1;
+          min-width: 0;
           padding-top: fn.rem(10);
         }
 
+        &-label-discount {
+          flex-shrink: 0;
+          margin-left: auto;
+
+          .vits-tooltip {
+            &-trigger {
+              @include mx.flex(flex, row, center, center);
+              gap: 0;
+              width: fn.rem(84);
+              height: map.get(var.$unit, 32);
+              border-radius: map.get(var.$radius, 'sm');
+              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'primary');
+
+              .icon {
+                width: fn.rem(14);
+                height: fn.rem(14);
+                color: map.get(color.$gray-shades, '90');
+              }
+
+              .text {
+                font-size: fn.rem(12);
+                font-weight: 600;
+                color: map.get(color.$text-colors, 'primary');
+              }
+            }
+
+            &[data-tooltip='right'] .vits-tooltip-content {
+              top: calc(100% + 7px);
+              right: -7px;
+              border-radius: map.get(var.$radius, 'md');
+
+              .vits-tooltip-list > li {
+                padding-left: map.get(var.$unit, 12);
+                line-height: fn.rem(18);
+
+                strong {
+                  font-weight: 600;
+                }
+
+                &::before {
+                  width: map.get(var.$unit, 4);
+                  height: map.get(var.$unit, 4);
+                }
+              }
+            }
+          }
+        }
+
         &-price {
-          width: 100%;
+          flex-grow: 1;
+          min-width: 0;
+          max-width: 100%;
 
           &-original {
             @include typo.typography('d3r', $color: map.get(color.$text-colors, 'tertiary'));
@@ -123,6 +176,10 @@
               margin-top: map.get(var.$unit, 20);
             }
           }
+        }
+
+        &-coupon {
+          flex-shrink: 0;
         }
 
         &-shipping {
