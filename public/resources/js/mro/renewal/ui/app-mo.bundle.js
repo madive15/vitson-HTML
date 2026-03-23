@@ -3651,7 +3651,11 @@
     // 브레드크럼 없으면 페이지 이동
     var lastDepth = path.depth3Id || path.depth2Id || path.depth1Id;
     if (lastDepth) {
-      window.location.href = '/category/' + lastDepth;
+      var params = ['searchType=C', 'categoryType=N'];
+      if (path.depth1Id) params.push('lvl1Cty=' + encodeURIComponent(path.depth1Id));
+      if (path.depth2Id) params.push('lvl2Cty=' + encodeURIComponent(path.depth2Id));
+      if (path.depth3Id) params.push('lvl3Cty=' + encodeURIComponent(path.depth3Id));
+      window.location.href = '/mro/m/shop/productList.do?' + params.join('&');
     }
   }
 
