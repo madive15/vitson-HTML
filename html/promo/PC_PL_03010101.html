@@ -59879,6 +59879,7 @@
                         
                       </ul>
 
+                      <!-- [D] 상품이 있을 때 -->
                       <div class="promo-products-tab-content" data-tab-content>
                         
                         <div
@@ -72278,6 +72279,30 @@
                         </div>
                         
                       </div>
+
+                      <!-- [D] 상품이 없을 때 -->
+                      <div class="promo-products-tab-content" data-tab-content style="display: none">
+                        <!-- prettier-ignore -->
+                        
+
+<!-- prettier-ignore -->
+
+
+<section class="vits-empty-state" data-ui="empty-state">
+  <div class="vits-empty-state-content">
+    <div class="vits-empty-state-text">
+      <h2 class="vits-empty-state-title">등록된 상품이 없습니다</h2>
+      
+    </div>
+    <div class="vits-empty-state-icon" aria-hidden="true">
+      <i class="ic ic-document-paper" aria-hidden="true"></i>
+
+    </div>
+  </div>
+  
+</section>
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -72841,6 +72866,14 @@
           els.forEach(function (el) {
             el.style.display = 'none';
           });
+        }
+
+        // ?type=empty : 상품 없음 상태 전환
+        if (params.get('type') === 'empty') {
+          var contents = document.querySelectorAll('[data-tab-content]');
+          // contents[0]: 상품 있음, contents[1]: 상품 없음
+          if (contents[0]) contents[0].style.display = 'none';
+          if (contents[1]) contents[1].style.display = '';
         }
       })();
     </script>

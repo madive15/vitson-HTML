@@ -252,6 +252,7 @@
 
           <main id="skipNav" class="vm-main">
             <div class="vm-main-content main-content-promo">
+              <!-- [D] 기획전 있을 떄 -->
               <div class="vm-promo-main" data-tab-scope>
                 <!-- 탭 메뉴 -->
                 <div class="vm-promo-main-tab">
@@ -472,6 +473,30 @@
                   </div>
                 </div>
                 
+              </div>
+
+              <!-- [D] 기획전 없을 떄 -->
+              <div class="vm-promo-main" data-tab-scope style="display: none">
+                <!-- prettier-ignore -->
+                
+
+<!-- prettier-ignore -->
+
+
+<section class="vits-empty-state" data-ui="empty-state">
+  <div class="vits-empty-state-content">
+    <div class="vits-empty-state-text">
+      <h2 class="vits-empty-state-title">기획전 정보가 없습니다</h2>
+      
+    </div>
+    <div class="vits-empty-state-icon" aria-hidden="true">
+      <i class="ic ic-document-paper" aria-hidden="true"></i>
+
+    </div>
+  </div>
+  
+</section>
+
               </div>
             </div>
           </main>
@@ -30527,5 +30552,18 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/kendo-ui-core@2025.4.1111/js/kendo.ui.core.min.js"></script> -->
 <!-- <script src="https://kendo.cdn.telerik.com/2025.4.1111/js/kendo.all.min.js"></script> -->
 
+
+    <script>
+      // ?type=empty 일 때 empty 상태 전환
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('type') === 'empty') {
+          var sections = document.querySelectorAll('.vm-promo-main');
+          // sections[0]: 기획전 있음, sections[1]: 기획전 없음
+          if (sections[0]) sections[0].style.display = 'none';
+          if (sections[1]) sections[1].style.display = '';
+        }
+      })();
+    </script>
   </body>
 </html>
