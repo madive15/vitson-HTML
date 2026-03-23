@@ -226,7 +226,7 @@
             <button type="button" class="vits-select-trigger">
               <span class="vits-select-value"
                 data-vits-select-value
-                data-placeholder="수량">수량</span>
+                data-placeholder="0">수량</span>
               <span class="vits-select-icon">
                 <i class="ic ic-arrow-down"></i>
               </span>
@@ -361,7 +361,7 @@
             <button type="button" class="vits-select-trigger">
               <span class="vits-select-value"
                 data-vits-select-value
-                data-placeholder="수량">수량</span>
+                data-placeholder="0">수량</span>
               <span class="vits-select-icon">
                 <i class="ic ic-arrow-down"></i>
               </span>
@@ -463,7 +463,7 @@
             <button type="button" class="vits-select-trigger">
               <span class="vits-select-value"
                 data-vits-select-value
-                data-placeholder="수량">수량</span>
+                data-placeholder="0">수량</span>
               <span class="vits-select-icon">
                 <i class="ic ic-arrow-down"></i>
               </span>
@@ -565,7 +565,7 @@
             <button type="button" class="vits-select-trigger">
               <span class="vits-select-value"
                 data-vits-select-value
-                data-placeholder="수량">수량</span>
+                data-placeholder="0">수량</span>
               <span class="vits-select-icon">
                 <i class="ic ic-arrow-down"></i>
               </span>
@@ -1510,6 +1510,11 @@
         }
 
         // [D] 테스트서버 셀렉트 토글 (로컬 확인용)
+        // data-placeholder 값을 초기 텍스트로 적용
+        root.querySelectorAll('.vits-select-value[data-placeholder]').forEach(function (el) {
+          el.textContent = el.dataset.placeholder;
+        });
+
         $(document).on('click', '.vits-select-trigger', function (e) {
           e.stopPropagation();
           const $trigger = $(this);
@@ -1553,10 +1558,17 @@
           e.stopPropagation();
           const $option = $(this);
           const $select = $option.closest('.vits-select');
+          const $triggerValue = $select.find('.vits-select-value');
+          const $hiddenInput = $select.find('[data-vits-select-hidden]');
 
-          $select.find('.vits-select-value').text($option.text());
-          $select.find('[data-vits-select-hidden]').val($option.attr('data-value'));
+          // 값 설정
+          $triggerValue.text($option.text());
+          $hiddenInput.val($option.attr('data-value'));
+
+          // 선택 표시
           $option.addClass('vits-select-selected').siblings().removeClass('vits-select-selected');
+
+          // 목록 닫기
           $select.removeClass('is-open is-dropup');
         });
 
