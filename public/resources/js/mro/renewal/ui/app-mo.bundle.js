@@ -1755,6 +1755,7 @@
     var $chips = $bar.find(SEL.chips);
     if (!getAppliedCount()) {
       $chips.remove();
+      $bar.find('[data-filter-clear-all]').remove();
       _lastAdded = null;
       return;
     }
@@ -1767,9 +1768,10 @@
       if (!_applied[name]) return;
       _applied[name].forEach(function (value) {
         var label = findLabel(name, value);
-        html.push('<button type="button" class="vits-chip-button type-outline size-s"' + ' data-chip-action="remove"' + ' data-chip-name="' + esc(name) + '"' + ' data-chip-value="' + esc(value) + '">' + '<span class="text">' + esc(label) + '</span>' + '<span class="icon" aria-hidden="true"><i class="ic ic-x"></i></span>' + '</button>');
+        html.push('<button type="button" class="vits-chip-button type-filled"' + ' data-chip-action="remove"' + ' data-chip-name="' + esc(name) + '"' + ' data-chip-value="' + esc(value) + '">' + '<span class="text">' + esc(label) + '</span>' + '<span class="icon" aria-hidden="true"><i class="ic ic-x"></i></span>' + '</button>');
       });
     });
+    html.push('<button type="button" class="vm-filter-clear-all" data-filter-clear-all>전체 해제</button>');
     html.push('</div>');
     $chips.html(html.join(''));
 
@@ -1797,7 +1799,7 @@
     $innerState.toggleClass('is-selected', hasFilter);
     var $innerText = $innerState.find('button .text');
     if ($innerText.length) {
-      $innerText.text(hasFilter ? '필터' : '필터 더보기');
+      $innerText.text('필터');
     }
 
     // 스코프 밖 filter-btn (toolbar 등): is-selected만
@@ -1912,6 +1914,12 @@
       $section.find('.' + CLS.hidden).removeClass(CLS.hidden);
       $section.addClass(CLS.expanded);
       $btn.remove();
+    });
+    $doc.on('click' + NS, '[data-filter-clear-all]', function () {
+      _applied = {};
+      syncAllCheckboxes();
+      updateUI();
+      emitApply();
     });
 
     // 칩 삭제
