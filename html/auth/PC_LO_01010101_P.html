@@ -22920,6 +22920,26 @@
         if (template && content) {
           content.innerHTML = template.innerHTML;
         }
+
+        // auth=phone → 휴대전화 탭 활성화
+        var auth = urlParams.get('auth');
+        if (type === 'once' && auth === 'phone') {
+          var tabEmail = content.querySelector('#auth-tab-0');
+          var tabPhone = content.querySelector('#auth-tab-1');
+
+          if (tabEmail && tabPhone) {
+            tabEmail.classList.remove('is-active');
+            tabEmail.setAttribute('aria-selected', 'false');
+            tabPhone.classList.add('is-active');
+            tabPhone.setAttribute('aria-selected', 'true');
+          }
+
+          var panels = content.querySelectorAll('.vits-login-form-fields');
+          if (panels.length >= 2) {
+            panels[0].setAttribute('hidden', '');
+            panels[1].removeAttribute('hidden');
+          }
+        }
       }
     </script>
   </body>
