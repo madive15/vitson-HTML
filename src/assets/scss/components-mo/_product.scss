@@ -259,6 +259,19 @@ $mo-product-gap: map.get(var.$unit, 8);
     padding-top: var.$mo-section-gap;
     padding-bottom: fn.rem(50);
     background: color.$color-white;
+
+    &:has(.vm-product-items + .vm-search-result) {
+      padding-bottom: 0;
+
+      .vm-product-items {
+        padding-bottom: fn.rem(50);
+      }
+
+      .vm-search-result .vm-search-result-recommend {
+        @include mx.border('top', fn.rem(8), $color: map.get(color.$layout-surf, 'sunken'));
+        border-bottom: 0;
+      }
+    }
   }
 
   &-toolbar {
