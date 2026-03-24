@@ -55,8 +55,12 @@
     applyCols($list, $items);
   }
 
-  // 레전드 섹션 초기화 및 재호출 시 컬럼 수 재계산
-  function init() {
+  // DOM이 이미 있으면 즉시 처리, 없으면 MutationObserver로 삽입 감지
+  var observer = null;
+
+  function initExisting() {
+    var found = false;
+
     $(ROOT_SELECTOR).each(function (_, el) {
       var $root = $(el);
 
@@ -65,11 +69,46 @@
       if (!$root.data(DATA_INIT_KEY)) {
         $root.data(DATA_INIT_KEY, true);
       }
+
+      found = true;
     });
+
+    return found;
+  }
+
+  function init() {
+    // 이미 DOM이 있으면 즉시 처리 후 종료
+    if (initExisting()) {
+      disconnectObserver();
+      return;
+    }
+
+    // DOM이 없으면 observer로 삽입 감지
+    if (observer) return;
+
+    var target = document.body;
+    if (!target) return;
+
+    observer = new MutationObserver(function () {
+      if (initExisting()) {
+        disconnectObserver();
+      }
+    });
+
+    observer.observe(target, {childList: true, subtree: true});
+  }
+
+  function disconnectObserver() {
+    if (!observer) return;
+    observer.disconnect();
+    observer = null;
   }
 
   // 레전드 섹션 destroy 시 동적 컬럼 수 초기화
   function destroy() {
+    // observer 정리
+    disconnectObserver();
+
     $(ROOT_SELECTOR).each(function (_, el) {
       var $root = $(el);
       if (!$root.data(DATA_INIT_KEY)) return;

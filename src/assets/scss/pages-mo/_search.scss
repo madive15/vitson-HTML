@@ -37,14 +37,16 @@
 }
 
 // 검색 페이지 - 기본배경
-.vm-wrap:has(.main-content-search) {
-  background: color.$color-white;
-
-  .vm-content-wrap {
+.vm-wrap {
+  &:has(.main-content-search) {
     background: color.$color-white;
+
+    .vm-content-wrap {
+      background: color.$color-white;
+    }
   }
 
-  &:has(.vm-search-result) {
+  &:has(.header-search-bar) {
     // 툴바 스티키
     .vm-product-toolbar {
       top: map.get(var.$mo-header, 'search-bar');
