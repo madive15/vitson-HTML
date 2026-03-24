@@ -741,10 +741,12 @@
 
       // 반품신청 회수 의뢰일(.claim-request-pickup) 내부 datepicker 전용 분기
       var isInClaimPickup = $el.closest('.claim-request-pickup').length > 0;
+      // 배송정보 퀵배송 패널 datepicker — 동일한 첫 open 위치 보정 필요
+      var isInShippingPanel = $el.closest('.vits-shipping-panel').length > 0;
+      var needsFirstOpenFix = isInClaimPickup || isInShippingPanel;
 
-      // 반품신청 회수 의뢰일: 첫 open 위치 깨짐 + 이동 보임 방지
-      // — inst 생성 직후 보이지 않게 열었다 닫아서 DOM 생성 + 클래스 선적용
-      if (isInClaimPickup) {
+      // 첫 open 위치 깨짐 방지 — claim-request-pickup, 배송정보 패널 공용
+      if (needsFirstOpenFix) {
         inst._userClose = true;
         inst.open();
         var pickupInitPopup = inst.dateView && inst.dateView.popup;
@@ -8687,7 +8689,7 @@ var common = __webpack_require__(6023);
  *
  * @note
  *  - 텍스트가 넘치면 버튼 동적 생성, 넘치지 않으면 버튼 미생성 또는 hidden
- *  - overflow: hidden 상태에서 scrollWidth 측정을 위해 일시적으로 해제
+ *  - block 요소는 Range API로 텍스트 실제 너비 측정, 그 외는 overflow 해제 후 scrollWidth 측정
  *  - ResizeObserver로 레이아웃 변경 시 넘침 여부 자동 재판별
  *  - destroy 시 동적 생성된 버튼 제거
  *
@@ -8723,11 +8725,22 @@ var common = __webpack_require__(6023);
     if ($root.hasClass(ACTIVE)) return;
     var el = $text[0];
 
-    // overflow: hidden 상태에서 scrollWidth === clientWidth 방지
-    el.style.setProperty('overflow', 'visible', 'important');
-    var sw = el.scrollWidth;
-    var cw = el.clientWidth;
-    el.style.removeProperty('overflow');
+    // block 요소는 scrollWidth가 clientWidth와 같아지는 한계가 있어 Range로 측정
+    var sw, cw;
+    if (window.getComputedStyle(el).display === 'block') {
+      var maxW = parseFloat(window.getComputedStyle(el).maxWidth);
+
+      // ceil로 올림 — 경계값 소수점 오탐 방지
+      cw = maxW && isFinite(maxW) ? Math.ceil(maxW) : el.clientWidth;
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      sw = range.getBoundingClientRect().width;
+    } else {
+      el.style.setProperty('overflow', 'visible', 'important');
+      sw = el.scrollWidth;
+      cw = el.clientWidth;
+      el.style.removeProperty('overflow');
+    }
 
     // 레이아웃 미계산 상태면 건너뜀
     if (sw === 0 && cw === 0) return;
