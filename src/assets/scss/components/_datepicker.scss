@@ -512,6 +512,7 @@ $vits-datepicker-single-sizes: (
     padding: map.get(var.$unit, 20);
     margin-left: (fn.rem(13) * -1);
     overflow: hidden;
+    background: color.$color-white;
     border: 1px solid map.get(color.$layout-border, 'primary');
     border-radius: map.get(var.$radius, 'md');
   }
@@ -723,5 +724,14 @@ $vits-datepicker-single-sizes: (
 
   &.is-selected {
     border-color: map.get(color.$layout-border, 'primary');
+  }
+}
+
+.k-animation-container:has(.vits-datepicker-single) {
+  &,
+  .k-child-animation-container,
+  .k-calendar-container {
+    background: transparent;
+    border: 0;
   }
 }

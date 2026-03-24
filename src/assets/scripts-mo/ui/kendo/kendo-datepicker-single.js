@@ -517,10 +517,12 @@
 
       // 반품신청 회수 의뢰일(.claim-request-pickup) 내부 datepicker 전용 분기
       var isInClaimPickup = $el.closest('.claim-request-pickup').length > 0;
+      // 배송정보 퀵배송 패널 datepicker — 동일한 첫 open 위치 보정 필요
+      var isInShippingPanel = $el.closest('.vits-shipping-panel').length > 0;
+      var needsFirstOpenFix = isInClaimPickup || isInShippingPanel;
 
-      // 반품신청 회수 의뢰일: 첫 open 위치 깨짐 + 이동 보임 방지
-      // — inst 생성 직후 보이지 않게 열었다 닫아서 DOM 생성 + 클래스 선적용
-      if (isInClaimPickup) {
+      // 첫 open 위치 깨짐 방지 — claim-request-pickup, 배송정보 패널 공용
+      if (needsFirstOpenFix) {
         inst._userClose = true;
         inst.open();
         var pickupInitPopup = inst.dateView && inst.dateView.popup;

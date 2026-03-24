@@ -8,7 +8,7 @@
  *
  * @note
  *  - 텍스트가 넘치면 버튼 동적 생성, 넘치지 않으면 버튼 미생성 또는 hidden
- *  - overflow: hidden 상태에서 scrollWidth 측정을 위해 일시적으로 해제
+ *  - block 요소는 Range API로 텍스트 실제 너비 측정, 그 외는 overflow 해제 후 scrollWidth 측정
  *  - ResizeObserver로 레이아웃 변경 시 넘침 여부 자동 재판별
  *  - destroy 시 동적 생성된 버튼 제거
  *
@@ -52,13 +52,24 @@
 
     var el = $text[0];
 
-    // overflow: hidden 상태에서 scrollWidth === clientWidth 방지
-    el.style.setProperty('overflow', 'visible', 'important');
+    // block 요소는 scrollWidth가 clientWidth와 같아지는 한계가 있어 Range로 측정
+    var sw, cw;
 
-    var sw = el.scrollWidth;
-    var cw = el.clientWidth;
+    if (window.getComputedStyle(el).display === 'block') {
+      var maxW = parseFloat(window.getComputedStyle(el).maxWidth);
 
-    el.style.removeProperty('overflow');
+      // ceil로 올림 — 경계값 소수점 오탐 방지
+      cw = maxW && isFinite(maxW) ? Math.ceil(maxW) : el.clientWidth;
+
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      sw = range.getBoundingClientRect().width;
+    } else {
+      el.style.setProperty('overflow', 'visible', 'important');
+      sw = el.scrollWidth;
+      cw = el.clientWidth;
+      el.style.removeProperty('overflow');
+    }
 
     // 레이아웃 미계산 상태면 건너뜀
     if (sw === 0 && cw === 0) return;
