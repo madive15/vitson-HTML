@@ -152,24 +152,54 @@ $filter-dt-width: fn.rem(98);
       padding: map.get(var.$unit, 12) 0 var.$mo-section-gap;
 
       @include filter-btn;
+
+      .vm-filter-clear-all {
+        flex-shrink: 0;
+        padding: 0 0.75rem;
+        font-size: 0.75rem;
+        color: #444;
+        text-decoration: underline;
+        white-space: nowrap;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
     }
 
     &-selected {
       flex-grow: 1;
       min-width: 0;
+      padding-right: var.$mo-gutter;
       padding-left: map.get(var.$unit, 12);
 
-      @include fade-edge(right, #fff, 18px, 1);
+      // @include fade-edge(right, #fff, 18px, 1);
 
       .vits-chip-button-group {
         gap: map.get(var.$unit, 4);
 
         .vits-chip-button {
+          gap: 0;
           max-width: calc(100% - var.$mo-gutter);
+          height: fn.rem(28);
+          background: map.get(color.$layout-surf, 'raised');
+          box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'tertiary');
+
+          .text {
+            font-size: fn.rem(12);
+            color: map.get(color.$text-colors, 'secondary');
+          }
+
+          .icon {
+            color: map.get(color.$icon-neutral, 'tertiary');
+          }
 
           &:last-of-type {
             margin-right: var.$mo-gutter;
           }
+        }
+
+        .vm-filter-clear-all {
+          align-self: center;
         }
       }
     }
