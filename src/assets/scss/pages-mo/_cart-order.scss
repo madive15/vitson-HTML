@@ -392,9 +392,16 @@
 
 /* 주문하기 버튼 */
 .vm-cart-submit {
+  @include mx.position(sticky, $bottom: 0);
+  z-index: var.$zindex-base;
   width: 100%;
   padding: map.get(var.$unit, 16) 0 map.get(var.$unit, 32);
-  border-radius: map.get(var.$radius, 'md');
+  background: linear-gradient(
+    0deg,
+    rgb(240 240 240 / 100%) 87%,
+    rgb(240 240 240 / 100%) 87%,
+    rgb(240 240 240 / 0%) 100%
+  );
 
   [class*='vits-btn'] {
     width: 100%;
