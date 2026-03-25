@@ -204,6 +204,11 @@
       color: inherit;
       text-decoration: none;
     }
+
+    &.docs-total {
+      padding: 0;
+      border-top: 0;
+    }
   }
 
   // stylelint-disable-next-line no-descending-specificity
@@ -234,6 +239,10 @@
       background-color: map.get(color.$layout-surf, 'sunken');
       border-color: map.get(color.$layout-border, 'secondary');
     }
+  }
+
+  &-print-footer {
+    display: none;
   }
 
   // 거래명세서 합계
@@ -283,6 +292,19 @@
 
       &:not(:last-of-type) {
         @include mx.border('right', $color: map.get(color.$layout-border, 'quaternary'));
+      }
+    }
+  }
+
+  @media print {
+    // 워터마크 겹침 방지용 tfoot 여백
+    .general-table-print-footer {
+      display: table-footer-group;
+
+      td {
+        height: 84px;
+        padding: 0;
+        border: none;
       }
     }
   }
