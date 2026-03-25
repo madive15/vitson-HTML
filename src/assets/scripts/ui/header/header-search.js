@@ -38,7 +38,7 @@
     VIEWPORT_MARGIN: 10
   };
 
-  var KEY = {ESC: 27};
+  var KEY = {ESC: 27, UP: 38, DOWN: 40, ENTER: 13, TAB: 9};
   var DUMMY_HREFS = ['', '#', '#!'];
 
   var CLS = {
@@ -166,6 +166,7 @@
     setState($scope, state);
 
     if (!opts.skipProducts) resetProducts($scope);
+    clearRelatedNavigation($scope);
   }
 
   // 삭제버튼 동기화
@@ -351,6 +352,56 @@
     closePanel($scope);
   }
 
+  // 화살표 키로 연관검색어 탐색
+  function navigateRelated($scope, direction) {
+    var els = getEls($scope);
+    if (!els.$relatedList.length) return;
+
+    var $items = els.$relatedList.find(SEL.RELATED_ITEM);
+    if (!$items.length) return;
+
+    var $current = $items.filter('.' + CLS.ACTIVE);
+    var currentIdx = $current.length ? $items.index($current) : -1;
+    var nextIdx;
+
+    if (direction === 'down') {
+      nextIdx = currentIdx < $items.length - 1 ? currentIdx + 1 : 0;
+    } else {
+      nextIdx = currentIdx > 0 ? currentIdx - 1 : $items.length - 1;
+    }
+
+    // 기존 활성 해제
+    $items.removeClass(CLS.ACTIVE);
+
+    var $next = $items.eq(nextIdx);
+    $next.addClass(CLS.ACTIVE);
+
+    // aria-activedescendant 갱신
+    els.$input.attr('aria-activedescendant', $next[0].id || '');
+
+    // 상품패널 연동 (hover와 동일)
+    cancelProductsHide($scope);
+    var key = $next.attr('data-related-item');
+    if (key) {
+      showProducts($scope, key);
+    } else {
+      resetProducts($scope);
+    }
+
+    // 연관검색어 링크에 실제 포커스 이동 (탭 이동과 동일한 스타일링)
+    var $nextLink = $next.find('a').first();
+    if ($nextLink.length) $nextLink[0].focus();
+  }
+
+  // 화살표 탐색 해제 (패널 닫힐 때)
+  function clearRelatedNavigation($scope) {
+    var els = getEls($scope);
+    els.$input.removeAttr('aria-activedescendant');
+    if (els.$relatedList.length) {
+      els.$relatedList.find(SEL.RELATED_ITEM).removeClass(CLS.ACTIVE);
+    }
+  }
+
   // 상품패널 leave
   function handleProductsLeave($scope, e) {
     var toElement = e.relatedTarget || e.toElement;
@@ -361,6 +412,8 @@
   // 인풋 핸들러 - 포커스 중이면 빈 값이어도 패널 유지
   function handleInput($scope) {
     syncClearBtn($scope);
+    // 타이핑 시 화살표 탐색 상태 초기화
+    clearRelatedNavigation($scope);
     var state = getState($scope);
     if (state.escClosing) return;
     var isFocused = getEls($scope).$input.is(':focus');
@@ -412,32 +465,102 @@
     els.$input.on('input' + ns, function () {
       handleInput($scope);
     });
+
     els.$input.on('focus' + ns, function () {
       syncClearBtn($scope);
+      var state = getState($scope);
+      if (state.escClosing) return;
       openPanel($scope);
     });
+
     els.$input.on('click' + ns, function () {
       var state = getState($scope);
       if (!state.isOpen) openPanel($scope);
     });
-    // ESC: 브라우저 기본동작 차단 + 패널 닫기
+
+    // 인풋 키보드: ESC(패널 닫기), ↑↓(연관검색어 탐색), Enter(활성 항목 이동)
     els.$input.on('keydown' + ns, function (e) {
-      if (e.keyCode !== KEY.ESC) return;
+      var code = e.keyCode;
       var state = getState($scope);
-      state.escClosing = true;
-      setState($scope, state);
-      if (state.isOpen) closePanel($scope);
-      setTimeout(function () {
-        var s = getState($scope);
-        s.escClosing = false;
-        setState($scope, s);
-        syncClearBtn($scope);
-      }, 0);
+      var $active;
+      var $link;
+
+      // ESC: 패널 닫기
+      if (code === KEY.ESC) {
+        state.escClosing = true;
+        setState($scope, state);
+        if (state.isOpen) closePanel($scope);
+        setTimeout(function () {
+          var s = getState($scope);
+          s.escClosing = false;
+          setState($scope, s);
+          syncClearBtn($scope);
+        }, 0);
+        return;
+      }
+
+      // ↑↓: 연관검색어 탐색
+      if (code === KEY.UP || code === KEY.DOWN) {
+        if (!state.isOpen) return;
+        e.preventDefault(); // 커서 이동 방지
+        navigateRelated($scope, code === KEY.DOWN ? 'down' : 'up');
+        return;
+      }
+
+      // Enter: 활성 연관검색어 링크 이동
+      if (code === KEY.ENTER) {
+        $active = els.$relatedList.length ? els.$relatedList.find(SEL.RELATED_ITEM + '.' + CLS.ACTIVE) : $();
+        $link = $active.length ? $active.find('a').first() : $();
+
+        if ($active.length) {
+          e.preventDefault(); // 폼 submit 방지
+
+          if ($link.length) {
+            var href = String($link.attr('href') || '').trim();
+            if (DUMMY_HREFS.indexOf(href) === -1) {
+              window.location.href = href;
+            }
+          }
+          closePanel($scope);
+        }
+        // 활성 항목 없으면 기본 폼 submit 동작
+      }
+
+      // Tab: 활성 연관검색어가 있으면 해당 링크로 포커스 이동
+      if (code === KEY.TAB && !e.shiftKey) {
+        $active = els.$relatedList.length ? els.$relatedList.find(SEL.RELATED_ITEM + '.' + CLS.ACTIVE) : $();
+        $link = $active.length ? $active.find('a').first() : $();
+
+        if ($active.length && $link.length) {
+          // 인풋 바로 다음에 탭이 가도록 중간 요소들을 일시적으로 탭 순서에서 제외
+          var $skippable = $scope.find('a, button, input, [tabindex]').not(els.$input).not($link);
+          $skippable.each(function () {
+            var orig = this.getAttribute('tabindex');
+            this.setAttribute('data-orig-tabindex', orig !== null ? orig : '');
+            this.setAttribute('tabindex', '-1');
+          });
+
+          // 다음 프레임에서 복원
+          requestAnimationFrame(function () {
+            $skippable.each(function () {
+              var orig = this.getAttribute('data-orig-tabindex');
+              if (orig === '') {
+                this.removeAttribute('tabindex');
+              } else {
+                this.setAttribute('tabindex', orig);
+              }
+              this.removeAttribute('data-orig-tabindex');
+            });
+          });
+        }
+      }
     });
 
     // 스코프 내 클릭 시 인풋 포커스 유지
     $scope.on('mousedown' + ns, function (e) {
       if ($(e.target).closest(SEL.INPUT).length) return;
+      if ($(e.target).closest(SEL.RELATED_LINK).length) return;
+      if ($(e.target).closest(SEL.PRODUCTS_WRAP).length) return;
       e.preventDefault();
     });
 
@@ -468,11 +591,88 @@
       $scope.on('mouseenter' + ns, SEL.RELATED_ITEM, function (e) {
         handleRelatedEnter($scope, e);
       });
+
       $scope.on('mouseleave' + ns, SEL.RELATED_ITEM, function (e) {
         handleRelatedLeave($scope, e);
       });
+
       $scope.on('click' + ns, SEL.RELATED_LINK, function (e) {
         handleRelatedClick($scope, e);
+      });
+
+      // 연관검색어 링크에서 화살표 탐색 (탭 이동 후 화살표키)
+      $scope.on('keydown' + ns, SEL.RELATED_LINK, function (e) {
+        var code = e.keyCode;
+
+        // ↑↓: 연관검색어 간 이동
+        if (code === KEY.UP || code === KEY.DOWN) {
+          e.preventDefault();
+
+          var $currentItem = $(e.currentTarget).closest(SEL.RELATED_ITEM);
+          var $items = els.$relatedList.find(SEL.RELATED_ITEM);
+          var currentIdx = $items.index($currentItem);
+          var nextIdx;
+
+          if (code === KEY.DOWN) {
+            nextIdx = currentIdx < $items.length - 1 ? currentIdx + 1 : 0;
+          } else {
+            nextIdx = currentIdx > 0 ? currentIdx - 1 : $items.length - 1;
+          }
+
+          var $nextLink = $items.eq(nextIdx).find('a').first();
+          if ($nextLink.length) $nextLink.trigger('focus');
+
+          var $nextItem = $items.eq(nextIdx);
+          $items.removeClass(CLS.ACTIVE);
+          $nextItem.addClass(CLS.ACTIVE);
+
+          cancelProductsHide($scope);
+          var key = $nextItem.attr('data-related-item');
+          if (key) {
+            showProducts($scope, key);
+          } else {
+            resetProducts($scope);
+          }
+          return;
+        }
+
+        // Tab: 활성 상품패널의 첫 번째 상품 링크로 이동
+        if (code === KEY.TAB && !e.shiftKey) {
+          var $item = $(e.currentTarget).closest(SEL.RELATED_ITEM);
+          var itemKey = $item.attr('data-related-item');
+          if (itemKey && els.$productsWrap.length) {
+            var $panel = els.$productsWrap.find('[data-products-panel="' + escapeSelector(itemKey) + '"]').first();
+            var $firstProduct = $panel.find('a').first();
+            if ($firstProduct.length) {
+              e.preventDefault();
+              $firstProduct[0].focus();
+            }
+          }
+        }
+      });
+
+      // 연관검색어 링크 포커스 시 상품패널 연동 (탭 이동 대응)
+      $scope.on('focus' + ns, SEL.RELATED_LINK, function () {
+        var $item = $(this).closest(SEL.RELATED_ITEM);
+        var $items = els.$relatedList.find(SEL.RELATED_ITEM);
+
+        $items.removeClass(CLS.ACTIVE);
+        $item.addClass(CLS.ACTIVE);
+
+        cancelProductsHide($scope);
+        var key = $item.attr('data-related-item');
+        if (key) {
+          showProducts($scope, key);
+        } else {
+          resetProducts($scope);
+        }
+      });
+
+      // 상품패널로 포커스 이동 시에는 상품패널 유지
+      $scope.on('blur' + ns, SEL.RELATED_LINK, function (e) {
+        var toElement = e.relatedTarget;
+        if (toElement && $(toElement).closest(SEL.PRODUCTS_WRAP).length) return;
+        scheduleProductsHide($scope);
       });
     }
 
@@ -484,7 +684,57 @@
       els.$productsWrap.on('mouseleave' + ns, function (e) {
         handleProductsLeave($scope, e);
       });
+
+      // 상품패널 내 마지막 링크에서 Tab → 다음 연관검색어로 이동
+      els.$productsWrap.on('keydown' + ns, 'a', function (e) {
+        if (e.keyCode !== KEY.TAB || e.shiftKey) return;
+
+        var $thisLink = $(e.currentTarget);
+        var $panel = $thisLink.closest(SEL.PRODUCTS_PANEL);
+        var $panelLinks = $panel.find('a');
+
+        // 마지막 링크가 아니면 브라우저 기본 Tab 동작
+        if ($panelLinks.index($thisLink) < $panelLinks.length - 1) return;
+
+        // 현재 활성 연관검색어의 다음 항목으로 이동
+        var panelKey = $panel.attr('data-products-panel');
+        var $items = els.$relatedList.find(SEL.RELATED_ITEM);
+        var $currentRelated = $items.filter('[data-related-item="' + escapeSelector(panelKey) + '"]');
+        var currentIdx = $items.index($currentRelated);
+        var nextIdx = currentIdx < $items.length - 1 ? currentIdx + 1 : -1;
+
+        if (nextIdx > -1) {
+          e.preventDefault();
+          var $nextLink = $items.eq(nextIdx).find('a').first();
+          if ($nextLink.length) $nextLink[0].focus();
+        }
+        // 마지막 연관검색어면 브라우저 기본 Tab 동작 (스코프 밖으로)
+      });
     }
+
+    // 패널 내 ESC: 패널 닫기 + 인풋으로 포커스 복귀
+    $scope.on('keydown' + ns, SEL.PANEL, function (e) {
+      if (e.keyCode !== KEY.ESC) return;
+      var state = getState($scope);
+      state.escClosing = true;
+      setState($scope, state);
+      if (state.isOpen) closePanel($scope);
+      els.$input[0].focus();
+      setTimeout(function () {
+        var s = getState($scope);
+        s.escClosing = false;
+        setState($scope, s);
+      }, 0);
+    });
+
+    // relatedTarget이 null이면 스코프 내 포커스 이동으로 간주
+    $scope.on('focusout' + ns, function (e) {
+      var toElement = e.relatedTarget;
+      if (!toElement) return;
+      if ($(toElement).closest($scope).length) return;
+      var state = getState($scope);
+      if (state.isOpen) closePanel($scope);
+    });
 
     // document 이벤트
     var docNs = ns + state.id;
@@ -517,6 +767,13 @@
     // 초기 동기화
     if (!els.$input.attr('aria-expanded')) {
       els.$input.attr('aria-expanded', 'false');
+    }
+
+    // 연관검색어 항목 id 부여 (aria-activedescendant용)
+    if (els.$relatedList.length) {
+      els.$relatedList.find(SEL.RELATED_ITEM).each(function (i) {
+        if (!this.id) this.id = state.id + '_related_' + i;
+      });
     }
     syncClearBtn($scope);
     if (els.$recentWrap.length) syncRecentClearBtn($scope);

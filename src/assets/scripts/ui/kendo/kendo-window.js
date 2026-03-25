@@ -130,7 +130,13 @@
     var $content = $el.find('.vits-modal-content');
     if (!$content.length) return;
 
-    var obs = new MutationObserver(function () {
+    var obs = new MutationObserver(function (mutations) {
+      // 비밀번호 눈 토글(.vits-btn-eyes) 변경 시 center 재계산 방지
+      var relevant = mutations.some(function (m) {
+        return !m.target.closest('.vits-btn-eyes');
+      });
+      if (!relevant) return;
+
       refresh(id);
     });
 
