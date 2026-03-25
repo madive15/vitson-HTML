@@ -60725,10 +60725,24 @@
                                 { text: '2,350,196원', tdClass: 'docs-td-amount', className: 'total-amount' }
                               ] 
                             })  -->
+
+                            <!-- 26-03-25 [D] 합계행 추가 -->
+                            <tr>
+                              <td colspan="10" class="docs-total">
+                                <dl class="docs-total-summary">
+                                  <dt>공급가액</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt>부가세</dt>
+                                  <dd>99,999,999</dd>
+                                  <dt class="docs-total">합계</dt>
+                                  <dd class="docs-total">1,999,999,999원</dd>
+                                </dl>
+                              </td>
+                            </tr>
                           </tbody>
 
-                          <!-- 26-03-11 MU-711 합계행 추가 -->
-                          <tfoot class="docs-total">
+                          <!-- 26-03-11 MU-711 합계행 추가 => 26-03-25 주석 -->
+                          <!-- <tfoot class="docs-total">
                             <tr>
                               <td colspan="10">
                                 <dl class="docs-total-summary">
@@ -60740,6 +60754,13 @@
                                   <dd class="docs-total">1,999,999,999원</dd>
                                 </dl>
                               </td>
+                            </tr>
+                          </tfoot> -->
+
+                          <!-- 26-03-25 [D] 인쇄용 추가 -->
+                          <tfoot class="general-table-print-footer" aria-hidden="true">
+                            <tr>
+                              <td colspan="10"></td>
                             </tr>
                           </tfoot>
                         </table>

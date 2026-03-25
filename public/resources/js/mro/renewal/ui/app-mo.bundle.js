@@ -1267,23 +1267,40 @@
     });
     return found;
   }
+
+  // 루트 + 자식까지 모두 준비됐는지 확인
+  function isReady() {
+    var ready = false;
+    $(ROOT_SELECTOR).each(function (_, el) {
+      var $list = getList($(el));
+      if (getItems($list).length) ready = true;
+    });
+    return ready;
+  }
   function init() {
-    // 이미 DOM이 있으면 즉시 처리 후 종료
-    if (initExisting()) {
+    // DOM + 자식까지 있으면 즉시 처리
+    if (initExisting() && isReady()) {
       disconnectObserver();
       return;
     }
 
-    // DOM이 없으면 observer로 삽입 감지
+    // body가 아직 없으면 DOMContentLoaded 후 재시도
+    if (!document.body) {
+      document.addEventListener('DOMContentLoaded', function handler() {
+        document.removeEventListener('DOMContentLoaded', handler);
+        init();
+      });
+      return;
+    }
+
+    // ROOT 없거나 자식 미삽입 → observer로 감지
     if (observer) return;
-    var target = document.body;
-    if (!target) return;
     observer = new MutationObserver(function () {
-      if (initExisting()) {
+      if (initExisting() && isReady()) {
         disconnectObserver();
       }
     });
-    observer.observe(target, {
+    observer.observe(document.body, {
       childList: true,
       subtree: true
     });
