@@ -1755,6 +1755,7 @@
             }
           }
 
+          &.is-current-product,
           &.is-sold-out {
             position: relative;
             pointer-events: none;
@@ -1766,9 +1767,16 @@
               @include mx.flex($align: center, $justify: center);
               position: absolute;
               inset: 0;
-              content: '일시품절';
               background: hwb(0deg 94.12% 5.88% / 80%);
             }
+          }
+
+          &.is-current-product::before {
+            content: '현재상품';
+          }
+
+          &.is-sold-out::before {
+            content: '일시품절';
           }
         }
 
