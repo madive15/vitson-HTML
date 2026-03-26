@@ -229,17 +229,6 @@
 
       if (!isBottom && !isSlide) inst.center();
 
-      // 슬라이드 팝업은 마지막 하나만 유지
-      if (isSlide) {
-        openedWindows.slice().forEach(function (winId) {
-          if (winId === id) return;
-          var $w = $('#' + winId).closest('.k-window');
-          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
-            close(winId);
-          }
-        });
-      }
-
       inst.open();
 
       // 바텀시트: 하단 고정 + 슬라이드 업
@@ -255,8 +244,19 @@
         playOpenAnimation($kw, id);
       }
 
-      // 슬라이드: 풀스크린
+      // 슬라이드: 풀스크린 + 스택 z-index
       if (isSlide) {
+        // 열린 슬라이드 중 최상위 z-index 산출
+        var maxZ = 10010;
+        openedWindows.forEach(function (winId) {
+          if (winId === id) return;
+          var $w = $('#' + winId).closest('.k-window');
+          if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) {
+            var z = parseInt($w.css('z-index'), 10) || 0;
+            if (z >= maxZ) maxZ = z + 1;
+          }
+        });
+
         $kw.css({
           top: '0',
           left: '0',
@@ -266,6 +266,7 @@
           height: '100%',
           position: 'fixed'
         });
+        $kw[0].style.setProperty('z-index', String(maxZ), 'important');
 
         playOpenAnimation($kw, id);
       }
@@ -301,10 +302,26 @@
   // dimClose 옵션으로 딤 클릭 닫기 제어
   $(document).on('click' + NS, '.k-overlay', function () {
     var ids = openedWindows.slice();
-    ids.forEach(function (winId) {
-      if ($('#' + winId).attr('data-dim-close') === 'false') return;
-      close(winId);
-    });
+
+    // 최상위가 슬라이드인지 판별
+    var topId = ids[ids.length - 1];
+    var $topW = topId ? $('#' + topId).closest('.k-window') : $();
+    var isTopSlide = $topW.hasClass('is-slideright') || $topW.hasClass('is-slideleft');
+
+    if (isTopSlide) {
+      // 슬라이드: 최상위 하나만 닫기
+      if ($('#' + topId).attr('data-dim-close') !== 'false') {
+        close(topId);
+      }
+    } else {
+      // 기존 동작 (슬라이드는 제외)
+      ids.forEach(function (winId) {
+        if ($('#' + winId).attr('data-dim-close') === 'false') return;
+        var $w = $('#' + winId).closest('.k-window');
+        if ($w.hasClass('is-slideright') || $w.hasClass('is-slideleft')) return;
+        close(winId);
+      });
+    }
   });
 
   window.VmKendoWindow = {
