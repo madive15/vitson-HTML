@@ -13,6 +13,7 @@
   const _attrs = typeof attrs !== 'undefined' ? attrs : '';
   const _onclick = typeof onclick !== 'undefined' ? onclick : '';
   const _form = typeof form !== 'undefined' ? form : '';
+  const _id = typeof id !== 'undefined' ? id : '';
   const _href = typeof href !== 'undefined' ? href : '';
   const _download = typeof download !== 'undefined' ? download : false;
   const _target = typeof target !== 'undefined' ? target : null;
@@ -43,6 +44,7 @@
   <%= _download ? 'download' : '' %>
   <% if (_target) { %> target="<%= _target %>"<% } %>
   <% if (_rel) { %> rel="<%= _rel %>"<% } %>
+  <% if (_id) { %> id="<%= _id %>"<% } %>
   class="<%= _btnClass %>"
   <% if (_onclick) { %>onclick="<%- _onclick %>"<% } %>
   <% _attrsArray.forEach(function(attr) { 
@@ -55,6 +57,7 @@
 <% } else { %>
 <button
   type="<%= _type || 'button' %>"
+  <% if (_id) { %> id="<%= _id %>"<% } %>
   <% if (_form) { %>form="<%= _form %>"<% } %>
   class="<%= _btnClass %>"
   <%= _disabled ? 'disabled' : '' %>

@@ -11,8 +11,9 @@
     <p class="amount-info-desc"><span class="name">메가존(주)</span>님의 2026.01.25 현재기준 이월금액</p>
   </div>
   <div class="amount-info-body">
+    <!-- 26-03-26 MU-1167 서버 동일 ID값 적용 -->
     <%- include(`${_src}/views/components/button/button.ejs`, { size: 'xs', variant: 'outline-secondary', iconName:
-    'ic-update', iconLeft: true, text: '실시간 업데이트' }) %>
+    'ic-update', iconLeft: true, text: '실시간 업데이트', id: 'btnRefreshBalance' }) %>
     <span class="amount-info-price"><%= amountPriceValue %>원 <em>(VAT 포함)</em></span>
   </div>
 </div>
