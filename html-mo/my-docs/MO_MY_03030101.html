@@ -164,7 +164,8 @@
   <div class="docs-filter-carryover-inner">
     <div class="docs-filter-carryover-head">
       <p class="docs-filter-carryover-title">전월 이월금액 안내</p>
-      <button type="button" class="docs-filter-carryover-button">
+      <!-- 26-03-26 MU-1167 서버 동일 ID값 적용 -->
+      <button type="button" class="docs-filter-carryover-button" id="btnRefreshBalance">
         <span class="icon">
           <i class="ic ic-update" aria-hidden="true"></i>
 
@@ -429,6 +430,7 @@
 <button
   type="docs"
   
+  
   class="vits-btn-lg-p vits-btn-outline-tertiary icon-left docs-filter-reset"
   
   
@@ -454,6 +456,7 @@
 <button
   type="docs"
   
+  
   class="vits-btn-lg-p vits-btn-secondary docs-filter-search"
   
   
@@ -470,6 +473,15 @@
 
   </div>
 </section>
+
+<script>
+  var btn = document.getElementById('btnRefreshBalance');
+  if (btn) {
+    btn.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+    });
+  }
+</script>
 
 
 
@@ -562,6 +574,7 @@
 <button
   type="bill"
   
+  
   class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
   
   
@@ -631,6 +644,7 @@
 
 <button
   type="bill"
+  
   
   class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
   
@@ -702,6 +716,7 @@
 <button
   type="bill"
   
+  
   class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
   
   
@@ -771,6 +786,7 @@
 
 <button
   type="bill"
+  
   
   class="vits-btn-md vits-btn-outline-secondary icon-left docs-item-download weight-r"
   
