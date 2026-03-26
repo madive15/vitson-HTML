@@ -9004,6 +9004,7 @@ var common = __webpack_require__(6023);
   var ACTIVE = 'is-open';
   var _bound = false;
   var _observers = [];
+  var _domObserver = null;
 
   // 버튼 동적 생성
   function createBtn($root) {
@@ -9095,6 +9096,37 @@ var common = __webpack_require__(6023);
         });
       });
     }
+
+    // 동적 삽입 대응 — DOM에 나중에 추가되는 [data-expand] 감지
+    if (window.MutationObserver) {
+      _domObserver = new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var added = mutations[i].addedNodes;
+          for (var j = 0; j < added.length; j++) {
+            var node = added[j];
+            if (!node || node.nodeType !== 1) continue;
+            var $targets = $(node).find(TEXT).addBack(TEXT);
+            $targets.each(function () {
+              var $text = $(this);
+              var $root = $text.closest(ROOT);
+              if (!$root.length) return;
+              if ($text.data('expandObserved')) return;
+              $text.data('expandObserved', true);
+              var observer = new ResizeObserver(function () {
+                checkOverflow($root);
+              });
+              observer.observe($text[0]);
+              _observers.push(observer);
+              checkOverflow($root);
+            });
+          }
+        }
+      });
+      _domObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
   }
   function destroy() {
     $(document).off(NS);
@@ -9102,9 +9134,14 @@ var common = __webpack_require__(6023);
       observer.disconnect();
     });
     _observers = [];
+    if (_domObserver) {
+      _domObserver.disconnect();
+      _domObserver = null;
+    }
 
     // 동적 생성된 버튼 제거
     $(ROOT).find(BTN).remove();
+    $(TEXT).removeData('expandObserved');
     _bound = false;
   }
   window.UI.expand = {
