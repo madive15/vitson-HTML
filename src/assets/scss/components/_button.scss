@@ -913,3 +913,34 @@ $btn-fix-widths: 120, 150, 160, 200;
   @include btn-reset;
   min-height: auto;
 }
+
+// 서버 대응 - 실시간 업데이트
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#btnRefreshBalance {
+  &,
+  .icon,
+  .text {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .icon .ic-update {
+    will-change: transform;
+  }
+
+  &:active {
+    .icon .ic-update {
+      animation: rotate360 0.45s linear infinite;
+    }
+  }
+}
