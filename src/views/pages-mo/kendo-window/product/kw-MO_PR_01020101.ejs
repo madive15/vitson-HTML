@@ -9,6 +9,10 @@
     ? query.selectedOption
     : _products[3].productCode;
 
+  const _currentProduct = (typeof query !== 'undefined' && query.currentProduct)
+  ? query.currentProduct
+  : _products[0].productCode;
+
   // 필터 mock 데이터
   const _specFilters = [
     {
@@ -118,7 +122,8 @@
     <%- include(`${_src}/views/components-mo/product/product-option-item.ejs`, {
       item: item,
       selectedOption: _optionSelected,
-      isMember: _isMember
+      isMember: _isMember,
+      isCurrentProduct: item.productCode === _currentProduct
     }) %>
     <% }); %>
   </ul>

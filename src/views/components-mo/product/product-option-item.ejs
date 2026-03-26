@@ -21,7 +21,8 @@
 const d_opt = item || {};
 const isSoldout_opt = d_opt.stockYn === 'N';
 const isSelected_opt = (typeof selectedOption !== 'undefined' && selectedOption) ? selectedOption === d_opt.productCode : false;
-const stateClass_opt = (isSoldout_opt ? ' is-soldout' : '') + (isSelected_opt ? ' is-selected' : '');
+const isCurrentProduct_opt = (typeof isCurrentProduct !== 'undefined') ? isCurrentProduct : false;
+const stateClass_opt = (isSoldout_opt ? ' is-soldout' : '') + (isSelected_opt ? ' is-selected' : '') + (isCurrentProduct_opt ? ' is-current-product' : '');
 
 // 가격 노출 규칙
 const rate_opt = Number(d_opt.discountRate) || 0;

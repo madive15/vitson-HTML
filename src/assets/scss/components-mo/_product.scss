@@ -223,7 +223,7 @@ $mo-product-gap: map.get(var.$unit, 8);
   }
 }
 
-@mixin soldout-overlay {
+@mixin soldout-overlay($text) {
   @include mx.position(absolute, 0, 0, 0, 0);
   @include mx.flex(flex, row, center, center);
   @include typo.typography('m1s', $color: map.get(color.$text-colors, 'inverse'));
@@ -231,23 +231,23 @@ $mo-product-gap: map.get(var.$unit, 8);
   width: 100%;
   height: 100%;
   pointer-events: none;
-  content: '일시품절';
+  content: $text;
   background: rgb(color.$color-black, 40%);
   backdrop-filter: blur(4px);
 }
 
-@mixin thumb-soldout {
+@mixin thumb-soldout($text: '일시품절') {
   border-radius: map.get(var.$radius, 'lg');
 
   &:not(:has(a))::after {
-    @include soldout-overlay;
+    @include soldout-overlay($text);
   }
 
   a {
     position: relative;
 
     &::after {
-      @include soldout-overlay;
+      @include soldout-overlay($text);
     }
   }
 }
@@ -452,6 +452,12 @@ $mo-product-gap: map.get(var.$unit, 8);
     &.is-soldout {
       .product-thumb {
         @include thumb-soldout;
+      }
+    }
+
+    &.is-current-product {
+      .product-thumb {
+        @include thumb-soldout('현재상품');
       }
     }
   }
@@ -1204,7 +1210,8 @@ $mo-product-gap: map.get(var.$unit, 8);
       }
     }
 
-    &.is-soldout {
+    &.is-soldout,
+    &.is-current-product {
       pointer-events: none;
 
       .product-body {
