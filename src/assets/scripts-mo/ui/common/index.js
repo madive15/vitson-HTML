@@ -21,6 +21,7 @@ import './survey-detail.js';
 import './voice-blob.js';
 import './bottom-tab-bar.js';
 import './chip-button.js';
+import './floating.js';
 
 (function ($, window) {
   'use strict';
@@ -47,7 +48,8 @@ import './chip-button.js';
     'surveyDetail',
     'voiceBlob',
     'bottomTabBar',
-    'chipButton'
+    'chipButton',
+    'floating'
   ];
 
   window.UI.common = {
