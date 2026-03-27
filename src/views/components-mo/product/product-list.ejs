@@ -10,16 +10,26 @@ const _hasRecommend =
   recommendProducts.length > 0;
 %>
 
-<ul class="vm-product-items view-thumb" data-ui="product-items">
-  <% if (_hasRecommend) { %>
-  <li class="vm-product-item full-banner" data-ui="product-inline-banner">
+<% if (_hasRecommend) { %>
+<%# 26-03-27 개발 서버 동일 위치 %>
+<div class="vm-search-result" id="searchResultArea" style="">
+  <div class="vm-search-result-recommend recommend-default" id="searchRecommendDefault" style="">
+    <%# 
+      26-03-27 상품 없을 경우, vm-product-inline-recommend 여기에 is-hidden 추가해주세요. 
+      <section class="vm-product-inline-recommend">
+    %>
     <!-- prettier-ignore -->
     <%- include(`${_src}/views/components-mo/product/product-inline-recommend.ejs`, {
       products: recommendProducts
     }) %>
-  </li>
-  <% } %>
+  </div>
+</div>
+<% } %>
 
+<%# 26-03-27 함께 본 상품 추가 %>
+<div></div>
+
+<ul class="vm-product-items view-thumb" data-ui="product-items">
   <!-- prettier-ignore -->
   <% products.forEach(function(item) { %>
     <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
