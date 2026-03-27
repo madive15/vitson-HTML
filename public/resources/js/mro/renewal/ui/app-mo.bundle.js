@@ -4137,7 +4137,7 @@
           height: '100%',
           position: 'fixed'
         });
-        if (!$kw.find('.category-full-popup').length) {
+        if (!$kw.find('.category-full-popup, .modal-filter-sheet, .my-shipment-popup').length) {
           $kw[0].style.setProperty('z-index', String(maxZ), 'important');
         }
         playOpenAnimation($kw, id);
