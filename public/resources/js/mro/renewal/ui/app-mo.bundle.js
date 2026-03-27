@@ -214,6 +214,203 @@
 
 /***/ }),
 
+/***/ 862:
+/***/ (function() {
+
+/**
+ * @file scripts-mo/ui/common/pull-refresh.js
+ * @description 모바일 커스텀 pull-to-refresh (내부 스크롤 컨테이너용)
+ * @scope .vm-content-wrap
+ * @mapping .vm-wrap (상태 클래스 부여 대상)
+ * @state is-pull-refreshing: 당기는 중
+ * @state is-pull-triggered: 임계값 초과 (놓으면 새로고침)
+ * @note
+ *  - body 스크롤이 아닌 .vm-content-wrap 내부 스크롤 환경에서
+ *    브라우저 기본 pull-to-refresh가 동작하지 않는 문제를 보완한다.
+ *  - --pull-distance CSS 변수로 당김 거리 전달 (스피너 연동용)
+ *  - init(): 멱등성 보장
+ *  - destroy(): DOM 제거 전 호출 권장
+ */
+
+(function ($, window) {
+  'use strict';
+
+  if (!$) return;
+  window.UI = window.UI || {};
+  var STATE = {
+    PULLING: 'is-pull-refreshing',
+    TRIGGERED: 'is-pull-triggered'
+  };
+  var SELECTOR = {
+    SCROLL_CONTAINER: '.vm-content-wrap',
+    WRAP: '.vm-wrap'
+  };
+  var INTERNAL = {
+    THRESHOLD: 80,
+    MAX_PULL: 120,
+    RESISTANCE: 0.4
+  };
+  var CSS_VAR = '--pull-distance';
+  var $scrollContainer = null;
+  var $wrap = null;
+  var isBound = false;
+  var isRefreshing = false;
+  var startY = 0;
+  var pullDistance = 0;
+  var isTouching = false;
+
+  // 옵션 (init 시 덮어쓰기 가능)
+  var opts = {
+    onRefresh: null
+  };
+
+  // 스크롤 컨테이너 캐싱
+  function getScrollContainer() {
+    if (!$scrollContainer || !$scrollContainer.length) {
+      $scrollContainer = $(SELECTOR.SCROLL_CONTAINER).not(function () {
+        return this.closest('.vm-search-overlay');
+      }).first();
+    }
+    return $scrollContainer;
+  }
+
+  // 래퍼 캐싱
+  function getWrap() {
+    if (!$wrap || !$wrap.length) {
+      $wrap = getScrollContainer().closest(SELECTOR.WRAP);
+    }
+    return $wrap;
+  }
+
+  // UI 리셋
+  function resetUI() {
+    pullDistance = 0;
+    var wrap = getWrap();
+    if (wrap.length) {
+      wrap.removeClass(STATE.PULLING).removeClass(STATE.TRIGGERED);
+      wrap[0].style.removeProperty(CSS_VAR);
+    }
+  }
+
+  // 새로고침 트리거
+  function trigger() {
+    isRefreshing = true;
+    if (typeof opts.onRefresh === 'function') {
+      // 비동기 완료 후 done() 호출
+      opts.onRefresh(function () {
+        isRefreshing = false;
+        resetUI();
+      });
+    } else {
+      location.reload();
+    }
+  }
+
+  // --- 터치 핸들러 ---
+  function onTouchStart(e) {
+    if (isRefreshing) return;
+    var el = getScrollContainer()[0];
+    if (!el || el.scrollTop > 0) return;
+    startY = e.touches[0].clientY;
+    isTouching = true;
+    pullDistance = 0;
+  }
+  function onTouchMove(e) {
+    if (!isTouching || isRefreshing) return;
+    var el = getScrollContainer()[0];
+    if (!el) return;
+    var delta = e.touches[0].clientY - startY;
+
+    // 위로 스와이프는 무시
+    if (delta <= 0) {
+      resetUI();
+      return;
+    }
+
+    // 스크롤이 내려간 상태에서 시작된 터치 무시
+    if (el.scrollTop > 0) {
+      isTouching = false;
+      return;
+    }
+
+    // 당기는 중 기본 스크롤 차단
+    e.preventDefault();
+
+    // 저항 적용
+    pullDistance = Math.min(delta * INTERNAL.RESISTANCE, INTERNAL.MAX_PULL);
+    var wrap = getWrap();
+    wrap.addClass(STATE.PULLING);
+    if (pullDistance >= INTERNAL.THRESHOLD) {
+      wrap.addClass(STATE.TRIGGERED);
+    } else {
+      wrap.removeClass(STATE.TRIGGERED);
+    }
+
+    // CSS 변수로 당김 거리 전달
+    wrap[0].style.setProperty(CSS_VAR, pullDistance + 'px');
+  }
+  function onTouchEnd() {
+    if (!isTouching) return;
+    isTouching = false;
+    if (pullDistance >= INTERNAL.THRESHOLD && !isRefreshing) {
+      trigger();
+    } else {
+      resetUI();
+    }
+  }
+
+  // 이벤트 바인딩
+  function bindEvents() {
+    if (isBound) return;
+    var el = getScrollContainer()[0];
+    if (!el) return;
+    isBound = true;
+    // passive: false — 당기는 중 preventDefault 필요
+    el.addEventListener('touchstart', onTouchStart, {
+      passive: true
+    });
+    el.addEventListener('touchmove', onTouchMove, {
+      passive: false
+    });
+    el.addEventListener('touchend', onTouchEnd, {
+      passive: true
+    });
+  }
+
+  // 이벤트 해제
+  function unbindEvents() {
+    if (!isBound) return;
+    isBound = false;
+    var el = getScrollContainer()[0];
+    if (!el) return;
+    el.removeEventListener('touchstart', onTouchStart);
+    el.removeEventListener('touchmove', onTouchMove);
+    el.removeEventListener('touchend', onTouchEnd);
+  }
+  window.UI.pullRefresh = {
+    /**
+     * @param {Object} [options]
+     * @option {Function} [onRefresh] - 커스텀 새로고침 콜백. done()을 인자로 받음.
+     *         null이면 location.reload() 실행.
+     */
+    init: function (options) {
+      if (isBound) return;
+      $.extend(opts, options);
+      bindEvents();
+    },
+    destroy: function () {
+      unbindEvents();
+      resetUI();
+      $scrollContainer = null;
+      $wrap = null;
+      isRefreshing = false;
+      isTouching = false;
+    }
+  };
+})(window.jQuery, window);
+
+/***/ }),
+
 /***/ 905:
 /***/ (function() {
 
@@ -2523,6 +2720,30 @@
       var atEnd = scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth - THRESHOLD;
       $scope.toggleClass(ClassName.OVERFLOW, hasOverflow && !atEnd);
     }
+
+    // scrollEl 내부 콘텐츠 크기 변화 감시 (비동기 데이터 로딩 대응)
+    var ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(update);
+      // scrollEl 자체 + 첫 번째 자식(콘텐츠 래퍼) 감시
+      ro.observe(scrollEl);
+      if (scrollEl.firstElementChild) {
+        ro.observe(scrollEl.firstElementChild);
+      }
+    }
+
+    // 자식 요소 동적 추가/제거 감시 (비동기 데이터 렌더링 대응)
+    var mo = new MutationObserver(function () {
+      update();
+      // 새로 생긴 첫 번째 자식을 ResizeObserver에 등록
+      if (ro && scrollEl.firstElementChild && !scrollEl.firstElementChild._roObserved) {
+        ro.observe(scrollEl.firstElementChild);
+        scrollEl.firstElementChild._roObserved = true;
+      }
+    });
+    mo.observe(scrollEl, {
+      childList: true
+    });
     $scrollEl.on('scroll.' + ns, update);
     $(window).on('resize.' + ns, update);
 
@@ -2533,6 +2754,14 @@
       destroy: function () {
         $scrollEl.off('scroll.' + ns);
         $(window).off('resize.' + ns);
+        if (ro) {
+          ro.disconnect();
+          ro = null;
+        }
+        if (mo) {
+          mo.disconnect();
+          mo = null;
+        }
         $scope.removeClass(ClassName.OVERFLOW);
         $scope.removeData(DATA_KEY);
       }
@@ -3286,7 +3515,10 @@
   // 스크롤 컨테이너 캐싱
   function getScrollContainer() {
     if (!$scrollContainer || !$scrollContainer.length || !isConnected($scrollContainer)) {
-      $scrollContainer = $(SELECTOR.SCROLL_CONTAINER).first();
+      // 검색 오버레이(.vm-search-overlay) 내부 컨테이너 제외
+      $scrollContainer = $(SELECTOR.SCROLL_CONTAINER).not(function () {
+        return this.closest('.vm-search-overlay');
+      }).first();
     }
     return $scrollContainer;
   }
@@ -4625,6 +4857,8 @@ var bottom_tab_bar = __webpack_require__(4714);
 var chip_button = __webpack_require__(9098);
 // EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/floating.js
 var floating = __webpack_require__(3257);
+// EXTERNAL MODULE: ./src/assets/scripts-mo/ui/common/pull-refresh.js
+var pull_refresh = __webpack_require__(862);
 ;// ./src/assets/scripts-mo/ui/common/index.js
 /**
  * @file scripts-mo/ui/common/index.js
@@ -4650,12 +4884,13 @@ var floating = __webpack_require__(3257);
 
 
 
+
 (function ($, window) {
   'use strict';
 
   if (!$) return;
   window.UI = window.UI || {};
-  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail', 'voiceBlob', 'bottomTabBar', 'chipButton', 'floating'];
+  var modules = ['tooltip', 'stickyObserver', 'overflowMenu', 'toggle', 'stepFlow', 'expand', 'tab', 'scrollButtons', 'tabSticky', 'collapse', 'scrollOverflowGradient', 'optionBox', 'stepTab', 'auth', 'surveyDetail', 'voiceBlob', 'bottomTabBar', 'chipButton', 'floating', 'pullRefresh'];
   window.UI.common = {
     init: function () {
       modules.forEach(function (name) {
@@ -5024,25 +5259,23 @@ var cart = __webpack_require__(9459);
     slidesPerView: 'auto',
     spaceBetween: 12,
     speed: 500,
-    slidesOffsetAfter: 50,
-    breakpoints: {
-      768: {
-        slidesOffsetAfter: 280
-      }
-    },
+    slidesOffsetAfter: 20,
     a11y: false,
     on: {
       init: function (swiper) {
         if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
+        var $slides = $(swiper.slides);
+        if (!$slides.filter('.is-selected').length) {
+          $slides.eq(0).addClass('is-selected');
+        }
+        // 초기 상태에서 끝에 도달해 있으면 클래스 부여
+        $(swiper.el).toggleClass('is-end', swiper.isEnd);
       },
-      slideChangeTransitionEnd: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
+      reachEnd: function (swiper) {
+        $(swiper.el).addClass('is-end');
+      },
+      fromEdge: function (swiper) {
+        $(swiper.el).removeClass('is-end');
       }
     }
   };
@@ -5191,20 +5424,50 @@ var cart = __webpack_require__(9459);
       var prevEl = this.querySelector('.swiper-button-prev');
       var nextEl = this.querySelector('.swiper-button-next');
       var $el = $(this);
+
+      // DOM에 없으면 자동 생성
+      if (!prevEl || !nextEl) {
+        var navWrap = document.createElement('div');
+        navWrap.className = 'vits-swiper-navs';
+        prevEl = document.createElement('button');
+        prevEl.className = 'swiper-button-prev';
+        prevEl.setAttribute('type', 'button');
+        prevEl.setAttribute('aria-label', '이전');
+        nextEl = document.createElement('button');
+        nextEl.className = 'swiper-button-next';
+        nextEl.setAttribute('type', 'button');
+        nextEl.setAttribute('aria-label', '다음');
+        navWrap.appendChild(prevEl);
+        navWrap.appendChild(nextEl);
+        this.appendChild(navWrap);
+      }
       if (!this.classList.contains('swiper')) this.classList.add('swiper');
       var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
-      if (prevEl && nextEl) {
+      var slideCount = this.querySelectorAll('.swiper-slide').length;
+      if (slideCount <= 1) {
+        options.allowTouchMove = false;
+        options.slidesOffsetAfter = 0;
+      }
+      if (prevEl && nextEl && slideCount > 1) {
         options.navigation = {
           nextEl: nextEl,
           prevEl: prevEl,
           disabledClass: 'swiper-button-disabled'
         };
+      } else if (prevEl && nextEl) {
+        // 1개 이하일 때 화살표 숨김
+        prevEl.style.display = 'none';
+        nextEl.style.display = 'none';
       }
       try {
         var instance = new swiper_bundle/* default */.A(this, options);
         $el.data(SWIPER_DATA_KEY, instance);
+        var totalSlides = instance.slides.length;
         this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
           slide.addEventListener('click', function () {
+            $(instance.slides).removeClass('is-selected');
+            $(slide).addClass('is-selected');
+            $el.toggleClass('is-last-selected', index === totalSlides - 1);
             instance.slideTo(index);
           });
         });
