@@ -121,14 +121,14 @@ $visual-btn: fn.rem(18);
 
         &.toggle-autoplay {
           @include mx.flex(flex, row, center, center);
-          @include icon.pse-icon(before, 14, 0, 0, color.$color-white, 'pause');
+          @include icon.pse-icon(before, (14 * 1.5), 0, 0, color.$color-white, 'pause');
           flex-shrink: 0;
-          width: $visual-btn;
-          height: $visual-btn;
+          width: $visual-btn * 1.5;
+          height: $visual-btn * 1.5;
           padding: map.get(var.$unit, 2);
           margin: map.get(var.$unit, 2) * -1;
           color: color.$color-white;
-          background: rgb(color.$color-white, 20%);
+          background: rgb(color.$color-black, 20%);
           border-radius: 50%;
 
           &.is-play::before {
@@ -140,22 +140,21 @@ $visual-btn: fn.rem(18);
     }
 
     &-nav {
-      @include mx.flex;
-      gap: fn.rem(5);
-      width: fn.rem(45);
-      height: $visual-btn;
+      @include mx.flex(flex, row, space-between, center);
+      width: (($visual-btn * 1.5) * 2) + fn.rem(3);
+      height: $visual-btn * 1.5;
       padding: 0 map.get(var.$unit, 2);
-      background: rgb(color.$color-white, 20%);
+      background: rgb(color.$color-black, 20%);
       border-radius: $visual-btn;
 
       button {
         @include mx.flex(flex, row, center, center);
-        flex: 1 0 $visual-btn;
+        flex: 0 0 $visual-btn * 1.5;
         padding: map.get(var.$unit, 2);
         margin: map.get(var.$unit, 2) * -1;
 
         .icon {
-          @include icon.ic-size(fn.rem(14));
+          @include icon.ic-size(fn.rem(14) * 1.5);
           color: color.$color-white;
         }
       }
