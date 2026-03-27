@@ -9762,14 +9762,41 @@ var common = __webpack_require__(6023);
     $doc.on('tab:change' + NS, function (e, data) {
       if (data === 'brandTab') {
         var $root = $scope();
-        if ($root.length) {
-          if (!_btnCache || !_btnCache.length) {
-            cacheBtnWidths($root);
-          }
-          fitButtons($root);
-          updateArrows($root);
-          filterList($root, activeFilter($root), '');
+        if (!$root.length) return;
+        if (!_btnCache || !_btnCache.length) {
+          cacheBtnWidths($root);
         }
+        fitButtons($root);
+        updateArrows($root);
+
+        // 텍스트가 채워져 있으면 즉시 캐시 갱신 + 필터
+        var hasText = $root.find(SEL.item).filter(function () {
+          return $.trim($(this).text());
+        }).length > 0;
+        if (hasText) {
+          cacheBrands($root);
+          filterList($root, activeFilter($root), '');
+          return;
+        }
+
+        // 비동기 텍스트 주입 대응 — DOM 변경 감지 후 캐시 갱신
+        var list = $root.find(SEL.list)[0];
+        if (!list) return;
+        var observer = new MutationObserver(function () {
+          var filled = $root.find(SEL.item).filter(function () {
+            return $.trim($(this).text());
+          }).length > 0;
+          if (filled) {
+            observer.disconnect();
+            cacheBrands($root);
+            filterList($root, activeFilter($root), '');
+          }
+        });
+        observer.observe(list, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
       }
     });
   }
@@ -9783,6 +9810,33 @@ var common = __webpack_require__(6023);
     fitButtons($root);
     bindEvents();
     updateArrows($root);
+
+    // 초기 필터 적용 — 텍스트 유무에 따라 즉시 or 대기
+    var hasText = $root.find(SEL.item).filter(function () {
+      return $.trim($(this).text());
+    }).length > 0;
+    if (hasText) {
+      filterList($root, activeFilter($root), '');
+    } else {
+      var list = $root.find(SEL.list)[0];
+      if (list) {
+        var observer = new MutationObserver(function () {
+          var filled = $root.find(SEL.item).filter(function () {
+            return $.trim($(this).text());
+          }).length > 0;
+          if (filled) {
+            observer.disconnect();
+            cacheBrands($root);
+            filterList($root, activeFilter($root), '');
+          }
+        });
+        observer.observe(list, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+    }
   }
   function destroy() {
     $(document).off(NS);
