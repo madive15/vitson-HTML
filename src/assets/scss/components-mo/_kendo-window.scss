@@ -165,6 +165,7 @@
 
 // 슬라이드 (왼쪽에서 오른쪽으로)
 [data-modal-box][data-modal-type='slide-left'] {
+  /* stylelint-disable-next-line no-descending-specificity */
   [class$='-panel'] {
     position: fixed;
     top: 0;
@@ -872,12 +873,12 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
 // 배송지등록, 목록, 화물영업소 조회 풀 팝업
 .vm-scope .k-window.is-slideleft,
 .vm-scope .k-window.is-slideright {
-  /* stylelint-disable-next-line no-descending-specificity */
+  /* stylelint-disable selector-id-pattern */
   &:has(#transListModal),
-  &:has(#transFormModal) {
+  &:has(#transFormModal),
+  &:has(#cargoModal) {
     background: map.get(color.$layout-surf, 'mypage');
 
-    /* stylelint-disable-next-line no-descending-specificity */
     .vm-modal-content {
       background: map.get(color.$layout-surf, 'mypage');
 
@@ -909,9 +910,9 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
       }
     }
 
-    /* stylelint-disable-next-line no-descending-specificity */
     .vm-modal-footer {
       background: map.get(color.$layout-surf, 'mypage');
     }
   }
+  /* stylelint-enable selector-id-pattern */
 }

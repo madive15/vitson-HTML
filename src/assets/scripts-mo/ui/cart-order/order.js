@@ -45,25 +45,23 @@ import Swiper from 'swiper/bundle';
     slidesPerView: 'auto',
     spaceBetween: 12,
     speed: 500,
-    slidesOffsetAfter: 50,
-    breakpoints: {
-      768: {
-        slidesOffsetAfter: 280
-      }
-    },
+    slidesOffsetAfter: 20,
     a11y: false,
     on: {
       init: function (swiper) {
         if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
+        var $slides = $(swiper.slides);
+        if (!$slides.filter('.is-selected').length) {
+          $slides.eq(0).addClass('is-selected');
+        }
+        // 초기 상태에서 끝에 도달해 있으면 클래스 부여
+        $(swiper.el).toggleClass('is-end', swiper.isEnd);
       },
-      slideChangeTransitionEnd: function (swiper) {
-        if (!swiper.slides || !swiper.slides.length) return;
-        $(swiper.slides).removeClass('is-selected');
-        var active = swiper.slides[swiper.activeIndex];
-        if (active) $(active).addClass('is-selected');
+      reachEnd: function (swiper) {
+        $(swiper.el).addClass('is-end');
+      },
+      fromEdge: function (swiper) {
+        $(swiper.el).removeClass('is-end');
       }
     }
   };
@@ -235,22 +233,52 @@ import Swiper from 'swiper/bundle';
       var nextEl = this.querySelector('.swiper-button-next');
       var $el = $(this);
 
+      // DOM에 없으면 자동 생성
+      if (!prevEl || !nextEl) {
+        var navWrap = document.createElement('div');
+        navWrap.className = 'vits-swiper-navs';
+        prevEl = document.createElement('button');
+        prevEl.className = 'swiper-button-prev';
+        prevEl.setAttribute('type', 'button');
+        prevEl.setAttribute('aria-label', '이전');
+        nextEl = document.createElement('button');
+        nextEl.className = 'swiper-button-next';
+        nextEl.setAttribute('type', 'button');
+        nextEl.setAttribute('aria-label', '다음');
+        navWrap.appendChild(prevEl);
+        navWrap.appendChild(nextEl);
+        this.appendChild(navWrap);
+      }
+
       if (!this.classList.contains('swiper')) this.classList.add('swiper');
 
       var options = Object.assign({}, PAYMENT_SWIPER_OPTIONS);
-      if (prevEl && nextEl) {
+      var slideCount = this.querySelectorAll('.swiper-slide').length;
+      if (slideCount <= 1) {
+        options.allowTouchMove = false;
+        options.slidesOffsetAfter = 0;
+      }
+      if (prevEl && nextEl && slideCount > 1) {
         options.navigation = {
           nextEl: nextEl,
           prevEl: prevEl,
           disabledClass: 'swiper-button-disabled'
         };
+      } else if (prevEl && nextEl) {
+        // 1개 이하일 때 화살표 숨김
+        prevEl.style.display = 'none';
+        nextEl.style.display = 'none';
       }
 
       try {
         var instance = new Swiper(this, options);
         $el.data(SWIPER_DATA_KEY, instance);
+        var totalSlides = instance.slides.length;
         this.querySelectorAll('.swiper-slide').forEach(function (slide, index) {
           slide.addEventListener('click', function () {
+            $(instance.slides).removeClass('is-selected');
+            $(slide).addClass('is-selected');
+            $el.toggleClass('is-last-selected', index === totalSlides - 1);
             instance.slideTo(index);
           });
         });

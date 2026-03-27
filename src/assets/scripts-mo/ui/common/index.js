@@ -22,6 +22,7 @@ import './voice-blob.js';
 import './bottom-tab-bar.js';
 import './chip-button.js';
 import './floating.js';
+import './pull-refresh.js';
 
 (function ($, window) {
   'use strict';
@@ -49,7 +50,8 @@ import './floating.js';
     'voiceBlob',
     'bottomTabBar',
     'chipButton',
-    'floating'
+    'floating',
+    'pullRefresh'
   ];
 
   window.UI.common = {

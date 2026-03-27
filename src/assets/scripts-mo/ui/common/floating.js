@@ -88,7 +88,12 @@
   // 스크롤 컨테이너 캐싱
   function getScrollContainer() {
     if (!$scrollContainer || !$scrollContainer.length || !isConnected($scrollContainer)) {
-      $scrollContainer = $(SELECTOR.SCROLL_CONTAINER).first();
+      // 검색 오버레이(.vm-search-overlay) 내부 컨테이너 제외
+      $scrollContainer = $(SELECTOR.SCROLL_CONTAINER)
+        .not(function () {
+          return this.closest('.vm-search-overlay');
+        })
+        .first();
     }
     return $scrollContainer;
   }

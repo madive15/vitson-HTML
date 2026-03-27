@@ -43,6 +43,28 @@
       $scope.toggleClass(ClassName.OVERFLOW, hasOverflow && !atEnd);
     }
 
+    // scrollEl 내부 콘텐츠 크기 변화 감시 (비동기 데이터 로딩 대응)
+    var ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(update);
+      // scrollEl 자체 + 첫 번째 자식(콘텐츠 래퍼) 감시
+      ro.observe(scrollEl);
+      if (scrollEl.firstElementChild) {
+        ro.observe(scrollEl.firstElementChild);
+      }
+    }
+
+    // 자식 요소 동적 추가/제거 감시 (비동기 데이터 렌더링 대응)
+    var mo = new MutationObserver(function () {
+      update();
+      // 새로 생긴 첫 번째 자식을 ResizeObserver에 등록
+      if (ro && scrollEl.firstElementChild && !scrollEl.firstElementChild._roObserved) {
+        ro.observe(scrollEl.firstElementChild);
+        scrollEl.firstElementChild._roObserved = true;
+      }
+    });
+    mo.observe(scrollEl, {childList: true});
+
     $scrollEl.on('scroll.' + ns, update);
     $(window).on('resize.' + ns, update);
 
@@ -54,6 +76,17 @@
       destroy: function () {
         $scrollEl.off('scroll.' + ns);
         $(window).off('resize.' + ns);
+
+        if (ro) {
+          ro.disconnect();
+          ro = null;
+        }
+
+        if (mo) {
+          mo.disconnect();
+          mo = null;
+        }
+
         $scope.removeClass(ClassName.OVERFLOW);
         $scope.removeData(DATA_KEY);
       }
