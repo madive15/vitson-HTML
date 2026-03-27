@@ -24,6 +24,8 @@
 }
 
 .vm-header {
+  padding-top: var(--safe-top);
+
   &:not(.header-main-bar) {
     @include mx.position(sticky, 0);
     z-index: map.get(var.$mo-zindex, 'header');
@@ -42,7 +44,7 @@
     }
 
     &.header-main-bar {
-      @include mx.position(sticky, (map.get(var.$mo-header, 'main-bar-top') * -1));
+      @include mx.position(sticky, calc((map.get(var.$mo-header, 'main-bar-top') * -1) - var(--safe-top)));
       z-index: map.get(var.$mo-zindex, 'header-main');
       flex-direction: column;
       gap: 0;
