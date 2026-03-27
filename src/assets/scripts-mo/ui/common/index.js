@@ -23,6 +23,7 @@ import './bottom-tab-bar.js';
 import './chip-button.js';
 import './floating.js';
 import './pull-refresh.js';
+import './swiper-base.js';
 
 (function ($, window) {
   'use strict';
@@ -51,7 +52,8 @@ import './pull-refresh.js';
     'bottomTabBar',
     'chipButton',
     'floating',
-    'pullRefresh'
+    'pullRefresh',
+    'swiperBase'
   ];
 
   window.UI.common = {

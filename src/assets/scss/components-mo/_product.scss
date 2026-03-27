@@ -277,6 +277,14 @@ $mo-product-gap: map.get(var.$unit, 8);
       .vm-product-items {
         box-shadow: none;
       }
+
+      .vm-product-inline-recommend {
+        .product-recommend-title {
+          font-size: fn.rem(18);
+          font-weight: 600;
+          color: map.get(color.$text-colors, 'primary');
+        }
+      }
     }
 
     &:has(.vm-product-inline-recommend.is-hidden) {
@@ -555,6 +563,41 @@ $mo-product-gap: map.get(var.$unit, 8);
     &:has(.product-recommend-head .vits-tooltip) {
       .price-login-button .text {
         font-size: fn.rem(11);
+      }
+    }
+  }
+
+  // 스와이프 추천상품
+  &-swiper-recommend {
+    @include mx.flex(flex, column);
+    gap: map.get(var.$unit, 20);
+    padding: map.get(var.$unit, 20) 0;
+    background: map.get(color.$layout-status, 'brand-bg-default');
+
+    .product-swiper-recommend {
+      &-title {
+        @include typo.typography('h4s', $color: map.get(color.$text-colors, 'primary'));
+        padding: 0 var.$mo-gutter;
+
+        .point-color {
+          color: map.get(color.$text-status, 'brand');
+        }
+      }
+
+      &-body {
+        .swiper {
+          padding: 0 var.$mo-gutter;
+
+          &-slide {
+            padding: map.get(var.$unit, 8);
+            background: color.$color-white;
+            border-radius: map.get(var.$radius, 'lg');
+
+            .vm-product-card {
+              @include mx.flex(flex, column);
+            }
+          }
+        }
       }
     }
   }
