@@ -27,7 +27,6 @@ $common-size: map.get(var.$unit, 40);
     z-index: map.get(var.$mo-zindex, 'floating');
     gap: map.get(var.$unit, 8);
     padding-bottom: $common-coords;
-    pointer-events: none;
     transition: bottom 0.3s ease;
   }
 
@@ -76,11 +75,36 @@ $common-size: map.get(var.$unit, 40);
 }
 
 @each $name, $height in var.$mo-bottom-bar {
-  @if $name != 'tab-bar' {
+  @if $name != 'tab-bar' and $name != 'step-bar-price' and $name != 'product-bar' {
     .vm-wrap:has([class*='#{$name}']) {
       .vm-floating-section {
         bottom: calc(#{$height} + env(safe-area-inset-bottom, 0px));
       }
+    }
+  }
+}
+
+.vm-wrap {
+  // step-bar + is-price 조합 별도 처리
+  &:has([class*='step-bar'].is-price) {
+    .vm-floating-section {
+      bottom: calc(#{map.get(var.$mo-bottom-bar, 'step-bar-price')} + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  // product-bar + bottom-bar-handle 조합 별도 처리
+  &:has([class*='product-bar']) {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .vm-floating-section {
+      bottom: calc(
+        #{map.get(var.$mo-header, 'bottom-bar-handle')} + #{map.get(var.$mo-bottom-bar, 'product-bar')} +
+          env(safe-area-inset-bottom, 0px)
+      );
+    }
+
+    // bar-handel 오픈시, floating 감추기
+    .vm-bottom-bar:has(.bottom-product-bar.is-open) {
+      z-index: map.get(var.$mo-zindex, 'floating') + 1;
     }
   }
 }
