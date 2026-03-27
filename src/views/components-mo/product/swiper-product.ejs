@@ -1,0 +1,30 @@
+<% const _src = srcPath; const _public = publicPath; %>
+<!-- prettier-ignore -->
+
+<%
+  const mockData = require(`${_src}/../public/resources/mock/products.json`);
+  const _all = mockData.products.slice();
+  for (let i = _all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_all[i], _all[j]] = [_all[j], _all[i]];
+  }
+  const _recommendProducts = _all.slice(0, 10);
+%>
+
+<div class="vm-product-swiper-recommend">
+  <div class="product-swiper-recommend-head">
+    <h2 class="product-swiper-recommend-title"><span class="point-color">검색어</span> 추천상품</h2>
+  </div>
+  <div class="product-swiper-recommend-body" data-ui="swiper-base" data-swiper="product">
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        <% _recommendProducts.forEach(function(item) { %>
+        <div class="swiper-slide">
+          <%- include(`${_src}/views/components-mo/product/swiper-product-item.ejs`, { item: item, showLike: false,
+          showCart: false, showCompareBtn: false }) %>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</div>
