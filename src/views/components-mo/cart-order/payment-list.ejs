@@ -74,25 +74,27 @@
           <!-- 카드 스와이퍼 -->
           <div class="vm-card-list swiper-container js-swiper" data-swiper-type="payment">
             <div class="swiper-wrapper">
+              <%# 26-03-27 서버 동일, 1번 2번 카드이미지 변경 %>
               <!-- prettier-ignore -->
               <% const cards = [ 
-              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/shinhan@2x.png' , color: '#4a6bc2' },
-              { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/ibk@2x.png' , color: '#004c9d' },
+              { image: 'https://m.hanacard.co.kr/ATTACH/MOBILE_APP/images/card/alliance/12_11748_03.png' , color: '#4a6bc2' },
+              { image: 'https://appcardapp2.hyundaicard.com:8444/new_img/02918_V_DS_M.png' , color: '#004c9d' },
               { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/kb@2x.png' , color: '#ffbc00' },
               { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/keb@2x.png' , color: '#f2f9f8' },
               { image: 'https://stdux.inicis.com/wpay/wpaystd/site/stdwpay/public/images/bank/woori@2x.png' , color: '#0067AC' },
             ]; %>
+            <%# 26-03-27 서버 동일, 배경색 제외 %>
             <% cards.forEach((card, index) => { %>
               <div
                 class="swiper-slide vm-card-item<%= index === 0 ? ' is-selected' : '' %>"
-                style="background-image: url('<%= card.image %>'); background-color: <%= card.color %>"
+                style="background-image: url('<%= card.image %>')"
               ></div>
               <% }); %>
             </div>
-            <div class="vits-swiper-navs">
+            <!-- <div class="vits-swiper-navs">
               <div class="swiper-button-prev"></div>
               <div class="swiper-button-next"></div>
-            </div>
+            </div> -->
           </div>
 
           <div class="vm-card-form">
@@ -161,10 +163,10 @@
               ></div>
               <% }); %>
             </div>
-            <div class="vits-swiper-navs">
+            <!-- <div class="vits-swiper-navs">
               <div class="swiper-button-prev"></div>
               <div class="swiper-button-next"></div>
-            </div>
+            </div> -->
           </div>
 
           <!--case: 등록된계좌 -->

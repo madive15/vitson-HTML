@@ -1120,12 +1120,12 @@
 
       .swiper-slide {
         flex-shrink: 0;
-        width: calc(100% / 1.5);
-
-        // ipad mini size(768px) 이상일 때 2.5개씩 보여줌
-        @media (width >= 768px) {
-          width: calc(100% / 2.5);
-        }
+        width: fn.rem(170);
+        aspect-ratio: 170 / 106;
+        padding: map.get(var.$unit, 2);
+        background-origin: content-box;
+        background-size: contain;
+        box-shadow: inset 0 0 0 1px map.get(color.$gray-shades, '30');
       }
 
       .vits-swiper-navs {
@@ -1170,6 +1170,10 @@
       .swiper-button-disabled {
         opacity: 0;
       }
+
+      &.is-end .vits-swiper-navs::after {
+        display: none;
+      }
     }
 
     /* 카드 아이템 */
@@ -1198,7 +1202,7 @@
         margin-bottom: map.get(var.$unit, 4);
       }
 
-      &.swiper-slide-active {
+      &.is-selected {
         filter: grayscale(0);
         border: 0;
         opacity: 1;
