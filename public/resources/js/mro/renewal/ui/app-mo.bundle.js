@@ -3905,7 +3905,9 @@
           height: '100%',
           position: 'fixed'
         });
-        $kw[0].style.setProperty('z-index', String(maxZ), 'important');
+        if (!$kw.find('.category-full-popup').length) {
+          $kw[0].style.setProperty('z-index', String(maxZ), 'important');
+        }
         playOpenAnimation($kw, id);
       }
 
