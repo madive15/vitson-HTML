@@ -8,17 +8,16 @@
 
 <%# PLP 전용 좌측 메뉴(카테고리/필터) %>
 <aside class="vits-grid-side vits-grid-side-left vits-side-plp">
-  <% if (showCategoryTree) { %> <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
-  <div class="plp-side-category">
-    <p class="plp-side-title">카테고리</p>
-    <%- include(`${_src}/views/components/category/category-tree.ejs`, { treeData: (mockData && mockData.category &&
-    Array.isArray(mockData.category.tree)) ? mockData.category.tree : [], depth1Id: depth1Id, depth2Id: depth2Id,
-    depth3Id: depth3Id }) %>
-  </div>
-  <% } %>
-
   <div class="plp-side-filter">
     <ul class="plp-side-filter-list">
+      <!-- 26-03-27 서버와 동일 구조로 변경 -->
+      <li data-search-more-scope="" id="categoryFilterArea">
+        <% if (showCategoryTree) { %> <%# 카테고리 트리 출력 영역(EJS에서 트리 마크업을 출력) %>
+        <p class="plp-side-title">카테고리</p>
+        <%- include(`${_src}/views/components/category/category-tree.ejs`, { treeData: (mockData && mockData.category &&
+        Array.isArray(mockData.category.tree)) ? mockData.category.tree : [], depth1Id: depth1Id, depth2Id: depth2Id,
+        depth3Id: depth3Id }) %> <% } %>
+      </li>
       <li>
         <p class="plp-side-title">공통</p>
         <div class="plp-side-filter-items">

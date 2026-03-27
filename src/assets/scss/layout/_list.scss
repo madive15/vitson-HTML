@@ -358,6 +358,11 @@ $list-directions: (
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: map.get(var.$unit, 24);
       align-items: stretch;
+
+      &:has(> li > .vits-empty-state) {
+        grid-template-columns: 1fr;
+        padding-top: map.get(var.$unit, 36);
+      }
     }
 
     &-item {
@@ -522,6 +527,14 @@ $list-directions: (
   .vits-product {
     &-list-items {
       @include mx.flex(flex, column, flex-start, flex-start);
+
+      &:has(> li > .vits-empty-state) {
+        padding-top: map.get(var.$unit, 36);
+
+        > li {
+          width: 100%;
+        }
+      }
     }
 
     &-item {

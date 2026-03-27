@@ -483,14 +483,18 @@
       </div>
     </div>
 
-    <!-- 26-03-23 MU-1100 목록없음 추가 -->
-    <div class="vits-product-empty" data-plp-empty style="display:none">
-       <!-- prettier-ignore -->
-      <%- include(`${_src}/views/components/empty-state.ejs`, { 
-        iconName: 'document-paper', 
-        title: '상품이 없습니다',
-        desc: '다른 검색어나 카테고리를 이용해보세요'
-      }) %>
+    <!-- 26-03-26 서버와 동일구조 적용 -->
+    <div class="vits-product-list view-thumb" data-plp-view-list data-context="like" style="display: none;">
+      <ul class="vits-product-list-items">
+        <li>
+          <!-- prettier-ignore -->
+          <%- include(`${_src}/views/components/empty-state.ejs`, { 
+            iconName: 'document-paper', 
+            title: '상품이 없습니다',
+            desc: '다른 검색어나 카테고리를 이용해보세요'
+          }) %>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
