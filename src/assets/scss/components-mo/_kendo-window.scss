@@ -461,8 +461,8 @@
       &-header {
         flex-shrink: 0;
         align-items: center;
-        height: fn.rem(48);
-        padding: 0 var.$mo-gutter;
+        height: calc(#{fn.rem(48)} + var(--safe-top));
+        padding: var(--safe-top) var.$mo-gutter 0;
       }
 
       &-inner {
@@ -498,8 +498,8 @@
       &-header {
         flex-shrink: 0;
         align-items: center;
-        height: fn.rem(48);
-        padding: 0 var.$mo-gutter;
+        height: calc(#{fn.rem(48)} + var(--safe-top));
+        padding: var(--safe-top) var.$mo-gutter 0;
       }
 
       &-inner {
@@ -581,6 +581,11 @@
         min-height: 0;
         max-height: 100vh;
         max-height: 100dvh;
+      }
+
+      // .k-window:has(.modal-viewport) 내부, .vm-modal 블록 안에 추가
+      &-header {
+        padding-top: var(--safe-top);
       }
 
       &-content {
