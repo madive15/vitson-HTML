@@ -5123,7 +5123,16 @@ var cart = __webpack_require__(9459);
         if (!$scope.length) return;
         var $item = $toggle.closest(PAYMENT_ITEM_SEL);
         var $radio = $item.find('input[type="radio"][aria-controls]');
-        if ($radio.length) {
+        if (!$radio.length) return;
+        var controlsId = $radio.attr('aria-controls');
+        var $panel = $scope.find('#' + controlsId);
+        var isOpen = $panel.hasClass('is-active') && $radio.is(':checked');
+        if (isOpen) {
+          // 열려있으면 닫기
+          $panel.removeClass('is-active');
+          $radio.attr('aria-expanded', 'false');
+        } else {
+          // 닫혀있으면 라디오 체크 + 패널 열기
           $radio.prop('checked', true);
           setPaymentPanelState($scope, $radio);
         }
@@ -5803,7 +5812,7 @@ var header_button = __webpack_require__(7451);
   'use strict';
 
   window.UI = window.UI || {};
-  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cart-order', 'brand', 'search', 'home', 'header'];
+  var modules = ['scrollLock', 'kendo', 'common', 'form', 'product', 'category', 'filter', 'cartOrder', 'brand', 'search', 'home', 'header'];
   window.UI.init = function () {
     modules.forEach(function (name) {
       var mod = window.UI[name];
