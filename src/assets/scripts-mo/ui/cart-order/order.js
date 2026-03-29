@@ -360,7 +360,18 @@ import Swiper from 'swiper/bundle';
         if (!$scope.length) return;
         var $item = $toggle.closest(PAYMENT_ITEM_SEL);
         var $radio = $item.find('input[type="radio"][aria-controls]');
-        if ($radio.length) {
+        if (!$radio.length) return;
+
+        var controlsId = $radio.attr('aria-controls');
+        var $panel = $scope.find('#' + controlsId);
+        var isOpen = $panel.hasClass('is-active') && $radio.is(':checked');
+
+        if (isOpen) {
+          // 열려있으면 닫기
+          $panel.removeClass('is-active');
+          $radio.attr('aria-expanded', 'false');
+        } else {
+          // 닫혀있으면 라디오 체크 + 패널 열기
           $radio.prop('checked', true);
           setPaymentPanelState($scope, $radio);
         }

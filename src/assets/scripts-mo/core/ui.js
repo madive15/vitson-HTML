@@ -30,7 +30,7 @@ import '../ui/header/index.js';
     'product',
     'category',
     'filter',
-    'cart-order',
+    'cartOrder',
     'brand',
     'search',
     'home',

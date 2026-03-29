@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
+@use 'sass:math';
 @use '@/assets/scss/abstracts/variables' as var;
 @use '@/assets/scss/abstracts/mixins' as mx;
 @use '@/assets/scss/abstracts/functions' as fn;
@@ -431,6 +432,17 @@
       max-height: calc(var(--vh, 1vh) * 95);
       padding: 0 !important;
       overflow: visible;
+    }
+
+    &:has(.vm-attachment-popup) {
+      $attachment-max-h: calc((var(--vh, 1vh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')}) * 0.6);
+      margin-top: math.div(map.get(var.$mo-bottom-bar, 'tab-bar'), 2) * -1;
+
+      .vm-modal-content {
+        .vm-attachment-popup img {
+          max-height: calc(#{$attachment-max-h});
+        }
+      }
     }
   }
 
