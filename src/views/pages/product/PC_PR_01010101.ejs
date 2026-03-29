@@ -55,6 +55,7 @@
                   <span class="icon"><%- include(`${_src}/views/components/icon.ejs`, { iconName: 'copy' }) %></span>
                 </div>
               </div>
+              <!-- 26-03-30 MU-1212 일시품절 시, is-sold-out 클래스 추가 -->
               <div class="vits-product-detail-container">
                 <div class="vits-deal-view">
                   <%- include(`${_src}/views/components/pg-product/swiper-gallery.ejs`) %>
@@ -405,5 +406,20 @@
     <%- include(`${_src}/views/layout/footer.links.ejs`) %>
 
     <!-- Deal Gallery  -->
+
+    <!-- [REMOVE] 퍼블 확인용 임시 코드 - 개발 적용 시 제거 -->
+    <script>
+      (function () {
+        'use strict';
+
+        var params = new URLSearchParams(window.location.search);
+
+        // 일시품절 상태 클래스 토글
+        if (params.get('type') === 'soldout') {
+          var container = document.querySelector('.vits-product-detail-container');
+          if (container) container.classList.add('is-sold-out');
+        }
+      })();
+    </script>
   </body>
 </html>
