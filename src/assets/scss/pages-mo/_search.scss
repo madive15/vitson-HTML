@@ -213,14 +213,19 @@
           gap: 0;
           height: auto;
           min-height: fn.rem(28);
-          padding: map.get(var.$unit, 4) map.get(var.$unit, 12);
+          padding: map.get(var.$unit, 4) map.get(var.$unit, 8) map.get(var.$unit, 4) map.get(var.$unit, 12);
 
           .text {
             min-width: 0;
             max-height: calc(2 * 1.4em);
+            padding-right: map.get(var.$unit, 4);
             overflow: hidden;
             text-overflow: clip;
             white-space: normal;
+          }
+
+          .remove {
+            color: map.get(color.$icon-neutral, 'tertiary');
           }
 
           &-group {

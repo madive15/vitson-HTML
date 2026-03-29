@@ -1,0 +1,12 @@
+<% const _src = srcPath; const _public = publicPath; %>
+
+<div class="vits-chip-button-group">
+  <% (datas || []).forEach((chip) => { %> <% const { variant = 'outline', value, name } = chip; %>
+  <div class="vits-chip-button type-<%= variant %>" data-chip-value="<%= value %>">
+    <button type="button" class="text name"><%= name %></button>
+    <button type="button" class="remove" data-chip-action="remove" aria-label="<%= name %> 삭제">
+      <%- include(`${_src}/views/components/icon.ejs`, { iconName: 'x' }) %>
+    </button>
+  </div>
+  <% }); %>
+</div>
