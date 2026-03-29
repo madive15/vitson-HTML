@@ -75,11 +75,28 @@ const _brandExhibition = _homeData.brandExhibition;
                   categoryMenus: _categoryMenus
                 }) %>
 
-                <!-- 오늘의 행사  -->
+                <!-- 자주 구매한 상품 & 많이 찾는 카테고리 -->
+                <div class="vm-home-popular">
+                  <!-- 26-03-30 MU-1211 비회원 자주 구매한 상품 미노출 -->
+
+                  <!-- 많이 찾는 카테고리  -->
+                  <!-- prettier-ignore -->
+                  <%- include(`${_src}/views/components-mo/home/home-banner-tab.ejs`, {
+                    numbered: true,
+                    tabs: _popularCategories,
+                    speed: 2000,
+                    menuSpaceBetween: 8,
+                    contentSpaceBetween: 16,
+                    memberYn: 'N',
+                    title: '지금 많이 찾으시는 <span class="point-color">카테고리</span>' }) %>
+                </div>
+
+                <!-- 26-03-30 MU-1211 문구 변경 -->
+                <!-- 상품 추천  -->
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components-mo/home/home-swiper-peek-banner.ejs`, {
                   banners: _peekBanners,
-                  title: '<span class="point-color">오늘의 행사</span> 놓치지 마세요' }) %>
+                  title: '우리 업종에 꼭 맞는 <span class="point-color">상품 추천</span>' }) %>
 
                 <!-- 카테고리 BEST -->
                 <!-- prettier-ignore -->
