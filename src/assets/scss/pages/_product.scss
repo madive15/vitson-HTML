@@ -107,6 +107,44 @@
 
 .vits-product-detail-container {
   padding-top: fn.rem(10);
+
+  &.is-sold-out {
+    .vits-deal-gallery .pd-gallery {
+      .pd-gallery-main,
+      .pd-gallery-thumbs .pd-thumb {
+        &::before {
+          @include mx.position(absolute, 0, 0, 0, 0);
+          @include mx.flex(flex, row, center, center);
+          @include typo.typography('b1s', $color: color.$color-white);
+          z-index: var.$zindx-soldout;
+          background: rgba(color.$color-black, 40%);
+          backdrop-filter: blur(2px);
+        }
+      }
+
+      .pd-gallery-main::before {
+        content: '일시품절';
+        border-radius: map.get(var.$radius, 'lg');
+      }
+
+      .pd-gallery-thumbs {
+        .pd-thumbs-area:hover .pd-thumb-nav {
+          pointer-events: none;
+          visibility: hidden;
+          opacity: 0;
+        }
+
+        .pd-thumb {
+          pointer-events: none;
+
+          &::before {
+            content: '';
+            border-radius: map.get(var.$radius, 'sm');
+          }
+        }
+      }
+    }
+  }
 }
 
 .vits-deal-view {

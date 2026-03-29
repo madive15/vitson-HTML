@@ -364,6 +364,24 @@
       }
     }
 
+    &-thumb {
+      &.is-sold-out {
+        position: relative;
+
+        &::before {
+          @include mx.position(absolute, 0, 0, 0, 0);
+          @include mx.flex(flex, row, center, center);
+          @include typo.typography('m1s', $color: map.get(color.$text-colors, 'inverse'));
+          z-index: var.$zindx-soldout;
+          width: 100%;
+          height: 100%;
+          content: '일시품절';
+          background: rgb(color.$color-black, 40%);
+          backdrop-filter: blur(4px);
+        }
+      }
+    }
+
     // 추천상품, 이런상품, 함께 본 상품
     &-recommend {
       @include mx.flex(flex, column);

@@ -51,6 +51,7 @@
                 <!-- S: 썸네일 + 주요 정보 -->
                 <div class="detail-overview">
                   <!-- S: 썸네일 -->
+                  <!-- 26-03-30 MU-1212 일시품절 시, is-sold-out 클래스 추가 -->
                   <div class="detail-thumb">
                     <!-- prettier-ignore -->
                     <%- include(`${_src}/views/components-mo/product/detail-overview-thumb.ejs`, {
@@ -311,6 +312,12 @@
         document.querySelectorAll('[data-bar-case]').forEach(function (el) {
           el.style.display = el.dataset.barCase === barType ? '' : 'none';
         });
+
+        // 일시품절 상태 클래스 토글
+        if (params.get('type') === 'soldout') {
+          var thumb = document.querySelector('.detail-thumb');
+          if (thumb) thumb.classList.add('is-sold-out');
+        }
       })();
     </script>
   </body>
