@@ -75,32 +75,6 @@ const _brandExhibition = _homeData.brandExhibition;
                   categoryMenus: _categoryMenus
                 }) %>
 
-                <!-- 자주 구매한 상품 & 많이 찾는 카테고리 -->
-                <div class="vm-home-popular">
-                  <!-- 
-                    [D] 자주 구매한 상품
-                         ㄴ 사용자 데이터에 따라 노출? 미노출 
-                  -->
-                  <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/components-mo/home/home-recommend.ejs`, {
-                    type: 'frequent',
-                    products: _frequentProducts,
-                    href: '#!',
-                    memberYn: 'N',
-                    title: '고객님께서 <span class="point-color">자주 구매한 상품</span>' }) %>
-
-                  <!-- 많이 찾는 카테고리  -->
-                  <!-- prettier-ignore -->
-                  <%- include(`${_src}/views/components-mo/home/home-banner-tab.ejs`, {
-                    numbered: true,
-                    tabs: _popularCategories,
-                    speed: 2000,
-                    menuSpaceBetween: 8,
-                    contentSpaceBetween: 16,
-                    memberYn: 'N',
-                    title: '지금 많이 찾으시는 <span class="point-color">카테고리</span>' }) %>
-                </div>
-
                 <!-- 오늘의 행사  -->
                 <!-- prettier-ignore -->
                 <%- include(`${_src}/views/components-mo/home/home-swiper-peek-banner.ejs`, {
