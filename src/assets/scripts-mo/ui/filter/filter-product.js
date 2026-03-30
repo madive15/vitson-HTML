@@ -328,9 +328,11 @@
     $doc.on('click' + NS, SEL.popup + ' ' + SEL.toggleBtn, function () {
       var $btn = $(this);
       var $body = $btn.closest('.filter-popup-section').find('.filter-popup-body');
-      var isOpen = $btn.attr('aria-expanded') === 'true';
-      $btn.attr('aria-expanded', String(!isOpen));
-      $body.slideToggle(SLIDE_DURATION);
+
+      $body.slideToggle(SLIDE_DURATION, function () {
+        // 애니메이션 완료 후 실제 가시성 기준으로 aria-expanded 보정
+        $btn.attr('aria-expanded', String($body.is(':visible')));
+      });
     });
 
     // 팝업: 브랜드 더보기
