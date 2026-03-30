@@ -45,7 +45,8 @@
     searchInput: '#my-orders-search-searchKeyword',
     dim: '.vm-mypage-filter-dim',
     resetBtn: '.actions-reset',
-    searchBtn: '.actions-search'
+    searchBtn: '.actions-search',
+    inputSearchBtn: '.input-search-btn'
   };
 
   // 기간 프리셋 (월 단위)
@@ -351,6 +352,7 @@
     $doc.on('click' + NS, SEL.dim, onDimClick);
     $doc.on('click' + NS, SCOPE + ' ' + SEL.resetBtn, onResetClick);
     $doc.on('click' + NS, SCOPE + ' ' + SEL.searchBtn, onSearchClick);
+    $doc.on('click' + NS, SCOPE + ' ' + SEL.inputSearchBtn, onSearchClick);
     $doc.on('input' + NS, SEL.searchInput, updateFilterValueState);
   }
 
