@@ -30354,56 +30354,20 @@
 
   <div class="product-quantity-stepper">
     
-
-
-<!-- 2026-02-22 추가: validation 래퍼 -->
-<div class="vits-quantity ">
-
-
-  <div class="quantity-control type-horiz vm-cart-quantity">
-    <button type="button" class="btn-step vits-minus-icon" aria-label="감소">
-      <i class="ic ic-minus" aria-hidden="true"></i>
-
-    </button>
-
-    <input
-      type="text"
-      inputmode="numeric"
-      pattern="[0-9]*"
-      class="quantity-input"
-      name="quantity"
-      id="modal2"
-      value="1"
-      data-min="1"
-      data-max="100"
-      data-step="1"
-      aria-label="개수"
-      
-      
-      
-      
-      
-      
-    />
-    <span class="quantity-input-measure" aria-hidden="true"></span>
-
-    
-      <span class="unit">BOX</span>
     
 
-    <button type="button" class="btn-step vits-plus-icon" aria-label="증가">
-      <i class="ic ic-plus" aria-hidden="true"></i>
-
-    </button>
-  </div>
-
-
-  <!-- 2026-02-22 추가: Validation 메시지 영역 -->
-  <!-- NOTE: hidden 속성으로 표시/숨김 제어, is-invalid/is-valid에 따라 색상 변경 -->
-  <div class="validation-message" hidden>
-    <p id="modal2-validation" aria-live="polite"></p>
-  </div>
-</div>
+    <div class="vits-quantity">
+      <div class="quantity-control type-horiz vm-cart-quantity">
+        <button type="button" class="btn-step vits-minus-icon" aria-label="감소" id="packingQtyMinus">
+          <i class="ic ic-minus" aria-hidden="true"></i>
+        </button>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="quantity-input" id="packingQtyInput" value="3" data-min="1" aria-label="개수">
+        <span class="quantity-input-measure" aria-hidden="true"></span>
+        <button type="button" class="btn-step vits-plus-icon" aria-label="증가" id="packingQtyPlus">
+          <i class="ic ic-plus" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -30582,6 +30546,22 @@
   <!-- 추가된 항목 리스트 -->
   <div class="vm-order-list-wrap">
     <ul class="vm-order-list">
+      <li class="order-item">
+        <span class="order-spec">3 m x 15개</span>
+        <span class="order-price">224,112원</span>
+        <button type="button" class="order-remove" aria-label="삭제">
+          <i class="ic ic-x" aria-hidden="true"></i>
+
+        </button>
+      </li>
+      <li class="order-item">
+        <span class="order-spec">16 m x 4개</span>
+        <span class="order-price">1,624,112원</span>
+        <button type="button" class="order-remove" aria-label="삭제">
+          <i class="ic ic-x" aria-hidden="true"></i>
+
+        </button>
+      </li>
       <li class="order-item">
         <span class="order-spec">3 m x 15개</span>
         <span class="order-price">224,112원</span>
