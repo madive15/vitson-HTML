@@ -1,6 +1,7 @@
 <% const _src = srcPath; const _public = publicPath; %>
 <!-- prettier-ignore -->
 <% const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y'; %>
+<% const _homeYn = (typeof homeYn !== 'undefined') ? homeYn : 'Y'; %>
 <!-- prettier-ignore -->
 
 <section 
@@ -21,7 +22,8 @@
       <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
         item: item,
         cardContext: type === 'frequent' ? 'frequent' : 'default',
-        memberYn: _memberYn
+        memberYn: _memberYn,
+        homeYn: _homeYn,
       }) %>
     <% }); %>
   </ul>
