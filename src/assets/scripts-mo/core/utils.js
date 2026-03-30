@@ -28,6 +28,12 @@
   function setVh() {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', vh + 'px');
+
+    // 키보드 대응 — visualViewport 실제 높이
+    var vv = window.visualViewport;
+    if (vv) {
+      document.documentElement.style.setProperty('--vv-height', vv.height + 'px');
+    }
   }
 
   /**

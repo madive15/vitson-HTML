@@ -465,6 +465,10 @@
                 &::-webkit-outer-spin-button {
                   appearance: none;
                 }
+
+                &:read-only {
+                  background: color.$color-white;
+                }
               }
             }
           }
@@ -511,7 +515,7 @@
           display: block;
 
           &-wire-table {
-            max-height: 45vh;
+            max-height: calc(var(--vv-height, 100vh) * 0.45);
             overflow: hidden auto;
           }
         }

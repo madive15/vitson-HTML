@@ -200,7 +200,9 @@ $visual-btn: fn.rem(18);
 
       .text {
         @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
-        white-space: nowrap;
+        text-align: center;
+        word-break: keep-all;
+        overflow-wrap: break-word;
       }
       /* stylelint-enable no-descending-specificity */
     }
@@ -547,6 +549,16 @@ $visual-btn: fn.rem(18);
       @include mx.flex(flex, column);
       gap: map.get(var.$unit, 8);
       padding: var.$mo-gutter var.$mo-gutter 0;
+
+      .vm-home-bottom-banner {
+        @include mx.flex(flex, column);
+        gap: map.get(var.$unit, 8);
+
+        .bottom-banner-link {
+          overflow: hidden;
+          border-radius: map.get(var.$radius, 'md');
+        }
+      }
     }
 
     &-banner {
@@ -622,6 +634,10 @@ $visual-btn: fn.rem(18);
           a {
             @include mx.img-fit;
             display: block;
+
+            img {
+              border-radius: var.$mo-gutter;
+            }
           }
         }
       }
