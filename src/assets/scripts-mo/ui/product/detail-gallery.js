@@ -119,6 +119,12 @@ import Swiper from 'swiper/bundle';
       zoomEl.classList.add(IS_OPEN);
       lockScroll();
 
+      // 풀스크린 모달 — bottom-bar 겹침 방지
+      var bottomBar = document.querySelector('.vm-bottom-bar');
+      var floating = document.querySelector('.vm-floating-section');
+      if (bottomBar) bottomBar.style.display = 'none';
+      if (floating) floating.style.display = 'none';
+
       // Android 뒤로가기 대응
       history.pushState({detailGalleryOpen: true}, '');
 
@@ -136,6 +142,12 @@ import Swiper from 'swiper/bundle';
       zoomEl.classList.remove(IS_OPEN);
       zoomEl.setAttribute('hidden', '');
       unlockScroll();
+
+      // 풀스크린 모달 해제 — bottom-bar 복원
+      var bottomBar = document.querySelector('.vm-bottom-bar');
+      var floating = document.querySelector('.vm-floating-section');
+      if (bottomBar) bottomBar.style.display = '';
+      if (floating) floating.style.display = 'flex';
 
       mainSwiper.slideTo(index, 0);
 

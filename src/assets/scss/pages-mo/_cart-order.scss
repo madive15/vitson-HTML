@@ -82,7 +82,7 @@
 }
 
 /* 수량 스텝퍼 모바일용 */
-@mixin quantity-stepper-h32 {
+@mixin quantity-stepper-h32($fixed-width: true) {
   .vm-cart-quantity {
     height: fn.rem(34);
 
@@ -99,8 +99,8 @@
 
     .quantity-input {
       @include typo.typography('b4r', $color: map.get(color.$text-colors, 'primary'));
-      width: fn.rem(36) !important;
-      min-width: fn.rem(36);
+      width: fn.rem(60) !important;
+      min-width: fn.rem(60);
       height: fn.rem(32);
       padding-right: fn.rem(8);
       text-align: center;
@@ -454,6 +454,7 @@
 
     &-quantity-stepper {
       @include quantity-stepper-h32;
+      flex-shrink: 0;
     }
   }
 }
@@ -531,7 +532,7 @@
     @include mx.flex(flex, row, flex-end, center);
     position: relative;
     gap: fn.rem(6);
-    width: fn.rem(102);
+    width: fn.rem(126);
 
     .unit-control-input {
       @include button.btn-reset;
