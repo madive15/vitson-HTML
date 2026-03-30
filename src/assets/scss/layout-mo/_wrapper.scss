@@ -18,6 +18,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0);
   --safe-left: env(safe-area-inset-left, 0);
   --safe-right: env(safe-area-inset-right, 0);
+  color-scheme: light only;
 
   @supports (height: 1dvh) {
     --vh: 1dvh;
@@ -107,4 +108,23 @@ html.vm-scope body {
   position: relative;
   z-index: map.get(var.$mo-zindex, 'bottom-bar');
   flex-shrink: 0;
+}
+
+// 삼성 브라우저 강제 다크모드 방어
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light only;
+  }
+
+  html,
+  body {
+    color: #000 !important;
+    background-color: #fff !important;
+  }
+
+  img,
+  video,
+  svg {
+    filter: none !important;
+  }
 }

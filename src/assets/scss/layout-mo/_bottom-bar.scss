@@ -174,8 +174,6 @@
 
   // product-bar
   .bottom-product-bar {
-    @include mx.flex(flex, column);
-    max-height: calc(95vh - var(--safe-top) - var(--safe-bottom));
     overflow: hidden;
     background: color.$color-white;
     border-radius: 0;
@@ -184,7 +182,6 @@
     .bar {
       &-handle {
         position: relative;
-        flex-shrink: 0;
         height: map.get(var.$mo-header, 'bottom-bar-handle');
         touch-action: none;
         cursor: grab;
@@ -329,6 +326,7 @@
             }
 
             &-input {
+              @include mx.border('all', $color: map.get(color.$layout-border, 'quaternary'));
               @include typo.typography('b4r');
               flex: 0 0 fn.rem(60);
               width: fn.rem(60);
@@ -336,9 +334,7 @@
               padding: 0 map.get(var.$unit, 4);
               text-align: center;
               background: color.$color-white;
-              border: 0;
               border-radius: map.get(var.$radius, 'sm') 0 0 map.get(var.$radius, 'sm');
-              box-shadow: inset 0 0 0 1px map.get(color.$layout-border, 'quaternary');
 
               &::-webkit-inner-spin-button,
               &::-webkit-outer-spin-button {
@@ -354,6 +350,7 @@
               @include button.btn-reset;
               @include mx.flex(flex, row, center, center);
               flex-grow: 1;
+              flex-shrink: 0;
               gap: map.get(var.$unit, 2);
               min-width: 0;
               height: map.get(var.$unit, 32);
@@ -478,7 +475,6 @@
         @include mx.flex(flex, row, flex-start, center);
         position: relative;
         z-index: (var.$zindex-base + 1);
-        flex-shrink: 0;
         gap: map.get(var.$unit, 8);
         padding: map.get(var.$unit, 12) var.$mo-gutter;
         background: color.$color-white;
@@ -512,37 +508,11 @@
 
       .bar {
         &-option {
-          position: relative;
-          display: flex !important;
-          flex: 1 1 auto;
-          flex-direction: column;
-          min-height: 0;
-          overflow: hidden auto;
+          display: block;
 
-          &-row:last-of-type {
-            @include mx.position(sticky, $bottom: 13px);
-            z-index: var.$zindex-base;
-            background-color: color.$color-white;
-
-            &::before {
-              @include mx.position(absolute, $top: -14px, $left: 0, $right: 0);
-              height: 14px;
-              content: '';
-              background: #fff;
-              background: linear-gradient(
-                0deg,
-                rgb(255 255 255 / 100%) 70%,
-                rgb(255 255 255 / 100%) 70%,
-                rgb(255 255 255 / 0%) 100%
-              );
-            }
-
-            &::after {
-              @include mx.position(absolute, $bottom: -14px, $left: 0, $right: 0);
-              height: 14px;
-              content: '';
-              background-color: color.$color-white;
-            }
+          &-wire-table {
+            max-height: 45vh;
+            overflow: hidden auto;
           }
         }
 
