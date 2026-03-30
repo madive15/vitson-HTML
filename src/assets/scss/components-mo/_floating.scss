@@ -76,7 +76,7 @@ $common-size: map.get(var.$unit, 40);
 
 @each $name, $height in var.$mo-bottom-bar {
   @if $name != 'tab-bar' and $name != 'step-bar-price' and $name != 'product-bar' {
-    .vm-wrap:has([class*='#{$name}']) {
+    .vm-wrap:has(.vm-bottom-bar > [class*='#{$name}']) {
       .vm-floating-section {
         bottom: calc(#{$height} + env(safe-area-inset-bottom, 0px));
       }
@@ -86,14 +86,14 @@ $common-size: map.get(var.$unit, 40);
 
 .vm-wrap {
   // step-bar + is-price 조합 별도 처리
-  &:has([class*='step-bar'].is-price) {
+  &:has(.vm-bottom-bar > [class*='step-bar'].is-price) {
     .vm-floating-section {
       bottom: calc(#{map.get(var.$mo-bottom-bar, 'step-bar-price')} + env(safe-area-inset-bottom, 0px));
     }
   }
 
   // product-bar + bottom-bar-handle 조합 별도 처리
-  &:has([class*='product-bar']) {
+  &:has(.vm-bottom-bar > [class*='product-bar']) {
     /* stylelint-disable-next-line no-descending-specificity */
     .vm-floating-section {
       bottom: calc(
