@@ -78,13 +78,22 @@
 
   setVh();
   var rafId = null;
-  (window.visualViewport || window).addEventListener('resize', function () {
+  function onViewportChange() {
     if (rafId) return;
     rafId = requestAnimationFrame(function () {
       setVh();
       rafId = null;
     });
-  });
+  }
+
+  var vv = window.visualViewport;
+  if (vv) {
+    // iOS Safari 키보드 대응 — resize + scroll 둘 다 필요
+    vv.addEventListener('resize', onViewportChange);
+    vv.addEventListener('scroll', onViewportChange);
+  } else {
+    window.addEventListener('resize', onViewportChange);
+  }
 
   // [TODO] iPad Chrome safe-area 초기 렌더링 지연 이슈
   // 스크롤 시 즉시 정상. 실서비스 확인 후 필요시 아래 코드 활성화
