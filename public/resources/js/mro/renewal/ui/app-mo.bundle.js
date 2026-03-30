@@ -1560,6 +1560,12 @@
   function setVh() {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', vh + 'px');
+
+    // 키보드 대응 — visualViewport 실제 높이
+    var vv = window.visualViewport;
+    if (vv) {
+      document.documentElement.style.setProperty('--vv-height', vv.height + 'px');
+    }
   }
 
   /**
@@ -2150,9 +2156,10 @@
     $doc.on('click' + NS, SEL.popup + ' ' + SEL.toggleBtn, function () {
       var $btn = $(this);
       var $body = $btn.closest('.filter-popup-section').find('.filter-popup-body');
-      var isOpen = $btn.attr('aria-expanded') === 'true';
-      $btn.attr('aria-expanded', String(!isOpen));
-      $body.slideToggle(SLIDE_DURATION);
+      $body.slideToggle(SLIDE_DURATION, function () {
+        // 애니메이션 완료 후 실제 가시성 기준으로 aria-expanded 보정
+        $btn.attr('aria-expanded', String($body.is(':visible')));
+      });
     });
 
     // 팝업: 브랜드 더보기
