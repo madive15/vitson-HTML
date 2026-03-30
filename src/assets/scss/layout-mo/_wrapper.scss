@@ -18,7 +18,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0);
   --safe-left: env(safe-area-inset-left, 0);
   --safe-right: env(safe-area-inset-right, 0);
-  color-scheme: light only;
+  color-scheme: only light;
 
   @supports (height: 1dvh) {
     --vh: 1dvh;
@@ -113,18 +113,35 @@ html.vm-scope body {
 // 삼성 브라우저 강제 다크모드 방어
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: light only;
+    color-scheme: only light;
   }
 
-  html,
-  body {
+  html.vm-scope,
+  html.vm-scope body {
     color: #000 !important;
     background-color: #fff !important;
   }
 
-  img,
-  video,
-  svg {
-    filter: none !important;
+  .vm-wrapper,
+  .vm-wrap,
+  .vm-content-wrap,
+  .vm-header,
+  .vm-main,
+  .vm-main-content,
+  .vm-footer,
+  .vm-bottom-bar {
+    color: #000 !important;
+    background-color: #fff !important;
+    background-image: none !important;
+  }
+
+  /* input / select / textarea / button 기본 UI도 라이트로 */
+  input,
+  textarea,
+  select,
+  button {
+    color: #000;
+    color-scheme: only light;
+    background-color: #fff;
   }
 }
