@@ -2,6 +2,7 @@
 <!-- prettier-ignore -->
 <%
   const _memberYn = (typeof memberYn !== 'undefined') ? memberYn : 'Y';
+  const _homeYn = (typeof homeYn !== 'undefined') ? homeYn : 'Y';
   const _ranked = typeof ranked !== 'undefined' && ranked;
   const _autoplay = typeof speed !== 'undefined' ? speed : null;
   const _menuSpaceBetween = typeof menuSpaceBetween !== 'undefined' ? menuSpaceBetween : 8;
@@ -51,7 +52,8 @@
                       <%- include(`${_src}/views/components-mo/product/product-item.ejs`, { 
                         item: product,
                         showRank: _ranked,
-                        memberYn: _memberYn
+                        memberYn: _memberYn,
+                        homeYn: _homeYn,
                       }) %>
                     </ul>
                   </div>

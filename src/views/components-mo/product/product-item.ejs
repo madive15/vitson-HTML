@@ -46,7 +46,8 @@ const stateClass = (isGuest ? ' is-guest' : '') + (isSoldout ? ' is-soldout' : '
 
 /* ── 피처 플래그 ── */
 const showCheckbox = (typeof _showCheckbox !== 'undefined') ? _showCheckbox : false;
-const _showLoginBtn = !isMember;
+const _isHome = (typeof homeYn !== 'undefined') ? homeYn === 'Y' : false;
+const _showLoginBtn = !isMember && !_isHome;
 
 const _showModel = (typeof d.showModel !== 'undefined') ? d.showModel : true;
 const _showSpec = (typeof d.showSpec !== 'undefined') ? d.showSpec : true;
