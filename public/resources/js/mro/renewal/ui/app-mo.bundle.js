@@ -1639,6 +1639,7 @@
       var mainContent = overlay.querySelector('.main-content-search');
       if (diff > 50) {
         var h = vv.height + 'px';
+        overlay.style.top = vv.offsetTop + 'px';
         overlay.style.height = h;
         if (wrapper) wrapper.style.height = h;
         if (wrap) wrap.style.height = h;
@@ -1646,9 +1647,10 @@
 
         // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'red';
+          mainContent.style.background = 'yellow';
         }
       } else {
+        overlay.style.top = '';
         overlay.style.height = '';
         if (wrapper) wrapper.style.height = '';
         if (wrap) wrap.style.height = '';
@@ -1656,7 +1658,7 @@
 
         // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'blue';
+          mainContent.style.background = 'orange';
         }
       }
     };
