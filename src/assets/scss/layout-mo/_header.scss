@@ -377,23 +377,11 @@
 
 // 개발 대응 - 검색 오버레이 레이아웃
 .vm-search-overlay {
-  @include mx.position(fixed, 0, 0, $left: 0);
+  @include mx.position(fixed, 0, 0, 0, 0);
   z-index: map.get(var.$mo-zindex, 'search-overlay');
-  height: var(--vv-height, 100vh);
   background: color.$color-white;
 
   .vm-search-view {
     padding-bottom: 0 !important;
-  }
-
-  // 내부 래퍼 높이 제한
-  .vm-wrapper,
-  .vm-wrap {
-    height: 100%;
-  }
-
-  // vm-content-wrap이 스크롤 담당 — sticky도 여기서 동작
-  .vm-content-wrap {
-    max-height: 100%;
   }
 }

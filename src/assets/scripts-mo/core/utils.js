@@ -28,12 +28,19 @@
   function setVh() {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
 
-    // 키보드 대응 — visualViewport 실제 높이
-    var vv = window.visualViewport;
-    if (vv) {
-      document.documentElement.style.setProperty('--vv-height', vv.height + 'px');
-    }
+  /**
+   * @description 검색 오버레이 키보드 대응
+   * @note 키보드 올라오면 오버레이 bottom을 키보드 높이만큼 올려서 하단 여백 방지
+   * @scope #searchOverlay
+   */
+  function updateSearchOverlay() {
+    var overlay = document.getElementById('searchOverlay');
+    if (!overlay) return;
+
+    var diff = window.innerHeight - window.visualViewport.height;
+    overlay.style.bottom = diff + 'px';
   }
 
   /**
@@ -88,9 +95,10 @@
 
   var vv = window.visualViewport;
   if (vv) {
-    // iOS Safari 키보드 대응 — resize + scroll 둘 다 필요
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
+    // 검색 오버레이 키보드 대응
+    vv.addEventListener('resize', updateSearchOverlay);
   } else {
     window.addEventListener('resize', onViewportChange);
   }
