@@ -1636,20 +1636,28 @@
       }
       var wrapper = overlay.querySelector('.vm-wrapper');
       var wrap = overlay.querySelector('.vm-wrap');
+      var mainContent = overlay.querySelector('.main-content-search');
       if (diff > 50) {
         var h = vv.height + 'px';
         overlay.style.height = h;
-
-        // 내부 래퍼 체인 높이도 동기화
-
         if (wrapper) wrapper.style.height = h;
         if (wrap) wrap.style.height = h;
         if (contentWrap) contentWrap.style.maxHeight = h;
+
+        // 디버그용 — 확인 후 제거
+        if (mainContent) {
+          mainContent.style.background = 'red';
+        }
       } else {
         overlay.style.height = '';
         if (wrapper) wrapper.style.height = '';
         if (wrap) wrap.style.height = '';
         if (contentWrap) contentWrap.style.maxHeight = '';
+
+        // 디버그용 — 확인 후 제거
+        if (mainContent) {
+          mainContent.style.background = 'blue';
+        }
       }
     };
     vv.addEventListener('resize', function () {
