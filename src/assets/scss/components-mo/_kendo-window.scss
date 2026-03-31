@@ -433,27 +433,6 @@
       padding: 0 !important;
       overflow: visible;
     }
-
-    $attachment-max-h: calc((var(--vh, 1vh) * 100 - #{map.get(var.$mo-bottom-bar, 'tab-bar')}) * 0.6);
-
-    &:has(.vm-attachment-popup),
-    &:has(.cart-product-add) {
-      margin-top: math.div(map.get(var.$mo-bottom-bar, 'tab-bar'), 2) * -1;
-    }
-
-    &:has(.vm-attachment-popup) {
-      .vm-modal-content {
-        .vm-attachment-popup img {
-          max-height: calc(#{$attachment-max-h});
-        }
-      }
-    }
-
-    &:has(.cart-product-add) {
-      .vm-modal-content {
-        max-height: calc(#{$attachment-max-h});
-      }
-    }
   }
 
   // 바텀시트 — 하단 고정
@@ -561,9 +540,9 @@
     }
   }
 
-  .k-window:has(.modal-category-sheet) ~ .k-overlay {
-    z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
-  }
+  // .k-window:has(.modal-category-sheet) ~ .k-overlay {
+  //   z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
+  // }
 
   // 뷰포트 풀스크린 — 화면 전체 꽉 참
   /* stylelint-disable no-descending-specificity */
@@ -661,9 +640,9 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
       }
     }
 
-    .k-window:has(#{$target}) ~ .k-overlay {
-      z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
-    }
+    // .k-window:has(#{$target}) ~ .k-overlay {
+    //   z-index: map.get(var.$mo-zindex, 'bottom-bar') - 2 !important;
+    // }
   }
 }
 

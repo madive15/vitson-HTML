@@ -24,10 +24,8 @@
 }
 
 .vm-header {
-  padding-top: var(--safe-top);
-
   &:not(.header-main-bar) {
-    @include mx.position(sticky, 0);
+    @include mx.position(sticky, var(--safe-top));
     z-index: map.get(var.$mo-zindex, 'header');
   }
 
@@ -35,8 +33,8 @@
   &[class*='header-'][class*='-bar'] {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
-    min-height: map.get(var.$mo-header, 'nav-bar');
-    padding: 0 var.$mo-gutter 0 fn.rem(7);
+    min-height: calc(map.get(var.$mo-header, 'nav-bar') + var(--safe-top));
+    padding: var(--safe-top) var.$mo-gutter 0 fn.rem(7);
     background: color.$color-white;
 
     &.header-rule {
@@ -44,11 +42,15 @@
     }
 
     &.header-main-bar {
-      @include mx.position(sticky, calc((map.get(var.$mo-header, 'main-bar-top') * -1) - var(--safe-top)));
+      @include mx.position(sticky, calc(map.get(var.$mo-header, 'main-bar-top') * -1));
       z-index: map.get(var.$mo-zindex, 'header-main');
       flex-direction: column;
       gap: 0;
-      padding: 0;
+      min-height: calc(
+        map.get(var.$mo-header, 'main-bar-top') + map.get(var.$mo-header, 'main-bar-gnb') + map.get(var.$unit, 8) +
+          var(--safe-top)
+      );
+      padding: var(--safe-top) 0 0;
 
       &.is-sticky {
         box-shadow: map.get(var.$box-shadow, 'elevation_2');
@@ -379,7 +381,7 @@
 .vm-search-overlay {
   @include mx.position(fixed, 0, 0, $left: 0);
   z-index: map.get(var.$mo-zindex, 'search-overlay');
-  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
   background: color.$color-white;
 
   .vm-search-view {

@@ -26,7 +26,7 @@
   // tab-bar
   .bottom-tab-bar {
     @include mx.border('top', $color: map.get(color.$neutral-colors, '9'));
-    padding: map.get(var.$unit, 8);
+    padding: map.get(var.$unit, 8) map.get(var.$unit, 8) calc(map.get(var.$unit, 8) + var(--safe-bottom));
     background: color.$color-white;
     box-shadow: map.get(var.$box-shadow, 'mo_menu');
 
@@ -139,7 +139,7 @@
   [class*='bottom-step-bar'] {
     @include mx.flex(flex, column);
     gap: map.get(var.$unit, 32);
-    padding: var.$mo-section-gap var.$mo-gutter 0;
+    padding: var.$mo-section-gap var.$mo-gutter var(--safe-bottom);
     background: color.$color-white;
     border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
     box-shadow: map.get(var.$box-shadow, 'mo_menu');
@@ -543,7 +543,7 @@
   .bottom-order-bar {
     @include mx.flex(flex, row, space-between, center);
     gap: map.get(var.$unit, 12);
-    padding: map.get(var.$unit, 24) map.get(var.$unit, 16) map.get(var.$unit, 40);
+    padding: map.get(var.$unit, 24) map.get(var.$unit, 16) calc(map.get(var.$unit, 40) + var(--safe-bottom));
     background-color: map.get(color.$layout-surf, 'base');
     border-radius: map.get(var.$radius, 'lg') map.get(var.$radius, 'lg') 0 0;
     box-shadow: map.get(var.$box-shadow, 'mo_menu');

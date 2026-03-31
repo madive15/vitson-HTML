@@ -441,7 +441,7 @@
     // 상세정보, 제원정보 및 고시정보, 관련 및 연관상품
     &-tab {
       &-nav {
-        @include mx.position(sticky, map.get(var.$mo-header, 'product-bar'));
+        @include mx.position(sticky, calc(map.get(var.$mo-header, 'product-bar') + var(--safe-top)));
         @include mx.flex;
         @include mx.hidden-scrollbar;
         z-index: (map.get(var.$mo-zindex, 'header') - 1);

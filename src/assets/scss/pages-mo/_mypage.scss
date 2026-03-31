@@ -1786,7 +1786,7 @@
   }
 
   &-header {
-    @include mx.position(sticky, map.get(var.$mo-header, 'nav-bar'));
+    @include mx.position(sticky, calc(map.get(var.$mo-header, 'nav-bar') + var(--safe-top)));
     @include mx.flex(flex, row, center, center);
     z-index: var.$zindex-base;
     flex-shrink: 0;
