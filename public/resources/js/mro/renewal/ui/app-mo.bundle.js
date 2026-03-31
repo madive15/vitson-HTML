@@ -1614,11 +1614,15 @@
     vv.addEventListener('scroll', onViewportChange);
 
     // 검색 오버레이 키보드 대응
+    var isKeyboardOpen = false;
     var applyOverlayHeight = function (source) {
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
       var contentWrap = overlay.querySelector('.vm-content-wrap');
-      var diff = window.innerHeight - vv.height;
+      var wrapper = overlay.querySelector('.vm-wrapper');
+      var wrap = overlay.querySelector('.vm-wrap');
+      var header = overlay.querySelector('.vm-header');
+      var mainContent = overlay.querySelector('.main-content-search');
 
       // 디버그용 — 확인 후 제거
       var debugEl = document.getElementById('debugOverlay');
@@ -1628,22 +1632,11 @@
         debugEl.style.cssText = 'position:fixed;top:50px;left:0;z-index:99999;background:red;color:#fff;padding:8px 12px;font-size:14px;line-height:1.4';
         document.body.appendChild(debugEl);
       }
-      debugEl.innerHTML = 'source: ' + source + '<br>diff: ' + Math.round(diff) + '<br>vv.height: ' + Math.round(vv.height) + '<br>innerHeight: ' + window.innerHeight + '<br>vv.offsetTop: ' + Math.round(vv.offsetTop);
-      if (source === 'resize') {
-        overlay.style.background = 'rgba(0,255,0,0.3)';
-      } else if (source === 'focus') {
-        overlay.style.background = 'rgba(0,0,255,0.3)';
-      }
-      var wrapper = overlay.querySelector('.vm-wrapper');
-      var wrap = overlay.querySelector('.vm-wrap');
-      var mainContent = overlay.querySelector('.main-content-search');
-      var header = overlay.querySelector('.vm-header');
-      if (diff > 50) {
+      debugEl.innerHTML = 'source: ' + source + '<br>keyboard: ' + isKeyboardOpen + '<br>vv.height: ' + Math.round(vv.height) + '<br>innerHeight: ' + window.innerHeight + '<br>vv.offsetTop: ' + Math.round(vv.offsetTop);
+      if (isKeyboardOpen) {
         var h = vv.height + 'px';
         overlay.style.height = h;
         overlay.style.overflow = 'hidden';
-
-        // 헤더 fixed 전환
         if (header) {
           header.style.position = 'fixed';
           header.style.top = '0';
@@ -1663,14 +1656,10 @@
         }
 
         // 디버그용 — 확인 후 제거
-        if (mainContent) {
-          mainContent.style.background = 'oragne';
-        }
+        if (mainContent) mainContent.style.background = 'orange';
       } else {
         overlay.style.height = '';
         overlay.style.overflow = '';
-
-        // 헤더 sticky 복원
         if (header) {
           header.style.position = '';
           header.style.top = '';
@@ -1690,23 +1679,27 @@
         }
 
         // 디버그용 — 확인 후 제거
-        if (mainContent) {
-          mainContent.style.background = 'yellow';
-        }
+        if (mainContent) mainContent.style.background = 'yellow';
       }
     };
     vv.addEventListener('resize', function () {
       applyOverlayHeight('resize');
     });
     vv.addEventListener('scroll', function () {
-      applyOverlayHeight('scroll');
+      if (isKeyboardOpen) {
+        applyOverlayHeight('scroll');
+      }
     });
-    document.addEventListener('focusin', function () {
-      setTimeout(function () {
-        applyOverlayHeight('focus');
-      }, 500);
+    document.addEventListener('focusin', function (e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        isKeyboardOpen = true;
+        setTimeout(function () {
+          applyOverlayHeight('focus');
+        }, 500);
+      }
     });
     document.addEventListener('focusout', function () {
+      isKeyboardOpen = false;
       setTimeout(function () {
         applyOverlayHeight('blur');
       }, 300);
