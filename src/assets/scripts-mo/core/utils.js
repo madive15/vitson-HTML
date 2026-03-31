@@ -85,39 +85,73 @@
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
 
-    // 검색 오버레이 키보드 대응 — 포커스 기반
-    var updateOverlay = function (e) {
-      // 디버그용 — 확인 후 제거
-      if (e.target && e.target.tagName === 'INPUT') {
-        e.target.style.border = '3px solid red';
-      }
-
+    // 검색 오버레이 키보드 대응
+    var applyOverlayHeight = function (source) {
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
       var contentWrap = overlay.querySelector('.vm-content-wrap');
 
-      setTimeout(function () {
-        var diff = window.innerHeight - vv.height;
+      var diff = window.innerHeight - vv.height;
 
-        if (diff > 50) {
-          var h = vv.height + 'px';
-          overlay.style.height = h;
+      // 디버그용 — 확인 후 제거
+      var debugEl = document.getElementById('debugOverlay');
+      if (!debugEl) {
+        debugEl = document.createElement('div');
+        debugEl.id = 'debugOverlay';
+        debugEl.style.cssText =
+          'position:fixed;top:50px;left:0;z-index:99999;background:red;color:#fff;padding:8px 12px;font-size:14px;line-height:1.4';
+        document.body.appendChild(debugEl);
+      }
+      debugEl.innerHTML =
+        'source: ' +
+        source +
+        '<br>diff: ' +
+        Math.round(diff) +
+        '<br>vv.height: ' +
+        Math.round(vv.height) +
+        '<br>innerHeight: ' +
+        window.innerHeight;
 
-          if (contentWrap) {
-            contentWrap.style.maxHeight = h;
-          }
-        } else {
-          overlay.style.height = '';
+      if (source === 'resize') {
+        overlay.style.background = 'rgba(0,255,0,0.3)';
+      } else if (source === 'focus') {
+        overlay.style.background = 'rgba(0,0,255,0.3)';
+      }
 
-          if (contentWrap) {
-            contentWrap.style.maxHeight = '';
-          }
+      if (diff > 50) {
+        var h = vv.height + 'px';
+        overlay.style.height = h;
+
+        if (contentWrap) {
+          contentWrap.style.maxHeight = h;
         }
-      }, 300);
+      } else {
+        overlay.style.height = '';
+
+        if (contentWrap) {
+          contentWrap.style.maxHeight = '';
+        }
+      }
     };
 
-    document.addEventListener('focusin', updateOverlay);
-    document.addEventListener('focusout', updateOverlay);
+    vv.addEventListener('resize', function () {
+      applyOverlayHeight('resize');
+    });
+    vv.addEventListener('scroll', function () {
+      applyOverlayHeight('scroll');
+    });
+
+    document.addEventListener('focusin', function () {
+      setTimeout(function () {
+        applyOverlayHeight('focus');
+      }, 500);
+    });
+
+    document.addEventListener('focusout', function () {
+      setTimeout(function () {
+        applyOverlayHeight('blur');
+      }, 300);
+    });
   } else {
     window.addEventListener('resize', onViewportChange);
   }
