@@ -25,12 +25,6 @@
   }
 }
 
-// 앱 웹뷰 공통: 네이티브에서 시스템 바 인셋 처리 → 웹 safe-area 보정 제거
-html.is-app-aos {
-  --safe-top: 0;
-  --safe-bottom: 0;
-}
-
 // --- 모바일 스코프 기본 ---
 .vm-scope {
   -webkit-tap-highlight-color: transparent;
@@ -72,6 +66,7 @@ html.vm-scope body {
 
 // --- 콘텐츠 래퍼 (header + main + footer) ---
 .vm-content-wrap {
+  @include mx.flex(flex, column);
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -79,9 +74,6 @@ html.vm-scope body {
   background: map.get(color.$layout-surf, 'sunken');
   -webkit-overflow-scrolling: touch;
 
-  @include mx.flex(flex, column);
-
-  // 내부 콘텐츠가 뷰포트보다 짧아도 푸터를 하단에 유지
   > * {
     flex-shrink: 0;
   }
@@ -111,9 +103,15 @@ html.vm-scope body {
 
 // --- 하단 고정 그룹 ---
 .vm-bottom-bar {
-  position: relative;
+  @include mx.position(fixed, $bottom: 0, $left: 0, $right: 0);
   z-index: map.get(var.$mo-zindex, 'bottom-bar');
   flex-shrink: 0;
+}
+
+@each $type, $height in var.$mo-bottom-bar {
+  .vm-wrap:has(.bottom-#{$type}) .vm-content-wrap {
+    padding-bottom: calc(#{$height} + var(--safe-bottom));
+  }
 }
 
 // 삼성 브라우저 강제 다크모드 방어
@@ -149,24 +147,5 @@ html.vm-scope body {
     color: #000;
     color-scheme: only light;
     background-color: #fff;
-  }
-}
-
-// iOS 앱: 바텀바 fixed 처리
-html {
-  .vm-bottom-bar {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: map.get(var.$mo-zindex, 'bottom-bar');
-  }
-
-  // 바텀바가 fixed로 빠지면서 콘텐츠가 바텀바 뒤로 들어가는 거 방지
-  // 바텀바 타입별 여백 자동 생성
-  @each $type, $height in var.$mo-bottom-bar {
-    .vm-wrap:has(.bottom-#{$type}) .vm-content-wrap {
-      padding-bottom: calc(#{$height} + var(--safe-bottom));
-    }
   }
 }
