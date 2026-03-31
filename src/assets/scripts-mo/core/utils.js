@@ -85,10 +85,11 @@
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
 
+    // 검색 오버레이 키보드 대응 — iOS Safari fixed 요소 키보드 밀림 방지
     var isKeyboardOpen = false;
     var touchMoveHandler = null;
 
-    var applyOverlayHeight = function (source) {
+    var applyOverlayHeight = function () {
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
       var contentWrap = overlay.querySelector('.vm-content-wrap');
@@ -100,9 +101,6 @@
         var h = vv.height + 'px';
         overlay.style.height = h;
         overlay.style.overflow = 'hidden';
-
-        // 디버그용 — 확인 후 제거
-        overlay.style.background = 'rgba(255, 165, 0, 0.15)';
 
         if (header) {
           header.style.position = 'fixed';
@@ -126,7 +124,7 @@
 
           // 스크롤 끝 바운스 방지
           if (!touchMoveHandler) {
-            touchMoveHandler = function (ev) {
+            touchMoveHandler = function () {
               var top = contentWrap.scrollTop;
               var max = contentWrap.scrollHeight - contentWrap.clientHeight;
               if (top >= max) contentWrap.scrollTop = max - 1;
@@ -138,9 +136,6 @@
       } else {
         overlay.style.height = '';
         overlay.style.overflow = '';
-
-        // 디버그용 — 확인 후 제거
-        overlay.style.background = '';
 
         if (header) {
           header.style.position = '';
@@ -162,7 +157,6 @@
           contentWrap.style.paddingTop = '';
           contentWrap.style.overscrollBehavior = '';
 
-          // 리스너 해제
           if (touchMoveHandler) {
             contentWrap.removeEventListener('touchmove', touchMoveHandler);
             touchMoveHandler = null;
@@ -171,30 +165,24 @@
       }
     };
 
-    vv.addEventListener('resize', function () {
-      applyOverlayHeight('resize');
-    });
+    vv.addEventListener('resize', applyOverlayHeight);
 
     vv.addEventListener('scroll', function () {
       if (isKeyboardOpen) {
-        applyOverlayHeight('scroll');
+        applyOverlayHeight();
       }
     });
 
     document.addEventListener('focusin', function (e) {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
         isKeyboardOpen = true;
-        setTimeout(function () {
-          applyOverlayHeight('focus');
-        }, 500);
+        setTimeout(applyOverlayHeight, 500);
       }
     });
 
     document.addEventListener('focusout', function () {
       isKeyboardOpen = false;
-      setTimeout(function () {
-        applyOverlayHeight('blur');
-      }, 300);
+      setTimeout(applyOverlayHeight, 300);
     });
   } else {
     window.addEventListener('resize', onViewportChange);
