@@ -123,10 +123,21 @@
       var wrapper = overlay.querySelector('.vm-wrapper');
       var wrap = overlay.querySelector('.vm-wrap');
       var mainContent = overlay.querySelector('.main-content-search');
+      var header = overlay.querySelector('.vm-header');
 
       if (diff > 50) {
         var h = vv.height + 'px';
         overlay.style.height = h;
+        overlay.style.overflow = 'hidden';
+
+        // 헤더 fixed 전환
+        if (header) {
+          header.style.position = 'fixed';
+          header.style.top = '0';
+          header.style.left = '0';
+          header.style.right = '0';
+          header.style.zIndex = '300';
+        }
 
         if (wrapper) wrapper.style.height = h;
         if (wrap) {
@@ -139,11 +150,22 @@
           contentWrap.style.flex = 'none';
         }
 
+        // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'skyblue';
+          mainContent.style.background = 'oragne';
         }
       } else {
         overlay.style.height = '';
+        overlay.style.overflow = '';
+
+        // 헤더 sticky 복원
+        if (header) {
+          header.style.position = '';
+          header.style.top = '';
+          header.style.left = '';
+          header.style.right = '';
+          header.style.zIndex = '';
+        }
 
         if (wrapper) wrapper.style.height = '';
         if (wrap) {
@@ -156,8 +178,9 @@
           contentWrap.style.flex = '';
         }
 
+        // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'lime';
+          mainContent.style.background = 'yellow';
         }
       }
     };
