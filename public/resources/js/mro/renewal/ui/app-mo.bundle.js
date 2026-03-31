@@ -1612,9 +1612,8 @@
   if (vv) {
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
-
-    // 검색 오버레이 키보드 대응
     var isKeyboardOpen = false;
+    var touchMoveHandler = null;
     var applyOverlayHeight = function (source) {
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
@@ -1622,21 +1621,13 @@
       var wrapper = overlay.querySelector('.vm-wrapper');
       var wrap = overlay.querySelector('.vm-wrap');
       var header = overlay.querySelector('.vm-header');
-      var mainContent = overlay.querySelector('.main-content-search');
-
-      // 디버그용 — 확인 후 제거
-      var debugEl = document.getElementById('debugOverlay');
-      if (!debugEl) {
-        debugEl = document.createElement('div');
-        debugEl.id = 'debugOverlay';
-        debugEl.style.cssText = 'position:fixed;top:50px;left:0;z-index:99999;background:red;color:#fff;padding:8px 12px;font-size:14px;line-height:1.4';
-        document.body.appendChild(debugEl);
-      }
-      debugEl.innerHTML = 'source: ' + source + '<br>keyboard: ' + isKeyboardOpen + '<br>vv.height: ' + Math.round(vv.height) + '<br>innerHeight: ' + window.innerHeight + '<br>vv.offsetTop: ' + Math.round(vv.offsetTop);
       if (isKeyboardOpen) {
         var h = vv.height + 'px';
         overlay.style.height = h;
         overlay.style.overflow = 'hidden';
+
+        // 디버그용 — 확인 후 제거
+        overlay.style.background = 'rgba(255, 165, 0, 0.15)';
         if (header) {
           header.style.position = 'fixed';
           header.style.top = '0';
@@ -1653,13 +1644,28 @@
           contentWrap.style.height = h;
           contentWrap.style.maxHeight = h;
           contentWrap.style.flex = 'none';
-        }
+          contentWrap.style.paddingTop = header ? header.offsetHeight + 'px' : '';
+          contentWrap.style.overscrollBehavior = 'none';
 
-        // 디버그용 — 확인 후 제거
-        if (mainContent) mainContent.style.background = 'orange';
+          // 스크롤 끝 바운스 방지
+          if (!touchMoveHandler) {
+            touchMoveHandler = function (ev) {
+              var top = contentWrap.scrollTop;
+              var max = contentWrap.scrollHeight - contentWrap.clientHeight;
+              if (top >= max) contentWrap.scrollTop = max - 1;
+              if (top <= 0) contentWrap.scrollTop = 1;
+            };
+            contentWrap.addEventListener('touchmove', touchMoveHandler, {
+              passive: false
+            });
+          }
+        }
       } else {
         overlay.style.height = '';
         overlay.style.overflow = '';
+
+        // 디버그용 — 확인 후 제거
+        overlay.style.background = '';
         if (header) {
           header.style.position = '';
           header.style.top = '';
@@ -1676,10 +1682,15 @@
           contentWrap.style.height = '';
           contentWrap.style.maxHeight = '';
           contentWrap.style.flex = '';
-        }
+          contentWrap.style.paddingTop = '';
+          contentWrap.style.overscrollBehavior = '';
 
-        // 디버그용 — 확인 후 제거
-        if (mainContent) mainContent.style.background = 'yellow';
+          // 리스너 해제
+          if (touchMoveHandler) {
+            contentWrap.removeEventListener('touchmove', touchMoveHandler);
+            touchMoveHandler = null;
+          }
+        }
       }
     };
     vv.addEventListener('resize', function () {
