@@ -1628,7 +1628,7 @@
         debugEl.style.cssText = 'position:fixed;top:50px;left:0;z-index:99999;background:red;color:#fff;padding:8px 12px;font-size:14px;line-height:1.4';
         document.body.appendChild(debugEl);
       }
-      debugEl.innerHTML = 'source: ' + source + '<br>diff: ' + Math.round(diff) + '<br>vv.height: ' + Math.round(vv.height) + '<br>innerHeight: ' + window.innerHeight;
+      debugEl.innerHTML = 'source: ' + source + '<br>diff: ' + Math.round(diff) + '<br>vv.height: ' + Math.round(vv.height) + '<br>innerHeight: ' + window.innerHeight + '<br>vv.offsetTop: ' + Math.round(vv.offsetTop);
       if (source === 'resize') {
         overlay.style.background = 'rgba(0,255,0,0.3)';
       } else if (source === 'focus') {
