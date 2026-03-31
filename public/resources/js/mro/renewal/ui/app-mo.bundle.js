@@ -1634,17 +1634,22 @@
       } else if (source === 'focus') {
         overlay.style.background = 'rgba(0,0,255,0.3)';
       }
+      var wrapper = overlay.querySelector('.vm-wrapper');
+      var wrap = overlay.querySelector('.vm-wrap');
       if (diff > 50) {
         var h = vv.height + 'px';
         overlay.style.height = h;
-        if (contentWrap) {
-          contentWrap.style.maxHeight = h;
-        }
+
+        // 내부 래퍼 체인 높이도 동기화
+
+        if (wrapper) wrapper.style.height = h;
+        if (wrap) wrap.style.height = h;
+        if (contentWrap) contentWrap.style.maxHeight = h;
       } else {
         overlay.style.height = '';
-        if (contentWrap) {
-          contentWrap.style.maxHeight = '';
-        }
+        if (wrapper) wrapper.style.height = '';
+        if (wrap) wrap.style.height = '';
+        if (contentWrap) contentWrap.style.maxHeight = '';
       }
     };
     vv.addEventListener('resize', function () {
