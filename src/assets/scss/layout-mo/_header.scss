@@ -380,7 +380,6 @@
   @include mx.position(fixed, 0, 0, $left: 0);
   z-index: map.get(var.$mo-zindex, 'search-overlay');
   height: var(--vv-height, 100vh);
-  overflow: hidden;
   background: color.$color-white;
 
   .vm-search-view {
@@ -391,5 +390,10 @@
   .vm-wrapper,
   .vm-wrap {
     height: 100%;
+  }
+
+  // vm-content-wrap이 스크롤 담당 — sticky도 여기서 동작
+  .vm-content-wrap {
+    max-height: 100%;
   }
 }
