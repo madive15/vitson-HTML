@@ -126,28 +126,38 @@
 
       if (diff > 50) {
         var h = vv.height + 'px';
-        overlay.style.top = vv.offsetTop + 'px';
         overlay.style.height = h;
 
         if (wrapper) wrapper.style.height = h;
-        if (wrap) wrap.style.height = h;
-        if (contentWrap) contentWrap.style.maxHeight = h;
+        if (wrap) {
+          wrap.style.height = h;
+          wrap.style.overflow = 'hidden';
+        }
+        if (contentWrap) {
+          contentWrap.style.height = h;
+          contentWrap.style.maxHeight = h;
+          contentWrap.style.flex = 'none';
+        }
 
-        // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'yellow';
+          mainContent.style.background = 'skyblue';
         }
       } else {
-        overlay.style.top = '';
         overlay.style.height = '';
 
         if (wrapper) wrapper.style.height = '';
-        if (wrap) wrap.style.height = '';
-        if (contentWrap) contentWrap.style.maxHeight = '';
+        if (wrap) {
+          wrap.style.height = '';
+          wrap.style.overflow = '';
+        }
+        if (contentWrap) {
+          contentWrap.style.height = '';
+          contentWrap.style.maxHeight = '';
+          contentWrap.style.flex = '';
+        }
 
-        // 디버그용 — 확인 후 제거
         if (mainContent) {
-          mainContent.style.background = 'orange';
+          mainContent.style.background = 'lime';
         }
       }
     };
