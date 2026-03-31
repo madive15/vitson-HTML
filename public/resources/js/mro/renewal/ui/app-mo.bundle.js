@@ -1563,18 +1563,6 @@
   }
 
   /**
-   * @description 검색 오버레이 키보드 대응
-   * @note 키보드 올라오면 오버레이 bottom을 키보드 높이만큼 올려서 하단 여백 방지
-   * @scope #searchOverlay
-   */
-  function updateSearchOverlay() {
-    var overlay = document.getElementById('searchOverlay');
-    if (!overlay) return;
-    var diff = window.innerHeight - window.visualViewport.height;
-    overlay.style.bottom = diff + 'px';
-  }
-
-  /**
    * @description 수평 스크롤 요소를 끝(오른쪽)으로 이동
    * @scope [data-scroll-end]
    * @note 초기 실행 + 자식 변경 시 자동 재실행 (동적 렌더링 대응)
@@ -1624,8 +1612,6 @@
   if (vv) {
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
-    // 검색 오버레이 키보드 대응
-    vv.addEventListener('resize', updateSearchOverlay);
   } else {
     window.addEventListener('resize', onViewportChange);
   }
