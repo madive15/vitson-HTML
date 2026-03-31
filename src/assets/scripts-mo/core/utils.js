@@ -110,7 +110,9 @@
         '<br>vv.height: ' +
         Math.round(vv.height) +
         '<br>innerHeight: ' +
-        window.innerHeight;
+        window.innerHeight +
+        '<br>vv.offsetTop: ' +
+        Math.round(vv.offsetTop);
 
       if (source === 'resize') {
         overlay.style.background = 'rgba(0,255,0,0.3)';
