@@ -1614,16 +1614,28 @@
     vv.addEventListener('scroll', onViewportChange);
 
     // 검색 오버레이 키보드 대응 — 오버레이 + 내부 스크롤 영역 높이 동기화
-    vv.addEventListener('resize', function () {
+    var updateOverlay = function () {
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
-      var h = vv.height + 'px';
-      overlay.style.height = h;
       var contentWrap = overlay.querySelector('.vm-content-wrap');
-      if (contentWrap) {
-        contentWrap.style.maxHeight = h;
+      var diff = window.innerHeight - vv.height;
+      if (diff > 50) {
+        // 키보드 올라온 상태
+        var h = vv.height + 'px';
+        overlay.style.height = h;
+        if (contentWrap) {
+          contentWrap.style.maxHeight = h;
+        }
+      } else {
+        // 키보드 내린 상태 — 인라인 스타일 제거, CSS로 복귀
+        overlay.style.height = '';
+        if (contentWrap) {
+          contentWrap.style.maxHeight = '';
+        }
       }
-    });
+    };
+    vv.addEventListener('resize', updateOverlay);
+    vv.addEventListener('scroll', updateOverlay);
   } else {
     window.addEventListener('resize', onViewportChange);
   }
