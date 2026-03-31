@@ -84,6 +84,20 @@
   if (vv) {
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
+
+    // 검색 오버레이 키보드 대응 — 오버레이 + 내부 스크롤 영역 높이 동기화
+    vv.addEventListener('resize', function () {
+      var overlay = document.getElementById('searchOverlay');
+      if (!overlay) return;
+
+      var h = vv.height + 'px';
+      overlay.style.height = h;
+
+      var contentWrap = overlay.querySelector('.vm-content-wrap');
+      if (contentWrap) {
+        contentWrap.style.maxHeight = h;
+      }
+    });
   } else {
     window.addEventListener('resize', onViewportChange);
   }

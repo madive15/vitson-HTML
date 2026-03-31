@@ -377,9 +377,8 @@
 
 // 개발 대응 - 검색 오버레이 레이아웃
 .vm-search-overlay {
-  @include mx.position(fixed, 0, 0, 0, 0);
+  @include mx.position(fixed, 0, 0, $left: 0);
   z-index: map.get(var.$mo-zindex, 'search-overlay');
-  overflow: clip;
   background: color.$color-white;
 
   .vm-search-view {
