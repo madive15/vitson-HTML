@@ -85,34 +85,39 @@
     vv.addEventListener('resize', onViewportChange);
     vv.addEventListener('scroll', onViewportChange);
 
-    // 검색 오버레이 키보드 대응 — 오버레이 + 내부 스크롤 영역 높이 동기화
-    var updateOverlay = function () {
+    // 검색 오버레이 키보드 대응 — 포커스 기반
+    var updateOverlay = function (e) {
+      // 디버그용 — 확인 후 제거
+      if (e.target && e.target.tagName === 'INPUT') {
+        e.target.style.border = '3px solid red';
+      }
+
       var overlay = document.getElementById('searchOverlay');
       if (!overlay) return;
       var contentWrap = overlay.querySelector('.vm-content-wrap');
 
-      var diff = window.innerHeight - vv.height;
+      setTimeout(function () {
+        var diff = window.innerHeight - vv.height;
 
-      if (diff > 50) {
-        // 키보드 올라온 상태
-        var h = vv.height + 'px';
-        overlay.style.height = h;
+        if (diff > 50) {
+          var h = vv.height + 'px';
+          overlay.style.height = h;
 
-        if (contentWrap) {
-          contentWrap.style.maxHeight = h;
+          if (contentWrap) {
+            contentWrap.style.maxHeight = h;
+          }
+        } else {
+          overlay.style.height = '';
+
+          if (contentWrap) {
+            contentWrap.style.maxHeight = '';
+          }
         }
-      } else {
-        // 키보드 내린 상태 — 인라인 스타일 제거, CSS로 복귀
-        overlay.style.height = '';
-
-        if (contentWrap) {
-          contentWrap.style.maxHeight = '';
-        }
-      }
+      }, 300);
     };
 
-    vv.addEventListener('resize', updateOverlay);
-    vv.addEventListener('scroll', updateOverlay);
+    document.addEventListener('focusin', updateOverlay);
+    document.addEventListener('focusout', updateOverlay);
   } else {
     window.addEventListener('resize', onViewportChange);
   }
