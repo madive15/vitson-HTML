@@ -31,7 +31,9 @@ html.is-app-aos {
 }
 
 html.is-app-ios {
-  --safe-bottom: 0;
+  // iOS 앱에서도 시스템 safe-area를 사용하도록 주석 처리
+  // --safe-bottom: 0;
+  background-color: beige; // 영역 확인용 임시 배경색
 }
 
 // --- 모바일 스코프 기본 ---
@@ -50,6 +52,14 @@ html.vm-scope body {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: auto;
+}
+
+.is-app-ios.vm-scope {
+  height: inherit;
+}
+
+.is-app-ios.vm-scope body {
+  height: 100vh;
 }
 
 // --- 전체 래퍼 (운영 영역, 클래스 추가 불가) ---
@@ -98,11 +108,16 @@ html.vm-scope body {
   @include mx.flex(flex, column);
   flex: 1 1 auto;
   min-width: 0;
+  padding-top: var(--safe-top);
 
   &-content {
     flex: 1 1 auto;
     min-width: 0;
   }
+}
+
+.header-main-bar ~ .vm-main {
+  padding-top: 0;
 }
 
 // --- 푸터 ---
@@ -112,16 +127,14 @@ html.vm-scope body {
 
 // --- 하단 고정 그룹 ---
 .vm-bottom-bar {
-  @include mx.position(fixed, $bottom: 0, $left: 0, $right: 0);
+  // flex 레이아웃 내에서 하단에 고정되도록 설정
+  position: relative;
   z-index: map.get(var.$mo-zindex, 'bottom-bar');
   flex-shrink: 0;
+  margin-top: auto; // 상단 컨텐츠가 작아도 바닥에 붙게 함
 }
 
-@each $type, $height in var.$mo-bottom-bar {
-  .vm-wrap:has(.bottom-#{$type}) .vm-content-wrap {
-    padding-bottom: calc(#{$height} + var(--safe-bottom));
-  }
-}
+// [삭제됨] @each $type, $height in var.$mo-bottom-bar padding-bottom 로직 (flex 구조에서는 불필요)
 
 // 삼성 브라우저 강제 다크모드 방어
 @media (prefers-color-scheme: dark) {
@@ -146,6 +159,10 @@ html.vm-scope body {
     color: #000 !important;
     background-color: #fff !important;
     background-image: none !important;
+  }
+
+  .vm-main-content {
+    padding-top: var(--safe-top);
   }
 
   /* input / select / textarea / button 기본 UI도 라이트로 */

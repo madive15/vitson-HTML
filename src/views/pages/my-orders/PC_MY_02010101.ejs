@@ -131,11 +131,15 @@
           const num = parseInt(val);
           const unit = val.replace(num, '');
 
-          const startStr = fn_formatDateAdd(unit, -num);
-          const endStr = fn_formatDateAdd('d', 0);
+          // 해당 월 1일 기준으로 start 계산
+          var now = new Date();
+          var startDate = new Date(now.getFullYear(), now.getMonth() - (num - 1), 1);
+          var sy = startDate.getFullYear();
+          var sm = startDate.getMonth() + 1;
+          sm = sm < 10 ? '0' + sm : sm;
+          var startStr = sy + '-' + sm + '-01';
 
-          const start = new Date(startStr);
-          const end = new Date(endStr);
+          var endStr = fn_formatDateAdd('d', 0);
 
           // ⭐ Kendo Calendar 인스턴스
           const calendar = VitsKendoRangePicker.getInstance('.vits-kendo-range-picker');

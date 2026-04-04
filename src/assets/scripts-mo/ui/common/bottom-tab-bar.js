@@ -101,50 +101,52 @@
     //   $popupEl.removeData('fromGnb');
     // }
 
-    // 콘텐츠는 팝업 안에서 비동기 렌더
-    R.loadTree(function () {
-      var $scope = $catScope();
-      if (!$scope.length) return;
+    // 콘텐츠는 첫 프레임(팝업 열림) 이후 렌더 — 클릭 응답성 개선
+    requestAnimationFrame(function () {
+      R.loadTree(function () {
+        var $scope = $catScope();
+        if (!$scope.length) return;
 
-      if (!_scopeBound) {
-        // 팝업 DOM이 잔류할 경우 대비 — 방어적 unbind 후 재바인딩
-        R.unbindScopeEvents($scope);
-        R.bindScopeEvents($scope, _state, onCommit);
-        _scopeBound = true;
-      }
-
-      var tree = R.getTree();
-      if (!_state.path.depth1Id && tree.length) {
-        _state.browseD1 = tree[0].categoryCode;
-      } else {
-        _state.browseD1 = _state.path.depth1Id;
-      }
-
-      R.renderDepth1($scope, _state.path, _state.browseD1);
-
-      if (!_state.path.depth1Id && tree.length) {
-        $scope.find('[data-depth1-item]').first().addClass('is-current');
-        R.renderSub($scope, _state.browseD1, _state.path);
-      }
-
-      if (window.UI && window.UI.tab) {
-        var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
-        if ($tabScope.length) {
-          var $popup = $('#' + POPUP_ID);
-          var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
-          $popup.removeAttr('data-request-tab');
-          window.UI.tab.activate($tabScope, requestTab);
+        if (!_scopeBound) {
+          // 팝업 DOM이 잔류할 경우 대비 — 방어적 unbind 후 재바인딩
+          R.unbindScopeEvents($scope);
+          R.bindScopeEvents($scope, _state, onCommit);
+          _scopeBound = true;
         }
-      }
 
-      setTimeout(function () {
-        if (_state.path.depth1Id) {
-          R.scrollToActive($scope);
+        var tree = R.getTree();
+        if (!_state.path.depth1Id && tree.length) {
+          _state.browseD1 = tree[0].categoryCode;
         } else {
-          $scope.find('[data-depth1-panel]').scrollTop(0);
-          $scope.find('[data-sub-panel]').scrollTop(0);
+          _state.browseD1 = _state.path.depth1Id;
         }
-      }, OPEN_DELAY);
+
+        R.renderDepth1($scope, _state.path, _state.browseD1);
+
+        if (!_state.path.depth1Id && tree.length) {
+          $scope.find('[data-depth1-item]').first().addClass('is-current');
+          R.renderSub($scope, _state.browseD1, _state.path);
+        }
+
+        if (window.UI && window.UI.tab) {
+          var $tabScope = $('#' + POPUP_ID).find('[data-tab-scope]');
+          if ($tabScope.length) {
+            var $popup = $('#' + POPUP_ID);
+            var requestTab = $popup.attr('data-request-tab') || 'categoryTab';
+            $popup.removeAttr('data-request-tab');
+            window.UI.tab.activate($tabScope, requestTab);
+          }
+        }
+
+        setTimeout(function () {
+          if (_state.path.depth1Id) {
+            R.scrollToActive($scope);
+          } else {
+            $scope.find('[data-depth1-panel]').scrollTop(0);
+            $scope.find('[data-sub-panel]').scrollTop(0);
+          }
+        }, OPEN_DELAY);
+      });
     });
   }
 

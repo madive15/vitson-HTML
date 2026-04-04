@@ -70,122 +70,161 @@
 
   setDeviceClass();
 
-  setVh();
-  var rafId = null;
-  function onViewportChange() {
-    if (rafId) return;
-    rafId = requestAnimationFrame(function () {
-      setVh();
-      rafId = null;
-    });
+  /**
+   * @description iOS App 내 화면 깨짐 대응 — .is-app-ios 클래스 존재 시 뷰포트 보정 로직 제외
+   */
+  if (!document.documentElement.classList.contains('is-app-ios')) {
+    setVh();
+    var rafId = null;
+    // eslint-disable-next-line no-inner-declarations
+    function onViewportChange() {
+      if (rafId) return;
+      rafId = requestAnimationFrame(function () {
+        setVh();
+        rafId = null;
+      });
+    }
+
+    var vv = window.visualViewport;
+    if (vv) {
+      vv.addEventListener('resize', onViewportChange);
+      vv.addEventListener('scroll', onViewportChange);
+
+      // 검색 오버레이 키보드 대응 — iOS Safari fixed 요소 키보드 밀림 방지
+      var isKeyboardOpen = false;
+      var touchMoveHandler = null;
+
+      var applyOverlayHeight = function () {
+        var overlay = document.getElementById('searchOverlay');
+        if (!overlay) return;
+        var contentWrap = overlay.querySelector('.vm-content-wrap');
+        var wrapper = overlay.querySelector('.vm-wrapper');
+        var wrap = overlay.querySelector('.vm-wrap');
+        var header = overlay.querySelector('.vm-header');
+
+        if (isKeyboardOpen) {
+          var h = vv.height + 'px';
+          overlay.style.height = h;
+          overlay.style.overflow = 'hidden';
+
+          if (header) {
+            header.style.position = 'fixed';
+            header.style.top = '0';
+            header.style.left = '0';
+            header.style.right = '0';
+            header.style.zIndex = '300';
+          }
+
+          if (wrapper) wrapper.style.height = h;
+          if (wrap) {
+            wrap.style.height = h;
+            wrap.style.overflow = 'hidden';
+          }
+          if (contentWrap) {
+            contentWrap.style.height = h;
+            contentWrap.style.maxHeight = h;
+            contentWrap.style.flex = 'none';
+            contentWrap.style.paddingTop = header ? header.offsetHeight + 'px' : '';
+            contentWrap.style.overscrollBehavior = 'none';
+
+            // 스크롤 끝 바운스 방지
+            if (!touchMoveHandler) {
+              touchMoveHandler = function () {
+                var top = contentWrap.scrollTop;
+                var max = contentWrap.scrollHeight - contentWrap.clientHeight;
+                if (top >= max) contentWrap.scrollTop = max - 1;
+                if (top <= 0) contentWrap.scrollTop = 1;
+              };
+              contentWrap.addEventListener('touchmove', touchMoveHandler, {passive: false});
+            }
+          }
+        } else {
+          overlay.style.height = '';
+          overlay.style.overflow = '';
+
+          if (header) {
+            header.style.position = '';
+            header.style.top = '';
+            header.style.left = '';
+            header.style.right = '';
+            header.style.zIndex = '';
+          }
+
+          if (wrapper) wrapper.style.height = '';
+          if (wrap) {
+            wrap.style.height = '';
+            wrap.style.overflow = '';
+          }
+          if (contentWrap) {
+            contentWrap.style.height = '';
+            contentWrap.style.maxHeight = '';
+            contentWrap.style.flex = '';
+            contentWrap.style.paddingTop = '';
+            contentWrap.style.overscrollBehavior = '';
+
+            if (touchMoveHandler) {
+              contentWrap.removeEventListener('touchmove', touchMoveHandler);
+              touchMoveHandler = null;
+            }
+          }
+        }
+      };
+
+      vv.addEventListener('resize', applyOverlayHeight);
+
+      vv.addEventListener('scroll', function () {
+        if (isKeyboardOpen) {
+          applyOverlayHeight();
+        }
+      });
+
+      document.addEventListener('focusin', function (e) {
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+          isKeyboardOpen = true;
+          setTimeout(applyOverlayHeight, 500);
+        }
+      });
+
+      document.addEventListener('focusout', function () {
+        isKeyboardOpen = false;
+        setTimeout(applyOverlayHeight, 300);
+      });
+    } else {
+      window.addEventListener('resize', onViewportChange);
+    }
   }
 
-  var vv = window.visualViewport;
-  if (vv) {
-    vv.addEventListener('resize', onViewportChange);
-    vv.addEventListener('scroll', onViewportChange);
+  if (document.documentElement.classList.contains('is-app-ios')) {
+    const input = document.getElementById('search-overlay-keyword');
+    const header = document.querySelector('.vm-search-overlay .vm-header');
 
-    // 검색 오버레이 키보드 대응 — iOS Safari fixed 요소 키보드 밀림 방지
-    var isKeyboardOpen = false;
-    var touchMoveHandler = null;
+    if (input && header) {
+      let lastScrollY = 0;
+      let restoreTimer = null;
 
-    var applyOverlayHeight = function () {
-      var overlay = document.getElementById('searchOverlay');
-      if (!overlay) return;
-      var contentWrap = overlay.querySelector('.vm-content-wrap');
-      var wrapper = overlay.querySelector('.vm-wrapper');
-      var wrap = overlay.querySelector('.vm-wrap');
-      var header = overlay.querySelector('.vm-header');
+      input.addEventListener('focus', () => {
+        lastScrollY = window.scrollY;
 
-      if (isKeyboardOpen) {
-        var h = vv.height + 'px';
-        overlay.style.height = h;
-        overlay.style.overflow = 'hidden';
+        // 1. sticky 끔
+        header.style.position = 'static';
 
-        if (header) {
-          header.style.position = 'fixed';
-          header.style.top = '0';
-          header.style.left = '0';
-          header.style.right = '0';
-          header.style.zIndex = '300';
-        }
+        // 2. iOS 강제 스크롤 보정 (두 번 잡기)
+        setTimeout(() => window.scrollTo(0, lastScrollY), 50);
+        setTimeout(() => window.scrollTo(0, lastScrollY), 150);
 
-        if (wrapper) wrapper.style.height = h;
-        if (wrap) {
-          wrap.style.height = h;
-          wrap.style.overflow = 'hidden';
-        }
-        if (contentWrap) {
-          contentWrap.style.height = h;
-          contentWrap.style.maxHeight = h;
-          contentWrap.style.flex = 'none';
-          contentWrap.style.paddingTop = header ? header.offsetHeight + 'px' : '';
-          contentWrap.style.overscrollBehavior = 'none';
+        // 3. sticky 복구 (이전 타이머 제거)
+        clearTimeout(restoreTimer);
+        restoreTimer = setTimeout(() => {
+          header.style.position = 'sticky';
+        }, 350);
+      });
 
-          // 스크롤 끝 바운스 방지
-          if (!touchMoveHandler) {
-            touchMoveHandler = function () {
-              var top = contentWrap.scrollTop;
-              var max = contentWrap.scrollHeight - contentWrap.clientHeight;
-              if (top >= max) contentWrap.scrollTop = max - 1;
-              if (top <= 0) contentWrap.scrollTop = 1;
-            };
-            contentWrap.addEventListener('touchmove', touchMoveHandler, {passive: false});
-          }
-        }
-      } else {
-        overlay.style.height = '';
-        overlay.style.overflow = '';
-
-        if (header) {
-          header.style.position = '';
-          header.style.top = '';
-          header.style.left = '';
-          header.style.right = '';
-          header.style.zIndex = '';
-        }
-
-        if (wrapper) wrapper.style.height = '';
-        if (wrap) {
-          wrap.style.height = '';
-          wrap.style.overflow = '';
-        }
-        if (contentWrap) {
-          contentWrap.style.height = '';
-          contentWrap.style.maxHeight = '';
-          contentWrap.style.flex = '';
-          contentWrap.style.paddingTop = '';
-          contentWrap.style.overscrollBehavior = '';
-
-          if (touchMoveHandler) {
-            contentWrap.removeEventListener('touchmove', touchMoveHandler);
-            touchMoveHandler = null;
-          }
-        }
-      }
-    };
-
-    vv.addEventListener('resize', applyOverlayHeight);
-
-    vv.addEventListener('scroll', function () {
-      if (isKeyboardOpen) {
-        applyOverlayHeight();
-      }
-    });
-
-    document.addEventListener('focusin', function (e) {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-        isKeyboardOpen = true;
-        setTimeout(applyOverlayHeight, 500);
-      }
-    });
-
-    document.addEventListener('focusout', function () {
-      isKeyboardOpen = false;
-      setTimeout(applyOverlayHeight, 300);
-    });
-  } else {
-    window.addEventListener('resize', onViewportChange);
+      // 🔥 blur 시 확실하게 원복
+      input.addEventListener('blur', () => {
+        clearTimeout(restoreTimer);
+        header.style.position = 'sticky';
+      });
+    }
   }
 
   // [TODO] iPad Chrome safe-area 초기 렌더링 지연 이슈

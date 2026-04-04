@@ -109,6 +109,11 @@
     el.$input.val('');
     if (el.$clear.length) el.$clear.attr('hidden', '');
     setInvalid(el.$input, el.$validation, false);
+    el.$input.trigger('inputSearch:clear');
+    $(document).trigger('ui:input-search-clear', {
+      form: el.$form[0],
+      input: el.$input[0]
+    });
   }
 
   function bindEvents(el, opt) {

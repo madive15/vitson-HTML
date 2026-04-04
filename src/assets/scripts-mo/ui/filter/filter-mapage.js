@@ -97,11 +97,12 @@
     }, PICKER_INIT_DELAY);
   }
 
-  // 날짜 계산
+  // 날짜 계산 — start를 해당 월 1일로 세팅
   function calcPresetRange(months) {
     var end = new Date();
     var start = new Date();
-    start.setMonth(start.getMonth() - months);
+    start.setMonth(start.getMonth() - (months - 1));
+    start.setDate(1);
     return {start: start, end: end};
   }
 
@@ -158,6 +159,9 @@
     $(SEL.dim).hide();
     unlockHeight();
     unlockScroll();
+
+    // 포커스 남아있으면 해제 — 리스트 클릭 시 blur 선소비 방지
+    $(SEL.searchInput).blur();
   }
 
   // hidden input 직접 세팅 — picker 미초기화 상태에서 사용
@@ -314,6 +318,7 @@
 
   // 조회하기 버튼
   function onSearchClick() {
+    $(SEL.searchInput).blur();
     closeFilter();
     // TODO: 조회 API 호출
   }
@@ -354,6 +359,14 @@
     $doc.on('click' + NS, SCOPE + ' ' + SEL.searchBtn, onSearchClick);
     $doc.on('click' + NS, SCOPE + ' ' + SEL.inputSearchBtn, onSearchClick);
     $doc.on('input' + NS, SEL.searchInput, updateFilterValueState);
+
+    // input blur 시 포커스 확실히 해제 — iOS 더블탭 방지
+    $doc.on('focusout' + NS, SEL.searchInput, function (e) {
+      var input = e.target;
+      setTimeout(function () {
+        input.blur();
+      }, 0);
+    });
   }
 
   // 공개 API

@@ -116,7 +116,11 @@
   }
 
   // 슬라이드 닫힘 애니메이션 + 안전장치
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   function closeWithAnimation($kw, inst) {
+    var $el = $kw.find('[data-ui="kendo-window"]').first();
+    var id = $el.attr('id');
+
     $kw.addClass('is-closing');
     var closed = false;
 
@@ -124,7 +128,15 @@
       if (closed) return;
       closed = true;
       $kw.removeClass('is-closing');
-      inst.close();
+
+      // slide/bottom: Kendo close() 우회 — 직접 DOM 숨김
+      $kw[0].style.display = 'none';
+      $el[0].style.display = 'none';
+      disconnectContent(id);
+      var idx = openedWindows.indexOf(id);
+      if (idx > -1) openedWindows.splice(idx, 1);
+      if (openedWindows.length === 0) unlockBody();
+      $(document).trigger('kendo:close', [id]);
     }
 
     $kw.one('animationend', done);
@@ -227,9 +239,24 @@
       var isBottom = $kw.hasClass('is-bottomsheet');
       var isSlide = $kw.hasClass('is-slideright') || $kw.hasClass('is-slideleft');
 
-      if (!isBottom && !isSlide) inst.center();
+      if (!isBottom && !isSlide) {
+        // center 모달: Kendo open() 그대로 사용
+        inst.center();
+        inst.open();
+        setTimeout(function () {
+          checkScroll(id);
+        }, 0);
+        return;
+      }
 
-      inst.open();
+      // slide/bottom: Kendo open() 우회 — 직접 DOM 표시 (성능 최적화)
+      // $el은 vm-modal-inner(display:flex) — 'block' 강제 시 flex 깨짐 → '' 로 CSS 복원
+      $kw[0].style.display = 'block';
+      $el[0].style.display = '';
+      lockBody();
+      if (openedWindows.indexOf(id) === -1) openedWindows.push(id);
+      observeContent(id);
+      $(document).trigger('kendo:open', [id]);
 
       // 바텀시트: 하단 고정 + 슬라이드 업
       if (isBottom) {
@@ -246,7 +273,6 @@
 
       // 슬라이드: 풀스크린 + 스택 z-index
       if (isSlide) {
-        // 열린 슬라이드 중 최상위 z-index 산출
         var maxZ = 10010;
         openedWindows.forEach(function (winId) {
           if (winId === id) return;

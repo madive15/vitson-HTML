@@ -462,8 +462,10 @@
       &-header {
         flex-shrink: 0;
         align-items: center;
-        height: calc(#{fn.rem(48)} + var(--safe-top));
-        padding: var(--safe-top) var.$mo-gutter 0;
+
+        // height: calc(#{fn.rem(48)} + var(--safe-top));
+        height: calc(48px + var(--safe-top));
+        padding: var(--safe-top) var.$mo-gutter 0 !important;
       }
 
       &-inner {
@@ -500,7 +502,7 @@
         flex-shrink: 0;
         align-items: center;
         height: calc(#{fn.rem(48)} + var(--safe-top));
-        padding: var(--safe-top) var.$mo-gutter 0;
+        padding: var(--safe-top) var.$mo-gutter 0 !important;
       }
 
       &-inner {
@@ -848,9 +850,16 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
   /* stylelint-disable-next-line no-descending-specificity */
   &:has(.category-full-popup) {
     border-radius: 0;
+
+    .k-window-content {
+      height: 100%;
+    }
   }
 
   .category-full-popup {
+    height: 100%;
+    overflow: hidden;
+
     /* stylelint-disable-next-line no-descending-specificity */
     .vm-modal-content {
       display: flex;
@@ -921,4 +930,19 @@ $tabbar-under-window-has: ('.modal-filter-sheet', '.my-shipment-popup', '.catego
     }
   }
   /* stylelint-enable selector-id-pattern */
+}
+
+// 계정 등록 팝업
+.vm-scope #accountRegisterModal {
+  .vm-mypage-account-form {
+    padding: 0;
+
+    #rowPassword {
+      gap: map.get(var.$unit, 12);
+    }
+
+    .vits-btn-sm {
+      min-height: fn.rem(44);
+    }
+  }
 }

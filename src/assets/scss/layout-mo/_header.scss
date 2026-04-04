@@ -33,8 +33,12 @@
   &[class*='header-'][class*='-bar'] {
     @include mx.flex(flex, row, flex-start, center);
     gap: map.get(var.$unit, 8);
-    min-height: calc(map.get(var.$mo-header, 'nav-bar') + var(--safe-top));
-    padding: var(--safe-top) var.$mo-gutter 0 fn.rem(7);
+
+    // min-height: calc(map.get(var.$mo-header, 'nav-bar') + var(--safe-top));
+    min-height: calc(map.get(var.$mo-header, 'nav-bar'));
+
+    // padding: var(--safe-top) var.$mo-gutter 0 fn.rem(7);
+    padding: 0 var.$mo-gutter 0 fn.rem(7);
     background: color.$color-white;
 
     &.header-rule {
@@ -387,4 +391,8 @@
   .vm-search-view {
     padding-bottom: 0 !important;
   }
+}
+
+.is-app-ios .vm-search-overlay .vm-content-wrap {
+  padding-top: 0 !important;
 }

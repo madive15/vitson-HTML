@@ -216,43 +216,108 @@
     return false;
   }
 
-  // 브랜드 캐시 생성
+  // 필터용 스타일시트
+  var _filterStyle = null;
+  function getFilterStyle() {
+    if (!_filterStyle) {
+      var s = document.createElement('style');
+      s.id = 'brand-filter-style';
+      document.head.appendChild(s);
+      _filterStyle = s;
+    }
+    return _filterStyle;
+  }
+
+  // 브랜드 캐시 생성 + data-chosung 속성 부여
   function cacheBrands($root) {
     var items = [];
     $root.find(SEL.item).each(function () {
       var $el = $(this);
+      var text = $.trim($el.text());
       items.push({
         $el: $el,
-        text: $.trim($el.text())
+        el: this,
+        text: text
       });
+      // 초성 속성 부여
+      if (text) {
+        var first = text.charAt(0);
+        if (/[가-힣]/.test(first)) {
+          var cho = normalizeChosung(getChosung(first));
+          if (cho) this.setAttribute('data-chosung', cho);
+        } else if (/[A-Za-z]/.test(first)) {
+          this.setAttribute('data-chosung', first.toUpperCase());
+        }
+      }
     });
     $root.data('brandCache', items);
+    // 초성별 카운트 캐시
+    var counts = {all: items.length};
+    for (var i = 0; i < items.length; i++) {
+      var c = items[i].el.getAttribute('data-chosung');
+      if (c) counts[c] = (counts[c] || 0) + 1;
+    }
+    $root.data('brandCounts', counts);
   }
 
   // 목록 필터링
   function filterList($root, filter, keyword) {
     var items = $root.data('brandCache');
     if (!items) return;
-
-    var count = 0;
     var kw = keyword ? keyword.toLowerCase() : '';
 
-    items.forEach(function (item) {
-      var filterMatch = matchFilter(item.text, filter);
-      var kwMatch = !kw || item.text.toLowerCase().indexOf(kw) > -1;
-      var show = filterMatch && kwMatch;
-
-      if (show) {
-        item.$el.removeClass('is-hidden');
-        count++;
-      } else {
-        item.$el.addClass('is-hidden');
+    // 키워드 검색은 기존 방식 (개별 매칭 필요)
+    if (kw) {
+      getFilterStyle().textContent = '';
+      var count = 0;
+      for (var i = 0, len = items.length; i < len; i++) {
+        var item = items[i];
+        var filterMatch = matchFilter(item.text, filter);
+        var kwMatch = item.text.toLowerCase().indexOf(kw) > -1;
+        if (filterMatch && kwMatch) {
+          item.el.classList.remove('is-hidden');
+          count++;
+        } else {
+          item.el.classList.add('is-hidden');
+        }
       }
-    });
+      $root.find(SEL.count).text(count);
+      var $empty = $root.find(SEL.empty);
+      var $list = $root.find(SEL.list);
+      if (count === 0) {
+        $list.addClass('is-hidden');
+        $empty.removeClass('is-hidden');
+      } else {
+        $list.removeClass('is-hidden');
+        $empty.addClass('is-hidden');
+      }
+      var bEl = $root.find(SEL.body)[0];
+      if (bEl)
+        requestAnimationFrame(function () {
+          bEl.scrollTop = 0;
+        });
+      return;
+    }
 
+    // 초성 필터: CSS 규칙으로 일괄 처리 (개별 DOM 조작 없음)
+    // 이전 키워드 검색에서 남은 is-hidden 클래스 제거
+    var prevHidden = $root.find(SEL.item + '.is-hidden');
+    if (prevHidden.length) prevHidden.removeClass('is-hidden');
+
+    var style = getFilterStyle();
+    if (filter === 'all') {
+      style.textContent = '';
+    } else {
+      style.textContent = '[data-brand-item]:not([data-chosung="' + filter + '"]){display:none!important}';
+    }
+
+    var counts = $root.data('brandCounts') || {};
+    // eslint-disable-next-line no-redeclare
+    var count = filter === 'all' ? counts.all || items.length : counts[filter] || 0;
     $root.find(SEL.count).text(count);
-
+    // eslint-disable-next-line no-redeclare
     var $empty = $root.find(SEL.empty);
+    // eslint-disable-next-line no-redeclare
     var $list = $root.find(SEL.list);
     if (count === 0) {
       $list.addClass('is-hidden');
@@ -262,9 +327,11 @@
       $empty.addClass('is-hidden');
     }
 
-    // 목록 스크롤 최상위로
-    var $body = $root.find(SEL.body);
-    if ($body[0]) $body[0].scrollTop = 0;
+    var bodyEl = $root.find(SEL.body)[0];
+    if (bodyEl)
+      requestAnimationFrame(function () {
+        bodyEl.scrollTop = 0;
+      });
   }
 
   // 현재 활성 필터값
@@ -316,11 +383,13 @@
       $root.find(SEL.prev).removeClass('is-hidden');
       $root.find(SEL.next).removeClass('is-hidden');
 
-      // 버튼 너비 재계산 + 화살표 상태 갱신
-      fitButtons($root);
-      updateArrows($root);
-
+      // 필터링 먼저 실행 (레이아웃 읽기 없음)
       filterList($root, filter, '');
+      // 버튼 너비 재계산 + 화살표 상태 갱신은 다음 프레임으로 지연 (forced reflow 방지)
+      requestAnimationFrame(function () {
+        fitButtons($root);
+        updateArrows($root);
+      });
 
       if (window.UI && window.UI.inputSearch) {
         window.UI.inputSearch.clear($root);
@@ -364,11 +433,12 @@
       $root.find(SEL.prev).removeClass('is-hidden');
       $root.find(SEL.next).removeClass('is-hidden');
 
-      // 버튼 너비 재계산 + 화살표 상태 갱신
-      fitButtons($root);
-      updateArrows($root);
-
       filterList($root, activeFilter($root), '');
+      // 버튼 너비 재계산 + 화살표 상태 갱신은 다음 프레임으로 지연 (forced reflow 방지)
+      requestAnimationFrame(function () {
+        fitButtons($root);
+        updateArrows($root);
+      });
     });
 
     // 브랜드 탭 활성화 시 fitButtons + 화살표 갱신

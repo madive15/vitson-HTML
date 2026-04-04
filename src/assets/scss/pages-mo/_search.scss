@@ -49,7 +49,7 @@
   &:has(.header-search-bar) {
     // 툴바 스티키
     .vm-product-toolbar {
-      top: map.get(var.$mo-header, 'search-bar');
+      top: calc(map.get(var.$mo-header, 'search-bar') + var(--safe-top));
     }
   }
 }
@@ -141,6 +141,7 @@
         will-change: transform;
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       &-link {
         display: block;
         height: $rank-item-height;
@@ -401,6 +402,7 @@
 
     .keyword-link {
       @include mx.flex(flex, row, flex-start, center);
+      @include typo.typography('b4r', $color: map.get(color.$text-colors, 'secondary'));
       flex-shrink: 0;
       min-height: fn.rem(30);
       padding: map.get(var.$unit, 4) map.get(var.$unit, 8);
