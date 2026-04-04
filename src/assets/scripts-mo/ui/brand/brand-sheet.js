@@ -203,6 +203,7 @@
     var first = text.charAt(0);
 
     if (/[ㄱ-ㅎ]/.test(filter)) {
+      if (first === '㈜') return filter === 'ㅈ';
       if (/[가-힣]/.test(first)) {
         return normalizeChosung(getChosung(first)) === filter;
       }
@@ -242,12 +243,17 @@
       // 초성 속성 부여
       if (text) {
         var first = text.charAt(0);
-        if (/[가-힣]/.test(first)) {
-          var cho = normalizeChosung(getChosung(first));
-          if (cho) this.setAttribute('data-chosung', cho);
+        var cho = null;
+
+        if (first === '㈜') {
+          cho = 'ㅈ';
+        } else if (/[가-힣]/.test(first)) {
+          cho = normalizeChosung(getChosung(first));
         } else if (/[A-Za-z]/.test(first)) {
-          this.setAttribute('data-chosung', first.toUpperCase());
+          cho = first.toUpperCase();
         }
+
+        if (cho) this.setAttribute('data-chosung', cho);
       }
     });
     $root.data('brandCache', items);
