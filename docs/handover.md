@@ -221,12 +221,14 @@
   - `at-rule-no-unknown`: SCSS 전용 구문(@include, @mixin 등) 사용을 위해 기본 CSS 미확인 규칙 검사를 보정.
 - **속성 정렬**: CSS 속성은 의미론적 그룹(Layout -> Box -> Visual -> Typography)에 따라 자동 정렬됩니다.
 
-### 8.3. 공통 준수 사항
-
-- **Ignore 규칙**: `dist`, `node_modules`, `public`, `config` 디렉토리는 린트 검사 대상에서 제외됩니다.
-- **자동 교정**: 커밋 전 반드시 `pnpm eslint:fix` 및 `pnpm stylelint:fix`를 실행하여 코드 스타일을 동기화하십시오.
+### 8.3. 공통 준수 사항 및 자동화
+-   **VS Code 자동 교정 (권장)**: `.vscode/settings.json` 설정을 통해 파일 저장 시 **Prettier(포맷팅), ESLint(JS/TS 오류), Stylelint(SCSS 정렬)**가 즉시 자동 교정됩니다.
+    -   **필수 확장**: `Prettier - Code formatter`, `ESLint`, `Stylelint` 익스텐션을 설치하여 활용하십시오.
+-   **Ignore 규칙**: `dist`, `node_modules`, `public`, `config` 디렉토리는 린트 검사 대상에서 제외됩니다.
+-   **수동 교정**: 대량의 파일 수정 시 `pnpm eslint:fix` 및 `pnpm stylelint:fix` 명령어를 사용하여 전체 코드 스타일을 동기화할 수 있습니다.
 
 ---
+
 
 **최종 업데이트**: 2026-04-09
 **작성자**: 이동걸
