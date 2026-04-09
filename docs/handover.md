@@ -195,7 +195,36 @@
 - **`npx hygen generator new [name]`**: 새로운 Hygen 제너레이터(기본형)를 생성합니다.
 - **`npx hygen generator with-prompt [name]`**: 프롬프트 입력 기능이 포함된 신규 제너레이터를 생성합니다.
 
-### 8.
+---
+
+## 8. 코드 표준 및 린트 규칙 (Coding Standards & Linting)
+
+프로젝트의 코드 일관성과 품질 유지를 위해 ESLint와 Stylelint를 엄격히 적용합니다.
+
+### 8.1. JavaScript / TypeScript (ESLint)
+
+- **기반 설정**: `eslint:recommended`, `@typescript-eslint/recommended`, `prettier/recommended`
+- **환경**: Browser, Node.js, ES6+ 지원.
+- **주요 규칙**:
+  - `no-unused-vars`: 미사용 변수 발견 시 '경고(warn)' 처리.
+  - **Prettier 연동**: 모든 포맷팅 규칙은 Prettier에 위임하며, 충돌 발생 시 Prettier 규칙을 우선합니다.
+- **전역 변수**: `APP_NODE_ENV`, `APP_ENV_ROOT` 등 환경 변수들에 대한 전역 참조를 허용합니다.
+
+### 8.2. SCSS / CSS (Stylelint)
+
+- **기반 설정**: `stylelint-config-standard-scss`, `stylelint-config-recess-order` (속성 선언 순서 강제)
+- **네이밍 컨벤션**: 클래스 선택자, 변수명, `@keyframes` 명칭은 모두 **`kebab-case`**를 원칙으로 합니다.
+- **주요 규칙**:
+  - `unit-allowed-list`: 허용된 단위만 사용 가능 (`px`, `rem`, `vh`, `dvh`, `vw`, `%` 등. 특히 **`dvh`** 포함).
+  - `selector-pseudo-element-colon-notation`: 가상 요소에 이중 콜론(`::`) 사용 강제.
+  - `declaration-empty-line-before`: 속성 선언 사이의 불필요한 빈 줄 금지.
+  - `at-rule-no-unknown`: SCSS 전용 구문(@include, @mixin 등) 사용을 위해 기본 CSS 미확인 규칙 검사를 보정.
+- **속성 정렬**: CSS 속성은 의미론적 그룹(Layout -> Box -> Visual -> Typography)에 따라 자동 정렬됩니다.
+
+### 8.3. 공통 준수 사항
+
+- **Ignore 규칙**: `dist`, `node_modules`, `public`, `config` 디렉토리는 린트 검사 대상에서 제외됩니다.
+- **자동 교정**: 커밋 전 반드시 `pnpm eslint:fix` 및 `pnpm stylelint:fix`를 실행하여 코드 스타일을 동기화하십시오.
 
 ---
 
