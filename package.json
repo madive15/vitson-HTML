@@ -18,8 +18,11 @@
     "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix --ignore-path .stylelintignore .",
     "ejslint": "npx ejs-lint **/*.ejs",
     "build:sh": "pnpm build && sh ./postbuild.sh",
+    "build:sh:css": "pnpm build && sh ./postbuildcss.sh",
     "prettier:dist": "prettier --write \"dist/html/**/*.html\" \"dist/resources/css/mro/renewal/**/*.css\" --ignore-path /dev/null",
-    "build:sh:prettier": "pnpm build:sh && pnpm prettier:dist"
+    "prettier:dist:css": "prettier --write \"dist/resources/css/mro/renewal/**/*.css\" --ignore-path /dev/null",
+    "build:sh:prettier": "pnpm build:sh && pnpm prettier:dist",
+    "build:sh:prettier:css": "pnpm build:sh && pnpm prettier:dist:css"
   },
   "repository": {
     "type": "git",

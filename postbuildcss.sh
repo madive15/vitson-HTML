@@ -28,11 +28,10 @@ echo "'public' 폴더 제거 완료."
 echo "HTML 및 CSS 파일 내 경로 및 주석 정리 시작..."
 
 # DIST_DIR 하위의 모든 html, css 파일을 찾는다
-find "$DIST_DIR" \( -name "*.html" -o -name "*.css" \) -print0 \
+find "$DIST_DIR" \( -name "*.css" \) -print0 \
 | xargs -0 sed -i '
   s#\.\./public/#\.\./#g;
   s#/public/#/#g;
-  s#<!--[[:space:]]*prettier-ignore[[:space:]]*-->##g;
 '
 
 echo "모든 경로 및 주석 정리 완료."
