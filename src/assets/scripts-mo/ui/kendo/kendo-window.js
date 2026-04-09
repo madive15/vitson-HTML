@@ -293,7 +293,7 @@
           position: 'fixed'
         });
 
-        if (!$kw.find('.category-full-popup, .modal-filter-sheet, .my-shipment-popup').length) {
+        if (!$kw.find('.category-full-popup, .modal-filter-sheet, .my-shipment-popup, .modal-category-sheet').length) {
           $kw[0].style.setProperty('z-index', String(maxZ), 'important');
         }
 

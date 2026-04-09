@@ -101,8 +101,8 @@
   function calcPresetRange(months) {
     var end = new Date();
     var start = new Date();
-    start.setMonth(start.getMonth() - (months - 1));
-    start.setDate(1);
+    start.setMonth(start.getMonth() - months);
+
     return {start: start, end: end};
   }
 

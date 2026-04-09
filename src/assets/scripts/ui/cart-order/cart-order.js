@@ -75,10 +75,10 @@
           $panel.toggleClass('is-active', isActive);
         });
 
-        // freight 선택 시: data-freight-visible true/false, data-freight-hidden true/false
+        // 운임선택: 택배/화물은 노출, 퀵은 비노출 (MU-1255)
         $wrap.find('[data-freight-visible]').each(function () {
           var $el = $(this);
-          $el.attr('data-freight-visible', methodValue === 'freight' ? 'true' : 'false');
+          $el.attr('data-freight-visible', methodValue !== 'quick' ? 'true' : 'false');
         });
         $wrap.find('[data-freight-hidden]').each(function () {
           var $el = $(this);
