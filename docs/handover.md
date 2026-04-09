@@ -149,5 +149,41 @@
 3.  **검증**: 수정 후 `pnpm build:sh:prettier`를 통해 결과물 HTML의 포맷팅을 최종 확인하십시오.
 
 ---
+
+## 7. 명령어 가이드 (Command Reference)
+
+프로젝트 개발, 빌드 및 품질 관리를 위한 주요 명령어 일람입니다. `pnpm` 사용을 권장합니다.
+
+### 7.1. 개발 및 빌드 (Development & Build)
+-   **`pnpm dev`**: 로컬 개발 서버를 실행합니다. (`localhost:8080`)
+    -   EJS 템플릿 변경 시 실시간 반영(HMR)을 지원하며, 대규모 프로젝트 환경을 고려하여 Node.js 메모리 제한을 12GB로 확장하여 실행합니다.
+-   **`pnpm build`**: 운영 환경을 위한 정적 자산(Static Assets)을 빌드합니다.
+    -   `webpack.prod.cjs` 설정을 사용하며, `dist/` 폴더에 결과물이 생성됩니다.
+-   **`pnpm build:sh`**: 빌드 후 후처리 스크립트(`postbuild.sh`)를 실행합니다.
+    -   `dist/public` 내부 파일을 루트로 이동시키고, HTML/CSS 내 잘못된 경로(`/public/`)를 자동으로 보정합니다.
+-   **`pnpm build:sh:css`**: 빌드 후 CSS 파일 전용 후처리 스크립트(`postbuildcss.sh`)를 실행합니다.
+    -   HTML 제외, CSS 내 경로 보정 작업만 수행할 때 사용합니다.
+-   **`pnpm build:sh:prettier`**: [가장 권장되는 빌드 방식] 빌드, 후처리, 그리고 결과물(HTML/CSS) 포맷팅까지 일괄 수행합니다.
+-   **`pnpm build:sh:prettier:css`**: 빌드 및 CSS 전용 후처리 후, CSS 파일만 포맷팅을 수행합니다.
+-   **`pnpm analyze`**: 빌드된 번들 크기를 시각적으로 분석합니다.
+
+### 7.2. 코드 품질 및 포맷팅 (Lint & Format)
+-   **`pnpm eslint` / `pnpm eslint:fix`**: JavaScript 및 TypeScript 파일의 컨벤션 위반 사항을 검사하고 자동 교정합니다.
+-   **`pnpm stylelint` / `pnpm stylelint:fix`**: SCSS/CSS 파일의 스타일 규칙 및 속성 선언 순서를 검사하고 자동 교정합니다.
+-   **`pnpm ejslint`**: EJS 템플릿의 문법 오류를 사전에 검사합니다.
+-   **`pnpm prettier:dist`**: 빌드된 결과물(`dist/`) 내 HTML 및 CSS 파일의 가독성을 위해 코드 포맷팅을 강제 적용합니다.
+-   **`pnpm prettier:dist:css`**: 빌드된 결과물 내 CSS 파일만 타겟팅하여 포맷팅을 적용합니다.
+
+### 7.3. 배포 (Deployment)
+-   **`pnpm gh-pages`**: 빌드 후 현재 `dist/` 내용을 지정된 GitHub Pages 브랜치로 배포합니다.
+
+### 7.4. 코드 제너레이터 (Code Generation)
+신규 페이지 및 컴포넌트 구조를 일관성 있게 생성하기 위해 **Hygen**을 활용합니다.
+
+-   **`npx hygen pages with-prompt`**: [핵심] 대화형 프롬프트를 통해 신규 EJS 페이지 템플릿을 생성합니다.
+-   **`npx hygen generator new [name]`**: 새로운 Hygen 제너레이터(기본형)를 생성합니다.
+-   **`npx hygen generator with-prompt [name]`**: 프롬프트 입력 기능이 포함된 신규 제너레이터를 생성합니다.
+
+---
 **최종 업데이트**: 2026-04-09
 **작성자**: Gemini CLI
