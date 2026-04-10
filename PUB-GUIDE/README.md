@@ -43,6 +43,37 @@
 └── _templates/          # 코드 제너레이터(Hygen) 템플릿
 ```
 
+### 2.1. 빌드 결과물 구조 (Build Output Structure)
+
+`pnpm build:sh:prettier` 실행 후 생성되는 `dist/` 폴더의 구조입니다. 모든 HTML과 주요 CSS는 Prettier를 통해 포맷팅이 완료된 상태입니다.
+
+```text
+dist/
+├── assets/          # Webpack 번들 에셋 (fonts, scripts, css 등)
+├── html/            # PC용 HTML 페이지 결과물
+├── html-mo/         # 모바일용 HTML 페이지 결과물
+├── resources/       # [핵심] 공통 정적 리소스 (이미지, CSS, JS, Mock)
+│   ├── css/         # 후처리 및 포맷팅이 완료된 스타일시트
+│   ├── js/          # 공통 라이브러리 및 유틸리티
+│   ├── img/         # 이미지 및 아이콘 자산
+│   └── mock/        # EJS 데이터 바인딩용 JSON 데이터
+├── wsg/             # 퍼블리싱 가이드(WSG) 및 관련 리소스
+├── index.html       # PC 퍼블리싱 현황판
+└── index_mo.html    # 모바일 퍼블리싱 현황판
+```
+
+```
+dist/resources/css/mro/renewal/\*.css
+dist/resources/img/mro/renewal/\*.\*
+dist/resources/js/mro/renewal/ui/\*.js
+를 복사하여
+개발 mro_renewal 레포의
+src/main/webapp/resources/css/mro/renewal/\*.css
+src/main/webapp/resources/img/mro/renewal/\*.\*
+src/main/webapp/resources/js/mro/renewal/ui/\*.js
+로 붙여넣기하여 개발소스로 옮겨주면된다
+```
+
 ---
 
 ## 3. 작업 방식 및 워크플로우 (Work Workflow)
@@ -736,5 +767,5 @@ scripts/
 
 ---
 
-**최종 업데이트**: 2026-04-09
+**최종 업데이트**: 2026-04-10
 **작성자**: 이동걸
